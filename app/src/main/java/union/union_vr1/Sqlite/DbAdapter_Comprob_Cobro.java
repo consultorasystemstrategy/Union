@@ -195,10 +195,10 @@ public class DbAdapter_Comprob_Cobro {
 
     public void insertSomeComprobCobros() {
 
-        createComprobCobros(1, 1, 1, 1, "FACTURA", "FAC-0001", "2014-11-12", 1000, "2014-11-12",
-                "10:00:00", 500, 1, 1);
-        createComprobCobros(1, 1, 1, 2, "FACTURA", "FAC-0001", "2014-11-19", 1000, "2014-11-19",
-                "10:00:00", 200, 0, 1);
+        createComprobCobros(1, 1, 1, 1, "FACTURA", "FAC-0001", "2014-11-12", 1000, "",
+                "", 0, 1, 1);
+        createComprobCobros(1, 1, 1, 2, "FACTURA", "FAC-0001", "2014-11-19", 1000, "",
+                "", 0, 0, 1);
     }
 
 }

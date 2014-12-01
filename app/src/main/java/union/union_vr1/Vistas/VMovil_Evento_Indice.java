@@ -65,6 +65,7 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         dbHelper3.insertSomeAgentes();
         //dbHelper4.insertSomeComprobCobros();
         dbHelper4.deleteAllComprobCobros();
+        dbHelper4.insertSomeComprobCobros();
         dbHelper5.deleteAllHistoVentaDetalle();
         dbHelper5.insertSomeHistoVentaDetalle();
         dbHelper6.deleteAllStockAgente();

@@ -165,6 +165,42 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
         alertDialog.show();
     }
 
+    public void select2(){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                context);
+
+        // set title
+        alertDialogBuilder.setTitle("Cancelar");
+
+        // set dialog message
+        alertDialogBuilder
+                .setMessage("¿Elegir?")
+                .setCancelable(false)
+                .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,int id) {
+                        idValNew = Double.parseDouble(mSPNcredit.getText().toString()) + idVal2;
+                        dbHelper.updateComprobCobrosCan(idCobro,"","",0,"0");
+                        Toast.makeText(getApplicationContext(),
+                                "Anulado", Toast.LENGTH_SHORT).show();
+                        displayListViewVCC();
+                        mSPNcredit.setText("0.0");
+                    }
+                })
+                .setNegativeButton("No",new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,int id) {
+                        Toast.makeText(getApplicationContext(),
+                                "Cancelo ", Toast.LENGTH_SHORT).show();
+                    }
+                });
+        //displayListViewVCC();
+
+        // create alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+
+        // show it
+        alertDialog.show();
+    }
+
     @Override
     public void onClick(View v) {
         // TODO Auto-generated method stub
@@ -183,6 +219,7 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
                 }
                 if(Integer.parseInt(idEstado) == 1){
                     Toast.makeText(getApplicationContext(),"No posee deuda", Toast.LENGTH_SHORT).show();
+                    select2();
                 }
                 //dbHelper.updateComprobCobrosCan(String.valueOf(valIdCredito),getDatePhone(),getTimePhone(),Double.parseDouble(mSPNcredit.getText().toString()));
                 displayListViewVCC();
