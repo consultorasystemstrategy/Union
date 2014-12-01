@@ -92,6 +92,11 @@
             android:label="@string/app_name" >
 
         </activity>
+        <activity
+            android:name=".Vistas.VMovil_Resumen_Caja"
+            android:label="@string/app_name" >
+
+        </activity>
     </application>
 
 </manifest>

@@ -223,6 +223,18 @@ public class DbAdapter_Stock_Agente {
         return mCursor;
     }
 
+    public Cursor fetchAllStockAgenteVentas() {
+
+        Cursor mCursor = mDb.query(SQLITE_TABLE_Stock_Agente, new String[] {ST_id_stock_agente,
+                        ST_codigo,ST_nombre,ST_inicial,ST_final,ST_ventas,ST_devoluciones,ST_canjes,ST_buenos,ST_malos,ST_disponible},
+                null, null, null, null, null);
+
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+    }
+
     public void insertSomeStockAgente() {
 
         createStockAgente( 1, "PANs", "1A", "11", 10, 10, 10, 0, 0, 0, 0, 0, 10, 1);

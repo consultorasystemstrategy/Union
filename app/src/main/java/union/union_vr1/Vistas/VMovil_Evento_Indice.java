@@ -97,7 +97,8 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
 
                 break;
             case R.id.VEI_BTNresume:
-
+                Intent ir = new Intent(this,VMovil_Resumen_Caja.class);
+                startActivity(ir);
                 break;
             case R.id.VEI_BTNcarinv:
                 Intent is = new Intent(this, DbManager_Evento_Establec_GET.class);
