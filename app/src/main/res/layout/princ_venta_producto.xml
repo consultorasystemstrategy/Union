@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent" android:layout_height="fill_parent"
+    android:orientation="vertical">
+
+    <TextView android:layout_width="fill_parent"
+        android:layout_height="wrap_content" android:padding="10dp"
+        android:text="@string/VVP_titulo" android:textSize="20sp"
+        android:id="@+id/VVP_titulo" />
+
+    <EditText android:id="@+id/VVP_buscar" android:layout_width="225dp"
+        android:layout_height="wrap_content" android:ems="10"
+        android:hint="@string/VVP_busqueda"
+        android:layout_below="@+id/VVP_titulo">
+        <requestFocus />
+    </EditText>
+
+    <EditText
+        android:hint="@string/VVP_cantidad"
+        android:text="@string/VVP_cantidad"
+        android:layout_width="78dp"
+        android:ems="10"
+        android:layout_height="wrap_content"
+        android:id="@+id/VVP_cantid"
+        android:layout_toEndOf="@+id/VVP_buscar"
+        android:layout_below="@+id/VVP_titulo"
+        android:layout_toRightOf="@+id/VVP_buscar"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <ListView android:id="@+id/VVP_listar"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/VVP_buscar" />
+
+</RelativeLayout>

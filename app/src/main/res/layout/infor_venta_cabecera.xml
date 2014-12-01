@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="6dip">
+
+    <TextView
+        android:id="@+id/VVC_cantidinf"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:text="cantid" />
+
+    <TextView
+        android:id="@+id/VVC_producinf"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:text="produc"
+        android:layout_toRightOf="@+id/VVC_cantidinf"
+        android:layout_toEndOf="@+id/VVC_cantidinf" />
+
+    <TextView
+        android:id="@+id/VVC_preuniinf"
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:text="preuni"
+        android:layout_toRightOf="@+id/VVC_producinf"
+        android:layout_toEndOf="@+id/VVC_producinf" />
+
+    <TextView
+        android:id="@+id/VVC_precioinf"
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:text="precio"
+        android:layout_toRightOf="@+id/VVC_preuniinf"
+        android:layout_toEndOf="@+id/VVC_preuniinf" />
+</RelativeLayout>

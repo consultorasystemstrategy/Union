@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="6dip">
+
+    <TextView
+        android:id="@+id/VVCO_seriedinf"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:text="seried" />
+
+    <TextView
+        android:id="@+id/VVCO_nrodocinf"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:text="nrodoc"
+        android:layout_toRightOf="@+id/VVCO_seriedinf"
+        android:layout_toEndOf="@+id/VVCO_seriedinf" />
+
+    <TextView
+        android:id="@+id/VVCO_basimpinf"
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:text="basimp"
+        android:layout_toRightOf="@+id/VVCO_nrodocinf"
+        android:layout_toEndOf="@+id/VVCO_nrodocinf" />
+
+    <TextView
+        android:id="@+id/VVCO_igvvalinf"
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:text="igvval"
+        android:layout_toRightOf="@+id/VVCO_basimpinf"
+        android:layout_toEndOf="@+id/VVCO_basimpinf" />
+
+    <TextView
+        android:id="@+id/VVCO_totalvinf"
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:text="totalv"
+        android:layout_toRightOf="@+id/VVCO_igvvalinf"
+        android:layout_toEndOf="@+id/VVCO_igvvalinf" />
+</RelativeLayout>

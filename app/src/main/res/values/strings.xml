@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Productos Union</string>
+    <string name="app_name">Productos Union</string>
+    <string name="country_prompt">Choose a country</string>
+    <string name="VME_titulo">Lista de Establecimientos!</string>
+    <string name="VME_busqueda">Buscar Establecimientos…</string>
+    <string name="VVCO_titulo">Lista de Comprobantes!</string>
+    <string name="VVCO_busqueda">Buscar Comprobantes…</string>
+    <string name="VVP_titulo">Lista de Productos!</string>
+    <string name="VVP_busqueda">Buscar Productos…</string>
+    <string name="VVP_cantidad">0</string>
+    <string name="VVC_titulo">Ventas!</string>
+    <string name="VVCR_titulo">Plan de Pagos!</string>
+    <string name="VEG_titulo">Gastos!</string>
+    <string name="VHV_titulo">Lista de Historico!</string>
+    <string name="VHV_busqueda">Buscar Historico…</string>
+    <string name="VCH_titulo">Lista Canc. Historico!</string>
+    <string name="VCH_busqueda">Buscar Canc. Historico…</string>
+    <string-array name="country_arrays">
+        <item>Malaysia</item>
+        <item>United States</item>
+        <item>Indonesia</item>
+        <item>France</item>
+        <item>Italy</item>
+        <item>Singapore</item>
+        <item>New Zealand</item>
+        <item>India</item>
+    </string-array>
+    <string-array name="proced_gasto">
+        <item>Ninguno</item>
+        <item>Privado</item>
+        <item>Publico</item>
+        <item>Urgente</item>
+        <item>Manual</item>
+    </string-array>
+    <string-array name="tipo_comprobante">
+        <item>Factura</item>
+        <item>Boleta</item>
+    </string-array>
+    <string-array name="tipo_devolucion">
+        <item>Devolucion</item>
+        <item>Canje</item>
+    </string-array>
+    <string-array name="tipo_venta">
+        <item>Normal</item>
+        <item>Rpp</item>
+    </string-array>
+    <string-array name="cate_devolucion">
+        <item>Bueno</item>
+        <item>Vencimiento - Malo</item>
+        <item>Malogrado</item>
+        <item>Reclamo</item>
+    </string-array>
+    <string-array name="forma_pago">
+        <item>Contado</item>
+        <item>Credito</item>
+    </string-array>
+    <string-array name="tipo_atencion">
+        <item>Pendiente</item>
+        <item>Atendido</item>
+        <item>No Atendido</item>
+    </string-array>
+
+    <string name="title_activity_princ_venta_principal">princ_venta_principal</string>
+    <string name="title_activity_vmovil__evento__establec">VMovil_Evento_Establec</string>
+
+</resources>
+

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="6dip">
+
+    <TextView
+        android:id="@+id/VEG_nombreinf"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:text="nombre" />
+
+    <TextView
+        android:id="@+id/VEG_fechasinf"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:text="fecha"
+        android:layout_toRightOf="@+id/VEG_nombreinf"
+        android:layout_toEndOf="@+id/VEG_nombreinf" />
+
+    <TextView
+        android:id="@+id/VEG_totalsinf"
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:text="total"
+        android:layout_toRightOf="@+id/VEG_fechasinf" />
+</RelativeLayout>

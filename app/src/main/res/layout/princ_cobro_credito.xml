@@ -1,0 +1,53 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="union.union_vr1.Vistas.VMovil_Venta_CabeceraX">
+
+    <TextView android:layout_width="fill_parent"
+        android:layout_height="wrap_content" android:padding="10dp"
+        android:text="@string/VVCR_titulo" android:textSize="20sp"
+        android:id="@+id/VCCR_titulo"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/VCCR_SPNcredit"
+        android:layout_below="@+id/VCCR_LSTcresez"
+        android:layout_alignRight="@+id/VCCR_BTNcancelar"
+        android:layout_alignEnd="@+id/VCCR_BTNcancelar" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=" +  -  Actualizar  -  + "
+        android:id="@+id/VCCR_BTNactualiz"
+        android:layout_below="@+id/VCCR_SPNcredit"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=" +  -   Cancelar   -  + "
+        android:id="@+id/VCCR_BTNcancelar"
+        android:layout_below="@+id/VCCR_SPNcredit"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="150dp"
+        android:id="@+id/VCCR_LSTcresez"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/VCCR_titulo" />
+
+</RelativeLayout>

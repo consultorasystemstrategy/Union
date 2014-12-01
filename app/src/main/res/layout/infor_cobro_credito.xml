@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="6dip">
+
+    <TextView
+        android:id="@+id/VCCR_numdocinf"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:text="numdo" />
+
+    <TextView
+        android:id="@+id/VCCR_fecproinf"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:text="fecpr"
+        android:layout_toRightOf="@+id/VCCR_numdocinf"
+        android:layout_toEndOf="@+id/VCCR_numdocinf" />
+
+    <TextView
+        android:id="@+id/VCCR_montosinf"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:text="mont"
+        android:layout_toRightOf="@+id/VCCR_fecproinf"
+        android:layout_toEndOf="@+id/VCCR_fecproinf"/>
+
+    <TextView
+        android:id="@+id/VCCR_estadoinf"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:text="estad"
+        android:layout_toRightOf="@+id/VCCR_montosinf"
+        android:layout_toEndOf="@+id/VCCR_montosinf"/>
+
+
+</RelativeLayout>
