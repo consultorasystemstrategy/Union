@@ -127,6 +127,8 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
         String[] columns = new String[]{
                 DbAdapter_Comprob_Venta_Detalle.CD_cantidad,
                 DbAdapter_Comprob_Venta_Detalle.CD_nom_producto,
+                DbAdapter_Comprob_Venta_Detalle.CD_prom_anterior,
+                DbAdapter_Comprob_Venta_Detalle.CD_devuelto,
                 DbAdapter_Comprob_Venta_Detalle.CD_precio_unit,
                 DbAdapter_Comprob_Venta_Detalle.CD_importe
         };
@@ -135,6 +137,8 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
         int[] to = new int[]{
                 R.id.VVC_cantidinf,
                 R.id.VVC_producinf,
+                R.id.VVC_proantinf,
+                R.id.VVC_devoluinf,
                 R.id.VVC_preuniinf,
                 R.id.VVC_precioinf,
         };
@@ -460,7 +464,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
                 Double val04 = cursory.getDouble(10);
                 Double val05 = val04/val03;
 
-                dbHelper.createComprobVentaDetalle( 0, val01, val02, val03, val04, val04, val05, 10);
+                dbHelper.createComprobVentaDetalle( 0, val01, val02, val03, val04, val04, val05, "0/0", "0", 10);
 
             } while(cursory.moveToNext());
         }

@@ -217,10 +217,10 @@ public class VMovil_Venta_Producto extends Activity {
                                 //MainActivity.this.finish();
                                 valIdTipoVenInt = Integer.parseInt(valIdTipoVen);
                                 if(valIdTipoVenInt == 0){
-                                    dbHelpery.createComprobVentaDetalle( 0, idprod, nombre, cantid, precio, precio, preuni, 10);
+                                    dbHelpery.createComprobVentaDetalle( 0, idprod, nombre, cantid, precio, precio, preuni, "0/0", "0", 10);
                                 }
                                 if(valIdTipoVenInt == 1){
-                                    dbHelpery.createComprobVentaDetalle( 0, idprod, nombre, cantid, 0, 0, 0, 10);
+                                    dbHelpery.createComprobVentaDetalle( 0, idprod, nombre, cantid, 0, 0, 0, "0/0", "0", 10);
                                 }
                                 Toast.makeText(getApplicationContext(),
                                         "Registrado", Toast.LENGTH_SHORT).show();

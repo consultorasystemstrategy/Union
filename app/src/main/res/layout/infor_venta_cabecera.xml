@@ -40,7 +40,7 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:gravity="center"
             android:text="0/0"
-            android:id="@+id/VVC_promAnt"
+            android:id="@+id/VVC_proantinf"
             android:textSize="10dp" />
 
         <TextView
@@ -48,7 +48,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:gravity="center"
-            android:id="@+id/VVC_dev"
+            android:id="@+id/VVC_devoluinf"
             android:text="0"
             android:textSize="10dp" />
 

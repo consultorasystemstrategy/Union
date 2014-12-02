@@ -19,6 +19,8 @@ public class DbAdapter_Comprob_Venta_Detalle {
     public static final String CD_importe = "cd_re_importe";
     public static final String CD_costo_venta = "cd_re_costo_venta";
     public static final String CD_precio_unit = "cd_re_precio_unit";
+    public static final String CD_prom_anterior = "cd_te_prom_anterior";
+    public static final String CD_devuelto = "cd_te_devuelto";
     public static final String CD_valor_unidad = "cd_in_valor_unidad";
 
     public static final String TAG = "Comprob_Venta_Detalle";
@@ -40,6 +42,8 @@ public class DbAdapter_Comprob_Venta_Detalle {
                     +CD_importe+" real,"
                     +CD_costo_venta+" real,"
                     +CD_precio_unit+" real,"
+                    +CD_prom_anterior+" text,"
+                    +CD_devuelto+" text,"
                     +CD_valor_unidad+" integer);";
 
     public static final String DELETE_TABLE_COMPROB_VENTA_DETALLE = "DROP TABLE IF EXISTS " + SQLITE_TABLE_Comprob_Venta_Detalle;
@@ -62,7 +66,8 @@ public class DbAdapter_Comprob_Venta_Detalle {
 
     public long createComprobVentaDetalle(
             int id_comprob, int id_producto, String nom_producto, int cantidad, double importe,
-            double costo_venta, double precio_unit, int valor_unidad){
+            double costo_venta, double precio_unit, String prom_anterior, String devuelto,
+            int valor_unidad){
 
         ContentValues initialValues = new ContentValues();
         initialValues.put(CD_id_comprob,id_comprob);
@@ -72,6 +77,8 @@ public class DbAdapter_Comprob_Venta_Detalle {
         initialValues.put(CD_importe,importe);
         initialValues.put(CD_costo_venta,costo_venta);
         initialValues.put(CD_precio_unit,precio_unit);
+        initialValues.put(CD_prom_anterior,prom_anterior);
+        initialValues.put(CD_devuelto,devuelto);
         initialValues.put(CD_valor_unidad,valor_unidad);
 
         return mDb.insert(SQLITE_TABLE_Comprob_Venta_Detalle, null, initialValues);
@@ -183,11 +190,11 @@ public class DbAdapter_Comprob_Venta_Detalle {
 
     public void insertSomeComprobVentaDetalle() {
 
-        createComprobVentaDetalle( 1, 1, "PAN", 1, 2.0, 2.0, 1, 10);
-        createComprobVentaDetalle( 2, 2, "AGUA", 1, 1.0, 1.0, 2, 20);
-        createComprobVentaDetalle( 3, 1, "PAN", 1, 2.0, 2.0, 3, 30);
-        createComprobVentaDetalle( 4, 2, "AGUA", 1, 1.0, 1.0, 4, 40);
-        createComprobVentaDetalle( 5, 2, "AGUA", 1, 1.0, 1.0, 5, 50);
+        createComprobVentaDetalle( 1, 1, "PAN", 1, 2.0, 2.0, 1, "0/0", "0", 10);
+        createComprobVentaDetalle( 2, 2, "AGUA", 1, 1.0, 1.0, 2, "0/0", "0", 20);
+        createComprobVentaDetalle( 3, 1, "PAN", 1, 2.0, 2.0, 3, "0/0", "0", 30);
+        createComprobVentaDetalle( 4, 2, "AGUA", 1, 1.0, 1.0, 4, "0/0", "0", 40);
+        createComprobVentaDetalle( 5, 2, "AGUA", 1, 1.0, 1.0, 5, "0/0", "0", 50);
 
     }
 
