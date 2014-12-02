@@ -174,7 +174,7 @@ public class DbAdapter_Histo_Comprob_Anterior {
         return mCursor;
     }
 
-    public Cursor fetchAllHistoComprobAnteriorByIdComp(String id) {
+    public Cursor fetchAllHistoComprobAnteriorByIdEst(String id) {
 
         Cursor mCursor = mDb.query(SQLITE_TABLE_Histo_Comprob_Anterior, new String[] {HC_id_hist_comprob,
                         HC_id_establec, HC_id_producto, HC_nom_producto, HC_cantidad, HC_prom_anterior,

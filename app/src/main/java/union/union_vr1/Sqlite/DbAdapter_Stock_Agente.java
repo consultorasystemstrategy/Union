@@ -223,6 +223,23 @@ public class DbAdapter_Stock_Agente {
         return mCursor;
     }
 
+    public Cursor fetchAllStockAgentePrecioIdProd(String val01, String val02) {
+
+        Cursor mCursor = mDb.rawQuery("SELECT pr_re_precio_unit FROM " + SQLITE_TABLE_Stock_Agente + " INNER JOIN " +
+                DbAdapter_Precio.SQLITE_TABLE_Precio + " ON " + SQLITE_TABLE_Stock_Agente + "." +
+                ST_id_producto + " = " + DbAdapter_Precio.SQLITE_TABLE_Precio + "." +
+                DbAdapter_Precio.PR_id_producto + " WHERE " + DbAdapter_Precio.PR_id_cat_est + " = " +
+                val01 + " AND " + ST_id_producto + " like '%" + val02 + "%'", null, null);
+
+        //Cursor mCursor = mDb.rawQuery("SELECT * FROM m_stock_agente INNER JOIN m_precio" +
+        //        " ON m_stock_agente.st_in_id_producto = m_precio.pr_in_id_producto", null, null);
+
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+    }
+
     public Cursor fetchAllStockAgenteVentas() {
 
         Cursor mCursor = mDb.query(SQLITE_TABLE_Stock_Agente, new String[] {ST_id_stock_agente,

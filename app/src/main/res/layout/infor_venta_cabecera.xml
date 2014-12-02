@@ -37,7 +37,6 @@
         <TextView
             android:layout_width="45dp"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
             android:gravity="center"
             android:text="0/0"
             android:id="@+id/VVC_proantinf"
@@ -46,7 +45,6 @@
         <TextView
             android:layout_width="30dp"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
             android:gravity="center"
             android:id="@+id/VVC_devoluinf"
             android:text="0"

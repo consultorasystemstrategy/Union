@@ -15,6 +15,7 @@ import union.union_vr1.Sqlite.DbAdapter_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta_Detalle;
+import union.union_vr1.Sqlite.DbAdapter_Histo_Comprob_Anterior;
 import union.union_vr1.Sqlite.DbAdapter_Histo_Venta_Detalle;
 import union.union_vr1.Sqlite.DbAdapter_Precio;
 import union.union_vr1.Sqlite.DbAdapter_Stock_Agente;
@@ -31,6 +32,7 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
     private DbAdapter_Histo_Venta_Detalle dbHelper5;
     private DbAdapter_Stock_Agente dbHelper6;
     private DbAdapter_Precio dbHelper7;
+    private DbAdapter_Histo_Comprob_Anterior dbHelper8;
     private TextView titulo;
     private String titulox;
     private Button estado;
@@ -57,6 +59,8 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         dbHelper6.open();
         dbHelper7 = new DbAdapter_Precio(this);
         dbHelper7.open();
+        dbHelper8 = new DbAdapter_Histo_Comprob_Anterior(this);
+        dbHelper8.open();
         dbHelper.deleteAllEstablecs();
         dbHelper.insertSomeEstablecs();
         dbHelper1.deleteAllComprobVenta();
@@ -72,7 +76,7 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         dbHelper6.insertSomeStockAgente();
         dbHelper7.deleteAllPrecio();
         dbHelper7.insertSomePrecio();
-
+        dbHelper8.insertSomeHistoComprobAnterior();
         mClient = (Button)findViewById(R.id.VEI_BTNclient);
         mInfgas = (Button)findViewById(R.id.VEI_BTNinfgas);
         mResume = (Button)findViewById(R.id.VEI_BTNresume);

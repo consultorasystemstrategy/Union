@@ -28,6 +28,7 @@ import java.util.List;
 
 import union.union_vr1.R;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta_Detalle;
+import union.union_vr1.Sqlite.DbAdapter_Histo_Comprob_Anterior;
 import union.union_vr1.Sqlite.DbAdapter_Histo_Venta_Detalle;
 import union.union_vr1.Sqlite.DbAdapter_Stock_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Tipo_Gasto;
@@ -36,7 +37,7 @@ import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta;
 import union.union_vr1.Sqlite.DbAdapter_Agente;
 public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
-    private Cursor cursor, cursorx, cursorv, cursorz, cursorw, cursory, cursort;
+    private Cursor cursor, cursorx, cursorv, cursorz, cursorw, cursory, cursort, cursorn, cursorp, cursorf;
     private SimpleCursorAdapter dataAdapter;
     private DbAdapter_Comprob_Venta_Detalle dbHelper;
     private DbAdaptert_Evento_Establec dbHelperx;
@@ -44,6 +45,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
     private DbAdapter_Comprob_Venta dbHelperz;
     private DbAdapter_Agente dbHelperv;
     private DbAdapter_Histo_Venta_Detalle dbHelpera;
+    private DbAdapter_Histo_Comprob_Anterior dbHelper8;
     private DbAdapter_Stock_Agente dbHelperp;
     private Button mProduc, mProces, mCancel;
     private Spinner spinner1, spinner2, spinner3;
@@ -64,6 +66,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
     private int CorreBoleta, CorreFactura, CorreRrpp, idAgente, CorreUsa;
     private int idComprobV1, idComprobV2;
     private String DetCompr;
+    private String valCatEst;
     final Context context = this;
     //private int Cantidad, cant1, cant2, cant3, cant4;
     @Override
@@ -93,6 +96,8 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
         dbHelpera.open();
         dbHelperp = new DbAdapter_Stock_Agente(this);
         dbHelperp.open();
+        dbHelper8 = new DbAdapter_Histo_Comprob_Anterior(this);
+        dbHelper8.open();
         //dbHelperv.insertSomeAgentes();
 
         procesarCAG();
@@ -467,6 +472,44 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
                 dbHelper.createComprobVentaDetalle( 0, val01, val02, val03, val04, val04, val05, "0/0", "0", 10);
 
             } while(cursory.moveToNext());
+        }
+
+    }
+
+    public void procesarCES(){
+
+        cursorx = dbHelperx.fetchEstablecsById(valIdEstabX);
+        //Nos aseguramos de que existe al menos un registro
+        if (cursorx.moveToFirst()) {
+            //Recorremos el cursor hasta que no haya más registros
+            do {
+                valCatEst = cursorx.getString(2);
+            } while(cursorx.moveToNext());
+        }
+    }
+
+    private void precarga2(){
+        //cursor = manager.BuscarAgentes(tv.getText().toString());
+        pase01 = 1;
+        cursorn = dbHelper8.fetchAllHistoComprobAnteriorByIdEst(valIdEstabX);
+        //Nos aseguramos de que existe al menos un registro
+        if (cursorn.moveToFirst()) {
+            //Recorremos el cursor hasta que no haya más registros
+            do {
+                String idprod = cursorn.getString(2);
+                cursorp = dbHelperp.fetchAllStockAgentePrecioIdProd(valCatEst, idprod);
+                Double precio = cursorp.getDouble(0);
+                int val01 = cursorn.getInt(2);
+                String val02 = cursorn.getString(3);
+                int val03 = cursorn.getInt(4);
+                Double val04 = precio;
+                Double val05 = val04/val03;
+                String val06 = cursorn.getString(5);
+                String val07 = cursorn.getString(6);
+
+                dbHelper.createComprobVentaDetalle( 0, val01, val02, val03, val04, val04, val05, val06, val07, 10);
+
+            } while(cursorn.moveToNext());
         }
 
     }

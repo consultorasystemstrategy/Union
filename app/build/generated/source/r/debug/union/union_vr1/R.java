@@ -123,11 +123,11 @@ public final class R {
         public static final int VVC_SPNtipcom=0x7f090072;
         public static final int VVC_SPNtipven=0x7f090071;
         public static final int VVC_cantidinf=0x7f090023;
-        public static final int VVC_dev=0x7f090026;
+        public static final int VVC_devoluinf=0x7f090026;
         public static final int VVC_precioinf=0x7f090028;
         public static final int VVC_preuniinf=0x7f090027;
+        public static final int VVC_proantinf=0x7f090025;
         public static final int VVC_producinf=0x7f090024;
-        public static final int VVC_promAnt=0x7f090025;
         public static final int VVC_titulo=0x7f09006e;
         public static final int VVP_buscar=0x7f09007f;
         public static final int VVP_cantid=0x7f090080;
