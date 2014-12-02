@@ -320,11 +320,11 @@ public class DbAdapter_Histo_Venta_Detalle {
 
     public void insertSomeHistoVentaDetalle() {
 
-        createHistoVentaDetalle( 1, 1, 1, 1, 0, 1, "1A - 1", "TIENDA NA", "PAN", 1, 2.0,
+        createHistoVentaDetalle( 1, 1, 1, 1, 0, 1, "1A - 1", "TIENDA NA", "Pan Integral Mediano Union", 1, 2.0,
                 "2014-11-12", "08:10:00", 1, 1, 1, 1, 0.0, "", "", "", "", 1, 1);
-        createHistoVentaDetalle( 2, 1, 1, 2, 0, 1, "1A - 1", "TIENDA NA", "AGUA", 1, 2.0,
+        createHistoVentaDetalle( 2, 1, 1, 2, 0, 1, "1A - 1", "TIENDA NA", "Mega Galleta Integral de kiwicha", 1, 2.0,
                 "2014-11-12", "08:10:00", 1, 1, 1, 1, 0.0, "", "", "", "", 1, 1);
-        createHistoVentaDetalle( 3, 2, 1, 1, 0, 2, "1A - 2", "TIENDA NA", "PAN", 2, 4.0,
+        createHistoVentaDetalle( 3, 2, 1, 1, 0, 2, "1A - 2", "TIENDA NA", "Agua de Mesa Union", 2, 4.0,
                 "2014-11-05", "08:10:00", 1, 1, 1, 1, 0.0, "", "", "", "", 1, 1);
 
     }

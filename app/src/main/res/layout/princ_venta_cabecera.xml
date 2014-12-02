@@ -38,7 +38,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/VVC_SPNtipcom"
-        android:layout_below="@+id/VVC_LSTprosel"
+        android:layout_above="@+id/VVC_BTNprocesar"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_alignRight="@+id/VVC_BTNprocesar"
         android:layout_alignEnd="@+id/VVC_BTNprocesar" />
 
@@ -46,8 +48,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/VVC_SPNforpag"
-        android:layout_below="@+id/VVC_LSTprosel"
         android:layout_toEndOf="@+id/VVC_SPNtipcom"
+        android:layout_above="@+id/VVC_BTNcancelar"
         android:layout_alignLeft="@+id/VVC_BTNcancelar"
         android:layout_alignStart="@+id/VVC_BTNcancelar" />
 
@@ -56,7 +58,7 @@
         android:layout_height="wrap_content"
         android:text=" +  -   Procesar   -  + "
         android:id="@+id/VVC_BTNprocesar"
-        android:layout_below="@+id/VVC_SPNforpag"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
@@ -65,7 +67,7 @@
         android:layout_height="wrap_content"
         android:text=" +  -   Cancelar   -  + "
         android:id="@+id/VVC_BTNcancelar"
-        android:layout_below="@+id/VVC_SPNforpag"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 

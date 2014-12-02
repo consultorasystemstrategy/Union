@@ -95,7 +95,8 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
                 startActivity(i);
                 break;
             case R.id.VEI_BTNinfgas:
-
+                Intent ig = new Intent(this,VMovil_Evento_Gasto.class);
+                startActivity(ig);
                 break;
             case R.id.VEI_BTNresume:
                 Intent ir = new Intent(this,VMovil_Resumen_Caja.class);
