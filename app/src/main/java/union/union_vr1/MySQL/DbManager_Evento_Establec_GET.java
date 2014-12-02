@@ -34,7 +34,7 @@ public class DbManager_Evento_Establec_GET extends ListActivity {
 
     // url to get all empleados list Reemplaza la IP de tu equipo o la direccion de tu servidor
     // Si tu servidor es tu PC colocar IP Ej: "http://127.97.99.200/taller06oct/..", no colocar "http://localhost/taller06oct/.."
-    private static String url_all_establec = "http://192.168.0.109/produnion/lis_establec.php";
+    private static String url_all_establec = "http://192.168.0.158:8081/produnion/lis_establec.php";
 
     // JSON Node names
     private static final String TAG_SUCCESS = "success";

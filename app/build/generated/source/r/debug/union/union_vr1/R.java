@@ -83,6 +83,7 @@ public final class R {
         public static final int VME_establec=0x7f090018;
         public static final int VME_listar=0x7f09005f;
         public static final int VME_nombre=0x7f090016;
+        public static final int VOP_BTNonline=0x7f090082;
         public static final int VRC_TBLingresos=0x7f090064;
         public static final int VRC_THiapt=0x7f09006a;
         public static final int VRC_THingresos=0x7f090063;
@@ -132,8 +133,9 @@ public final class R {
         public static final int VVP_precio=0x7f09002f;
         public static final int VVP_produc=0x7f090030;
         public static final int VVP_titulo=0x7f09007c;
-        public static final int action_settings=0x7f090080;
+        public static final int action_settings=0x7f090083;
         public static final int btnSubmit=0x7f09003f;
+        public static final int button=0x7f090081;
         public static final int cedula=0x7f090031;
         public static final int editText=0x7f090033;
         public static final int imageButton=0x7f090034;
@@ -158,6 +160,7 @@ public final class R {
         public static final int textView8=0x7f090067;
         public static final int txtResultado=0x7f090035;
         public static final int username=0x7f09003b;
+        public static final int webView=0x7f090080;
     }
     public static final class layout {
         public static final int carga_evento_establec=0x7f030000;
@@ -188,11 +191,13 @@ public final class R {
         public static final int princ_venta_comprob=0x7f030019;
         public static final int princ_venta_credito=0x7f03001a;
         public static final int princ_venta_producto=0x7f03001b;
+        public static final int princ_web_view=0x7f03001c;
     }
     public static final class menu {
         public static final int my=0x7f080000;
         public static final int princ_venta_principal=0x7f080001;
         public static final int vmovil__evento__establec=0x7f080002;
+        public static final int vmovil__online__pumovil=0x7f080003;
     }
     public static final class string {
         public static final int VCH_busqueda=0x7f060000;

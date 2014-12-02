@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import union.union_vr1.Conexion.JSONParser;
 import union.union_vr1.Vistas.VMovil_Evento_Indice;
+import union.union_vr1.Vistas.VMovil_Online_Pumovil;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -60,7 +61,7 @@ public class Login extends Activity implements OnClickListener{
    // private static final String LOGIN_URL = "http://xxx.xxx.x.x:1234/webservice/login.php";
     
     //testing on Emulator:
-    private static final String LOGIN_URL = "http://192.168.0.109/produnion/login.php";
+    private static final String LOGIN_URL = "http://192.168.0.158:8081/produnion/login.php";
     //private static final String LOGIN_URL = "http://192.168.0.158:8081/webservice/login.php";
   //testing from a real server:
     //private static final String LOGIN_URL = "http://www.yourdomain.com/webservice/login.php";
@@ -212,7 +213,7 @@ public class Login extends Activity implements OnClickListener{
                 if (success == 1) {
 
                     Log.d("Login Successful!", json.toString());
-                	Intent i = new Intent(Login.this, VMovil_Evento_Indice.class);
+                	Intent i = new Intent(Login.this, VMovil_Online_Pumovil.class);
                 	finish();
     				startActivity(i);
                 	return json.getString(TAG_MESSAGE);
