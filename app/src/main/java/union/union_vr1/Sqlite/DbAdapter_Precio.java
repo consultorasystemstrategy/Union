@@ -101,6 +101,19 @@ public class DbAdapter_Precio {
 
     }
 
+    public Cursor fetchAllPrecioById(String val01, String val02) {
+
+        Cursor mCursor = mDb.query(SQLITE_TABLE_Precio, new String[] {PR_id_precio,
+                        PR_id_producto, PR_id_cat_est, PR_costo_venta, PR_precio_unit},
+                PR_id_producto + " = " + val01 + " AND " + PR_id_cat_est + " = " + val02,
+                null, null, null, null, null);
+
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+    }
+
     public Cursor fetchAllPrecio() {
 
         Cursor mCursor = mDb.query(SQLITE_TABLE_Precio, new String[] {PR_id_precio,

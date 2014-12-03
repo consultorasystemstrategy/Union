@@ -78,4 +78,39 @@
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/VVC_SPNtipven" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=" "
+        android:id="@+id/VVC_TXVcolors"
+        android:layout_below="@+id/VVC_LSTprosel"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="28dp"
+        android:layout_alignRight="@+id/VVC_SPNforpag"
+        android:layout_alignEnd="@+id/VVC_SPNforpag"
+        android:background="#ff000000" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=" "
+        android:id="@+id/VVC_TXVstoant"
+        android:layout_below="@+id/VVC_TXVcolors"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/VVC_SPNforpag"
+        android:layout_alignEnd="@+id/VVC_SPNforpag" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=" "
+        android:id="@+id/VVC_TXVstohoy"
+        android:layout_below="@+id/VVC_TXVstoant"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/VVC_SPNforpag"
+        android:layout_alignEnd="@+id/VVC_SPNforpag" />
+
 </RelativeLayout>

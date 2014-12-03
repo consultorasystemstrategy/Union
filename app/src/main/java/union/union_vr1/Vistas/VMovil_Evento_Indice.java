@@ -76,6 +76,7 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         dbHelper6.insertSomeStockAgente();
         dbHelper7.deleteAllPrecio();
         dbHelper7.insertSomePrecio();
+        dbHelper8.deleteAllHistoComprobAnterior();
         dbHelper8.insertSomeHistoComprobAnterior();
         mClient = (Button)findViewById(R.id.VEI_BTNclient);
         mInfgas = (Button)findViewById(R.id.VEI_BTNinfgas);

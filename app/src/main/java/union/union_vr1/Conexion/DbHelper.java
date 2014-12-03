@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import union.union_vr1.Sqlite.DbAdapter_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
+import union.union_vr1.Sqlite.DbAdapter_Histo_Comprob_Anterior;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 import union.union_vr1.Sqlite.DbAdapter_Tipo_Gasto;
 import union.union_vr1.Sqlite.DbAdapter_Informe_Gastos;
@@ -21,7 +22,7 @@ import union.union_vr1.Sqlite.DbAdapter_Histo_Venta_Detalle;
 public class DbHelper extends SQLiteOpenHelper {
 
     private static final int DATABASE_VERSION = 1;
-    private static final String DATABASE_NAME = "ProdUnionSXNHT.sqlite";
+    private static final String DATABASE_NAME = "ProdUnionSXNHTS.sqlite";
 
     public DbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -51,6 +52,9 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(DbAdapter_Histo_Venta.CREATE_TABLE_HISTO_VENTA);
         //Log.w(DbAdapter_Histo_Venta_Detalle.TAG, DbAdapter_Histo_Venta_Detalle.CREATE_TABLE_HISTO_VENTA_DETALLE);
         db.execSQL(DbAdapter_Histo_Venta_Detalle.CREATE_TABLE_HISTO_VENTA_DETALLE);
+        //Log.w(DbAdapter_Histo_Comprob_Anterior.TAG, DbAdapter_Histo_Comprob_Anterior.CREATE_TABLE_HISTO_COMPROB_ANTERIOR);
+        db.execSQL(DbAdapter_Histo_Comprob_Anterior.CREATE_TABLE_HISTO_COMPROB_ANTERIOR);
+
     }
 
     @Override
@@ -68,6 +72,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(DbAdapter_Comprob_Cobro.DELETE_TABLE_COMPROB_COBRO);
         db.execSQL(DbAdapter_Histo_Venta.DELETE_TABLE_HISTO_VENTA);
         db.execSQL(DbAdapter_Histo_Venta_Detalle.DELETE_TABLE_HISTO_VENTA_DETALLE);
+        db.execSQL(DbAdapter_Histo_Comprob_Anterior.DELETE_TABLE_HISTO_COMPROB_ANTERIOR);
         onCreate(db);
     }
 }

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -15,6 +16,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -30,6 +32,7 @@ import union.union_vr1.R;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta_Detalle;
 import union.union_vr1.Sqlite.DbAdapter_Histo_Comprob_Anterior;
 import union.union_vr1.Sqlite.DbAdapter_Histo_Venta_Detalle;
+import union.union_vr1.Sqlite.DbAdapter_Precio;
 import union.union_vr1.Sqlite.DbAdapter_Stock_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Tipo_Gasto;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
@@ -47,6 +50,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
     private DbAdapter_Histo_Venta_Detalle dbHelpera;
     private DbAdapter_Histo_Comprob_Anterior dbHelper8;
     private DbAdapter_Stock_Agente dbHelperp;
+    private DbAdapter_Precio dbHelper7;
     private Button mProduc, mProces, mCancel;
     private Spinner spinner1, spinner2, spinner3;
     private double valbaimp, valimpue, valtotal;
@@ -68,6 +72,8 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
     private String DetCompr;
     private String valCatEst;
     final Context context = this;
+    private String idprod;
+    TextView colors, stoant, stohoy;
     //private int Cantidad, cant1, cant2, cant3, cant4;
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -77,10 +83,23 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
         pase01 = 0;
         pase02 = 0;
 
+
+        //colors.setBackgroundColor(Color.WHITE);
+        //stoant.setText("Surtido del Stock Anterior:1 - Venta Anterior:1(1%)");
+        //stohoy.setText("Surtido del Stock de Hoy:2 - Venta Hoy:2(2%)");
+
         Bundle bundle = getIntent().getExtras();
         valIdEstabX=bundle.getString("idEstabX");
 
         setContentView(R.layout.princ_venta_cabecera);
+
+        colors = (TextView)findViewById(R.id.VVC_TXVcolors);
+        stoant = (TextView)findViewById(R.id.VVC_TXVstoant);
+        stohoy = (TextView)findViewById(R.id.VVC_TXVstohoy);
+
+        colors.setBackgroundColor(Color.WHITE);
+        stoant.setText(String.valueOf("Surtido del Stock Anterior:0 - Venta Anterior:0(0%)"));
+        stohoy.setText(String.valueOf("Surtido del Stock de Hoy:0 - Venta Hoy:0(0%)"));
 
         dbHelper = new DbAdapter_Comprob_Venta_Detalle(this);
         dbHelper.open();
@@ -98,6 +117,8 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
         dbHelperp.open();
         dbHelper8 = new DbAdapter_Histo_Comprob_Anterior(this);
         dbHelper8.open();
+        dbHelper7 = new DbAdapter_Precio(this);
+        dbHelper7.open();
         //dbHelperv.insertSomeAgentes();
 
         procesarCAG();
@@ -210,7 +231,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
         switch (v.getId()) {
             case R.id.VVC_BTNproducto:
                 displayListViewVVC();
-
+                porcstock();
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                         context);
 
@@ -223,11 +244,14 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
                         .setCancelable(false)
                         .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog,int id) {
-                                precarga();
+                                precarga2();
+                                Toast.makeText(getApplicationContext(),
+                                        idprod, Toast.LENGTH_SHORT).show();
                                 Toast.makeText(getApplicationContext(),
                                         "Precargado", Toast.LENGTH_SHORT).show();
                                 //displayListViewVVC();
                                 displayListViewVVC();
+                                porcstock();
                             }
                         })
                         .setNegativeButton("No",new DialogInterface.OnClickListener() {
@@ -235,6 +259,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
                                 producto();
                                 Toast.makeText(getApplicationContext(),
                                         "Sin Precargar", Toast.LENGTH_SHORT).show();
+                                porcstock();
                             }
                         });
 
@@ -476,6 +501,50 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
 
     }
 
+    public void porcstock(){
+
+        int pridto = 0;
+        int stocto = 0;
+        int stkant = 0;
+        int venant = 0;
+        double porc01;
+        double porc02;
+        String mens01;
+        String mens02;
+
+        Cursor cursorj1 = dbHelper.fetchAllComprobVentaDetalle0();
+        if (cursorj1.moveToFirst()) {
+            do { pridto += 1; } while(cursorj1.moveToNext());
+        }
+
+        Cursor cursorj2 = dbHelperp.fetchAllStockAgente();
+        if (cursorj2.moveToFirst()) {
+            do { stocto += 1; } while(cursorj2.moveToNext());
+        }
+
+        Cursor cursorj3 = dbHelperx.fetchEstablecsByIdX(valIdEstabX);
+        if (cursorj3.moveToFirst()) {
+            //Recorremos el cursor hasta que no haya más registros
+            do {
+                stkant = cursorj3.getInt(9);
+                venant = cursorj3.getInt(10);
+            } while(cursorj3.moveToNext());
+        }
+
+        porc01 = (100 * venant)/stkant;
+        porc02 = (100 * pridto)/stocto;
+
+        if(porc01 == porc02){colors.setBackgroundColor(Color.WHITE);}
+        if(porc01 < porc02) {colors.setBackgroundColor(Color.GREEN);}
+        if(porc01 > porc02) {colors.setBackgroundColor(Color.RED);}
+
+        mens01 = "Surtido del Stock Anterior:" + stkant + " - Venta Anterior:"+ venant +"("+ porc01 +"%)";
+        mens02 = "Surtido del Stock de Hoy:" + stocto + " - Venta Hoy:"+ pridto +"("+ porc02 +"%)";
+        //colors.setBackgroundColor(Color.WHITE);
+        stoant.setText(String.valueOf(mens01));
+        stohoy.setText(String.valueOf(mens02));
+    }
+
     public void procesarCES(){
 
         cursorx = dbHelperx.fetchEstablecsById(valIdEstabX);
@@ -489,6 +558,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
     }
 
     private void precarga2(){
+        procesarCES();
         //cursor = manager.BuscarAgentes(tv.getText().toString());
         pase01 = 1;
         cursorn = dbHelper8.fetchAllHistoComprobAnteriorByIdEst(valIdEstabX);
@@ -496,13 +566,16 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
         if (cursorn.moveToFirst()) {
             //Recorremos el cursor hasta que no haya más registros
             do {
-                String idprod = cursorn.getString(2);
-                cursorp = dbHelperp.fetchAllStockAgentePrecioIdProd(valCatEst, idprod);
-                Double precio = cursorp.getDouble(0);
+                idprod = cursorn.getString(2);
+
+                cursorp = dbHelper7.fetchAllPrecioById(idprod, valCatEst);
+                cursorp.moveToFirst();
+                Double precio = cursorp.getDouble(4);
                 int val01 = cursorn.getInt(2);
                 String val02 = cursorn.getString(3);
                 int val03 = cursorn.getInt(4);
                 Double val04 = precio;
+                //Double val04 = 1.0;
                 Double val05 = val04/val03;
                 String val06 = cursorn.getString(5);
                 String val07 = cursorn.getString(6);

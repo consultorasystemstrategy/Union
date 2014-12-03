@@ -158,6 +158,22 @@ public class DbAdaptert_Evento_Establec {
 
     }
 
+    public Cursor fetchEstablecsByIdX(String inputText) throws SQLException {
+        Log.w(TAG, inputText);
+        Cursor mCursor = null;
+        mCursor = mDb.query(true, SQLITE_TABLE_Evento_Establec, new String[] {EE_id_evt_establec,
+                        EE_id_establec, EE_id_cat_est, EE_id_tipo_doc_cliente, EE_id_estado_atencion,
+                        EE_nom_establec, EE_nom_cliente, EE_doc_cliente, EE_orden, EE_surtido_stock_ant,
+                        EE_surtido_venta_ant, EE_monto_credito, EE_dias_credito, EE_id_agente},
+                EE_id_establec + " = " + inputText, null,
+                null, null, null, null);
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+
+    }
+
     public Cursor fetchAllEstablecs() {
 
         Cursor mCursor = mDb.query(SQLITE_TABLE_Evento_Establec, new String[] {EE_id_evt_establec,
@@ -186,7 +202,7 @@ public class DbAdaptert_Evento_Establec {
 
     public void insertSomeEstablecs() {
 
-        createEstablecs(1, 1, 3, 1, "TIENDA NA", "JUAN", "10001", 1, 11, 21, 50.5, 31, 0, 1);
+        createEstablecs(1, 1, 3, 1, "TIENDA NA", "JUAN", "10001", 1, 50, 4, 50.5, 31, 0, 1);
         createEstablecs(2, 1, 4, 2, "TIENDA NB", "JUAN", "10001", 1, 11, 21, 60.5, 31, 0, 1);
         createEstablecs(3, 2, 5, 3, "GRIFO NA",  "JUAN", "10001", 1, 11, 21, 70.5, 31, 0, 1);
         createEstablecs(4, 2, 6, 1, "GRIFO NB",  "JUAN", "10001", 1, 11, 21, 80.5, 31, 0, 1);
