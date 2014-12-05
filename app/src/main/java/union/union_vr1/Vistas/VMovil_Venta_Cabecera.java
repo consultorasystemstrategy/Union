@@ -73,6 +73,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
     private String valCatEst;
     final Context context = this;
     private String idprod;
+    private double vender;
     TextView colors, stoant, stohoy;
     //private int Cantidad, cant1, cant2, cant3, cant4;
     @Override
@@ -271,183 +272,41 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
 
                 break;
             case R.id.VVC_BTNprocesar:
-                procesarPRO();
-                valbaimp = 0;
-                valimpue = 0;
-                valtotal = 0;
                 displayListViewVVC();
-                procesarCVD();
-                procesarCRE();
-                if(spinner2.getSelectedItemId()==0){
-                    SerieUsa = SerieFactura;
-                    CorreUsa = CorreFactura;
-                    TipoDocS = "FACTURA";
-                    impresion =
-                        "FACTURA : " +
-                        "\nValor Inicial : "+ valbaimp +
-                        "\nValor Impuest : "+ valimpue +
-                        "\nValor Total   : "+ valtotal;
+                porcstock();
+                String prevenp = "Va a vender " + vender + "% que la venta anterior";
+                Toast.makeText(getApplicationContext(),
+                        prevenp, Toast.LENGTH_SHORT).show();
 
-                }
-                if(spinner2.getSelectedItemId()==1){
-                    SerieUsa = SerieBoleta;
-                    CorreUsa = CorreBoleta;
-                    TipoDocS = "BOLETA";
-                    impresion =
-                        "BOLETA : " +
-                        "\nValor Inicial : "+ valbaimp +
-                        "\nValor Impuest : "+ valimpue +
-                        "\nValor Total   : "+ valtotal;
+                AlertDialog.Builder alertDialogBuilder1 = new AlertDialog.Builder(
+                        context);
 
-                }
-                DetCompr = SerieUsa +" " + CorreUsa;
+                // set title
+                alertDialogBuilder1.setTitle("Precargar Producto");
 
-                if(pase01 == 1) {
-                    dbHelperz.createComprobVenta(Integer.parseInt(valIdEstabX),
-                            Integer.parseInt(String.valueOf(spinner2.getSelectedItemId() + 1)),
-                            Integer.parseInt(String.valueOf(spinner3.getSelectedItemId() + 1)),
-                            1, "1", SerieUsa, CorreUsa, valbaimp, valimpue, valtotal,
-                            getDatePhone(), getTimePhone(), 1, 0, idAgente);
-                    cursorz = dbHelperz.fetchAllComprobVenta();
-                    cursorz.moveToLast();
-                    idComprobV1 = cursorz.getInt(0);
-                    dbHelper.updateComprobVentaDetalle1("0", String.valueOf(idComprobV1), "0");
-                    if(spinner2.getSelectedItemId()==0){
-                        dbHelperv.updateAgentesFA(String.valueOf(idAgente), SerieFactura,
-                                String.valueOf(CorreFactura));
-                    }
-                    if(spinner2.getSelectedItemId()==1){
-                        dbHelperv.updateAgentesBO(String.valueOf(idAgente), SerieBoleta,
-                                String.valueOf(CorreBoleta));
-                    }
-                }
-                if(pase02 == 1) {
-                    dbHelperz.createComprobVenta(Integer.parseInt(valIdEstabX),
-                            Integer.parseInt(String.valueOf(spinner2.getSelectedItemId() + 1)),
-                            Integer.parseInt(String.valueOf(spinner3.getSelectedItemId() + 1)),
-                            2, "1", SerieRrpp, CorreRrpp, 0, 0, 0,
-                            getDatePhone(), getTimePhone(), 1, 0, idAgente);
-                    cursorz = dbHelperz.fetchAllComprobVenta();
-                    cursorz.moveToLast();
-                    idComprobV2 = cursorz.getInt(0);
-                    if(pase01 == 0){
-                        dbHelper.updateComprobVentaDetalle1("0", String.valueOf(idComprobV2), "0");
-                    }
-                    if(pase02 == 1) {
-                        dbHelper.updateComprobVentaDetalle2(String.valueOf(idComprobV1), String.valueOf(idComprobV2), "0");
-                    }
-                    dbHelperv.updateAgentesRP(String.valueOf(idAgente), SerieRrpp,
-                            String.valueOf(CorreRrpp));
-                }
-                if(pase01 == 1 || pase02 == 1){
-                    dbHelperx.updateEstablecs(valIdEstabX, 2);
-                }
-                if(spinner3.getSelectedItemId()==0){
+                // set dialog message
+                alertDialogBuilder1
+                        .setMessage("¿Elegir?")
+                        .setCancelable(false)
+                        .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,int id) {
+                                aceptar();
+                                }
+                        })
+                        .setNegativeButton("No",new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,int id) {
+                                
+                                Toast.makeText(getApplicationContext(),
+                                        "Cancelar", Toast.LENGTH_SHORT).show();
 
-                    impresion +=
-                        "\nCONTADO";
-                        Toast.makeText(getApplicationContext(), impresion, Toast.LENGTH_SHORT).show();
-                    finish();
-                }
-                if(spinner3.getSelectedItemId()==1){
-                    impresion +=
-                        "\nCREDITO : " +
-                        "\nMonto : "+ valCredito +
-                        "\nDias  : "+ valDiaCred;
-                        //Toast.makeText(getApplicationContext(), impresion, Toast.LENGTH_SHORT).show();
-                    if(valtotal <= valCredito){
-                        pase = 1;
-                        impresion +=
-                            "\nCREDITO APROBADO";
-                        Toast.makeText(getApplicationContext(), impresion, Toast.LENGTH_SHORT).show();
-                        //dbHelpery.deleteAllComprobCobros();
-                        final String[] items = {" 7 dias - 1 cuota", "15 dias - 1 cuota", "15 dias - 2 cuota",
-                                "30 dias - 1 cuota", "30 dias - 2 cuota", "30 dias - 4 cuota"};
-
-                        AlertDialog.Builder dialogo = new AlertDialog.Builder(this);
-                        dialogo.setTitle("Dias de Pago");
-                        dialogo.setItems(items, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int item) {
-                                if(item == 0){
-                                    valtotalp = valtotal;
-                                    valtotalp = roundTwoDecimals(valtotalp);
-                                    fechaCobro = getDatePhone1();
-                                    dbHelpery.createComprobCobros(Integer.parseInt(valIdEstabX), idComprobV1, 1, 1,
-                                            TipoDocS, DetCompr, fechaCobro, valtotalp, "", "", 0, 0, 1);
-                                }
-                                if(item == 1){
-                                    valtotalp = valtotal;
-                                    valtotalp = roundTwoDecimals(valtotalp);
-                                    fechaCobro = getDatePhone2();
-                                    dbHelpery.createComprobCobros(Integer.parseInt(valIdEstabX), idComprobV1, 1, 1,
-                                            TipoDocS, DetCompr, fechaCobro, valtotalp, "", "", 0, 0, 1);
-                                }
-                                if(item == 2){
-                                    valtotalp = valtotal/2;
-                                    valtotalp = roundTwoDecimals(valtotalp);
-                                    fechaCobro = getDatePhone1();
-                                    dbHelpery.createComprobCobros(Integer.parseInt(valIdEstabX), idComprobV1, 1, 1,
-                                            TipoDocS, DetCompr, fechaCobro, valtotalp, "", "", 0, 0, 1);
-                                    valtotalp = valtotal/2;
-                                    fechaCobro = getDatePhone2();
-                                    dbHelpery.createComprobCobros(Integer.parseInt(valIdEstabX), idComprobV1, 1, 2,
-                                            TipoDocS, DetCompr, fechaCobro, valtotalp, "", "", 0, 0, 1);
-                                }
-                                if(item == 3){
-                                    valtotalp = valtotal;
-                                    valtotalp = roundTwoDecimals(valtotalp);
-                                    fechaCobro = getDatePhone4();
-                                    dbHelpery.createComprobCobros(Integer.parseInt(valIdEstabX), idComprobV1, 1, 1,
-                                            TipoDocS, DetCompr, fechaCobro, valtotalp, "", "", 0, 0, 1);
-                                }
-                                if(item == 4){
-                                    valtotalp = valtotal/2;
-                                    valtotalp = roundTwoDecimals(valtotalp);
-                                    fechaCobro = getDatePhone2();
-                                    dbHelpery.createComprobCobros(Integer.parseInt(valIdEstabX), idComprobV1, 1, 1,
-                                            TipoDocS, DetCompr, fechaCobro, valtotalp, "", "", 0, 0, 1);
-                                    valtotalp = valtotal/2;
-                                    fechaCobro = getDatePhone4();
-                                    dbHelpery.createComprobCobros(Integer.parseInt(valIdEstabX), idComprobV1, 1, 2,
-                                            TipoDocS, DetCompr, fechaCobro, valtotalp, "", "", 0, 0, 1);
-                                }
-                                if(item == 5){
-                                    valtotalp = valtotal/4;
-                                    valtotalp = roundTwoDecimals(valtotalp);
-                                    fechaCobro = getDatePhone1();
-                                    dbHelpery.createComprobCobros(Integer.parseInt(valIdEstabX), idComprobV1, 1, 1,
-                                            TipoDocS, DetCompr, fechaCobro, valtotalp, "", "", 0, 0, 1);
-                                    valtotalp = valtotal/4;
-                                    valtotalp = roundTwoDecimals(valtotalp);
-                                    fechaCobro = getDatePhone2();
-                                    dbHelpery.createComprobCobros(Integer.parseInt(valIdEstabX), idComprobV1, 1, 2,
-                                            TipoDocS, DetCompr, fechaCobro, valtotalp, "", "", 0, 0, 1);
-                                    valtotalp = valtotal/4;
-                                    valtotalp = roundTwoDecimals(valtotalp);
-                                    fechaCobro = getDatePhone3();
-                                    dbHelpery.createComprobCobros(Integer.parseInt(valIdEstabX), idComprobV1, 1, 3,
-                                            TipoDocS, DetCompr, fechaCobro, valtotalp, "", "", 0, 0, 1);
-                                    valtotalp = valtotal/4;
-                                    valtotalp = roundTwoDecimals(valtotalp);
-                                    fechaCobro = getDatePhone4();
-                                    dbHelpery.createComprobCobros(Integer.parseInt(valIdEstabX), idComprobV1, 1, 4,
-                                            TipoDocS, DetCompr, fechaCobro, valtotalp, "", "", 0, 0, 1);
-                                }
-                                Toast.makeText(getApplicationContext(), items[item], Toast.LENGTH_LONG).show();
-                                eleccion(valIdEstabX, String.valueOf(idComprobV1), TipoDocS, DetCompr, String.valueOf(valtotal));
                             }
                         });
-                        dialogo.create();
-                        dialogo.show();
 
-                    }else{
-                        pase = 0;
-                        impresion +=
-                            "\nCREDITO NO APROBADO";
-                        Toast.makeText(getApplicationContext(), impresion, Toast.LENGTH_SHORT).show();
-                        finish();
-                    }
-                }
+                // create alert dialog
+                AlertDialog alertDialog1 = alertDialogBuilder1.create();
+
+                // show it
+                alertDialog1.show();
 
                 break;
             case R.id.VVC_BTNcancelar:
@@ -455,6 +314,186 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
                 break;
             default:
                 break;
+        }
+    }
+
+    private void aceptar(){
+        procesarPRO();
+        valbaimp = 0;
+        valimpue = 0;
+        valtotal = 0;
+        displayListViewVVC();
+        procesarCVD();
+        procesarCRE();
+        if(spinner2.getSelectedItemId()==0){
+            SerieUsa = SerieFactura;
+            CorreUsa = CorreFactura;
+            TipoDocS = "FACTURA";
+            impresion =
+                    "FACTURA : " +
+                            "\nValor Inicial : "+ valbaimp +
+                            "\nValor Impuest : "+ valimpue +
+                            "\nValor Total   : "+ valtotal;
+
+        }
+        if(spinner2.getSelectedItemId()==1){
+            SerieUsa = SerieBoleta;
+            CorreUsa = CorreBoleta;
+            TipoDocS = "BOLETA";
+            impresion =
+                    "BOLETA : " +
+                            "\nValor Inicial : "+ valbaimp +
+                            "\nValor Impuest : "+ valimpue +
+                            "\nValor Total   : "+ valtotal;
+
+        }
+        DetCompr = SerieUsa +" " + CorreUsa;
+
+        if(pase01 == 1) {
+            dbHelperz.createComprobVenta(Integer.parseInt(valIdEstabX),
+                    Integer.parseInt(String.valueOf(spinner2.getSelectedItemId() + 1)),
+                    Integer.parseInt(String.valueOf(spinner3.getSelectedItemId() + 1)),
+                    1, "1", SerieUsa, CorreUsa, valbaimp, valimpue, valtotal,
+                    getDatePhone(), getTimePhone(), 1, 0, idAgente);
+            cursorz = dbHelperz.fetchAllComprobVenta();
+            cursorz.moveToLast();
+            idComprobV1 = cursorz.getInt(0);
+            dbHelper.updateComprobVentaDetalle1("0", String.valueOf(idComprobV1), "0");
+            if(spinner2.getSelectedItemId()==0){
+                dbHelperv.updateAgentesFA(String.valueOf(idAgente), SerieFactura,
+                        String.valueOf(CorreFactura));
+            }
+            if(spinner2.getSelectedItemId()==1){
+                dbHelperv.updateAgentesBO(String.valueOf(idAgente), SerieBoleta,
+                        String.valueOf(CorreBoleta));
+            }
+        }
+        if(pase02 == 1) {
+            dbHelperz.createComprobVenta(Integer.parseInt(valIdEstabX),
+                    Integer.parseInt(String.valueOf(spinner2.getSelectedItemId() + 1)),
+                    Integer.parseInt(String.valueOf(spinner3.getSelectedItemId() + 1)),
+                    2, "1", SerieRrpp, CorreRrpp, 0, 0, 0,
+                    getDatePhone(), getTimePhone(), 1, 0, idAgente);
+            cursorz = dbHelperz.fetchAllComprobVenta();
+            cursorz.moveToLast();
+            idComprobV2 = cursorz.getInt(0);
+            if(pase01 == 0){
+                dbHelper.updateComprobVentaDetalle1("0", String.valueOf(idComprobV2), "0");
+            }
+            if(pase02 == 1) {
+                dbHelper.updateComprobVentaDetalle2(String.valueOf(idComprobV1), String.valueOf(idComprobV2), "0");
+            }
+            dbHelperv.updateAgentesRP(String.valueOf(idAgente), SerieRrpp,
+                    String.valueOf(CorreRrpp));
+        }
+        if(pase01 == 1 || pase02 == 1){
+            dbHelperx.updateEstablecs(valIdEstabX, 2);
+        }
+        if(spinner3.getSelectedItemId()==0){
+
+            impresion +=
+                    "\nCONTADO";
+            Toast.makeText(getApplicationContext(), impresion, Toast.LENGTH_SHORT).show();
+            finish();
+        }
+        if(spinner3.getSelectedItemId()==1){
+            impresion +=
+                    "\nCREDITO : " +
+                            "\nMonto : "+ valCredito +
+                            "\nDias  : "+ valDiaCred;
+            //Toast.makeText(getApplicationContext(), impresion, Toast.LENGTH_SHORT).show();
+            if(valtotal <= valCredito){
+                pase = 1;
+                impresion +=
+                        "\nCREDITO APROBADO";
+                Toast.makeText(getApplicationContext(), impresion, Toast.LENGTH_SHORT).show();
+                //dbHelpery.deleteAllComprobCobros();
+                final String[] items = {" 7 dias - 1 cuota", "15 dias - 1 cuota", "15 dias - 2 cuota",
+                        "30 dias - 1 cuota", "30 dias - 2 cuota", "30 dias - 4 cuota"};
+
+                AlertDialog.Builder dialogo = new AlertDialog.Builder(this);
+                dialogo.setTitle("Dias de Pago");
+                dialogo.setItems(items, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int item) {
+                        if(item == 0){
+                            valtotalp = valtotal;
+                            valtotalp = roundTwoDecimals(valtotalp);
+                            fechaCobro = getDatePhone1();
+                            dbHelpery.createComprobCobros(Integer.parseInt(valIdEstabX), idComprobV1, 1, 1,
+                                    TipoDocS, DetCompr, fechaCobro, valtotalp, "", "", 0, 0, 1);
+                        }
+                        if(item == 1){
+                            valtotalp = valtotal;
+                            valtotalp = roundTwoDecimals(valtotalp);
+                            fechaCobro = getDatePhone2();
+                            dbHelpery.createComprobCobros(Integer.parseInt(valIdEstabX), idComprobV1, 1, 1,
+                                    TipoDocS, DetCompr, fechaCobro, valtotalp, "", "", 0, 0, 1);
+                        }
+                        if(item == 2){
+                            valtotalp = valtotal/2;
+                            valtotalp = roundTwoDecimals(valtotalp);
+                            fechaCobro = getDatePhone1();
+                            dbHelpery.createComprobCobros(Integer.parseInt(valIdEstabX), idComprobV1, 1, 1,
+                                    TipoDocS, DetCompr, fechaCobro, valtotalp, "", "", 0, 0, 1);
+                            valtotalp = valtotal/2;
+                            fechaCobro = getDatePhone2();
+                            dbHelpery.createComprobCobros(Integer.parseInt(valIdEstabX), idComprobV1, 1, 2,
+                                    TipoDocS, DetCompr, fechaCobro, valtotalp, "", "", 0, 0, 1);
+                        }
+                        if(item == 3){
+                            valtotalp = valtotal;
+                            valtotalp = roundTwoDecimals(valtotalp);
+                            fechaCobro = getDatePhone4();
+                            dbHelpery.createComprobCobros(Integer.parseInt(valIdEstabX), idComprobV1, 1, 1,
+                                    TipoDocS, DetCompr, fechaCobro, valtotalp, "", "", 0, 0, 1);
+                        }
+                        if(item == 4){
+                            valtotalp = valtotal/2;
+                            valtotalp = roundTwoDecimals(valtotalp);
+                            fechaCobro = getDatePhone2();
+                            dbHelpery.createComprobCobros(Integer.parseInt(valIdEstabX), idComprobV1, 1, 1,
+                                    TipoDocS, DetCompr, fechaCobro, valtotalp, "", "", 0, 0, 1);
+                            valtotalp = valtotal/2;
+                            fechaCobro = getDatePhone4();
+                            dbHelpery.createComprobCobros(Integer.parseInt(valIdEstabX), idComprobV1, 1, 2,
+                                    TipoDocS, DetCompr, fechaCobro, valtotalp, "", "", 0, 0, 1);
+                        }
+                        if(item == 5){
+                            valtotalp = valtotal/4;
+                            valtotalp = roundTwoDecimals(valtotalp);
+                            fechaCobro = getDatePhone1();
+                            dbHelpery.createComprobCobros(Integer.parseInt(valIdEstabX), idComprobV1, 1, 1,
+                                    TipoDocS, DetCompr, fechaCobro, valtotalp, "", "", 0, 0, 1);
+                            valtotalp = valtotal/4;
+                            valtotalp = roundTwoDecimals(valtotalp);
+                            fechaCobro = getDatePhone2();
+                            dbHelpery.createComprobCobros(Integer.parseInt(valIdEstabX), idComprobV1, 1, 2,
+                                    TipoDocS, DetCompr, fechaCobro, valtotalp, "", "", 0, 0, 1);
+                            valtotalp = valtotal/4;
+                            valtotalp = roundTwoDecimals(valtotalp);
+                            fechaCobro = getDatePhone3();
+                            dbHelpery.createComprobCobros(Integer.parseInt(valIdEstabX), idComprobV1, 1, 3,
+                                    TipoDocS, DetCompr, fechaCobro, valtotalp, "", "", 0, 0, 1);
+                            valtotalp = valtotal/4;
+                            valtotalp = roundTwoDecimals(valtotalp);
+                            fechaCobro = getDatePhone4();
+                            dbHelpery.createComprobCobros(Integer.parseInt(valIdEstabX), idComprobV1, 1, 4,
+                                    TipoDocS, DetCompr, fechaCobro, valtotalp, "", "", 0, 0, 1);
+                        }
+                        Toast.makeText(getApplicationContext(), items[item], Toast.LENGTH_LONG).show();
+                        eleccion(valIdEstabX, String.valueOf(idComprobV1), TipoDocS, DetCompr, String.valueOf(valtotal));
+                    }
+                });
+                dialogo.create();
+                dialogo.show();
+
+            }else{
+                pase = 0;
+                impresion +=
+                        "\nCREDITO NO APROBADO";
+                Toast.makeText(getApplicationContext(), impresion, Toast.LENGTH_SHORT).show();
+                finish();
+            }
         }
     }
 
@@ -533,7 +572,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
 
         porc01 = (100 * venant)/stkant;
         porc02 = (100 * pridto)/stocto;
-
+        vender = porc01 - porc02;
         if(porc01 == porc02){colors.setBackgroundColor(Color.WHITE);}
         if(porc01 < porc02) {colors.setBackgroundColor(Color.GREEN);}
         if(porc01 > porc02) {colors.setBackgroundColor(Color.RED);}
