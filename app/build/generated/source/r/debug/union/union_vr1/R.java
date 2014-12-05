@@ -144,7 +144,7 @@ public final class R {
         public static final int VVP_precio=0x7f090032;
         public static final int VVP_produc=0x7f090033;
         public static final int VVP_titulo=0x7f090082;
-        public static final int action_settings=0x7f09008a;
+        public static final int action_settings=0x7f09008b;
         public static final int btnSubmit=0x7f090042;
         public static final int button=0x7f090087;
         public static final int cedula=0x7f090034;
@@ -153,13 +153,14 @@ public final class R {
         public static final int imageView1=0x7f09003d;
         public static final int listView=0x7f090000;
         public static final int login=0x7f09003a;
-        public static final int name=0x7f090089;
+        public static final int name=0x7f09008a;
         public static final int nombre=0x7f090035;
         public static final int password=0x7f09003b;
         public static final int salir=0x7f090039;
         public static final int spinner1=0x7f09003f;
         public static final int spinner2=0x7f090040;
         public static final int spinner3=0x7f090041;
+        public static final int tag_message=0x7f090089;
         public static final int textView1=0x7f09000d;
         public static final int textView19=0x7f090065;
         public static final int textView2=0x7f09000e;

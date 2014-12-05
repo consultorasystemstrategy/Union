@@ -48,7 +48,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/VVC_SPNforpag"
-        android:layout_toEndOf="@+id/VVC_SPNtipcom"
+
         android:layout_above="@+id/VVC_BTNcancelar"
         android:layout_alignLeft="@+id/VVC_BTNcancelar"
         android:layout_alignStart="@+id/VVC_BTNcancelar" />

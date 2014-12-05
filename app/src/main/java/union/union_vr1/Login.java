@@ -61,7 +61,7 @@ public class Login extends Activity implements OnClickListener{
    // private static final String LOGIN_URL = "http://xxx.xxx.x.x:1234/webservice/login.php";
     
     //testing on Emulator:
-    private static final String LOGIN_URL = "http://192.168.0.158:8081/produnion/login.php";
+    private static final String LOGIN_URL = "http://192.168.0.158:8083/produnion/login.php";
     //private static final String LOGIN_URL = "http://192.168.0.158:8081/webservice/login.php";
   //testing from a real server:
     //private static final String LOGIN_URL = "http://www.yourdomain.com/webservice/login.php";
@@ -70,6 +70,16 @@ public class Login extends Activity implements OnClickListener{
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_MESSAGE = "message";
     private static final String TAG_NOMBRE  = "name";
+
+    //JSON elementos para la tabla m_agente
+    private static final String TAG_id_agente = "id_agente";
+    private static final String TAG_id_agente_venta = "id_agente_venta";
+    private static final String TAG_id_empresa = "id_empresa";
+    private static final String TAG_id_usuario = "id_usuario";
+    private static final String TAG_nombre_agente = "nombre_agente";
+    private static final String TAG_nombre_usuario = "nombre_usuario";
+    private static final String TAG_pass_usuario = "pass_usuario";
+
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -214,6 +224,13 @@ public class Login extends Activity implements OnClickListener{
 
                     Log.d("Login Successful!", json.toString());
                 	Intent i = new Intent(Login.this, VMovil_Online_Pumovil.class);
+                    i.putExtra("nombre_usuario", json.getString(TAG_NOMBRE));
+                   /* i.putExtra("id_agente", json.getString(TAG_id_agente));
+                    i.putExtra("id_agente_venta", json.getString(TAG_id_agente_venta));
+                    i.putExtra("id_empresa", json.getString(TAG_id_empresa));
+                    i.putExtra("nombre_agente", json.getString(TAG_nombre_agente));
+                    i.putExtra("id_usuario", json.getString(TAG_id_usuario));
+                    i.putExtra("pass_usuario", json.getString(TAG_pass_usuario));*/
                 	finish();
     				startActivity(i);
                 	return json.getString(TAG_MESSAGE);
@@ -221,7 +238,7 @@ public class Login extends Activity implements OnClickListener{
                 if (success == 0) {
                 	Log.d("Login Failure!", json.getString(TAG_MESSAGE));
                 	return json.getString(TAG_MESSAGE);
-                	
+
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

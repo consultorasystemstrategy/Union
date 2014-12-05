@@ -201,10 +201,23 @@ public class DbAdapter_Agente {
         return mCursor;
     }
 
+
+    public void updateAgente(String id_agente_venta,String id_usuario,String id_empresa,String nombre_usuario,String nombre_agente,String pass_usuario){
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(AG_id_agente_venta,id_agente_venta);
+        initialValues.put(AG_id_usuario,id_usuario);
+        initialValues.put(AG_id_empresa,id_empresa);
+        initialValues.put(AG_nombre_agente,nombre_agente);
+        initialValues.put(AG_nom_usuario,nombre_usuario);
+        initialValues.put(AG_pass_usuario,pass_usuario);
+        mDb.update(SQLITE_TABLE_Agente, initialValues,null,null);
+    }
+
     public void insertSomeAgentes() {
 
         createAgentes(1, 1, 1, "URLISH", "AGENTE01", "123456", 1, 1000, 1000, "LIMA 01", 5, "BO001",
                 "FA001", "RP001", 1000, 2000, 3000);
+/*
         createAgentes(2, 1, 1, "JOSE", "AGENTE02", "123456", 1, 2000, 2000, "LIMA 02", 5, "BO002",
                 "FA002", "RP002", 12, 22, 32);
         createAgentes(3, 1, 1, "SCANER", "AGENTE03", "123456", 1, 3000, 3000, "LIMA 03", 5, "BO003",
@@ -213,7 +226,7 @@ public class DbAdapter_Agente {
                 "FA004", "RP004", 14, 24, 34);
         createAgentes(5, 1, 1, "PEDRO", "AGENTE05", "123456", 1, 5000, 5000, "LIMA 05", 5, "BO005",
                 "FA005", "RP005", 15, 25, 35);
-
+*/
     }
 
 }

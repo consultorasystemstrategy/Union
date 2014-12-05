@@ -32,8 +32,8 @@ public class VMovil_Resumen_Caja extends TabActivity {
 
         dbHelper = new DbAdapter_Stock_Agente(this);
         dbHelper.open();
-        dbHelper.deleteAllStockAgente();
-        dbHelper.insertSomeStockAgente();
+        //dbHelper.deleteAllStockAgente();
+        //dbHelper.insertSomeStockAgente();
 
 
         TabSpec spec = tabHost.newTabSpec("Tab1");

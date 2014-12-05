@@ -39,7 +39,7 @@ public class DbManager_Evento_Establec_POST extends Activity implements View.OnC
     // JSON parser class
     JSONParser jsonParser = new JSONParser();
 
-    private static String url_reg_establecs = "http://192.168.0.158:8081/produnion/ing_establec.php";
+    private static String url_reg_establecs = "http://192.168.0.158:8083/produnion/ing_establec.php";
 
     // JSON Node names
     private static final String TAG_SUCCESS = "success";

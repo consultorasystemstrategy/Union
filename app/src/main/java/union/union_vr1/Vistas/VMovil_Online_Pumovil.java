@@ -2,28 +2,45 @@ package union.union_vr1.Vistas;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
 
 import union.union_vr1.R;
+import union.union_vr1.Sqlite.DbAdapter_Agente;
+
 
 public class VMovil_Online_Pumovil extends Activity {
 
     private  WebView view;
+    private TextView textView;
+
+    private DbAdapter_Agente dbHelper;
+    private SimpleCursorAdapter dataAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.princ_web_view);
 
+        textView = (TextView)findViewById(R.id.tag_message);
+        Bundle bundle = getIntent().getExtras();
+        //textView.setText(bundle.getString("id_agente_venta"));
+
+
         view = (WebView)this.findViewById(R.id.webView);
         view.getSettings().setJavaScriptEnabled(true);
-        view.loadUrl("http://192.168.0.107:8084/SysMovilProductosUnion");
+        view.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
+        view.loadUrl("http://192.168.0.109:8084/SysMovilProductosUnion");
         view.setWebViewClient(new HelloWebViewCliente());
+
+        //displayUpdateAgente();
     }
 
     private class HelloWebViewCliente extends WebViewClient{
@@ -51,6 +68,21 @@ public class VMovil_Online_Pumovil extends Activity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void displayUpdateAgente(){
+        dbHelper = new DbAdapter_Agente(this);
+        dbHelper.open();
+        dbHelper.deleteAllAgentes();
+        dbHelper.insertSomeAgentes();
+        Bundle bundle = getIntent().getExtras();
+        String id_agente_venta = bundle.getString("id_agente_venta");
+        String id_usuario = bundle.getString("id_usuario");
+        String id_empresa = bundle.getString("id_empresa");
+        String nombre_usuario = bundle.getString("nombre_usuario");
+        String nombre_agente = bundle.getString("nombre_agente");
+        String pass_usuario = bundle.getString("pass_usuario");
+        dbHelper.updateAgente(id_agente_venta,id_usuario,id_empresa,nombre_usuario,nombre_agente,pass_usuario);
     }
 
 
