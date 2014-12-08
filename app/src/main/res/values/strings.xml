@@ -63,7 +63,7 @@
         <item>Atendido</item>
         <item>No Atendido</item>
     </string-array>
-    <!--Princ_evento_gasto.xml-->
+    <!--Principal_evento_gasto.xml-->
     <string-array name="procedenciaGasto">
         <item>planta</item>
         <item>ruta</item>

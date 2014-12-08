@@ -63,6 +63,7 @@ public class VMovil_Evento_Gasto extends Activity /*implements OnClickListener *
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //Creando la UI
         setContentView(R.layout.princ_evento_gasto);
 
         dbHelperInformeGasto = new DbAdapter_Informe_Gastos(this);
