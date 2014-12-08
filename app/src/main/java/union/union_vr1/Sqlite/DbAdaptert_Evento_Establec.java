@@ -126,13 +126,19 @@ public class DbAdaptert_Evento_Establec {
         Cursor mCursor = null;
         if (inputText == null  ||  inputText.length () == 0)  {
             mCursor = mDb.query(SQLITE_TABLE_Evento_Establec, new String[] {EE_id_evt_establec,
-                            EE_id_establec, EE_nom_establec, EE_nom_cliente, EE_doc_cliente},
+                            EE_id_establec, EE_id_cat_est, EE_id_tipo_doc_cliente, EE_id_estado_atencion,
+                            EE_nom_establec, EE_nom_cliente, EE_doc_cliente, EE_orden, EE_surtido_stock_ant,
+                            EE_surtido_venta_ant, EE_monto_credito, EE_dias_credito, EE_estado_no_atencion,
+                            EE_id_agente},
                     null, null, null, null, null);
 
         }
         else {
             mCursor = mDb.query(true, SQLITE_TABLE_Evento_Establec, new String[] {EE_id_evt_establec,
-                            EE_id_establec, EE_nom_establec, EE_nom_cliente, EE_doc_cliente},
+                            EE_id_establec, EE_id_cat_est, EE_id_tipo_doc_cliente, EE_id_estado_atencion,
+                            EE_nom_establec, EE_nom_cliente, EE_doc_cliente, EE_orden, EE_surtido_stock_ant,
+                            EE_surtido_venta_ant, EE_monto_credito, EE_dias_credito, EE_estado_no_atencion,
+                            EE_id_agente},
                     EE_nom_establec + " like '%" + inputText + "%'", null,
                     null, null, null, null);
         }

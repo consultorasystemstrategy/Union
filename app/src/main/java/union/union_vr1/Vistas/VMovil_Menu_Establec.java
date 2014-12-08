@@ -19,12 +19,14 @@ import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
 import union.union_vr1.R;
+import union.union_vr1.Sqlite.CursorAdapterEstablecimientoColor;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 
 public class VMovil_Menu_Establec extends Activity {
 
     private DbAdaptert_Evento_Establec dbHelper;
     private SimpleCursorAdapter dataAdapter;
+    private CursorAdapterEstablecimientoColor cursorAdapterEstablecimientoColor;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -79,9 +81,15 @@ public class VMovil_Menu_Establec extends Activity {
                 to,
                 0);
 
+        cursorAdapterEstablecimientoColor = new CursorAdapterEstablecimientoColor(this,cursor);
+
+
         ListView listView = (ListView) findViewById(R.id.VME_listar);
+        listView.setAdapter(cursorAdapterEstablecimientoColor);
+
+
         // Assign adapter to ListView
-        listView.setAdapter(dataAdapter);
+
         //bindView();
         //View v = listView.getSelectedView();
         //v.setBackgroundColor(Color.BLUE);
@@ -151,11 +159,11 @@ public class VMovil_Menu_Establec extends Activity {
 
             public void onTextChanged(CharSequence s, int start,
                                       int before, int count) {
-                dataAdapter.getFilter().filter(s.toString());
+                cursorAdapterEstablecimientoColor.getFilter().filter(s.toString());
             }
         });
 
-        dataAdapter.setFilterQueryProvider(new FilterQueryProvider() {
+        cursorAdapterEstablecimientoColor.setFilterQueryProvider(new FilterQueryProvider() {
             public Cursor runQuery(CharSequence constraint) {
                 return dbHelper.fetchEstablecsByName(constraint.toString());
             }
