@@ -5,6 +5,7 @@
     android:orientation="vertical"
     android:padding="6dip">
 
+    <!--
     <TextView
         android:id="@+id/VEG_nombreinf"
         android:layout_width="120dp"
@@ -24,5 +25,57 @@
         android:layout_width="70dp"
         android:layout_height="wrap_content"
         android:text="total"
-        android:layout_toRightOf="@+id/VEG_fechasinf" />
+        android:layout_toRightOf="@+id/VEG_fechasinf" />-->
+
+    <TextView
+        android:layout_width="20dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/VEG_textViewIdTipoGasto"
+        android:text="id" />
+
+    <TextView
+        android:layout_width="64dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/VEG_textViewNombreGasto"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/VEG_textViewIdTipoGasto"
+        android:layout_toEndOf="@+id/VEG_textViewIdTipoGasto"
+        android:text="Gasto" />
+    <TextView
+        android:layout_width="64dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/VEG_textViewTotal"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/VEG_textViewNombreGasto"
+        android:layout_toEndOf="@+id/VEG_textViewNombreGasto"
+        android:text="Total" />
+
+    <TextView
+        android:layout_width="64dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/VEG_textViewSubtotal"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/VEG_textViewTotal"
+        android:layout_toEndOf="@+id/VEG_textViewTotal"
+        android:text="Subtotal" />
+
+    <TextView
+        android:layout_width="64dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/VEG_textViewIgv"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/VEG_textViewSubtotal"
+        android:layout_toEndOf="@+id/VEG_textViewSubtotal"
+        android:text="igv" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="R."
+        android:id="@+id/VEG_textViewReferencia"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+
 </RelativeLayout>

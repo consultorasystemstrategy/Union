@@ -63,6 +63,18 @@
         <item>Atendido</item>
         <item>No Atendido</item>
     </string-array>
+    <!--Princ_evento_gasto.xml-->
+    <string-array name="procedenciaGasto">
+        <item>En planta</item>
+        <item>En ruta</item>
+    </string-array>
+    <string-array name="tipoDocumento">
+        <item>factura</item>
+        <item>boleta</item>
+        <item>ficha</item>
+    </string-array>
+
+
 
     <string name="title_activity_princ_venta_principal">princ_venta_principal</string>
     <string name="title_activity_vmovil__evento__establec">VMovil_Evento_Establec</string>

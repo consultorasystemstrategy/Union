@@ -22,6 +22,7 @@ public class DbAdapter_Informe_Gastos {
     public static final String GA_fecha = "ga_te_fecha";
     public static final String GA_hora = "ga_te_hora";
     public static final String GA_estado = "ga_int_estado";
+    public static final String GA_referencia = "ga_referencia";
     public static final String GA_id_agente = "ga_in_id_agente";
 
     public static final String TAG = "Informe_Gastos";
@@ -46,6 +47,7 @@ public class DbAdapter_Informe_Gastos {
                     +GA_fecha+" text,"
                     +GA_hora+" text,"
                     +GA_estado+" integer,"
+                    +GA_referencia+" text,"
                     +GA_id_agente+" integer);";
 
     public static final String DELETE_TABLE_INFORME_GASTOS = "DROP TABLE IF EXISTS " + SQLITE_TABLE_Informe_Gastos;
@@ -68,7 +70,7 @@ public class DbAdapter_Informe_Gastos {
 
     public long createInformeGastos(
             int id_tipo_gasto, int id_procedencia_gasto, int id_tipo_doc, String nom_tipo_gasto,
-            double subtotal, double igv, double total, String fecha, String hora, int estado,
+            double subtotal, double igv, double total, String fecha, String hora, int estado, String referencia,
             int id_agente) {
 
         ContentValues initialValues = new ContentValues();
@@ -82,6 +84,7 @@ public class DbAdapter_Informe_Gastos {
         initialValues.put(GA_fecha,fecha);
         initialValues.put(GA_hora,hora);
         initialValues.put(GA_estado,estado);
+        initialValues.put(GA_referencia, referencia);
         initialValues.put(GA_id_agente,id_agente);
 
         return mDb.insert(SQLITE_TABLE_Informe_Gastos, null, initialValues);
@@ -120,9 +123,13 @@ public class DbAdapter_Informe_Gastos {
 
     public Cursor fetchAllInformeGastos() {
 
-        Cursor mCursor = mDb.query(SQLITE_TABLE_Informe_Gastos, new String[] {GA_id_gasto,
-                        GA_nom_tipo_gasto, GA_subtotal, GA_igv, GA_total, GA_fecha},
-                null, null, null, null, null);
+        /*Cursor mCursor = mDb.query(SQLITE_TABLE_Informe_Gastos, new String[] {GA_id_gasto,GA_id_tipo_gasto,
+                        GA_nom_tipo_gasto, GA_subtotal, GA_igv, GA_total, GA_fecha, GA_referencia},
+                null, null, null, null, GA_id_gasto+" DESC");
+        */
+            Cursor mCursor = mDb.rawQuery("SELECT m_informe_gastos._id, m_tipo_gasto.tg_te_nom_tipo_gasto,m_informe_gastos.ga_re_total, m_informe_gastos.ga_re_subtotal, m_informe_gastos.ga_re_igv,m_informe_gastos.ga_referencia FROM m_informe_gastos, m_tipo_gasto " +
+                "WHERE m_informe_gastos.ga_in_id_tipo_gasto = m_tipo_gasto.tg_in_id_tgasto " +
+                    " ORDER BY m_informe_gastos._id DESC ",null);
 
         if (mCursor != null) {
             mCursor.moveToFirst();
@@ -131,13 +138,8 @@ public class DbAdapter_Informe_Gastos {
     }
 
     public void insertSomeInformeGastos() {
-
-        createInformeGastos(1, 1, 1, "COMBUSTIBLE", 10.5, 1.0, 11.5, "2014-11-12", "08:10:00", 1, 1);
-        createInformeGastos(2, 2, 2, "COMIDA", 20.5, 2.0, 22.5, "2014-11-12", "08:10:00", 1, 1);
-        createInformeGastos(3, 3, 3, "DEPARTAMENTO", 30.5, 3.0, 33.5, "2014-11-12", "08:10:00", 1, 1);
-        createInformeGastos(4, 4, 4, "VIAJE", 40.5, 4.0, 44.5, "2014-11-12", "08:10:00", 1, 1);
-        createInformeGastos(5, 5, 5, "NUEVO", 50.5, 5.0, 55.5, "2014-11-12", "08:10:00", 1, 1);
-
+        createInformeGastos(1, 1, 1, "COMBUSTIBLE", 10.5, 1.0, 11.5, "2014-11-12", "08:10:00", 1,"A001",  1);
+        createInformeGastos(2, 2, 2, "COMIDA", 20.5, 2.0, 22.5, "2014-11-12", "08:10:00", 1,"A002", 1);
     }
 
 }
