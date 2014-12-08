@@ -17,6 +17,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import union.union_vr1.CustomOnItemSelectedListener;
 import union.union_vr1.R;
 import union.union_vr1.Sqlite.DbAdapter_Informe_Gastos;
 import union.union_vr1.Sqlite.DbAdapter_Tipo_Gasto;
@@ -77,6 +78,7 @@ public class VMovil_Evento_Gasto extends Activity /*implements OnClickListener *
 
         spinnerTipoGasto = (Spinner) findViewById(R.id.spinner_VEG_tipoGasto);
         spinnerProcedenciaGasto = (Spinner) findViewById(R.id.spinner_VEG_procedenciaGasto);
+
         spinnerTipoDocumento = (Spinner) findViewById(R.id.spinner_VEG_tipoDocumento);
         listViewInformeGasto = (ListView) findViewById(R.id.VEG_listViewInformeGasto);
 
@@ -84,6 +86,82 @@ public class VMovil_Evento_Gasto extends Activity /*implements OnClickListener *
         editTextReferencia = (EditText) findViewById(R.id.editText_VEG_referencia);
 
         addItemsOnSpinners();
+        spinnerTipoGasto.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                String tipoGasto = adapterView.getItemAtPosition(i).toString();
+                TipoDeGasto tipoDeGasto = TipoDeGasto.valueOf(tipoGasto);
+
+                switch (tipoDeGasto){
+                    case Combustible:
+
+                        String  itemProcedenciaGasto = (String) spinnerProcedenciaGasto.getSelectedItem();
+                        ProcedenciaGasto procedenciaGasto = ProcedenciaGasto.valueOf(itemProcedenciaGasto);
+                        switch (procedenciaGasto) {
+                            case planta:
+                                addItemsTipoDocumento_CombustiblePlanta();
+                                break;
+                            case ruta:
+                                addItemsTipoDocumento_CombustibleRuta();
+                                break;
+
+                        }
+                        break;
+                    case Comida:
+                        addItemsTipoDocumento();
+                        break;
+                    case Departamento:
+                        addItemsTipoDocumento();
+                        break;
+                    case Viaje:
+                        addItemsTipoDocumento();
+                        break;
+                    case Nuevo:
+                        addItemsTipoDocumento();
+                        break;
+
+
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+        spinnerProcedenciaGasto.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+                int positionTipoGasto  = spinnerTipoGasto.getSelectedItemPosition();
+                positionTipoGasto++;
+
+
+                String procedenciaSeleccionada = (String) adapterView.getItemAtPosition(i);
+                ProcedenciaGasto procedenciaGasto = ProcedenciaGasto.valueOf(procedenciaSeleccionada);
+
+
+                if (positionTipoGasto==1) {
+                    switch (procedenciaGasto) {
+                        case planta:
+                            addItemsTipoDocumento_CombustiblePlanta();
+                            break;
+                        case ruta:
+                            addItemsTipoDocumento_CombustibleRuta();
+                            break;
+
+                    }
+
+                }else{
+
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
         displayListViewVEG();
         /*
         dbHelper = new DbAdapter_Informe_Gastos(this);
@@ -177,18 +255,38 @@ public class VMovil_Evento_Gasto extends Activity /*implements OnClickListener *
         //Le indicamos al spinner el adaptador a usar
         spinnerProcedenciaGasto.setAdapter(adapterProcedenciaGasto);
 
+        addItemsTipoDocumento();
+
+
+
+
+    }
+    public void addItemsTipoDocumento_CombustibleRuta(){
+        //Creamos el adaptador
+        ArrayAdapter<CharSequence> adapterTipoDocumento = ArrayAdapter.createFromResource(this,R.array.tipoDocumentoCombustibleRuta,android.R.layout.simple_spinner_item);
+        //Añadimos el layout para el menú
+        adapterTipoDocumento.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        //Le indicamos al spinner el adaptador a usar
+        spinnerTipoDocumento.setAdapter(adapterTipoDocumento);
+    }
+    public void addItemsTipoDocumento_CombustiblePlanta(){
+        //Creamos el adaptador
+        ArrayAdapter<CharSequence> adapterTipoDocumento = ArrayAdapter.createFromResource(this,R.array.tipoDocumentoCombustiblePlanta,android.R.layout.simple_spinner_item);
+        //Añadimos el layout para el menú
+        adapterTipoDocumento.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        //Le indicamos al spinner el adaptador a usar
+        spinnerTipoDocumento.setAdapter(adapterTipoDocumento);
+    }
+    public void addItemsTipoDocumento(){
         //Creamos el adaptador
         ArrayAdapter<CharSequence> adapterTipoDocumento = ArrayAdapter.createFromResource(this,R.array.tipoDocumento,android.R.layout.simple_spinner_item);
         //Añadimos el layout para el menú
         adapterTipoDocumento.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         //Le indicamos al spinner el adaptador a usar
         spinnerTipoDocumento.setAdapter(adapterTipoDocumento);
-
-
-
-
-
     }
+
+
     public void agegarGastos(View v) {
         int positionTipoGasto  = spinnerTipoGasto.getSelectedItemPosition();
         int positionProcedenciaGasto  = spinnerProcedenciaGasto.getSelectedItemPosition();
@@ -236,6 +334,14 @@ public class VMovil_Evento_Gasto extends Activity /*implements OnClickListener *
 
     private enum TipoDocumento {
         factura, ficha, boleta;
+    }
+
+    private enum ProcedenciaGasto{
+        planta, ruta
+    }
+
+    private enum TipoDeGasto{
+        Combustible, Comida, Departamento, Viaje, Nuevo
     }
 
     private void displayListViewVEG() {

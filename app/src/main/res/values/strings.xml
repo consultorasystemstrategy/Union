@@ -65,13 +65,19 @@
     </string-array>
     <!--Princ_evento_gasto.xml-->
     <string-array name="procedenciaGasto">
-        <item>En planta</item>
-        <item>En ruta</item>
+        <item>planta</item>
+        <item>ruta</item>
     </string-array>
     <string-array name="tipoDocumento">
         <item>factura</item>
         <item>boleta</item>
         <item>ficha</item>
+    </string-array>
+    <string-array name="tipoDocumentoCombustiblePlanta">
+        <item>ficha</item>
+    </string-array>
+    <string-array name="tipoDocumentoCombustibleRuta">
+        <item>factura</item>
     </string-array>
 
 

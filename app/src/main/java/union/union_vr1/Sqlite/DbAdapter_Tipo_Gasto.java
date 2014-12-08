@@ -102,11 +102,11 @@ public class DbAdapter_Tipo_Gasto {
 
     public void insertSomeTipoGastos() {
 
-        createTipoGastos(1, "COMBUSTIBLE");
-        createTipoGastos(2, "COMIDA");
-        createTipoGastos(3, "DEPARTAMENTO");
-        createTipoGastos(4, "VIAJE");
-        createTipoGastos(5, "NUEVO");
+        createTipoGastos(1, "Combustible");
+        createTipoGastos(2, "Comida");
+        createTipoGastos(3, "Departamento");
+        createTipoGastos(4, "Viaje");
+        createTipoGastos(5, "Nuevo");
 
     }
 
