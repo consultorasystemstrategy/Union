@@ -5,6 +5,7 @@
     android:orientation="vertical"
     android:padding="6dip">
 
+
     <TextView
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
@@ -74,5 +75,4 @@
         android:layout_above="@+id/textView2"
         android:layout_alignLeft="@+id/VME_establec"
         android:text="TextView" />
-
 </RelativeLayout>
