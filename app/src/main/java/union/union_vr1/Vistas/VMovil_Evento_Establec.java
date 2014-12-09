@@ -25,6 +25,8 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
     private int valEstado;
     private String valIdEstab;
     private Button mCobros, mCanDev, mVentas, mManten, mReport, mEstadoAtendido, mEstadoNoAtendido, mEstadoPendiente;
+
+    //Esto es un comentario
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -136,12 +138,12 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
                 //        "1", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.VEE_BTNmanten:
-                Intent idd = new Intent(this, VMovil_Canc_Histo.class);
+                Intent idd = new Intent(this, VMovil_Venta_Comprob.class);
                 idd.putExtra("idEstabX", valIdEstab);
                 startActivity(idd);
                 break;
             case R.id.VEE_BTNreport:
-                Intent is = new Intent(this, VMovil_Venta_Comprob.class);
+                Intent is = new Intent(this, VMovil_Canc_Histo.class);
                 is.putExtra("idEstabX", valIdEstab);
                 startActivity(is);
                 //Toast.makeText(getApplicationContext(),
