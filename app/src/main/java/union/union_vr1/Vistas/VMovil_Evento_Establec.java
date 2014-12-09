@@ -6,8 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -26,7 +24,7 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
     private String estadox;
     private int valEstado;
     private String valIdEstab;
-    private Button mCobros, mCanDev, mVentas, mManten, mReport, mEstado;
+    private Button mCobros, mCanDev, mVentas, mManten, mReport, mEstadoAtendido, mEstadoNoAtendido, mEstadoPendiente;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,14 +37,20 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
         mVentas = (Button)findViewById(R.id.VEE_BTNventas);
         mManten = (Button)findViewById(R.id.VEE_BTNmanten);
         mReport = (Button)findViewById(R.id.VEE_BTNreport);
-        mEstado = (Button)findViewById(R.id.VEE_BTNestado);
+        mEstadoAtendido = (Button)findViewById(R.id.VEE_BTNEstadoAtendido);
+        mEstadoNoAtendido = (Button)findViewById(R.id.VEE_BTNEstadoNoAtendido);
+        mEstadoPendiente = (Button)findViewById(R.id.VEE_BTNEstadoPendiente);
+
 
         mCobros.setOnClickListener(this);
         mCanDev.setOnClickListener(this);
         mVentas.setOnClickListener(this);
         mManten.setOnClickListener(this);
         mReport.setOnClickListener(this);
-        mEstado.setOnClickListener(this);
+        mEstadoAtendido.setOnClickListener(this);
+        mEstadoNoAtendido.setOnClickListener(this);
+        mEstadoPendiente.setOnClickListener(this);
+
 
         Bundle bundle = getIntent().getExtras();
         valIdEstab=bundle.getString("idEstab");
@@ -54,8 +58,7 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
 
         titulo = (TextView) findViewById(R.id.VEE_TVWtitulo);
         titulo.setText(titulox);
-        estado = (Button) findViewById(R.id.VEE_BTNestado);
-        estado.setText(estadox);
+
     }
 
     public void titulos(String ids){
@@ -67,7 +70,7 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
                     "\nNombre  : "+ cursor.getString(4) +
                     "\nOrden   : "+ cursor.getString(5);
                 if(cursor.getInt(6)==1){
-                    estadox = "PENDIENTE";
+                    estadox = "POR ATENDER";
                     valEstado = 1;
                 }
                 if(cursor.getInt(6)==2){
@@ -78,6 +81,11 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
                     estadox = "NO ATENDIDO";
                     valEstado = 3;
                 }
+                if(cursor.getInt(6)==4){
+                    estadox = "PENDIENTE";
+                    valEstado = 4;
+                }
+
             } while(cursor.moveToNext());
         }
     }
@@ -92,27 +100,11 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
         dialogo.setTitle("ESTADO");
         dialogo.setItems(items, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
-                if(item == 0){
-                    dbHelper.updateEstablecs1(idEstabl, 3, 1);
-                    titulos(idEstabl);
-                    estado.setText(estadox);
-                }
-                if(item == 1){
-                    dbHelper.updateEstablecs1(idEstabl, 3, 2);
-                    titulos(idEstabl);
-                    estado.setText(estadox);
-                }
-                if(item == 2){
-                    dbHelper.updateEstablecs1(idEstabl, 3, 3);
-                    titulos(idEstabl);
-                    estado.setText(estadox);
-                }
-                if(item == 3){
-                    dbHelper.updateEstablecs1(idEstabl, 3, 4);
-                    titulos(idEstabl);
-                    estado.setText(estadox);
-                }
-                Toast.makeText(getApplicationContext(), items[item], Toast.LENGTH_LONG).show();
+                    dbHelper.updateEstadoNoAtendido(idEstabl, 3, item,items[item]);
+                    Intent intent2= new Intent(getApplicationContext(), VMovil_Menu_Establec.class);
+                    startActivity(intent2);
+
+                Toast.makeText(getApplicationContext(), "No atendio por : " + items[item], Toast.LENGTH_LONG).show();
             }
         });
         dialogo.create();
@@ -155,13 +147,21 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
                 //Toast.makeText(getApplicationContext(),
                 //        "1", Toast.LENGTH_SHORT).show();
                 break;
-            case R.id.VEE_BTNestado:
-                titulos(valIdEstab);
-                if(valEstado == 1){
-                    eleccion(valIdEstab);
-                    //dbHelper.updateEstablecs(valIdEstab, 3);
-                }
+            case R.id.VEE_BTNEstadoAtendido:
 
+                dbHelper.updateEstadoEstablecs(valIdEstab, 2);
+                Intent intent= new Intent(this, VMovil_Menu_Establec.class);
+                startActivity(intent);
+                break;
+            case R.id.VEE_BTNEstadoNoAtendido:
+                eleccion(valIdEstab);
+                break;
+            case R.id.VEE_BTNEstadoPendiente:
+
+                dbHelper.updateEstadoEstablecs(valIdEstab, 4);
+                titulos(valIdEstab);
+                Intent intent2= new Intent(this, VMovil_Menu_Establec.class);
+                startActivity(intent2);
                 break;
             default:
                 break;

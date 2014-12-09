@@ -36,10 +36,7 @@ public class VMovil_Menu_Establec extends Activity {
         dbHelper = new DbAdaptert_Evento_Establec(this);
         dbHelper.open();
 
-        //Clean all data
-        dbHelper.deleteAllEstablecs();
         //Add some data
-        dbHelper.insertSomeEstablecs();
 
         //Generate ListView from SQLite Database
         displayListView();
@@ -56,6 +53,7 @@ public class VMovil_Menu_Establec extends Activity {
 
         Cursor cursor = dbHelper.fetchAllEstablecsXX();
 
+        /*
         // The desired columns to be bound
         String[] columns = new String[] {
                 DbAdaptert_Evento_Establec.EE_id_establec,
@@ -81,6 +79,7 @@ public class VMovil_Menu_Establec extends Activity {
                 to,
                 0);
 
+*/
         cursorAdapterEstablecimientoColor = new CursorAdapterEstablecimientoColor(this,cursor);
 
 
@@ -123,7 +122,7 @@ public class VMovil_Menu_Establec extends Activity {
                 String idEstablec =
                         cursor.getString(cursor.getColumnIndexOrThrow("ee_in_id_establec"));
 
-                int idEstEst = cursor.getInt(cursor.getColumnIndexOrThrow("ee_in_estado_no_atencion"));
+                int idEstEst = cursor.getInt(cursor.getColumnIndexOrThrow(DbAdaptert_Evento_Establec.EE_id_estado_no_atencion));
 
                 //if(idEstEst == 1){
                 //    view.setBackgroundColor(Color.BLUE);

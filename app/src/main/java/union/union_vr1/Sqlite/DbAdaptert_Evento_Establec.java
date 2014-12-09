@@ -23,8 +23,10 @@ public class DbAdaptert_Evento_Establec {
     public static final String EE_surtido_venta_ant = "ee_in_surtido_venta_ant";
     public static final String EE_monto_credito = "ee_re_monto_credito";
     public static final String EE_dias_credito = "ee_in_dias_credito";
-    public static final String EE_estado_no_atencion = "ee_in_estado_no_atencion";
+    public static final String EE_id_estado_no_atencion = "ee_in_id_estado_no_atencion";
     public static final String EE_id_agente = "ee_in_id_agente";
+    public static final String EE_estado_no_atencion_comentario ="ee_in_estado_no_atencion_comentario";
+
 
     public static final String TAG = "Evento_Establec";
     private DbHelper mDbHelper;
@@ -50,7 +52,8 @@ public class DbAdaptert_Evento_Establec {
                     +EE_surtido_venta_ant+" integer,"
                     +EE_monto_credito+" real,"
                     +EE_dias_credito+" integer,"
-                    +EE_estado_no_atencion+" integer,"
+                    +EE_id_estado_no_atencion+" integer,"
+                    +EE_estado_no_atencion_comentario+" text,"
                     +EE_id_agente+" integer);";
 
     public static final String DELETE_TABLE_EVENTO_ESTABLEC = "DROP TABLE IF EXISTS " + SQLITE_TABLE_Evento_Establec;
@@ -90,24 +93,41 @@ public class DbAdaptert_Evento_Establec {
         initialValues.put(EE_surtido_venta_ant,surtido_venta_ant);
         initialValues.put(EE_monto_credito,monto_credito);
         initialValues.put(EE_dias_credito,dias_credito);
-        initialValues.put(EE_estado_no_atencion,estado_no_atencion);
+        initialValues.put(EE_id_estado_no_atencion,estado_no_atencion);
         initialValues.put(EE_id_agente,id_agente);
 
         return mDb.insert(SQLITE_TABLE_Evento_Establec, null, initialValues);
     }
 
-    public void updateEstablecs(String id, int valor){
+    public void updateEstadoNoAtendido(String id, int estado, int estadoNoAtendido, String comentario){
         ContentValues initialValues = new ContentValues();
-        initialValues.put(EE_id_estado_atencion,valor);
+        initialValues.put(EE_id_estado_atencion, estado);
+        initialValues.put(EE_id_estado_no_atencion, estadoNoAtendido);
+        initialValues.put(EE_estado_no_atencion_comentario, comentario);
+
+        mDb.update(SQLITE_TABLE_Evento_Establec, initialValues,
+                EE_id_establec+"=?",new String[]{id});
+    }
+    public void updateEstadoEstablecs(String id, int estado){
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(EE_id_estado_atencion,estado);
+
+        mDb.update(SQLITE_TABLE_Evento_Establec, initialValues,
+                EE_id_establec+"=?",new String[]{id});
+    }
+    public void updateEstablecs(String id, int estado){
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(EE_id_estado_atencion,estado);
 
         mDb.update(SQLITE_TABLE_Evento_Establec, initialValues,
                 EE_id_establec+"=?",new String[]{id});
     }
 
+
     public void updateEstablecs1(String id, int aten, int naten){
         ContentValues initialValues = new ContentValues();
         initialValues.put(EE_id_estado_atencion,aten);
-        initialValues.put(EE_estado_no_atencion,naten);
+        initialValues.put(EE_id_estado_no_atencion,naten);
         mDb.update(SQLITE_TABLE_Evento_Establec, initialValues,
                 EE_id_establec+"=?",new String[]{id});
     }
@@ -128,7 +148,7 @@ public class DbAdaptert_Evento_Establec {
             mCursor = mDb.query(SQLITE_TABLE_Evento_Establec, new String[] {EE_id_evt_establec,
                             EE_id_establec, EE_id_cat_est, EE_id_tipo_doc_cliente, EE_id_estado_atencion,
                             EE_nom_establec, EE_nom_cliente, EE_doc_cliente, EE_orden, EE_surtido_stock_ant,
-                            EE_surtido_venta_ant, EE_monto_credito, EE_dias_credito, EE_estado_no_atencion,
+                            EE_surtido_venta_ant, EE_monto_credito, EE_dias_credito, EE_id_estado_atencion,
                             EE_id_agente},
                     null, null, null, null, null);
 
@@ -137,7 +157,7 @@ public class DbAdaptert_Evento_Establec {
             mCursor = mDb.query(true, SQLITE_TABLE_Evento_Establec, new String[] {EE_id_evt_establec,
                             EE_id_establec, EE_id_cat_est, EE_id_tipo_doc_cliente, EE_id_estado_atencion,
                             EE_nom_establec, EE_nom_cliente, EE_doc_cliente, EE_orden, EE_surtido_stock_ant,
-                            EE_surtido_venta_ant, EE_monto_credito, EE_dias_credito, EE_estado_no_atencion,
+                            EE_surtido_venta_ant, EE_monto_credito, EE_dias_credito, EE_id_estado_no_atencion,
                             EE_id_agente},
                     EE_nom_establec + " like '%" + inputText + "%'", null,
                     null, null, null, null);
@@ -212,7 +232,7 @@ public class DbAdaptert_Evento_Establec {
         Cursor mCursor = mDb.query(SQLITE_TABLE_Evento_Establec, new String[] {EE_id_evt_establec,
                         EE_id_establec, EE_id_cat_est, EE_id_tipo_doc_cliente, EE_id_estado_atencion,
                         EE_nom_establec, EE_nom_cliente, EE_doc_cliente, EE_orden, EE_surtido_stock_ant,
-                        EE_surtido_venta_ant, EE_monto_credito, EE_dias_credito, EE_estado_no_atencion,
+                        EE_surtido_venta_ant, EE_monto_credito, EE_dias_credito, EE_id_estado_no_atencion,
                         EE_id_agente},
                 null, null, null, null, null);
 

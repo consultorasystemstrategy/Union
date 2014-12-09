@@ -49,6 +49,12 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         dbHelper2.open();
         dbHelper = new DbAdaptert_Evento_Establec(this);
         dbHelper.open();
+
+
+        dbHelper.deleteAllEstablecs();
+        dbHelper.insertSomeEstablecs();
+
+
         dbHelper3 = new DbAdapter_Agente(this);
         dbHelper3.open();
         dbHelper4 = new DbAdapter_Comprob_Cobro(this);

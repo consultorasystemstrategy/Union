@@ -64,21 +64,50 @@
         android:layout_centerHorizontal="true"
         style="@style/button_text" />
 
-    <Button
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Estado"
-        android:id="@+id/VEE_BTNestado"
-        style="@style/button_text"
         android:layout_below="@+id/VEE_BTNreport"
-        android:layout_centerHorizontal="true" />
+        android:layout_toStartOf="@+id/VEE_BTNEstadoAtendido"
+        android:layout_alignRight="@+id/VEE_BTNreport"
+        android:layout_alignEnd="@+id/VEE_BTNreport"
+        android:id="@+id/linearLayout"
+        android:layout_marginTop="32dp">
+
+        <Button
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Atendido"
+            android:id="@+id/VEE_BTNEstadoAtendido"
+            style="@style/button_text"
+            android:layout_below="@+id/linearLayout"
+            android:layout_centerHorizontal="true"
+            android:layout_weight="1" />
+
+        <Button
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="No atendido"
+            android:id="@+id/VEE_BTNEstadoNoAtendido"
+            android:layout_weight="1"
+            android:textStyle="bold" />
+
+        <Button
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Pendiente"
+            android:id="@+id/VEE_BTNEstadoPendiente"
+            android:layout_weight="1"
+            android:textStyle="bold" />
+    </LinearLayout>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Datos"
         android:id="@+id/VEE_TVWdatosx"
-        android:layout_below="@+id/VEE_BTNestado"
+        android:layout_below="@+id/linearLayout"
         android:layout_centerHorizontal="true"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:gravity="center" />
