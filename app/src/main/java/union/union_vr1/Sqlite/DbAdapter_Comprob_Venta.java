@@ -108,18 +108,34 @@ public class DbAdapter_Comprob_Venta {
 
     }
 
+    public void updateComprobante(int id, int estado){
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(CV_estado_comp,estado);
+
+        mDb.update(SQLITE_TABLE_Comprob_Venta, initialValues,
+                CV_id_comprob+"=?",new String[]{""+id});
+    }
+
     public Cursor fetchComprobVentaByName(String inputText) throws SQLException {
         Log.w(TAG, inputText);
         Cursor mCursor = null;
         if (inputText == null  ||  inputText.length () == 0)  {
-            mCursor = mDb.query(SQLITE_TABLE_Comprob_Venta, new String[] {CV_id_comprob,
-                            CV_id_establec, CV_codigo_erp, CV_serie, CV_num_doc, CV_total},
+            mCursor = mDb.query(SQLITE_TABLE_Comprob_Venta,  new String[] {CV_id_comprob,
+
+                            CV_id_establec, CV_id_tipo_doc, CV_id_forma_pago, CV_id_tipo_venta,
+                            CV_codigo_erp, CV_serie, CV_num_doc, CV_base_imp, CV_igv, CV_total,
+                            CV_fecha_doc, CV_hora_doc, CV_estado_comp, CV_estado_conexion, CV_id_agente
+                    },
                     null, null, null, null, null);
 
         }
         else {
-            mCursor = mDb.query(true, SQLITE_TABLE_Comprob_Venta, new String[] {CV_id_comprob,
-                            CV_id_establec, CV_codigo_erp, CV_serie, CV_num_doc, CV_total},
+            mCursor = mDb.query(true, SQLITE_TABLE_Comprob_Venta,new String[] {CV_id_comprob,
+
+                            CV_id_establec, CV_id_tipo_doc, CV_id_forma_pago, CV_id_tipo_venta,
+                            CV_codigo_erp, CV_serie, CV_num_doc, CV_base_imp, CV_igv, CV_total,
+                            CV_fecha_doc, CV_hora_doc, CV_estado_comp, CV_estado_conexion, CV_id_agente
+                    },
                     CV_num_doc + " like '%" + inputText + "%'", null,
                     null, null, null, null);
         }
@@ -133,8 +149,11 @@ public class DbAdapter_Comprob_Venta {
     public Cursor fetchAllComprobVenta() {
 
         Cursor mCursor = mDb.query(SQLITE_TABLE_Comprob_Venta, new String[] {CV_id_comprob,
-                        CV_id_establec, CV_codigo_erp, CV_serie, CV_num_doc, CV_base_imp,
-                        CV_igv, CV_total},
+
+                        CV_id_establec, CV_id_tipo_doc, CV_id_forma_pago, CV_id_tipo_venta,
+                        CV_codigo_erp, CV_serie, CV_num_doc, CV_base_imp, CV_igv, CV_total,
+                        CV_fecha_doc, CV_hora_doc, CV_estado_comp, CV_estado_conexion, CV_id_agente
+                },
                 null, null, null, null, null);
 
         if (mCursor != null) {
@@ -146,8 +165,11 @@ public class DbAdapter_Comprob_Venta {
     public Cursor fetchAllComprobVentaByEstable(String id) {
 
         Cursor mCursor = mDb.query(SQLITE_TABLE_Comprob_Venta, new String[] {CV_id_comprob,
-                        CV_id_establec, CV_codigo_erp, CV_serie, CV_num_doc, CV_base_imp,
-                        CV_igv, CV_total},
+
+                        CV_id_establec, CV_id_tipo_doc, CV_id_forma_pago, CV_id_tipo_venta,
+                        CV_codigo_erp, CV_serie, CV_num_doc, CV_base_imp, CV_igv, CV_total,
+                        CV_fecha_doc, CV_hora_doc, CV_estado_comp, CV_estado_conexion, CV_id_agente
+                },
                 CV_id_establec + " = " + id, null, null, null, null);
 
         if (mCursor != null) {
@@ -158,10 +180,10 @@ public class DbAdapter_Comprob_Venta {
 
     public void insertSomeComprobVenta() {
 
-        createComprobVenta( 1, 1, 1, 1, "0001", "1A", 1, 10, 0, 10, "2014-11-12", "08:10:00", 0, 0, 1);
+        createComprobVenta( 1, 1, 1, 1, "0001", "1A", 1, 10, 0, 10, "2014-11-12", "08:10:00", 1, 0, 1);
         createComprobVenta( 2, 1, 1, 1, "0002", "2A", 2, 20, 0, 20, "2014-11-12", "08:10:00", 0, 0, 1);
-        createComprobVenta( 3, 1, 1, 1, "0003", "3A", 3, 30, 0, 30, "2014-11-12", "08:10:00", 0, 0, 1);
-        createComprobVenta( 4, 1, 1, 1, "0004", "4A", 4, 10, 0, 40, "2014-11-12", "08:10:00", 0, 0, 1);
+        createComprobVenta( 3, 1, 1, 1, "0003", "3A", 3, 30, 0, 30, "2014-11-12", "08:10:00", 1, 0, 1);
+        createComprobVenta( 4, 1, 1, 1, "0004", "4A", 4, 10, 0, 40, "2014-11-12", "08:10:00", 1, 0, 1);
         createComprobVenta( 5, 1, 1, 1, "0005", "5A", 5, 10, 0, 50, "2014-11-12", "08:10:00", 0, 0, 1);
 
     }

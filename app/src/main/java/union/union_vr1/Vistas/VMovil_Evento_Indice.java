@@ -51,9 +51,6 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         dbHelper.open();
 
 
-        dbHelper.deleteAllEstablecs();
-        dbHelper.insertSomeEstablecs();
-
 
         dbHelper3 = new DbAdapter_Agente(this);
         dbHelper3.open();
@@ -67,9 +64,15 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         dbHelper7.open();
         dbHelper8 = new DbAdapter_Histo_Comprob_Anterior(this);
         dbHelper8.open();
+
+
+
+        //Agregando datos de prueba  cada vez que se inicia esta vista
         dbHelper.deleteAllEstablecs();
         dbHelper.insertSomeEstablecs();
+
         dbHelper1.deleteAllComprobVenta();
+        dbHelper1.insertSomeComprobVenta();
         dbHelper2.deleteAllComprobVentaDetalle();
         dbHelper3.deleteAllAgentes();
         dbHelper3.insertSomeAgentes();

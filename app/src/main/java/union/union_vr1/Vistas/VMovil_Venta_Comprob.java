@@ -8,6 +8,7 @@ import android.bluetooth.BluetoothSocket;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -28,11 +29,19 @@ import java.util.Set;
 import java.util.UUID;
 
 import union.union_vr1.R;
+import union.union_vr1.Sqlite.CursorAdapterComprobanteVenta;
+import union.union_vr1.Sqlite.CursorAdapterEstablecimientoColor;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta_Detalle;
+import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 
 public class VMovil_Venta_Comprob extends Activity {
-    private Cursor cursor, cursorx;
+
+
+    private DbAdapter_Comprob_Venta dbHelper;
+    private CursorAdapterComprobanteVenta cursorAdapterComprobanteVenta;
+
+    /*private Cursor cursor, cursorx;
     private DbAdapter_Comprob_Venta dbHelper;
     private SimpleCursorAdapter dataAdapter;
     private String idComprob;
@@ -52,11 +61,19 @@ public class VMovil_Venta_Comprob extends Activity {
     int readBufferPosition;
     int counter;
     volatile boolean stopWorker;
+    */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.princ_venta_comprob);
-        Bundle bundle = getIntent().getExtras();
+
+
+        dbHelper = new DbAdapter_Comprob_Venta(this);
+        dbHelper.open();
+
+        displayListView();
+
+        /*Bundle bundle = getIntent().getExtras();
         valIdEstabX=bundle.getString("idEstabX");
         dbHelper = new DbAdapter_Comprob_Venta(this);
         dbHelper.open();
@@ -64,9 +81,101 @@ public class VMovil_Venta_Comprob extends Activity {
         dbHelpery.open();
         //Generate ListView from SQLite Database
         displayListView();
+        */
+    }
+
+
+    private void displayListView() {
+
+        Cursor cursor = dbHelper.fetchAllComprobVenta();
+        cursorAdapterComprobanteVenta = new CursorAdapterComprobanteVenta(this,cursor);
+
+
+        ListView listView = (ListView) findViewById(R.id.VVCO_listar);
+        listView.setAdapter(cursorAdapterComprobanteVenta);
+
+        listView.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> listView, View view,
+                                    int position, long id) {
+                // Get the cursor, positioned to the corresponding row in the result set
+                Cursor cursor = (Cursor) listView.getItemAtPosition(position);
+
+                // Get the state's capital from this row in the database.
+                int idComprobante =
+                        Integer.parseInt(cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Comprob_Venta.CV_id_comprob)));
+
+                int estado = Integer.parseInt(cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Comprob_Venta.CV_estado_comp)));
+
+
+                switch (estado){
+                    case 0:
+                        Toast.makeText(getApplicationContext(),
+                                "El comprobante ya se encuentra anulado", Toast.LENGTH_SHORT).show();
+                        break;
+                    case 1:
+                        dialogCambiarEstado(idComprobante);
+                        break;
+                    default:
+
+                        break;
+
+                }
+
+            }
+        });
+
+
+
+        EditText myFilter = (EditText) findViewById(R.id.VVCO_buscar);
+        myFilter.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {
+            }
+
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start,
+                                      int before, int count) {
+                cursorAdapterComprobanteVenta.getFilter().filter(s.toString());
+            }
+        });
+
+        cursorAdapterComprobanteVenta.setFilterQueryProvider(new FilterQueryProvider() {
+            public Cursor runQuery(CharSequence constraint) {
+                return dbHelper.fetchComprobVentaByName(constraint.toString());
+            }
+        });
 
     }
 
+
+    public void dialogCambiarEstado(final int idComprobante) {
+
+        final String[] items = {"Anular"};
+        AlertDialog.Builder dialogo = new AlertDialog.Builder(this);
+        dialogo.setTitle("Anular comprobante");
+        dialogo.setItems(items, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int item) {
+
+
+
+                        dbHelper.updateComprobante(idComprobante, 0);
+                        finish();
+                        Intent intent2= new Intent(getApplicationContext(), VMovil_Venta_Comprob.class);
+                        startActivity(intent2);
+
+                        Toast.makeText(getApplicationContext(), "Anulado: " , Toast.LENGTH_LONG).show();
+
+            }
+        });
+        dialogo.create();
+        dialogo.show();
+    }
+
+/*
     private void eleccion(String idComprobDet){
         //cursor = manager.BuscarAgentes(tv.getText().toString());
         cursorx = dbHelpery.fetchAllComprobVentaDetalleByIdComp(idComprobDet);
@@ -324,9 +433,6 @@ public class VMovil_Venta_Comprob extends Activity {
         }
     }
 
-    /*
-     * This will send data to be printed by the bluetooth printer
-     */
     public void sendData() throws IOException {
         try {
 
@@ -384,4 +490,5 @@ public class VMovil_Venta_Comprob extends Activity {
             e.printStackTrace();
         }
     }
+    */
 }
