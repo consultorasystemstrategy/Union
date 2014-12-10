@@ -103,7 +103,7 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
         // Assign adapter to ListView
         listView.setAdapter(dataAdapter);
 
-        //-------------------------------------------------------------
+        //----------------------------------------------------------------
 
 
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
