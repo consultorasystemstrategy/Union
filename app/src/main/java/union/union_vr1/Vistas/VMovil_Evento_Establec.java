@@ -14,6 +14,7 @@ import android.widget.Toast;
 import union.union_vr1.R;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 
+//Esti es yb cinebtario
 
 public class VMovil_Evento_Establec extends Activity implements View.OnClickListener {
     private Cursor cursor;
