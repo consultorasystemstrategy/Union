@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
@@ -68,6 +69,7 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
         mCancelar.setOnClickListener(this);
 
         displayListViewVCC();
+
     }
 
     private void displayListViewVCC() {
@@ -191,32 +193,43 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
         alertDialogBuilder.setTitle("Cancelar");
 
         // set dialog message
-        alertDialogBuilder
+        AlertDialog.Builder builder = alertDialogBuilder
                 .setMessage("¿Elegir?")
                 .setCancelable(false)
-                .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog,int id) {
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
                         idValNew = Double.parseDouble(mSPNcredit.getText().toString()) + idVal2;
-                        dbHelper.updateComprobCobrosCan(idCobro,getDatePhone(),getTimePhone(),idValNew,estadox);
+                        dbHelper.updateComprobCobrosCan(idCobro, getDatePhone(), getTimePhone(), idValNew, estadox);
                         Toast.makeText(getApplicationContext(),
                                 "Actualizado", Toast.LENGTH_SHORT).show();
-                        displayListViewVCC();
+
+                       // displayListViewVCC();
                         mSPNcredit.setText("0.0");
+                        Back();
+
                     }
+
                 })
-                .setNegativeButton("No",new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog,int id) {
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
                         Toast.makeText(getApplicationContext(),
                                 "Cancelo ", Toast.LENGTH_SHORT).show();
                     }
                 });
-                //displayListViewVCC();
+        //displayListViewVCC();
 
         // create alert dialog
         AlertDialog alertDialog = alertDialogBuilder.create();
 
         // show it
         alertDialog.show();
+
+    }
+    public void Back(){
+
+        Intent returnAc = new Intent(this,VMovil_Evento_Establec.class);
+        returnAc.putExtra("idEstab",estabX);
+        startActivity(returnAc);
     }
 
     public void select2(){
@@ -236,7 +249,8 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
                         dbHelper.updateComprobCobrosCan(idCobro,"","",0,"0");
                         Toast.makeText(getApplicationContext(),
                                 "Anulado", Toast.LENGTH_SHORT).show();
-                        displayListViewVCC();
+                        Back();
+                        //displayListViewVCC();
                         mSPNcredit.setText("0.0");
                     }
                 })
