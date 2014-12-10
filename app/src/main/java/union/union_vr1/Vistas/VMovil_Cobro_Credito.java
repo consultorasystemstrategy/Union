@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,6 +17,7 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -97,9 +99,61 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
                 to,
                 0);
 
-        ListView listView = (ListView) findViewById(R.id.VCCR_LSTcresez);
+        final ListView listView = (ListView) findViewById(R.id.VCCR_LSTcresez);
         // Assign adapter to ListView
         listView.setAdapter(dataAdapter);
+
+        //-------------------------------------------------------------
+
+
+        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                // TODO Auto-generated method stub
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem,
+                                 int visibleItemCount, int totalItemCount) {
+                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                for(int i = 0; i<totalItemCount;i++){
+                    Cursor cr = (Cursor) listView.getItemAtPosition(i);
+                    String fecha_Programada = cr.getString(cr.getColumnIndexOrThrow("cc_te_fecha_programada"));
+
+                    try {
+
+                        Date dSqlite = df.parse(fecha_Programada);
+                        Date dSistema = df.parse(getDatePhone());
+
+                        if(dSqlite.before(dSistema)){
+                            View v = listView.getChildAt(i);
+                            if(v != null) {
+                                v.setBackgroundColor(0xffff0000);
+                            }
+                        }
+                        if(dSqlite.after(dSistema)){
+                            View v = listView.getChildAt(i);
+                            if(v != null) {
+                                v.setBackgroundColor(0xff00ff00);
+                            }
+                        }
+                        if(dSqlite.equals(dSistema)){
+                            View v = listView.getChildAt(i);
+                            if(v != null) {
+                                v.setBackgroundColor(0xffff0000);
+                            }
+                        }
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+            }
+        } );
+
+        //-----------------------------------------------------------------------------------------
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

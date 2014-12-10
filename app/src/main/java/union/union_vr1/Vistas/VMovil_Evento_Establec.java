@@ -5,13 +5,21 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.LightingColorFilter;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
 import union.union_vr1.R;
+import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 
 //Esti es yb cinebtario
@@ -19,6 +27,7 @@ import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 public class VMovil_Evento_Establec extends Activity implements View.OnClickListener {
     private Cursor cursor;
     private DbAdaptert_Evento_Establec dbHelper;
+    private DbAdapter_Comprob_Cobro dbHelper44;
     private TextView titulo;
     private String titulox;
     private Button estado;
@@ -62,7 +71,60 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
         titulo = (TextView) findViewById(R.id.VEE_TVWtitulo);
         titulo.setText(titulox);
 
+        //.-------------------------------------
+        dbHelper44 = new DbAdapter_Comprob_Cobro(this);
+        dbHelper44.open();
+        Cursor cursor = dbHelper44.listaComprobantes();
+
+        //Recorremos el cursor hasta que no haya más registros
+
+        int i ;
+
+        if (cursor.moveToFirst()) {
+            for (i=0; i<1;i++) {
+                String fecha = cursor.getString(0);
+                try {
+                    cursor.moveToNext();
+                    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                    Date dSqlite = df.parse(fecha);
+                    Date dSistema = df.parse(fech());
+
+                    if (dSqlite.equals(dSistema)) {
+                        Toast.makeText(getApplicationContext(), "Hay Deudas por Cobrar ", Toast.LENGTH_SHORT).show();
+                        mCobros.getBackground().setColorFilter(new LightingColorFilter(0xffff0000, 0xffff0000));
+                    }
+                    if (dSqlite.before(dSistema)) {
+                        Toast.makeText(getApplicationContext(), "Hay Deudas por Cobrar", Toast.LENGTH_SHORT).show();
+                        mCobros.getBackground().setColorFilter(new LightingColorFilter(0xffff0000, 0xffff0000));
+                    }
+                    if (dSqlite.after(dSistema)) {
+                        Toast.makeText(getApplicationContext(), "Fechas Proximas", Toast.LENGTH_SHORT).show();
+                        mCobros.getBackground().setColorFilter(new LightingColorFilter(0xff00ff00, 0xff00ff00));
+                    }
+
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+
+
+        cursor.close();
+
     }
+    private String fech() throws ParseException {
+        Calendar cal = new GregorianCalendar();
+        Date date = cal.getTime();
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        String formatteDate = df.format(date);
+        Date d = df.parse(formatteDate);
+
+        return formatteDate;
+    }
+//-------------------------------------------------------------------------------------------------------------------------
+
+
 
     public void titulos(String ids){
         cursor = dbHelper.fetchEstablecsById(ids);

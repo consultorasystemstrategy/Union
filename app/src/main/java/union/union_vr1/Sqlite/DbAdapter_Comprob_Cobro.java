@@ -192,6 +192,11 @@ public class DbAdapter_Comprob_Cobro {
         return mCursor;
 
     }
+    public Cursor listaComprobantes() {
+
+        Cursor mCursor = mDb.rawQuery("SELECT  cc_te_fecha_programada  FROM m_comprob_cobro order by cc_te_fecha_programada asc",null);
+        return mCursor;
+    }
 
     public void insertSomeComprobCobros() {
 
