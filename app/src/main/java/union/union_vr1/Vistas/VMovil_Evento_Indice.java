@@ -38,7 +38,7 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
     private Button estado;
     private String estadox;
     private String valIdEstab;
-    private Button mClient, mInfgas, mResume, mCarinv, mTrainv;
+    private Button mClient, mInfgas, mResume, mCarinv, mTrainv,mCobroTotal;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,12 +92,13 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         mResume = (Button)findViewById(R.id.VEI_BTNresume);
         mCarinv = (Button)findViewById(R.id.VEI_BTNcarinv);
         mTrainv = (Button)findViewById(R.id.VEI_BTNtrainv);
-
+        mCobroTotal = (Button) findViewById(R.id.VEI_BTNcobrarTodo);
         mClient.setOnClickListener(this);
         mInfgas.setOnClickListener(this);
         mResume.setOnClickListener(this);
         mCarinv.setOnClickListener(this);
         mTrainv.setOnClickListener(this);
+        mCobroTotal.setOnClickListener(this);
     }
 
     @Override
@@ -123,6 +124,11 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
             case R.id.VEI_BTNtrainv:
                 Intent ip = new Intent(this, DbManager_Evento_Establec_POST.class);
                 startActivity(ip);
+                break;
+            case R.id.VEI_BTNcobrarTodo:
+                Intent cT = new Intent(this, VMovil_Cobros_Totales.class);
+                startActivity(cT);
+
                 break;
             default:
                 break;

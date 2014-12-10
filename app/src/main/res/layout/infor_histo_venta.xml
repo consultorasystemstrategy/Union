@@ -15,7 +15,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/cliente"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/textView1"
@@ -24,20 +24,20 @@
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/fecha"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView2"
-        android:layout_below="@+id/textView2"
+        android:layout_alignLeft="@+id/cliente"
+        android:layout_below="@+id/cliente"
         android:text="Cant.   :       "
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/monto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView3"
-        android:layout_below="@+id/textView3"
+        android:layout_alignLeft="@+id/fecha"
+        android:layout_below="@+id/fecha"
         android:text="Fecha  : "
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -45,8 +45,8 @@
         android:id="@+id/textView5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView4"
-        android:layout_below="@+id/textView4"
+        android:layout_alignLeft="@+id/monto"
+        android:layout_below="@+id/monto"
         android:text="Monto : "
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -57,33 +57,33 @@
         android:text="TextView"
         android:layout_alignBaseline="@+id/textView1"
         android:layout_alignBottom="@+id/textView1"
-        android:layout_toRightOf="@+id/textView3" />
+        android:layout_toRightOf="@+id/fecha" />
 
     <TextView
         android:id="@+id/VHV_produ"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/textView2"
-        android:layout_alignBottom="@+id/textView2"
-        android:layout_toRightOf="@+id/textView3"
+        android:layout_alignBaseline="@+id/cliente"
+        android:layout_alignBottom="@+id/cliente"
+        android:layout_toRightOf="@+id/fecha"
         android:text="TextView" />
 
     <TextView
         android:id="@+id/VHV_canti"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/textView3"
-        android:layout_alignBottom="@+id/textView3"
-        android:layout_toRightOf="@+id/textView3"
+        android:layout_alignBaseline="@+id/fecha"
+        android:layout_alignBottom="@+id/fecha"
+        android:layout_toRightOf="@+id/fecha"
         android:text="TextView" />
 
     <TextView
         android:id="@+id/VHV_fecha"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/textView4"
-        android:layout_alignBottom="@+id/textView4"
-        android:layout_toRightOf="@+id/textView3"
+        android:layout_alignBaseline="@+id/monto"
+        android:layout_alignBottom="@+id/monto"
+        android:layout_toRightOf="@+id/fecha"
         android:text="TextView" />
 
     <TextView
@@ -92,7 +92,7 @@
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/textView5"
         android:layout_alignBottom="@+id/textView5"
-        android:layout_toRightOf="@+id/textView3"
+        android:layout_toRightOf="@+id/fecha"
         android:text="TextView" />
 
 </RelativeLayout>

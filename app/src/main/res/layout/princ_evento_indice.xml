@@ -27,13 +27,21 @@
         android:layout_below="@+id/VEI_TVWtitulo"
         android:layout_centerHorizontal="true"
         style="@style/button_text" />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Cobrar Todo"
+        android:id="@+id/VEI_BTNcobrarTodo"
+        android:layout_below="@+id/VEI_BTNclient"
+        android:layout_centerHorizontal="true"
+        style="@style/button_text" />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Informe de Gastos"
         android:id="@+id/VEI_BTNinfgas"
-        android:layout_below="@+id/VEI_BTNclient"
+        android:layout_below="@+id/VEI_BTNcobrarTodo"
         android:layout_centerHorizontal="true"
         style="@style/button_text" />
 

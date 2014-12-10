@@ -112,7 +112,7 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
 
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
-                // TODO Auto-generated method stub
+
             }
 
             @Override
@@ -137,7 +137,7 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
                         if(dSqlite.after(dSistema)){
                             View v = listView.getChildAt(i);
                             if(v != null) {
-                                v.setBackgroundColor(0xff00ff00);
+                                v.setBackgroundColor(0xffffff00);
                             }
                         }
                         if(dSqlite.equals(dSistema)){

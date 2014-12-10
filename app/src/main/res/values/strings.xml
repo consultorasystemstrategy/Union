@@ -19,6 +19,7 @@
     <string name="VHV_busqueda">Buscar Historico…</string>
     <string name="VCH_titulo">Lista Canc. Historico!</string>
     <string name="VCH_busqueda">Buscar Canc. Historico…</string>
+
     <string-array name="country_arrays">
         <item>Malaysia</item>
         <item>United States</item>
@@ -63,7 +64,7 @@
         <item>Atendido</item>
         <item>No Atendido</item>
     </string-array>
-    <!--Principal_evento_gasto.xml-->
+    <!-- Principal_evento_gasto.xml -->
     <string-array name="procedenciaGasto">
         <item>planta</item>
         <item>ruta</item>
@@ -80,10 +81,8 @@
         <item>factura</item>
     </string-array>
 
-
-
     <string name="title_activity_princ_venta_principal">princ_venta_principal</string>
     <string name="title_activity_vmovil__evento__establec">VMovil_Evento_Establec</string>
+    <string name="title_activity_vmovil__cobros__totales">VMovil_Cobros_Totales</string>
 
 </resources>
-

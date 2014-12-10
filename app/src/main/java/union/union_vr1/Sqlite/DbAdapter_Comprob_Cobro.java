@@ -184,7 +184,7 @@ public class DbAdapter_Comprob_Cobro {
                         CC_id_establec, CC_id_comprob, CC_id_plan_pago, CC_id_plan_pago_detalle,
                         CC_desc_tipo_doc, CC_doc, CC_fecha_programada, CC_monto_a_pagar,
                         CC_fecha_cobro, CC_monto_cobrado, CC_estado_cobro},
-                CC_id_establec + " = " + inputText, null,
+                CC_id_establec + " = " + inputText +" and cc_in_estado_cobro ='0' order by cc_te_fecha_programada asc", null,
                 null, null, null, null);
         if (mCursor != null) {
             mCursor.moveToFirst();
@@ -192,17 +192,28 @@ public class DbAdapter_Comprob_Cobro {
         return mCursor;
 
     }
-    public Cursor listaComprobantes() {
+    public Cursor listaComprobantes(int establex) {
 
-        Cursor mCursor = mDb.rawQuery("SELECT  cc_te_fecha_programada  FROM m_comprob_cobro order by cc_te_fecha_programada asc",null);
+        Cursor mCursor = mDb.rawQuery("SELECT  cc_te_fecha_programada  FROM   m_comprob_cobro where cc_in_id_establec="+establex+" and  cc_in_estado_cobro ='0' order by cc_te_fecha_programada asc",null);
         return mCursor;
     }
+    public Cursor listarComprobantesToCobros(){
+        Cursor mCursor = mDb.rawQuery("SELECT * FROM  m_comprob_cobro",null);
+        return null;
+    }
+
 
     public void insertSomeComprobCobros() {
 
-        createComprobCobros(1, 1, 1, 1, "FACTURA", "FAC-0001", "2014-11-12", 1000, "",
+        createComprobCobros(1, 1, 1, 1, "FACTURA", "FAC-0001", "2014-12-12", 1000, "",
                 "", 0, 1, 1);
-        createComprobCobros(1, 1, 1, 2, "FACTURA", "FAC-0001", "2014-11-19", 1000, "",
+        createComprobCobros(1, 1, 1, 2, "FACTURA", "FAC-0001", "2014-12-19", 1000, "",
+                "", 0, 0, 1);
+        createComprobCobros(1, 1, 1, 2, "FACTURA", "FAC-0001", "2014-12-19", 500, "",
+                "", 0, 0, 1);
+        createComprobCobros(1, 1, 1, 2, "FACTURA", "FAC-0001", "2014-12-01", 200, "",
+                "", 0, 0, 1);
+        createComprobCobros(2, 2, 2, 2, "FACTURA", "FAC-0002", "2014-12-01", 200, "",
                 "", 0, 0, 1);
     }
 

@@ -5,14 +5,11 @@ import java.util.List;
 
 
 import android.database.Cursor;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.app.Activity;
-import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
@@ -26,7 +23,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         dbHelper = new DbAdaptert_Evento_Establec(this);
         dbHelper.open();
-        ListView lv = (ListView) findViewById(R.id.listView);
+        ListView lv = (ListView) findViewById(R.id.listCobrosTotales);
         PlanetAdapter pa = new PlanetAdapter(initList(), this);
 
         lv.setAdapter(pa);

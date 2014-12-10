@@ -82,7 +82,7 @@
                                 android:layout_height="wrap_content"
                                 android:textAppearance="?android:attr/textAppearanceMedium"
                                 android:text="Cant."
-                                android:id="@+id/textView4"
+                                android:id="@+id/monto"
                                 android:height="40dp"
                                 android:width="50dp"/>
 
