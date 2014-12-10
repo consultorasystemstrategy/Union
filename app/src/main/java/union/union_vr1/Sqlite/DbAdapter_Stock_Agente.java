@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+import android.widget.Toast;
 
 import union.union_vr1.Conexion.DbHelper;
 
@@ -119,14 +120,40 @@ public class DbAdapter_Stock_Agente {
 
     }
 
-    public void updateStockAgente(String id, String val1, String val2, String val3, String val4){
+    public void updateStockAgente(int id_producto, int cantidadFinal,int disponible, int ventas, int fisico){
+
         ContentValues initialValues = new ContentValues();
-        initialValues.put(ST_final,val1);
-        initialValues.put(ST_disponible,val2);
-        initialValues.put(ST_ventas,val3);
-        initialValues.put(ST_fisico,val4);
+        initialValues.put(ST_final, cantidadFinal);
+        initialValues.put(ST_disponible,disponible);
+        initialValues.put(ST_ventas,ventas);
+        initialValues.put(ST_fisico,fisico);
         mDb.update(SQLITE_TABLE_Stock_Agente, initialValues,
-                ST_id_producto+"=?",new String[]{id});
+                ST_id_producto+"=?",new String[]{""+id_producto});
+    }
+
+    public void updateStockAgenteCantidad(int id_producto, int cantidadAnulada, Context context){
+        Cursor mCursor = null;
+        mCursor = mDb.query(true, SQLITE_TABLE_Stock_Agente, new String[] {ST_id_producto,
+                        ST_final, ST_disponible, ST_ventas, ST_fisico},
+                ST_id_producto + " = " + id_producto, null, null, null, null, null);
+
+        int cantidadFinal = 0;
+
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+            cantidadFinal  = mCursor.getInt(mCursor.getColumnIndex(ST_final));
+        }
+        int sumado = cantidadFinal+cantidadAnulada;
+        int restado = cantidadFinal-cantidadAnulada;
+
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(ST_final,sumado);
+        initialValues.put(ST_disponible,sumado);
+        initialValues.put(ST_ventas,restado);
+        initialValues.put(ST_fisico,sumado);
+        mDb.update(SQLITE_TABLE_Stock_Agente, initialValues,
+                ST_id_producto+"=?",new String[]{""+id_producto});
+
     }
 
     public Cursor fetchStockAgentePrecioByName(String inputText) throws SQLException {

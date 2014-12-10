@@ -177,10 +177,11 @@ public class DbAdapter_Comprob_Venta_Detalle {
         return mCursor;
     }
 
-    public Cursor fetchAllComprobVentaDetalleByIdComp(String id) {
+    public Cursor fetchAllComprobVentaDetalleByIdComp(int id) {
 
         Cursor mCursor = mDb.query(SQLITE_TABLE_Comprob_Venta_Detalle, new String[] {CD_comp_detalle,
-                        CD_id_comprob, CD_nom_producto, CD_cantidad, CD_precio_unit, CD_importe},
+                        CD_id_comprob, CD_id_producto, CD_costo_venta, CD_nom_producto, CD_cantidad,
+                        CD_precio_unit, CD_importe, CD_prom_anterior, CD_devuelto},
                 CD_id_comprob + " = " + id, null, null, null, null);
 
         if (mCursor != null) {
@@ -188,6 +189,7 @@ public class DbAdapter_Comprob_Venta_Detalle {
         }
         return mCursor;
     }
+
 
     public void insertSomeComprobVentaDetalle() {
 

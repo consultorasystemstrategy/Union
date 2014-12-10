@@ -33,6 +33,8 @@ import union.union_vr1.Sqlite.CursorAdapterComprobanteVenta;
 import union.union_vr1.Sqlite.CursorAdapterEstablecimientoColor;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta_Detalle;
+import union.union_vr1.Sqlite.DbAdapter_Histo_Venta_Detalle;
+import union.union_vr1.Sqlite.DbAdapter_Stock_Agente;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 
 public class VMovil_Venta_Comprob extends Activity {
@@ -40,6 +42,12 @@ public class VMovil_Venta_Comprob extends Activity {
 
     private DbAdapter_Comprob_Venta dbHelper;
     private CursorAdapterComprobanteVenta cursorAdapterComprobanteVenta;
+    private DbAdapter_Comprob_Venta_Detalle dbHelper_Comp_Venta_Detalle;
+    private DbAdapter_Stock_Agente dbHelper_Stock_Agente;
+
+    private int idComprobante;
+
+
 
     /*private Cursor cursor, cursorx;
     private DbAdapter_Comprob_Venta dbHelper;
@@ -70,6 +78,11 @@ public class VMovil_Venta_Comprob extends Activity {
 
         dbHelper = new DbAdapter_Comprob_Venta(this);
         dbHelper.open();
+        dbHelper_Comp_Venta_Detalle = new DbAdapter_Comprob_Venta_Detalle(this);
+        dbHelper_Comp_Venta_Detalle.open();
+        dbHelper_Stock_Agente = new DbAdapter_Stock_Agente(this);
+        dbHelper_Stock_Agente.open();
+
 
         displayListView();
 
@@ -102,7 +115,7 @@ public class VMovil_Venta_Comprob extends Activity {
                 Cursor cursor = (Cursor) listView.getItemAtPosition(position);
 
                 // Get the state's capital from this row in the database.
-                int idComprobante =
+                idComprobante =
                         Integer.parseInt(cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Comprob_Venta.CV_id_comprob)));
 
                 int estado = Integer.parseInt(cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Comprob_Venta.CV_estado_comp)));
@@ -161,13 +174,35 @@ public class VMovil_Venta_Comprob extends Activity {
             public void onClick(DialogInterface dialog, int item) {
 
 
+                        Cursor cursorComprobanteVentaDetalle = dbHelper_Comp_Venta_Detalle.fetchAllComprobVentaDetalleByIdComp(idComprobante);
+                        cursorComprobanteVentaDetalle.moveToFirst();
+
+                int id_producto;
+                int cantidad;
+                int precioUnitario;
+                int costeVenta;
+
+                        cursorComprobanteVentaDetalle.moveToFirst();
+                        if (cursorComprobanteVentaDetalle.getCount()>0) {
+                            do {
+                                id_producto = cursorComprobanteVentaDetalle.getInt(cursorComprobanteVentaDetalle.getColumnIndex(DbAdapter_Comprob_Venta_Detalle.CD_id_producto));
+                                cantidad = cursorComprobanteVentaDetalle.getInt(cursorComprobanteVentaDetalle.getColumnIndex(DbAdapter_Comprob_Venta_Detalle.CD_cantidad));
+
+                                dbHelper_Stock_Agente.updateStockAgenteCantidad(id_producto, cantidad, getApplicationContext());
+
+                            } while (cursorComprobanteVentaDetalle.moveToNext());
+                        }else
+                        {
+                            Toast.makeText(getApplicationContext(), "No ha registros de este comprobante de venta : ", Toast.LENGTH_LONG).show();
+                        }
 
                         dbHelper.updateComprobante(idComprobante, 0);
+
                         finish();
                         Intent intent2= new Intent(getApplicationContext(), VMovil_Venta_Comprob.class);
                         startActivity(intent2);
 
-                        Toast.makeText(getApplicationContext(), "Anulado: " , Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "Comprobante Anulado " , Toast.LENGTH_LONG).show();
 
             }
         });

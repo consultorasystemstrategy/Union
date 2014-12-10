@@ -459,6 +459,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
                                     TipoDocS, DetCompr, fechaCobro, valtotalp, "", "", 0, 0, 1);
                         }
                         if(item == 5){
+
                             valtotalp = valtotal/4;
                             valtotalp = roundTwoDecimals(valtotalp);
                             fechaCobro = getDatePhone1();
@@ -582,6 +583,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
         //colors.setBackgroundColor(Color.WHITE);
         stoant.setText(String.valueOf(mens01));
         stohoy.setText(String.valueOf(mens02));
+
     }
 
     public void procesarCES(){
@@ -735,8 +737,8 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
         int cant2 = cursorw.getInt(2);
         int cant3 = cursorw.getInt(3);
         int cant4 = cursorw.getInt(4);
-        dbHelperp.updateStockAgente(String.valueOf(idProd), String.valueOf(cant1 - Cant),
-                String.valueOf(cant2 - Cant), String.valueOf(cant3 + Cant), String.valueOf(cant4 - Cant));
+        dbHelperp.updateStockAgente(idProd, cant1 - Cant,
+                cant2 - Cant, cant3 + Cant, cant4 - Cant);
     }
 
     double roundTwoDecimals(double d)
