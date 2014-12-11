@@ -16,7 +16,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
-        android:id="@+id/cliente"
+        android:id="@+id/clienteCobrosT"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/textView1"
@@ -25,20 +25,20 @@
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
-        android:id="@+id/fecha"
+        android:id="@+id/fechaCobros"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/cliente"
-        android:layout_below="@+id/cliente"
+        android:layout_alignLeft="@+id/clienteCobrosT"
+        android:layout_below="@+id/clienteCobrosT"
         android:text="Nombre: "
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
-        android:id="@+id/monto"
+        android:id="@+id/montoCobros"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/fecha"
-        android:layout_below="@+id/fecha"
+        android:layout_alignLeft="@+id/fechaCobros"
+        android:layout_below="@+id/fechaCobros"
         android:text="Docum: "
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -46,17 +46,17 @@
         android:id="@+id/VME_nombre"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/fecha"
-        android:layout_alignBottom="@+id/fecha"
-        android:layout_toRightOf="@+id/fecha"
+        android:layout_alignBaseline="@+id/fechaCobros"
+        android:layout_alignBottom="@+id/fechaCobros"
+        android:layout_toRightOf="@+id/fechaCobros"
         android:text="TextView" />
 
     <TextView
         android:id="@+id/VME_docum"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/monto"
-        android:layout_alignBottom="@+id/monto"
+        android:layout_alignBaseline="@+id/montoCobros"
+        android:layout_alignBottom="@+id/montoCobros"
         android:layout_alignLeft="@+id/VME_nombre"
         android:text="TextView" />
 
@@ -64,15 +64,15 @@
         android:id="@+id/VME_establec"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/fecha"
-        android:layout_toRightOf="@+id/fecha"
+        android:layout_above="@+id/fechaCobros"
+        android:layout_toRightOf="@+id/fechaCobros"
         android:text="TextView" />
 
     <TextView
         android:id="@+id/VME_codigo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/cliente"
+        android:layout_above="@+id/clienteCobrosT"
         android:layout_alignLeft="@+id/VME_establec"
         android:text="TextView" />
 </RelativeLayout>

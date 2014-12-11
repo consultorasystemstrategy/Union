@@ -15,7 +15,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
-        android:id="@+id/cliente"
+        android:id="@+id/clienteCobrosT"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/textView1"
@@ -24,29 +24,29 @@
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
-        android:id="@+id/fecha"
+        android:id="@+id/fechaCobros"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/cliente"
-        android:layout_below="@+id/cliente"
+        android:layout_alignLeft="@+id/clienteCobrosT"
+        android:layout_below="@+id/clienteCobrosT"
         android:text="Cant.   :       "
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
-        android:id="@+id/monto"
+        android:id="@+id/montoCobros"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/fecha"
-        android:layout_below="@+id/fecha"
+        android:layout_alignLeft="@+id/fechaCobros"
+        android:layout_below="@+id/fechaCobros"
         android:text="Fecha  : "
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/idcobro"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/monto"
-        android:layout_below="@+id/monto"
+        android:layout_alignLeft="@+id/montoCobros"
+        android:layout_below="@+id/montoCobros"
         android:text="Monto : "
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -57,42 +57,42 @@
         android:text="TextView"
         android:layout_alignBaseline="@+id/textView1"
         android:layout_alignBottom="@+id/textView1"
-        android:layout_toRightOf="@+id/fecha" />
+        android:layout_toRightOf="@+id/fechaCobros" />
 
     <TextView
         android:id="@+id/VHV_produ"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/cliente"
-        android:layout_alignBottom="@+id/cliente"
-        android:layout_toRightOf="@+id/fecha"
+        android:layout_alignBaseline="@+id/clienteCobrosT"
+        android:layout_alignBottom="@+id/clienteCobrosT"
+        android:layout_toRightOf="@+id/fechaCobros"
         android:text="TextView" />
 
     <TextView
         android:id="@+id/VHV_canti"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/fecha"
-        android:layout_alignBottom="@+id/fecha"
-        android:layout_toRightOf="@+id/fecha"
+        android:layout_alignBaseline="@+id/fechaCobros"
+        android:layout_alignBottom="@+id/fechaCobros"
+        android:layout_toRightOf="@+id/fechaCobros"
         android:text="TextView" />
 
     <TextView
         android:id="@+id/VHV_fecha"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/monto"
-        android:layout_alignBottom="@+id/monto"
-        android:layout_toRightOf="@+id/fecha"
+        android:layout_alignBaseline="@+id/montoCobros"
+        android:layout_alignBottom="@+id/montoCobros"
+        android:layout_toRightOf="@+id/fechaCobros"
         android:text="TextView" />
 
     <TextView
         android:id="@+id/VHV_monto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/textView5"
-        android:layout_alignBottom="@+id/textView5"
-        android:layout_toRightOf="@+id/fecha"
+        android:layout_alignBaseline="@+id/idcobro"
+        android:layout_alignBottom="@+id/idcobro"
+        android:layout_toRightOf="@+id/fechaCobros"
         android:text="TextView" />
 
 </RelativeLayout>

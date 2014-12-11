@@ -72,7 +72,7 @@
                                 android:layout_height="wrap_content"
                                 android:textAppearance="?android:attr/textAppearanceMedium"
                                 android:text="Comp."
-                                android:id="@+id/textView5"
+                                android:id="@+id/idcobro"
                                 android:enabled="false"
                                 android:height="40dp"
                                 android:width="150dp"/>
@@ -82,7 +82,7 @@
                                 android:layout_height="wrap_content"
                                 android:textAppearance="?android:attr/textAppearanceMedium"
                                 android:text="Cant."
-                                android:id="@+id/monto"
+                                android:id="@+id/montoCobros"
                                 android:height="40dp"
                                 android:width="50dp"/>
 

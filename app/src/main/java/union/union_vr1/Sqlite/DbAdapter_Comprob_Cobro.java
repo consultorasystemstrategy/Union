@@ -194,12 +194,12 @@ public class DbAdapter_Comprob_Cobro {
     }
     public Cursor listaComprobantes(int establex) {
 
-        Cursor mCursor = mDb.rawQuery("SELECT  cc_te_fecha_programada  FROM   m_comprob_cobro where cc_in_id_establec="+establex+" and  cc_in_estado_cobro ='0' order by cc_te_fecha_programada asc",null);
+        Cursor mCursor = mDb.rawQuery("SELECT cc_te_fecha_programada  FROM   m_comprob_cobro where cc_in_id_establec="+establex+" and  cc_in_estado_cobro ='0' order by cc_te_fecha_programada asc",null);
         return mCursor;
     }
     public Cursor listarComprobantesToCobros(){
-        Cursor mCursor = mDb.rawQuery("SELECT * FROM  m_comprob_cobro",null);
-        return null;
+        Cursor mCursor = mDb.rawQuery("SELECT mc._id, mc.cc_te_doc,me.ee_te_nom_cliente,mc.cc_te_fecha_programada, mc.cc_re_monto_a_pagar,me.ee_te_nom_establec ,mc.cc_in_id_establec from m_comprob_cobro mc,m_evento_establec me where mc.cc_in_id_establec=me.ee_in_id_establec and mc.cc_in_estado_cobro='0' order by mc.cc_te_fecha_programada asc",null);
+        return mCursor;
     }
 
 
@@ -213,7 +213,7 @@ public class DbAdapter_Comprob_Cobro {
                 "", 0, 0, 1);
         createComprobCobros(1, 1, 1, 2, "FACTURA", "FAC-0001", "2014-12-01", 200, "",
                 "", 0, 0, 1);
-        createComprobCobros(2, 2, 2, 2, "FACTURA", "FAC-0002", "2014-12-01", 200, "",
+        createComprobCobros(2, 2, 2, 2, "FACTURA", "FAC-0002", "2014-12-11", 200, "",
                 "", 0, 0, 1);
     }
 

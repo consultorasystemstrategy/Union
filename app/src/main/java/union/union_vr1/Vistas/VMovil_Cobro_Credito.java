@@ -116,8 +116,7 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
             }
 
             @Override
-            public void onScroll(AbsListView view, int firstVisibleItem,
-                                 int visibleItemCount, int totalItemCount) {
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
                 for(int i = 0; i<totalItemCount;i++){
                     Cursor cr = (Cursor) listView.getItemAtPosition(i);
@@ -127,21 +126,21 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
 
                         Date dSqlite = df.parse(fecha_Programada);
                         Date dSistema = df.parse(getDatePhone());
-
+                        View v = listView.getChildAt(i);
                         if(dSqlite.before(dSistema)){
-                            View v = listView.getChildAt(i);
+
                             if(v != null) {
                                 v.setBackgroundColor(0xffff0000);
                             }
                         }
                         if(dSqlite.after(dSistema)){
-                            View v = listView.getChildAt(i);
+
                             if(v != null) {
                                 v.setBackgroundColor(0xffffff00);
                             }
                         }
                         if(dSqlite.equals(dSistema)){
-                            View v = listView.getChildAt(i);
+
                             if(v != null) {
                                 v.setBackgroundColor(0xffff0000);
                             }
