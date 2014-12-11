@@ -221,16 +221,17 @@ public class Login extends Activity implements OnClickListener{
                 //setVar1(String.valueOf(success));
                 //pass.setText(String.valueOf(success));
                 if (success == 1) {
-
                     Log.d("Login Successful!", json.toString());
                 	Intent i = new Intent(Login.this, VMovil_Online_Pumovil.class);
-                    i.putExtra("nombre_usuario", json.getString(TAG_NOMBRE));
-                   /* i.putExtra("id_agente", json.getString(TAG_id_agente));
-                    i.putExtra("id_agente_venta", json.getString(TAG_id_agente_venta));
-                    i.putExtra("id_empresa", json.getString(TAG_id_empresa));
-                    i.putExtra("nombre_agente", json.getString(TAG_nombre_agente));
-                    i.putExtra("id_usuario", json.getString(TAG_id_usuario));
-                    i.putExtra("pass_usuario", json.getString(TAG_pass_usuario));*/
+
+                    i.putExtra("putPassUsuario", json.getString(TAG_pass_usuario));
+                    i.putExtra("putNombreAgente", json.getString(TAG_nombre_agente));
+                    i.putExtra("putNombreUsuario", json.getString(TAG_nombre_usuario));
+                    i.putExtra("putIdAgenteVenta", json.getString(TAG_id_agente_venta));
+                    i.putExtra("putIdEmpresa", json.getString(TAG_id_empresa));
+                    i.putExtra("putIdUsuario", json.getString(TAG_id_usuario));
+
+
                 	finish();
     				startActivity(i);
                 	return json.getString(TAG_MESSAGE);

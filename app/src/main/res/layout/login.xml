@@ -35,26 +35,17 @@
         <requestFocus />
     </EditText>
 
-    <TextView
-        android:id="@+id/cliente"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="17dp"
-        android:gravity="center"
-        android:text="Sistema Movil"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textStyle="bold" />
-
     <ImageView
         android:id="@+id/imageView1"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/activity_vertical_margin"
-        android:layout_below="@+id/cliente"
-        android:layout_centerHorizontal="true"
         android:src="@drawable/logo"
-        android:layout_above="@+id/textView1" />
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_above="@+id/textView1"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <TextView
         android:id="@+id/TextView01"
