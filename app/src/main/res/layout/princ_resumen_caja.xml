@@ -82,7 +82,7 @@
                                 android:layout_height="wrap_content"
                                 android:textAppearance="?android:attr/textAppearanceMedium"
                                 android:text="Cant."
-                                android:id="@+id/VC_dev"
+                                android:id="@+id/textView4"
                                 android:height="40dp"
                                 android:width="50dp"/>
 

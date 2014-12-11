@@ -74,7 +74,8 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
         //.-------------------------------------
         dbHelper44 = new DbAdapter_Comprob_Cobro(this);
         dbHelper44.open();
-        Cursor cursor = dbHelper44.listaComprobantes();
+        int idEstab = Integer.parseInt(valIdEstab);
+        Cursor cursor = dbHelper44.listaComprobantes(idEstab);
 
         //Recorremos el cursor hasta que no haya más registros
 
@@ -83,6 +84,7 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
         if (cursor.moveToFirst()) {
             for (i=0; i<1;i++) {
                 String fecha = cursor.getString(0);
+
                 try {
                     cursor.moveToNext();
                     SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
@@ -99,15 +101,21 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
                     }
                     if (dSqlite.after(dSistema)) {
                         Toast.makeText(getApplicationContext(), "Fechas Proximas", Toast.LENGTH_SHORT).show();
-                        mCobros.getBackground().setColorFilter(new LightingColorFilter(0xff00ff00, 0xff00ff00));
+                        mCobros.getBackground().setColorFilter(new LightingColorFilter(0xffffff00, 0xffffff00));
                     }
+
 
                 } catch (ParseException e) {
                     e.printStackTrace();
+
                 }
             }
-        }
 
+        }
+        if(cursor.getCount() <=0){
+            Toast.makeText(getApplicationContext(), "No hay Deudas Por Cobrar", Toast.LENGTH_SHORT).show();
+            mCobros.getBackground().setColorFilter(new LightingColorFilter(0xff00ff00, 0xff00ff00));
+        }
 
 
         cursor.close();
