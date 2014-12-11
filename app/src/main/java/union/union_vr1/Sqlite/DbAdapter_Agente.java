@@ -215,7 +215,7 @@ public class DbAdapter_Agente {
 
     public void insertSomeAgentes() {
 
-        createAgentes(1, 1, 1, "URLISH", "AGENTE01", "123456", 1, 1000, 1000, "LIMA 01", 5, "BO001",
+        createAgentes(14, 1, 1, "URLISH", "AGENTE01", "123456", 1, 1000, 1000, "LIMA 01", 5, "BO001",
                 "FA001", "RP001", 1000, 2000, 3000);
 /*
         createAgentes(2, 1, 1, "JOSE", "AGENTE02", "123456", 1, 2000, 2000, "LIMA 02", 5, "BO002",
