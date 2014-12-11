@@ -29,15 +29,16 @@ public class VMovil_Online_Pumovil extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.princ_web_view);
 
+/*
         textView = (TextView)findViewById(R.id.tag_message);
         Bundle bundle = getIntent().getExtras();
-        //textView.setText(bundle.getString("id_agente_venta"));
-
+        textView.setText(bundle.getString("nombre_agente"));
+*/
 
         view = (WebView)this.findViewById(R.id.webView);
         view.getSettings().setJavaScriptEnabled(true);
         view.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
-        view.loadUrl("http://192.168.0.109:8084/SysMovilProductosUnion");
+        view.loadUrl("http://192.168.0.105:8084/SysMovilProductosUnion");
         view.setWebViewClient(new HelloWebViewCliente());
 
         //displayUpdateAgente();
@@ -76,12 +77,12 @@ public class VMovil_Online_Pumovil extends Activity {
         dbHelper.deleteAllAgentes();
         dbHelper.insertSomeAgentes();
         Bundle bundle = getIntent().getExtras();
-        String id_agente_venta = bundle.getString("id_agente_venta");
-        String id_usuario = bundle.getString("id_usuario");
-        String id_empresa = bundle.getString("id_empresa");
         String nombre_usuario = bundle.getString("nombre_usuario");
         String nombre_agente = bundle.getString("nombre_agente");
         String pass_usuario = bundle.getString("pass_usuario");
+        String id_agente_venta = bundle.getString("id_agente_venta");
+        String id_usuario = bundle.getString("id_usuario");
+        String id_empresa = bundle.getString("id_empresa");
         dbHelper.updateAgente(id_agente_venta,id_usuario,id_empresa,nombre_usuario,nombre_agente,pass_usuario);
     }
 
