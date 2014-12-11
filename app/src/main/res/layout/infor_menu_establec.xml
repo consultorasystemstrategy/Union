@@ -16,7 +16,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/VC_producto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/textView1"
@@ -25,20 +25,20 @@
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/VC_p_a"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView2"
-        android:layout_below="@+id/textView2"
+        android:layout_alignLeft="@+id/VC_producto"
+        android:layout_below="@+id/VC_producto"
         android:text="Nombre: "
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/VC_dev"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView3"
-        android:layout_below="@+id/textView3"
+        android:layout_alignLeft="@+id/VC_p_a"
+        android:layout_below="@+id/VC_p_a"
         android:text="Docum: "
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -46,17 +46,17 @@
         android:id="@+id/VME_nombre"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/textView3"
-        android:layout_alignBottom="@+id/textView3"
-        android:layout_toRightOf="@+id/textView3"
+        android:layout_alignBaseline="@+id/VC_p_a"
+        android:layout_alignBottom="@+id/VC_p_a"
+        android:layout_toRightOf="@+id/VC_p_a"
         android:text="TextView" />
 
     <TextView
         android:id="@+id/VME_docum"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/textView4"
-        android:layout_alignBottom="@+id/textView4"
+        android:layout_alignBaseline="@+id/VC_dev"
+        android:layout_alignBottom="@+id/VC_dev"
         android:layout_alignLeft="@+id/VME_nombre"
         android:text="TextView" />
 
@@ -64,15 +64,15 @@
         android:id="@+id/VME_establec"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/textView3"
-        android:layout_toRightOf="@+id/textView3"
+        android:layout_above="@+id/VC_p_a"
+        android:layout_toRightOf="@+id/VC_p_a"
         android:text="TextView" />
 
     <TextView
         android:id="@+id/VME_codigo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/textView2"
+        android:layout_above="@+id/VC_producto"
         android:layout_alignLeft="@+id/VME_establec"
         android:text="TextView" />
 </RelativeLayout>

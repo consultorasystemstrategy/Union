@@ -174,7 +174,7 @@ public class DbAdapter_Histo_Comprob_Anterior {
         return mCursor;
     }
 
-    public Cursor fetchAllHistoComprobAnteriorByIdEst(String id) {
+    public Cursor fetchAllHistoComprobAnteriorByIdEst(int id) {
 
         Cursor mCursor = mDb.query(SQLITE_TABLE_Histo_Comprob_Anterior, new String[] {HC_id_hist_comprob,
                         HC_id_establec, HC_id_producto, HC_nom_producto, HC_cantidad, HC_prom_anterior,
@@ -187,13 +187,33 @@ public class DbAdapter_Histo_Comprob_Anterior {
         return mCursor;
     }
 
+    public Cursor fetchAllHistoComprobAnteriorByIdEstRawQuery(int id) {
+
+        String sql = "SELECT HCA._id AS _id, HCA.hc_te_nom_producto AS nombre_producto, HCA.hc_te_prom_anterior||\"/\"||HCA.hc_in_cantidad AS pa, HCA.hc_te_devuelto AS devuelto, HCA.hc_te_prom_anterior AS cantidad, EE.ee_in_id_cat_est,P.pr_re_precio_unit AS pu, HCA.hc_te_prom_anterior*P.pr_re_precio_unit AS total\n" +
+                "FROM m_histo_comprob_anterior HCA\n" +
+                "INNER JOIN m_evento_establec EE\n" +
+                "ON HCA.hc_in_id_establec = EE.ee_in_id_establec\n" +
+                "INNER JOIN m_precio P\n" +
+                "ON ( HCA.hc_in_id_producto = P.pr_in_id_producto\n" +
+                "\tAND EE.ee_in_id_cat_est = P.pr_in_id_cat_estt)\n" +
+                "WHERE  HCA.hc_in_id_establec = ?";
+        Cursor mCursor = mDb.rawQuery(sql, new String[]{""+id});
+
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+    }
+
+
+
     public void insertSomeHistoComprobAnterior() {
 
-        createHistoComprobAnterior( 1, 1, "PAN", 1, "0/0", "0", 1, 1);
-        createHistoComprobAnterior( 1, 2, "AGUA", 2, "0/0", "0", 1, 1);
-        createHistoComprobAnterior( 2, 1, "PAN", 1, "0/0", "0", 1, 1);
-        createHistoComprobAnterior( 2, 2, "AGUA", 2, "0/0", "0", 1, 1);
-        createHistoComprobAnterior( 3, 2, "AGUA", 3, "0/0", "0", 1, 1);
+        createHistoComprobAnterior( 1, 1, "PAN", 1, "3", "0", 1, 1);
+        createHistoComprobAnterior( 1, 2, "AGUA", 2, "3", "0", 1, 1);
+        createHistoComprobAnterior( 2, 1, "PAN", 1, "3", "0", 1, 1);
+        createHistoComprobAnterior( 2, 2, "AGUA", 2, "3", "0", 1, 1);
+        createHistoComprobAnterior( 3, 2, "AGUA", 3, "3", "0", 1, 1);
 
     }
 

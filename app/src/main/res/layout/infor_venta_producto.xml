@@ -15,7 +15,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/VC_producto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/textView1"
@@ -27,9 +27,9 @@
         android:id="@+id/VVP_precio"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/textView2"
-        android:layout_toRightOf="@+id/textView2"
-        android:layout_alignBaseline="@+id/textView2"
+        android:layout_above="@+id/VC_producto"
+        android:layout_toRightOf="@+id/VC_producto"
+        android:layout_alignBaseline="@+id/VC_producto"
         android:text="TextView" />
 
     <TextView
@@ -37,8 +37,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="TextView"
-        android:layout_above="@+id/textView2"
-        android:layout_toRightOf="@+id/textView2"
-        android:layout_toEndOf="@+id/textView2" />
+        android:layout_above="@+id/VC_producto"
+        android:layout_toRightOf="@+id/VC_producto"
+        android:layout_toEndOf="@+id/VC_producto" />
 
 </RelativeLayout>

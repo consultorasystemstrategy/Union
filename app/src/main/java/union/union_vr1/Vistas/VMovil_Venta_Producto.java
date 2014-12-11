@@ -43,7 +43,10 @@ import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta_Detalle;
 import union.union_vr1.BlueTooth.BtConexion;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 public class VMovil_Venta_Producto extends Activity {
-    private Spinner VVP_seleciS;
+
+
+    /*private Spinner VVP_seleciS;
+
     TextView titulo;
     private Cursor cursor, cursorx;
     // android built in classes for bluetooth operations
@@ -76,11 +79,13 @@ public class VMovil_Venta_Producto extends Activity {
     private String valIdTipoVen;
     private String valCatEst;
     private int valIdTipoVenInt;
+    */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.princ_venta_producto);
-        Bundle bundle = getIntent().getExtras();
+
+        /*Bundle bundle = getIntent().getExtras();
         valIdEstabXY=bundle.getString("idEstabXY");
         valIdTipoVen=bundle.getString("idTipoVen");
         Toast.makeText(getApplicationContext(),
@@ -106,8 +111,10 @@ public class VMovil_Venta_Producto extends Activity {
 
         //Generate ListView from SQLite Database
         displayListView();
+        */
     }
 
+    /*
     public void procesarCES(){
 
         cursorx = dbHelperz.fetchEstablecsById(valIdEstabXY);
@@ -411,10 +418,8 @@ public class VMovil_Venta_Producto extends Activity {
             e.printStackTrace();
         }
     }
-
+*/
     /*
-     * This will send data to be printed by the bluetooth printer
-     */
     public void sendData() throws IOException {
         try {
 
@@ -495,5 +500,6 @@ public class VMovil_Venta_Producto extends Activity {
             e.printStackTrace();
         }
     }
+    */
 
 }

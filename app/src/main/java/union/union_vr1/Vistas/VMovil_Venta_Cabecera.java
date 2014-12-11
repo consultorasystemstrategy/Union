@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.net.IDN;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -40,6 +41,13 @@ import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta;
 import union.union_vr1.Sqlite.DbAdapter_Agente;
 public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
+
+
+    private DbAdapter_Histo_Comprob_Anterior dbHelper_Histo_comprob_anterior;
+    private int idEstablecimiento;
+    private SimpleCursorAdapter simpleCursorAdapter;
+
+    /*
     private Cursor cursor, cursorx, cursorv, cursorz, cursorw, cursory, cursort, cursorn, cursorp, cursorf;
     private SimpleCursorAdapter dataAdapter;
     private DbAdapter_Comprob_Venta_Detalle dbHelper;
@@ -75,11 +83,24 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
     private String idprod;
     private double vender;
     TextView colors, stoant, stohoy;
+    */
     //private int Cantidad, cant1, cant2, cant3, cant4;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.princ_venta_cabecera);
 
+
+        dbHelper_Histo_comprob_anterior = new DbAdapter_Histo_Comprob_Anterior(this);
+        dbHelper_Histo_comprob_anterior.open();
+
+        Bundle bundle = getIntent().getExtras();
+        idEstablecimiento=Integer.parseInt(bundle.getString("idEstabX"));
+
+        setContentView(R.layout.princ_venta_cabecera);
+
+        displayHistorialComprobanteAnterior();
+        /*
         pase = 0;
         pase01 = 0;
         pase02 = 0;
@@ -91,7 +112,6 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
 
         Bundle bundle = getIntent().getExtras();
         valIdEstabX=bundle.getString("idEstabX");
-
         setContentView(R.layout.princ_venta_cabecera);
 
         colors = (TextView)findViewById(R.id.VVC_TXVcolors);
@@ -143,9 +163,73 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
         addItemsOnSpinner1();
         addItemsOnSpinner2();
         addItemsOnSpinner3();
-        //displayListViewVVC();
+        displayListViewVVC();
+        */
     }
 
+    @Override
+    public void onClick(View view) {
+
+    }
+
+    private void displayHistorialComprobanteAnterior() {
+
+        Cursor cursor = dbHelper_Histo_comprob_anterior.fetchAllHistoComprobAnteriorByIdEstRawQuery(idEstablecimiento);
+
+        // The desired columns to be bound
+        String[] columns = new String[]{
+                "_id",
+                "nombre_producto",
+                "pa",
+                "devuelto",
+                "cantidad",
+                "pu",
+                "total"
+        };
+
+        // the XML defined views which the data will be bound to
+        int[] to = new int[]{
+                R.id.VC_cod,
+                R.id.VC_producto,
+                R.id.VC_p_a,
+                R.id.VC_dev,
+                R.id.VC_promedio,
+                R.id.VC_pu,
+                R.id.VC_total
+        };
+
+        // create the adapter using the cursor pointing to the desired data
+        //as well as the layout information
+        simpleCursorAdapter = new SimpleCursorAdapter(
+                this, R.layout.infor_venta_cabecera,
+                cursor,
+                columns,
+                to,
+                0);
+
+        ListView listView = (ListView) findViewById(R.id.VC_listView);
+        // Assign adapter to ListView
+        listView.setAdapter(simpleCursorAdapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> listView, View view,
+                                    int position, long id) {
+                // Get the cursor, positioned to the corresponding row in the result set
+                Cursor cursorw = (Cursor) listView.getItemAtPosition(position);
+
+                // Get the state's capital from this row in the database.
+                int id_historial_comprobante = cursorw.getInt(cursorw.getColumnIndexOrThrow(DbAdapter_Histo_Comprob_Anterior.HC_id_hist_comprob));
+
+
+                Toast.makeText(getApplicationContext(),
+                        "id Historail comprobante : " + id_historial_comprobante, Toast.LENGTH_SHORT).show();
+            }
+
+        });
+    }
+
+    /*
     private void displayListViewVVC() {
 
         Cursor cursor = dbHelper.fetchAllComprobVentaDetalle0();
@@ -810,4 +894,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
         startActivity(idr);
         finish();
     }
-}
+    /*
+
+     */
+    }
