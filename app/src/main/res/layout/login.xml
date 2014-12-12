@@ -30,7 +30,8 @@
         android:ems="10"
         android:inputType="textPassword"
         android:layout_below="@+id/TextView01"
-        android:layout_centerHorizontal="true">
+        android:layout_centerHorizontal="true"
+        android:text="123">
 
         <requestFocus />
     </EditText>
@@ -63,7 +64,8 @@
         android:ems="10"
         android:layout_below="@+id/textView1"
         android:layout_alignLeft="@+id/password"
-        android:layout_alignStart="@+id/password" />
+        android:layout_alignStart="@+id/password"
+        android:text="orlando" />
 
     <TextView
         android:id="@+id/textView1"

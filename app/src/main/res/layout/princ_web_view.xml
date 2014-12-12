@@ -26,32 +26,10 @@
         android:layout_height="wrap_content"
         android:text="Sincronizar con Offline"
         android:id="@+id/VEE_BTNEstadoNoAtendido"
-        android:onClick="lanzarOnLine"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_toLeftOf="@+id/tag_message"
-        android:layout_toStartOf="@+id/tag_message" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Ir a On Line"
-        android:id="@+id/VOP_BTNonline"
-        android:onClick="lanzarOffLine"
-        android:layout_above="@+id/webView"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_toRightOf="@+id/tag_message"
-        android:layout_toEndOf="@+id/tag_message" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Small Text"
-        android:id="@+id/tag_message"
-        android:layout_above="@+id/webView"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignRight="@+id/webView"
+        android:layout_alignEnd="@+id/webView" />
 
 </RelativeLayout>
