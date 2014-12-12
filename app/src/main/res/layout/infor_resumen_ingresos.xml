@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal">
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="descripcion"
+                android:id="@+id/VRC_descripcion" />
+
+            <TextView
+                android:layout_width="35dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="0"
+                android:id="@+id/VRC_cantidad" />
+
+            <TextView
+                android:layout_width="35dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="0"
+                android:id="@+id/VRC_vendido" />
+
+            <TextView
+                android:layout_width="35dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="0"
+                android:id="@+id/VRC_pagado" />
+
+            <TextView
+                android:layout_width="35dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="0"
+                android:id="@+id/VRC_cobrado" />
+        </TableRow>
+
+    </TableLayout>
+
+</LinearLayout>

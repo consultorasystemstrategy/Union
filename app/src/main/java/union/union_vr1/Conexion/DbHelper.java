@@ -3,10 +3,12 @@ package union.union_vr1.Conexion;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import union.union_vr1.Sqlite.DbAdapter_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
 import union.union_vr1.Sqlite.DbAdapter_Histo_Comprob_Anterior;
+import union.union_vr1.Sqlite.DbAdapter_Resumen_Caja;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 import union.union_vr1.Sqlite.DbAdapter_Tipo_Gasto;
 import union.union_vr1.Sqlite.DbAdapter_Informe_Gastos;
@@ -22,7 +24,7 @@ import union.union_vr1.Sqlite.DbAdapter_Histo_Venta_Detalle;
 public class DbHelper extends SQLiteOpenHelper {
 
     private static final int DATABASE_VERSION = 4;
-    private static final String DATABASE_NAME = "ProdUnionSXNHTS.sqlite";
+    private static final String DATABASE_NAME = "ProdUniondb.sqlite";
 
     public DbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -54,7 +56,8 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(DbAdapter_Histo_Venta_Detalle.CREATE_TABLE_HISTO_VENTA_DETALLE);
         //Log.w(DbAdapter_Histo_Comprob_Anterior.TAG, DbAdapter_Histo_Comprob_Anterior.CREATE_TABLE_HISTO_COMPROB_ANTERIOR);
         db.execSQL(DbAdapter_Histo_Comprob_Anterior.CREATE_TABLE_HISTO_COMPROB_ANTERIOR);
-
+        //Log.w(DbAdapter_Resumen_Caja.TAG, DbAdapter_Resumen_Caja.CREATE_TABLE_RESUMEN_CAJA);
+        db.execSQL(DbAdapter_Resumen_Caja.CREATE_TABLE_RESUMEN_CAJA);
     }
 
     @Override
@@ -73,6 +76,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(DbAdapter_Histo_Venta.DELETE_TABLE_HISTO_VENTA);
         db.execSQL(DbAdapter_Histo_Venta_Detalle.DELETE_TABLE_HISTO_VENTA_DETALLE);
         db.execSQL(DbAdapter_Histo_Comprob_Anterior.DELETE_TABLE_HISTO_COMPROB_ANTERIOR);
+        db.execSQL(DbAdapter_Resumen_Caja.DELETE_TABLE_RESUMEN_CAJA);
         onCreate(db);
     }
 }
