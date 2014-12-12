@@ -25,8 +25,7 @@
         android:text="Cobros"
         android:id="@+id/VEE_BTNcobros"
         android:layout_below="@+id/VEE_TVWtitulo"
-        android:layout_centerHorizontal="true"
-        style="@style/button_text" />
+        android:layout_centerHorizontal="true"/>
 
     <Button
         android:layout_width="match_parent"
@@ -34,8 +33,7 @@
         android:text="Canjes / Devoluciones"
         android:id="@+id/VEE_BTNcandev"
         android:layout_below="@+id/VEE_BTNcobros"
-        android:layout_centerHorizontal="true"
-        style="@style/button_text" />
+        android:layout_centerHorizontal="true" />
 
     <Button
         android:layout_width="match_parent"
@@ -43,8 +41,7 @@
         android:text="Ventas"
         android:id="@+id/VEE_BTNventas"
         android:layout_below="@+id/VEE_BTNcandev"
-        android:layout_centerHorizontal="true"
-        style="@style/button_text" />
+        android:layout_centerHorizontal="true" />
 
     <Button
         android:layout_width="match_parent"
@@ -52,8 +49,7 @@
         android:text="Mantenimiento"
         android:id="@+id/VEE_BTNmanten"
         android:layout_below="@+id/VEE_BTNventas"
-        android:layout_centerHorizontal="true"
-        style="@style/button_text" />
+        android:layout_centerHorizontal="true"/>
 
     <Button
         android:layout_width="match_parent"
@@ -61,15 +57,13 @@
         android:text="Reporte"
         android:id="@+id/VEE_BTNreport"
         android:layout_below="@+id/VEE_BTNmanten"
-        android:layout_centerHorizontal="true"
-        style="@style/button_text" />
+        android:layout_centerHorizontal="true"/>
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/VEE_BTNreport"
-        android:layout_toStartOf="@+id/VEE_BTNEstadoAtendido"
         android:layout_alignRight="@+id/VEE_BTNreport"
         android:layout_alignEnd="@+id/VEE_BTNreport"
         android:id="@+id/linearLayout"
@@ -80,7 +74,6 @@
             android:layout_height="wrap_content"
             android:text="Atendido"
             android:id="@+id/VEE_BTNEstadoAtendido"
-            style="@style/button_text"
             android:layout_below="@+id/linearLayout"
             android:layout_centerHorizontal="true"
             android:layout_weight="1" />

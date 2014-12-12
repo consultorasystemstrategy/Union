@@ -54,6 +54,7 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter{
             TextView textView = (TextView) view;
             textView.setSingleLine(false);
             textView.setText(establecimiento);
+            textView.setTextColor(context.getResources().getColor(R.color.PersonalizadoSteve4));
 
             WindowManager.LayoutParams layout_791 = new WindowManager.LayoutParams();
             layout_791.width = WindowManager.LayoutParams.MATCH_PARENT;
@@ -65,16 +66,16 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter{
             textView.setText(establecimiento);
             switch (id_estado_atencion){
                 case 1:
-                    textView.setBackgroundColor(Color.BLUE);
+                    textView.setBackgroundColor(context.getResources().getColor(R.color.azul));
                     break;
                 case 2:
-                    textView.setBackgroundColor(Color.GREEN);
+                    textView.setBackgroundColor(context.getResources().getColor(R.color.verde));
                     break;
                 case 3:
-                    textView.setBackgroundColor(Color.RED);
+                    textView.setBackgroundColor(context.getResources().getColor(R.color.rojo));
                     break;
                 case 4:
-                    textView.setBackgroundColor(Color.YELLOW);
+                    textView.setBackgroundColor(context.getResources().getColor(R.color.amarillo));
                     break;
 
             }
