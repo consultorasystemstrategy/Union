@@ -42,19 +42,19 @@ public class VMovil_Online_Pumovil extends Activity{
         view = (WebView)this.findViewById(R.id.webView);
         view.getSettings().setJavaScriptEnabled(true);
         view.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
-        view.loadUrl("http://192.168.0.105:8084/SysMovilProductosUnion");
+        view.loadUrl("http://192.168.0.104:8084/SysMovilProductosUnion");
 
-        //Asignamos a la vista web el cliente (navegador)
-        //que hemos creado como clase privada (ver más abajo
-        //y que extiende del que trae Android por defecto.
-        //Esta clase maneja el navegador:
+        /*Asignamos a la vista web el cliente (navegador)
+        que hemos creado como clase privada (ver más abajo
+        y que extiende del que trae Android por defecto.
+        Esta clase maneja el navegador:*/
         view.setWebViewClient(new MiWebViewClient());
 
-        //Asignamos a la vista web la clase MiWebViewClient
-        //que hemos creado como clase privada (ver más abajo)
-        //y que extiende del que trae Android por defecto.
-        //Esta clase permite controlar los eventos que se producen
-        //en el navegador:
+        /*Asignamos a la vista web la clase MiWebViewClient
+        que hemos creado como clase privada (ver más abajo)
+        y que extiende del que trae Android por defecto.
+        Esta clase permite controlar los eventos que se producen
+        en el navegador:*/
         view.setWebChromeClient(new MiWebCromeClient());
 
         final Button button = (Button) findViewById(R.id.VEE_BTNEstadoNoAtendido);
@@ -65,8 +65,6 @@ public class VMovil_Online_Pumovil extends Activity{
                 dialogConfirm.show(manager,"DialogSincronizarOffLine");
             }
         });
-
-
 
         displayUpdateAgente();
     }
