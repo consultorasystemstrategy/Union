@@ -17,20 +17,23 @@
         android:layout_alignParentStart="true" />
 
 
-    <EditText
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/VCCR_SPNcredit"
-        android:layout_below="@+id/VCCR_LSTcresez"
-        android:layout_alignRight="@+id/VCCR_BTNcancelar"
-        android:layout_alignEnd="@+id/VCCR_BTNcancelar" />
+        android:focusableInTouchMode="false"
+        android:focusable="false"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:text="" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text=" +  -  Actualizar  -  + "
         android:id="@+id/VCCR_BTNactualiz"
-        android:layout_below="@+id/VCCR_SPNcredit"
+        android:layout_alignTop="@+id/VCCR_BTNcancelar"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
@@ -40,8 +43,9 @@
         android:text=" +  -   Cancelar   -  + "
         android:id="@+id/VCCR_BTNcancelar"
         android:layout_below="@+id/VCCR_SPNcredit"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignRight="@+id/VCCR_LSTcresez"
+        android:layout_alignEnd="@+id/VCCR_LSTcresez"
+        android:layout_marginTop="59dp" />
 
     <ListView
         android:layout_width="wrap_content"
@@ -49,5 +53,15 @@
         android:id="@+id/VCCR_LSTcresez"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/VCCR_titulo" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Monto a Pagar:"
+        android:id="@+id/textView"
+        android:layout_above="@+id/VCCR_SPNcredit"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>

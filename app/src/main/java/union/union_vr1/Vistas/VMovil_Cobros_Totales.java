@@ -3,6 +3,7 @@ package union.union_vr1.Vistas;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.Menu;
@@ -10,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
@@ -17,10 +19,12 @@ import android.widget.Toast;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
 import union.union_vr1.R;
+import union.union_vr1.Sqlite.CursorAdapterCobrosTotales;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
 
 
@@ -40,86 +44,15 @@ DbAdapter_Comprob_Cobro cCobro ;
     public void listarCobrosTotales(){
 
         Cursor cursor = cCobro.listarComprobantesToCobros();
-        cursor.moveToFirst();
+        CursorAdapterCobrosTotales cACobros = new CursorAdapterCobrosTotales(this, cursor);
+
+        final ListView listCobros = (ListView) findViewById(R.id.listaCobrosTotales);
+        listCobros.setAdapter(cACobros);
 
 
-       // System.out.println("here..!"+ cursor.getColumnName(0)+"-"+cursor.getColumnName(1)+"-"+cursor.getColumnName(2)+"-"+cursor.getColumnName(3));
-        // The desired columns to be bound
-        String[] columns = new String[] {
-                cursor.getColumnName(0) , //DbAdapter_Comprob_Cobro.CC_doc,
-                cursor.getColumnName(1),
-                cursor.getColumnName(2) ,
-                cursor.getColumnName(5),
-                cursor.getColumnName(3),
-                cursor.getColumnName(4),
-        };
-
-        // the XML defined views which the data will be bound to
-        int[] to = new int[] {
-               R.id.cod,
-                R.id.factotales,
-                R.id.nomcliente,
-                R.id.localCobro,
-                R.id.fechpro,
-                R.id.repagar,
-
-        };
 
 
-        dataAdapter = new SimpleCursorAdapter(
-                this,
-                R.layout.infor_menu_cobrototal,
-                cursor,
-                columns,
-                to,
-                0);
-         final ListView listCobros = (ListView) findViewById(R.id.listaCobrosTotales);
-        listCobros.setAdapter(dataAdapter);
 
-        listCobros.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView absListView, int i) {
-
-            }
-
-            @Override
-            public void onScroll(AbsListView absListView, int i, int i2, int i3) {
-                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-                for(int e = 0; e<i3;e++){
-
-                   Cursor cr = (Cursor) listCobros.getItemAtPosition(e);
-                    String fecha_Programada = cr.getString(cr.getColumnIndexOrThrow("cc_te_fecha_programada"));
-                    cr.getInt(0);
-                    try {
-                        Date dSqlite = df.parse(fecha_Programada);
-                        Date dSistema = df.parse(getDatePhone());
-                        View v = listCobros.getChildAt(e);
-                        if(dSqlite.before(dSistema)){
-
-                            if(v != null) {
-                                v.setBackgroundColor(0xffff0000);
-                            }
-                        }
-                        if(dSqlite.after(dSistema)){
-
-                            if(v != null) {
-                                v.setBackgroundColor(0xffffff00);
-                            }
-                        }
-                        if(dSqlite.equals(dSistema)){
-
-                            if(v != null) {
-                                v.setBackgroundColor(0xffff0000);
-                            }
-                        }
-                    } catch (ParseException e1) {
-                        e1.printStackTrace();
-                    }
-
-                }
-
-            }
-        });
 
         listCobros.setOnItemClickListener( new AdapterView.OnItemClickListener() {
             @Override
@@ -127,53 +60,65 @@ DbAdapter_Comprob_Cobro cCobro ;
                 Cursor cr2 = (Cursor) listCobros.getItemAtPosition(i);
                 String establec = cr2.getString(cr2.getColumnIndexOrThrow("ee_te_nom_establec"));
                 String cliente = cr2.getString(cr2.getColumnIndexOrThrow("ee_te_nom_cliente"));
-                int idCCobro = cr2.getInt(0);
+                String idCCobro = cr2.getString(0);
                 int monto = cr2.getInt(cr2.getColumnIndexOrThrow("cc_re_monto_a_pagar"));
-                System.out.println("here"+establec+"-"+idCCobro+"-"+monto+"-"+cliente);
+                //System.out.println("here"+establec+"-"+idCCobro+"-"+monto+"-"+cliente);
                 view.setBackgroundColor(0xffcccccc);
-                select(establec,monto,idCCobro,cliente);
+                Dialog(establec, monto, idCCobro, cliente);
 
             }
         });
 
 
     }
-    public void select(String establec,int deuda,int idEstable,String cliente){
+    public void Dialog(String establec, final int deuda,  final String idCCobro,String cliente){
+
+        cCobro = new DbAdapter_Comprob_Cobro(this);
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                 this);
 
-        // set title
         alertDialogBuilder.setTitle("Cobro de Credito");
 
-        // set dialog message
         AlertDialog.Builder builder = alertDialogBuilder
                 .setMessage("Pago de Deuda para el Establecimiento: "+establec+" con Dueño: "+cliente+" : Deuda: "+deuda+" ")
                 .setCancelable(false)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        Toast.makeText(getApplicationContext(),
-                                "Actualizado", Toast.LENGTH_SHORT).show();
 
-                        // displayListViewVCC();
+                        cCobro.open();
+                        int estado = cCobro.updateComprobCobrosCan2(idCCobro, getDatePhone(), getTimePhone(), deuda, "1");
+
+                        if (estado == 1) {
+                            listarCobrosTotales();
+
+                            Toast.makeText(getApplicationContext(), "Actualizado", Toast.LENGTH_SHORT).show();
+
+                            Back();
+
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Error Interno", Toast.LENGTH_SHORT).show();
+                        }
 
 
                     }
 
                 })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         Toast.makeText(getApplicationContext(),
                                 "Cancelo ", Toast.LENGTH_SHORT).show();
                     }
                 });
-        //displayListViewVCC();
 
-        // create alert dialog
         AlertDialog alertDialog = alertDialogBuilder.create();
 
-        // show it
         alertDialog.show();
 
+    }
+
+    public void Back(){
+        Intent i = new Intent(this,VMovil_Evento_Indice.class);
+        startActivity(i);
     }
 
 
@@ -202,5 +147,13 @@ DbAdapter_Comprob_Cobro cCobro ;
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         String formatteDate = df.format(date);
         return formatteDate;
+    }
+    private String getTimePhone()
+    {
+        Calendar cal = new GregorianCalendar();
+        Date date = cal.getTime();
+        SimpleDateFormat df = new SimpleDateFormat("hh:mm:ss");
+        String formatteTime = df.format(date);
+        return formatteTime;
     }
 }

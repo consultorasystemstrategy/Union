@@ -34,6 +34,7 @@ public class CursorAdapterComprobanteVenta extends CursorAdapter {
 
         TextView textView = (TextView) view;
         textView.setSingleLine(false);
+
         WindowManager.LayoutParams layout_791 = new WindowManager.LayoutParams();
         layout_791.width = WindowManager.LayoutParams.MATCH_PARENT;
         layout_791.height  = WindowManager.LayoutParams.WRAP_CONTENT;

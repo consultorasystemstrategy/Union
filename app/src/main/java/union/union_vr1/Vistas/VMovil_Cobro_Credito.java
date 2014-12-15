@@ -9,13 +9,18 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import org.w3c.dom.Text;
 
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -33,7 +38,7 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
     final Context context = this;
     private DbAdapter_Comprob_Cobro dbHelper;
     private Button mActualiz, mCancelar;
-    private EditText mSPNcredit;
+    private TextView mSPNcredit;
     private double valbaimp, valimpue, valtotal;
     private String estabX;
     private double valCredito;
@@ -60,13 +65,17 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
         dbHelper.open();
         //dbHelper.deleteAllComprobCobros();
         //dbHelper.insertSomeComprobCobros();
-        mSPNcredit = (EditText)findViewById(R.id.VCCR_SPNcredit);
+        mSPNcredit = (TextView)findViewById(R.id.VCCR_SPNcredit);
 
         mActualiz = (Button)findViewById(R.id.VCCR_BTNactualiz);
         mActualiz.setOnClickListener(this);
 
         mCancelar = (Button)findViewById(R.id.VCCR_BTNcancelar);
         mCancelar.setOnClickListener(this);
+        InputMethodManager imm = (InputMethodManager)getSystemService(
+                Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(mSPNcredit.getWindowToken(), 0);
+       getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         displayListViewVCC();
 
@@ -201,8 +210,8 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
                         dbHelper.updateComprobCobrosCan(idCobro, getDatePhone(), getTimePhone(), idValNew, estadox);
                         Toast.makeText(getApplicationContext(),
                                 "Actualizado", Toast.LENGTH_SHORT).show();
-
-                       // displayListViewVCC();
+//<
+                        //displayListViewVCC();
                         mSPNcredit.setText("0.0");
                         Back();
 
@@ -249,7 +258,7 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
                         Toast.makeText(getApplicationContext(),
                                 "Anulado", Toast.LENGTH_SHORT).show();
                         Back();
-                        //displayListViewVCC();
+                       // displayListViewVCC();
                         mSPNcredit.setText("0.0");
                     }
                 })
