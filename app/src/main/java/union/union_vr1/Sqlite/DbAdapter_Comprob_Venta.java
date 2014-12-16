@@ -103,10 +103,12 @@ public class DbAdapter_Comprob_Venta {
 
         int doneDelete = 0;
         doneDelete = mDb.delete(SQLITE_TABLE_Comprob_Venta, null , null);
+
         Log.w(TAG, Integer.toString(doneDelete));
         return doneDelete > 0;
 
     }
+
 
     public void updateComprobante(int id, int estado){
         ContentValues initialValues = new ContentValues();
@@ -180,11 +182,11 @@ public class DbAdapter_Comprob_Venta {
 
     public void insertSomeComprobVenta() {
 
-        createComprobVenta( 1, 1, 1, 1, "0001", "1A", 1, 10, 0, 10, "2014-11-12", "08:10:00", 1, 0, 1);
-        createComprobVenta( 2, 1, 1, 1, "0002", "2A", 2, 20, 0, 20, "2014-11-12", "08:10:00", 0, 0, 1);
+        createComprobVenta( 1, 1, 1, 1, "0001", "1A", 1, 10, 0, 10, "2014-16-12", "08:10:00", 1, 0, 1);
+        createComprobVenta( 2, 1, 1, 1, "0002", "2A", 2, 20, 0, 20, "2014-16-12", "08:10:00", 0, 0, 1);
         createComprobVenta( 3, 1, 1, 1, "0003", "3A", 3, 30, 0, 30, "2014-11-12", "08:10:00", 1, 0, 1);
         createComprobVenta( 4, 1, 1, 1, "0004", "4A", 4, 10, 0, 40, "2014-11-12", "08:10:00", 1, 0, 1);
-        createComprobVenta( 5, 1, 1, 1, "0005", "5A", 5, 10, 0, 50, "2014-11-12", "08:10:00", 0, 0, 1);
+        createComprobVenta( 5, 1, 1, 1, "0005", "5A", 5, 10, 0, 50, "2014-11-12", "08:10:00", 0, 0,1);
 
     }
 
