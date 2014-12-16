@@ -234,7 +234,7 @@ public class DbAdaptert_Evento_Establec {
                         EE_nom_establec, EE_nom_cliente, EE_doc_cliente, EE_orden, EE_surtido_stock_ant,
                         EE_surtido_venta_ant, EE_monto_credito, EE_dias_credito, EE_id_estado_no_atencion,
                         EE_id_agente},
-                null, null, null, null, null);
+                null, null, null, null,EE_id_estado_atencion + ", " + EE_orden);
 
         if (mCursor != null) {
             mCursor.moveToFirst();

@@ -7,6 +7,11 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
 import union.union_vr1.Conexion.DbHelper;
 
 /**
@@ -15,11 +20,14 @@ import union.union_vr1.Conexion.DbHelper;
 public class DbAdapter_Resumen_Caja {
 
     public static final String RC_resumenCajaId = "_id";
+    public static final String RC_id_Agente = "id_Agente";
     public static final String RC_descripcionComprobante = "rc_te_descripcion";
+    public static final String RC_id_tipo_GI = "rc_te_tipo_gi";
     public static final String RC_cantidad = "rc_in_cantidad";
     public static final String RC_vendido = "rc_re_vendido";
     public static final String RC_pagado = "rc_re_pagado";
     public static final String RC_cobrado = "rc_re_cobrado";
+    public static final String RC_fecha_reporte = "rc_re_fecha_reporte";
 
 
     public static final String TAG = "Resumen_Caja";
@@ -30,12 +38,15 @@ public class DbAdapter_Resumen_Caja {
 
     public static final String CREATE_TABLE_RESUMEN_CAJA =
             "CREATE TABLE IF NOT EXISTS "+SQLITE_TABLE_Resumen_Caja+" ("
-            +RC_resumenCajaId+ " integer primary key autoincrement,"
-            +RC_descripcionComprobante+ " text,"
-            +RC_cantidad+ " integer,"
-            +RC_vendido+ " real,"
-            +RC_pagado+ " real,"
-            +RC_cobrado+ " real);";
+                    +RC_resumenCajaId+ " integer primary key autoincrement,"
+                    +RC_id_Agente+" integer,"
+                    +RC_descripcionComprobante+ " text,"
+                    +RC_id_tipo_GI+" integer,"
+                    +RC_cantidad+ " integer,"
+                    +RC_vendido+ " real,"
+                    +RC_pagado+ " real,"
+                    +RC_cobrado+ " real,"
+                    +RC_fecha_reporte+" text);";
 
 
     public static final String DELETE_TABLE_RESUMEN_CAJA = "DROP TABLE IF EXISTS + " + SQLITE_TABLE_Resumen_Caja;
@@ -54,13 +65,15 @@ public class DbAdapter_Resumen_Caja {
         }
     }
 
-    public long createResumenCaja(String descripcion, int cantidad, float vendido, float pagado, float cobrado){
+    public long createResumenCaja(String descripcion,int idAgente ,int cantidad, float vendido, float pagado, float cobrado,String fecha){
         ContentValues initialValues = new ContentValues();
+        initialValues.put(RC_id_Agente,idAgente);
         initialValues.put(RC_descripcionComprobante,descripcion);
         initialValues.put(RC_cantidad,cantidad);
         initialValues.put(RC_vendido,vendido);
         initialValues.put(RC_pagado,pagado);
         initialValues.put(RC_cobrado,cobrado);
+        initialValues.put(RC_fecha_reporte,fecha);
 
         return mDb.insert(SQLITE_TABLE_Resumen_Caja,null,initialValues);
     }
@@ -74,23 +87,25 @@ public class DbAdapter_Resumen_Caja {
 
     public Cursor fetchAllResumenCaja(){
         Cursor mCursor = mDb.query(SQLITE_TABLE_Resumen_Caja,new String[]{RC_resumenCajaId,
-                RC_descripcionComprobante,RC_cantidad,RC_vendido,RC_pagado,RC_cobrado},
+                        RC_descripcionComprobante,RC_cantidad,RC_vendido,RC_pagado,RC_cobrado},
                 null,null,null,null,null);
         if(mCursor!=null){
-               mCursor.moveToFirst();
+            mCursor.moveToFirst();
         }
         return mCursor;
     }
 
-    public void insertSomeResumenCaja(){
 
-        createResumenCaja("Boletas Emitidas",0,0.0f,0.0f,0.0f);
+
+    public void insertSomeResumenCaja(){
+/*
+        createResumenCaja("Boletas Emitidas",0,0.0f,0.0f,0.0f,"");
         createResumenCaja("Facturas Emitidas",0,0.0f,0.0f,0.0f);
         createResumenCaja("Notas de Credito Emitidas",0,0.0f,0.0f,0.0f);
         createResumenCaja("Facturas Cobradas",0,0.0f,0.0f,0.0f);
         createResumenCaja("Boletas Cobradas",0,0.0f,0.0f,0.0f);
         createResumenCaja("Boletas Anuladas",0,0.0f,0.0f,0.0f);
-        createResumenCaja("Facturas Anuladas",0,0.0f,0.0f,0.0f);
+        createResumenCaja("Facturas Anuladas",0,0.0f,0.0f,0.0f);*/
 
     }
 
