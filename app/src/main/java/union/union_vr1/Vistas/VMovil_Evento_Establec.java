@@ -87,7 +87,7 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
 
                 try {
                     cursor.moveToNext();
-                    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                    SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
                     Date dSqlite = df.parse(fecha);
                     Date dSistema = df.parse(fech());
 
@@ -124,7 +124,7 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
     private String fech() throws ParseException {
         Calendar cal = new GregorianCalendar();
         Date date = cal.getTime();
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         String formatteDate = df.format(date);
         Date d = df.parse(formatteDate);
 

@@ -126,7 +126,7 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
                 for(int i = 0; i<totalItemCount;i++){
                     Cursor cr = (Cursor) listView.getItemAtPosition(i);
                     String fecha_Programada = cr.getString(cr.getColumnIndexOrThrow("cc_te_fecha_programada"));
@@ -317,7 +317,7 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
     {
         Calendar cal = new GregorianCalendar();
         Date date = cal.getTime();
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         String formatteDate = df.format(date);
         return formatteDate;
     }

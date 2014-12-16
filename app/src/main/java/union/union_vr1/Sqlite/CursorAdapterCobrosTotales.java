@@ -32,7 +32,7 @@ public class CursorAdapterCobrosTotales extends CursorAdapter {
     {
         Calendar cal = new GregorianCalendar();
         Date date = cal.getTime();
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         String formatteDate = df.format(date);
         return formatteDate;
     }
@@ -66,7 +66,7 @@ public class CursorAdapterCobrosTotales extends CursorAdapter {
                 "\nFecha: "+fechpro+"," +
                 "\nMonto: "+repagar+"";
         textView.setText(cobrosTotales);
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         String fecha_Programada = fechpro;
         try {
             Date dSqlite = df.parse(fecha_Programada);

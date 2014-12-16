@@ -74,10 +74,11 @@ public class VMovil_Online_Pumovil extends Activity {
 
         dbHelper4 = new DbAdapter_Comprob_Cobro(this);
         dbHelper4.open();
+        /*
         dbHelper4.insertSomeComprobCobros();
         dbHelper4.deleteAllComprobCobros();
         dbHelper4.insertSomeComprobCobros();
-
+        */
     }
 
     @Override
