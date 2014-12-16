@@ -27,6 +27,7 @@ import java.util.List;
 import union.union_vr1.Conexion.JSONParser;
 import union.union_vr1.R;
 import union.union_vr1.Sqlite.DbAdapter_Agente;
+import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 import union.union_vr1.Vistas.VMovil_Evento_Indice;
 import union.union_vr1.Vistas.VMovil_Online_Pumovil;
@@ -36,19 +37,24 @@ public class DbManager_Agente_GET extends Activity {
     //Aqui se se inicializan las variables para manejar los metodos de base de datos sqlite
     private DbAdapter_Agente manager;
     private DbAdaptert_Evento_Establec managerEstablecimiento;
+    private DbAdapter_Comprob_Cobro managerCobro;
 
 
     //Aqui se inicializa las variables globales para mandar por GET
     private ProgressDialog progressDialog;
     JSONParser jsonParser = new JSONParser();
     JSONParser jsonParserEstablec = new JSONParser();
-    private static String url_agente = "http://192.168.0.158:8083/produnion/lis_agente.php";
-    private static String url_establec = "http://192.168.0.158:8083/produnion/lis_establec.php";
+    JSONParser jsonParserCobro = new JSONParser();
+    private static String url_agente = "http://192.168.0.104:8081/produnion/lis_agente.php";
+    private static String url_cobro = "http://192.168.0.104:8081/produnion/lis_hist_cobro.php";
+    private static String url_establec = "http://192.168.0.104:8081/produnion/lis_establec.php";
     private static final String TAG_SUCCESS = "success";
     JSONArray agente = null;
     JSONArray establecimientos = null;
+    JSONArray cobros=null;
     public int i;
     public int k;
+    public int c;
 
     //Aqui se inicializa las variables para Agente de Venta
     private static final String TAG_agente = "agente_venta";
@@ -84,6 +90,24 @@ public class DbManager_Agente_GET extends Activity {
     private static final String TAG_estado_no_atencion = "estado_no_atencion";
     private static final String TAG_id_agente = "id_agente";
 
+    //Aqui se inicializan las variables para el historial de cobros
+    public static final String TAG_historial_cobros = "hist_cobros";
+    public static final String TAG_id_establec_cobro = "id_establec";
+    public static final String TAG_id_comprob = "id_comprob";
+    public static final String TAG_id_plan_pago = "id_plan_pago";
+    public static final String TAG_id_plan_pago_detalle = "id_plan_pago_detalle";
+    public static final String TAG_desc_tipo_doc = "desc_tipo_doc";
+    public static final String TAG_doc = "doc";
+    public static final String TAG_fecha_programada = "fecha_programada";
+    public static final String TAG_monto_a_pagar = "monto_a_pagar";
+    public static final String TAG_fecha_cobro = "fecha_cobro";
+    public static final String TAG_hora_cobro = "hora_cobro";
+    public static final String TAG_monto_cobrado = "monto_cobrado";
+    public static final String TAG_estado_cobro = "estado_cobro";
+    public static final String TAG_id_agente_cobro = "id_agente";
+    public static final String TAG_id_forma_cobro = "id_forma_cobro";
+    public static final String TAG_lugar_registro = "lugar_registro";
+
 
 
     @Override
@@ -98,11 +122,15 @@ public class DbManager_Agente_GET extends Activity {
         managerEstablecimiento.open();
         managerEstablecimiento.deleteAllEstablecs();
 
+        managerCobro = new DbAdapter_Comprob_Cobro(this);
+        managerCobro.open();
+        managerCobro.deleteAllComprobCobros();
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.princ_json_agente);
         new LoadUpdateAgente().execute();
         new LoadInsertEstablec().execute();
-
+        new LoadInsertHistCobros().execute();
     }
 
     class LoadUpdateAgente extends AsyncTask<String,String,String>{
@@ -161,16 +189,6 @@ public class DbManager_Agente_GET extends Activity {
 
     class LoadInsertEstablec extends AsyncTask<String,String,String>{
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            progressDialog= new ProgressDialog(DbManager_Agente_GET.this);
-            progressDialog.setMessage("Importando Historial de Establecimientos de Sistema On line...");
-            progressDialog.setIndeterminate(false);
-            progressDialog.setCancelable(false);
-            progressDialog.show();
-
-        }
         protected String doInBackground(String... args) {
             Bundle bundle = getIntent().getExtras();
             String id_agente_venta = bundle.getString("putIdAgenteVenta");
@@ -224,6 +242,72 @@ public class DbManager_Agente_GET extends Activity {
             return null;
         }
 
+    }
+
+    class LoadInsertHistCobros extends AsyncTask<String,String,String>{
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog= new ProgressDialog(DbManager_Agente_GET.this);
+            progressDialog.setMessage("Importando Historial de Establecimientos de Sistema On line...");
+            progressDialog.setIndeterminate(false);
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+
+        }
+        protected String doInBackground(String... args) {
+            Bundle bundle = getIntent().getExtras();
+            String id_agente_venta = bundle.getString("putIdAgenteVenta");
+            //Aqui se lista los parametros a enviar al PHP
+            List<NameValuePair> params = new ArrayList<NameValuePair>();
+            params.add(new BasicNameValuePair("id_agente_venta", id_agente_venta));
+            // getting JSON string from URL
+            JSONObject jsonCobro = jsonParserCobro.makeHttpRequest(url_cobro, "GET", params);
+            //Impresion en consola de prueba para verificar si se recibió algún dato del PHP
+            Log.d("cobros: ", jsonCobro.toString());
+
+            try {
+                //Aqui se verifica si se envio recibio los datos correctamente
+                int success = jsonCobro.getInt(TAG_SUCCESS);
+                if (success == 1) {
+                    // Aqui se inserta la lista de datos en un JSON array
+                    cobros = jsonCobro.getJSONArray(TAG_historial_cobros);
+
+
+                    //Se recorre el array del agente
+                    for (c = 0; c < cobros.length(); c++) {
+                        JSONObject co = cobros.getJSONObject(c);
+
+                        //Aqui se hace uso de las variables recibidas para cualquier metodo de base de datos
+                        managerCobro.createComprobCobros(
+                                co.getInt(TAG_id_establec_cobro),
+                                co.getInt(TAG_id_comprob),
+                                co.getInt(TAG_id_plan_pago),
+                                co.getInt(TAG_id_plan_pago_detalle),
+                                co.getString(TAG_desc_tipo_doc),
+                                co.getString(TAG_doc),
+                                co.getString(TAG_fecha_programada),
+                                co.getDouble(TAG_monto_a_pagar),
+                                co.getString(TAG_fecha_cobro),
+                                co.getString(TAG_hora_cobro),
+                                co.getDouble(TAG_monto_cobrado),
+                                co.getInt(TAG_estado_cobro),
+                                co.getInt(TAG_id_agente_cobro),
+                                co.getInt(TAG_id_forma_cobro),
+                                co.getString(TAG_lugar_registro)
+                        );
+                    }
+
+                } else {
+                    Log.d("Fallo Sincronizacion!", jsonCobro.getString(TAG_SUCCESS));
+                    return jsonCobro.getString(TAG_SUCCESS);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
         protected void onPostExecute(String file_url) {
             progressDialog.dismiss();
             final Button btnSgt = (Button)findViewById(R.id.JS_AG_BTN_sig);
@@ -237,5 +321,4 @@ public class DbManager_Agente_GET extends Activity {
         }
 
     }
-
 }

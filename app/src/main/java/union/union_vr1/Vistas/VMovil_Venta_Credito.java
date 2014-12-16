@@ -139,65 +139,65 @@ public class VMovil_Venta_Credito extends Activity implements OnClickListener {
                             valtotalp = roundTwoDecimals(valtotalp);
                             fechaCobro = getDatePhone1();
                             dbHelper.createComprobCobros(Integer.parseInt(estabX), Integer.parseInt(idcomX), 1, 1,
-                                    tipdoX, detcoX, fechaCobro, valtotalp, "", "", 0, 0, 1);
+                                    tipdoX, detcoX, fechaCobro, valtotalp, "", "", 0, 0, 1,2,"mobile");
                         }
                         if(item == 1){
                             valtotalp = Double.parseDouble(totalX);
                             valtotalp = roundTwoDecimals(valtotalp);
                             fechaCobro = getDatePhone2();
                             dbHelper.createComprobCobros(Integer.parseInt(estabX), Integer.parseInt(idcomX), 1, 1,
-                                    tipdoX, detcoX, fechaCobro, valtotalp, "", "", 0, 0, 1);
+                                    tipdoX, detcoX, fechaCobro, valtotalp, "", "", 0, 0, 1,2,"mobile");
                         }
                         if(item == 2){
                             valtotalp = Double.parseDouble(totalX)/2;
                             valtotalp = roundTwoDecimals(valtotalp);
                             fechaCobro = getDatePhone1();
                             dbHelper.createComprobCobros(Integer.parseInt(estabX), Integer.parseInt(idcomX), 1, 1,
-                                    tipdoX, detcoX, fechaCobro, valtotalp, "", "", 0, 0, 1);
+                                    tipdoX, detcoX, fechaCobro, valtotalp, "", "", 0, 0, 1,2,"mobile");
                             valtotalp = Double.parseDouble(totalX)/2;
                             fechaCobro = getDatePhone2();
                             dbHelper.createComprobCobros(Integer.parseInt(estabX), Integer.parseInt(idcomX), 1, 2,
-                                    tipdoX, detcoX, fechaCobro, valtotalp, "", "", 0, 0, 1);
+                                    tipdoX, detcoX, fechaCobro, valtotalp, "", "", 0, 0, 1,2,"mobile");
                         }
                         if(item == 3){
                             valtotalp = Double.parseDouble(totalX);
                             valtotalp = roundTwoDecimals(valtotalp);
                             fechaCobro = getDatePhone4();
                             dbHelper.createComprobCobros(Integer.parseInt(estabX), Integer.parseInt(idcomX), 1, 1,
-                                    tipdoX, detcoX, fechaCobro, valtotalp, "", "", 0, 0, 1);
+                                    tipdoX, detcoX, fechaCobro, valtotalp, "", "", 0, 0, 1,2,"mobile");
                         }
                         if(item == 4){
                             valtotalp = Double.parseDouble(totalX)/2;
                             valtotalp = roundTwoDecimals(valtotalp);
                             fechaCobro = getDatePhone2();
                             dbHelper.createComprobCobros(Integer.parseInt(estabX), Integer.parseInt(idcomX), 1, 1,
-                                    tipdoX, detcoX, fechaCobro, valtotalp, "", "", 0, 0, 1);
+                                    tipdoX, detcoX, fechaCobro, valtotalp, "", "", 0, 0, 1,2,"mobile");
                             valtotalp = Double.parseDouble(totalX)/2;
                             fechaCobro = getDatePhone4();
                             dbHelper.createComprobCobros(Integer.parseInt(estabX), Integer.parseInt(idcomX), 1, 2,
-                                    tipdoX, detcoX, fechaCobro, valtotalp, "", "", 0, 0, 1);
+                                    tipdoX, detcoX, fechaCobro, valtotalp, "", "", 0, 0, 1,2,"mobile");
                         }
                         if(item == 5){
                             valtotalp = Double.parseDouble(totalX)/4;
                             valtotalp = roundTwoDecimals(valtotalp);
                             fechaCobro = getDatePhone1();
                             dbHelper.createComprobCobros(Integer.parseInt(estabX), Integer.parseInt(idcomX), 1, 1,
-                                    tipdoX, detcoX, fechaCobro, valtotalp, "", "", 0, 0, 1);
+                                    tipdoX, detcoX, fechaCobro, valtotalp, "", "", 0, 0, 1,2,"mobile");
                             valtotalp = Double.parseDouble(totalX)/4;
                             valtotalp = roundTwoDecimals(valtotalp);
                             fechaCobro = getDatePhone2();
                             dbHelper.createComprobCobros(Integer.parseInt(estabX), Integer.parseInt(idcomX), 1, 2,
-                                    tipdoX, detcoX, fechaCobro, valtotalp, "", "", 0, 0, 1);
+                                    tipdoX, detcoX, fechaCobro, valtotalp, "", "", 0, 0, 1,2,"mobile");
                             valtotalp = Double.parseDouble(totalX)/4;
                             valtotalp = roundTwoDecimals(valtotalp);
                             fechaCobro = getDatePhone3();
                             dbHelper.createComprobCobros(Integer.parseInt(estabX), Integer.parseInt(idcomX), 1, 3,
-                                    tipdoX, detcoX, fechaCobro, valtotalp, "", "", 0, 0, 1);
+                                    tipdoX, detcoX, fechaCobro, valtotalp, "", "", 0, 0, 1,2,"mobile");
                             valtotalp = Double.parseDouble(totalX)/4;
                             valtotalp = roundTwoDecimals(valtotalp);
                             fechaCobro = getDatePhone4();
                             dbHelper.createComprobCobros(Integer.parseInt(estabX), Integer.parseInt(idcomX), 1, 4,
-                                    tipdoX, detcoX, fechaCobro, valtotalp, "", "", 0, 0, 1);
+                                    tipdoX, detcoX, fechaCobro, valtotalp, "", "", 0, 0, 1,2,"mobile");
                         }
                         Toast.makeText(getApplicationContext(), items[item], Toast.LENGTH_LONG).show();
                         displayListViewVVC();

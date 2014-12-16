@@ -25,6 +25,8 @@ public class DbAdapter_Comprob_Cobro {
     public static final String CC_monto_cobrado = "cc_re_monto_cobrado";
     public static final String CC_estado_cobro = "cc_in_estado_cobro";
     public static final String CC_id_agente = "cc_in_id_agente";
+    public static final String CC_id_forma_cobro = "cc_id_forma_cobro";
+    public static final String CC_lugar_registro = "cc_lugar_registro";
 
     public static final String TAG = "Comprob_Cobro";
     private DbHelper mDbHelper;
@@ -50,7 +52,9 @@ public class DbAdapter_Comprob_Cobro {
                     +CC_hora_cobro+" text,"
                     +CC_monto_cobrado+" real,"
                     +CC_estado_cobro+" integer,"
-                    +CC_id_agente+" integer);";
+                    +CC_id_agente+" integer,"
+                    +CC_id_forma_cobro+" integer,"
+                    +CC_lugar_registro+" text);";
 
     public static final String DELETE_TABLE_COMPROB_COBRO = "DROP TABLE IF EXISTS " + SQLITE_TABLE_Comprob_Cobro;
 
@@ -74,7 +78,7 @@ public class DbAdapter_Comprob_Cobro {
             int id_establec, int id_comprob, int id_plan_pago, int id_plan_pago_detalle,
             String desc_tipo_doc, String doc, String fecha_programada, double monto_a_pagar,
             String fecha_cobro, String hora_cobro, double monto_cobrado, int estado_cobro,
-            int id_agente) {
+            int id_agente,int id_forma_cobro, String lugar_registro) {
 
         ContentValues initialValues = new ContentValues();
         initialValues.put(CC_id_establec,id_establec);
@@ -90,7 +94,8 @@ public class DbAdapter_Comprob_Cobro {
         initialValues.put(CC_monto_cobrado,monto_cobrado);
         initialValues.put(CC_estado_cobro,estado_cobro);
         initialValues.put(CC_id_agente,id_agente);
-
+        initialValues.put(CC_id_forma_cobro,id_forma_cobro);
+        initialValues.put(CC_lugar_registro,lugar_registro);
         return mDb.insert(SQLITE_TABLE_Comprob_Cobro, null, initialValues);
     }
 
@@ -229,15 +234,15 @@ return insert;
     public void insertSomeComprobCobros() {
 
         createComprobCobros(1, 1, 1, 1, "FACTURA", "FAC-0001", "2014-12-12", 1000, "",
-                "", 0, 0, 1);
+                "", 0, 0, 1,1,"historial");
         createComprobCobros(1, 1, 1, 2, "FACTURA", "FAC-0001", "2014-12-19", 1000, "",
-                "", 0, 0, 1);
+                "", 0, 0, 1,1,"historial");
         createComprobCobros(1, 1, 1, 2, "FACTURA", "FAC-0001", "2014-12-19", 500, "",
-                "", 0, 0, 1);
+                "", 0, 0, 1,1,"historial");
         createComprobCobros(1, 1, 1, 2, "FACTURA", "FAC-0001", "2014-12-01", 200, "",
-                "", 0, 0, 1);
+                "", 0, 0, 1,1,"historial");
         createComprobCobros(2, 2, 2, 2, "FACTURA", "FAC-0002", "2014-12-11", 200, "",
-                "", 0, 0, 1);
+                "", 0, 0, 1,1,"historial");
     }
 
 }
