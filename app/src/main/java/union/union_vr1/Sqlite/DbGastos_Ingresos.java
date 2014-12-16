@@ -37,7 +37,7 @@ public class DbGastos_Ingresos {
         mDb.execSQL("insert into m_comprob_venta values ( null,1, 2, 1, 1, '0005', '5A', 5, 10, 0, 150, '16/12/2014', '08:10:00', 0, 0,1);");
 
         listarGatos_Boletas_Emitidas(idAgente);
-       listarGatos_Facturas_Emitidas(idAgente);
+        listarGatos_Facturas_Emitidas(idAgente);
          /*listarGatos_Notas_Credito_Emitidas(idAgente);
         listarGatos_Facturas_Cobradas(idAgente);
         listarGatos_Boletas_Cobradas(idAgente);
