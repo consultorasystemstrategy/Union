@@ -1,51 +1,48 @@
 package union.union_vr1.Vistas;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.IOException;
-import java.net.IDN;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
-
 import union.union_vr1.R;
+import union.union_vr1.Sqlite.DBAdapter_Temp_Venta;
+import union.union_vr1.Sqlite.DbAdapter_Agente;
+import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta_Detalle;
 import union.union_vr1.Sqlite.DbAdapter_Histo_Comprob_Anterior;
 import union.union_vr1.Sqlite.DbAdapter_Histo_Venta_Detalle;
-import union.union_vr1.Sqlite.DbAdapter_Precio;
-import union.union_vr1.Sqlite.DbAdapter_Stock_Agente;
-import union.union_vr1.Sqlite.DbAdapter_Tipo_Gasto;
-import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
-import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
-import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta;
-import union.union_vr1.Sqlite.DbAdapter_Agente;
-public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
+import union.union_vr1.Utils.MyApplication;
+
+public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
 
 
     private DbAdapter_Histo_Comprob_Anterior dbHelper_Histo_comprob_anterior;
+    private DBAdapter_Temp_Venta dbHelper_temp_venta;
+    private DbAdapter_Comprob_Venta dbHelper_Comprob_Venta;
+    private DbAdapter_Agente dbHelperAgente;
+    private DbAdapter_Comprob_Venta_Detalle dbHelper_Comprob_Venta_Detalle;
+
     private int idEstablecimiento;
+    int id_agente_venta;
     private SimpleCursorAdapter simpleCursorAdapter;
+
+    private Spinner spinnerTipoDocumento;
+    private Spinner spinnerFormaPago;
+    private Button buttonAgregar;
+    private Button buttonVender;
+    private ListView listView;
+    private View header;
 
     /*
     private Cursor cursor, cursorx, cursorv, cursorz, cursorw, cursory, cursort, cursorn, cursorp, cursorf;
@@ -94,17 +91,70 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
         dbHelper_Histo_comprob_anterior = new DbAdapter_Histo_Comprob_Anterior(this);
         dbHelper_Histo_comprob_anterior.open();
 
+        dbHelper_temp_venta = new DBAdapter_Temp_Venta(this);
+        dbHelper_temp_venta.open();
+
+        dbHelper_Comprob_Venta = new DbAdapter_Comprob_Venta(this);
+        dbHelper_Comprob_Venta.open();
+
+        dbHelperAgente = new DbAdapter_Agente(this);
+        dbHelperAgente.open();
+
+        dbHelper_Comprob_Venta_Detalle  = new DbAdapter_Comprob_Venta_Detalle(this);
+        dbHelper_Comprob_Venta_Detalle.open();
+
         Bundle bundle = getIntent().getExtras();
         idEstablecimiento=Integer.parseInt(bundle.getString("idEstabX"));
+        id_agente_venta= ((MyApplication) this.getApplication()).getIdAgente();
 
         setContentView(R.layout.princ_venta_cabecera);
 
+
+
+
+        spinnerTipoDocumento = (Spinner) findViewById(R.id.VC_spinnerTipoDocumento);
+        ArrayAdapter<CharSequence> adapterTipoDocumento = ArrayAdapter.createFromResource(this,R.array.tipoDocumento,android.R.layout.simple_spinner_item);
+        adapterTipoDocumento.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerTipoDocumento.setAdapter(adapterTipoDocumento);
+
+        spinnerFormaPago = (Spinner) findViewById(R.id.VC_spinnerFormaPago);
+        ArrayAdapter<CharSequence> adapterFormaPago = ArrayAdapter.createFromResource(this,R.array.forma_pago,android.R.layout.simple_spinner_item);
+        adapterFormaPago.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerFormaPago.setAdapter(adapterFormaPago);
+
+        buttonAgregar = (Button) findViewById(R.id.VC_buttonAgregarProductos);
+        buttonVender = (Button) findViewById(R.id.VC_buttonVender);
+        buttonVender.setOnClickListener(this);
+        buttonAgregar.setOnClickListener(this);
+
         displayHistorialComprobanteAnterior();
+
+        spinnerFormaPago.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                String formaDePago = adapterView.getItemAtPosition(i).toString();
+                FormaPago formaPago = FormaPago.valueOf(formaDePago);
+
+                switch (formaPago){
+                    case Contado:
+
+                        break;
+                    case Credito:
+                        Intent intent = new Intent(getApplicationContext(), VMovil_Venta_Cabecera_PlanPagos.class);
+                        startActivity(intent);
+                        break;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
         /*
         pase = 0;
         pase01 = 0;
         pase02 = 0;
-
 
         //colors.setBackgroundColor(Color.WHITE);
         //stoant.setText("Surtido del Stock Anterior:1 - Venta Anterior:1(1%)");
@@ -167,47 +217,201 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
         */
     }
 
-    @Override
+    private enum FormaPago{
+        Contado, Credito
+    }
+
+@Override
     public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.VC_buttonAgregarProductos:
+                Intent intent  = new Intent(this, VMovil_Venta_Cabecera_AgregarProductos.class);
+
+                startActivity(intent);
+                break;
+            case R.id.VC_buttonVender:
+                    vender();
+                break;
+            default:
+
+                break;
+        }
 
     }
 
+    public void vender(){
+
+            //Obtener los datos de las ventas
+
+            String formaPago = spinnerFormaPago.getSelectedItem().toString();
+            String tipoDocumento = spinnerTipoDocumento.getSelectedItem().toString();
+
+            TipoDocumento tipoDocumento1 = TipoDocumento.valueOf(tipoDocumento);
+            FormaPago formaPago1 = FormaPago.valueOf(formaPago);
+
+            int tipoVenta = 1;
+            int numero_documento = 1;
+            int estado_conexion = 0;
+            int i_tipoDocumento = 0;
+            int i_formaPago = 0;
+            int estado_comprobante = 1;
+            Double monto_total  = 0.0;
+            Double igv  = 0.0;
+            Double base_imponible = 0.0;
+            String erp_stringTipoDocumento  = null;
+            String serie = null;
+            String codigo_erp = null;
+
+            switch (tipoDocumento1){
+                case factura:
+                    i_tipoDocumento = 1;
+                    erp_stringTipoDocumento="FV";
+                    serie = dbHelperAgente.getSerieFacturaByIdAgente("14");
+                    codigo_erp = erp_stringTipoDocumento+serie;
+                    break;
+                case boleta:
+                    i_tipoDocumento = 2;
+                    erp_stringTipoDocumento="BV";
+                    serie = dbHelperAgente.getSerieBoletaByIdAgente("14");
+                    codigo_erp = erp_stringTipoDocumento+serie;
+                    break;
+                case ficha:
+                    break;
+            }
+            switch (formaPago1){
+                case Contado:
+                    i_formaPago = 1;
+                    break;
+                case Credito:
+                    i_formaPago = 2;
+                    break;
+
+            }
+
+
+        String datosConcatenados = "idEestableciminto : " + idEstablecimiento + "\n" +
+                "idAgente : " + id_agente_venta + "\n" +
+                "Forma de pago : " + formaPago + "\n" +
+                "Tipo Documento : " + tipoDocumento+ "\n" + "---------------------------";
+
+        long id = dbHelper_Comprob_Venta.createComprobVenta(idEstablecimiento,i_tipoDocumento,i_formaPago,tipoVenta,codigo_erp,serie,numero_documento,base_imponible,igv,monto_total,null,null,estado_comprobante, estado_conexion,id_agente_venta);
+
+
+
+        int id_comprobante = (int) id;
+
+
+        Cursor cursorTemp = simpleCursorAdapter.getCursor();
+
+
+
+        for (cursorTemp.moveToFirst(); !cursorTemp.isAfterLast();cursorTemp.moveToNext()){
+
+            int _id = cursorTemp.getInt(cursorTemp.getColumnIndex(DBAdapter_Temp_Venta.temp_venta_detalle));
+            int id_producto = cursorTemp.getInt(cursorTemp.getColumnIndex(DBAdapter_Temp_Venta.temp_id_producto));
+            String nombre_producto = cursorTemp.getString(cursorTemp.getColumnIndex(DBAdapter_Temp_Venta.temp_nom_producto));
+            int cantidad = cursorTemp.getInt(cursorTemp.getColumnIndex(DBAdapter_Temp_Venta.temp_cantidad));
+            Double precio_unitario = cursorTemp.getDouble(cursorTemp.getColumnIndex(DBAdapter_Temp_Venta.temp_precio_unit));
+            Double importe = cursorTemp.getDouble(cursorTemp.getColumnIndex(DBAdapter_Temp_Venta.temp_importe));
+
+            String promedio_anterior = cursorTemp.getString(cursorTemp.getColumnIndex(DBAdapter_Temp_Venta.temp_prom_anterior));
+            String devuelto = cursorTemp.getString(cursorTemp.getColumnIndex(DBAdapter_Temp_Venta.temp_devuelto));
+
+            monto_total += importe;
+
+            long comprobVentaDetalle = dbHelper_Comprob_Venta_Detalle.createComprobVentaDetalle(id_comprobante, id_producto, nombre_producto, cantidad, importe,0, precio_unitario, promedio_anterior, devuelto,0);
+
+
+            datosConcatenados+="Producto  "+ nombre_producto + "Vendido satisfactoriamente con id : "+ comprobVentaDetalle;
+        }
+
+        base_imponible = monto_total /1.18;
+        igv = base_imponible*0.18;
+        dbHelper_Comprob_Venta.updateComprobanteMontos(id,monto_total,igv, base_imponible);
+        datosConcatenados+="total de gasto : " + monto_total;
+        datosConcatenados+="base impornible: " + base_imponible;
+        datosConcatenados+="igv : " + igv;
+
+        dbHelper_temp_venta.deleteAllTempVentaDetalle();
+
+        Intent intent= new Intent(this, VMovil_Evento_Indice.class);
+        Toast.makeText(getApplicationContext(),datosConcatenados,Toast.LENGTH_LONG).show();
+        startActivity(intent);
+
+
+    }
+
+    public enum TipoDocumento{
+        factura, boleta, ficha
+    }
     private void displayHistorialComprobanteAnterior() {
 
         Cursor cursor = dbHelper_Histo_comprob_anterior.fetchAllHistoComprobAnteriorByIdEstRawQuery(idEstablecimiento);
+        //OBTENGO LAS PJOSICIONES DE LAS COLUMNAS DEL CURSOR
+        int indice_id = cursor.getColumnIndex("_id");
+        int indice_id_producto = cursor.getColumnIndex("id_producto");
+        int indice_nombre_producto = cursor.getColumnIndex("nombre_producto");
+        int indice_cantidad = cursor.getColumnIndex("cantidad");
+        int indice_precio_unitario = cursor.getColumnIndex("pu");
+        int indice_importe = cursor.getColumnIndex("total");
 
+        int indice_promedio_anterior = cursor.getColumnIndex("pa");
+        int indice_devuelto  = cursor.getColumnIndex("devuelto");
+
+        //t indice_valor_unidad = cursor.getColumnIndex("");
+        //int indice_costo_venta = cursor.getColumnIndex("");
+
+        cursor.moveToFirst();
+
+        for (cursor.moveToFirst(); !cursor.isAfterLast();cursor.moveToNext()){
+
+            int _id = cursor.getInt(indice_id);
+            int id_producto = cursor.getInt(indice_id_producto);
+            String nombre_producto = cursor.getString(indice_nombre_producto);
+            int cantidad = cursor.getInt(indice_cantidad);
+            Double precio_unitario = cursor.getDouble(indice_precio_unitario);
+            Double importe = cursor.getDouble(indice_importe);
+
+            String promedio_anterior = cursor.getString(indice_promedio_anterior);
+            String devuelto = cursor.getString(indice_devuelto);
+
+            //En una tabla "Temp_Venta" Nos sirve para agregar datos del historial de ventas anteriores y sugerir al usuario, estos son datos temporales
+            long id = dbHelper_temp_venta.createTempVentaDetalle(1,id_producto,nombre_producto,cantidad,importe, precio_unitario, promedio_anterior, devuelto);
+
+
+        }
+
+        Cursor cursorTempVentaDetalle = dbHelper_temp_venta.fetchAllTempVentaDetalle();
         // The desired columns to be bound
         String[] columns = new String[]{
-                "_id",
-                "nombre_producto",
-                "pa",
-                "devuelto",
-                "cantidad",
-                "pu",
-                "total"
+                DBAdapter_Temp_Venta.temp_nom_producto,
+                DBAdapter_Temp_Venta.temp_cantidad,
+                DBAdapter_Temp_Venta.temp_precio_unit,
+                DBAdapter_Temp_Venta.temp_importe,
+
         };
 
         // the XML defined views which the data will be bound to
         int[] to = new int[]{
-                R.id.VC_cod,
                 R.id.VC_producto,
-                R.id.VC_p_a,
-                R.id.VC_dev,
                 R.id.VC_promedio,
                 R.id.VC_pu,
                 R.id.VC_total
+
         };
 
         // create the adapter using the cursor pointing to the desired data
         //as well as the layout information
         simpleCursorAdapter = new SimpleCursorAdapter(
                 this, R.layout.infor_venta_cabecera,
-                cursor,
+                cursorTempVentaDetalle,
                 columns,
                 to,
                 0);
 
-        ListView listView = (ListView) findViewById(R.id.VC_listView);
+        listView = (ListView) findViewById(R.id.VC_listView);
+        header = getLayoutInflater().inflate(R.layout.infor_venta_cabecera,null);
+        listView.addHeaderView(header);
         // Assign adapter to ListView
         listView.setAdapter(simpleCursorAdapter);
 
@@ -216,14 +420,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
             public void onItemClick(AdapterView<?> listView, View view,
                                     int position, long id) {
                 // Get the cursor, positioned to the corresponding row in the result set
-                Cursor cursorw = (Cursor) listView.getItemAtPosition(position);
-
-                // Get the state's capital from this row in the database.
-                int id_historial_comprobante = cursorw.getInt(cursorw.getColumnIndexOrThrow(DbAdapter_Histo_Comprob_Anterior.HC_id_hist_comprob));
-
-
-                Toast.makeText(getApplicationContext(),
-                        "id Historail comprobante : " + id_historial_comprobante, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),""+view,Toast.LENGTH_SHORT).show();
             }
 
         });
@@ -897,4 +1094,6 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
     /*
 
      */
+
+
     }

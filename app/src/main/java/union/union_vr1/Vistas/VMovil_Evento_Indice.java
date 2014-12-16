@@ -81,10 +81,10 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
 
         //Agregando datos de prueba  cada vez que se inicia esta vista
 
-        /*
         dbHelper.deleteAllEstablecs();
         dbHelper.insertSomeEstablecs();
-*/
+
+
         dbHelper1.deleteAllComprobVenta();
         dbHelper1.insertSomeComprobVenta();
         dbHelper2.deleteAllComprobVentaDetalle();

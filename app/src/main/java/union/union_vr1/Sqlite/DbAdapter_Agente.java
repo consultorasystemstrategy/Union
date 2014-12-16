@@ -144,15 +144,45 @@ public class DbAdapter_Agente {
         Log.w(TAG, inputText);
         Cursor mCursor = null;
         mCursor = mDb.query(true, SQLITE_TABLE_Agente, new String[] {AG_id_agente,
-            AG_id_agente_venta, AG_nombre_agente, AG_nombre_ruta, AG_nro_bodegas},
-            AG_id_agente_venta + " = " + inputText, null,
-            null, null, null, null);
+                        AG_id_agente_venta, AG_nombre_agente, AG_nombre_ruta, AG_nro_bodegas},
+                AG_id_agente_venta + " = " + inputText, null,
+                null, null, null, null);
         if (mCursor != null) {
             mCursor.moveToFirst();
         }
         return mCursor;
 
     }
+
+    public String getSerieFacturaByIdAgente(String idAgente) throws SQLException {
+        Cursor mCursor = null;
+        mCursor = mDb.query(true, SQLITE_TABLE_Agente, new String[] {AG_id_agente,
+                        AG_id_agente_venta, AG_nombre_agente, AG_nombre_ruta, AG_nro_bodegas, AG_serie_boleta, AG_serie_factura, AG_serie_rrpp},
+                AG_id_agente_venta + " = " + idAgente, null,
+                null, null, null, null);
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+
+
+        return mCursor.getString(mCursor.getColumnIndex(AG_serie_factura));
+
+    }
+    public String getSerieBoletaByIdAgente(String idAgente) throws SQLException {
+        Cursor mCursor = null;
+        mCursor = mDb.query(true, SQLITE_TABLE_Agente, new String[] {AG_id_agente,
+                        AG_id_agente_venta, AG_nombre_agente, AG_nombre_ruta, AG_nro_bodegas, AG_serie_boleta, AG_serie_factura, AG_serie_rrpp},
+                AG_id_agente_venta + " = " + idAgente, null,
+                null, null, null, null);
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+
+
+        return mCursor.getString(mCursor.getColumnIndex(AG_serie_boleta));
+
+    }
+
 
     public Cursor fetchAgentesByName(String inputText) throws SQLException {
         Log.w(TAG, inputText);

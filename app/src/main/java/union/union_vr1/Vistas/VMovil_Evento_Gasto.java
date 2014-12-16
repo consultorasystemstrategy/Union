@@ -329,6 +329,7 @@ public class VMovil_Evento_Gasto extends Activity /*implements OnClickListener *
 
         displayListViewVEG();
         Toast.makeText(getApplicationContext(),"Registro insertado satisfactoriamente con id : "+idRegistroGastoInsertado,Toast.LENGTH_SHORT).show();
+
         //Toast.makeText(getApplicationContext(),
         //        "idTipoGAsto : " + positionTipoGasto + ", idProcedenciaGasto : " + positionProcedenciaGasto + ", idTipoDocumento"+positionTipoDocumento + ", total : "+total+ ", referencia : " +referencia+", nomobreDocumento : "+nombreDocumento, Toast.LENGTH_SHORT).show();
     }

@@ -12,6 +12,8 @@ import union.union_vr1.Conexion.DbHelper;
 public class DbAdapter_Comprob_Venta {
 
     public static final String CV_id_comprob = "_id";
+
+    public static final String CV_id_comp = "cv_in_id_comp";
     public static final String CV_id_establec = "cv_in_id_establec";
     public static final String CV_id_tipo_doc = "cv_in_id_tipo_doc";
     public static final String CV_id_forma_pago = "cv_in_id_forma_pago";
@@ -115,6 +117,18 @@ public class DbAdapter_Comprob_Venta {
         mDb.update(SQLITE_TABLE_Comprob_Venta, initialValues,
                 CV_id_comprob+"=?",new String[]{""+id});
     }
+
+    public void updateComprobanteMontos(long id, Double total, Double igv, Double base_imponible){
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(CV_total,total);
+        initialValues.put(CV_total,igv);
+        initialValues.put(CV_total,base_imponible);
+
+        mDb.update(SQLITE_TABLE_Comprob_Venta, initialValues,
+                CV_id_comprob+"=?",new String[]{""+id});
+    }
+
+
 
     public Cursor fetchComprobVentaByName(String inputText) throws SQLException {
         Log.w(TAG, inputText);
