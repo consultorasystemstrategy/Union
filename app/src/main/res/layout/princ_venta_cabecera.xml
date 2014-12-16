@@ -1,7 +1,13 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+
     tools:context="union.union_vr1.Vistas.VMovil_Venta_CabeceraX">
 
     <!--
@@ -110,6 +116,8 @@
         android:layout_alignRight="@+id/VVC_SPNforpag"
         android:layout_alignEnd="@+id/VVC_SPNforpag" />
 -->
+
+    <!--
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="fill_parent"
@@ -177,7 +185,7 @@
             android:layout_height="wrap_content"
             android:text="P.U."
             android:id="@+id/textView6"
-            android:layout_weight="1"
+            android:layout_weight ="1"
             android:textSize="8dp"
             android:textStyle="bold"
             android:textColor="@color/PersonalizadoSteve3"
@@ -194,10 +202,66 @@
             android:textColor="@color/PersonalizadoSteve3"
             android:background="@color/PersonalizadoSteve4"/>
     </LinearLayout>
+-->
 
-    <ListView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/VC_listView"
-        android:layout_marginTop="12dp" />
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1">
+
+            <ListView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/VC_listView" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="4">
+
+            <Spinner
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:id="@+id/VC_spinnerTipoDocumento"
+                android:layout_weight="1"/>
+
+            <Spinner
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:id="@+id/VC_spinnerFormaPago"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="4">
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:text="Agregar Productos"
+                android:id="@+id/VC_buttonAgregarProductos"
+                android:layout_weight="1"
+                android:background="@color/PersonalizadoSteve2" />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:text="Vender"
+                android:id="@+id/VC_buttonVender"
+                android:layout_weight="1"
+                android:background="@color/PersonalizadoSteve4" />
+        </LinearLayout>
+    </LinearLayout>
+
 </RelativeLayout>

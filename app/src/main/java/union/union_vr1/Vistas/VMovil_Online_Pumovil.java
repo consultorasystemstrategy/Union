@@ -22,6 +22,7 @@ import union.union_vr1.R;
 import union.union_vr1.Sqlite.DbAdapter_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
 import union.union_vr1.Utils.DialogSincronizarOffLine;
+import union.union_vr1.Utils.MyApplication;
 
 
 public class VMovil_Online_Pumovil extends Activity {
@@ -112,6 +113,11 @@ public class VMovil_Online_Pumovil extends Activity {
         String id_agente_venta = bundle.getString("putIdAgenteVenta");
         String id_usuario = bundle.getString("putIdUsuario");
         String id_empresa = bundle.getString("putIdEmpresa");
+
+
+        //VARIABLE GLOBAL, PARA OBTENERLA DESDE CUALQUIER SITIO DE LA APLICACIÓN
+        ((MyApplication)this.getApplication()).setIdAgente(Integer.parseInt(id_agente_venta));
+
         dbHelper.updateAgente(id_agente_venta,id_usuario,id_empresa,nombre_usuario,nombre_agente,pass_usuario);
     }
 

@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import union.union_vr1.Sqlite.DBAdapter_Temp_Venta;
 import union.union_vr1.Sqlite.DbAdapter_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
 import union.union_vr1.Sqlite.DbAdapter_Histo_Comprob_Anterior;
@@ -23,8 +24,8 @@ import union.union_vr1.Sqlite.DbAdapter_Histo_Venta_Detalle;
  */
 public class DbHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 4;
-    private static final String DATABASE_NAME = "ProdUniondbJ.sqlite";
+    private static final int DATABASE_VERSION = 8;
+    private static final String DATABASE_NAME = "ProdUniondb.sqlite";
 
     public DbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -58,6 +59,9 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(DbAdapter_Histo_Comprob_Anterior.CREATE_TABLE_HISTO_COMPROB_ANTERIOR);
         //Log.w(DbAdapter_Resumen_Caja.TAG, DbAdapter_Resumen_Caja.CREATE_TABLE_RESUMEN_CAJA);
         db.execSQL(DbAdapter_Resumen_Caja.CREATE_TABLE_RESUMEN_CAJA);
+
+        db.execSQL(DBAdapter_Temp_Venta.CREATE_TABLE_TEMP_VENTA_DETALLE);
+
     }
 
     @Override
@@ -77,6 +81,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(DbAdapter_Histo_Venta_Detalle.DELETE_TABLE_HISTO_VENTA_DETALLE);
         db.execSQL(DbAdapter_Histo_Comprob_Anterior.DELETE_TABLE_HISTO_COMPROB_ANTERIOR);
         db.execSQL(DbAdapter_Resumen_Caja.DELETE_TABLE_RESUMEN_CAJA);
+        db.execSQL(DBAdapter_Temp_Venta.DELETE_TABLE_TEMP_VENTA_DETALLE);
         onCreate(db);
     }
 }

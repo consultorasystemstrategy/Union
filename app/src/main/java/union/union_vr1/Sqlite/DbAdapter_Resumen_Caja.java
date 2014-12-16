@@ -49,7 +49,7 @@ public class DbAdapter_Resumen_Caja {
                     +RC_fecha_reporte+" text);";
 
 
-    public static final String DELETE_TABLE_RESUMEN_CAJA = "DROP TABLE IF EXISTS + " + SQLITE_TABLE_Resumen_Caja;
+    public static final String DELETE_TABLE_RESUMEN_CAJA = "DROP TABLE IF EXISTS " + SQLITE_TABLE_Resumen_Caja;
 
     public DbAdapter_Resumen_Caja(Context context){this.mCtx=context;}
 

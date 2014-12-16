@@ -21,6 +21,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import union.union_vr1.R;
 import union.union_vr1.Sqlite.CursorAdapterEstablecimientoColor;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
+import union.union_vr1.Utils.MyApplication;
 
 public class VMovil_Menu_Establec extends Activity {
 
@@ -45,6 +46,9 @@ public class VMovil_Menu_Establec extends Activity {
 
     private void eleccion(String idEstabl){
         Intent i = new Intent(this, VMovil_Evento_Establec.class);
+
+        ((MyApplication)this.getApplication()).setIdEstablecimiento(Integer.parseInt(idEstabl));
+
         i.putExtra("idEstab", idEstabl);
         startActivity(i);
     }

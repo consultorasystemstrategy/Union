@@ -8,8 +8,9 @@
         android:orientation="horizontal"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/LayoutParent">
+        android:id="@+id/VC_LayoutParent">
 
+        <!--
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -18,16 +19,15 @@
             android:layout_weight="1"
             android:textSize="8dp"
             android:textStyle="bold|italic" />
-
+-->
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
             android:text="Producto"
             android:id="@+id/VC_producto"
-            android:layout_weight="3"
-            android:textSize="8dp"
-            android:textStyle="bold|italic" />
-
+            android:layout_weight="1"
+            android:gravity="left|center_vertical|center" />
+<!--
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -45,32 +45,31 @@
             android:layout_weight="1"
             android:textSize="8dp"
             android:textStyle="bold|italic" />
-
+-->
         <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
             android:inputType="number"
             android:ems="10"
             android:id="@+id/VC_promedio"
+            android:gravity="left|center_vertical"
             android:layout_weight="1"
-            android:textSize="8dp" />
+            android:editable="true" />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
             android:text="P.U."
             android:id="@+id/VC_pu"
             android:layout_weight="1"
-            android:textSize="8dp"
-            android:textStyle="bold" />
+            android:gravity="left|center_vertical" />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
             android:text="Total"
             android:id="@+id/VC_total"
             android:layout_weight="1"
-            android:textSize="8dp"
-            android:textStyle="bold|italic" />
+            android:gravity="left|center_vertical" />
     </LinearLayout>
 </RelativeLayout>

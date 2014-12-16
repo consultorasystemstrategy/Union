@@ -13,6 +13,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
+        android:name=".Utils.MyApplication"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/TemaPersonalizadoSteve" >
@@ -30,7 +31,7 @@
         </activity>
         <activity
             android:name=".Vistas.VMovil_Venta_Cabecera"
-            android:label="@string/app_name" >
+            android:label="Venta de Productos" >
         </activity>
         <activity
             android:name=".Vistas.VMovil_Evento_Establec"
@@ -97,6 +98,16 @@
             android:name=".Vistas.VMovil_Cobros_Totales"
             android:label="@string/app_name" >
         </activity>
+        <activity
+            android:name=".Vistas.VMovil_Venta_Cabecera_AgregarProductos"
+            android:label="Agregar productos" >
+        </activity>
+        <activity
+            android:name=".Vistas.VMovil_Venta_Cabecera_PlanPagos"
+            android:label="Plan de Pagos" >
+        </activity>
+
+
         <activity
             android:name=".MySQL.DbManager_Agente_GET"
             android:label="@string/title_activity_db_manager__agente__get" >

@@ -19,6 +19,7 @@
     <string name="VHV_busqueda">Buscar Historico…</string>
     <string name="VCH_titulo">Lista Canc. Historico!</string>
     <string name="VCH_busqueda">Buscar Canc. Historico…</string>
+    <string name="VCPP">Nùmero de Cuotas</string>
 
     <string-array name="country_arrays">
         <item>Malaysia</item>
@@ -80,6 +81,15 @@
     <string-array name="tipoDocumentoCombustibleRuta">
         <item>factura</item>
     </string-array>
+
+    <string-array name="Cuotas">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+    </string-array>
+
+
 
     <string name="title_activity_princ_venta_principal">princ_venta_principal</string>
     <string name="title_activity_vmovil__evento__establec">VMovil_Evento_Establec</string>

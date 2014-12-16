@@ -119,7 +119,48 @@ public class DbAdapter_Stock_Agente {
         return mCursor;
 
     }
+    public Cursor fetchStockAgenteByIdEstablecimiento(int idCategorìaEstablecimiento) throws SQLException {
+        Cursor mCursor = null;
+        mCursor = mDb.rawQuery("SELECT *\n" +
+                "FROM m_stock_agente SA\n" +
+                "INNER JOIN m_precio P\n" +
+                "ON SA.st_in_id_producto = P.pr_in_id_producto\n" +
+                "WHERE P.pr_in_id_cat_estt = ?", new String[] {""+idCategorìaEstablecimiento});
 
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+
+    }
+
+    public Cursor fetchStockAgenteByIdEstablecimientoandName(int idCategorìaEstablecimiento, String nameProducto) throws SQLException {
+        Cursor mCursor = null;
+        if (nameProducto == null  ||  nameProducto.length () == 0)  {
+
+            mCursor = mDb.rawQuery("SELECT *\n" +
+                    "FROM m_stock_agente SA\n" +
+                    "INNER JOIN m_precio P\n" +
+                    "ON SA.st_in_id_producto = P.pr_in_id_producto\n" +
+                    "WHERE P.pr_in_id_cat_estt ="+idCategorìaEstablecimiento,null);
+
+        } else {
+
+
+            mCursor = mDb.rawQuery("SELECT *\n" +
+                    "FROM m_stock_agente SA\n" +
+                    "INNER JOIN m_precio P\n" +
+                    "ON SA.st_in_id_producto = P.pr_in_id_producto\n" +
+                    "WHERE P.pr_in_id_cat_estt = "+idCategorìaEstablecimiento+" " +
+                    "AND SA.st_te_nombre LIKE '%"+nameProducto+"%'", null);
+        }
+
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+
+    }
     public void updateStockAgente(int id_producto, int cantidadFinal,int disponible, int ventas, int fisico){
 
         ContentValues initialValues = new ContentValues();

@@ -189,7 +189,7 @@ public class DbAdapter_Histo_Comprob_Anterior {
 
     public Cursor fetchAllHistoComprobAnteriorByIdEstRawQuery(int id) {
 
-        String sql = "SELECT HCA._id AS _id, HCA.hc_te_nom_producto AS nombre_producto, HCA.hc_te_prom_anterior||\"/\"||HCA.hc_in_cantidad AS pa, HCA.hc_te_devuelto AS devuelto, HCA.hc_te_prom_anterior AS cantidad, EE.ee_in_id_cat_est,P.pr_re_precio_unit AS pu, HCA.hc_te_prom_anterior*P.pr_re_precio_unit AS total\n" +
+        String sql = "SELECT HCA._id AS _id, HCA.hc_in_id_producto AS id_producto, HCA.hc_te_nom_producto AS nombre_producto, HCA.hc_te_prom_anterior||\"/\"||HCA.hc_in_cantidad AS pa, HCA.hc_te_devuelto AS devuelto, HCA.hc_te_prom_anterior AS cantidad, EE.ee_in_id_cat_est,P.pr_re_precio_unit AS pu, HCA.hc_te_prom_anterior*P.pr_re_precio_unit AS total\n" +
                 "FROM m_histo_comprob_anterior HCA\n" +
                 "INNER JOIN m_evento_establec EE\n" +
                 "ON HCA.hc_in_id_establec = EE.ee_in_id_establec\n" +
