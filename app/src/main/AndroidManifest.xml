@@ -98,10 +98,6 @@
             android:label="@string/app_name" >
         </activity>
         <activity
-            android:name=".MySQL.DbManager_Agente_Venta_GET"
-            android:label="@string/app_name" >
-        </activity>
-        <activity
             android:name=".MySQL.DbManager_Agente_GET"
             android:label="@string/title_activity_db_manager__agente__get" >
         </activity>
