@@ -13,9 +13,12 @@ import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
+
 
 import union.union_vr1.MySQL.DbManager_Evento_Establec_GET;
 import union.union_vr1.MySQL.DbManager_Evento_Establec_POST;
@@ -64,7 +67,7 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         dbHelper3 = new DbAdapter_Agente(this);
         dbHelper3.open();
         dbHelper4 = new DbAdapter_Comprob_Cobro(this);
-    dbHelper4.open();
+        dbHelper4.open();
         dbHelper5 = new DbAdapter_Histo_Venta_Detalle(this);
         dbHelper5.open();
         dbHelper6 = new DbAdapter_Stock_Agente(this);
@@ -77,6 +80,7 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
 
 
         //Agregando datos de prueba  cada vez que se inicia esta vista
+
         dbHelper.deleteAllEstablecs();
         dbHelper.insertSomeEstablecs();
 
@@ -85,9 +89,11 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         dbHelper2.deleteAllComprobVentaDetalle();
         dbHelper3.deleteAllAgentes();
         dbHelper3.insertSomeAgentes();
+
+      /*  dbHelper4.insertSomeComprobCobros();
+        dbHelper4.deleteAllComprobCobros();
         dbHelper4.insertSomeComprobCobros();
-       dbHelper4.deleteAllComprobCobros();
-       dbHelper4.insertSomeComprobCobros();
+*/
         dbHelper5.deleteAllHistoVentaDetalle();
         dbHelper5.insertSomeHistoVentaDetalle();
         dbHelper6.deleteAllStockAgente();

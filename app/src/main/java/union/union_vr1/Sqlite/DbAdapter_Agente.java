@@ -213,6 +213,40 @@ public class DbAdapter_Agente {
         mDb.update(SQLITE_TABLE_Agente, initialValues,null,null);
     }
 
+    public void updateAgenteBefore(String id_agente_venta, String id_liquidacion, String km_inicial,
+                                   String km_final, String nombre_ruta,String nro_bodegas,
+                                   String serie_boleta, String serie_factura, String serie_rrpp,
+                                   String correlativo_boleta, String correlativo_factura,
+                                   String correlativo_rrpp){
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(AG_liquidacion,id_liquidacion);
+        initialValues.put(AG_km_inicial,km_inicial);
+        initialValues.put(AG_km_final,km_final);
+        initialValues.put(AG_nombre_ruta,nombre_ruta);
+        initialValues.put(AG_nro_bodegas,nro_bodegas);
+        initialValues.put(AG_serie_boleta,serie_boleta);
+        initialValues.put(AG_serie_factura,serie_factura);
+        initialValues.put(AG_serie_rrpp,serie_rrpp);
+        initialValues.put(AG_correlativo_boleta,correlativo_boleta);
+        initialValues.put(AG_correlativo_factura,correlativo_factura);
+        initialValues.put(AG_correlativo_rrpp,correlativo_rrpp);
+        mDb.update(SQLITE_TABLE_Agente, initialValues,
+                AG_id_agente_venta+"=?",new String[]{id_agente_venta});
+    }
+
+    private String M_id_agente_venta;
+    private String M_liquidacion;
+    private String M_km_inicial;
+    private String M_km_final;
+    private String M_nombre_ruta;
+    private String M_nro_bodegas;
+    private String M_serie_boleta;
+    private String M_serie_factura;
+    private String M_serie_rrpp;
+    private String M_correlativo_boleta;
+    private String M_correlativo_factura;
+    private String M_correlativo_rrpp;
+
     public void insertSomeAgentes() {
 
         createAgentes(14, 1, 1, "URLISH", "AGENTE01", "123456", 1, 1000, 1000, "LIMA 01", 5, "BO001",

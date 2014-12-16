@@ -2,6 +2,7 @@ package union.union_vr1.Vistas;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -12,12 +13,15 @@ import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import union.union_vr1.R;
 import union.union_vr1.Sqlite.DbAdapter_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
+import union.union_vr1.Utils.DialogSincronizarOffLine;
 
 
 public class VMovil_Online_Pumovil extends Activity {
@@ -29,52 +33,52 @@ public class VMovil_Online_Pumovil extends Activity {
     private DbAdapter_Agente dbHelper;
     private SimpleCursorAdapter dataAdapter;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.princ_web_view);
 
-
-        textView = (TextView)findViewById(R.id.tag_message);
         Bundle bundle = getIntent().getExtras();
-        textView.setText(bundle.getString("putPassUsuario"));
-
+        Toast.makeText(VMovil_Online_Pumovil.this, "Password :" + bundle.getString("putPassUsuario") + "\n\n" + "Nombre Agente: " + bundle.getString("putNombreAgente"), Toast.LENGTH_LONG).show();
 
         view = (WebView)this.findViewById(R.id.webView);
         view.getSettings().setJavaScriptEnabled(true);
         view.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
-        view.loadUrl("http://192.168.0.105:8084/SysMovilProductosUnion");
+        view.loadUrl("http://192.168.0.104:8084/SysMovilProductosUnion");
 
-        //Asignamos a la vista web el cliente (navegador)
-        //que hemos creado como clase privada (ver más abajo
-        //y que extiende del que trae Android por defecto.
-        //Esta clase maneja el navegador:
+        /*Asignamos a la vista web el cliente (navegador)
+        que hemos creado como clase privada (ver más abajo
+        y que extiende del que trae Android por defecto.
+        Esta clase maneja el navegador:*/
         view.setWebViewClient(new MiWebViewClient());
 
-        //Asignamos a la vista web la clase MiWebViewClient
-        //que hemos creado como clase privada (ver más abajo)
-        //y que extiende del que trae Android por defecto.
-        //Esta clase permite controlar los eventos que se producen
-        //en el navegador:
+        /*Asignamos a la vista web la clase MiWebViewClient
+        que hemos creado como clase privada (ver más abajo)
+        y que extiende del que trae Android por defecto.
+        Esta clase permite controlar los eventos que se producen
+        en el navegador:*/
         view.setWebChromeClient(new MiWebCromeClient());
 
-        //displayUpdateAgente();
+        final Button button = (Button) findViewById(R.id.VEE_BTNEstadoNoAtendido);
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                FragmentManager manager = getFragmentManager();
+                DialogSincronizarOffLine dialogConfirm = new DialogSincronizarOffLine();
+                dialogConfirm.show(manager,"DialogSincronizarOffLine");
+            }
+        });
 
-        //Insertar Algunos Datos de Prueba
+        displayUpdateAgente();
 
-      //  dbHelper4 = new DbAdapter_Comprob_Cobro(this);
-       // dbHelper4.open();
-        //dbHelper4.deleteAllComprobCobros();
-        //dbHelper4.insertSomeComprobCobros();
+        dbHelper4 = new DbAdapter_Comprob_Cobro(this);
+        dbHelper4.open();
+        dbHelper4.insertSomeComprobCobros();
+        dbHelper4.deleteAllComprobCobros();
+        dbHelper4.insertSomeComprobCobros();
+
     }
-
-    private class HelloWebViewCliente extends WebViewClient{
-        public boolean loading(WebView webView,String url){
-             webView.loadUrl(url);
-            return true;
-        }
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -110,16 +114,6 @@ public class VMovil_Online_Pumovil extends Activity {
         dbHelper.updateAgente(id_agente_venta,id_usuario,id_empresa,nombre_usuario,nombre_agente,pass_usuario);
     }
 
-
-    public void lanzarOnLine(View v){
-        Intent i = new Intent(this,VMovil_Evento_Indice.class);
-        startActivity(i);
-    }
-
-    public void lanzarOffLine(View v){
-        Intent i = new Intent(this,VMovil_Online_Pumovil.class);
-        startActivity(i);
-    }
 
     private class MiWebViewClient extends WebViewClient
     {
