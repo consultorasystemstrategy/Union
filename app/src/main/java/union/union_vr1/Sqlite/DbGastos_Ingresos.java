@@ -43,7 +43,7 @@ public class DbGastos_Ingresos {
         listarGatos_Boletas_Cobradas(idAgente);
         listarGatos_Boletas_Anuladas(idAgente);
         listarGatos_Facturas_Anuladas(idAgente);*/
-        Cursor cr = mDb.rawQuery("select * from m_resumen_caja  where rc_re_fecha_reporte='"+getDatePhone()+"' and id_Agente="+idAgente+" ",null);
+        Cursor cr = mDb.rawQuery("select * from m_resumen_caja  where rc_re_fecha_reporte='"+getDatePhone()+"' and id_Agente="+idAgente+"",null);
 
         return cr;
     }
