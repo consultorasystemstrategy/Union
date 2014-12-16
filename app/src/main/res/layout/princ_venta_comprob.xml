@@ -3,17 +3,77 @@
     android:layout_width="fill_parent" android:layout_height="fill_parent"
     android:orientation="vertical">
 
-    <TextView android:layout_width="fill_parent"
-        android:layout_height="wrap_content" android:padding="10dp"
-        android:text="@string/VVCO_titulo" android:textSize="20sp" />
+    <TabHost
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tabMante">
 
-    <EditText android:id="@+id/VVCO_buscar" android:layout_width="match_parent"
-        android:layout_height="wrap_content" android:ems="10"
-        android:hint="@string/VVCO_busqueda">
-        <requestFocus />
-    </EditText>
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical">
 
-    <ListView android:id="@+id/VVCO_listar" android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
+            <TabWidget
+                android:id="@android:id/tabs"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"></TabWidget>
+
+            <FrameLayout
+                android:id="@android:id/tabcontent"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+
+                <RelativeLayout
+                    android:id="@+id/comprob"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent">
+
+
+                   <!-- <TextView android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:padding="10dp"
+                        android:text="@string/VVCO_titulo" android:textSize="20sp" />-->
+                    <EditText android:id="@+id/VVCO_buscar" android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:ems="10"
+                        android:hint="@string/VVCO_busqueda">
+                        <requestFocus />
+                    </EditText>
+
+                    <ListView android:id="@+id/VVCO_listar" android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_below="@+id/VVCO_buscar"
+                        android:layout_alignParentStart="true" />
+
+
+
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:id="@+id/cobranza"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent">
+
+                    <ListView
+                        android:id="@+id/VVCO_cbrz"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        </ListView>
+                    </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/canje"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"></LinearLayout>
+                <LinearLayout
+                    android:id="@+id/autoriz"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"></LinearLayout>
+
+            </FrameLayout>
+        </LinearLayout>
+    </TabHost>
+
+
+
 
 </LinearLayout>

@@ -11,6 +11,7 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
@@ -18,7 +19,6 @@
         <activity
             android:name=".Vistas.VMovil_Menu_Establec"
             android:label="@string/app_name" >
-
         </activity>
         <activity
             android:name=".Vistas.VMovil_Venta_Producto"
@@ -27,43 +27,34 @@
         <activity
             android:name=".MyAndroidAppActivityX"
             android:label="@string/app_name" >
-
         </activity>
         <activity
             android:name=".Vistas.VMovil_Venta_Cabecera"
             android:label="@string/app_name" >
-
         </activity>
         <activity
             android:name=".Vistas.VMovil_Evento_Establec"
             android:label="@string/app_name" >
-
         </activity>
         <activity
             android:name=".Vistas.VMovil_Venta_Credito"
             android:label="@string/app_name" >
-
         </activity>
         <activity
             android:name=".Vistas.VMovil_Venta_Comprob"
             android:label="@string/app_name" >
-
         </activity>
         <activity
             android:name=".Vistas.VMovil_Cobro_Credito"
             android:label="@string/app_name" >
-
         </activity>
         <activity
             android:name=".Vistas.VMovil_Evento_Indice"
             android:label="@string/app_name" >
-
-
         </activity>
         <activity
             android:name=".Vistas.VMovil_Evento_Gasto"
             android:label="@string/app_name" >
-
         </activity>
         <activity
             android:name=".Login"
@@ -77,39 +68,38 @@
         <activity
             android:name=".MySQL.DbManager_Evento_Establec_GET"
             android:label="@string/app_name" >
-
         </activity>
         <activity
             android:name=".MySQL.DbManager_Evento_Establec_POST"
             android:label="@string/app_name" >
-
         </activity>
         <activity
             android:name=".Vistas.VMovil_Histo_Venta"
             android:label="@string/app_name" >
-
         </activity>
         <activity
             android:name=".Vistas.VMovil_Canc_Histo"
             android:label="@string/app_name" >
-
         </activity>
         <activity
             android:name=".Vistas.VMovil_Resumen_Caja"
             android:label="@string/app_name" >
-
         </activity>
         <activity
             android:name=".Vistas.VMovil_Online_Pumovil"
             android:label="@string/app_name" >
-
-
         </activity>
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name" >
-
-
+        </activity>
+        <activity
+            android:name=".Vistas.VMovil_Cobros_Totales"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name=".MySQL.DbManager_Agente_GET"
+            android:label="@string/title_activity_db_manager__agente__get" >
         </activity>
     </application>
 

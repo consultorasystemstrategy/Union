@@ -160,8 +160,6 @@ public class DbManager_Evento_Establec_GET extends ListActivity {
                         JSONObject c = empleados.getJSONObject(i);
 
                         // Storing each json item in variable
-                        //String cedula = c.getString(TAG_id_usuario);
-                        //String nombre = c.getString(TAG_nom_usuario)+ " " +c.getString(TAG_pass_usuario);
 
                         M_id_evt_establec = c.getInt(TAG_id_evt_establec);
                         M_id_establec = c.getInt(TAG_id_establec);
@@ -194,21 +192,6 @@ public class DbManager_Evento_Establec_GET extends ListActivity {
                                 M_dias_credito,
                                 M_estado_no_atencion,
                                 M_id_agente);
-
-                        //tabla[i][1] = String.valueOf(M_id_evt_establec);
-                        //tabla[i][2] = String.valueOf(M_id_establec);
-                        //tabla[i][3] = String.valueOf(M_id_cat_est);
-                        //tabla[i][4] = String.valueOf(M_id_tipo_doc_cliente);
-                        //tabla[i][5] = String.valueOf(M_id_estado_atencion);
-                        //tabla[i][6] = String.valueOf(M_nom_establec);
-                        //tabla[i][7] = String.valueOf(M_nom_cliente);
-                        //tabla[i][8] = String.valueOf(M_doc_cliente);
-                        //tabla[i][9] = String.valueOf(M_orden);
-                        //tabla[i][10] = String.valueOf(M_surtido_stock_ant);
-                        //tabla[i][11] = String.valueOf(M_surtido_venta_ant);
-                        //tabla[i][12] = String.valueOf(M_monto_credito);
-                        //tabla[i][13] = String.valueOf(M_dias_credito);
-                        //tabla[i][14] = String.valueOf(M_id_agente);
 
                         // creating new HashMap
                         HashMap<String, String> map = new HashMap<String, String>();
@@ -253,12 +236,6 @@ public class DbManager_Evento_Establec_GET extends ListActivity {
                     setListAdapter(adapter);
                 }
             });
-
-            // buscar la carga
-
-            //Intent in = new Intent(DbManager_Evento_Establec_GET.this, DbManager_Evento_Establec_POST.class);
-            //finish();
-            //startActivity(in);
 
         }
 

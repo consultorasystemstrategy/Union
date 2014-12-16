@@ -1,0 +1,241 @@
+package union.union_vr1.MySQL;
+
+import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ListAdapter;
+import android.widget.SimpleAdapter;
+import android.widget.TextView;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import union.union_vr1.Conexion.JSONParser;
+import union.union_vr1.R;
+import union.union_vr1.Sqlite.DbAdapter_Agente;
+import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
+import union.union_vr1.Vistas.VMovil_Evento_Indice;
+import union.union_vr1.Vistas.VMovil_Online_Pumovil;
+
+public class DbManager_Agente_GET extends Activity {
+
+    //Aqui se se inicializan las variables para manejar los metodos de base de datos sqlite
+    private DbAdapter_Agente manager;
+    private DbAdaptert_Evento_Establec managerEstablecimiento;
+
+
+    //Aqui se inicializa las variables globales para mandar por GET
+    private ProgressDialog progressDialog;
+    JSONParser jsonParser = new JSONParser();
+    JSONParser jsonParserEstablec = new JSONParser();
+    private static String url_agente = "http://192.168.0.158:8083/produnion/lis_agente.php";
+    private static String url_establec = "http://192.168.0.158:8083/produnion/lis_establec.php";
+    private static final String TAG_SUCCESS = "success";
+    JSONArray agente = null;
+    JSONArray establecimientos = null;
+    public int i;
+    public int k;
+
+    //Aqui se inicializa las variables para Agente de Venta
+    private static final String TAG_agente = "agente_venta";
+    private static final String TAG_id_agente_venta = "id_agente_venta";
+    private static final String TAG_id_liquidacion = "id_liquidacion";
+    private static final String TAG_km_inicial = "km_inicial";
+    private static final String TAG_km_final = "km_final";
+    private static final String TAG_nombre_ruta = "nombre_ruta";
+    private static final String TAG_nro_bodegas = "nro_bodegas";
+    private static final String TAG_serie_boleta = "serie_boleta";
+    private static final String TAG_serie_factura = "serie_factura";
+    private static final String TAG_serie_rrpp = "serie_rrpp";
+    private static final String TAG_correlativo_boleta = "correlativo_boleta";
+    private static final String TAG_correlativo_factura = "correlativo_factura";
+    private static final String TAG_correlativo_rrpp = "correlativo_rrpp";
+
+
+    //Aqui se inicializa las variables para evento establecimiento
+    private static final String TAG_EventoEstablec = "establecimientos";
+    private static final String TAG_id_evt_establec = "id_evt_establec";
+    private static final String TAG_id_establec = "id_establec";
+    private static final String TAG_id_cat_est = "id_cat_est";
+    private static final String TAG_id_tipo_doc_cliente = "id_tipo_doc_cliente";
+    private static final String TAG_id_estado_atencion = "id_estado_atencion";
+    private static final String TAG_nom_establec = "nom_establec";
+    private static final String TAG_nom_cliente = "nom_cliente";
+    private static final String TAG_doc_cliente = "doc_cliente";
+    private static final String TAG_orden = "orden";
+    private static final String TAG_surtido_stock_ant = "surtido_stock_ant";
+    private static final String TAG_surtido_venta_ant = "surtido_venta_ant";
+    private static final String TAG_monto_credito = "monto_credito";
+    private static final String TAG_dias_credito = "dias_credito";
+    private static final String TAG_estado_no_atencion = "estado_no_atencion";
+    private static final String TAG_id_agente = "id_agente";
+
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.princ_json_agente);
+
+        manager = new DbAdapter_Agente(this);
+        manager.open();
+
+        managerEstablecimiento = new DbAdaptert_Evento_Establec(this);
+        managerEstablecimiento.open();
+        managerEstablecimiento.deleteAllEstablecs();
+
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.princ_json_agente);
+        new LoadUpdateAgente().execute();
+        new LoadInsertEstablec().execute();
+
+    }
+
+    class LoadUpdateAgente extends AsyncTask<String,String,String>{
+        protected String doInBackground(String... args) {
+            Bundle bundle = getIntent().getExtras();
+            String id_agente_venta = bundle.getString("putIdAgenteVenta");
+            //Aqui se lista los parametros a enviar al PHP
+            List<NameValuePair> params = new ArrayList<NameValuePair>();
+            params.add(new BasicNameValuePair("id_agente_venta", id_agente_venta));
+            // getting JSON string from URL
+            JSONObject json = jsonParser.makeHttpRequest(url_agente, "GET", params);
+            //Impresion en consola de prueba para verificar si se recibió algún dato del PHP
+            Log.d("agente de venta: ", json.toString());
+
+            try {
+                //Aqui se verifica si se envio recibio los datos correctamente
+                int success = json.getInt(TAG_SUCCESS);
+                if (success == 1) {
+                    // Aqui se inserta la lista de datos en un JSON array
+                    agente = json.getJSONArray(TAG_agente);
+
+
+                    //Se recorre el array del agente
+                    for (i = 0; i < agente.length(); i++) {
+                        JSONObject c = agente.getJSONObject(i);
+
+                        //Aqui se hace uso de las variables recibidas para cualquier metodo de base de datos
+                        manager.updateAgenteBefore(
+                                c.getString(TAG_id_agente_venta),
+                                c.getString(TAG_id_liquidacion),
+                                c.getString(TAG_km_inicial),
+                                c.getString(TAG_km_final),
+                                c.getString(TAG_nombre_ruta),
+                                c.getString(TAG_nro_bodegas),
+                                c.getString(TAG_serie_boleta),
+                                c.getString(TAG_serie_factura),
+                                c.getString(TAG_serie_rrpp),
+                                c.getString(TAG_correlativo_boleta),
+                                c.getString(TAG_correlativo_factura),
+                                c.getString(TAG_correlativo_rrpp)
+                        );
+                    }
+
+                } else {
+                    Log.d("Fallo Sincronizacion!", json.getString(TAG_SUCCESS));
+                    return json.getString(TAG_SUCCESS);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+    }
+
+    class LoadInsertEstablec extends AsyncTask<String,String,String>{
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog= new ProgressDialog(DbManager_Agente_GET.this);
+            progressDialog.setMessage("Importando Historial de Establecimientos de Sistema On line...");
+            progressDialog.setIndeterminate(false);
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+
+        }
+        protected String doInBackground(String... args) {
+            Bundle bundle = getIntent().getExtras();
+            String id_agente_venta = bundle.getString("putIdAgenteVenta");
+            //Aqui se lista los parametros a enviar al PHP
+            List<NameValuePair> params = new ArrayList<NameValuePair>();
+            params.add(new BasicNameValuePair("id_agente_venta", id_agente_venta));
+            // getting JSON string from URL
+            JSONObject jsonEstablec = jsonParserEstablec.makeHttpRequest(url_establec, "GET", params);
+            //Impresion en consola de prueba para verificar si se recibió algún dato del PHP
+            Log.d("establecimientos: ", jsonEstablec.toString());
+
+            try {
+                //Aqui se verifica si se envio recibio los datos correctamente
+                int success = jsonEstablec.getInt(TAG_SUCCESS);
+                if (success == 1) {
+                    // Aqui se inserta la lista de datos en un JSON array
+                    establecimientos = jsonEstablec.getJSONArray(TAG_EventoEstablec);
+
+                    //Se recorre el array de los establecimientos
+                    for (k = 0; k < establecimientos.length(); k++) {
+                        JSONObject ce = establecimientos.getJSONObject(k);
+
+                        //Aqui se hace uso de las variables recibidas para cualquier metodo de base de datos
+                        managerEstablecimiento.createEstablecs(
+                                ce.getInt(TAG_id_establec),
+                                ce.getInt(TAG_id_cat_est),
+                                ce.getInt(TAG_id_tipo_doc_cliente),
+                                ce.getInt(TAG_id_estado_atencion),
+                                ce.getString(TAG_nom_establec),
+                                ce.getString(TAG_nom_cliente),
+                                ce.getString(TAG_doc_cliente),
+                                ce.getInt(TAG_orden),
+                                ce.getInt(TAG_surtido_stock_ant),
+                                ce.getInt(TAG_surtido_venta_ant),
+                                ce.getDouble(TAG_monto_credito),
+                                ce.getInt(TAG_dias_credito),
+                                ce.getInt(TAG_estado_no_atencion),
+                                ce.getInt(TAG_id_agente)
+                        );
+                    }
+
+
+                } else {
+                    Log.d("Fallo Sincronizacion!", jsonEstablec.getString(TAG_SUCCESS));
+                    return jsonEstablec.getString(TAG_SUCCESS);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        protected void onPostExecute(String file_url) {
+            progressDialog.dismiss();
+            final Button btnSgt = (Button)findViewById(R.id.JS_AG_BTN_sig);
+            btnSgt.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(view.getContext(),VMovil_Evento_Indice.class);
+                    startActivity(intent);
+                }
+            });
+        }
+
+    }
+
+}

@@ -3,10 +3,22 @@ package union.union_vr1.Vistas;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.LightingColorFilter;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+
 
 import union.union_vr1.MySQL.DbManager_Evento_Establec_GET;
 import union.union_vr1.MySQL.DbManager_Evento_Establec_POST;
@@ -24,6 +36,7 @@ import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 
 public class VMovil_Evento_Indice extends Activity implements View.OnClickListener {
     private Cursor cursor;
+    private DbAdapter_Comprob_Cobro cCobro ;
     private DbAdaptert_Evento_Establec dbHelper;
     private DbAdapter_Comprob_Venta_Detalle dbHelper2;
     private DbAdapter_Comprob_Venta dbHelper1;
@@ -51,7 +64,6 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         dbHelper.open();
 
 
-
         dbHelper3 = new DbAdapter_Agente(this);
         dbHelper3.open();
         dbHelper4 = new DbAdapter_Comprob_Cobro(this);
@@ -68,6 +80,7 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
 
 
         //Agregando datos de prueba  cada vez que se inicia esta vista
+
         dbHelper.deleteAllEstablecs();
         dbHelper.insertSomeEstablecs();
 
@@ -76,9 +89,11 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         dbHelper2.deleteAllComprobVentaDetalle();
         dbHelper3.deleteAllAgentes();
         dbHelper3.insertSomeAgentes();
-        //dbHelper4.insertSomeComprobCobros();
+
+      /*  dbHelper4.insertSomeComprobCobros();
         dbHelper4.deleteAllComprobCobros();
         dbHelper4.insertSomeComprobCobros();
+*/
         dbHelper5.deleteAllHistoVentaDetalle();
         dbHelper5.insertSomeHistoVentaDetalle();
         dbHelper6.deleteAllStockAgente();
@@ -99,6 +114,41 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         mCarinv.setOnClickListener(this);
         mTrainv.setOnClickListener(this);
         mCobroTotal.setOnClickListener(this);
+        cCobro = new DbAdapter_Comprob_Cobro(this);
+        cCobro.open();
+        AsignarColor(mCobroTotal);
+
+    }
+    private void AsignarColor(Button btn){
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        Cursor cursor = cCobro.listarComprobantesToCobros();
+        if(cursor.moveToFirst()){
+            String fecha_Programada = cursor.getString(cursor.getColumnIndexOrThrow("cc_te_fecha_programada"));
+            try {
+                Date dSqlite = df.parse(fecha_Programada);
+                Date dSistema = df.parse(getDatePhone());
+                if(dSqlite.before(dSistema)){
+                        btn.setBackgroundColor(0xffff0000);
+
+                }
+                if(dSqlite.after(dSistema)){
+                        btn.setBackgroundColor(0xffffff00);
+                }
+                if(dSqlite.equals(dSistema)){
+                        btn.setBackgroundColor(0xffff0000);
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+        }
+        if(cursor.getCount() <=0){
+            Toast.makeText(getApplicationContext(), "No hay Deudas Por Cobrar", Toast.LENGTH_SHORT).show();
+            btn.setBackgroundColor(0xff00ff00);
+        }
+
+
+        cursor.close();
     }
 
     @Override
@@ -133,5 +183,13 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
             default:
                 break;
         }
+    }
+    private String getDatePhone()
+    {
+        Calendar cal = new GregorianCalendar();
+        Date date = cal.getTime();
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        String formatteDate = df.format(date);
+        return formatteDate;
     }
 }

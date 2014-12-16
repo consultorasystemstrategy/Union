@@ -2,49 +2,44 @@ package union.union_vr1.Vistas;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothSocket;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.FilterQueryProvider;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.TabHost;
 import android.widget.Toast;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Set;
-import java.util.UUID;
 
 import union.union_vr1.R;
 import union.union_vr1.Sqlite.CursorAdapterComprobanteVenta;
-import union.union_vr1.Sqlite.CursorAdapterEstablecimientoColor;
+import union.union_vr1.Sqlite.CursorAdapter_Man_Cbrz;
+import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta_Detalle;
-import union.union_vr1.Sqlite.DbAdapter_Histo_Venta_Detalle;
 import union.union_vr1.Sqlite.DbAdapter_Stock_Agente;
-import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 
 public class VMovil_Venta_Comprob extends Activity {
 
-
+private String idEstablec;
     private DbAdapter_Comprob_Venta dbHelper;
     private CursorAdapterComprobanteVenta cursorAdapterComprobanteVenta;
     private DbAdapter_Comprob_Venta_Detalle dbHelper_Comp_Venta_Detalle;
     private DbAdapter_Stock_Agente dbHelper_Stock_Agente;
-
+    private DbAdapter_Comprob_Cobro dbHelper_Comprob_Cobro;
+private SimpleCursorAdapter adapter;
     private int idComprobante;
 
 
@@ -70,9 +65,14 @@ public class VMovil_Venta_Comprob extends Activity {
     int counter;
     volatile boolean stopWorker;
     */
+
+
+    //
+    TabHost tH;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.princ_venta_comprob);
 
 
@@ -82,9 +82,40 @@ public class VMovil_Venta_Comprob extends Activity {
         dbHelper_Comp_Venta_Detalle.open();
         dbHelper_Stock_Agente = new DbAdapter_Stock_Agente(this);
         dbHelper_Stock_Agente.open();
+        dbHelper_Comprob_Cobro = new DbAdapter_Comprob_Cobro(this);
+        dbHelper_Comprob_Cobro.open();
+
+        tH= (TabHost) findViewById(R.id.tabMante);
+        tH.setup();
+        Bundle bundle = getIntent().getExtras();
+        idEstablec=bundle.getString("idEstabX");
 
 
+        //Item1
+        TabHost.TabSpec spec = tH.newTabSpec("1");
+        spec.setContent(R.id.comprob);
+        spec.setIndicator("Comprobantes");
         displayListView();
+         tH.addTab(spec);
+        // Item2
+        TabHost.TabSpec spec2 = tH.newTabSpec("2");
+        spec2.setContent(R.id.cobranza);
+        spec2.setIndicator("Cobranza");
+        listarCobranzas();
+        tH.addTab(spec2);
+//Item 3
+        TabHost.TabSpec spec3 = tH.newTabSpec("3");
+        spec3.setContent(R.id.canje);
+        spec3.setIndicator("Canje");
+        displayListView();
+        tH.addTab(spec3);
+//Item 4
+        TabHost.TabSpec spec4 = tH.newTabSpec("4");
+        spec4.setContent(R.id.autoriz);
+        spec4.setIndicator("Autorización");
+        displayListView();
+        tH.addTab(spec4);
+
 
         /*Bundle bundle = getIntent().getExtras();
         valIdEstabX=bundle.getString("idEstabX");
@@ -96,6 +127,72 @@ public class VMovil_Venta_Comprob extends Activity {
         displayListView();
         */
     }
+    private void listarCobranzas(){
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        Cursor cursor = dbHelper_Comprob_Cobro.listarComprobantesToCobrosMante(idEstablec);
+        CursorAdapter_Man_Cbrz cAdapter_Cbrz_Man = new CursorAdapter_Man_Cbrz(this,cursor);
+        final ListView listCbrz = (ListView) findViewById(R.id.VVCO_cbrz);
+        listCbrz.setAdapter(cAdapter_Cbrz_Man);
+
+
+        listCbrz.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Cursor cr2 = (Cursor) listCbrz.getItemAtPosition(i);
+                if(cr2.getString(7).equals("Cobrado")){
+                    String idCompro = cr2.getString(0);
+                    String factura = cr2.getString(1);
+                    String hora = cr2.getString(5);
+                    String fecha = cr2.getString(9);
+                    Double monto = Double.parseDouble(cr2.getString(6));
+
+                    dialog(idCompro, factura, hora, fecha, monto);
+                }else{
+                    Toast.makeText(getApplicationContext(),"Ya se Encuentra Anulado",Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+    }
+    public void dialog(final String idCompro,String factura, final String hora,final String fecha, final Double monto){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+
+        // set title
+        alertDialogBuilder.setTitle("Anular");
+
+        // set dialog message
+        AlertDialog.Builder builder = alertDialogBuilder
+                .setMessage("¿Desea Anular?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        dbHelper_Comprob_Cobro.updateComprobCobrosMan(idCompro, fecha, hora, monto, "0");
+                        Toast.makeText(getApplicationContext(),
+                                "Actualizado", Toast.LENGTH_SHORT).show();
+
+                        Intent w = new Intent(getApplicationContext(),VMovil_Evento_Establec.class);
+                        w.putExtra("idEstab",idEstablec);
+                        startActivity(w);
+                    }
+
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Toast.makeText(getApplicationContext(),
+                                "Cancelo", Toast.LENGTH_SHORT).show();
+                    }
+                });
+       listarCobranzas();
+
+        // create alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+
+        // show it
+        alertDialog.show();
+
+    }
+
 
 
     private void displayListView() {
