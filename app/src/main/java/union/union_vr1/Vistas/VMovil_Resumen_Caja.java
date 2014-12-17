@@ -13,6 +13,7 @@ import android.widget.TabHost.TabSpec;
 
 
 import union.union_vr1.R;
+import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta;
 import union.union_vr1.Sqlite.DbAdapter_Resumen_Caja;
 import union.union_vr1.Sqlite.DbAdapter_Stock_Agente;
@@ -27,6 +28,8 @@ public class VMovil_Resumen_Caja extends TabActivity {
     private DbGastos_Ingresos dbHelperRC;
     private SimpleCursorAdapter dataAdapterRC;
     private DbAdapter_Comprob_Venta cv;
+    private DbAdapter_Resumen_Caja rc;
+    private DbAdapter_Comprob_Cobro compV;
 
 
     @Override
@@ -35,17 +38,21 @@ public class VMovil_Resumen_Caja extends TabActivity {
         setContentView(R.layout.princ_resumen_caja);
 
         tabHost = (TabHost) findViewById(android.R.id.tabhost);
-
         dbHelper = new DbAdapter_Stock_Agente(this);
-
         dbHelper.open();
-
-cv= new DbAdapter_Comprob_Venta(this);
+        cv= new DbAdapter_Comprob_Venta(this);
         cv.open();
         cv.deleteAllComprobVenta();
-
         dbHelperRC = new DbGastos_Ingresos(this);
         dbHelperRC.open();
+        rc= new DbAdapter_Resumen_Caja(this);
+        rc.open();
+        rc.deleteAllResumenCaja();
+
+        compV = new DbAdapter_Comprob_Cobro(this);
+        compV.open();
+        compV.deleteAllComprobCobros();
+
 
         //dbHelper.deleteAllStockAgente();
         //dbHelper.insertSomeStockAgente();
