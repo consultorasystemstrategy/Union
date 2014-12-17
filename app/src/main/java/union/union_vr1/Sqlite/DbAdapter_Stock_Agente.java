@@ -307,6 +307,14 @@ public class DbAdapter_Stock_Agente {
         }
         return mCursor;
     }
+    public Cursor listarById(int idAgente){
+        Cursor cr = mDb.rawQuery("select  _id,st_in_id_producto, st_te_nombre, st_in_disponible from m_stock_agente where st_in_id_agente="+idAgente+"",null);
+        return  cr ;
+    }
+    public Cursor listarbyIdProducto  (String nombre,int idAgente)  throws SQLException{
+     Cursor cr = mDb.rawQuery("select _id,st_in_id_producto, st_te_nombre, st_in_disponible from m_stock_agente where st_in_id_agente="+idAgente+" and  st_te_nombre LIKE '%"+nombre+"%' ",null);
+      return cr;
+    }
 
     public Cursor fetchAllStockAgenteVentas() {
 

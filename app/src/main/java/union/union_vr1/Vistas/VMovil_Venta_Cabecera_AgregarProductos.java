@@ -95,9 +95,7 @@ public class VMovil_Venta_Cabecera_AgregarProductos extends Activity implements 
             @Override
             public void afterTextChanged(Editable editable) {
             }
-        });
-
-
+            });
            adapterProductos.setFilterQueryProvider(new FilterQueryProvider() {
                @Override
                public Cursor runQuery(CharSequence charSequence) {
