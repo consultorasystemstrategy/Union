@@ -42,6 +42,7 @@ public class VMovil_Resumen_Caja extends TabActivity {
         dbHelper.open();
         cv= new DbAdapter_Comprob_Venta(this);
         cv.open();
+
         cv.deleteAllComprobVenta();
         dbHelperRC = new DbGastos_Ingresos(this);
         dbHelperRC.open();

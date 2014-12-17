@@ -44,12 +44,13 @@ public class VMovil_Menu_Establec extends Activity {
 
     }
 
-    private void eleccion(String idEstabl){
+    private void eleccion(String idEstabl,int idAgente){
         Intent i = new Intent(this, VMovil_Evento_Establec.class);
 
         ((MyApplication)this.getApplication()).setIdEstablecimiento(Integer.parseInt(idEstabl));
 
         i.putExtra("idEstab", idEstabl);
+        i.putExtra("idAgente", idAgente);
         startActivity(i);
     }
 
@@ -123,10 +124,9 @@ public class VMovil_Menu_Establec extends Activity {
                 Cursor cursor = (Cursor) listView.getItemAtPosition(position);
 
                 // Get the state's capital from this row in the database.
-                String idEstablec =
-                        cursor.getString(cursor.getColumnIndexOrThrow("ee_in_id_establec"));
+                String idEstablec = cursor.getString(cursor.getColumnIndexOrThrow("ee_in_id_establec"));
 
-                int idEstEst = cursor.getInt(cursor.getColumnIndexOrThrow(DbAdaptert_Evento_Establec.EE_id_estado_no_atencion));
+                int id_agente = cursor.getInt(cursor.getColumnIndexOrThrow("ee_in_id_agente"));
 
                 //if(idEstEst == 1){
                 //    view.setBackgroundColor(Color.BLUE);
@@ -142,9 +142,8 @@ public class VMovil_Menu_Establec extends Activity {
                 //}
 
 
-                Toast.makeText(getApplicationContext(),
-                        idEstablec, Toast.LENGTH_SHORT).show();
-                eleccion(idEstablec);
+                Toast.makeText(getApplicationContext(),idEstablec, Toast.LENGTH_SHORT).show();
+                eleccion(idEstablec,id_agente);
                 //listView.setBackgroundColor(Color.GREEN);
 
             }

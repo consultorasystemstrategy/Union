@@ -281,8 +281,8 @@ public class DbGastos_Ingresos {
 
                 cr1=mDb.rawQuery("select * from m_resumen_caja where rc_re_fecha_reporte='"+getDatePhone()+"' and rc_te_tipo_gi=6 ",null);
                 String cantidad = cr2.getString(0);
-                String vendido = "";
-                String pagado = cr2.getString(1);
+                String vendido = "-"+cr2.getString(1);
+                String pagado = "";
                 String cobrado ="";
                 actualizar(cr1,cantidad,vendido,pagado,cobrado);
 
@@ -295,9 +295,9 @@ public class DbGastos_Ingresos {
 
             if(cr2.getInt(0)!=0){
                 String cantidad = cr2.getString(0);
-                String vendido = "";
+                String vendido = "-"+cr2.getString(1);
                 String pagado = "";
-                String cobrado=cr2.getString(1);
+                String cobrado="";
                 actualizar(cr1,cantidad,vendido,pagado,cobrado);
             }
             else{
@@ -318,8 +318,8 @@ public class DbGastos_Ingresos {
 
                 cr1=mDb.rawQuery("select * from m_resumen_caja where rc_re_fecha_reporte='"+getDatePhone()+"' and rc_te_tipo_gi=7 ",null);
                 String cantidad = cr2.getString(0);
-                String vendido = "";
-                String pagado = cr2.getString(1);
+                String vendido = "-"+cr2.getString(1);
+                String pagado = "";
                 String cobrado ="";
                 actualizar(cr1,cantidad,vendido,pagado,cobrado);
 
@@ -332,9 +332,9 @@ public class DbGastos_Ingresos {
 
             if(cr2.getInt(0)!=0){
                 String cantidad = cr2.getString(0);
-                String vendido = "";
+                String vendido = "-"+cr2.getString(1);
                 String pagado = "";
-                String cobrado=cr2.getString(1);
+                String cobrado="";
                 actualizar(cr1,cantidad,vendido,pagado,cobrado);
             }
             else{
