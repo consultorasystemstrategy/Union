@@ -137,6 +137,7 @@ public class VMovil_Venta_Cabecera_AgregarProductos extends Activity implements 
 
 
 
+
                 //Aquí obtengo el cursor posicionado en la fila que ha seleccionado/clickeado
                 Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
 
