@@ -16,7 +16,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/VCPA_textView2NombreProducto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/textView1"
@@ -28,8 +28,8 @@
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView2"
-        android:layout_below="@+id/textView2"
+        android:layout_alignLeft="@+id/VCPA_textView2NombreProducto"
+        android:layout_below="@+id/VCPA_textView2NombreProducto"
         android:text="Nombre: "
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -72,7 +72,7 @@
         android:id="@+id/VME_codigo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/textView2"
+        android:layout_above="@+id/VCPA_textView2NombreProducto"
         android:layout_alignLeft="@+id/VME_establec"
         android:text="TextView" />
 </RelativeLayout>

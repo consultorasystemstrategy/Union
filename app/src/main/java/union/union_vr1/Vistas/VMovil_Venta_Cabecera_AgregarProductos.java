@@ -1,18 +1,24 @@
 package union.union_vr1.Vistas;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FilterQueryProvider;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
@@ -35,12 +41,15 @@ public class VMovil_Venta_Cabecera_AgregarProductos extends Activity implements 
     private SimpleCursorAdapter adapterProductos;
     private DbAdapter_Stock_Agente dbHelper_Stock_Agente;
     private Cursor mCursor;
-
+    private Context mContext;
+    private int cantidad;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vmovil__venta__cabecera__agregar_productos);
 
+
+        mContext = this;
         dbHelper_Stock_Agente = new DbAdapter_Stock_Agente(this);
         dbHelper_Stock_Agente.open();
 
@@ -135,27 +144,69 @@ public class VMovil_Venta_Cabecera_AgregarProductos extends Activity implements 
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
+/*
+                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                LayoutInflater inflater = getLayoutInflater();
+                builder.setView(inflater.inflate(R.layout.dialog_cantidad_productos, null))
+                        // Add action buttons
+                        .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                // sign in the user ...
+                                Toast.makeText(getApplicationContext(), "id : "+id+"\n" +
+                                        " dialog" + dialog,Toast.LENGTH_LONG).show();;
+
+                            }
+                        });
+                builder.create();
+                */
 
 
+                myTextDialog().show();
 
                 //Aquí obtengo el cursor posicionado en la fila que ha seleccionado/clickeado
                 Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
 
+
+                autoCompleteTextView.setText("");
                 //El item seleccionado tenía sólo 2 columnas visibles, pero en el cursos se encuentran todas las columnas
                 //Aquí podemos obtener las otras columnas para los que querramos hacer con ellas
                 String nombre = cursor.getString(cursor.getColumnIndex(DbAdapter_Stock_Agente.ST_nombre));
                 int id_producto = cursor.getInt(cursor.getColumnIndex(DbAdapter_Stock_Agente.ST_id_producto));
                 int disponible = cursor.getInt(cursor.getColumnIndex(DbAdapter_Stock_Agente.ST_disponible));
 
+                Cursor mCursorPrecioUnitario = dbHelper_Precio.fetchAllPrecioByIdProductoAndCategoeria(""+id_producto,""+id_categoria_establecimiento);
+                mCursorPrecioUnitario.moveToFirst();
+
+                int precio_unitario = mCursorPrecioUnitario.getInt(mCursorPrecioUnitario.getColumnIndex(DbAdapter_Precio.PR_precio_unit));
+
+                /*
 
                 Toast.makeText(getApplicationContext(), nombre +
                         " id_producto : " + id_producto + "\n" +
                                 "disponible : " + disponible, Toast.LENGTH_SHORT).show();
-
+*/
             }
         });
 
 
+    }
+
+    private Dialog myTextDialog() {
+        final View layout = View.inflate(this, R.layout.dialog_cantidad_productos, null);
+
+        final EditText savedText = ((EditText) layout.findViewById(R.id.VCAP_editTextCantidad));
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Cantidad");
+        builder.setPositiveButton("OK", new Dialog.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                String texto = savedText.getText().toString().trim();
+                cantidad = Integer.parseInt(texto);
+            }
+        });
+        builder.setView(layout);
+        return builder.create();
     }
 
 

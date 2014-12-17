@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Pan Integral Americano "
+        android:id="@+id/VCPA_textView2NombreProducto"
+        android:gravity="center"
+        android:textColor="@color/PersonalizadoSteve4"
+        android:textSize="24dp" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Precio : S/. 18.20"
+        android:id="@+id/VCPA_textViewPrecio"
+        android:gravity="center"
+        android:textColor="@color/PersonalizadoSteve2"
+        android:textSize="24dp" />
+
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:id="@+id/VCAP_editTextCantidad"
+        android:hint="Cantidad"
+        android:layout_gravity="center"
+        android:gravity="center" />
+
+</LinearLayout>
