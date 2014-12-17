@@ -13,11 +13,8 @@ import android.widget.TabHost.TabSpec;
 
 
 import union.union_vr1.R;
-import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
-import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta;
 import union.union_vr1.Sqlite.DbAdapter_Resumen_Caja;
 import union.union_vr1.Sqlite.DbAdapter_Stock_Agente;
-import union.union_vr1.Sqlite.DbGastos_Ingresos;
 
 
 public class VMovil_Resumen_Caja extends TabActivity {
@@ -25,11 +22,8 @@ public class VMovil_Resumen_Caja extends TabActivity {
     TabHost tabHost;
     private DbAdapter_Stock_Agente dbHelper;
     private SimpleCursorAdapter dataAdapter;
-    private DbGastos_Ingresos dbHelperRC;
+    private DbAdapter_Resumen_Caja dbHelperRC;
     private SimpleCursorAdapter dataAdapterRC;
-    private DbAdapter_Comprob_Venta cv;
-    private DbAdapter_Resumen_Caja rc;
-    private DbAdapter_Comprob_Cobro compV;
 
 
     @Override
@@ -38,26 +32,20 @@ public class VMovil_Resumen_Caja extends TabActivity {
         setContentView(R.layout.princ_resumen_caja);
 
         tabHost = (TabHost) findViewById(android.R.id.tabhost);
+
         dbHelper = new DbAdapter_Stock_Agente(this);
         dbHelper.open();
-        cv= new DbAdapter_Comprob_Venta(this);
-        cv.open();
 
-        cv.deleteAllComprobVenta();
-        dbHelperRC = new DbGastos_Ingresos(this);
+
+
+        dbHelperRC = new DbAdapter_Resumen_Caja(this);
         dbHelperRC.open();
-        rc= new DbAdapter_Resumen_Caja(this);
-        rc.open();
-        rc.deleteAllResumenCaja();
-
-        compV = new DbAdapter_Comprob_Cobro(this);
-        compV.open();
-        compV.deleteAllComprobCobros();
+        dbHelperRC.deleteAllResumenCaja();
+        dbHelperRC.insertSomeResumenCaja();
 
 
         //dbHelper.deleteAllStockAgente();
         //dbHelper.insertSomeStockAgente();
-
 
 
         TabSpec spec = tabHost.newTabSpec("Tab1");
@@ -143,9 +131,7 @@ public class VMovil_Resumen_Caja extends TabActivity {
     }
 
     public void displayListIngresosGastos() {
-
-        Cursor cursor = dbHelperRC.listarTodo(1);
-
+        Cursor cursor = dbHelperRC.fetchAllResumenCaja();
         String[] columns = new String[]{
                 DbAdapter_Resumen_Caja.RC_descripcionComprobante,
                 DbAdapter_Resumen_Caja.RC_cantidad,
@@ -170,7 +156,6 @@ public class VMovil_Resumen_Caja extends TabActivity {
                 0);
         ListView listView = (ListView)findViewById(R.id.VRC_listarResumenCaja);
         listView.setAdapter(dataAdapterRC);
-
     }
 
 }

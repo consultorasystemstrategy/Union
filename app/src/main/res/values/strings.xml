@@ -81,12 +81,15 @@
     <string-array name="tipoDocumentoCombustibleRuta">
         <item>factura</item>
     </string-array>
+
     <string-array name="Cuotas">
         <item>1</item>
         <item>2</item>
         <item>3</item>
         <item>4</item>
     </string-array>
+
+
 
     <string name="title_activity_princ_venta_principal">princ_venta_principal</string>
     <string name="title_activity_vmovil__evento__establec">VMovil_Evento_Establec</string>
@@ -99,6 +102,5 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_example">Example action</string>
     <string name="title_activity_db_manager__agente__get">DbManager_Agente_GET</string>
-    <string name="title_activity_vmovil__evento__canjes__cobros">VMovil_Evento_Canjes_Cobros</string>
 
 </resources>

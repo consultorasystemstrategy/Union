@@ -65,12 +65,10 @@ public class DbAdapter_Resumen_Caja {
         }
     }
 
-    public long createResumenCaja(String descripcion,int idAgente ,int tipo_gi,int cantidad, Double vendido, Double pagado, Double cobrado,String fecha){
-
+    public long createResumenCaja(String descripcion,int idAgente ,int cantidad, float vendido, float pagado, float cobrado,String fecha){
         ContentValues initialValues = new ContentValues();
         initialValues.put(RC_id_Agente,idAgente);
         initialValues.put(RC_descripcionComprobante,descripcion);
-        initialValues.put(RC_id_tipo_GI,tipo_gi);
         initialValues.put(RC_cantidad,cantidad);
         initialValues.put(RC_vendido,vendido);
         initialValues.put(RC_pagado,pagado);
@@ -100,7 +98,14 @@ public class DbAdapter_Resumen_Caja {
 
 
     public void insertSomeResumenCaja(){
-
+/*
+        createResumenCaja("Boletas Emitidas",0,0.0f,0.0f,0.0f,"");
+        createResumenCaja("Facturas Emitidas",0,0.0f,0.0f,0.0f);
+        createResumenCaja("Notas de Credito Emitidas",0,0.0f,0.0f,0.0f);
+        createResumenCaja("Facturas Cobradas",0,0.0f,0.0f,0.0f);
+        createResumenCaja("Boletas Cobradas",0,0.0f,0.0f,0.0f);
+        createResumenCaja("Boletas Anuladas",0,0.0f,0.0f,0.0f);
+        createResumenCaja("Facturas Anuladas",0,0.0f,0.0f,0.0f);*/
 
     }
 

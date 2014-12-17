@@ -77,8 +77,6 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         dbHelper8 = new DbAdapter_Histo_Comprob_Anterior(this);
         dbHelper8.open();
 
-
-
         //Agregando datos de prueba  cada vez que se inicia esta vista
 
         dbHelper.deleteAllEstablecs();
