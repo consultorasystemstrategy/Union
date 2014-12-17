@@ -126,7 +126,7 @@ public class VMovil_Menu_Establec extends Activity {
                 String idEstablec =
                         cursor.getString(cursor.getColumnIndexOrThrow("ee_in_id_establec"));
 
-                int idEstEst = cursor.getInt(cursor.getColumnIndexOrThrow(DbAdaptert_Evento_Establec.EE_id_estado_no_atencion));
+                //int idEstEst = cursor.getInt(cursor.getColumnIndexOrThrow(DbAdaptert_Evento_Establec.EE_id_estado_no_atencion));
 
                 //if(idEstEst == 1){
                 //    view.setBackgroundColor(Color.BLUE);

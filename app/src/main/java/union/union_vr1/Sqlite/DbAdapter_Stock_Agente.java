@@ -119,13 +119,13 @@ public class DbAdapter_Stock_Agente {
         return mCursor;
 
     }
-    public Cursor fetchStockAgenteByIdEstablecimiento(int idCategorìaEstablecimiento) throws SQLException {
+    public Cursor fetchStockAgenteByIdAgente(String inputText) throws SQLException {
+        Log.w(TAG, inputText);
         Cursor mCursor = null;
-        mCursor = mDb.rawQuery("SELECT *\n" +
-                "FROM m_stock_agente SA\n" +
-                "INNER JOIN m_precio P\n" +
-                "ON SA.st_in_id_producto = P.pr_in_id_producto\n" +
-                "WHERE P.pr_in_id_cat_estt = ?", new String[] {""+idCategorìaEstablecimiento});
+        mCursor = mDb.query(true, SQLITE_TABLE_Stock_Agente, new String[] {ST_id_stock_agente,
+                        ST_id_producto,
+                        ST_final, ST_disponible, ST_ventas, ST_fisico},
+                ST_id_stock_agente + " = " + inputText, null, null, null, null, null);
 
         if (mCursor != null) {
             mCursor.moveToFirst();
@@ -133,6 +133,36 @@ public class DbAdapter_Stock_Agente {
         return mCursor;
 
     }
+    public Cursor fetchStockAgenteByIdEstablecimiento(int idCategorìaEstablecimiento) throws SQLException {
+        Cursor mCursor = null;
+        mCursor = mDb.rawQuery("SELECT *\n" +
+                " FROM m_stock_agente SA\n" +
+                " INNER JOIN m_precio P\n" +
+                " ON SA.st_in_id_producto = P.pr_in_id_producto\n" +
+                " WHERE P.pr_in_id_cat_estt = ?", new String[] {""+idCategorìaEstablecimiento});
+
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+
+    }
+    public Cursor fetchStockAgenteByIdEstablecimientoAndIdStockAgente(int idCategorìaEstablecimiento, long idStockAgente) throws SQLException {
+        Cursor mCursor = null;
+        mCursor = mDb.rawQuery("SELECT SA."+ST_id_stock_agente+" ,"+ST_nombre+" ,"+ST_disponible+"\n" +
+                " FROM m_stock_agente SA\n" +
+                " INNER JOIN m_precio P\n" +
+                " ON SA.st_in_id_producto = P.pr_in_id_producto\n" +
+                " WHERE P.pr_in_id_cat_estt = ? " +
+                " AND SA._id = ?", new String[] {""+idCategorìaEstablecimiento, ""+idStockAgente});
+
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+
+    }
+
 
     public Cursor fetchStockAgenteByIdEstablecimientoandName(int idCategorìaEstablecimiento, String nameProducto) throws SQLException {
         Cursor mCursor = null;
@@ -249,6 +279,7 @@ public class DbAdapter_Stock_Agente {
     public Cursor fetchAllStockAgente() {
 
         Cursor mCursor = mDb.query(SQLITE_TABLE_Stock_Agente, new String[] {ST_id_stock_agente,
+                        ST_id_agente,
                         ST_id_producto, ST_nombre, ST_codigo, ST_disponible},
                 null, null, null, null, null);
 

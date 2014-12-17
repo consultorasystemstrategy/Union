@@ -6,15 +6,19 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.FilterQueryProvider;
 import android.widget.SimpleCursorAdapter;
+import android.widget.Toast;
 
 import union.union_vr1.R;
+import union.union_vr1.Sqlite.DbAdapter_Precio;
 import union.union_vr1.Sqlite.DbAdapter_Stock_Agente;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 import union.union_vr1.Utils.MyApplication;
@@ -25,11 +29,12 @@ public class VMovil_Venta_Cabecera_AgregarProductos extends Activity implements 
     private Button buttonAgregarProductos;
     private AutoCompleteTextView autoCompleteTextView;
     private int idEstablecimiento;
-    private int id_categoria_establecimiento;
-    private DbAdapter_Stock_Agente dbHelper_Stock_Agente;
+    private int id_categoria_establecimiento = 1;
     private DbAdaptert_Evento_Establec dbHelper_Evento_Establecimiento;
+    private DbAdapter_Precio dbHelper_Precio;
     private SimpleCursorAdapter adapterProductos;
-
+    private DbAdapter_Stock_Agente dbHelper_Stock_Agente;
+    private Cursor mCursor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,8 +44,12 @@ public class VMovil_Venta_Cabecera_AgregarProductos extends Activity implements 
         dbHelper_Stock_Agente = new DbAdapter_Stock_Agente(this);
         dbHelper_Stock_Agente.open();
 
+        dbHelper_Precio = new DbAdapter_Precio(this);
+        dbHelper_Precio.open();
+
         dbHelper_Evento_Establecimiento = new DbAdaptert_Evento_Establec(this);
         dbHelper_Evento_Establecimiento.open();
+
 
         buttonAgregarProductos = (Button) findViewById(R.id.VCAP_buttonAgregar);
         autoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.VCAP_AutoCompleteProductos);
@@ -55,18 +64,19 @@ public class VMovil_Venta_Cabecera_AgregarProductos extends Activity implements 
         id_categoria_establecimiento = cursorEstablecimiento.getInt(cursorEstablecimiento.getColumnIndex(DbAdaptert_Evento_Establec.EE_id_cat_est));
 
 
-        Cursor mCursor = dbHelper_Stock_Agente.fetchStockAgenteByIdEstablecimiento(id_categoria_establecimiento);
+        mCursor = dbHelper_Stock_Agente.fetchStockAgenteByIdEstablecimiento(id_categoria_establecimiento);
+
 
         String[] columns = new String[]{
                 DbAdapter_Stock_Agente.ST_nombre,
-                DbAdapter_Stock_Agente.ST_disponible
+                DbAdapter_Stock_Agente.ST_disponible,
 
         };
 
         // the XML defined views which the data will be bound to
         int[] to = new int[]{
                 R.id.VCAP_producto,
-                R.id.VCPA_stock
+                R.id.VCPA_stock,
 
         };
         adapterProductos = new SimpleCursorAdapter(this,
@@ -105,6 +115,44 @@ public class VMovil_Venta_Cabecera_AgregarProductos extends Activity implements 
 
                }
            });
+
+
+        autoCompleteTextView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                Toast.makeText(getApplicationContext(),
+                    "Ser on Item Selected",
+                        Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+
+
+                //Aquí obtengo el cursor posicionado en la fila que ha seleccionado/clickeado
+                Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
+
+                //El item seleccionado tenía sólo 2 columnas visibles, pero en el cursos se encuentran todas las columnas
+                //Aquí podemos obtener las otras columnas para los que querramos hacer con ellas
+                String nombre = cursor.getString(cursor.getColumnIndex(DbAdapter_Stock_Agente.ST_nombre));
+                int id_producto = cursor.getInt(cursor.getColumnIndex(DbAdapter_Stock_Agente.ST_id_producto));
+                int disponible = cursor.getInt(cursor.getColumnIndex(DbAdapter_Stock_Agente.ST_disponible));
+
+
+                Toast.makeText(getApplicationContext(), nombre +
+                        " id_producto : " + id_producto + "\n" +
+                                "disponible : " + disponible, Toast.LENGTH_SHORT).show();
+
+            }
+        });
 
 
     }

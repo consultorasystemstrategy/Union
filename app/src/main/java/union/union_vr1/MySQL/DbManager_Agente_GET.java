@@ -45,9 +45,9 @@ public class DbManager_Agente_GET extends Activity {
     JSONParser jsonParser = new JSONParser();
     JSONParser jsonParserEstablec = new JSONParser();
     JSONParser jsonParserCobro = new JSONParser();
-    private static String url_agente = "http://192.168.0.104:8081/produnion/lis_agente.php";
-    private static String url_cobro = "http://192.168.0.104:8081/produnion/lis_hist_cobro.php";
-    private static String url_establec = "http://192.168.0.104:8081/produnion/lis_establec.php";
+    private static String url_agente = "http://192.168.0.158:8083/produnion/lis_agente.php";
+    private static String url_cobro = "http://192.168.0.158:8083/produnion/lis_hist_cobro.php";
+    private static String url_establec = "http://192.168.0.158:8083/produnion/lis_establec.php";
     private static final String TAG_SUCCESS = "success";
     JSONArray agente = null;
     JSONArray establecimientos = null;
