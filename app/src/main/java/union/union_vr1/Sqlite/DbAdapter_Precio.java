@@ -18,6 +18,9 @@ public class DbAdapter_Precio {
     public static final String PR_precio_unit = "pr_re_precio_unit";
     public static final String PR_valor_unidad = "pr_in_valor_unidad";
     public static final String PR_id_agente = "pr_in_id_agente";
+    public static final String PR_desde = "pr_in_desde";
+    public static final String PR_hasta = "pr_in_hasta";
+
     public static final String TAG = "Precio";
     private DbHelper mDbHelper;
     private SQLiteDatabase mDb;
@@ -35,7 +38,10 @@ public class DbAdapter_Precio {
                     +PR_costo_venta+" real,"
                     +PR_precio_unit+" real,"
                     +PR_valor_unidad+" integer,"
-                    +PR_id_agente+" integer);";
+                    +PR_id_agente+" integer,"
+                    +PR_desde+" integer,"
+                    +PR_hasta+" integer);"
+            ;
 
     public static final String DELETE_TABLE_PRECIO = "DROP TABLE IF EXISTS " + SQLITE_TABLE_Precio;
 
@@ -57,7 +63,7 @@ public class DbAdapter_Precio {
 
     public long createPrecio(
             int id_producto, int id_cat_est, double costo_venta, double precio_unit,
-            int valor_unidad, int id_agente){
+            int valor_unidad, int id_agente, int desde, int hasta){
 
         ContentValues initialValues = new ContentValues();
         initialValues.put(PR_id_producto,id_producto);
@@ -66,6 +72,9 @@ public class DbAdapter_Precio {
         initialValues.put(PR_precio_unit,precio_unit);
         initialValues.put(PR_valor_unidad,valor_unidad);
         initialValues.put(PR_id_agente,id_agente);
+        initialValues.put(PR_desde,desde);
+        initialValues.put(PR_hasta,hasta);
+
 
         return mDb.insert(SQLITE_TABLE_Precio, null, initialValues);
     }
@@ -113,6 +122,18 @@ public class DbAdapter_Precio {
         }
         return mCursor;
     }
+    public Cursor fetchAllPrecioByIdProductoAndCantidad(int id_producto, int cantidad) {
+
+        Cursor mCursor = mDb.query(SQLITE_TABLE_Precio, new String[] {PR_id_precio,
+                        PR_id_producto, PR_id_cat_est, PR_costo_venta, PR_precio_unit},
+                PR_id_producto + " = " + id_producto+ " AND " + PR_desde + " <= " + cantidad+ " AND " + PR_hasta + " >= " + cantidad,
+                null, null, null, null, null);
+
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+    }
 
     public Cursor fetchAllPrecio() {
 
@@ -128,21 +149,21 @@ public class DbAdapter_Precio {
 
     public void insertSomePrecio() {
 
-        createPrecio( 1, 1, 11.00, 11.50, 1, 1);
-        createPrecio( 1, 2, 12.00, 12.50, 1, 1);
-        createPrecio( 1, 3, 13.00, 13.50, 1, 1);
-        createPrecio( 2, 1, 21.00, 21.50, 1, 1);
-        createPrecio( 2, 2, 22.00, 22.50, 1, 1);
-        createPrecio( 2, 3, 23.00, 23.50, 1, 1);
-        createPrecio( 3, 1, 31.00, 31.50, 1, 1);
-        createPrecio( 3, 2, 32.00, 32.50, 1, 1);
-        createPrecio( 3, 3, 33.00, 33.50, 1, 1);
-        createPrecio( 4, 1, 41.00, 41.50, 1, 1);
-        createPrecio( 4, 2, 42.00, 42.50, 1, 1);
-        createPrecio( 4, 3, 43.00, 43.50, 1, 1);
-        createPrecio( 5, 1, 51.00, 51.50, 1, 1);
-        createPrecio( 5, 2, 52.00, 52.50, 1, 1);
-        createPrecio( 5, 3, 53.00, 53.50, 1, 1);
+        createPrecio( 1, 1, 11.00, 11.50, 1,1, 1, 30);
+        createPrecio( 1, 2, 12.00, 12.50, 1,1, 31, 60);
+        createPrecio( 1, 2, 12.00, 12.50, 1,1, 61, 100);
+        createPrecio( 2, 1, 21.00, 21.50, 1,1, 1, 30);
+        createPrecio( 2, 2, 22.00, 22.50, 1,1, 31, 60);
+        createPrecio( 2, 3, 23.00, 23.50, 1,1, 61, 1000);
+        createPrecio( 3, 1, 31.00, 31.50, 1,1, 1, 30);
+        createPrecio( 3, 2, 32.00, 32.50, 1,1, 31, 60);
+        createPrecio( 3, 3, 33.00, 33.50, 1,1, 61, 1000);
+        createPrecio( 4, 1, 41.00, 41.50, 1,1, 1, 30);
+        createPrecio( 4, 2, 42.00, 42.50, 1,1, 31, 60);
+        createPrecio( 4, 3, 43.00, 43.50, 1,1,61, 1000);
+        createPrecio( 5, 1, 51.00, 51.50, 1,1, 1, 30);
+        createPrecio( 5, 2, 52.00, 52.50, 1,1, 31, 60);
+        createPrecio( 5, 3, 53.00, 53.50, 1,1, 61, 1000);
     }
 
 }

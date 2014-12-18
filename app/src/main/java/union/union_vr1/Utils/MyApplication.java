@@ -9,6 +9,15 @@ public class MyApplication extends Application{
 
         private int idAgente;
         private int idEstablecimiento;
+        private boolean DisplayedHistorialComprobanteAnterior;
+
+    public boolean isDisplayedHistorialComprobanteAnterior() {
+        return DisplayedHistorialComprobanteAnterior;
+    }
+
+    public void setDisplayedHistorialComprobanteAnterior(boolean displayedHistorialComprobanteAnterior) {
+        DisplayedHistorialComprobanteAnterior = displayedHistorialComprobanteAnterior;
+    }
 
     public int getIdEstablecimiento() {
         return idEstablecimiento;

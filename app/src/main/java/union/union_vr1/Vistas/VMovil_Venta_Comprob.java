@@ -30,16 +30,17 @@ import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta_Detalle;
 import union.union_vr1.Sqlite.DbAdapter_Stock_Agente;
+import union.union_vr1.Utils.MyApplication;
 
 public class VMovil_Venta_Comprob extends Activity {
 
-private String idEstablec;
+    private int idEstablec;
     private DbAdapter_Comprob_Venta dbHelper;
     private CursorAdapterComprobanteVenta cursorAdapterComprobanteVenta;
     private DbAdapter_Comprob_Venta_Detalle dbHelper_Comp_Venta_Detalle;
     private DbAdapter_Stock_Agente dbHelper_Stock_Agente;
     private DbAdapter_Comprob_Cobro dbHelper_Comprob_Cobro;
-private SimpleCursorAdapter adapter;
+    private SimpleCursorAdapter adapter;
     private int idComprobante;
 
 
@@ -87,8 +88,7 @@ private SimpleCursorAdapter adapter;
 
         tH= (TabHost) findViewById(R.id.tabMante);
         tH.setup();
-        Bundle bundle = getIntent().getExtras();
-        idEstablec=bundle.getString("idEstabX");
+        idEstablec=((MyApplication)this.getApplication()).getIdEstablecimiento();
 
 
         //Item1
@@ -129,7 +129,7 @@ private SimpleCursorAdapter adapter;
     }
     private void listarCobranzas(){
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        Cursor cursor = dbHelper_Comprob_Cobro.listarComprobantesToCobrosMante(idEstablec);
+        Cursor cursor = dbHelper_Comprob_Cobro.listarComprobantesToCobrosMante(""+idEstablec);
         CursorAdapter_Man_Cbrz cAdapter_Cbrz_Man = new CursorAdapter_Man_Cbrz(this,cursor);
         final ListView listCbrz = (ListView) findViewById(R.id.VVCO_cbrz);
         listCbrz.setAdapter(cAdapter_Cbrz_Man);

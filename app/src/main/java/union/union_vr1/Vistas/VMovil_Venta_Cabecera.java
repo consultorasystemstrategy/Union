@@ -1,9 +1,13 @@
 package union.union_vr1.Vistas;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Adapter;
@@ -43,51 +47,70 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
     private Button buttonVender;
     private ListView listView;
     private View header;
+    private Context mContext;
+
+    @Override
+    public void onBackPressed() {
+        new AlertDialog.Builder(this)
+                .setTitle("No ha vendido nada")
+                .setMessage("¿Está seguro que desea salir?")
+                .setNegativeButton(android.R.string.no, null)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // FIRE ZE MISSILES!
+
+                        dbHelper_temp_venta.deleteAllTempVentaDetalle();
+                        finish();
+                        Intent intent = new Intent(mContext,VMovil_Evento_Indice.class);
+                        startActivity(intent);
+                    }
+                }).create().show();
+    }
 
     /*
-    private Cursor cursor, cursorx, cursorv, cursorz, cursorw, cursory, cursort, cursorn, cursorp, cursorf;
-    private SimpleCursorAdapter dataAdapter;
-    private DbAdapter_Comprob_Venta_Detalle dbHelper;
-    private DbAdaptert_Evento_Establec dbHelperx;
-    private DbAdapter_Comprob_Cobro dbHelpery;
-    private DbAdapter_Comprob_Venta dbHelperz;
-    private DbAdapter_Agente dbHelperv;
-    private DbAdapter_Histo_Venta_Detalle dbHelpera;
-    private DbAdapter_Histo_Comprob_Anterior dbHelper8;
-    private DbAdapter_Stock_Agente dbHelperp;
-    private DbAdapter_Precio dbHelper7;
-    private Button mProduc, mProces, mCancel;
-    private Spinner spinner1, spinner2, spinner3;
-    private double valbaimp, valimpue, valtotal;
-    private String valIdEstabX;
-    private double valCredito;
-    private int valDiaCred;
-    private String valTipVen;
-    private String impresion;
-    private String idProduc;
-    private int pase;
-    private int pase01;
-    private int pase02;
-    private String TipoDocS;
-    private double valtotalp;
-    private String fechaCobro;
-    private String SerieBoleta, SerieFactura, SerieRrpp, SerieUsa;
-    private int CorreBoleta, CorreFactura, CorreRrpp, idAgente, CorreUsa;
-    private int idComprobV1, idComprobV2;
-    private String DetCompr;
-    private String valCatEst;
-    final Context context = this;
-    private String idprod;
-    private double vender;
-    TextView colors, stoant, stohoy;
-    */
+            private Cursor cursor, cursorx, cursorv, cursorz, cursorw, cursory, cursort, cursorn, cursorp, cursorf;
+            private SimpleCursorAdapter dataAdapter;
+            private DbAdapter_Comprob_Venta_Detalle dbHelper;
+            private DbAdaptert_Evento_Establec dbHelperx;
+            private DbAdapter_Comprob_Cobro dbHelpery;
+            private DbAdapter_Comprob_Venta dbHelperz;
+            private DbAdapter_Agente dbHelperv;
+            private DbAdapter_Histo_Venta_Detalle dbHelpera;
+            private DbAdapter_Histo_Comprob_Anterior dbHelper8;
+            private DbAdapter_Stock_Agente dbHelperp;
+            private DbAdapter_Precio dbHelper7;
+            private Button mProduc, mProces, mCancel;
+            private Spinner spinner1, spinner2, spinner3;
+            private double valbaimp, valimpue, valtotal;
+            private String valIdEstabX;
+            private double valCredito;
+            private int valDiaCred;
+            private String valTipVen;
+            private String impresion;
+            private String idProduc;
+            private int pase;
+            private int pase01;
+            private int pase02;
+            private String TipoDocS;
+            private double valtotalp;
+            private String fechaCobro;
+            private String SerieBoleta, SerieFactura, SerieRrpp, SerieUsa;
+            private int CorreBoleta, CorreFactura, CorreRrpp, idAgente, CorreUsa;
+            private int idComprobV1, idComprobV2;
+            private String DetCompr;
+            private String valCatEst;
+            final Context context = this;
+            private String idprod;
+            private double vender;
+            TextView colors, stoant, stohoy;
+            */
     //private int Cantidad, cant1, cant2, cant3, cant4;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.princ_venta_cabecera);
 
-
+        mContext = this;
         dbHelper_Histo_comprob_anterior = new DbAdapter_Histo_Comprob_Anterior(this);
         dbHelper_Histo_comprob_anterior.open();
 
@@ -103,8 +126,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
         dbHelper_Comprob_Venta_Detalle  = new DbAdapter_Comprob_Venta_Detalle(this);
         dbHelper_Comprob_Venta_Detalle.open();
 
-        Bundle bundle = getIntent().getExtras();
-        idEstablecimiento=Integer.parseInt(bundle.getString("idEstabX"));
+        idEstablecimiento=((MyApplication)this.getApplication()).getIdEstablecimiento();
         id_agente_venta= ((MyApplication) this.getApplication()).getIdAgente();
 
         setContentView(R.layout.princ_venta_cabecera);
@@ -127,8 +149,14 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
         buttonVender.setOnClickListener(this);
         buttonAgregar.setOnClickListener(this);
 
-        displayHistorialComprobanteAnterior();
+        boolean isDisplayed = ((MyApplication)this.getApplication()).isDisplayedHistorialComprobanteAnterior();
 
+        if (isDisplayed) {
+            //NO SE MUESTRA EL HISTORIAL DEL COMPROBANTE ANTERIOR COMO SUGERENCIA DE VENTA AL USUARIO
+        }else{
+            displayHistorialComprobanteAnterior();
+        }
+        mostrarProductosParaVender();
         spinnerFormaPago.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -151,6 +179,43 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
 
             }
         });
+
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+
+                //Aquí obtengo el cursor posicionado en la fila que ha seleccionado/clickeado
+                Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
+                final long id_tem_detalle = cursor.getLong(cursor.getColumnIndex(DBAdapter_Temp_Venta.temp_venta_detalle));
+
+                new AlertDialog.Builder(mContext)
+                        .setTitle("Eliminar")
+                        .setMessage("¿Está seguro que desea eliminar este producto de la venta?")
+                        .setNegativeButton(android.R.string.no, null)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                // FIRE ZE MISSILES!
+                                boolean succesful = dbHelper_temp_venta.deleteTempVentaDetalleById(id_tem_detalle);
+                                if (succesful) {
+                                    Toast.makeText(getApplicationContext(), "Producto eliminado de la venta actual correctamente", Toast.LENGTH_LONG).show();
+                                    finish();
+                                    Intent intent = new Intent(mContext, VMovil_Venta_Cabecera.class);
+                                    startActivity(intent);
+                                }else{
+                                    Toast.makeText(getApplicationContext(), "No se pudo eliminar intente nuevamente", Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        }).create().show();
+
+                /*simpleCursorAdapter.notifyDataSetChanged();
+                simpleCursorAdapter.getCursor().requery();
+                listView.refreshDrawableState();*/
+
+                return false;
+            }
+        });
+
         /*
         pase = 0;
         pase01 = 0;
@@ -230,6 +295,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
                 startActivity(intent);
                 break;
             case R.id.VC_buttonVender:
+                    ((MyApplication)this.getApplication()).setDisplayedHistorialComprobanteAnterior(false);
                     vender();
                 break;
             default:
@@ -346,6 +412,8 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
     }
     private void displayHistorialComprobanteAnterior() {
 
+
+        ((MyApplication)this.getApplication()).setDisplayedHistorialComprobanteAnterior(true);
         Cursor cursor = dbHelper_Histo_comprob_anterior.fetchAllHistoComprobAnteriorByIdEstRawQuery(idEstablecimiento);
         //OBTENGO LAS PJOSICIONES DE LAS COLUMNAS DEL CURSOR
         int indice_id = cursor.getColumnIndex("_id");
@@ -374,13 +442,16 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
 
             String promedio_anterior = cursor.getString(indice_promedio_anterior);
             String devuelto = cursor.getString(indice_devuelto);
+            int procedencia = 0;
 
             //En una tabla "Temp_Venta" Nos sirve para agregar datos del historial de ventas anteriores y sugerir al usuario, estos son datos temporales
-            long id = dbHelper_temp_venta.createTempVentaDetalle(1,id_producto,nombre_producto,cantidad,importe, precio_unitario, promedio_anterior, devuelto);
+            long id = dbHelper_temp_venta.createTempVentaDetalle(1,id_producto,nombre_producto,cantidad,importe, precio_unitario, promedio_anterior, devuelto, procedencia);
 
 
         }
 
+    }
+    public void mostrarProductosParaVender(){
         Cursor cursorTempVentaDetalle = dbHelper_temp_venta.fetchAllTempVentaDetalle();
         // The desired columns to be bound
         String[] columns = new String[]{
@@ -415,15 +486,6 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
         // Assign adapter to ListView
         listView.setAdapter(simpleCursorAdapter);
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> listView, View view,
-                                    int position, long id) {
-                // Get the cursor, positioned to the corresponding row in the result set
-                Toast.makeText(getApplicationContext(),""+view,Toast.LENGTH_SHORT).show();
-            }
-
-        });
     }
 
     /*

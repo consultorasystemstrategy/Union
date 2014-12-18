@@ -117,6 +117,7 @@ public class VMovil_Online_Pumovil extends Activity {
 
         //VARIABLE GLOBAL, PARA OBTENERLA DESDE CUALQUIER SITIO DE LA APLICACIÓN
         ((MyApplication)this.getApplication()).setIdAgente(Integer.parseInt(id_agente_venta));
+        ((MyApplication)this.getApplication()).setDisplayedHistorialComprobanteAnterior(false);
 
         dbHelper.updateAgente(id_agente_venta,id_usuario,id_empresa,nombre_usuario,nombre_agente,pass_usuario);
     }
