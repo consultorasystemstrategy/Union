@@ -29,7 +29,7 @@ public class VMovil_Evento_Canjes_Dev extends Activity {
     private DbAdapter_Stock_Agente dbHelper_Stock;
     private int idAgente;
     private int idProducto;
-
+/*
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,5 +125,5 @@ public class VMovil_Evento_Canjes_Dev extends Activity {
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
+    }*/
 }
