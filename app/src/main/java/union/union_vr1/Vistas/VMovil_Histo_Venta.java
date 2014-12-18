@@ -61,6 +61,7 @@ public class VMovil_Histo_Venta extends Activity {
         //Add some data
         //dbHelper.insertSomeHistoVentaDetalle();
 
+        //Generate ListView from SQLite Database
         displayListView();
 
     }

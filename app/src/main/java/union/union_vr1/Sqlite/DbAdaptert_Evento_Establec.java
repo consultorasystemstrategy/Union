@@ -197,7 +197,6 @@ public class DbAdaptert_Evento_Establec {
             mCursor.moveToFirst();
         }
         return mCursor;
-
     }
 
     public Cursor fetchAllEstablecs() {

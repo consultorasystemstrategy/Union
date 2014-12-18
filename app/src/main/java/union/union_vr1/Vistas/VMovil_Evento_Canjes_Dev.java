@@ -1,6 +1,7 @@
 package union.union_vr1.Vistas;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.text.Editable;
@@ -27,6 +28,7 @@ public class VMovil_Evento_Canjes_Dev extends Activity {
     private DbAdapter_Histo_Venta_Detalle dbHelper_Hi_De;
     private DbAdapter_Stock_Agente dbHelper_Stock;
     private int idAgente;
+    private int idProducto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,10 +63,12 @@ public class VMovil_Evento_Canjes_Dev extends Activity {
         int[] to = new int[]{
                 R.id.VCAP_producto,
                 R.id.VCPA_stock
-
         };
         adapter = new SimpleCursorAdapter(this,R.layout.infor_venta_cabecera_productos,cr,colum,to,0);
         autoComple.setAdapter(adapter);
+
+
+
         autoComple.addTextChangedListener( new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
@@ -81,14 +85,25 @@ public class VMovil_Evento_Canjes_Dev extends Activity {
 
             }
         });
+
         adapter.setFilterQueryProvider(new FilterQueryProvider() {
             @Override
             public Cursor runQuery(CharSequence charSequence) {
-                System.out.println(charSequence.length());
-                return dbHelper_Stock.fetchStockAgenteByIdEstablecimientoandName(idAgente, charSequence.toString());
-
+                Cursor cr = dbHelper_Stock.listarbyIdProducto(charSequence.toString(), idAgente);
+                return cr;
             }
         });
+        autoComple.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+               Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
+               String nom =  cursor.getString(2);
+               autoComple.setText(nom);
+              // Toast.makeText(getApplicationContext(),cursor.getString(1),Toast.LENGTH_SHORT).show();
+                //Intent bProducto = new Intent(getApplicationContext(),)
+            }
+        });
+
 
     }
 

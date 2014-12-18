@@ -28,6 +28,7 @@ import union.union_vr1.Conexion.JSONParser;
 import union.union_vr1.R;
 import union.union_vr1.Sqlite.DbAdapter_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
+import union.union_vr1.Sqlite.DbAdapter_Histo_Comprob_Anterior;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 import union.union_vr1.Vistas.VMovil_Evento_Indice;
 import union.union_vr1.Vistas.VMovil_Online_Pumovil;
@@ -38,6 +39,7 @@ public class DbManager_Agente_GET extends Activity {
     private DbAdapter_Agente manager;
     private DbAdaptert_Evento_Establec managerEstablecimiento;
     private DbAdapter_Comprob_Cobro managerCobro;
+    private DbAdapter_Histo_Comprob_Anterior managerComprobAnterior;
 
 
     //Aqui se inicializa las variables globales para mandar por GET
@@ -45,16 +47,20 @@ public class DbManager_Agente_GET extends Activity {
     JSONParser jsonParser = new JSONParser();
     JSONParser jsonParserEstablec = new JSONParser();
     JSONParser jsonParserCobro = new JSONParser();
+    JSONParser jsonParserComprobAnt = new JSONParser();
     private static String url_agente = "http://192.168.0.158:8083/produnion/lis_agente.php";
     private static String url_cobro = "http://192.168.0.158:8083/produnion/lis_hist_cobro.php";
     private static String url_establec = "http://192.168.0.158:8083/produnion/lis_establec.php";
+    private static String url_hist_comprob_ant = "http://192.168.0.158:8083/produnion/lis_hist_comprob_ant.php";
     private static final String TAG_SUCCESS = "success";
     JSONArray agente = null;
     JSONArray establecimientos = null;
     JSONArray cobros=null;
+    JSONArray comprob_anterior = null;
     public int i;
     public int k;
     public int c;
+    public int a;
 
     //Aqui se inicializa las variables para Agente de Venta
     private static final String TAG_agente = "agente_venta";
@@ -108,6 +114,17 @@ public class DbManager_Agente_GET extends Activity {
     public static final String TAG_id_forma_cobro = "id_forma_cobro";
     public static final String TAG_lugar_registro = "lugar_registro";
 
+    //Aqui se inicializa las variables para el historial del ultimo comprobante
+    public static final String TAG_comprob_anterior = "hist_comp_ant";
+    public static final String TAG_id_establec_comp_ant = "id_establec";
+    public static final String TAG_id_producto = "id_producto";
+    public static final String TAG_nom_producto = "nom_producto";
+    public static final String TAG_cantidad = "cantidad";
+    public static final String TAG_prom_anterior = "prom_anterior";
+    public static final String TAG_devuelto = "devuelto";
+    public static final String TAG_valor_unidad = "valor_unidad";
+    public static final String TAG_id_agente_comp_ant = "id_agente";
+
 
 
     @Override
@@ -126,11 +143,21 @@ public class DbManager_Agente_GET extends Activity {
         managerCobro.open();
         managerCobro.deleteAllComprobCobros();
 
+        managerComprobAnterior = new DbAdapter_Histo_Comprob_Anterior(this);
+        managerComprobAnterior.open();
+        managerComprobAnterior.deleteAllHistoComprobAnterior();
+
+
+
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.princ_json_agente);
         new LoadUpdateAgente().execute();
         new LoadInsertEstablec().execute();
         new LoadInsertHistCobros().execute();
+        new LoadInsertHistCompAnterior().execute();
+        //new DbManager_Stock_Agente_GET().doInBackground();
     }
 
     class LoadUpdateAgente extends AsyncTask<String,String,String>{
@@ -245,16 +272,7 @@ public class DbManager_Agente_GET extends Activity {
     }
 
     class LoadInsertHistCobros extends AsyncTask<String,String,String>{
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            progressDialog= new ProgressDialog(DbManager_Agente_GET.this);
-            progressDialog.setMessage("Importando Historial de Establecimientos de Sistema On line...");
-            progressDialog.setIndeterminate(false);
-            progressDialog.setCancelable(false);
-            progressDialog.show();
 
-        }
         protected String doInBackground(String... args) {
             Bundle bundle = getIntent().getExtras();
             String id_agente_venta = bundle.getString("putIdAgenteVenta");
@@ -301,6 +319,65 @@ public class DbManager_Agente_GET extends Activity {
                 } else {
                     Log.d("Fallo Sincronizacion!", jsonCobro.getString(TAG_SUCCESS));
                     return jsonCobro.getString(TAG_SUCCESS);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+    }
+
+    class LoadInsertHistCompAnterior extends AsyncTask<String,String,String>{
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog= new ProgressDialog(DbManager_Agente_GET.this);
+            progressDialog.setMessage("Importando Historial de Establecimientos de Sistema On line...");
+            progressDialog.setIndeterminate(false);
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+
+        }
+        protected String doInBackground(String... args) {
+            Bundle bundle = getIntent().getExtras();
+            String id_agente_venta = bundle.getString("putIdAgenteVenta");
+            //Aqui se lista los parametros a enviar al PHP
+            List<NameValuePair> params = new ArrayList<NameValuePair>();
+            params.add(new BasicNameValuePair("id_agente_venta", id_agente_venta));
+            // getting JSON string from URL
+            JSONObject jsonCompAnt = jsonParserComprobAnt.makeHttpRequest(url_hist_comprob_ant, "GET", params);
+            //Impresion en consola de prueba para verificar si se recibió algún dato del PHP
+            Log.d("Comprobante anterior: ", jsonCompAnt.toString());
+
+            try {
+                //Aqui se verifica si se envio recibio los datos correctamente
+                int success = jsonCompAnt.getInt(TAG_SUCCESS);
+                if (success == 1) {
+                    // Aqui se inserta la lista de datos en un JSON array
+                    comprob_anterior = jsonCompAnt.getJSONArray(TAG_comprob_anterior);
+
+
+                    //Se recorre el array del agente
+                    for (c = 0; c < comprob_anterior.length(); c++) {
+                        JSONObject co = comprob_anterior.getJSONObject(c);
+
+                        //Aqui se hace uso de las variables recibidas para cualquier metodo de base de datos
+                        managerComprobAnterior.createHistoComprobAnterior(
+                                co.getInt(TAG_id_establec_comp_ant),
+                                co.getInt(TAG_id_producto),
+                                co.getString(TAG_nom_producto),
+                                co.getInt(TAG_cantidad),
+                                co.getString(TAG_prom_anterior),
+                                co.getString(TAG_devuelto),
+                                co.getInt(TAG_valor_unidad),
+                                co.getInt(TAG_id_agente_comp_ant)
+                        );
+                    }
+
+                } else {
+                    Log.d("Fallo Sincronizacion!", jsonCompAnt.getString(TAG_SUCCESS));
+                    return jsonCompAnt.getString(TAG_SUCCESS);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
