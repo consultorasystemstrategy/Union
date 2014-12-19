@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.FilterQueryProvider;
+import android.widget.RelativeLayout;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,12 +25,14 @@ import union.union_vr1.Sqlite.DbAdapter_Stock_Agente;
 public class VMovil_Evento_Canjes_Dev extends Activity {
     private String establec;
     private AutoCompleteTextView autoComple;
-    private SimpleCursorAdapter adapter ;
+    private SimpleCursorAdapter adapter;
     private DbAdapter_Histo_Venta_Detalle dbHelper_Hi_De;
     private DbAdapter_Stock_Agente dbHelper_Stock;
     private int idAgente;
     private int idProducto;
-/*
+    private int stock;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,31 +48,36 @@ public class VMovil_Evento_Canjes_Dev extends Activity {
         //--------------------------------------------------------
         Bundle idE = getIntent().getExtras();
         establec = idE.getString("idEstabX");
-        idAgente=idE.getInt("idAgente");
+        idAgente = idE.getInt("idAgente");
         setContentView(R.layout.activity_vmovil__evento__canjes__dev);
         autoComple = (AutoCompleteTextView) findViewById(R.id.autocomplete);
+        System.out.println("here" + idAgente + "-" + establec);
         autoComplete();
 
 
     }
-    private void autoComplete(){
+
+    private void autoComplete() {
+
+
         Cursor cr = dbHelper_Stock.listarById(idAgente);
         cr.moveToFirst();
-        Toast.makeText(this,cr.getString(2),Toast.LENGTH_SHORT).show();
-        String [] colum = new String[]{
+        System.out.println(cr.getString(0));
+
+        Toast.makeText(this, cr.getString(2), Toast.LENGTH_SHORT).show();
+        String[] colum = new String[]{
                 cr.getColumnName(2),
                 cr.getColumnName(3)
         };
         int[] to = new int[]{
-                R.id.VCAP_producto,
-                R.id.VCPA_stock
+                R.id.autcomcan_dev,
+                R.id.autocom_can_dev
         };
-        adapter = new SimpleCursorAdapter(this,R.layout.infor_venta_cabecera_productos,cr,colum,to,0);
+        adapter = new SimpleCursorAdapter(this, R.layout.infor_canjes_dev, cr, colum, to, 0);
         autoComple.setAdapter(adapter);
 
 
-
-        autoComple.addTextChangedListener( new TextWatcher() {
+        autoComple.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
 
@@ -78,6 +86,7 @@ public class VMovil_Evento_Canjes_Dev extends Activity {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
                 adapter.getFilter().filter(charSequence.toString());
+
             }
 
             @Override
@@ -96,11 +105,20 @@ public class VMovil_Evento_Canjes_Dev extends Activity {
         autoComple.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-               Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
-               String nom =  cursor.getString(2);
-               autoComple.setText(nom);
-              // Toast.makeText(getApplicationContext(),cursor.getString(1),Toast.LENGTH_SHORT).show();
-                //Intent bProducto = new Intent(getApplicationContext(),)
+                adapterView.setBackgroundColor(0x00000000);
+                Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
+                String nom = cursor.getString(2);
+                idProducto = cursor.getInt(1);
+                autoComple.setText(nom);
+                stock = cursor.getInt(3);
+                Intent faCanjeDev = new Intent(getApplicationContext(), VMovil_Facturas_Canjes_Dev.class);
+                faCanjeDev.putExtra("idAgente", idAgente);
+                faCanjeDev.putExtra("idEstablec", establec);
+                faCanjeDev.putExtra("idProducto", idProducto);
+                faCanjeDev.putExtra("stock", stock);
+                faCanjeDev.putExtra("nomProducto", nom);
+                startActivity(faCanjeDev);
+
             }
         });
 
@@ -111,7 +129,7 @@ public class VMovil_Evento_Canjes_Dev extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.vmovil__evento__canjes__cobros, menu);
+
         return true;
     }
 
@@ -125,5 +143,5 @@ public class VMovil_Evento_Canjes_Dev extends Activity {
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }*/
+    }
 }

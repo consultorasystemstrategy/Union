@@ -244,8 +244,8 @@ public class DbAdaptert_Evento_Establec {
     public void insertSomeEstablecs() {
 
         createEstablecs(1, 1, 3, 1, "TIENDA NAs", "JUAN", "10001", 1, 50, 4, 50.5, 31, 1, 1);
-        createEstablecs(2, 1, 4, 2, "TIENDA NBs", "JUAN", "10001", 1, 11, 21, 60.5, 31, 2, 1);
-        createEstablecs(3, 2, 5, 3, "GRIFO NAs",  "JUAN", "10001", 1, 11, 21, 70.5, 31, 3, 1);
+        createEstablecs(2, 1, 4, 2, "jajajaj", "JUAN", "10001", 1, 11, 21, 60.5, 31, 2, 1);
+        createEstablecs(3, 2, 5, 3, "GRIFjsfhlg",  "JUAN", "10001", 1, 11, 21, 70.5, 31, 3, 1);
         createEstablecs(4, 2, 6, 1, "GRIFO NBs",  "JUAN", "10001", 1, 11, 21, 80.5, 31, 4, 1);
         createEstablecs(5, 3, 7, 2, "PERSON NAs", "JUAN", "10001", 1, 11, 21, 90.5, 31, 1, 1);
 

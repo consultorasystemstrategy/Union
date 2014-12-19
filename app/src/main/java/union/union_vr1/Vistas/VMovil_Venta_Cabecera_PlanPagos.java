@@ -13,13 +13,14 @@ import union.union_vr1.R;
 public class VMovil_Venta_Cabecera_PlanPagos extends Activity {
 
     private Spinner spinnerCuotas;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vmovil__venta__cabecera__plan_pagos);
 
         spinnerCuotas = (Spinner) findViewById(R.id.VCPP_spinnerCuotas);
-        ArrayAdapter<CharSequence> adapterCuotas = ArrayAdapter.createFromResource(this,R.array.Cuotas,android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> adapterCuotas = ArrayAdapter.createFromResource(this, R.array.Cuotas, android.R.layout.simple_spinner_item);
         adapterCuotas.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerCuotas.setAdapter(adapterCuotas);
     }

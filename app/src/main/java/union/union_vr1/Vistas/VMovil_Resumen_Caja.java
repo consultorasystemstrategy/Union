@@ -1,7 +1,6 @@
 package union.union_vr1.Vistas;
 
 
-
 import android.app.TabActivity;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -35,7 +34,6 @@ public class VMovil_Resumen_Caja extends TabActivity {
 
         dbHelper = new DbAdapter_Stock_Agente(this);
         dbHelper.open();
-
 
 
         dbHelperRC = new DbAdapter_Resumen_Caja(this);
@@ -149,12 +147,12 @@ public class VMovil_Resumen_Caja extends TabActivity {
         };
 
         dataAdapterRC = new SimpleCursorAdapter(
-          this,R.layout.infor_resumen_ingresos,
+                this, R.layout.infor_resumen_ingresos,
                 cursor,
                 columns,
                 to,
                 0);
-        ListView listView = (ListView)findViewById(R.id.VRC_listarResumenCaja);
+        ListView listView = (ListView) findViewById(R.id.VRC_listarResumenCaja);
         listView.setAdapter(dataAdapterRC);
     }
 

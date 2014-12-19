@@ -44,10 +44,10 @@ public class VMovil_Menu_Establec extends Activity {
 
     }
 
-    private void eleccion(String idEstabl,int idAgente){
+    private void eleccion(String idEstabl, int idAgente) {
         Intent i = new Intent(this, VMovil_Evento_Establec.class);
 
-        ((MyApplication)this.getApplication()).setIdEstablecimiento(Integer.parseInt(idEstabl));
+        ((MyApplication) this.getApplication()).setIdEstablecimiento(Integer.parseInt(idEstabl));
 
         i.putExtra("idEstab", idEstabl);
         i.putExtra("idAgente", idAgente);
@@ -85,7 +85,7 @@ public class VMovil_Menu_Establec extends Activity {
                 0);
 
 */
-        cursorAdapterEstablecimientoColor = new CursorAdapterEstablecimientoColor(this,cursor);
+        cursorAdapterEstablecimientoColor = new CursorAdapterEstablecimientoColor(this, cursor);
 
 
         ListView listView = (ListView) findViewById(R.id.VME_listar);
@@ -108,12 +108,11 @@ public class VMovil_Menu_Establec extends Activity {
         //View v4 = listView.getSelectedView();
         //v4.setBackgroundColor(Color.BLUE);
 
-        for (int i=0; i < listView.getCount(); i++)
-        {
-            final View row = listView.getAdapter().getView(i,null,null);
+        for (int i = 0; i < listView.getCount(); i++) {
+            final View row = listView.getAdapter().getView(i, null, null);
             //Solo deseo colocar background color a las 3 primeras filas, pero
             //al ejecutar no pinta ninguna fila de azul
-                row.setBackgroundColor(Color.BLUE);
+            row.setBackgroundColor(Color.BLUE);
         }
 
         listView.setOnItemClickListener(new OnItemClickListener() {
@@ -144,8 +143,8 @@ public class VMovil_Menu_Establec extends Activity {
 
 
                 Toast.makeText(getApplicationContext(),
-                        idEstablec, Toast.LENGTH_SHORT).show();
-                eleccion(idEstablec,id_agente);
+                        idEstablec + "Aqui po" + id_agente, Toast.LENGTH_SHORT).show();
+                eleccion(idEstablec, id_agente);
                 //listView.setBackgroundColor(Color.GREEN);
 
             }
@@ -179,24 +178,19 @@ public class VMovil_Menu_Establec extends Activity {
 
         String color_picto = (cur.getString(cur.getColumnIndex("ee_in_estado_no_atencion")));
 
-        if(color_picto.equals("0")){
+        if (color_picto.equals("0")) {
 
-            view.setBackgroundColor( Color.parseColor("#f48905"));
-        }
-        else if (color_picto.equals("1")){
-            view.setBackgroundColor( Color.parseColor("#688f2b"));
-        }
-        else if (color_picto.equals("2")){
-            view.setBackgroundColor( Color.parseColor("#F781F3"));
-        }
-        else if (color_picto.equals("3")){
-            view.setBackgroundColor( Color.parseColor("#003366"));
-        }
-        else if (color_picto.equals("4")){
-            view.setBackgroundColor( Color.parseColor("#F7FE2E"));
-        }
-        else if (color_picto.equals("5")){
-            view.setBackgroundColor( Color.parseColor("#ffffff"));
+            view.setBackgroundColor(Color.parseColor("#f48905"));
+        } else if (color_picto.equals("1")) {
+            view.setBackgroundColor(Color.parseColor("#688f2b"));
+        } else if (color_picto.equals("2")) {
+            view.setBackgroundColor(Color.parseColor("#F781F3"));
+        } else if (color_picto.equals("3")) {
+            view.setBackgroundColor(Color.parseColor("#003366"));
+        } else if (color_picto.equals("4")) {
+            view.setBackgroundColor(Color.parseColor("#F7FE2E"));
+        } else if (color_picto.equals("5")) {
+            view.setBackgroundColor(Color.parseColor("#ffffff"));
         }
     }
 

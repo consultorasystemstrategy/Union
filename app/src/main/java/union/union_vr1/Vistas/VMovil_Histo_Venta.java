@@ -31,22 +31,23 @@ public class VMovil_Histo_Venta extends Activity {
     private SimpleCursorAdapter dataAdapter;
     //private int cant_ope;
     public final String[] items01 = {"1"};
-    public final String[] items02 = {"1","2"};
-    public final String[] items03 = {"1","2","3"};
-    public final String[] items04 = {"1","2","3","4"};
-    public final String[] items05 = {"1","2","3","4","5"};
-    public final String[] items06 = {"1","2","3","4","5","6"};
-    public final String[] items07 = {"1","2","3","4","5","6","7"};
-    public final String[] items08 = {"1","2","3","4","5","6","7","8"};
-    public final String[] items09 = {"1","2","3","4","5","6","7","8","9"};
-    public final String[] items10 = {"1","2","3","4","5","6","7","8","9","10"};
-    public String[] items  = new String[20];
+    public final String[] items02 = {"1", "2"};
+    public final String[] items03 = {"1", "2", "3"};
+    public final String[] items04 = {"1", "2", "3", "4"};
+    public final String[] items05 = {"1", "2", "3", "4", "5"};
+    public final String[] items06 = {"1", "2", "3", "4", "5", "6"};
+    public final String[] items07 = {"1", "2", "3", "4", "5", "6", "7"};
+    public final String[] items08 = {"1", "2", "3", "4", "5", "6", "7", "8"};
+    public final String[] items09 = {"1", "2", "3", "4", "5", "6", "7", "8", "9"};
+    public final String[] items10 = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};
+    public String[] items = new String[20];
     public int tope;
     public int cate;
     public int form;
     public int cant;
     public double impo;
     private String valIdEstabX;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,7 +56,7 @@ public class VMovil_Histo_Venta extends Activity {
         dbHelper = new DbAdapter_Histo_Venta_Detalle(this);
         dbHelper.open();
         Bundle bundle = getIntent().getExtras();
-        valIdEstabX=bundle.getString("idEstabX");
+        valIdEstabX = bundle.getString("idEstabX");
         //Clean all data
         //dbHelper.deleteAllHistoVentaDetalle();
         //Add some data
@@ -66,7 +67,7 @@ public class VMovil_Histo_Venta extends Activity {
 
     }
 
-    private void eleccion(final String idEstabl, final double impor){
+    private void eleccion(final String idEstabl, final double impor) {
         //Intent i = new Intent(this, VMovil_Evento_Establec.class);
         //i.putExtra("idEstab", idEstabl);
         //startActivity(i);
@@ -76,7 +77,7 @@ public class VMovil_Histo_Venta extends Activity {
         dialogo.setTitle("ACCION");
         dialogo.setItems(items, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
-                if(item == 0){
+                if (item == 0) {
                     tope = 2;
                     cate = 1;
                     form = 1;
@@ -85,7 +86,7 @@ public class VMovil_Histo_Venta extends Activity {
                             getDatePhone(), getTimePhone(), "1", "1", 2);
                     displayListView();
                 }
-                if(item == 1){
+                if (item == 1) {
                     tope = 2;
                     cate = 2;
                     form = 1;
@@ -94,7 +95,7 @@ public class VMovil_Histo_Venta extends Activity {
                             getDatePhone(), getTimePhone(), "1", "1", 2);
                     displayListView();
                 }
-                if(item == 2){
+                if (item == 2) {
                     tope = 2;
                     cate = 3;
                     form = 1;
@@ -103,7 +104,7 @@ public class VMovil_Histo_Venta extends Activity {
                             getDatePhone(), getTimePhone(), "1", "1", 2);
                     displayListView();
                 }
-                if(item == 3){
+                if (item == 3) {
                     tope = 2;
                     cate = 4;
                     form = 1;
@@ -112,7 +113,7 @@ public class VMovil_Histo_Venta extends Activity {
                             getDatePhone(), getTimePhone(), "1", "1", 2);
                     displayListView();
                 }
-                if(item == 4){
+                if (item == 4) {
                     tope = 1;
                     cate = 1;
                     form = 1;
@@ -121,7 +122,7 @@ public class VMovil_Histo_Venta extends Activity {
                             getDatePhone(), getTimePhone(), "1", "1", 2);
                     displayListView();
                 }
-                if(item == 5){
+                if (item == 5) {
                     tope = 1;
                     cate = 2;
                     form = 1;
@@ -130,7 +131,7 @@ public class VMovil_Histo_Venta extends Activity {
                             getDatePhone(), getTimePhone(), "1", "1", 2);
                     displayListView();
                 }
-                if(item == 6){
+                if (item == 6) {
                     tope = 1;
                     cate = 3;
                     form = 1;
@@ -139,7 +140,7 @@ public class VMovil_Histo_Venta extends Activity {
                             getDatePhone(), getTimePhone(), "1", "1", 2);
                     displayListView();
                 }
-                if(item == 7){
+                if (item == 7) {
                     tope = 1;
                     cate = 4;
                     form = 1;
@@ -156,54 +157,74 @@ public class VMovil_Histo_Venta extends Activity {
 
     }
 
-    private void cantidad(int idCant){
+    private void cantidad(int idCant) {
         //Intent i = new Intent(this, VMovil_Evento_Establec.class);
         //i.putExtra("idEstab", idEstabl);
         //startActivity(i);
 
-        if(idCant ==  1) {items = items01;}
-        if(idCant ==  2) {items = items02;}
-        if(idCant ==  3) {items = items03;}
-        if(idCant ==  4) {items = items04;}
-        if(idCant ==  5) {items = items05;}
-        if(idCant ==  6) {items = items06;}
-        if(idCant ==  7) {items = items07;}
-        if(idCant ==  8) {items = items08;}
-        if(idCant ==  9) {items = items09;}
-        if(idCant == 10) {items = items10;}
+        if (idCant == 1) {
+            items = items01;
+        }
+        if (idCant == 2) {
+            items = items02;
+        }
+        if (idCant == 3) {
+            items = items03;
+        }
+        if (idCant == 4) {
+            items = items04;
+        }
+        if (idCant == 5) {
+            items = items05;
+        }
+        if (idCant == 6) {
+            items = items06;
+        }
+        if (idCant == 7) {
+            items = items07;
+        }
+        if (idCant == 8) {
+            items = items08;
+        }
+        if (idCant == 9) {
+            items = items09;
+        }
+        if (idCant == 10) {
+            items = items10;
+        }
 
         AlertDialog.Builder dialogox = new AlertDialog.Builder(this);
         dialogox.setTitle("CANTIDAD");
         dialogox.setItems(items, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialogx, int itemx) {
-                if(itemx == 0){
+                if (itemx == 0) {
                     cant = 1;
                 }
-                if(itemx == 1){
+                if (itemx == 1) {
                     cant = 2;
                 }
-                if(itemx == 2){
+                if (itemx == 2) {
                     cant = 3;
                 }
-                if(itemx == 3){
+                if (itemx == 3) {
                     cant = 4;
                 }
-                if(itemx == 4){
+                if (itemx == 4) {
                     cant = 5;
                 }
-                if(itemx == 5){
+                if (itemx == 5) {
                     cant = 6;
                 }
-                if(itemx == 6){
+                if (itemx == 6) {
                     cant = 7;
                 }
-                if(itemx == 7){
+                if (itemx == 7) {
                     cant = 8;
                 }
-                if(itemx == 8){
+                if (itemx == 8) {
                     cant = 9;
                 }
-                if(itemx == 9){
+                if (itemx == 9) {
                     cant = 10;
                 }
                 Toast.makeText(getApplicationContext(), items[itemx], Toast.LENGTH_LONG).show();
@@ -216,10 +237,10 @@ public class VMovil_Histo_Venta extends Activity {
 
     private void displayListView() {
 
-        Cursor cursor = dbHelper.fetchAllHistoVentaDetalleByIdEst1(valIdEstabX,"1");
+        Cursor cursor = dbHelper.fetchAllHistoVentaDetalleByIdEst1(valIdEstabX, "1");
         //Cursor cursor = dbHelper.fetchAllHistoVentaDetalle();
         // The desired columns to be bound
-        String[] columns = new String[] {
+        String[] columns = new String[]{
                 DbAdapter_Histo_Venta_Detalle.HD_comprobante,
                 DbAdapter_Histo_Venta_Detalle.HD_nom_producto,
                 DbAdapter_Histo_Venta_Detalle.HD_cantidad,
@@ -228,7 +249,7 @@ public class VMovil_Histo_Venta extends Activity {
         };
 
         // the XML defined views which the data will be bound to
-        int[] to = new int[] {
+        int[] to = new int[]{
                 R.id.VHV_compr,
                 R.id.VHV_produ,
                 R.id.VHV_canti,
@@ -286,14 +307,13 @@ public class VMovil_Histo_Venta extends Activity {
 
         dataAdapter.setFilterQueryProvider(new FilterQueryProvider() {
             public Cursor runQuery(CharSequence constraint) {
-                return dbHelper.fetchHistoVentaDetalleByNameEst1(valIdEstabX, constraint.toString(),"1");
+                return dbHelper.fetchHistoVentaDetalleByNameEst1(valIdEstabX, constraint.toString(), "1");
             }
         });
 
     }
 
-    private String getTimePhone()
-    {
+    private String getTimePhone() {
         Calendar cal = new GregorianCalendar();
         Date date = cal.getTime();
         SimpleDateFormat df = new SimpleDateFormat("hh:mm:ss");
@@ -301,8 +321,7 @@ public class VMovil_Histo_Venta extends Activity {
         return formatteTime;
     }
 
-    private String getDatePhone()
-    {
+    private String getDatePhone() {
         Calendar cal = new GregorianCalendar();
         Date date = cal.getTime();
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");

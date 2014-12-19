@@ -34,6 +34,7 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
     private String estadox;
     private int valEstado;
     private String valIdEstab;
+    private int idAgente;
     private Button mCobros, mCanDev, mVentas, mManten, mReport, mEstadoAtendido, mEstadoNoAtendido, mEstadoPendiente;
 
     //Esto es un comentario
@@ -44,14 +45,14 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
         dbHelper = new DbAdaptert_Evento_Establec(this);
         dbHelper.open();
 
-        mCobros = (Button)findViewById(R.id.VEE_BTNcobros);
-        mCanDev = (Button)findViewById(R.id.VEE_BTNcandev);
-        mVentas = (Button)findViewById(R.id.VEE_BTNventas);
-        mManten = (Button)findViewById(R.id.VEE_BTNmanten);
-        mReport = (Button)findViewById(R.id.VEE_BTNreport);
-        mEstadoAtendido = (Button)findViewById(R.id.VEE_BTNEstadoAtendido);
-        mEstadoNoAtendido = (Button)findViewById(R.id.VEE_BTNEstadoNoAtendido);
-        mEstadoPendiente = (Button)findViewById(R.id.VEE_BTNEstadoPendiente);
+        mCobros = (Button) findViewById(R.id.VEE_BTNcobros);
+        mCanDev = (Button) findViewById(R.id.VEE_BTNcandev);
+        mVentas = (Button) findViewById(R.id.VEE_BTNventas);
+        mManten = (Button) findViewById(R.id.VEE_BTNmanten);
+        mReport = (Button) findViewById(R.id.VEE_BTNreport);
+        mEstadoAtendido = (Button) findViewById(R.id.VEE_BTNEstadoAtendido);
+        mEstadoNoAtendido = (Button) findViewById(R.id.VEE_BTNEstadoNoAtendido);
+        mEstadoPendiente = (Button) findViewById(R.id.VEE_BTNEstadoPendiente);
 
 
         mCobros.setOnClickListener(this);
@@ -65,7 +66,8 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
 
 
         Bundle bundle = getIntent().getExtras();
-        valIdEstab=bundle.getString("idEstab");
+        valIdEstab = bundle.getString("idEstab");
+        idAgente = bundle.getInt("idAgente");
         titulos(valIdEstab);
 
         titulo = (TextView) findViewById(R.id.VEE_TVWtitulo);
@@ -79,10 +81,10 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
 
         //Recorremos el cursor hasta que no haya más registros
 
-        int i ;
+        int i;
 
         if (cursor.moveToFirst()) {
-            for (i=0; i<1;i++) {
+            for (i = 0; i < 1; i++) {
                 String fecha = cursor.getString(0);
 
                 try {
@@ -112,7 +114,7 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
             }
 
         }
-        if(cursor.getCount() <=0){
+        if (cursor.getCount() <= 0) {
             Toast.makeText(getApplicationContext(), "No hay Deudas Por Cobrar", Toast.LENGTH_SHORT).show();
             mCobros.getBackground().setColorFilter(new LightingColorFilter(0xff00ff00, 0xff00ff00));
         }
@@ -121,6 +123,7 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
         cursor.close();
 
     }
+
     private String fech() throws ParseException {
         Calendar cal = new GregorianCalendar();
         Date date = cal.getTime();
@@ -133,37 +136,36 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
 //-------------------------------------------------------------------------------------------------------------------------
 
 
-
-    public void titulos(String ids){
+    public void titulos(String ids) {
         cursor = dbHelper.fetchEstablecsById(ids);
         if (cursor.moveToFirst()) {
             do {
                 titulox =
-                    "Cliente : "+ cursor.getString(3) +
-                    "\nNombre  : "+ cursor.getString(4) +
-                    "\nOrden   : "+ cursor.getString(5);
-                if(cursor.getInt(6)==1){
+                        "Cliente : " + cursor.getString(3) +
+                                "\nNombre  : " + cursor.getString(4) +
+                                "\nOrden   : " + cursor.getString(5);
+                if (cursor.getInt(6) == 1) {
                     estadox = "POR ATENDER";
                     valEstado = 1;
                 }
-                if(cursor.getInt(6)==2){
+                if (cursor.getInt(6) == 2) {
                     estadox = "ATENDIDO";
                     valEstado = 2;
                 }
-                if(cursor.getInt(6)==3){
+                if (cursor.getInt(6) == 3) {
                     estadox = "NO ATENDIDO";
                     valEstado = 3;
                 }
-                if(cursor.getInt(6)==4){
+                if (cursor.getInt(6) == 4) {
                     estadox = "PENDIENTE";
                     valEstado = 4;
                 }
 
-            } while(cursor.moveToNext());
+            } while (cursor.moveToNext());
         }
     }
 
-    private void eleccion(final String idEstabl){
+    private void eleccion(final String idEstabl) {
         //Intent i = new Intent(this, VMovil_Evento_Establec.class);
         //i.putExtra("idEstab", idEstabl);
         //startActivity(i);
@@ -173,9 +175,9 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
         dialogo.setTitle("ESTADO");
         dialogo.setItems(items, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
-                    dbHelper.updateEstadoNoAtendido(idEstabl, 3, item,items[item]);
-                    Intent intent2= new Intent(getApplicationContext(), VMovil_Menu_Establec.class);
-                    startActivity(intent2);
+                dbHelper.updateEstadoNoAtendido(idEstabl, 3, item, items[item]);
+                Intent intent2 = new Intent(getApplicationContext(), VMovil_Menu_Establec.class);
+                startActivity(intent2);
 
                 Toast.makeText(getApplicationContext(), "No atendio por : " + items[item], Toast.LENGTH_LONG).show();
             }
@@ -197,8 +199,11 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
                 //        "1", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.VEE_BTNcandev:
-                Intent idh = new Intent(this, VMovil_Histo_Venta.class);
+                Toast.makeText(this, ":((((( " + idAgente + ")", Toast.LENGTH_SHORT).show();
+                Intent idh = new Intent(this, VMovil_Evento_Canjes_Dev.class);
                 idh.putExtra("idEstabX", valIdEstab);
+                idh.putExtra("idAgente", idAgente);
+
                 startActivity(idh);
                 break;
             case R.id.VEE_BTNventas:
@@ -223,7 +228,7 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
             case R.id.VEE_BTNEstadoAtendido:
 
                 dbHelper.updateEstadoEstablecs(valIdEstab, 2);
-                Intent intent= new Intent(this, VMovil_Menu_Establec.class);
+                Intent intent = new Intent(this, VMovil_Menu_Establec.class);
                 startActivity(intent);
                 break;
             case R.id.VEE_BTNEstadoNoAtendido:
@@ -233,7 +238,7 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
 
                 dbHelper.updateEstadoEstablecs(valIdEstab, 4);
                 titulos(valIdEstab);
-                Intent intent2= new Intent(this, VMovil_Menu_Establec.class);
+                Intent intent2 = new Intent(this, VMovil_Menu_Establec.class);
                 startActivity(intent2);
                 break;
             default:

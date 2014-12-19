@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+
 import android.widget.Spinner;
 
 import union.union_vr1.R;
@@ -42,6 +43,7 @@ import union.union_vr1.Sqlite.DbAdapter_Stock_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta_Detalle;
 import union.union_vr1.BlueTooth.BtConexion;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
+
 public class VMovil_Venta_Producto extends Activity {
 
 

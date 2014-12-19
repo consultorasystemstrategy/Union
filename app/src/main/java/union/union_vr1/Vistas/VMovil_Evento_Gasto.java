@@ -22,7 +22,7 @@ import union.union_vr1.R;
 import union.union_vr1.Sqlite.DbAdapter_Informe_Gastos;
 import union.union_vr1.Sqlite.DbAdapter_Tipo_Gasto;
 
-public class VMovil_Evento_Gasto extends Activity /*implements OnClickListener */{
+public class VMovil_Evento_Gasto extends Activity /*implements OnClickListener */ {
 
     private final static int IGV = 18;
     private DbAdapter_Informe_Gastos dbHelperInformeGasto;
@@ -93,10 +93,10 @@ public class VMovil_Evento_Gasto extends Activity /*implements OnClickListener *
                 String tipoGasto = adapterView.getItemAtPosition(i).toString();
                 TipoDeGasto tipoDeGasto = TipoDeGasto.valueOf(tipoGasto);
 
-                switch (tipoDeGasto){
+                switch (tipoDeGasto) {
                     case Combustible:
 
-                        String  itemProcedenciaGasto = (String) spinnerProcedenciaGasto.getSelectedItem();
+                        String itemProcedenciaGasto = (String) spinnerProcedenciaGasto.getSelectedItem();
                         ProcedenciaGasto procedenciaGasto = ProcedenciaGasto.valueOf(itemProcedenciaGasto);
                         switch (procedenciaGasto) {
                             case planta:
@@ -134,7 +134,7 @@ public class VMovil_Evento_Gasto extends Activity /*implements OnClickListener *
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
-                int positionTipoGasto  = spinnerTipoGasto.getSelectedItemPosition();
+                int positionTipoGasto = spinnerTipoGasto.getSelectedItemPosition();
                 positionTipoGasto++;
 
 
@@ -142,7 +142,7 @@ public class VMovil_Evento_Gasto extends Activity /*implements OnClickListener *
                 ProcedenciaGasto procedenciaGasto = ProcedenciaGasto.valueOf(procedenciaSeleccionada);
 
 
-                if (positionTipoGasto==1) {
+                if (positionTipoGasto == 1) {
                     switch (procedenciaGasto) {
                         case planta:
                             addItemsTipoDocumento_CombustiblePlanta();
@@ -153,7 +153,7 @@ public class VMovil_Evento_Gasto extends Activity /*implements OnClickListener *
 
                     }
 
-                }else{
+                } else {
 
                 }
             }
@@ -207,7 +207,7 @@ public class VMovil_Evento_Gasto extends Activity /*implements OnClickListener *
             return databaseId;
         }
 
-        public String getDatabaseValue(){
+        public String getDatabaseValue() {
             return databaseValue;
         }
 
@@ -225,7 +225,7 @@ public class VMovil_Evento_Gasto extends Activity /*implements OnClickListener *
         int i = 0;
         if (cursor.moveToFirst()) {
             do {
-                Log.d("TIPO GASTO SUB " +i, cursor.getString(2));
+                Log.d("TIPO GASTO SUB " + i, cursor.getString(2));
                 TipoGasto[i] = cursor.getString(1);
 
                 labels.add(new SpinnerObject(cursor.getInt(0), cursor.getString(2)));
@@ -250,7 +250,7 @@ public class VMovil_Evento_Gasto extends Activity /*implements OnClickListener *
         spinnerTipoGasto.setAdapter(dataAdapter);
 
         //Creamos el adaptador
-        ArrayAdapter<CharSequence> adapterProcedenciaGasto = ArrayAdapter.createFromResource(this,R.array.procedenciaGasto,android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> adapterProcedenciaGasto = ArrayAdapter.createFromResource(this, R.array.procedenciaGasto, android.R.layout.simple_spinner_item);
         //Añadimos el layout para el menú
         adapterProcedenciaGasto.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         //Le indicamos al spinner el adaptador a usar
@@ -259,28 +259,29 @@ public class VMovil_Evento_Gasto extends Activity /*implements OnClickListener *
         addItemsTipoDocumento();
 
 
-
-
     }
-    public void addItemsTipoDocumento_CombustibleRuta(){
+
+    public void addItemsTipoDocumento_CombustibleRuta() {
         //Creamos el adaptador
-        ArrayAdapter<CharSequence> adapterTipoDocumento = ArrayAdapter.createFromResource(this,R.array.tipoDocumentoCombustibleRuta,android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> adapterTipoDocumento = ArrayAdapter.createFromResource(this, R.array.tipoDocumentoCombustibleRuta, android.R.layout.simple_spinner_item);
         //Añadimos el layout para el menú
         adapterTipoDocumento.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         //Le indicamos al spinner el adaptador a usar
         spinnerTipoDocumento.setAdapter(adapterTipoDocumento);
     }
-    public void addItemsTipoDocumento_CombustiblePlanta(){
+
+    public void addItemsTipoDocumento_CombustiblePlanta() {
         //Creamos el adaptador
-        ArrayAdapter<CharSequence> adapterTipoDocumento = ArrayAdapter.createFromResource(this,R.array.tipoDocumentoCombustiblePlanta,android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> adapterTipoDocumento = ArrayAdapter.createFromResource(this, R.array.tipoDocumentoCombustiblePlanta, android.R.layout.simple_spinner_item);
         //Añadimos el layout para el menú
         adapterTipoDocumento.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         //Le indicamos al spinner el adaptador a usar
         spinnerTipoDocumento.setAdapter(adapterTipoDocumento);
     }
-    public void addItemsTipoDocumento(){
+
+    public void addItemsTipoDocumento() {
         //Creamos el adaptador
-        ArrayAdapter<CharSequence> adapterTipoDocumento = ArrayAdapter.createFromResource(this,R.array.tipoDocumento,android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> adapterTipoDocumento = ArrayAdapter.createFromResource(this, R.array.tipoDocumento, android.R.layout.simple_spinner_item);
         //Añadimos el layout para el menú
         adapterTipoDocumento.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         //Le indicamos al spinner el adaptador a usar
@@ -289,11 +290,13 @@ public class VMovil_Evento_Gasto extends Activity /*implements OnClickListener *
 
 
     public void agegarGastos(View v) {
-        int positionTipoGasto  = spinnerTipoGasto.getSelectedItemPosition();
-        int positionProcedenciaGasto  = spinnerProcedenciaGasto.getSelectedItemPosition();
-        int positionTipoDocumento  = spinnerTipoDocumento.getSelectedItemPosition();
+        int positionTipoGasto = spinnerTipoGasto.getSelectedItemPosition();
+        int positionProcedenciaGasto = spinnerProcedenciaGasto.getSelectedItemPosition();
+        int positionTipoDocumento = spinnerTipoDocumento.getSelectedItemPosition();
 
-        positionTipoGasto++; positionProcedenciaGasto++; positionTipoDocumento++;
+        positionTipoGasto++;
+        positionProcedenciaGasto++;
+        positionTipoDocumento++;
 
 
         Double total = Double.valueOf(editTextTotal.getText().toString());
@@ -309,26 +312,26 @@ public class VMovil_Evento_Gasto extends Activity /*implements OnClickListener *
         int agente = 1;
 
         long idRegistroGastoInsertado = 0;
-        switch (tipoDocumento){
+        switch (tipoDocumento) {
             case factura:
-                igv = IGV*total/100;
-                subtotal = total-igv;
+                igv = IGV * total / 100;
+                subtotal = total - igv;
 
-                idRegistroGastoInsertado=dbHelperInformeGasto.createInformeGastos(positionTipoGasto, positionProcedenciaGasto,positionTipoDocumento,null,subtotal,igv,total,null,null,estado,referencia, agente);
+                idRegistroGastoInsertado = dbHelperInformeGasto.createInformeGastos(positionTipoGasto, positionProcedenciaGasto, positionTipoDocumento, null, subtotal, igv, total, null, null, estado, referencia, agente);
                 Log.d("TIPO DOCUMENTO", "FACTURA");
                 break;
             case boleta:
-                idRegistroGastoInsertado=dbHelperInformeGasto.createInformeGastos(positionTipoGasto, positionProcedenciaGasto,positionTipoDocumento,null,subtotal,igv,total,null,null,estado,referencia, agente);
+                idRegistroGastoInsertado = dbHelperInformeGasto.createInformeGastos(positionTipoGasto, positionProcedenciaGasto, positionTipoDocumento, null, subtotal, igv, total, null, null, estado, referencia, agente);
                 Log.d("TIPO DOCUMENTO", "BOLETA");
                 break;
             case ficha:
-                idRegistroGastoInsertado=dbHelperInformeGasto.createInformeGastos(positionTipoGasto, positionProcedenciaGasto,positionTipoDocumento,null,subtotal,igv,total,null,null,estado,referencia, agente);
+                idRegistroGastoInsertado = dbHelperInformeGasto.createInformeGastos(positionTipoGasto, positionProcedenciaGasto, positionTipoDocumento, null, subtotal, igv, total, null, null, estado, referencia, agente);
                 Log.d("TIPO DOCUMENTO", "FICHA");
                 break;
         }
 
         displayListViewVEG();
-        Toast.makeText(getApplicationContext(),"Registro insertado satisfactoriamente con id : "+idRegistroGastoInsertado,Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "Registro insertado satisfactoriamente con id : " + idRegistroGastoInsertado, Toast.LENGTH_SHORT).show();
 
         //Toast.makeText(getApplicationContext(),
         //        "idTipoGAsto : " + positionTipoGasto + ", idProcedenciaGasto : " + positionProcedenciaGasto + ", idTipoDocumento"+positionTipoDocumento + ", total : "+total+ ", referencia : " +referencia+", nomobreDocumento : "+nombreDocumento, Toast.LENGTH_SHORT).show();
@@ -338,11 +341,11 @@ public class VMovil_Evento_Gasto extends Activity /*implements OnClickListener *
         factura, ficha, boleta;
     }
 
-    private enum ProcedenciaGasto{
+    private enum ProcedenciaGasto {
         planta, ruta
     }
 
-    private enum TipoDeGasto{
+    private enum TipoDeGasto {
         Combustible, Comida, Departamento, Viaje, Nuevo
     }
 

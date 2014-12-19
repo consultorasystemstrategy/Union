@@ -28,7 +28,7 @@ import union.union_vr1.Sqlite.DbAdapter_Histo_Comprob_Anterior;
 import union.union_vr1.Sqlite.DbAdapter_Histo_Venta_Detalle;
 import union.union_vr1.Utils.MyApplication;
 
-public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
+public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
 
 
     private DbAdapter_Histo_Comprob_Anterior dbHelper_Histo_comprob_anterior;
@@ -61,7 +61,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
 
                         dbHelper_temp_venta.deleteAllTempVentaDetalle();
                         finish();
-                        Intent intent = new Intent(mContext,VMovil_Evento_Indice.class);
+                        Intent intent = new Intent(mContext, VMovil_Evento_Indice.class);
                         startActivity(intent);
                     }
                 }).create().show();
@@ -123,24 +123,22 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
         dbHelperAgente = new DbAdapter_Agente(this);
         dbHelperAgente.open();
 
-        dbHelper_Comprob_Venta_Detalle  = new DbAdapter_Comprob_Venta_Detalle(this);
+        dbHelper_Comprob_Venta_Detalle = new DbAdapter_Comprob_Venta_Detalle(this);
         dbHelper_Comprob_Venta_Detalle.open();
 
-        idEstablecimiento=((MyApplication)this.getApplication()).getIdEstablecimiento();
-        id_agente_venta= ((MyApplication) this.getApplication()).getIdAgente();
+        idEstablecimiento = ((MyApplication) this.getApplication()).getIdEstablecimiento();
+        id_agente_venta = ((MyApplication) this.getApplication()).getIdAgente();
 
         setContentView(R.layout.princ_venta_cabecera);
 
 
-
-
         spinnerTipoDocumento = (Spinner) findViewById(R.id.VC_spinnerTipoDocumento);
-        ArrayAdapter<CharSequence> adapterTipoDocumento = ArrayAdapter.createFromResource(this,R.array.tipoDocumento,android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> adapterTipoDocumento = ArrayAdapter.createFromResource(this, R.array.tipoDocumento, android.R.layout.simple_spinner_item);
         adapterTipoDocumento.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerTipoDocumento.setAdapter(adapterTipoDocumento);
 
         spinnerFormaPago = (Spinner) findViewById(R.id.VC_spinnerFormaPago);
-        ArrayAdapter<CharSequence> adapterFormaPago = ArrayAdapter.createFromResource(this,R.array.forma_pago,android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> adapterFormaPago = ArrayAdapter.createFromResource(this, R.array.forma_pago, android.R.layout.simple_spinner_item);
         adapterFormaPago.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerFormaPago.setAdapter(adapterFormaPago);
 
@@ -149,11 +147,11 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
         buttonVender.setOnClickListener(this);
         buttonAgregar.setOnClickListener(this);
 
-        boolean isDisplayed = ((MyApplication)this.getApplication()).isDisplayedHistorialComprobanteAnterior();
+        boolean isDisplayed = ((MyApplication) this.getApplication()).isDisplayedHistorialComprobanteAnterior();
 
         if (isDisplayed) {
             //NO SE MUESTRA EL HISTORIAL DEL COMPROBANTE ANTERIOR COMO SUGERENCIA DE VENTA AL USUARIO
-        }else{
+        } else {
             displayHistorialComprobanteAnterior();
         }
         mostrarProductosParaVender();
@@ -163,7 +161,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
                 String formaDePago = adapterView.getItemAtPosition(i).toString();
                 FormaPago formaPago = FormaPago.valueOf(formaDePago);
 
-                switch (formaPago){
+                switch (formaPago) {
                     case Contado:
 
                         break;
@@ -202,7 +200,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
                                     finish();
                                     Intent intent = new Intent(mContext, VMovil_Venta_Cabecera.class);
                                     startActivity(intent);
-                                }else{
+                                } else {
                                     Toast.makeText(getApplicationContext(), "No se pudo eliminar intente nuevamente", Toast.LENGTH_LONG).show();
                                 }
                             }
@@ -282,21 +280,21 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
         */
     }
 
-    private enum FormaPago{
+    private enum FormaPago {
         Contado, Credito
     }
 
-@Override
+    @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.VC_buttonAgregarProductos:
-                Intent intent  = new Intent(this, VMovil_Venta_Cabecera_AgregarProductos.class);
+                Intent intent = new Intent(this, VMovil_Venta_Cabecera_AgregarProductos.class);
 
                 startActivity(intent);
                 break;
             case R.id.VC_buttonVender:
-                    ((MyApplication)this.getApplication()).setDisplayedHistorialComprobanteAnterior(false);
-                    vender();
+                ((MyApplication) this.getApplication()).setDisplayedHistorialComprobanteAnterior(false);
+                vender();
                 break;
             default:
 
@@ -305,63 +303,62 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
 
     }
 
-    public void vender(){
+    public void vender() {
 
-            //Obtener los datos de las ventas
+        //Obtener los datos de las ventas
 
-            String formaPago = spinnerFormaPago.getSelectedItem().toString();
-            String tipoDocumento = spinnerTipoDocumento.getSelectedItem().toString();
+        String formaPago = spinnerFormaPago.getSelectedItem().toString();
+        String tipoDocumento = spinnerTipoDocumento.getSelectedItem().toString();
 
-            TipoDocumento tipoDocumento1 = TipoDocumento.valueOf(tipoDocumento);
-            FormaPago formaPago1 = FormaPago.valueOf(formaPago);
+        TipoDocumento tipoDocumento1 = TipoDocumento.valueOf(tipoDocumento);
+        FormaPago formaPago1 = FormaPago.valueOf(formaPago);
 
-            int tipoVenta = 1;
-            int numero_documento = 1;
-            int estado_conexion = 0;
-            int i_tipoDocumento = 0;
-            int i_formaPago = 0;
-            int estado_comprobante = 1;
-            Double monto_total  = 0.0;
-            Double igv  = 0.0;
-            Double base_imponible = 0.0;
-            String erp_stringTipoDocumento  = null;
-            String serie = null;
-            String codigo_erp = null;
+        int tipoVenta = 1;
+        int numero_documento = 1;
+        int estado_conexion = 0;
+        int i_tipoDocumento = 0;
+        int i_formaPago = 0;
+        int estado_comprobante = 1;
+        Double monto_total = 0.0;
+        Double igv = 0.0;
+        Double base_imponible = 0.0;
+        String erp_stringTipoDocumento = null;
+        String serie = null;
+        String codigo_erp = null;
 
-            switch (tipoDocumento1){
-                case factura:
-                    i_tipoDocumento = 1;
-                    erp_stringTipoDocumento="FV";
-                    serie = dbHelperAgente.getSerieFacturaByIdAgente("14");
-                    codigo_erp = erp_stringTipoDocumento+serie;
-                    break;
-                case boleta:
-                    i_tipoDocumento = 2;
-                    erp_stringTipoDocumento="BV";
-                    serie = dbHelperAgente.getSerieBoletaByIdAgente("14");
-                    codigo_erp = erp_stringTipoDocumento+serie;
-                    break;
-                case ficha:
-                    break;
-            }
-            switch (formaPago1){
-                case Contado:
-                    i_formaPago = 1;
-                    break;
-                case Credito:
-                    i_formaPago = 2;
-                    break;
+        switch (tipoDocumento1) {
+            case factura:
+                i_tipoDocumento = 1;
+                erp_stringTipoDocumento = "FV";
+                serie = dbHelperAgente.getSerieFacturaByIdAgente("14");
+                codigo_erp = erp_stringTipoDocumento + serie;
+                break;
+            case boleta:
+                i_tipoDocumento = 2;
+                erp_stringTipoDocumento = "BV";
+                serie = dbHelperAgente.getSerieBoletaByIdAgente("14");
+                codigo_erp = erp_stringTipoDocumento + serie;
+                break;
+            case ficha:
+                break;
+        }
+        switch (formaPago1) {
+            case Contado:
+                i_formaPago = 1;
+                break;
+            case Credito:
+                i_formaPago = 2;
+                break;
 
-            }
+        }
 
 
         String datosConcatenados = "idEestableciminto : " + idEstablecimiento + "\n" +
                 "idAgente : " + id_agente_venta + "\n" +
                 "Forma de pago : " + formaPago + "\n" +
-                "Tipo Documento : " + tipoDocumento+ "\n" + "---------------------------";
+                "Tipo Documento : " + tipoDocumento + "\n" + "---------------------------";
 
-        long id = dbHelper_Comprob_Venta.createComprobVenta(idEstablecimiento,i_tipoDocumento,i_formaPago,tipoVenta,codigo_erp,serie,numero_documento,base_imponible,igv,monto_total,null,null,estado_comprobante, estado_conexion,id_agente_venta);
-
+        long id = dbHelper_Comprob_Venta.createComprobVenta(idEstablecimiento, i_tipoDocumento, i_formaPago, tipoVenta, codigo_erp, serie, numero_documento, base_imponible, igv, monto_total, null, null, estado_comprobante, estado_conexion, id_agente_venta);
 
 
         int id_comprobante = (int) id;
@@ -370,8 +367,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
         Cursor cursorTemp = simpleCursorAdapter.getCursor();
 
 
-
-        for (cursorTemp.moveToFirst(); !cursorTemp.isAfterLast();cursorTemp.moveToNext()){
+        for (cursorTemp.moveToFirst(); !cursorTemp.isAfterLast(); cursorTemp.moveToNext()) {
 
             int _id = cursorTemp.getInt(cursorTemp.getColumnIndex(DBAdapter_Temp_Venta.temp_venta_detalle));
             int id_producto = cursorTemp.getInt(cursorTemp.getColumnIndex(DBAdapter_Temp_Venta.temp_id_producto));
@@ -385,35 +381,36 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
 
             monto_total += importe;
 
-            long comprobVentaDetalle = dbHelper_Comprob_Venta_Detalle.createComprobVentaDetalle(id_comprobante, id_producto, nombre_producto, cantidad, importe,0, precio_unitario, promedio_anterior, devuelto,0);
+            long comprobVentaDetalle = dbHelper_Comprob_Venta_Detalle.createComprobVentaDetalle(id_comprobante, id_producto, nombre_producto, cantidad, importe, 0, precio_unitario, promedio_anterior, devuelto, 0);
 
 
-            datosConcatenados+="Producto  "+ nombre_producto + "Vendido satisfactoriamente con id : "+ comprobVentaDetalle;
+            datosConcatenados += "Producto  " + nombre_producto + "Vendido satisfactoriamente con id : " + comprobVentaDetalle;
         }
 
-        base_imponible = monto_total /1.18;
-        igv = base_imponible*0.18;
-        dbHelper_Comprob_Venta.updateComprobanteMontos(id,monto_total,igv, base_imponible);
-        datosConcatenados+="total de gasto : " + monto_total;
-        datosConcatenados+="base impornible: " + base_imponible;
-        datosConcatenados+="igv : " + igv;
+        base_imponible = monto_total / 1.18;
+        igv = base_imponible * 0.18;
+        dbHelper_Comprob_Venta.updateComprobanteMontos(id, monto_total, igv, base_imponible);
+        datosConcatenados += "total de gasto : " + monto_total;
+        datosConcatenados += "base impornible: " + base_imponible;
+        datosConcatenados += "igv : " + igv;
 
         dbHelper_temp_venta.deleteAllTempVentaDetalle();
 
-        Intent intent= new Intent(this, VMovil_Evento_Indice.class);
-        Toast.makeText(getApplicationContext(),datosConcatenados,Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(this, VMovil_Evento_Indice.class);
+        Toast.makeText(getApplicationContext(), datosConcatenados, Toast.LENGTH_LONG).show();
         startActivity(intent);
 
 
     }
 
-    public enum TipoDocumento{
+    public enum TipoDocumento {
         factura, boleta, ficha
     }
+
     private void displayHistorialComprobanteAnterior() {
 
 
-        ((MyApplication)this.getApplication()).setDisplayedHistorialComprobanteAnterior(true);
+        ((MyApplication) this.getApplication()).setDisplayedHistorialComprobanteAnterior(true);
         Cursor cursor = dbHelper_Histo_comprob_anterior.fetchAllHistoComprobAnteriorByIdEstRawQuery(idEstablecimiento);
         //OBTENGO LAS PJOSICIONES DE LAS COLUMNAS DEL CURSOR
         int indice_id = cursor.getColumnIndex("_id");
@@ -424,14 +421,14 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
         int indice_importe = cursor.getColumnIndex("total");
 
         int indice_promedio_anterior = cursor.getColumnIndex("pa");
-        int indice_devuelto  = cursor.getColumnIndex("devuelto");
+        int indice_devuelto = cursor.getColumnIndex("devuelto");
 
         //t indice_valor_unidad = cursor.getColumnIndex("");
         //int indice_costo_venta = cursor.getColumnIndex("");
 
         cursor.moveToFirst();
 
-        for (cursor.moveToFirst(); !cursor.isAfterLast();cursor.moveToNext()){
+        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
 
             int _id = cursor.getInt(indice_id);
             int id_producto = cursor.getInt(indice_id_producto);
@@ -445,13 +442,14 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
             int procedencia = 0;
 
             //En una tabla "Temp_Venta" Nos sirve para agregar datos del historial de ventas anteriores y sugerir al usuario, estos son datos temporales
-            long id = dbHelper_temp_venta.createTempVentaDetalle(1,id_producto,nombre_producto,cantidad,importe, precio_unitario, promedio_anterior, devuelto, procedencia);
+            long id = dbHelper_temp_venta.createTempVentaDetalle(1, id_producto, nombre_producto, cantidad, importe, precio_unitario, promedio_anterior, devuelto, procedencia);
 
 
         }
 
     }
-    public void mostrarProductosParaVender(){
+
+    public void mostrarProductosParaVender() {
         Cursor cursorTempVentaDetalle = dbHelper_temp_venta.fetchAllTempVentaDetalle();
         // The desired columns to be bound
         String[] columns = new String[]{
@@ -481,7 +479,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
                 0);
 
         listView = (ListView) findViewById(R.id.VC_listView);
-        header = getLayoutInflater().inflate(R.layout.infor_venta_cabecera,null);
+        header = getLayoutInflater().inflate(R.layout.infor_venta_cabecera, null);
         listView.addHeaderView(header);
         // Assign adapter to ListView
         listView.setAdapter(simpleCursorAdapter);
@@ -1158,4 +1156,4 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
      */
 
 
-    }
+}

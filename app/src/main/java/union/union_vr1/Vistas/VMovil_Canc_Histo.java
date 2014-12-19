@@ -30,22 +30,23 @@ public class VMovil_Canc_Histo extends Activity {
     private SimpleCursorAdapter dataAdapter;
     //private int cant_ope;
     public final String[] items01 = {"1"};
-    public final String[] items02 = {"1","2"};
-    public final String[] items03 = {"1","2","3"};
-    public final String[] items04 = {"1","2","3","4"};
-    public final String[] items05 = {"1","2","3","4","5"};
-    public final String[] items06 = {"1","2","3","4","5","6"};
-    public final String[] items07 = {"1","2","3","4","5","6","7"};
-    public final String[] items08 = {"1","2","3","4","5","6","7","8"};
-    public final String[] items09 = {"1","2","3","4","5","6","7","8","9"};
-    public final String[] items10 = {"1","2","3","4","5","6","7","8","9","10"};
-    public String[] items  = new String[20];
+    public final String[] items02 = {"1", "2"};
+    public final String[] items03 = {"1", "2", "3"};
+    public final String[] items04 = {"1", "2", "3", "4"};
+    public final String[] items05 = {"1", "2", "3", "4", "5"};
+    public final String[] items06 = {"1", "2", "3", "4", "5", "6"};
+    public final String[] items07 = {"1", "2", "3", "4", "5", "6", "7"};
+    public final String[] items08 = {"1", "2", "3", "4", "5", "6", "7", "8"};
+    public final String[] items09 = {"1", "2", "3", "4", "5", "6", "7", "8", "9"};
+    public final String[] items10 = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};
+    public String[] items = new String[20];
     public int tope;
     public int cate;
     public int form;
     public int cant;
     public double impo;
     private String valIdEstabX;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,7 +55,7 @@ public class VMovil_Canc_Histo extends Activity {
         dbHelper = new DbAdapter_Histo_Venta_Detalle(this);
         dbHelper.open();
         Bundle bundle = getIntent().getExtras();
-        valIdEstabX=bundle.getString("idEstabX");
+        valIdEstabX = bundle.getString("idEstabX");
         //Clean all data
         //dbHelper.deleteAllHistoVentaDetalle();
         //Add some data
@@ -67,10 +68,10 @@ public class VMovil_Canc_Histo extends Activity {
 
     private void displayListView() {
 
-        Cursor cursor = dbHelper.fetchAllHistoVentaDetalleByIdEst1(valIdEstabX,"2");
+        Cursor cursor = dbHelper.fetchAllHistoVentaDetalleByIdEst1(valIdEstabX, "2");
         //Cursor cursor = dbHelper.fetchAllHistoVentaDetalle();
         // The desired columns to be bound
-        String[] columns = new String[] {
+        String[] columns = new String[]{
                 DbAdapter_Histo_Venta_Detalle.HD_comprobante,
                 DbAdapter_Histo_Venta_Detalle.HD_nom_producto,
                 DbAdapter_Histo_Venta_Detalle.HD_cantidad_ope,
@@ -79,7 +80,7 @@ public class VMovil_Canc_Histo extends Activity {
         };
 
         // the XML defined views which the data will be bound to
-        int[] to = new int[] {
+        int[] to = new int[]{
                 R.id.VCH_compr,
                 R.id.VCH_produ,
                 R.id.VCH_canti,
@@ -135,14 +136,13 @@ public class VMovil_Canc_Histo extends Activity {
 
         dataAdapter.setFilterQueryProvider(new FilterQueryProvider() {
             public Cursor runQuery(CharSequence constraint) {
-                return dbHelper.fetchHistoVentaDetalleByNameEst1(valIdEstabX, constraint.toString(),"2");
+                return dbHelper.fetchHistoVentaDetalleByNameEst1(valIdEstabX, constraint.toString(), "2");
             }
         });
 
     }
 
-    private String getTimePhone()
-    {
+    private String getTimePhone() {
         Calendar cal = new GregorianCalendar();
         Date date = cal.getTime();
         SimpleDateFormat df = new SimpleDateFormat("hh:mm:ss");
@@ -150,8 +150,7 @@ public class VMovil_Canc_Histo extends Activity {
         return formatteTime;
     }
 
-    private String getDatePhone()
-    {
+    private String getDatePhone() {
         Calendar cal = new GregorianCalendar();
         Date date = cal.getTime();
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
