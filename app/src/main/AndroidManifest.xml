@@ -106,11 +106,17 @@
             android:name=".Vistas.VMovil_Venta_Cabecera_PlanPagos"
             android:label="Plan de Pagos" >
         </activity>
-
-
         <activity
             android:name=".MySQL.DbManager_Agente_GET"
-            android:label="@string/title_activity_db_manager__agente__get" >
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name=".Vistas.VMovil_Evento_Canjes_Dev"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name=".Vistas.VMovil_Facturas_Canjes_Dev"
+            android:label="@string/app_name" >
         </activity>
     </application>
 
