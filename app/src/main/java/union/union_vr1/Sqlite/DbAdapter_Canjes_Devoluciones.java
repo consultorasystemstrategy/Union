@@ -56,5 +56,6 @@ public class DbAdapter_Canjes_Devoluciones {
         cr.moveToFirst();
         precio=cr.getDouble(1);
         return precio;
+
     }
 }
