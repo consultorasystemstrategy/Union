@@ -39,12 +39,12 @@ public class VMovil_Evento_Canjes_Dev extends Activity {
         //-------------------------------------------------------
         dbHelper_Stock = new DbAdapter_Stock_Agente(this);
         dbHelper_Stock.open();
-        dbHelper_Stock.deleteAllStockAgente();
-        dbHelper_Stock.insertSomeStockAgente();
+      //  dbHelper_Stock.deleteAllStockAgente();
+       // dbHelper_Stock.insertSomeStockAgente();
         //--------------------------------------------------------
         dbHelper_Hi_De = new DbAdapter_Histo_Venta_Detalle(this);
         dbHelper_Hi_De.open();
-        dbHelper_Hi_De.deleteAllHistoVentaDetalle();
+        //dbHelper_Hi_De.deleteAllHistoVentaDetalle();
         //--------------------------------------------------------
         Bundle idE = getIntent().getExtras();
         establec = idE.getString("idEstabX");

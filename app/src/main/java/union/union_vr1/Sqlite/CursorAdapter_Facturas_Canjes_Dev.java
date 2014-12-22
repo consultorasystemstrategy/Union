@@ -14,6 +14,7 @@ import android.widget.TextView;
  */
 public class CursorAdapter_Facturas_Canjes_Dev extends CursorAdapter {
     private DbAdapter_Canjes_Devoluciones dbHelpeCanjes_Dev;
+
     public CursorAdapter_Facturas_Canjes_Dev(Context context, Cursor c) {
         super(context, c);
         dbHelpeCanjes_Dev = new DbAdapter_Canjes_Devoluciones(context);
@@ -23,8 +24,8 @@ public class CursorAdapter_Facturas_Canjes_Dev extends CursorAdapter {
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup viewGroup) {
-        final LayoutInflater inflater  = LayoutInflater.from(context);
-        final View view = inflater.inflate(android.R.layout.simple_dropdown_item_1line, viewGroup,false);
+        final LayoutInflater inflater = LayoutInflater.from(context);
+        final View view = inflater.inflate(android.R.layout.simple_dropdown_item_1line, viewGroup, false);
         return view;
     }
 
@@ -36,35 +37,53 @@ public class CursorAdapter_Facturas_Canjes_Dev extends CursorAdapter {
 
         WindowManager.LayoutParams layout_791 = new WindowManager.LayoutParams();
         layout_791.width = WindowManager.LayoutParams.MATCH_PARENT;
-        layout_791.height  = WindowManager.LayoutParams.WRAP_CONTENT;
+        layout_791.height = WindowManager.LayoutParams.WRAP_CONTENT;
 
         textView.setLayoutParams(layout_791);
-        if(cursor.moveToFirst()) {
+        if (cursor.moveToFirst()) {
+            String factura = "";
+            String fecha = "";
+            String monto = "";
             String comprobante = cursor.getString(7);
+            String producto = cursor.getString(9);
+            String cantidad = cursor.getString(10);
             //Cortar el String Comprobante
             System.out.println("con datos");
             String[] datos = comprobante.split("/");
 
+            if (datos.length >= 2) {
+                factura = datos[1];
+                fecha = datos[2];
+                monto = datos[3];
 
+
+
+                String textoAdpater = "Factura: " + factura + ","
+                        + "\nProducto: " + producto + ","
+                        + "\nCantidad: " + cantidad + ""
+                        + "\nMonto: " + monto + ""
+                        + "\nFecha: " + fecha + "";
+
+
+                textView.setText(textoAdpater);
+            } else {
+                String factura2 = cursor.getString(7);
+                String fecha2 = cursor.getString(12);
+                String monto2 = cursor.getString(11);
+
+                String textoAdpater = "Factura: " + factura2 + ","
+                        + "\nProducto: " + producto + ","
+                        + "\nCantidad: " + cantidad + ""
+                        + "\nMonto: " + monto2 + ""
+                        + "\nFecha: " + fecha2 + "";
+                textView.setText(textoAdpater);
+
+
+            }
             //-------
-            String factura = datos[1];
-            String fecha = datos[2];
-            String monto = datos[3];
-            String producto = cursor.getString(9);
-            String cantidad = cursor.getString(10);
 
 
-            String textoAdpater = "Factura: " + factura + ","
-                    + "\nProducto: " + producto + ","
-                    + "\nCantidad: " + cantidad + ""
-                    + "\nMonto: " + monto + ""
-                    + "\nFecha: " + fecha + "";
-
-
-            textView.setText(textoAdpater);
         }
-
-
 
 
     }

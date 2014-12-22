@@ -25,10 +25,13 @@ import android.widget.Toast;
 
 import union.union_vr1.R;
 import union.union_vr1.Sqlite.CursorAdapterComprobanteVenta;
+import union.union_vr1.Sqlite.CursorAdapter_Man_Can_Dev;
 import union.union_vr1.Sqlite.CursorAdapter_Man_Cbrz;
+import union.union_vr1.Sqlite.DbAdapter_Canjes_Devoluciones;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta_Detalle;
+import union.union_vr1.Sqlite.DbAdapter_Histo_Venta_Detalle;
 import union.union_vr1.Sqlite.DbAdapter_Stock_Agente;
 import union.union_vr1.Utils.MyApplication;
 
@@ -40,6 +43,7 @@ public class VMovil_Venta_Comprob extends Activity {
     private DbAdapter_Comprob_Venta_Detalle dbHelper_Comp_Venta_Detalle;
     private DbAdapter_Stock_Agente dbHelper_Stock_Agente;
     private DbAdapter_Comprob_Cobro dbHelper_Comprob_Cobro;
+    private DbAdapter_Canjes_Devoluciones dbHelper_Canjes_Dev;
     private SimpleCursorAdapter adapter;
     private int idComprobante;
 
@@ -78,6 +82,14 @@ public class VMovil_Venta_Comprob extends Activity {
         setContentView(R.layout.princ_venta_comprob);
 
 
+        //-----------borrar luego
+         DbAdapter_Histo_Venta_Detalle k = new DbAdapter_Histo_Venta_Detalle(getApplication());
+        k.open();
+        //k.deleteAllHistoVentaDetalle();
+        //k.insertSomeHistoVentaDetalle();
+        //-----------------
+
+
         dbHelper = new DbAdapter_Comprob_Venta(this);
         dbHelper.open();
         dbHelper_Comp_Venta_Detalle = new DbAdapter_Comprob_Venta_Detalle(this);
@@ -86,6 +98,11 @@ public class VMovil_Venta_Comprob extends Activity {
         dbHelper_Stock_Agente.open();
         dbHelper_Comprob_Cobro = new DbAdapter_Comprob_Cobro(this);
         dbHelper_Comprob_Cobro.open();
+
+
+        //---
+        dbHelper_Canjes_Dev = new DbAdapter_Canjes_Devoluciones(this);
+        dbHelper_Canjes_Dev.open();
 
         tH = (TabHost) findViewById(R.id.tabMante);
         tH.setup();
@@ -107,8 +124,8 @@ public class VMovil_Venta_Comprob extends Activity {
 //Item 3
         TabHost.TabSpec spec3 = tH.newTabSpec("3");
         spec3.setContent(R.id.canje);
-        spec3.setIndicator("Canje");
-        displayListView();
+        spec3.setIndicator("Canje/Devoluciones");
+        listarCanjes_devoluciones(idEstablec);
         tH.addTab(spec3);
 //Item 4
         TabHost.TabSpec spec4 = tH.newTabSpec("4");
@@ -127,6 +144,15 @@ public class VMovil_Venta_Comprob extends Activity {
         //Generate ListView from SQLite Database
         displayListView();
         */
+    }
+    private void listarCanjes_devoluciones(int idEstabl){
+        System.out.println("here"+idEstabl);
+
+        Cursor cr = dbHelper_Canjes_Dev.listarCanjesDev(idEstabl);
+        cr.moveToFirst();
+        CursorAdapter_Man_Can_Dev adapterCanjes_Dev = new CursorAdapter_Man_Can_Dev(getApplicationContext(),cr);
+        ListView listaCanjes_Dev = (ListView) findViewById(R.id.listarCanjDev);
+        listaCanjes_Dev.setAdapter(adapterCanjes_Dev);
     }
 
     private void listarCobranzas() {
