@@ -60,6 +60,9 @@
         <item>Contado</item>
         <item>Credito</item>
     </string-array>
+    <string-array name="forma_pago_credito">
+        <item>Credito</item>
+    </string-array>
     <string-array name="tipo_atencion">
         <item>Pendiente</item>
         <item>Atendido</item>
@@ -82,12 +85,24 @@
         <item>factura</item>
     </string-array>
 
-    <string-array name="Cuotas">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
+    <string-array name="nCuota4">
         <item>4</item>
+        <item>3</item>
+        <item>2</item>
+        <item>1</item>
     </string-array>
+    <string-array name="nCuota2">
+        <item>2</item>
+        <item>1</item>
+    </string-array>
+    <string-array name="nCuota1">
+        <item>1</item>
+    </string-array>
+    <string-array name="acciones">
+        <item>Editar</item>
+        <item>Eliminar</item>
+    </string-array>
+
 
 
 

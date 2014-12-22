@@ -27,11 +27,9 @@ public class DbAdaptert_Evento_Establec {
     public static final String EE_id_agente = "ee_in_id_agente";
     public static final String EE_estado_no_atencion_comentario ="ee_in_estado_no_atencion_comentario";
 
-
     public static final String TAG = "Evento_Establec";
     private DbHelper mDbHelper;
     private SQLiteDatabase mDb;
-
     //private static final int DATABASE_VERSION = 1;
     //private static final String DATABASE_NAME = "ProdUnion.sqlite";
     private static final String SQLITE_TABLE_Evento_Establec = "m_evento_establec";
@@ -243,11 +241,11 @@ public class DbAdaptert_Evento_Establec {
 
     public void insertSomeEstablecs() {
 
-        createEstablecs(1, 1, 3, 1, "TIENDA NAs", "JUAN", "10001", 1, 50, 4, 50.5, 31, 1, 1);
-        createEstablecs(2, 1, 4, 2, "TIENDA NBs", "JUAN", "10001", 1, 11, 21, 60.5, 31, 2, 1);
-        createEstablecs(3, 2, 5, 3, "GRIFO NAs",  "JUAN", "10001", 1, 11, 21, 70.5, 31, 3, 1);
-        createEstablecs(4, 2, 6, 1, "GRIFO NBs",  "JUAN", "10001", 1, 11, 21, 80.5, 31, 4, 1);
-        createEstablecs(5, 3, 7, 2, "PERSON NAs", "JUAN", "10001", 1, 11, 21, 90.5, 31, 1, 1);
+        createEstablecs(1, 1, 3, 1, "TIENDA NAs", "JUAN", "10001", 1, 50, 4, 100, 3, 1, 1);
+        createEstablecs(2, 1, 4, 2, "TIENDA NBs", "JUAN", "10001", 1, 11, 21, 300, 7, 2, 1);
+        createEstablecs(3, 2, 5, 3, "GRIFO NAs",  "JUAN", "10001", 1, 11, 21, 1000, 15, 3, 1);
+        createEstablecs(4, 2, 6, 1, "GRIFO NBs",  "JUAN", "10001", 1, 11, 21, 5000, 31, 4, 1);
+        createEstablecs(5, 3, 7, 2, "PERSON NAs", "JUAN", "10001", 1, 11, 21, 5000, 31, 1, 1);
 
     }
 

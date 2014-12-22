@@ -210,7 +210,6 @@ public class VMovil_Venta_Cabecera_AgregarProductos extends Activity implements 
                 //Aquí obtengo el cursor posicionado en la fila que ha seleccionado/clickeado
                 Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
 
-
                 autoCompleteTextView.setText("");
                 //El item seleccionado tenía sólo 2 columnas visibles, pero en el cursos se encuentran todas las columnas
                 //Aquí podemos obtener las otras columnas para los que querramos hacer con ellas
@@ -257,9 +256,6 @@ public class VMovil_Venta_Cabecera_AgregarProductos extends Activity implements 
                 }
 
                 double total_importe = precio_unitario*cantidad;
-
-
-
                 String promedio_anterior = null;
                 String devuelto = null;
 

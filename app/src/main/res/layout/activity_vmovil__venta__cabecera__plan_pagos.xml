@@ -22,7 +22,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:text="S/. 1080.50"
-                android:id="@+id/textView"
+                android:id="@+id/VCPP_textViewMontoTotal"
                 android:layout_weight="1"
                 android:textStyle="bold|italic"
                 android:textSize="24dp"
@@ -49,17 +49,35 @@
             android:layout_weight="1">
 
             <ListView
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/listView" />
+                android:id="@+id/VCPP_listViewCuotas" />
         </LinearLayout>
 
-        <Button
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:text="Listo"
-            android:id="@+id/VCAP_buttonAgregar"
-            android:layout_weight="4"
-            android:background="@color/PersonalizadoSteve4" />
+            android:layout_weight="4">
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:text="Calcular"
+                android:id="@+id/VCPP_buttonCalcularCuotas"
+                android:layout_weight="1"
+                android:background="@color/PersonalizadoSteve4"
+                android:onClick="CalcularCuotas" />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:text="Establecer Cuotas"
+                android:id="@+id/VCPP_buttonEstablecer"
+                android:layout_weight="1"
+                android:background="@color/PersonalizadoSteve2"
+                android:onClick="CalcularCuotas" />
+
+        </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

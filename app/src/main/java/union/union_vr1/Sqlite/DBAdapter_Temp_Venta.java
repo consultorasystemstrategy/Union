@@ -99,12 +99,13 @@ public class DBAdapter_Temp_Venta {
                 temp_venta_detalle+"=?",new String[]{idorig});
     }
 
-    public void updateTempVentaDetalle2(String idorig, String iddest, String vals){
+    public void updateTempVentaDetalleCantidad(long id_temp_venta_detalle, int cantidad, double total){
         ContentValues initialValues = new ContentValues();
-        initialValues.put(temp_id_comprob,iddest);
+        initialValues.put(temp_cantidad, cantidad);
+        initialValues.put(temp_importe, total);
 
         mDb.update(SQLITE_TABLE_Temp_Venta_Detalle, initialValues,
-                temp_venta_detalle+"=? AND "+temp_importe+"=?",new String[]{idorig, vals});
+                temp_venta_detalle+"=?",new String[]{""+id_temp_venta_detalle});
     }
 
     public boolean  deleteAllTempVentaDetalle() {
@@ -142,6 +143,18 @@ public class DBAdapter_Temp_Venta {
         Cursor mCursor = mDb.query(SQLITE_TABLE_Temp_Venta_Detalle, new String[] {temp_venta_detalle,
                 temp_id_comprob,temp_id_producto, temp_nom_producto, temp_cantidad, temp_precio_unit,temp_precio_unit, temp_importe,
                 temp_prom_anterior, temp_devuelto},temp_procedencia + " = ?", new String[]{""+procedencia}, null, null, null);
+
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+    }
+
+    public Cursor fetchAllTempVentaDetalleByID(long id) {
+
+        Cursor mCursor = mDb.query(SQLITE_TABLE_Temp_Venta_Detalle, new String[] {temp_venta_detalle,
+                temp_id_comprob,temp_id_producto, temp_nom_producto, temp_cantidad, temp_precio_unit,temp_precio_unit, temp_importe,
+                temp_prom_anterior, temp_devuelto},temp_venta_detalle + " = ?", new String[]{""+id}, null, null, null);
 
         if (mCursor != null) {
             mCursor.moveToFirst();

@@ -75,7 +75,7 @@ public class DbAdapter_Comprob_Cobro {
     }
 
     public long createComprobCobros(
-            int id_establec, int id_comprob, int id_plan_pago, int id_plan_pago_detalle,
+            int id_establec, long id_comprob, int id_plan_pago, int id_plan_pago_detalle,
             String desc_tipo_doc, String doc, String fecha_programada, double monto_a_pagar,
             String fecha_cobro, String hora_cobro, double monto_cobrado, int estado_cobro,
             int id_agente,int id_forma_cobro, String lugar_registro) {
