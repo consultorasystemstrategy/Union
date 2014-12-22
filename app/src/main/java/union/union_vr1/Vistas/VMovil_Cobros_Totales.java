@@ -29,7 +29,7 @@ import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
 
 
 public class VMovil_Cobros_Totales extends Activity {
-DbAdapter_Comprob_Cobro cCobro ;
+    DbAdapter_Comprob_Cobro cCobro;
     private SimpleCursorAdapter dataAdapter;
 
     @Override
@@ -41,7 +41,7 @@ DbAdapter_Comprob_Cobro cCobro ;
         listarCobrosTotales();
     }
 
-    public void listarCobrosTotales(){
+    public void listarCobrosTotales() {
 
         Cursor cursor = cCobro.listarComprobantesToCobros();
         CursorAdapterCobrosTotales cACobros = new CursorAdapterCobrosTotales(this, cursor);
@@ -50,11 +50,7 @@ DbAdapter_Comprob_Cobro cCobro ;
         listCobros.setAdapter(cACobros);
 
 
-
-
-
-
-        listCobros.setOnItemClickListener( new AdapterView.OnItemClickListener() {
+        listCobros.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Cursor cr2 = (Cursor) listCobros.getItemAtPosition(i);
@@ -71,7 +67,8 @@ DbAdapter_Comprob_Cobro cCobro ;
 
 
     }
-    public void Dialog(String establec, final int deuda,  final String idCCobro,String cliente){
+
+    public void Dialog(String establec, final int deuda, final String idCCobro, String cliente) {
 
         cCobro = new DbAdapter_Comprob_Cobro(this);
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
@@ -80,7 +77,7 @@ DbAdapter_Comprob_Cobro cCobro ;
         alertDialogBuilder.setTitle("Cobro de Credito");
 
         AlertDialog.Builder builder = alertDialogBuilder
-                .setMessage("Pago de Deuda para el Establecimiento: "+establec+" con Dueño: "+cliente+" : Deuda: "+deuda+" ")
+                .setMessage("Pago de Deuda para el Establecimiento: " + establec + " con Dueño: " + cliente + " : Deuda: " + deuda + " ")
                 .setCancelable(false)
                 .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
@@ -116,8 +113,8 @@ DbAdapter_Comprob_Cobro cCobro ;
 
     }
 
-    public void Back(){
-        Intent i = new Intent(this,VMovil_Evento_Indice.class);
+    public void Back() {
+        Intent i = new Intent(this, VMovil_Evento_Indice.class);
         startActivity(i);
     }
 
@@ -140,16 +137,16 @@ DbAdapter_Comprob_Cobro cCobro ;
         }
         return super.onOptionsItemSelected(item);
     }
-    private String getDatePhone()
-    {
+
+    private String getDatePhone() {
         Calendar cal = new GregorianCalendar();
         Date date = cal.getTime();
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         String formatteDate = df.format(date);
         return formatteDate;
     }
-    private String getTimePhone()
-    {
+
+    private String getTimePhone() {
         Calendar cal = new GregorianCalendar();
         Date date = cal.getTime();
         SimpleDateFormat df = new SimpleDateFormat("hh:mm:ss");

@@ -151,7 +151,7 @@ public class DbAdapter_Precio {
 
         createPrecio( 1, 1, 11.00, 11.50, 1,1, 1, 30);
         createPrecio( 1, 2, 12.00, 12.50, 1,1, 31, 60);
-        createPrecio( 1, 2, 12.00, 12.50, 1,1, 61, 100);
+        createPrecio( 1, 3, 12.00, 12.50, 1,1, 61, 100);
         createPrecio( 2, 1, 21.00, 21.50, 1,1, 1, 30);
         createPrecio( 2, 2, 22.00, 22.50, 1,1, 31, 60);
         createPrecio( 2, 3, 23.00, 23.50, 1,1, 61, 1000);

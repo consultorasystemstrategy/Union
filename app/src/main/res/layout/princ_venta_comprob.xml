@@ -60,14 +60,23 @@
                         </ListView>
                     </LinearLayout>
 
-                <LinearLayout
+                <RelativeLayout
                     android:id="@+id/canje"
                     android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"></LinearLayout>
+                    android:layout_height="fill_parent">
+                    <ListView
+                        android:id="@+id/listarCanjDev"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        </ListView>
+                    </RelativeLayout>
                 <LinearLayout
                     android:id="@+id/autoriz"
                     android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"></LinearLayout>
+                    android:layout_height="fill_parent">
+
+                    </LinearLayout>
 
             </FrameLayout>
         </LinearLayout>

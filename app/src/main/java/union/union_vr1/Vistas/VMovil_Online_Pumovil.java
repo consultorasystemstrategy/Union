@@ -28,12 +28,11 @@ import union.union_vr1.Utils.MyApplication;
 public class VMovil_Online_Pumovil extends Activity {
     private DbAdapter_Comprob_Cobro dbHelper4;
 
-    private  WebView view;
+    private WebView view;
     private TextView textView;
 
     private DbAdapter_Agente dbHelper;
     private SimpleCursorAdapter dataAdapter;
-
 
 
     @Override
@@ -44,7 +43,7 @@ public class VMovil_Online_Pumovil extends Activity {
         Bundle bundle = getIntent().getExtras();
         Toast.makeText(VMovil_Online_Pumovil.this, "Password :" + bundle.getString("putPassUsuario") + "\n\n" + "Nombre Agente: " + bundle.getString("putNombreAgente"), Toast.LENGTH_LONG).show();
 
-        view = (WebView)this.findViewById(R.id.webView);
+        view = (WebView) this.findViewById(R.id.webView);
         view.getSettings().setJavaScriptEnabled(true);
         view.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
         view.loadUrl("http://192.168.0.104:8084/SysMovilProductosUnion");
@@ -67,7 +66,7 @@ public class VMovil_Online_Pumovil extends Activity {
             public void onClick(View v) {
                 FragmentManager manager = getFragmentManager();
                 DialogSincronizarOffLine dialogConfirm = new DialogSincronizarOffLine();
-                dialogConfirm.show(manager,"DialogSincronizarOffLine");
+                dialogConfirm.show(manager, "DialogSincronizarOffLine");
             }
         });
 
@@ -101,7 +100,7 @@ public class VMovil_Online_Pumovil extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void displayUpdateAgente(){
+    public void displayUpdateAgente() {
         dbHelper = new DbAdapter_Agente(this);
         dbHelper.open();
         dbHelper.deleteAllAgentes();
@@ -116,29 +115,25 @@ public class VMovil_Online_Pumovil extends Activity {
 
 
         //VARIABLE GLOBAL, PARA OBTENERLA DESDE CUALQUIER SITIO DE LA APLICACIÓN
-        ((MyApplication)this.getApplication()).setIdAgente(Integer.parseInt(id_agente_venta));
-        ((MyApplication)this.getApplication()).setDisplayedHistorialComprobanteAnterior(false);
+        ((MyApplication) this.getApplication()).setIdAgente(Integer.parseInt(id_agente_venta));
+        ((MyApplication) this.getApplication()).setDisplayedHistorialComprobanteAnterior(false);
 
-        dbHelper.updateAgente(id_agente_venta,id_usuario,id_empresa,nombre_usuario,nombre_agente,pass_usuario);
+        dbHelper.updateAgente(id_agente_venta, id_usuario, id_empresa, nombre_usuario, nombre_agente, pass_usuario);
     }
 
 
-    private class MiWebViewClient extends WebViewClient
-    {
+    private class MiWebViewClient extends WebViewClient {
         @Override
-        public boolean shouldOverrideUrlLoading(WebView view, String url)
-        {
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
             view.loadUrl(url);
             return true;
         }
     }
 
     //Con esta clase controlamos algunos eventos javascript del navegador
-    final class MiWebCromeClient extends WebChromeClient
-    {
+    final class MiWebCromeClient extends WebChromeClient {
         @Override
-        public boolean onJsAlert(WebView view, String url, String message, JsResult result)
-        {
+        public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
             new AlertDialog.Builder(view.getContext()).setMessage(message).setCancelable(true).show();
             result.confirm();
             return true;

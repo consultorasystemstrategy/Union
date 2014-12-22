@@ -43,28 +43,29 @@ public class VMovil_Venta_Credito extends Activity implements OnClickListener {
     private String fechaCobro;
 
     private int valIdCredito = 0;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         Bundle bundle = getIntent().getExtras();
-        estabX=bundle.getString("estab");
-        tipdoX=bundle.getString("tipdo");
-        detcoX=bundle.getString("detco");
-        totalX=bundle.getString("total");
+        estabX = bundle.getString("estab");
+        tipdoX = bundle.getString("tipdo");
+        detcoX = bundle.getString("detco");
+        totalX = bundle.getString("total");
 
         setContentView(R.layout.princ_venta_credito);
         dbHelper = new DbAdapter_Comprob_Cobro(this);
         dbHelper.open();
-        mSPNcredit = (EditText)findViewById(R.id.VVCR_SPNcredit);
+        mSPNcredit = (EditText) findViewById(R.id.VVCR_SPNcredit);
 
-        mRecalcuz = (Button)findViewById(R.id.VVCR_BTNrecalcuz);
+        mRecalcuz = (Button) findViewById(R.id.VVCR_BTNrecalcuz);
         mRecalcuz.setOnClickListener(this);
 
-        mActualiz = (Button)findViewById(R.id.VVCR_BTNactualiz);
+        mActualiz = (Button) findViewById(R.id.VVCR_BTNactualiz);
         mActualiz.setOnClickListener(this);
 
-        mCancelar = (Button)findViewById(R.id.VVCR_BTNcancelar);
+        mCancelar = (Button) findViewById(R.id.VVCR_BTNcancelar);
         mCancelar.setOnClickListener(this);
 
         displayListViewVVC();
@@ -117,7 +118,7 @@ public class VMovil_Venta_Credito extends Activity implements OnClickListener {
                 mSPNcredit.setText(String.valueOf(idMontoCredito));
                 Toast.makeText(getApplicationContext(),
                         idNumeroCredito, Toast.LENGTH_SHORT).show();
-                }
+            }
         });
     }
 
@@ -134,70 +135,70 @@ public class VMovil_Venta_Credito extends Activity implements OnClickListener {
                 dialogo.setTitle("Dias de Pago");
                 dialogo.setItems(items, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
-                        if(item == 0){
+                        if (item == 0) {
                             valtotalp = Double.parseDouble(totalX);
                             valtotalp = roundTwoDecimals(valtotalp);
                             fechaCobro = getDatePhone1();
                             dbHelper.createComprobCobros(Integer.parseInt(estabX), Integer.parseInt(idcomX), 1, 1,
-                                    tipdoX, detcoX, fechaCobro, valtotalp, "", "", 0, 0, 1,2,"mobile");
+                                    tipdoX, detcoX, fechaCobro, valtotalp, "", "", 0, 0, 1, 2, "mobile");
                         }
-                        if(item == 1){
+                        if (item == 1) {
                             valtotalp = Double.parseDouble(totalX);
                             valtotalp = roundTwoDecimals(valtotalp);
                             fechaCobro = getDatePhone2();
                             dbHelper.createComprobCobros(Integer.parseInt(estabX), Integer.parseInt(idcomX), 1, 1,
-                                    tipdoX, detcoX, fechaCobro, valtotalp, "", "", 0, 0, 1,2,"mobile");
+                                    tipdoX, detcoX, fechaCobro, valtotalp, "", "", 0, 0, 1, 2, "mobile");
                         }
-                        if(item == 2){
-                            valtotalp = Double.parseDouble(totalX)/2;
+                        if (item == 2) {
+                            valtotalp = Double.parseDouble(totalX) / 2;
                             valtotalp = roundTwoDecimals(valtotalp);
                             fechaCobro = getDatePhone1();
                             dbHelper.createComprobCobros(Integer.parseInt(estabX), Integer.parseInt(idcomX), 1, 1,
-                                    tipdoX, detcoX, fechaCobro, valtotalp, "", "", 0, 0, 1,2,"mobile");
-                            valtotalp = Double.parseDouble(totalX)/2;
+                                    tipdoX, detcoX, fechaCobro, valtotalp, "", "", 0, 0, 1, 2, "mobile");
+                            valtotalp = Double.parseDouble(totalX) / 2;
                             fechaCobro = getDatePhone2();
                             dbHelper.createComprobCobros(Integer.parseInt(estabX), Integer.parseInt(idcomX), 1, 2,
-                                    tipdoX, detcoX, fechaCobro, valtotalp, "", "", 0, 0, 1,2,"mobile");
+                                    tipdoX, detcoX, fechaCobro, valtotalp, "", "", 0, 0, 1, 2, "mobile");
                         }
-                        if(item == 3){
+                        if (item == 3) {
                             valtotalp = Double.parseDouble(totalX);
                             valtotalp = roundTwoDecimals(valtotalp);
                             fechaCobro = getDatePhone4();
                             dbHelper.createComprobCobros(Integer.parseInt(estabX), Integer.parseInt(idcomX), 1, 1,
-                                    tipdoX, detcoX, fechaCobro, valtotalp, "", "", 0, 0, 1,2,"mobile");
+                                    tipdoX, detcoX, fechaCobro, valtotalp, "", "", 0, 0, 1, 2, "mobile");
                         }
-                        if(item == 4){
-                            valtotalp = Double.parseDouble(totalX)/2;
+                        if (item == 4) {
+                            valtotalp = Double.parseDouble(totalX) / 2;
                             valtotalp = roundTwoDecimals(valtotalp);
                             fechaCobro = getDatePhone2();
                             dbHelper.createComprobCobros(Integer.parseInt(estabX), Integer.parseInt(idcomX), 1, 1,
-                                    tipdoX, detcoX, fechaCobro, valtotalp, "", "", 0, 0, 1,2,"mobile");
-                            valtotalp = Double.parseDouble(totalX)/2;
+                                    tipdoX, detcoX, fechaCobro, valtotalp, "", "", 0, 0, 1, 2, "mobile");
+                            valtotalp = Double.parseDouble(totalX) / 2;
                             fechaCobro = getDatePhone4();
                             dbHelper.createComprobCobros(Integer.parseInt(estabX), Integer.parseInt(idcomX), 1, 2,
-                                    tipdoX, detcoX, fechaCobro, valtotalp, "", "", 0, 0, 1,2,"mobile");
+                                    tipdoX, detcoX, fechaCobro, valtotalp, "", "", 0, 0, 1, 2, "mobile");
                         }
-                        if(item == 5){
-                            valtotalp = Double.parseDouble(totalX)/4;
+                        if (item == 5) {
+                            valtotalp = Double.parseDouble(totalX) / 4;
                             valtotalp = roundTwoDecimals(valtotalp);
                             fechaCobro = getDatePhone1();
                             dbHelper.createComprobCobros(Integer.parseInt(estabX), Integer.parseInt(idcomX), 1, 1,
-                                    tipdoX, detcoX, fechaCobro, valtotalp, "", "", 0, 0, 1,2,"mobile");
-                            valtotalp = Double.parseDouble(totalX)/4;
+                                    tipdoX, detcoX, fechaCobro, valtotalp, "", "", 0, 0, 1, 2, "mobile");
+                            valtotalp = Double.parseDouble(totalX) / 4;
                             valtotalp = roundTwoDecimals(valtotalp);
                             fechaCobro = getDatePhone2();
                             dbHelper.createComprobCobros(Integer.parseInt(estabX), Integer.parseInt(idcomX), 1, 2,
-                                    tipdoX, detcoX, fechaCobro, valtotalp, "", "", 0, 0, 1,2,"mobile");
-                            valtotalp = Double.parseDouble(totalX)/4;
+                                    tipdoX, detcoX, fechaCobro, valtotalp, "", "", 0, 0, 1, 2, "mobile");
+                            valtotalp = Double.parseDouble(totalX) / 4;
                             valtotalp = roundTwoDecimals(valtotalp);
                             fechaCobro = getDatePhone3();
                             dbHelper.createComprobCobros(Integer.parseInt(estabX), Integer.parseInt(idcomX), 1, 3,
-                                    tipdoX, detcoX, fechaCobro, valtotalp, "", "", 0, 0, 1,2,"mobile");
-                            valtotalp = Double.parseDouble(totalX)/4;
+                                    tipdoX, detcoX, fechaCobro, valtotalp, "", "", 0, 0, 1, 2, "mobile");
+                            valtotalp = Double.parseDouble(totalX) / 4;
                             valtotalp = roundTwoDecimals(valtotalp);
                             fechaCobro = getDatePhone4();
                             dbHelper.createComprobCobros(Integer.parseInt(estabX), Integer.parseInt(idcomX), 1, 4,
-                                    tipdoX, detcoX, fechaCobro, valtotalp, "", "", 0, 0, 1,2,"mobile");
+                                    tipdoX, detcoX, fechaCobro, valtotalp, "", "", 0, 0, 1, 2, "mobile");
                         }
                         Toast.makeText(getApplicationContext(), items[item], Toast.LENGTH_LONG).show();
                         displayListViewVVC();
@@ -208,8 +209,8 @@ public class VMovil_Venta_Credito extends Activity implements OnClickListener {
 
                 break;
             case R.id.VVCR_BTNactualiz:
-                    dbHelper.updateComprobCobros(String.valueOf(valIdCredito),Double.parseDouble(mSPNcredit.getText().toString()));
-                    displayListViewVVC();
+                dbHelper.updateComprobCobros(String.valueOf(valIdCredito), Double.parseDouble(mSPNcredit.getText().toString()));
+                displayListViewVVC();
                 break;
             case R.id.VVCR_BTNcancelar:
                 finish();
@@ -220,14 +221,12 @@ public class VMovil_Venta_Credito extends Activity implements OnClickListener {
     }
 
 
-    double roundTwoDecimals(double d)
-    {
+    double roundTwoDecimals(double d) {
         DecimalFormat twoDForm = new DecimalFormat("#.##");
         return Double.valueOf(twoDForm.format(d));
     }
 
-    private String getDatePhone1()
-    {
+    private String getDatePhone1() {
         Calendar cal = new GregorianCalendar();
         cal.add(Calendar.DATE, 7);
         Date date = cal.getTime();
@@ -235,8 +234,8 @@ public class VMovil_Venta_Credito extends Activity implements OnClickListener {
         String formatteDate = df.format(date);
         return formatteDate;
     }
-    private String getDatePhone2()
-    {
+
+    private String getDatePhone2() {
         Calendar cal = new GregorianCalendar();
         cal.add(Calendar.DATE, 14);
         Date date = cal.getTime();
@@ -244,8 +243,8 @@ public class VMovil_Venta_Credito extends Activity implements OnClickListener {
         String formatteDate = df.format(date);
         return formatteDate;
     }
-    private String getDatePhone3()
-    {
+
+    private String getDatePhone3() {
         Calendar cal = new GregorianCalendar();
         cal.add(Calendar.DATE, 21);
         Date date = cal.getTime();
@@ -253,8 +252,8 @@ public class VMovil_Venta_Credito extends Activity implements OnClickListener {
         String formatteDate = df.format(date);
         return formatteDate;
     }
-    private String getDatePhone4()
-    {
+
+    private String getDatePhone4() {
         Calendar cal = new GregorianCalendar();
         cal.add(Calendar.DATE, 28);
         Date date = cal.getTime();

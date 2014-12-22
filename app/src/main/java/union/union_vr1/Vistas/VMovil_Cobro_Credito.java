@@ -53,29 +53,30 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
     private String idMontoCancelado;
     private double idVal1, idVal2, idDeuda, idValNew;
     private int valIdCredito = 0;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         Bundle bundle = getIntent().getExtras();
-        estabX=bundle.getString("idEstabX");
+        estabX = bundle.getString("idEstabX");
 
         setContentView(R.layout.princ_cobro_credito);
         dbHelper = new DbAdapter_Comprob_Cobro(this);
         dbHelper.open();
         //dbHelper.deleteAllComprobCobros();
         //dbHelper.insertSomeComprobCobros();
-        mSPNcredit = (TextView)findViewById(R.id.VCCR_SPNcredit);
+        mSPNcredit = (TextView) findViewById(R.id.VCCR_SPNcredit);
 
-        mActualiz = (Button)findViewById(R.id.VCCR_BTNactualiz);
+        mActualiz = (Button) findViewById(R.id.VCCR_BTNactualiz);
         mActualiz.setOnClickListener(this);
 
-        mCancelar = (Button)findViewById(R.id.VCCR_BTNcancelar);
+        mCancelar = (Button) findViewById(R.id.VCCR_BTNcancelar);
         mCancelar.setOnClickListener(this);
-        InputMethodManager imm = (InputMethodManager)getSystemService(
+        InputMethodManager imm = (InputMethodManager) getSystemService(
                 Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(mSPNcredit.getWindowToken(), 0);
-       getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         displayListViewVCC();
 
@@ -127,7 +128,7 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-                for(int i = 0; i<totalItemCount;i++){
+                for (int i = 0; i < totalItemCount; i++) {
                     Cursor cr = (Cursor) listView.getItemAtPosition(i);
                     String fecha_Programada = cr.getString(cr.getColumnIndexOrThrow("cc_te_fecha_programada"));
 
@@ -136,21 +137,21 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
                         Date dSqlite = df.parse(fecha_Programada);
                         Date dSistema = df.parse(getDatePhone());
                         View v = listView.getChildAt(i);
-                        if(dSqlite.before(dSistema)){
+                        if (dSqlite.before(dSistema)) {
 
-                            if(v != null) {
+                            if (v != null) {
                                 v.setBackgroundColor(0xffff0000);
                             }
                         }
-                        if(dSqlite.after(dSistema)){
+                        if (dSqlite.after(dSistema)) {
 
-                            if(v != null) {
+                            if (v != null) {
                                 v.setBackgroundColor(0xffffff00);
                             }
                         }
-                        if(dSqlite.equals(dSistema)){
+                        if (dSqlite.equals(dSistema)) {
 
-                            if(v != null) {
+                            if (v != null) {
                                 v.setBackgroundColor(0xffff0000);
                             }
                         }
@@ -161,7 +162,7 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
                 }
 
             }
-        } );
+        });
 
         //-----------------------------------------------------------------------------------------
 
@@ -180,20 +181,20 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
                 idVal2 = cursor.getDouble(cursor.getColumnIndexOrThrow("cc_re_monto_cobrado"));
                 idDeuda = idVal1 - idVal2;
                 mSPNcredit.setText(String.valueOf(idDeuda));
-                if(Integer.parseInt(idEstado) == 0){
+                if (Integer.parseInt(idEstado) == 0) {
                     Estado = "Pendiente " + idDeuda;
                 }
-                if(Integer.parseInt(idEstado) == 1){
+                if (Integer.parseInt(idEstado) == 1) {
                     Estado = "Cancelado";
                 }
                 Toast.makeText(getApplicationContext(),
                         Estado, Toast.LENGTH_SHORT).show();
-                }
+            }
 
         });
     }
 
-    public void select(final String estadox){
+    public void select(final String estadox) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                 context);
 
@@ -233,14 +234,15 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
         alertDialog.show();
 
     }
-    public void Back(){
 
-        Intent returnAc = new Intent(this,VMovil_Evento_Establec.class);
-        returnAc.putExtra("idEstab",estabX);
+    public void Back() {
+
+        Intent returnAc = new Intent(this, VMovil_Evento_Establec.class);
+        returnAc.putExtra("idEstab", estabX);
         startActivity(returnAc);
     }
 
-    public void select2(){
+    public void select2() {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                 context);
 
@@ -251,19 +253,19 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
         alertDialogBuilder
                 .setMessage("¿Elegir?")
                 .setCancelable(false)
-                .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog,int id) {
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
                         idValNew = Double.parseDouble(mSPNcredit.getText().toString()) + idVal2;
-                        dbHelper.updateComprobCobrosCan(idCobro,"","",0,"0");
+                        dbHelper.updateComprobCobrosCan(idCobro, "", "", 0, "0");
                         Toast.makeText(getApplicationContext(),
                                 "Anulado", Toast.LENGTH_SHORT).show();
                         Back();
-                       // displayListViewVCC();
+                        // displayListViewVCC();
                         mSPNcredit.setText("0.0");
                     }
                 })
-                .setNegativeButton("No",new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog,int id) {
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
                         Toast.makeText(getApplicationContext(),
                                 "Cancelo ", Toast.LENGTH_SHORT).show();
                     }
@@ -282,19 +284,20 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
         // TODO Auto-generated method stub
         switch (v.getId()) {
             case R.id.VCCR_BTNactualiz:
-                if(Integer.parseInt(idEstado) == 0){
-                    if(idDeuda == Double.parseDouble(mSPNcredit.getText().toString())){
+                if (Integer.parseInt(idEstado) == 0) {
+                    if (idDeuda == Double.parseDouble(mSPNcredit.getText().toString())) {
                         select("1");
-                    }else{
-                    if(idDeuda > Double.parseDouble(mSPNcredit.getText().toString())){
-                        select("0");
+                    } else {
+                        if (idDeuda > Double.parseDouble(mSPNcredit.getText().toString())) {
+                            select("0");
+                        }
+                        if (idDeuda < Double.parseDouble(mSPNcredit.getText().toString())) {
+                            Toast.makeText(getApplicationContext(), "El ingreso sobrepasa la deuda", Toast.LENGTH_SHORT).show();
+                        }
                     }
-                    if(idDeuda < Double.parseDouble(mSPNcredit.getText().toString())){
-                        Toast.makeText(getApplicationContext(),"El ingreso sobrepasa la deuda", Toast.LENGTH_SHORT).show();
-                    }}
                 }
-                if(Integer.parseInt(idEstado) == 1){
-                    Toast.makeText(getApplicationContext(),"No posee deuda", Toast.LENGTH_SHORT).show();
+                if (Integer.parseInt(idEstado) == 1) {
+                    Toast.makeText(getApplicationContext(), "No posee deuda", Toast.LENGTH_SHORT).show();
                     select2();
                 }
                 //dbHelper.updateComprobCobrosCan(String.valueOf(valIdCredito),getDatePhone(),getTimePhone(),Double.parseDouble(mSPNcredit.getText().toString()));
@@ -308,21 +311,20 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
         }
     }
 
-    double roundTwoDecimals(double d)
-    {
+    double roundTwoDecimals(double d) {
         DecimalFormat twoDForm = new DecimalFormat("#.##");
         return Double.valueOf(twoDForm.format(d));
     }
-    private String getDatePhone()
-    {
+
+    private String getDatePhone() {
         Calendar cal = new GregorianCalendar();
         Date date = cal.getTime();
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         String formatteDate = df.format(date);
         return formatteDate;
     }
-    private String getTimePhone()
-    {
+
+    private String getTimePhone() {
         Calendar cal = new GregorianCalendar();
         Date date = cal.getTime();
         SimpleDateFormat df = new SimpleDateFormat("hh:mm:ss");

@@ -36,7 +36,7 @@ import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 
 public class VMovil_Evento_Indice extends Activity implements View.OnClickListener {
     private Cursor cursor;
-    private DbAdapter_Comprob_Cobro cCobro ;
+    private DbAdapter_Comprob_Cobro cCobro;
     private DbAdaptert_Evento_Establec dbHelper;
     private DbAdapter_Comprob_Venta_Detalle dbHelper2;
     private DbAdapter_Comprob_Venta dbHelper1;
@@ -51,7 +51,8 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
     private Button estado;
     private String estadox;
     private String valIdEstab;
-    private Button mClient, mInfgas, mResume, mCarinv, mTrainv,mCobroTotal;
+    private Button mClient, mInfgas, mResume, mCarinv, mTrainv, mCobroTotal;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,19 +94,19 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         dbHelper4.deleteAllComprobCobros();
         dbHelper4.insertSomeComprobCobros();
 */
-        dbHelper5.deleteAllHistoVentaDetalle();
-        dbHelper5.insertSomeHistoVentaDetalle();
+        //dbHelper5.deleteAllHistoVentaDetalle();
+        //dbHelper5.insertSomeHistoVentaDetalle();
         dbHelper6.deleteAllStockAgente();
         dbHelper6.insertSomeStockAgente();
         dbHelper7.deleteAllPrecio();
         dbHelper7.insertSomePrecio();
         dbHelper8.deleteAllHistoComprobAnterior();
         dbHelper8.insertSomeHistoComprobAnterior();
-        mClient = (Button)findViewById(R.id.VEI_BTNclient);
-        mInfgas = (Button)findViewById(R.id.VEI_BTNinfgas);
-        mResume = (Button)findViewById(R.id.VEI_BTNresume);
-        mCarinv = (Button)findViewById(R.id.VEI_BTNcarinv);
-        mTrainv = (Button)findViewById(R.id.VEI_BTNtrainv);
+        mClient = (Button) findViewById(R.id.VEI_BTNclient);
+        mInfgas = (Button) findViewById(R.id.VEI_BTNinfgas);
+        mResume = (Button) findViewById(R.id.VEI_BTNresume);
+        mCarinv = (Button) findViewById(R.id.VEI_BTNcarinv);
+        mTrainv = (Button) findViewById(R.id.VEI_BTNtrainv);
         mCobroTotal = (Button) findViewById(R.id.VEI_BTNcobrarTodo);
         mClient.setOnClickListener(this);
         mInfgas.setOnClickListener(this);
@@ -118,30 +119,31 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         AsignarColor(mCobroTotal);
 
     }
-    private void AsignarColor(Button btn){
+
+    private void AsignarColor(Button btn) {
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         Cursor cursor = cCobro.listarComprobantesToCobros();
-        if(cursor.moveToFirst()){
+        if (cursor.moveToFirst()) {
             String fecha_Programada = cursor.getString(cursor.getColumnIndexOrThrow("cc_te_fecha_programada"));
             try {
                 Date dSqlite = df.parse(fecha_Programada);
                 Date dSistema = df.parse(getDatePhone());
-                if(dSqlite.before(dSistema)){
-                        btn.setBackgroundColor(0xffff0000);
+                if (dSqlite.before(dSistema)) {
+                    btn.setBackgroundColor(0xffff0000);
 
                 }
-                if(dSqlite.after(dSistema)){
-                        btn.setBackgroundColor(0xffffff00);
+                if (dSqlite.after(dSistema)) {
+                    btn.setBackgroundColor(0xffffff00);
                 }
-                if(dSqlite.equals(dSistema)){
-                        btn.setBackgroundColor(0xffff0000);
+                if (dSqlite.equals(dSistema)) {
+                    btn.setBackgroundColor(0xffff0000);
                 }
             } catch (ParseException e) {
                 e.printStackTrace();
             }
 
         }
-        if(cursor.getCount() <=0){
+        if (cursor.getCount() <= 0) {
             Toast.makeText(getApplicationContext(), "No hay Deudas Por Cobrar", Toast.LENGTH_SHORT).show();
             btn.setBackgroundColor(0xff00ff00);
         }
@@ -159,11 +161,11 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
                 startActivity(i);
                 break;
             case R.id.VEI_BTNinfgas:
-                Intent ig = new Intent(this,VMovil_Evento_Gasto.class);
+                Intent ig = new Intent(this, VMovil_Evento_Gasto.class);
                 startActivity(ig);
                 break;
             case R.id.VEI_BTNresume:
-                Intent ir = new Intent(this,VMovil_Resumen_Caja.class);
+                Intent ir = new Intent(this, VMovil_Resumen_Caja.class);
                 startActivity(ir);
                 break;
             case R.id.VEI_BTNcarinv:
@@ -183,8 +185,8 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
                 break;
         }
     }
-    private String getDatePhone()
-    {
+
+    private String getDatePhone() {
         Calendar cal = new GregorianCalendar();
         Date date = cal.getTime();
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
