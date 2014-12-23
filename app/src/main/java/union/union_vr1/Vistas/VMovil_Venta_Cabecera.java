@@ -351,7 +351,6 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
         switch (view.getId()){
             case R.id.VC_buttonAgregarProductos:
                 Intent intent  = new Intent(this, VMovil_Venta_Cabecera_AgregarProductos.class);
-
                 startActivity(intent);
                 break;
             case R.id.VC_buttonVender:
@@ -476,6 +475,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
         dbHelper_Temp_Comprob_Cobros.deleteAllComprobCobros();
 
         Intent intent= new Intent(this, VMovil_Evento_Indice.class);
+        finish();
         Toast.makeText(getApplicationContext(),"Venta Satisfactoria",Toast.LENGTH_LONG).show();
         startActivity(intent);
 
