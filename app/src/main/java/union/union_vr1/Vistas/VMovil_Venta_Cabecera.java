@@ -351,6 +351,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
         switch (view.getId()){
             case R.id.VC_buttonAgregarProductos:
                 Intent intent  = new Intent(this, VMovil_Venta_Cabecera_AgregarProductos.class);
+                finish();
                 startActivity(intent);
                 break;
             case R.id.VC_buttonVender:

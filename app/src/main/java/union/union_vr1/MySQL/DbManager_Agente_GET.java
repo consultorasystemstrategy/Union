@@ -392,6 +392,7 @@ public class DbManager_Agente_GET extends Activity {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(view.getContext(),VMovil_Evento_Indice.class);
+                    finish();
                     startActivity(intent);
                 }
             });

@@ -51,6 +51,7 @@ public class VMovil_Menu_Establec extends Activity {
 
         i.putExtra("idEstab", idEstabl);
         i.putExtra("idAgente", idAgente);
+        finish();
         startActivity(i);
     }
 

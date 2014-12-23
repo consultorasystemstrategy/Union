@@ -57,9 +57,7 @@ public class VMovil_Venta_Cabecera_AgregarProductos extends Activity implements 
 
     @Override
     public void onBackPressed() {
-        finish();
-        Intent intent = new Intent(this, VMovil_Venta_Cabecera.class);
-        startActivity(intent);
+        Toast.makeText(getApplicationContext(), "Usted Tiene que agregar los productos", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -296,6 +294,7 @@ public class VMovil_Venta_Cabecera_AgregarProductos extends Activity implements 
         switch (view.getId()){
             case R.id.VCAP_buttonAgregar:
                 Intent intent = new Intent(this, VMovil_Venta_Cabecera.class);
+                finish();
                 startActivity(intent);
                 break;
 
