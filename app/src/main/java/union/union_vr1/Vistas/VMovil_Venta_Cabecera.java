@@ -33,6 +33,7 @@ import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta_Detalle;
 import union.union_vr1.Sqlite.DbAdapter_Histo_Comprob_Anterior;
 import union.union_vr1.Sqlite.DbAdapter_Histo_Venta_Detalle;
 import union.union_vr1.Sqlite.DbAdapter_Precio;
+import union.union_vr1.Sqlite.DbAdapter_Stock_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Comprob_Cobro;
 import union.union_vr1.Utils.MyApplication;
 
@@ -46,6 +47,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
     private DbAdapter_Comprob_Venta_Detalle dbHelper_Comprob_Venta_Detalle;
     private DbAdapter_Temp_Comprob_Cobro dbHelper_Temp_Comprob_Cobros;
     private DbAdapter_Comprob_Cobro dbHelper_Comprob_Cobros;
+    private DbAdapter_Stock_Agente dbHelper_Stock_Agente;
 
     private int idEstablecimiento;
     int id_agente_venta;
@@ -55,6 +57,8 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
     private Button buttonAgregar;
     private TextView textViewFooterText;
     private TextView textViewFooterTotal;
+    private TextView textViewFooterSurtidoStock;
+    private TextView textViewFooterSurtidoVenta;
     private Button buttonVender;
     private ListView listView;
     private View header;
@@ -123,6 +127,9 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
 
         dbHelper_Temp_Comprob_Cobros = new DbAdapter_Temp_Comprob_Cobro(this);
         dbHelper_Temp_Comprob_Cobros.open();
+
+        dbHelper_Stock_Agente = new DbAdapter_Stock_Agente(this);
+        dbHelper_Stock_Agente.open();
 
 
         idEstablecimiento=((MyApplication)this.getApplication()).getIdEstablecimiento();
@@ -562,7 +569,11 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
         //AQUÍ TIENE QUE ESTAR EL CÓDIGO QUE MUESTRE EL MONTO TOTAL DE LA VENTA
 
         Cursor cursorTemp = simpleCursorAdapter.getCursor();
+        int surtidoVenta = cursorTemp.getCount();
         totalFooter = 0.0;
+
+        Cursor cursorStock = dbHelper_Stock_Agente.fetchAllStockAgente();
+        int surtidoStock = cursorStock.getCount();
 
 
         for (cursorTemp.moveToFirst(); !cursorTemp.isAfterLast();cursorTemp.moveToNext()){
@@ -578,6 +589,37 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
 
         textViewFooterText = (TextView)footer.findViewById(R.id.VCAP_textViewFooterText);
         textViewFooterTotal = (TextView)footer.findViewById(R.id.VCAP_textViewFooterTotal);
+        textViewFooterSurtidoStock = (TextView)footer.findViewById(R.id.VCAP_textViewSurtidoStock);
+        textViewFooterSurtidoVenta = (TextView)footer.findViewById(R.id.VCAP_textViewSurtiDoVenta);
+
+
+        //DATOS DE PRUEBA LOS OBTENDRÈ CUANDO JOSMAR ME PASE ESTOS DATOS
+        int surtidoStockAnterior = 10;
+        int surtidoVentaAnterior = 1;
+
+        int porcentajeSurtidoAnterior = surtidoVentaAnterior*100/surtidoStockAnterior;
+
+        int porcentajeSurtido = surtidoVenta*100/surtidoStock;
+
+        textViewFooterSurtidoStock.setText(""+
+                "Surtido Stock : " + surtidoStock + "\n" + "Porcentaje de Surtido de Venta: " +  + porcentajeSurtido +"%");
+        textViewFooterSurtidoVenta.setText(""+
+                "Surtido Venta : " + surtidoVenta );
+
+        if (porcentajeSurtido==porcentajeSurtidoAnterior){
+            //IGUAL LO PINTAMOS DE AMARILLO
+            textViewFooterSurtidoVenta.setTextColor(this.getResources().getColor(R.color.amarillo));
+            textViewFooterSurtidoStock.setTextColor(this.getResources().getColor(R.color.amarillo));
+        }else if(porcentajeSurtido>porcentajeSurtidoAnterior){
+            //PINTAMOS DE VERDE
+            textViewFooterSurtidoVenta.setTextColor(this.getResources().getColor(R.color.verde));
+            textViewFooterSurtidoStock.setTextColor(this.getResources().getColor(R.color.verde));
+        }else if (porcentajeSurtido<porcentajeSurtidoAnterior){
+            //PINTAMOS DE ROJO
+            textViewFooterSurtidoVenta.setTextColor(this.getResources().getColor(R.color.rojo));
+            textViewFooterSurtidoStock.setTextColor(this.getResources().getColor(R.color.rojo));
+        }
+
 
         listView.addFooterView(footer);
         //ASIGNO EL ADAPTER AL LISTVIEW
