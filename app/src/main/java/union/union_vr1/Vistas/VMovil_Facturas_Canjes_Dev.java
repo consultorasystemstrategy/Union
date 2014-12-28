@@ -127,10 +127,12 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
                 listaFacturas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        if(stock==0){
+                            Toast.makeText(getApplicationContext(),"Tiene Stock 0",Toast.LENGTH_SHORT).show();
+                        }else{
                         Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
-
                         mostrar_alertdialog_spinners_regitrados(cursor);
-                    }
+                    }}
                 });
             }
 
