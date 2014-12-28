@@ -10,15 +10,6 @@ public class MyApplication extends Application{
         private int idAgente;
         private int idEstablecimiento;
         private boolean DisplayedHistorialComprobanteAnterior;
-        private boolean CuotasEstablecidas;
-
-    public boolean isCuotasEstablecidas() {
-        return CuotasEstablecidas;
-    }
-
-    public void setCuotasEstablecidas(boolean cuotasEstablecidas) {
-        CuotasEstablecidas = cuotasEstablecidas;
-    }
 
     public boolean isDisplayedHistorialComprobanteAnterior() {
         return DisplayedHistorialComprobanteAnterior;

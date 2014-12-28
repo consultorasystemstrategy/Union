@@ -47,6 +47,7 @@ public class CursorAdapter_Facturas_Canjes_Dev extends CursorAdapter {
             String comprobante = cursor.getString(7);
             String producto = cursor.getString(9);
             String cantidad = cursor.getString(10);
+            String devuelto= cursor.getString(17);
             //Cortar el String Comprobante
             System.out.println("con datos");
             String[] datos = comprobante.split("/");
@@ -60,7 +61,7 @@ public class CursorAdapter_Facturas_Canjes_Dev extends CursorAdapter {
 
                 String textoAdpater = "Factura: " + factura + ","
                         + "\nProducto: " + producto + ","
-                        + "\nCantidad: " + cantidad + ""
+                        + "\nCantidad: " + cantidad + "    Devuelto: "+devuelto+" fecha modi: "+cursor.getString(19)+""
                         + "\nMonto: " + monto + ""
                         + "\nFecha: " + fecha + "";
 

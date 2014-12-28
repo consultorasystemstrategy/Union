@@ -20,38 +20,40 @@ import android.widget.Toast;
 
 import union.union_vr1.R;
 import union.union_vr1.Sqlite.DbAdapter_Histo_Venta_Detalle;
+import union.union_vr1.Sqlite.DbAdapter_Precio;
 import union.union_vr1.Sqlite.DbAdapter_Stock_Agente;
+import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 
 public class VMovil_Evento_Canjes_Dev extends Activity {
     private String establec;
     private AutoCompleteTextView autoComple;
     private SimpleCursorAdapter adapter;
-    private DbAdapter_Histo_Venta_Detalle dbHelper_Hi_De;
     private DbAdapter_Stock_Agente dbHelper_Stock;
     private int idAgente;
     private int idProducto;
-    private int stock;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_vmovil__evento__canjes__dev);
         //-------------------------------------------------------
-        dbHelper_Stock = new DbAdapter_Stock_Agente(this);
+        dbHelper_Stock = new DbAdapter_Stock_Agente(getApplication());
         dbHelper_Stock.open();
-      //  dbHelper_Stock.deleteAllStockAgente();
-       // dbHelper_Stock.insertSomeStockAgente();
-        //--------------------------------------------------------
-        dbHelper_Hi_De = new DbAdapter_Histo_Venta_Detalle(this);
-        dbHelper_Hi_De.open();
-        //dbHelper_Hi_De.deleteAllHistoVentaDetalle();
+
+
+        DbAdaptert_Evento_Establec evenEsta = new DbAdaptert_Evento_Establec(this);
+        evenEsta.open();
+        evenEsta.deleteAllEstablecs();
+        evenEsta.insertSomeEstablecs();
+
         //--------------------------------------------------------
         Bundle idE = getIntent().getExtras();
         establec = idE.getString("idEstabX");
         idAgente = idE.getInt("idAgente");
-        setContentView(R.layout.activity_vmovil__evento__canjes__dev);
+
         autoComple = (AutoCompleteTextView) findViewById(R.id.autocomplete);
-        System.out.println("here" + idAgente + "-" + establec);
+
         autoComplete();
 
 
@@ -60,18 +62,13 @@ public class VMovil_Evento_Canjes_Dev extends Activity {
     private void autoComplete() {
 
 
-        Cursor cr = dbHelper_Stock.listarById(idAgente);
+        Cursor cr = dbHelper_Stock.listarProductos();
         cr.moveToFirst();
-        System.out.println(cr.getString(0));
 
-        Toast.makeText(this, cr.getString(2), Toast.LENGTH_SHORT).show();
         String[] colum = new String[]{
-                cr.getColumnName(2),
-                cr.getColumnName(3)
-        };
+                cr.getColumnName(1)};
         int[] to = new int[]{
-                R.id.autcomcan_dev,
-                R.id.autocom_can_dev
+                R.id.autcomcan_dev
         };
         adapter = new SimpleCursorAdapter(this, R.layout.infor_canjes_dev, cr, colum, to, 0);
         autoComple.setAdapter(adapter);
@@ -98,7 +95,7 @@ public class VMovil_Evento_Canjes_Dev extends Activity {
         adapter.setFilterQueryProvider(new FilterQueryProvider() {
             @Override
             public Cursor runQuery(CharSequence charSequence) {
-                Cursor cr = dbHelper_Stock.listarbyIdProducto(charSequence.toString(), idAgente);
+                Cursor cr = dbHelper_Stock.listarbyIdProducto(charSequence.toString());
                 return cr;
             }
         });
@@ -107,15 +104,13 @@ public class VMovil_Evento_Canjes_Dev extends Activity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 adapterView.setBackgroundColor(0x00000000);
                 Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
-                String nom = cursor.getString(2);
-                idProducto = cursor.getInt(1);
+                String nom = cursor.getString(1);
+                idProducto = cursor.getInt(0);
                 autoComple.setText(nom);
-                stock = cursor.getInt(3);
                 Intent faCanjeDev = new Intent(getApplicationContext(), VMovil_Facturas_Canjes_Dev.class);
                 faCanjeDev.putExtra("idAgente", idAgente);
                 faCanjeDev.putExtra("idEstablec", establec);
                 faCanjeDev.putExtra("idProducto", idProducto);
-                faCanjeDev.putExtra("stock", stock);
                 faCanjeDev.putExtra("nomProducto", nom);
                 startActivity(faCanjeDev);
 

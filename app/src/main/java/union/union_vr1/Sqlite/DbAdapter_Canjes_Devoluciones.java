@@ -54,6 +54,10 @@ public class DbAdapter_Canjes_Devoluciones {
 
         return estado;
     }
+    public Cursor obtenerStock(int id, int idProducto){
+        Cursor cr = mDb.rawQuery("select * from m_stock_agente where st_in_id_producto='"+idProducto+"' and st_in_id_agente='"+id+"'",null);
+        return cr;
+    }
 
     public Cursor nom_establecimiento(String idEstablecimiento) {
 

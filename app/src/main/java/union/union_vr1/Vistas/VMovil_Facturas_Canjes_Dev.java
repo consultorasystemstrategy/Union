@@ -41,7 +41,6 @@ import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 public class VMovil_Facturas_Canjes_Dev extends Activity {
     private int idProducto;
     private DbAdapter_Canjes_Devoluciones dbHelperCanjes_Dev;
-    private DbAdapter_Histo_Venta_Detalle HV;
     private ListView listaFacturas;
     private int stock;
     private String idEstablec;
@@ -57,21 +56,6 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.princ__facturas__canjes__dev);
 
-        //------------Borrar luego--------
-        HV = new DbAdapter_Histo_Venta_Detalle(this);
-        HV.open();
-        HV.deleteAllHistoVentaDetalle();
-        HV.insertSomeHistoVentaDetalle();
-
-        DbAdapter_Precio adapprecio = new DbAdapter_Precio(ctx);
-        adapprecio.open();
-        adapprecio.deleteAllPrecio();
-        adapprecio.insertSomePrecio();
-
-        DbAdaptert_Evento_Establec evenEsta = new DbAdaptert_Evento_Establec(ctx);
-        evenEsta.open();
-        evenEsta.deleteAllEstablecs();
-        evenEsta.insertSomeEstablecs();
 
         //--------------------------------------------
 
@@ -82,21 +66,31 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
 
         Bundle bd = getIntent().getExtras();
         idProducto = bd.getInt("idProducto");
-        stock = bd.getInt("stock");
         idEstablec = bd.getString("idEstablec");
         idAgente = bd.getInt("idAgente");
         nomProducto = bd.getString("nomProducto");
 
-        System.out.println("establecimiento"+idEstablec);
+        System.out.println("establecimiento" + idEstablec);
 
         Cursor cr = dbHelperCanjes_Dev.nom_establecimiento(idEstablec);
         cr.moveToFirst();
         nomEstablecimiento = cr.getString(1);
         idCategoriaEstablec = cr.getInt(2);
-
-        TextView stockView = (TextView) findViewById(R.id.stock_can_dev);
-        stockView.setText("Stock Disponible: " + stock);
+        imprimeStock(idAgente,idProducto);
         listarFacturas_Productos(idProducto, idAgente, idEstablec, nomProducto);
+    }
+
+    private void imprimeStock(int id,int producto) {
+        TextView stockView = (TextView) findViewById(R.id.stock_can_dev);
+        Cursor cr = dbHelperCanjes_Dev.obtenerStock(id,producto);
+        if(cr.moveToFirst()){
+            stock=cr.getInt(7);
+            stockView.setText("Stock Disponible: " + stock);
+        }else{
+            stockView.setText("Stock Disponible: " + "No Cuenta con Stock de este Producto");
+        }
+
+
     }
 
     private void listarFacturas_Productos(int producto, final int idAgente, final String idEstablec, final String nomProducto) {
@@ -475,16 +469,18 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
 
     public void confirmar() {
         //Instancia para poder volver
-        final Intent back = new Intent(getApplicationContext(), VMovil_Evento_Establec.class);
-        back.putExtra("idAgente", idAgente);
-        back.putExtra("idEstab", idEstablec);
+
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ctx);
         alertDialogBuilder.setTitle("Guardado Correctamente");
         AlertDialog.Builder builder = alertDialogBuilder
                 .setCancelable(false)
                 .setPositiveButton("Regresar", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
+                        Intent back = new Intent(getApplicationContext(), VMovil_Evento_Canjes_Dev.class);
+                        back.putExtra("idEstabX", idEstablec);
+                        back.putExtra("idAgente", idAgente);
                         startActivity(back);
+
                     }
 
                 });

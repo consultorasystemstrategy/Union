@@ -307,12 +307,12 @@ public class DbAdapter_Stock_Agente {
         }
         return mCursor;
     }
-    public Cursor listarById(int idAgente){
-        Cursor cr = mDb.rawQuery("select  _id,st_in_id_producto, st_te_nombre, st_in_disponible from m_stock_agente where st_in_id_agente="+idAgente+"",null);
+    public Cursor listarProductos(){
+        Cursor cr = mDb.rawQuery("select DISTINCT(pr_in_id_producto) _id,(pr_in_nombre) from m_precio ",null);
         return  cr ;
     }
-    public Cursor listarbyIdProducto  (String nombre,int idAgente)  throws SQLException{
-     Cursor cr = mDb.rawQuery("select _id,st_in_id_producto, st_te_nombre, st_in_disponible from m_stock_agente where st_in_id_agente="+idAgente+" and  st_te_nombre LIKE '%"+nombre+"%' ",null);
+    public Cursor listarbyIdProducto  (String nombre)  throws SQLException{
+     Cursor cr = mDb.rawQuery("select DISTINCT(pr_in_id_producto) _id,(pr_in_nombre) from m_precio where pr_in_nombre LIKE '%"+nombre+"%'",null);
       return cr;
     }
 
@@ -330,11 +330,11 @@ public class DbAdapter_Stock_Agente {
 
     public void insertSomeStockAgente() {
 
-        createStockAgente( 1, "Pan Integral Mediano Union", "1A", "11", 10, 10, 10, 0, 0, 0, 0, 0, 10, 1);
-        createStockAgente( 2, "Pan Americano Mediano Union", "2A", "22", 20, 20, 20, 0, 0, 0, 0, 0, 20, 1);
-        createStockAgente( 3, "Paneton Integral Super Bom", "3A", "33", 30, 30, 30, 0, 0, 0, 0, 0, 30, 1);
-        createStockAgente( 4, "Agua de Mesa Union", "4A", "44", 40, 40, 40, 0, 0, 0, 0, 0, 40, 1);
-        createStockAgente( 5, "Mega Galleta Integral de Kiwicha", "5A", "55", 50, 50, 50, 0, 0, 0, 0, 0, 50, 1);
+        createStockAgente( 1, "Producto1", "1A", "11", 10, 10, 10, 0, 0, 0, 0, 0, 10, 1);
+        createStockAgente( 2, "Producto2", "2A", "22", 20, 20, 20, 0, 0, 0, 0, 0, 20, 1);
+        createStockAgente( 3, "Producto3", "3A", "33", 30, 30, 30, 0, 0, 0, 0, 0, 30, 1);
+        createStockAgente( 4, "Producto4", "4A", "44", 40, 40, 40, 0, 0, 0, 0, 0, 40, 1);
+        createStockAgente( 5, "Producto5", "5A", "55", 50, 50, 50, 0, 0, 0, 0, 0, 50, 1);
 
     }
 
