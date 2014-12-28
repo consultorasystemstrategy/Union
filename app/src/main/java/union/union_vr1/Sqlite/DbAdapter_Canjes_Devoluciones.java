@@ -55,7 +55,7 @@ public class DbAdapter_Canjes_Devoluciones {
         return estado;
     }
     public Cursor obtenerStock(int id, int idProducto){
-        Cursor cr = mDb.rawQuery("select * from m_stock_agente where st_in_id_producto='"+idProducto+"' and st_in_id_agente='"+id+"'",null);
+        Cursor cr = mDb.rawQuery("select *,st_in_inicial- (st_in_canjes+st_in_devoluciones) as 'disponible' from m_stock_agente where st_in_id_producto='"+idProducto+"' and st_in_id_agente='"+id+"'",null);
         return cr;
     }
 
@@ -78,10 +78,22 @@ public class DbAdapter_Canjes_Devoluciones {
 
     }
 
-    public boolean update_Canj_dev(String tipo_op, String categoria_op, String cantidad, String importe, String idDetalle) {
+    public boolean update_Canj_dev(String tipo_op, String categoria_op, String cantidad, String importe, String idDetalle,int devuelto,String columna,int idProducto,Context tx) {
+        int can = devuelto+Integer.parseInt(cantidad);
         boolean estado = false;
         try {
-            mDb.execSQL("update m_histo_venta_detalle set hd_in_id_tipoper='" + tipo_op + "',hd_in_categoria_ope='" + categoria_op + "',hd_in_cantidad_ope='" + cantidad + "',hd_re_importe_ope='" + importe + "',hg_te_fecha_ope='"+getDatePhone()+"',hd_te_hora_ope='"+getTimePhone()+"' where hd_in_id_detalle='" + idDetalle + "';");
+
+            mDb.execSQL("update m_histo_venta_detalle set hd_in_id_tipoper='" + tipo_op + "',hd_in_categoria_ope='" + categoria_op + "',hd_in_cantidad_ope='" + can + "',hd_re_importe_ope='" + importe + "',hg_te_fecha_ope='"+getDatePhone()+"',hd_te_hora_ope='pendiente' where hd_in_id_detalle='" + idDetalle + "';");
+            Cursor cr = mDb.rawQuery("select * from m_stock_agente",null);
+            cr.moveToFirst();
+            int devol_canjes = cr.getInt(cr.getColumnIndex(columna));
+            int total = Integer.parseInt(cantidad)+devol_canjes;
+            System.out.println("bueno"+devol_canjes+idProducto+columna+total);
+            mDb.execSQL("update m_stock_agente set "+columna+"='"+total+"' where st_in_id_producto='"+idProducto+"'; ");
+
+            Cursor cr2 = mDb.rawQuery("select * from m_stock_agente",null);
+            cr2.moveToFirst();
+            Toast.makeText(tx,"Dev:"+cr2.getString(cr.getColumnIndex(columna)),Toast.LENGTH_SHORT).show();
             estado = true;
 
         } catch (android.database.SQLException e) {

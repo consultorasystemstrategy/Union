@@ -40,31 +40,21 @@ public class VMovil_Evento_Canjes_Dev extends Activity {
         //-------------------------------------------------------
         dbHelper_Stock = new DbAdapter_Stock_Agente(getApplication());
         dbHelper_Stock.open();
-
-
         DbAdaptert_Evento_Establec evenEsta = new DbAdaptert_Evento_Establec(this);
         evenEsta.open();
         evenEsta.deleteAllEstablecs();
         evenEsta.insertSomeEstablecs();
-
         //--------------------------------------------------------
         Bundle idE = getIntent().getExtras();
         establec = idE.getString("idEstabX");
         idAgente = idE.getInt("idAgente");
-
         autoComple = (AutoCompleteTextView) findViewById(R.id.autocomplete);
-
         autoComplete();
-
-
     }
 
     private void autoComplete() {
-
-
         Cursor cr = dbHelper_Stock.listarProductos();
         cr.moveToFirst();
-
         String[] colum = new String[]{
                 cr.getColumnName(1)};
         int[] to = new int[]{
@@ -72,8 +62,6 @@ public class VMovil_Evento_Canjes_Dev extends Activity {
         };
         adapter = new SimpleCursorAdapter(this, R.layout.infor_canjes_dev, cr, colum, to, 0);
         autoComple.setAdapter(adapter);
-
-
         autoComple.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
@@ -113,7 +101,6 @@ public class VMovil_Evento_Canjes_Dev extends Activity {
                 faCanjeDev.putExtra("idProducto", idProducto);
                 faCanjeDev.putExtra("nomProducto", nom);
                 startActivity(faCanjeDev);
-
             }
         });
 
