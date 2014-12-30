@@ -84,7 +84,6 @@
     <string-array name="tipoDocumentoCombustibleRuta">
         <item>factura</item>
     </string-array>
-
     <string-array name="nCuota4">
         <item>4</item>
         <item>3</item>
@@ -114,5 +113,6 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_example">Example action</string>
     <string name="title_activity_db_manager__agente__get">DbManager_Agente_GET</string>
+    <string name="title_activity_mostrar_can_dev_facturas">mostrar_can_dev_facturas</string>
 
 </resources>

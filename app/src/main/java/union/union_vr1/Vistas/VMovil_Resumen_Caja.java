@@ -47,7 +47,6 @@ public class VMovil_Resumen_Caja extends TabActivity {
 
 
         TabSpec spec = tabHost.newTabSpec("Tab1");
-
         spec.setContent(R.id.VRC_THingresos);
         spec.setIndicator("Ingresos y Gastos");
         displayListIngresosGastos();

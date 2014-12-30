@@ -21,6 +21,7 @@ import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -71,9 +72,6 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
         idEstablec = bd.getString("idEstablec");
         idAgente = bd.getInt("idAgente");
         nomProducto = bd.getString("nomProducto");
-
-        System.out.println("establecimiento" + idEstablec);
-
         Cursor cr = dbHelperCanjes_Dev.nom_establecimiento(idEstablec);
         cr.moveToFirst();
         nomEstablecimiento = cr.getString(1);
@@ -99,7 +97,7 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
         Cursor cr = dbHelperCanjes_Dev.listaFacturasByProducto(producto, idAgente, idEstablec);
 
         if (cr.moveToFirst()) {
-            if (cr.getString(17).equals(cr.getString(10))) {
+            if (cr.getString(17).equals(cr.getString(10)) || cr.getString(10).equals("") || cr.getString(1).equals("")) {
 
                 String[] noEncontrado = {"Producto No encontrado:", "Detalle: " + nomProducto + "", "¿Ingresar Comprobante de Venta?", "Yes", "No"};
                 ArrayAdapter adapter = new ArrayAdapter(getApplicationContext(), android.R.layout.simple_dropdown_item_1line, noEncontrado);
@@ -208,7 +206,6 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
 
                 if (charSequence.length() !=0) {
                     String nro = charSequence.toString();
-                    System.out.println(cantidadV+devueltoV+"here"+nro+charSequence.length());
                     int charSec = Integer.parseInt(nro);
                     if (charSec>r) {
 
