@@ -101,8 +101,6 @@ public class DbManager_Stock_Agente_GET{
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
         return null;
     }
-
 }

@@ -154,6 +154,7 @@ public class DbGastos_Ingresos {
         boolean estado = false;
         return estado;
     }
+
     private String getDatePhone()
     {
         Calendar cal = new GregorianCalendar();

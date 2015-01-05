@@ -125,8 +125,6 @@ public class DbManager_Agente_GET extends Activity {
     public static final String TAG_valor_unidad = "valor_unidad";
     public static final String TAG_id_agente_comp_ant = "id_agente";
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
