@@ -20,6 +20,9 @@ import android.widget.AdapterView.OnItemClickListener;
 
 import union.union_vr1.R;
 import union.union_vr1.Sqlite.CursorAdapterEstablecimientoColor;
+import union.union_vr1.Sqlite.DbAdapter_Histo_Venta_Detalle;
+import union.union_vr1.Sqlite.DbAdapter_Precio;
+import union.union_vr1.Sqlite.DbAdapter_Stock_Agente;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 import union.union_vr1.Utils.MyApplication;
 
@@ -33,6 +36,9 @@ public class VMovil_Menu_Establec extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.princ_menu_establec);
+
+
+
 
         dbHelper = new DbAdaptert_Evento_Establec(this);
         dbHelper.open();

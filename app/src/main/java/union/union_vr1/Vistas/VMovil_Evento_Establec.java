@@ -20,6 +20,9 @@ import java.util.GregorianCalendar;
 
 import union.union_vr1.R;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
+import union.union_vr1.Sqlite.DbAdapter_Histo_Venta_Detalle;
+import union.union_vr1.Sqlite.DbAdapter_Precio;
+import union.union_vr1.Sqlite.DbAdapter_Stock_Agente;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 
 //Esti es yb cinebtario
@@ -42,6 +45,28 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.princ_evento_establec);
+        //--ñ-
+        DbAdapter_Stock_Agente dbHelper_Stock;
+        DbAdapter_Histo_Venta_Detalle dbHelper_Hi_De;
+        dbHelper_Stock = new DbAdapter_Stock_Agente(this);
+        dbHelper_Stock.open();
+        dbHelper_Stock.deleteAllStockAgente();
+        dbHelper_Stock.insertSomeStockAgente();
+        //--------------------------------------------------------
+        dbHelper_Hi_De = new DbAdapter_Histo_Venta_Detalle(this);
+        dbHelper_Hi_De.open();
+        dbHelper_Hi_De.deleteAllHistoVentaDetalle();
+        dbHelper_Hi_De.insertSomeHistoVentaDetalle();
+
+        DbAdapter_Precio adapprecio = new DbAdapter_Precio(this);
+        adapprecio.open();
+        adapprecio.deleteAllPrecio();
+        adapprecio.insertSomePrecio();
+        //---
+
+
+
+
         dbHelper = new DbAdaptert_Evento_Establec(this);
         dbHelper.open();
 
@@ -66,8 +91,10 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
 
 
         Bundle bundle = getIntent().getExtras();
-        valIdEstab = bundle.getString("idEstab");
-        idAgente = bundle.getInt("idAgente");
+       // valIdEstab = bundle.getString("idEstab");
+       /// idAgente = bundle.getInt("idAgente");
+        valIdEstab="1";
+        idAgente=1;
         titulos(valIdEstab);
 
         titulo = (TextView) findViewById(R.id.VEE_TVWtitulo);
@@ -199,7 +226,7 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
                 //        "1", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.VEE_BTNcandev:
-                Toast.makeText(this, ":((((( " + idAgente + ")", Toast.LENGTH_SHORT).show();
+
                 Intent idh = new Intent(this, VMovil_Evento_Canjes_Dev.class);
                 idh.putExtra("idEstabX", valIdEstab);
                 idh.putExtra("idAgente", idAgente);

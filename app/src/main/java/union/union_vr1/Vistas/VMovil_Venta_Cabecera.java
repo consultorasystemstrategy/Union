@@ -158,7 +158,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
         buttonAgregar.setOnClickListener(this);
         listView = (ListView) findViewById(R.id.VC_listView);
 
-           isEstablecidasCuotas = ((MyApplication)this.getApplication()).isCuotasEstablecidas();
+       // isEstablecidasCuotas = ((MyApplication)this.getApplication()).isCuotasEstablecidas();
         if(isEstablecidasCuotas){
 
             buttonAgregar.setClickable(false);
@@ -420,7 +420,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
                     break;
                 case Credito:
                     i_formaPago = 2;
-                    ((MyApplication)this.getApplication()).setCuotasEstablecidas(false);
+                    //((MyApplication)this.getApplication()).setCuotasEstablecidas(false);
                     break;
 
             }

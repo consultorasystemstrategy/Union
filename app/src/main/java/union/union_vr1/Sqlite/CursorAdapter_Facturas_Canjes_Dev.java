@@ -41,49 +41,47 @@ public class CursorAdapter_Facturas_Canjes_Dev extends CursorAdapter {
 
         textView.setLayoutParams(layout_791);
         if (cursor.moveToFirst()) {
-            String factura = "";
-            String fecha = "";
-            String monto = "";
-            String comprobante = cursor.getString(7);
-            String producto = cursor.getString(9);
-            String cantidad = cursor.getString(10);
-            //Cortar el String Comprobante
-            System.out.println("con datos");
-            String[] datos = comprobante.split("/");
+                String factura = "";
+                String fecha = "";
+                String monto = "";
+                String comprobante = cursor.getString(7);
+                String producto = cursor.getString(9);
+                String cantidad = cursor.getString(10);
+                String devuelto = cursor.getString(17);
+                //Cortar el String Comprobante
+                System.out.println("con datos");
+                String[] datos = comprobante.split("/");
 
-            if (datos.length >= 2) {
-                factura = datos[1];
-                fecha = datos[2];
-                monto = datos[3];
-
-
-
-                String textoAdpater = "Factura: " + factura + ","
-                        + "\nProducto: " + producto + ","
-                        + "\nCantidad: " + cantidad + ""
-                        + "\nMonto: " + monto + ""
-                        + "\nFecha: " + fecha + "";
+                if (datos.length >= 2) {
+                    factura = datos[1];
+                    fecha = datos[2];
+                    monto = datos[3];
 
 
-                textView.setText(textoAdpater);
-            } else {
-                String factura2 = cursor.getString(7);
-                String fecha2 = cursor.getString(12);
-                String monto2 = cursor.getString(11);
-
-                String textoAdpater = "Factura: " + factura2 + ","
-                        + "\nProducto: " + producto + ","
-                        + "\nCantidad: " + cantidad + ""
-                        + "\nMonto: " + monto2 + ""
-                        + "\nFecha: " + fecha2 + "";
-                textView.setText(textoAdpater);
+                    String textoAdpater = "Factura: " + factura + ","
+                            + "\nProducto: " + producto + ","
+                            + "\nCantidad: " + cantidad + "    Devuelto: " + devuelto + " "
+                            + "\nMonto: " + monto + ""
+                            + "\nFecha: " + fecha + "";
 
 
+                    textView.setText(textoAdpater);
+                } else {
+                    String factura2 = cursor.getString(7);
+                    String fecha2 = cursor.getString(12);
+                    String monto2 = cursor.getString(11);
+
+                    String textoAdpater = "Factura: " + factura2 + ","
+                            + "\nProducto: " + producto + ","
+                            + "\nCantidad: " + cantidad + ""
+                            + "\nMonto: " + monto2 + ""
+                            + "\nFecha: " + fecha2 + "";
+                    textView.setText(textoAdpater);
+                }
+                //-------
             }
-            //-------
 
 
-        }
 
 
     }
