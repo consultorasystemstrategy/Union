@@ -6,7 +6,7 @@
     android:background="@color/PersonalizadoSteve5"
     android:orientation="vertical">
 
-    <LinearLayout
+   <!-- <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_weight="10"
@@ -79,5 +79,5 @@
             android:background="@color/rojo"
             android:text="Borrar los Cambios"
             android:id="@+id/button2" />
-    </LinearLayout>
+    </LinearLayout>-->
 </LinearLayout>

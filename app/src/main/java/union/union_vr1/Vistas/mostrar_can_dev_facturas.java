@@ -25,6 +25,7 @@ import java.util.GregorianCalendar;
 
 import union.union_vr1.R;
 import union.union_vr1.Sqlite.CursorAdapterFacturas;
+import union.union_vr1.Sqlite.CursorAdapterFacturas_Canjes;
 import union.union_vr1.Sqlite.CursorAdapterFacturas_Canjes_Dev;
 import union.union_vr1.Sqlite.CursorAdapter_Facturas_Canjes_Dev;
 import union.union_vr1.Sqlite.DbAdapter_Canjes_Devoluciones;
@@ -46,6 +47,7 @@ public class mostrar_can_dev_facturas extends TabActivity {
 
         Bundle bl = getIntent().getExtras();
         idEstablec = bl.getString("idEstablec");
+        idAgente = bl.getInt("idAgente");
 
 
         Button btn_guardar = (Button) findViewById(R.id.btn_fac_guardar);
@@ -84,11 +86,11 @@ public class mostrar_can_dev_facturas extends TabActivity {
             public void onClick(View view) {
                 int idTab = tabHost.getCurrentTab();
                 if (idTab == 0) {
-                    dialog_cancel("Canjes");
+                    dialog_cancel("Canjes", 1, "st_in_canjes");
 
                 }
                 if (idTab == 1) {
-                    dialog_cancel("Devoluciones");
+                    dialog_cancel("Devoluciones", 2, "st_in_devoluciones");
                 }
             }
         });
@@ -127,7 +129,7 @@ public class mostrar_can_dev_facturas extends TabActivity {
         if (cr.moveToFirst()) {
             view_canjes.setText(textoView);
             lista_facturas.addHeaderView(view_canjes);
-            CursorAdapterFacturas_Canjes_Dev adapter_facturas = new CursorAdapterFacturas_Canjes_Dev(getApplicationContext(), cr);
+            CursorAdapterFacturas_Canjes adapter_facturas = new CursorAdapterFacturas_Canjes(getApplicationContext(), cr);
             lista_facturas.setAdapter(adapter_facturas);
 
         } else {
@@ -154,9 +156,9 @@ public class mostrar_can_dev_facturas extends TabActivity {
         } else {
         }
 
-        Cursor cr = dbHelper_CanDev.obtener_facturas_canjes(2, idEstablec);
+        Cursor cr = dbHelper_CanDev.obtener_facturas_dev(2, idEstablec);
         ListView lista_facturas = (ListView) findViewById(R.id.listViewDevoluciones);
-        Cursor precio = dbHelper_CanDev.obtener_igv(2, idEstablec);
+        Cursor precio = dbHelper_CanDev.obtener_igv_dev(2, idEstablec);
         String textFooter = "";
         if (precio.moveToFirst()) {
             textFooter = "Sub: " + precio.getString(1) + "" +
@@ -177,7 +179,7 @@ public class mostrar_can_dev_facturas extends TabActivity {
 
     }
 
-    public void dialog_save(String op, final int operacion) {
+    public void dialog_save(final String op, final int operacion) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setTitle("Seguro de Guardar");
         AlertDialog.Builder builder = alertDialogBuilder
@@ -185,15 +187,29 @@ public class mostrar_can_dev_facturas extends TabActivity {
                 .setCancelable(false)
                 .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        boolean estado = dbHelper_CanDev.guardarCambios(operacion, idEstablec);
-                        if (estado) {
-                            Toast.makeText(getApplicationContext(), "Exito", Toast.LENGTH_SHORT).show();
-                            Intent in = new Intent(getApplicationContext(), VMovil_Evento_Canjes_Dev.class);
-                            in.putExtra("idEstabX", idEstablec);
-                            in.putExtra("idAgente", idAgente);
-                            startActivity(in);
-                        } else {
-                            Toast.makeText(getApplicationContext(), "Ocurrio un Error", Toast.LENGTH_SHORT).show();
+                        if (op.equals("Canjes")) {
+                            boolean estado = dbHelper_CanDev.guardarCambios(operacion, idEstablec);
+                            if (estado) {
+                                Toast.makeText(getApplicationContext(), "Exito", Toast.LENGTH_SHORT).show();
+                                Intent in = new Intent(getApplicationContext(), VMovil_Evento_Canjes_Dev.class);
+                                in.putExtra("idEstabX", idEstablec);
+                                in.putExtra("idAgente", idAgente);
+                                startActivity(in);
+                            } else {
+                                Toast.makeText(getApplicationContext(), "Ocurrio un Error", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                        if (op.equals("Devoluciones")) {
+                            boolean estado = dbHelper_CanDev.guardarCambios_dev(operacion, idEstablec);
+                            if (estado) {
+                                Toast.makeText(getApplicationContext(), "Exito", Toast.LENGTH_SHORT).show();
+                                Intent in = new Intent(getApplicationContext(), VMovil_Evento_Canjes_Dev.class);
+                                in.putExtra("idEstabX", idEstablec);
+                                in.putExtra("idAgente", idAgente);
+                                startActivity(in);
+                            } else {
+                                Toast.makeText(getApplicationContext(), "Ocurrio un Error", Toast.LENGTH_SHORT).show();
+                            }
                         }
                     }
 
@@ -208,23 +224,38 @@ public class mostrar_can_dev_facturas extends TabActivity {
 
     }
 
-    public void dialog_cancel(String op) {
-
-
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-                this);
-
+    public void dialog_cancel(final String op, final int tipo, final String columna) {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setTitle("Seguro de Borrar Los Cambios");
-
         AlertDialog.Builder builder = alertDialogBuilder
                 .setMessage("Operacion: " + op + "")
                 .setCancelable(false)
                 .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        Intent in = new Intent(getApplicationContext(), VMovil_Evento_Canjes_Dev.class);
-                        in.putExtra("idEstabX", idEstablec);
-                        in.putExtra("idAgente", idAgente);
-                        startActivity(in);
+                        if (op.equals("Canjes")) {
+                            boolean estado = dbHelper_CanDev.cancelarCambios(tipo, idEstablec, columna);
+                            if (estado) {
+                                Intent in = new Intent(getApplicationContext(), VMovil_Evento_Canjes_Dev.class);
+                                in.putExtra("idEstabX", idEstablec);
+                                in.putExtra("idAgente", idAgente);
+                                startActivity(in);
+                                Toast.makeText(getApplicationContext(), "Cambios Borrados", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(getApplicationContext(), "Ocurrio un Error", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                        if (op.equals("Devoluciones")) {
+                            boolean estado = dbHelper_CanDev.cancelarCambios_dev(tipo, idEstablec, columna);
+                            if (estado) {
+                                Intent in = new Intent(getApplicationContext(), VMovil_Evento_Canjes_Dev.class);
+                                in.putExtra("idEstabX", idEstablec);
+                                in.putExtra("idAgente", idAgente);
+                                startActivity(in);
+                                Toast.makeText(getApplicationContext(), "Cambios Borrados", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(getApplicationContext(), "Ocurrio un Error", Toast.LENGTH_SHORT).show();
+                            }
+                        }
                     }
 
                 })
@@ -235,7 +266,6 @@ public class mostrar_can_dev_facturas extends TabActivity {
                 });
 
         AlertDialog alertDialog = alertDialogBuilder.create();
-
         alertDialog.show();
 
     }

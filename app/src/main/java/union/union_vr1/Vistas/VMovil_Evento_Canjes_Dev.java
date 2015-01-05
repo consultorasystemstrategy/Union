@@ -1,44 +1,33 @@
 package union.union_vr1.Vistas;
 
 import android.app.Activity;
-import android.app.AlertDialog;
+import android.app.TabActivity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.FilterQueryProvider;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.SimpleCursorAdapter;
-import android.widget.Spinner;
-import android.widget.TextView;
+import android.widget.TabHost;
 import android.widget.Toast;
-
-import java.util.ArrayList;
 
 import union.union_vr1.R;
 import union.union_vr1.Sqlite.CursorAdapterFacturas;
-import union.union_vr1.Sqlite.CursorAdapter_Facturas_Canjes_Dev;
+import union.union_vr1.Sqlite.CursorAdapterFacturas_dev;
 import union.union_vr1.Sqlite.DbAdapter_Canjes_Devoluciones;
-import union.union_vr1.Sqlite.DbAdapter_Histo_Venta_Detalle;
-import union.union_vr1.Sqlite.DbAdapter_Precio;
 import union.union_vr1.Sqlite.DbAdapter_Stock_Agente;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 
-public class VMovil_Evento_Canjes_Dev extends Activity {
+public class VMovil_Evento_Canjes_Dev extends TabActivity {
     private String establec;
     private AutoCompleteTextView autoComple;
     private SimpleCursorAdapter adapter;
@@ -47,16 +36,18 @@ public class VMovil_Evento_Canjes_Dev extends Activity {
     private int idProducto;
     private DbAdapter_Canjes_Devoluciones dbHelper_CanDev;
     private Button btn_mostrar_guias;
-
+    private Context ctx;
+    private TabHost tabHost;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vmovil__evento__canjes__dev);
+        ctx=this;
         //-------------------------------------------------------
         dbHelper_Stock = new DbAdapter_Stock_Agente(getApplication());
         dbHelper_Stock.open();
-        dbHelper_CanDev =  new DbAdapter_Canjes_Devoluciones(getApplication());
+        dbHelper_CanDev = new DbAdapter_Canjes_Devoluciones(getApplication());
         dbHelper_CanDev.open();
         //------------------------------------------------------
         DbAdaptert_Evento_Establec evenEsta = new DbAdaptert_Evento_Establec(this);
@@ -68,10 +59,28 @@ public class VMovil_Evento_Canjes_Dev extends Activity {
         Bundle idE = getIntent().getExtras();
         establec = idE.getString("idEstabX");
         idAgente = idE.getInt("idAgente");
+        Toast.makeText(getApplicationContext(), "" + establec + idAgente, Toast.LENGTH_SHORT).show();
         autoComple = (AutoCompleteTextView) findViewById(R.id.autocomplete);
-
         autoComplete();
-        listar_Facturas();
+        //
+
+        tabHost = (TabHost) findViewById(android.R.id.tabhost);
+        TabHost.TabSpec spec = tabHost.newTabSpec("Tab1");
+        spec.setContent(R.id.tab1_can);
+        spec.setIndicator("Canjes");
+        listar_Facturas_can();
+        tabHost.addTab(spec);
+
+        TabHost.TabSpec spec2 = tabHost.newTabSpec("Tab2");
+        spec2.setContent(R.id.tab2_dev);
+        spec2.setIndicator("Devoluciones");
+        listar_Facturas_dev();
+        tabHost.addTab(spec2);
+
+
+        //
+
+
     }
 
     private void autoComplete() {
@@ -128,34 +137,59 @@ public class VMovil_Evento_Canjes_Dev extends Activity {
 
 
     }
-    private void listar_Facturas(){
-        Cursor cr = dbHelper_CanDev.obtener_facturas(establec);
+
+    private void listar_Facturas_can() {
+        Cursor cr = dbHelper_CanDev.obtener_facturas_can(establec);
         final ListView lista_facturas = (ListView) findViewById(R.id.guias_can_dev);
-        if(cr.moveToFirst()){
-            CursorAdapterFacturas adapter = new CursorAdapterFacturas(getApplicationContext(),cr);
+        if (cr.moveToFirst()) {
+            CursorAdapterFacturas adapter = new CursorAdapterFacturas(getApplicationContext(), cr);
             lista_facturas.setAdapter(adapter);
             btn_mostrar_guias = (Button) findViewById(R.id.button_mostrar_guias);
             btn_mostrar_guias.setVisibility(View.VISIBLE);
             btn_mostrar_guias.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(getApplicationContext(),"tas poes",Toast.LENGTH_SHORT).show();
-                    Intent i = new Intent(getApplicationContext(),mostrar_can_dev_facturas.class);
-                    i.putExtra("idEstablec",establec);
-                    i.putExtra("idAgente",idAgente);
+
+                    Intent i = new Intent(getApplicationContext(), Mostrar_can_dev_facturas.class);
+                    i.putExtra("idEstablec", establec);
+                    i.putExtra("idAgente", idAgente);
                     startActivity(i);
+                   finish();
 
 
                 }
             });
-        }else{
-            btn_mostrar_guias = (Button) findViewById(R.id.button_mostrar_guias);
-            btn_mostrar_guias.setVisibility(View.INVISIBLE);
+        } else {
+
 
         }
 
 
+    }
+    private void listar_Facturas_dev() {
+        Cursor cr = dbHelper_CanDev.obtener_facturas_dev(establec);
+        final ListView lista_facturas = (ListView) findViewById(R.id.guias_can_2);
+        if (cr.moveToFirst()) {
+            CursorAdapterFacturas_dev adapter = new CursorAdapterFacturas_dev(getApplicationContext(), cr);
+            lista_facturas.setAdapter(adapter);
+            btn_mostrar_guias = (Button) findViewById(R.id.button_mostrar_guias);
+            btn_mostrar_guias.setVisibility(View.VISIBLE);
+            btn_mostrar_guias.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent i = new Intent(getApplicationContext(), Mostrar_can_dev_facturas.class);
+                    i.putExtra("idEstablec", establec);
+                    i.putExtra("idAgente", idAgente);
+                    startActivity(i);
+                    finish();
 
+
+                }
+            });
+        } else {
+
+
+        }
     }
 
 

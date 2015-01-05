@@ -36,6 +36,11 @@ public class DbAdapter_Histo_Venta_Detalle {
     public static final String HD_lugar_registro = "hd_te_lugar_registro";
     public static final String HD_estado = "hd_in_estado";
     public static final String HD_id_agente = "hd_in_id_agente";
+    public static final String HD_cantidad_ope_dev = "hd_in_cantidad_ope_dev";
+    public static final String HD_categoria_ope_dev = "hd_in_categoria_ope_dev";
+    public static final String HD_importe_ope_dev = "hd_re_importe_ope_dev";
+    public static final String HD_fecha_ope_dev = "hg_te_fecha_ope_dev";
+    public static final String HD_hora_ope_dev = "hd_te_hora_ope_dev";
 
     public static final String TAG = "Histo_Venta_Detalle";
     private DbHelper mDbHelper;
@@ -72,7 +77,12 @@ public class DbAdapter_Histo_Venta_Detalle {
                     +HD_lote+" text,"
                     +HD_lugar_registro+" text,"
                     +HD_estado+" integer,"
-                    +HD_id_agente+" integer);";
+                    +HD_id_agente+" integer,"
+                    +HD_cantidad_ope_dev+" integer,"
+                    +HD_categoria_ope_dev+" integer,"
+                    +HD_importe_ope_dev+" real,"
+                    +HD_fecha_ope_dev+" text,"
+                    +HD_hora_ope_dev+" text );";
 
     public static final String DELETE_TABLE_HISTO_VENTA_DETALLE = "DROP TABLE IF EXISTS " + SQLITE_TABLE_Histo_Venta_Detalle;
 
@@ -97,7 +107,7 @@ public class DbAdapter_Histo_Venta_Detalle {
             String comprobante, String nom_estab, String nom_producto, int cantidad, double importe,
             String fecha, String hora, int valor_unidad, int categoria_ope, int forma_ope,
             int cantidad_ope, double importe_ope, String fecha_ope, String hora_ope, String lote,
-            String lugar_registro, int estado, int id_agente){
+            String lugar_registro, int estado, int id_agente,int cantidad_ope_dev,int categoria_ope_dev,double importe_ope_dev,String fecha_ope_dev,String hora_ope_dev){
 
         ContentValues initialValues = new ContentValues();
         initialValues.put(HD_id_detalle,id_detalle);
@@ -124,6 +134,11 @@ public class DbAdapter_Histo_Venta_Detalle {
         initialValues.put(HD_lugar_registro,lugar_registro);
         initialValues.put(HD_estado,estado);
         initialValues.put(HD_id_agente,id_agente);
+        initialValues.put(HD_cantidad_ope_dev,cantidad_ope_dev);
+        initialValues.put(HD_categoria_ope_dev,categoria_ope_dev);
+        initialValues.put(HD_importe_ope_dev,importe_ope_dev);
+        initialValues.put(HD_fecha_ope_dev,fecha_ope_dev);
+        initialValues.put(HD_hora_ope_dev,hora_ope_dev);
 
         return mDb.insert(SQLITE_TABLE_Histo_Venta_Detalle, null, initialValues);
     }
@@ -320,9 +335,9 @@ public class DbAdapter_Histo_Venta_Detalle {
 
     public void insertSomeHistoVentaDetalle() {
 
-        createHistoVentaDetalle( 1, 1, 1, 1, 1, 1, "80087/FV030-1858/2014-12-05/2.5", "TIENDA NA", "Pan Integral Mediano Union", 100, 2.0,"2014-11-12", "08:10:00", 1, 1, 1, 1, 5.0, "", "", "", "", 1, 1);
-        createHistoVentaDetalle( 2, 1, 1, 2, 0, 1, "80087/FV031-1858/2014-12-08/2.5", "TIENDA NA", "Mega Galleta Integral de kiwicha", 100, 2.0,"2014-11-12", "08:10:00", 1, 1, 1, 1, 0.0, "", "", "", "", 1, 1);
-        createHistoVentaDetalle( 3, 1, 1, 3, 0, 2, "80087/FV032-1858/2014-12-05/2.5", "TIENDA NA", "Agua de Mesa Union", 92, 4.0,"2014-11-05", "08:10:00", 1, 1, 1, 1, 0.0, "", "", "", "", 1, 1);
+        createHistoVentaDetalle( 1, 1, 1, 1, 0, 1, "80087/FV030-1858/2014-12-05/2.5", "TIENDA NA", "Pan Integral Mediano Union", 5, 2.0,"2014-11-12", "08:10:00", 1, 0, 1, 0, 5.0, "", "", "", "", 1, 1,0,0,0.0,"","");
+        createHistoVentaDetalle( 2, 1, 1, 1, 0, 1, "80087/FV031-1858/2014-12-08/2.5", "TIENDA NA", "Pan Integral Mediano Union", 5, 2.0,"2014-11-12", "08:10:00", 1, 0, 1, 0, 0.0, "", "", "", "", 1, 1,0,0,0.0,"","");
+        createHistoVentaDetalle( 3, 1, 1, 3, 0, 2, "80087/FV032-1858/2014-12-05/2.5", "TIENDA NA", "Agua de Mesa Union", 5, 4.0,"2014-11-05", "08:10:00", 1, 0, 1, 0, 0.0, "", "", "", "", 1, 1,0,0,0.0,"","");
 
     }
 

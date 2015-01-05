@@ -124,7 +124,7 @@
             android:label="@string/app_name" >
         </activity>
         <activity
-            android:name=".Vistas.mostrar_can_dev_facturas"
+            android:name=".Vistas.Mostrar_can_dev_facturas"
             android:label="@string/app_name" >
         </activity>
     </application>
