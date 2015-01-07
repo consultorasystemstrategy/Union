@@ -97,7 +97,7 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
         Cursor cr = dbHelperCanjes_Dev.listaFacturasByProducto(producto, idAgente, idEstablec);
 
         if (cr.moveToFirst()) {
-            if (cr.getString(17).equals(cr.getString(10)) || cr.getString(10).equals("") || cr.getString(1).equals("")) {
+            if ( cr.getString(10)==null || cr.getString(10).equals("")  ) {
 
                 String[] noEncontrado = {"Producto No encontrado:", "Detalle: " + nomProducto + "", "¿Ingresar Comprobante de Venta?", "Yes", "No"};
                 ArrayAdapter adapter = new ArrayAdapter(getApplicationContext(), android.R.layout.simple_dropdown_item_1line, noEncontrado);
@@ -163,8 +163,7 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
     private void mostrar_alertdialog_spinners_regitrados(Cursor cursor) {
 
         cantidadV = cursor.getInt(10);
-        devueltoV = cursor.getInt(17);
-        cursor.moveToFirst();
+        devueltoV = cursor.getInt(17)+cursor.getInt(25);
         String cantidad = cursor.getString(10);
         final String idDetalle = cursor.getString(1);
         String comprobante = cursor.getString(7);
@@ -297,7 +296,7 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
         }
         if (tipo_op.equals("Canje")) {
             tipo_op = "1";
-            boolean estado = dbHelperCanjes_Dev.update_Canj_dev(tipo_op, categoria_op, cantidad, importe, idDetalle,devuelto,"st_in_canjes",idProducto,ctx);
+            boolean estado = dbHelperCanjes_Dev.update_Canj(tipo_op, categoria_op, cantidad, importe, idDetalle,devuelto,"st_in_canjes",idProducto,ctx);
             if (estado) {
                 confirmar();
 
@@ -308,7 +307,7 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
         }
         if (tipo_op.equals("Devolucion")) {
             tipo_op = "2";
-            boolean estado = dbHelperCanjes_Dev.update_Canj_dev(tipo_op, categoria_op, cantidad, importe, idDetalle,devuelto,"st_in_devoluciones",idProducto,ctx);
+            boolean estado = dbHelperCanjes_Dev.update_dev(tipo_op, categoria_op, cantidad, importe, idDetalle,devuelto,"st_in_devoluciones",idProducto,ctx);
             if (estado) {
                 confirmar();
 
@@ -489,12 +488,13 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
         }
         //Obteniendo el nombre del establecimiento, categoria.
 
-        String precio = dbHelperCanjes_Dev.obtenerPrecio(idProducto, idCategoriaEstablec, ctx);
+        String precio = dbHelperCanjes_Dev.obtenerPrecio(idProducto, idCategoriaEstablec, ctx,idEstablec);
+        double importe = Double.parseDouble(precio);
 
         //Evaluando tipo de Operacion:
         if (tipo_op.equals("Canje")) {
             idTipo_Op = 1;
-            boolean estado = dbHelperCanjes_Dev.insertarCanjes_Dev(idEstablec, idProducto, idTipo_Op, compro, nomEstablecimiento, nomProducto, idCat_tipo, cantidad2, precio, lote, idAgente);
+            boolean estado = dbHelperCanjes_Dev.insertarCanjes(idEstablec, idProducto, idTipo_Op, compro, nomEstablecimiento, nomProducto, idCat_tipo, cantidad2, importe*cantidad2, lote, idAgente);
             if (estado) {
                 confirmar();
             } else {
@@ -503,7 +503,7 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
         }
         if (tipo_op.equals("Devolucion")) {
             idTipo_Op = 2;
-            boolean estado = dbHelperCanjes_Dev.insertarCanjes_Dev(idEstablec, idProducto, idTipo_Op, compro, nomEstablecimiento, nomProducto, idCat_tipo, cantidad2, precio, lote, idAgente);
+            boolean estado = dbHelperCanjes_Dev.insertar_Dev(idEstablec, idProducto, idTipo_Op, compro, nomEstablecimiento, nomProducto, idCat_tipo, cantidad2, importe*cantidad2, lote, idAgente);
             if (estado) {
                 confirmar();
             } else {

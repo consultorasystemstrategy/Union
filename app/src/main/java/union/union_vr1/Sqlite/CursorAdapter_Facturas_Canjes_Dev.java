@@ -40,14 +40,14 @@ public class CursorAdapter_Facturas_Canjes_Dev extends CursorAdapter {
         layout_791.height = WindowManager.LayoutParams.WRAP_CONTENT;
 
         textView.setLayoutParams(layout_791);
-        if (cursor.moveToFirst()) {
+
                 String factura = "";
                 String fecha = "";
                 String monto = "";
                 String comprobante = cursor.getString(7);
                 String producto = cursor.getString(9);
                 String cantidad = cursor.getString(10);
-                String devuelto = cursor.getString(17);
+                int devuelto = cursor.getInt(17)+cursor.getInt(25);
                 //Cortar el String Comprobante
                 System.out.println("con datos");
                 String[] datos = comprobante.split("/");
@@ -60,7 +60,7 @@ public class CursorAdapter_Facturas_Canjes_Dev extends CursorAdapter {
 
                     String textoAdpater = "Factura: " + factura + ","
                             + "\nProducto: " + producto + ","
-                            + "\nCantidad: " + cantidad + "    Devuelto: " + devuelto + " "
+                            + "\nCantidad: " + cantidad + "    Dev/Canj: " + devuelto + " "
                             + "\nMonto: " + monto + ""
                             + "\nFecha: " + fecha + "";
 
@@ -79,7 +79,7 @@ public class CursorAdapter_Facturas_Canjes_Dev extends CursorAdapter {
                     textView.setText(textoAdpater);
                 }
                 //-------
-            }
+
 
 
 

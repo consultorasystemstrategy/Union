@@ -12,8 +12,8 @@ import android.widget.TextView;
 /**
  * Created by Usuario on 29/12/2014.
  */
-public class CursorAdapterFacturas extends CursorAdapter {
-    public CursorAdapterFacturas(Context context, Cursor c) {
+public class CursorAdapterFacturas_dev extends CursorAdapter {
+    public CursorAdapterFacturas_dev(Context context, Cursor c) {
         super(context, c);
     }
 
@@ -35,10 +35,10 @@ public class CursorAdapterFacturas extends CursorAdapter {
         textView.setLayoutParams(layout_791);
 
         String producto = cursor.getString(9);
-        String cantidad = cursor.getString(17);
-        String precio = cursor.getString(18);
-        String acc = cursor.getString(5);
-        String mot = cursor.getString(15);
+        String cantidad = cursor.getString(25);
+        String precio = cursor.getString(27);
+        String acc = "2";
+        String mot = cursor.getString(26);
 
         if (acc.equals("1")) {
             acc = "Canje";
