@@ -24,10 +24,13 @@ public class DbAdapter_Comprob_Venta {
     public static final String CV_base_imp = "cv_re_base_imp";
     public static final String CV_igv = "cv_re_igv";
     public static final String CV_total = "cv_re_total";
+
     public static final String CV_fecha_doc = "cv_te_fecha_doc";
     public static final String CV_hora_doc = "cv_te_hora_doc";
     public static final String CV_estado_comp = "cv_in_estado_comp";
+
     public static final String CV_estado_conexion = "cv_in_estado_conexion";
+
     public static final String CV_id_agente = "cv_in_id_agente";
 
     public static final String TAG = "Comprob_Venta";

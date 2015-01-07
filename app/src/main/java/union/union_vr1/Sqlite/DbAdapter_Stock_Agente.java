@@ -172,7 +172,7 @@ public class DbAdapter_Stock_Agente {
                 ST_id_producto+"=?",new String[]{""+id_producto});
     }
 
-    public void updateStockAgenteCantidad(int id_producto, int cantidadAnulada, Context context){
+    public void updateStockAgenteCantidad(int id_producto, int cantidadAnulada){
         Cursor mCursor = null;
         mCursor = mDb.query(true, SQLITE_TABLE_Stock_Agente, new String[] {ST_id_producto,
                         ST_final, ST_disponible, ST_ventas, ST_fisico},

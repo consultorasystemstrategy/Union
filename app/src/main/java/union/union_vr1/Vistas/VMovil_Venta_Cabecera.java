@@ -457,7 +457,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
             monto_total += importe;
 
             comprobVentaDetalle = dbHelper_Comprob_Venta_Detalle.createComprobVentaDetalle(id_comprobante, id_producto, nombre_producto, cantidad, importe,0, precio_unitario, promedio_anterior, devuelto,0);
-
+            dbHelper_Stock_Agente.updateStockAgenteCantidad(id_producto,-cantidad);
 
             datosConcatenados+="Producto  "+ nombre_producto + "Vendido satisfactoriamente con id : "+ comprobVentaDetalle;
         }

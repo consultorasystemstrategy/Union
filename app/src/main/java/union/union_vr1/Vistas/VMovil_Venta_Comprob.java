@@ -312,7 +312,7 @@ public class VMovil_Venta_Comprob extends Activity {
                         id_producto = cursorComprobanteVentaDetalle.getInt(cursorComprobanteVentaDetalle.getColumnIndex(DbAdapter_Comprob_Venta_Detalle.CD_id_producto));
                         cantidad = cursorComprobanteVentaDetalle.getInt(cursorComprobanteVentaDetalle.getColumnIndex(DbAdapter_Comprob_Venta_Detalle.CD_cantidad));
 
-                        dbHelper_Stock_Agente.updateStockAgenteCantidad(id_producto, cantidad, getApplicationContext());
+                        dbHelper_Stock_Agente.updateStockAgenteCantidad(id_producto, cantidad);
 
                     } while (cursorComprobanteVentaDetalle.moveToNext());
                 } else {
