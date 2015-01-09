@@ -11,8 +11,10 @@ import union.union_vr1.Conexion.DbHelper;
 
 public class DbAdapter_Comprob_Venta_Detalle {
 
+    //ESTOS CAMPOS NOS OBTIENE EL PROCEDIMIENTO
     public static final String CD_comp_detalle = "_id";
     public static final String CD_id_comprob = "cd_in_id_comprob";
+    //FALTA EL COMPROBANTE DE VENTA DETALLE ID
     public static final String CD_id_producto = "cd_in_id_producto";
     public static final String CD_nom_producto = "cd_te_nom_producto";
     public static final String CD_cantidad = "cd_in_cantidad";
@@ -21,6 +23,7 @@ public class DbAdapter_Comprob_Venta_Detalle {
     public static final String CD_precio_unit = "cd_re_precio_unit";
     public static final String CD_prom_anterior = "cd_te_prom_anterior";
     public static final String CD_devuelto = "cd_te_devuelto";
+    //este campo es redundante[lo mismo que precio unitario (preguntar)]
     public static final String CD_valor_unidad = "cd_in_valor_unidad";
 
     public static final String TAG = "Comprob_Venta_Detalle";

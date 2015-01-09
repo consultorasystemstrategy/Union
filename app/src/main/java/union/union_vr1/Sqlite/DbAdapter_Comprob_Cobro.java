@@ -11,6 +11,9 @@ import union.union_vr1.Conexion.DbHelper;
 
 public class DbAdapter_Comprob_Cobro {
 
+    //LLENAMOS  TODOS ESTOS CAMPOS AL REALIZAR UNA VENTA AL CRÉDITO
+
+    //ESTOS CAMPOS OBTENEMOS DEL PROCEDIMIENTO
     public static final String CC_id_cob_historial = "_id";
     public static final String CC_id_establec = "cc_in_id_establec";
     public static final String CC_id_comprob = "cc_in_id_comprob";
@@ -20,10 +23,13 @@ public class DbAdapter_Comprob_Cobro {
     public static final String CC_doc = "cc_te_doc";
     public static final String CC_fecha_programada = "cc_te_fecha_programada";
     public static final String CC_monto_a_pagar = "cc_re_monto_a_pagar";
+
+
+    //ESTOS CAMPOS ACTUALIZAMOS AL REALIZAR UN COBRO
+    public static final String CC_estado_cobro = "cc_in_estado_cobro";
     public static final String CC_fecha_cobro = "cc_te_fecha_cobro";
     public static final String CC_hora_cobro = "cc_te_hora_cobro";
     public static final String CC_monto_cobrado = "cc_re_monto_cobrado";
-    public static final String CC_estado_cobro = "cc_in_estado_cobro";
     public static final String CC_id_agente = "cc_in_id_agente";
     public static final String CC_id_forma_cobro = "cc_id_forma_cobro";
     public static final String CC_lugar_registro = "cc_lugar_registro";

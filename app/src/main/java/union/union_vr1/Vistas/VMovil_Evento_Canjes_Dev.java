@@ -150,7 +150,7 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity {
                 @Override
                 public void onClick(View view) {
 
-                    Intent i = new Intent(getApplicationContext(), Mostrar_can_dev_facturas.class);
+                    Intent i = new Intent(getApplicationContext(), mostrar_can_dev_facturas.class);
                     i.putExtra("idEstablec", establec);
                     i.putExtra("idAgente", idAgente);
                     startActivity(i);
@@ -177,7 +177,7 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity {
             btn_mostrar_guias.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent i = new Intent(getApplicationContext(), Mostrar_can_dev_facturas.class);
+                    Intent i = new Intent(getApplicationContext(), mostrar_can_dev_facturas.class);
                     i.putExtra("idEstablec", establec);
                     i.putExtra("idAgente", idAgente);
                     startActivity(i);

@@ -13,6 +13,7 @@ public class DbAdapter_Comprob_Venta {
 
     public static final String CV_id_comprob = "_id";
 
+    //PROCEDIMIENTOS NOS DA ESTOS CAMPOS
     public static final String CV_id_comp = "cv_in_id_comp";
     public static final String CV_id_establec = "cv_in_id_establec";
     public static final String CV_id_tipo_doc = "cv_in_id_tipo_doc";
@@ -24,14 +25,16 @@ public class DbAdapter_Comprob_Venta {
     public static final String CV_base_imp = "cv_re_base_imp";
     public static final String CV_igv = "cv_re_igv";
     public static final String CV_total = "cv_re_total";
+    public static final String CV_id_agente = "cv_in_id_agente";
 
+    //FALTA OBTENER ESTAS COLUMNAS
     public static final String CV_fecha_doc = "cv_te_fecha_doc";
     public static final String CV_hora_doc = "cv_te_hora_doc";
+        //ACTUALIZAMOS ESTE CAMPO[CUANDO UN CLIENTE NOS DICE QUE QUIERE DEVOLVER UN PRODUCTO]
     public static final String CV_estado_comp = "cv_in_estado_comp";
 
     public static final String CV_estado_conexion = "cv_in_estado_conexion";
 
-    public static final String CV_id_agente = "cv_in_id_agente";
 
     public static final String TAG = "Comprob_Venta";
     private DbHelper mDbHelper;

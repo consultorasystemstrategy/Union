@@ -11,6 +11,7 @@ import union.union_vr1.Conexion.DbHelper;
 
 public class DbAdapter_Agente {
 
+    //LOS PROCEDIMIENTOS TRAEN ESTOS CAMPOS
     public static final String AG_id_agente = "_id";
     public static final String AG_id_agente_venta = "ag_in_id_agente_venta";
     public static final String AG_id_empresa = "ag_in_id_empresa";
@@ -25,10 +26,14 @@ public class DbAdapter_Agente {
     public static final String AG_nro_bodegas = "ag_in_nro_bodegas";
     public static final String AG_serie_boleta = "ag_te_serie_boleta";
     public static final String AG_serie_factura = "ag_te_serie_factura";
-    public static final String AG_serie_rrpp = "ag_te_serie_rrpp";
     public static final String AG_correlativo_boleta = "ag_in_correlativo_boleta";
     public static final String AG_correlativo_factura = "ag_in_correlativo_factura";
+
+    //FALTA TRAER ESTOS CAMPOS
     public static final String AG_correlativo_rrpp = "ag_in_correlativo_rrpp";
+    public static final String AG_serie_rrpp = "ag_te_serie_rrpp";
+
+
 
     public static final String TAG = "Agente";
     private DbHelper mDbHelper;

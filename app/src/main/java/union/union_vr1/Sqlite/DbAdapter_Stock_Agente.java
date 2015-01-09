@@ -12,7 +12,11 @@ import union.union_vr1.Conexion.DbHelper;
 
 public class DbAdapter_Stock_Agente {
 
+
+    // EL PROCEDIMIENTO NOS DA ESTOS DATOS
     public static final String ST_id_stock_agente = "_id";
+    //FALTA UN ID STOCK AGENTE PROPIO
+    //CUANDO REALIZAMOS UNA VENTA ACTUALIZAMOS EL STOCK DISPONIBLE, FINALL, FISICO, ETC
     public static final String ST_id_producto = "st_in_id_producto";
     public static final String ST_nombre = "st_te_nombre";
     public static final String ST_codigo = "st_te_codigo";
@@ -20,13 +24,20 @@ public class DbAdapter_Stock_Agente {
     public static final String ST_inicial = "st_in_inicial";
     public static final String ST_final = "st_in_final";
     public static final String ST_disponible = "st_in_disponible";
+    public static final String ST_id_agente = "st_in_id_agente";
+
+    //EL PROCEDIMIENTO NO TRAE ESTOS DATOS[MODIFICARLO]
+    // 2 OPCIONES
+    //1 TRAE ESTOS DATOS TAMBIÉN
+    //2 ELIMINAMOS ESTOS CAMPOS DE ESTE TABLA
     public static final String ST_ventas = "st_in_ventas";
     public static final String ST_canjes = "st_in_canjes";
     public static final String ST_devoluciones = "st_in_devoluciones";
     public static final String ST_buenos = "st_in_buenos";
     public static final String ST_malos = "st_in_malos";
     public static final String ST_fisico = "st_in_fisico";
-    public static final String ST_id_agente = "st_in_id_agente";
+
+
 
     public static final String TAG = "Stock_Agente";
     private DbHelper mDbHelper;

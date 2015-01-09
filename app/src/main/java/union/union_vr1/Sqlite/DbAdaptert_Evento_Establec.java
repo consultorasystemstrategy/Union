@@ -21,11 +21,19 @@ public class DbAdaptert_Evento_Establec {
     public static final String EE_orden = "ee_in_orden";
     public static final String EE_surtido_stock_ant = "ee_in_surtido_stock_ant";
     public static final String EE_surtido_venta_ant = "ee_in_surtido_venta_ant";
-    public static final String EE_monto_credito = "ee_re_monto_credito";
     public static final String EE_dias_credito = "ee_in_dias_credito";
-    public static final String EE_id_estado_no_atencion = "ee_in_id_estado_no_atencion";
     public static final String EE_id_agente = "ee_in_id_agente";
+
+
+    //FALTA OBTENER ESTE CAMPO
+    public static final String EE_monto_credito = "ee_re_monto_credito";
+
+    //ESTOS CAMPOS LOS RELLENAMOS NOSOTROS[ACTUALIZAMOS]
+    public static final String EE_id_estado_no_atencion = "ee_in_id_estado_no_atencion";
     public static final String EE_estado_no_atencion_comentario ="ee_in_estado_no_atencion_comentario";
+    //OBTIENE DE MÁS 2 CAMPOS[SON LOS PARÁMETROS PARA OBTENER LOS ESTABLECIMIENTOS POR RUTA]
+    //CAJA LIQUIDACIÓN
+    //FECHA
 
     public static final String TAG = "Evento_Establec";
     private DbHelper mDbHelper;

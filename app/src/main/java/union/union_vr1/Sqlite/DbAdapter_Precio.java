@@ -11,16 +11,24 @@ import union.union_vr1.Conexion.DbHelper;
 
 public class DbAdapter_Precio {
 
+
+    //PROCEDIMIENTO TRAE ESTOS CAMPOS
     public static final String PR_id_precio = "_id";
     public static final String PR_id_producto = "pr_in_id_producto";
     public static final String PR_id_cat_est = "pr_in_id_cat_estt";
     public static final String PR_costo_venta = "pr_re_costo_venta";
     public static final String PR_precio_unit = "pr_re_precio_unit";
-    public static final String PR_valor_unidad = "pr_in_valor_unidad";
-    public static final String PR_id_agente = "pr_in_id_agente";
     public static final String PR_desde = "pr_in_desde";
     public static final String PR_hasta = "pr_in_hasta";
+
+
+
+    //FALTA TRAER ESTOS CAMPOS
     public static final String PR_nombreProducto = "pr_in_nombre";
+    //este campo me parece redundante
+    public static final String PR_valor_unidad = "pr_in_valor_unidad";
+    //Este campo me parece innecesario [El precio no depende del id agente]]
+    public static final String PR_id_agente = "pr_in_id_agente";
 
     public static final String TAG = "Precio";
     private DbHelper mDbHelper;
