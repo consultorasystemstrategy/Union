@@ -187,30 +187,23 @@ public class mostrar_can_dev_facturas extends TabActivity {
                 .setCancelable(false)
                 .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        if (op.equals("Canjes")) {
-                            boolean estado = dbHelper_CanDev.guardarCambios(operacion, idEstablec);
-                            if (estado) {
-                                Toast.makeText(getApplicationContext(), "Exito", Toast.LENGTH_SHORT).show();
-                                Intent in = new Intent(getApplicationContext(), VMovil_Evento_Canjes_Dev.class);
-                                in.putExtra("idEstabX", idEstablec);
-                                in.putExtra("idAgente", idAgente);
-                                startActivity(in);
-                            } else {
-                                Toast.makeText(getApplicationContext(), "Ocurrio un Error", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                        if (op.equals("Devoluciones")) {
+                        if (operacion == 2) {
                             boolean estado = dbHelper_CanDev.guardarCambios_dev(operacion, idEstablec);
                             if (estado) {
-                                Toast.makeText(getApplicationContext(), "Exito", Toast.LENGTH_SHORT).show();
-                                Intent in = new Intent(getApplicationContext(), VMovil_Evento_Canjes_Dev.class);
-                                in.putExtra("idEstabX", idEstablec);
-                                in.putExtra("idAgente", idAgente);
-                                startActivity(in);
+                                exito();
                             } else {
                                 Toast.makeText(getApplicationContext(), "Ocurrio un Error", Toast.LENGTH_SHORT).show();
                             }
                         }
+                        if (operacion == 1) {
+                            boolean estado = dbHelper_CanDev.guardarCambios(operacion, idEstablec);
+                            if (estado) {
+                                exito();
+                            } else {
+                                Toast.makeText(getApplicationContext(), "Ocurrio un Error", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
                     }
 
                 })
@@ -232,26 +225,19 @@ public class mostrar_can_dev_facturas extends TabActivity {
                 .setCancelable(false)
                 .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        if (op.equals("Canjes")) {
+                        if (tipo == 1) {
                             boolean estado = dbHelper_CanDev.cancelarCambios(tipo, idEstablec, columna);
                             if (estado) {
-                                Intent in = new Intent(getApplicationContext(), VMovil_Evento_Canjes_Dev.class);
-                                in.putExtra("idEstabX", idEstablec);
-                                in.putExtra("idAgente", idAgente);
-                                startActivity(in);
-                                Toast.makeText(getApplicationContext(), "Cambios Borrados", Toast.LENGTH_SHORT).show();
+
+                                exito();
                             } else {
                                 Toast.makeText(getApplicationContext(), "Ocurrio un Error", Toast.LENGTH_SHORT).show();
                             }
                         }
-                        if (op.equals("Devoluciones")) {
+                        if (tipo == 2) {
                             boolean estado = dbHelper_CanDev.cancelarCambios_dev(tipo, idEstablec, columna);
                             if (estado) {
-                                Intent in = new Intent(getApplicationContext(), VMovil_Evento_Canjes_Dev.class);
-                                in.putExtra("idEstabX", idEstablec);
-                                in.putExtra("idAgente", idAgente);
-                                startActivity(in);
-                                Toast.makeText(getApplicationContext(), "Cambios Borrados", Toast.LENGTH_SHORT).show();
+                                exito();
                             } else {
                                 Toast.makeText(getApplicationContext(), "Ocurrio un Error", Toast.LENGTH_SHORT).show();
                             }
@@ -352,12 +338,8 @@ public class mostrar_can_dev_facturas extends TabActivity {
                         startActivity(in);
                     }
 
-                })
-                .setNegativeButton("Quedarme", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
                 });
+
 
         AlertDialog alertDialog = alertDialogBuilder.create();
 

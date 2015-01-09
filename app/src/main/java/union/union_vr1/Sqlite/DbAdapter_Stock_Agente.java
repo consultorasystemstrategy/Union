@@ -341,7 +341,7 @@ public class DbAdapter_Stock_Agente {
 
     public void insertSomeStockAgente() {
 
-        createStockAgente( 1, "Producto1", "1A", "11", 10, 10, 10, 0, 0, 0, 0, 0, 10, 1);
+        createStockAgente( 1, "Producto1", "1A", "11", 1, 10, 10, 0, 0, 0, 0, 0, 10, 1);
         createStockAgente( 2, "Producto2", "2A", "22", 20, 20, 20, 0, 0, 0, 0, 0, 20, 1);
         createStockAgente( 3, "Producto3", "3A", "33", 30, 30, 30, 0, 0, 0, 0, 0, 30, 1);
         createStockAgente( 4, "Producto4", "4A", "44", 40, 40, 40, 0, 0, 0, 0, 0, 40, 1);

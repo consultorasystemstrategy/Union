@@ -36,11 +36,7 @@
         <activity
             android:name=".Vistas.VMovil_Evento_Establec"
             android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".Vistas.VMovil_Venta_Credito"
@@ -124,7 +120,7 @@
             android:label="@string/app_name" >
         </activity>
         <activity
-            android:name=".Vistas.Mostrar_can_dev_facturas"
+            android:name=".Vistas.mostrar_can_dev_facturas"
             android:label="@string/app_name" >
         </activity>
     </application>

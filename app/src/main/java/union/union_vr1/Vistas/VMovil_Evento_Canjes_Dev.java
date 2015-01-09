@@ -8,7 +8,9 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -43,7 +45,7 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vmovil__evento__canjes__dev);
-        ctx=this;
+        ctx = this;
         //-------------------------------------------------------
         dbHelper_Stock = new DbAdapter_Stock_Agente(getApplication());
         dbHelper_Stock.open();
@@ -177,13 +179,7 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity {
             btn_mostrar_guias.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent i = new Intent(getApplicationContext(), mostrar_can_dev_facturas.class);
-                    i.putExtra("idEstablec", establec);
-                    i.putExtra("idAgente", idAgente);
-                    startActivity(i);
-                    finish();
-
-
+                    back();
                 }
             });
         } else {
@@ -191,25 +187,55 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity {
 
         }
     }
+    public void back(){
+        Intent i = new Intent(getApplicationContext(), mostrar_can_dev_facturas.class);
+        i.putExtra("idEstablec", establec);
+        i.putExtra("idAgente", idAgente);
+        this.startActivity(i);
+        this.finish();
+    }
 
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-
+        super.onCreateOptionsMenu(menu);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.vmovil__facturas__canjes__dev, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()) {
+            case R.id.retrocederActivity:
+             regresar();
+                break;
         }
-        return super.onOptionsItemSelected(item);
+        return true;
+    }
+
+    private void regresar(){
+        Intent i = new Intent(ctx, VMovil_Evento_Establec.class);
+        i.putExtra("idEstab", establec);
+        i.putExtra("idAgente", idAgente);
+        this.startActivity(i);
+        this.finish();
+    }
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        // TODO Auto-generated method stub
+
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_BACK:
+
+                regresar();
+
+                return true;
+
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }
+
+

@@ -116,6 +116,7 @@ public class VMovil_Venta_Cabecera_AgregarProductos extends Activity implements 
 
         };
 
+
         // create the adapter using the cursor pointing to the desired data
         //as well as the layout information
         SimpleCursorAdapter simpleCursorAdapter = new SimpleCursorAdapter(

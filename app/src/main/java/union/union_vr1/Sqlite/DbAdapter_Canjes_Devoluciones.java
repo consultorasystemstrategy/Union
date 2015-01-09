@@ -32,7 +32,7 @@ public class DbAdapter_Canjes_Devoluciones {
     }
 
     public Cursor listaFacturasByProducto(int idProducto, int idAgente, String idEstablec) {
-        Cursor cr = mDb.rawQuery("select * from m_histo_venta_detalle where hd_in_id_producto=" + idProducto + " and hd_in_id_agente=" + idAgente + " and hd_in_id_establec='" + idEstablec + "' and hd_in_estado=1", null);
+        Cursor cr = mDb.rawQuery("select * from m_histo_venta_detalle where hd_in_id_producto=" + idProducto + " and hd_in_id_agente=" + idAgente + " and hd_in_id_establec='" + idEstablec + "' and hd_in_estado=1 and hd_in_id_detalle !=''", null);
         if (cr != null) {
             cr.moveToFirst();
         } else {
@@ -44,8 +44,8 @@ public class DbAdapter_Canjes_Devoluciones {
     public boolean insertarCanjes(String idEstablec, int idProducto, int idtipoOpe, String comprobante, String nomEstablec, String nomProducto, int idCategoria, int cantidad, double importe, String lote, int idAgente) {
         boolean estado = false;
         try {
-            mDb.execSQL("insert into m_histo_venta_detalle values ( null,'', '', '" + idEstablec + "','" + idProducto + "','" + idtipoOpe + "','','" + comprobante + "', '" + nomEstablec + "', '" + nomProducto + "', '','', '', '', '', '" + idCategoria + "','','" + cantidad+ "','" + importe + "','" + getDatePhone() + "','pendiente','" + lote + "','','1','" + idAgente + "',0,0,0.0,'','');");
-            Cursor cr = mDb.rawQuery("select * from m_stock_agente where st_in_id_producto='"+idProducto+"'", null);
+            mDb.execSQL("insert into m_histo_venta_detalle values (null,'', '', '" + idEstablec + "','" + idProducto + "','" + idtipoOpe + "','','" + comprobante + "', '" + nomEstablec + "', '" + nomProducto + "', '','', '', '', '', '" + idCategoria + "','','" + cantidad + "','" + importe + "','" + getDatePhone() + "','pendiente','" + lote + "','','1','" + idAgente + "',0,0,0.0,'','');");
+            Cursor cr = mDb.rawQuery("select * from m_stock_agente where st_in_id_producto='" + idProducto + "'", null);
             cr.moveToFirst();
             int devol_canjes = cr.getInt(cr.getColumnIndex("st_in_canjes"));
             int total = cantidad + devol_canjes;
@@ -59,12 +59,13 @@ public class DbAdapter_Canjes_Devoluciones {
 
         return estado;
     }
+
     public boolean insertar_Dev(String idEstablec, int idProducto, int idtipoOpe, String comprobante, String nomEstablec, String nomProducto, int idCategoria, int cantidad_dev, double importe, String lote, int idAgente) {
         boolean estado = false;
         try {
-            mDb.execSQL("insert into m_histo_venta_detalle (_id,hd_in_id_establec,hd_in_id_producto,hd_te_comprobante,hd_te_nom_estab,hd_te_nom_producto,hd_te_lote,hd_in_estado,hd_in_id_agente,hd_in_cantidad_ope_dev,hd_in_categoria_ope_dev,hd_re_importe_ope_dev,hg_te_fecha_ope_dev,hd_te_hora_ope_dev) " +
-                                                    "values(null,'"+idEstablec+"','"+idProducto+"','"+comprobante+"','"+nomEstablec+"','"+nomProducto+"','"+lote+"','1','"+idAgente+"','"+cantidad_dev+"','"+idCategoria+"','"+importe+"','"+getDatePhone()+"','pendiente') ");
-            Cursor cr = mDb.rawQuery("select * from m_stock_agente where st_in_id_producto='"+idProducto+"'", null);
+            mDb.execSQL("insert into m_histo_venta_detalle (_id,hd_in_id_detalle,hd_in_id_establec,hd_in_id_producto,hd_te_comprobante,hd_te_nom_estab,hd_te_nom_producto,hd_te_lote,hd_in_estado,hd_in_id_agente,hd_in_cantidad_ope_dev,hd_in_categoria_ope_dev,hd_re_importe_ope_dev,hg_te_fecha_ope_dev,hd_te_hora_ope_dev) " +
+                    "values(null,'','" + idEstablec + "','" + idProducto + "','" + comprobante + "','" + nomEstablec + "','" + nomProducto + "','" + lote + "','1','" + idAgente + "','" + cantidad_dev + "','" + idCategoria + "','" + importe + "','" + getDatePhone() + "','pendiente') ");
+            Cursor cr = mDb.rawQuery("select * from m_stock_agente where st_in_id_producto='" + idProducto + "'", null);
             cr.moveToFirst();
             int devol_canjes = cr.getInt(cr.getColumnIndex("st_in_devoluciones"));
             int total = cantidad_dev + devol_canjes;
@@ -80,7 +81,7 @@ public class DbAdapter_Canjes_Devoluciones {
     }
 
     public Cursor obtenerStock(int id, int idProducto) {
-        Cursor cr = mDb.rawQuery("select *,st_in_inicial- (st_in_canjes+st_in_devoluciones) as 'disponible' from m_stock_agente where st_in_id_producto='" + idProducto + "' and st_in_id_agente='" + id + "'", null);
+        Cursor cr = mDb.rawQuery("select *,st_in_disponible- (st_in_canjes+st_in_devoluciones) as 'disponible' from m_stock_agente where st_in_id_producto='" + idProducto + "' and st_in_id_agente='" + id + "'", null);
         return cr;
     }
 
@@ -90,9 +91,9 @@ public class DbAdapter_Canjes_Devoluciones {
         return cr;
     }
 
-    public String obtenerPrecio(int idProducto, int idCategoriEstablec, Context ctx,String idesta) {
-        if(idCategoriEstablec==0){
-            Cursor ce = mDb.rawQuery("select _id, ee_in_id_cat_est from m_evento_establec where ee_in_id_establec='"+idesta+"' ",null);
+    public String obtenerPrecio(int idProducto, int idCategoriEstablec, Context ctx, String idesta) {
+        if (idCategoriEstablec == 0) {
+            Cursor ce = mDb.rawQuery("select _id, ee_in_id_cat_est from m_evento_establec where ee_in_id_establec='" + idesta + "' ", null);
             ce.moveToFirst();
             idCategoriEstablec = ce.getInt(1);
         }
@@ -101,23 +102,23 @@ public class DbAdapter_Canjes_Devoluciones {
         if (cr.moveToFirst()) {
             precio = cr.getString(1);
         } else {
-            System.out.println(precio+idProducto+idCategoriEstablec);
+            System.out.println(precio + idProducto + idCategoriEstablec);
         }
         return precio;
 
     }
 
-    public boolean update_Canj(String tipo_op, String categoria_op, String cantidad, String importe, String idDetalle, int devuelto, String columna, int idProducto, Context tx) {
+    public boolean update_Canj(String tipo_op, String categoria_op, String cantidad, String importe, String idDetalle, int devuelto, int idProducto, Context tx) {
         int can = devuelto + Integer.parseInt(cantidad);
         boolean estado = false;
         try {
 
             mDb.execSQL("update m_histo_venta_detalle set hd_in_id_tipoper='" + tipo_op + "',hd_in_categoria_ope='" + categoria_op + "',hd_in_cantidad_ope='" + can + "',hd_re_importe_ope='" + importe + "',hg_te_fecha_ope='" + getDatePhone() + "',hd_te_hora_ope='pendiente' where hd_in_id_detalle='" + idDetalle + "';");
-            Cursor cr = mDb.rawQuery("select * from m_stock_agente where st_in_id_producto='"+idProducto+"'", null);
+            Cursor cr = mDb.rawQuery("select * from m_stock_agente where st_in_id_producto='" + idProducto + "'", null);
             cr.moveToFirst();
-            int devol_canjes = cr.getInt(cr.getColumnIndex(columna));
+            int devol_canjes = cr.getInt(cr.getColumnIndex("st_in_canjes"));
             int total = Integer.parseInt(cantidad) + devol_canjes;
-            mDb.execSQL("update m_stock_agente set " + columna + "='" + total + "' where st_in_id_producto='" + idProducto + "'; ");
+            mDb.execSQL("update m_stock_agente set st_in_canjes='" + total + "' where st_in_id_producto='" + idProducto + "'; ");
             estado = true;
 
         } catch (android.database.SQLException e) {
@@ -127,18 +128,18 @@ public class DbAdapter_Canjes_Devoluciones {
 
         return estado;
     }
-    public boolean update_dev(String tipo_op, String categoria_op, String cantidad, String importe, String idDetalle, int devuelto, String columna, int idProducto, Context tx) {
+
+    public boolean update_dev(String tipo_op, String categoria_op, String cantidad, String importe, String idDetalle, int devuelto, int idProducto, Context tx) {
         int can = devuelto + Integer.parseInt(cantidad);
         boolean estado = false;
         try {
 
-            mDb.execSQL("update m_histo_venta_detalle set hd_in_cantidad_ope_dev='" + cantidad + "',hd_in_categoria_ope_dev='" + categoria_op + "',hd_re_importe_ope_dev='" + importe + "',hg_te_fecha_ope_dev='" + getDatePhone() + "',hd_te_hora_ope_dev='pendiente' where hd_in_id_detalle='" + idDetalle + "';");
-            Cursor cr = mDb.rawQuery("select * from m_stock_agente where st_in_id_producto='"+idProducto+"'", null);
+            mDb.execSQL("update m_histo_venta_detalle set hd_in_cantidad_ope_dev='" + can + "',hd_in_categoria_ope_dev='" + categoria_op + "',hd_re_importe_ope_dev='" + importe + "',hg_te_fecha_ope_dev='" + getDatePhone() + "',hd_te_hora_ope_dev='pendiente' where hd_in_id_detalle='" + idDetalle + "';");
+            Cursor cr = mDb.rawQuery("select * from m_stock_agente where st_in_id_producto='" + idProducto + "'", null);
             cr.moveToFirst();
-            int devol_canjes = cr.getInt(cr.getColumnIndex(columna));
+            int devol_canjes = cr.getInt(cr.getColumnIndex("st_in_devoluciones"));
             int total = Integer.parseInt(cantidad) + devol_canjes;
-            System.out.println("bueno" + devol_canjes + idProducto + columna + total);
-            mDb.execSQL("update m_stock_agente set " + columna + "='" + total + "' where st_in_id_producto='" + idProducto + "';");
+            mDb.execSQL("update m_stock_agente set st_in_devoluciones='" + total + "' where st_in_id_producto='" + idProducto + "';");
             estado = true;
 
         } catch (android.database.SQLException e) {
@@ -150,7 +151,7 @@ public class DbAdapter_Canjes_Devoluciones {
     }
 
     public Cursor obtener_facturas_can(String idEstablec) {
-        Cursor cr = mDb.rawQuery("select * from m_histo_venta_detalle where hd_in_id_establec='"+idEstablec+"'  and hd_te_hora_ope='pendiente' and hd_in_id_tipoper='1' and  hg_te_fecha_ope='"+getDatePhone()+"';",null);
+        Cursor cr = mDb.rawQuery("select * from m_histo_venta_detalle where hd_in_id_establec='" + idEstablec + "'  and hd_te_hora_ope='pendiente' and hd_in_id_tipoper='1' and  hg_te_fecha_ope='" + getDatePhone() + "';", null);
         if (cr != null) {
             cr.moveToFirst();
         } else {
@@ -158,8 +159,9 @@ public class DbAdapter_Canjes_Devoluciones {
         }
         return cr;
     }
+
     public Cursor obtener_facturas_dev(String idEstablec) {
-        Cursor cr = mDb.rawQuery("select * from m_histo_venta_detalle where hd_in_id_establec='"+idEstablec+"'  and hd_te_hora_ope_dev='pendiente' and  hg_te_fecha_ope_dev='"+getDatePhone()+"';",null);
+        Cursor cr = mDb.rawQuery("select * from m_histo_venta_detalle where hd_in_id_establec='" + idEstablec + "'  and hd_te_hora_ope_dev='pendiente' and  hg_te_fecha_ope_dev='" + getDatePhone() + "';", null);
         if (cr != null) {
             cr.moveToFirst();
         } else {
@@ -168,21 +170,24 @@ public class DbAdapter_Canjes_Devoluciones {
         return cr;
     }
 
-    public Cursor obtener_cabecera(String idEstablecimiento){
-        Cursor cr = mDb.rawQuery("select * from m_evento_establec where ee_in_id_establec ='"+idEstablecimiento+"'",null);
+    public Cursor obtener_cabecera(String idEstablecimiento) {
+        Cursor cr = mDb.rawQuery("select * from m_evento_establec where ee_in_id_establec ='" + idEstablecimiento + "'", null);
         return cr;
 
     }
-    public Cursor obtener_igv(int id,String idEstablec){
-        Cursor cr = mDb.rawQuery("select sum(hd_in_cantidad_ope*hd_re_importe_ope )  as total,sum(hd_re_importe_ope*hd_in_cantidad_ope)/1.18 as subtotal,sum(hd_re_importe_ope*hd_in_cantidad_ope)-sum(hd_re_importe_ope*hd_in_cantidad_ope)/1.18  as igv from  m_histo_venta_detalle where  hd_in_id_tipoper='"+id+"'  and  hg_te_fecha_ope='"+getDatePhone()+"' and hd_te_hora_ope ='pendiente' and hd_in_id_establec='" + idEstablec + "'",null);
+
+    public Cursor obtener_igv(int id, String idEstablec) {
+        Cursor cr = mDb.rawQuery("select sum(hd_in_cantidad_ope*hd_re_importe_ope )  as total,sum(hd_re_importe_ope*hd_in_cantidad_ope)/1.18 as subtotal,sum(hd_re_importe_ope*hd_in_cantidad_ope)-sum(hd_re_importe_ope*hd_in_cantidad_ope)/1.18  as igv from  m_histo_venta_detalle where  hd_in_id_tipoper='" + id + "'  and  hg_te_fecha_ope='" + getDatePhone() + "' and hd_te_hora_ope ='pendiente' and hd_in_id_establec='" + idEstablec + "'", null);
         return cr;
     }
-    public Cursor obtener_igv_dev(int id,String idEstablec){
-        Cursor cr = mDb.rawQuery("select sum(hd_in_cantidad_ope_dev*hd_re_importe_ope_dev )  as total,sum(hd_re_importe_ope_dev*hd_in_cantidad_ope_dev)/1.18 as subtotal,sum(hd_re_importe_ope_dev*hd_in_cantidad_ope_dev)-sum(hd_re_importe_ope_dev*hd_in_cantidad_ope_dev)/1.18  as igv from  m_histo_venta_detalle where   hg_te_fecha_ope_dev='"+getDatePhone()+"' and hd_te_hora_ope_dev ='pendiente' and hd_in_id_establec='" + idEstablec + "'",null);
+
+    public Cursor obtener_igv_dev(int id, String idEstablec) {
+        Cursor cr = mDb.rawQuery("select sum(hd_in_cantidad_ope_dev*hd_re_importe_ope_dev )  as total,sum(hd_re_importe_ope_dev*hd_in_cantidad_ope_dev)/1.18 as subtotal,sum(hd_re_importe_ope_dev*hd_in_cantidad_ope_dev)-sum(hd_re_importe_ope_dev*hd_in_cantidad_ope_dev)/1.18  as igv from  m_histo_venta_detalle where   hg_te_fecha_ope_dev='" + getDatePhone() + "' and hd_te_hora_ope_dev ='pendiente' and hd_in_id_establec='" + idEstablec + "'", null);
         return cr;
     }
-    public Cursor obtener_facturas_canjes(int tipo,String idEstablec) {
-        Cursor cr = mDb.rawQuery("select * from  m_histo_venta_detalle where  hd_in_id_tipoper='"+tipo+"' and hd_in_id_establec='" + idEstablec + "' and  hg_te_fecha_ope='"+getDatePhone()+"' and hd_te_hora_ope ='pendiente'",null);
+
+    public Cursor obtener_facturas_canjes(int tipo, String idEstablec) {
+        Cursor cr = mDb.rawQuery("select * from  m_histo_venta_detalle where  hd_in_id_tipoper='" + tipo + "' and hd_in_id_establec='" + idEstablec + "' and  hg_te_fecha_ope='" + getDatePhone() + "' and hd_te_hora_ope ='pendiente'", null);
         if (cr != null) {
             cr.moveToFirst();
         } else {
@@ -190,8 +195,9 @@ public class DbAdapter_Canjes_Devoluciones {
         }
         return cr;
     }
-    public Cursor obtener_facturas_dev(int tipo,String idEstablec) {
-        Cursor cr = mDb.rawQuery("select * from  m_histo_venta_detalle where hd_in_id_establec='" + idEstablec + "' and  hg_te_fecha_ope_dev='"+getDatePhone()+"' and hd_te_hora_ope_dev ='pendiente'",null);
+
+    public Cursor obtener_facturas_dev(int tipo, String idEstablec) {
+        Cursor cr = mDb.rawQuery("select * from  m_histo_venta_detalle where hd_in_id_establec='" + idEstablec + "' and  hg_te_fecha_ope_dev='" + getDatePhone() + "' and hd_te_hora_ope_dev ='pendiente'", null);
         if (cr != null) {
             cr.moveToFirst();
         } else {
@@ -201,18 +207,29 @@ public class DbAdapter_Canjes_Devoluciones {
     }
 
     public Cursor listarCanjesDev(int idEstablec) {
-        Cursor cr = mDb.rawQuery("select * from m_histo_venta_detalle where  hd_in_id_establec=" + idEstablec + " and hg_te_fecha_ope='" + getDatePhone() + "'", null);
+        Cursor cr = mDb.rawQuery("select * from m_histo_venta_detalle where  hd_in_id_establec=" + idEstablec + " and hg_te_fecha_ope='" + getDatePhone() + "';", null);
         return cr;
     }
-    public boolean guardarCambios(int tipo, String idEstablec){
+
+    public boolean guardarCambios(int tipo, String idEstablec) {
         boolean estado = false;
 
         try {
-            Cursor c = mDb.rawQuery("select * from  m_histo_venta_detalle where  hd_in_id_tipoper='"+tipo+"'  and  hg_te_fecha_ope='"+getDatePhone()+"' and hd_in_id_establec='"+idEstablec+"' and hd_te_hora_ope='pendiente'",null);
 
-           while (c.moveToNext()){
-                mDb.execSQL("update m_histo_venta_detalle set hd_te_hora_ope='"+getTimePhone()+"' where  hd_in_id_detalle='"+c.getString(1)+"'");
+            Cursor c = mDb.rawQuery("select * from  m_histo_venta_detalle where  hd_in_id_tipoper='" + tipo + "'  and  hg_te_fecha_ope='" + getDatePhone() + "' and hd_in_id_establec='" + idEstablec + "' and hd_te_hora_ope='pendiente';", null);
+
+            while (c.moveToNext()) {
+                mDb.execSQL("update m_histo_venta_detalle set hd_te_hora_ope='" + getTimePhone() + "' where  hd_in_id_detalle='" + c.getString(1) + "';");
             }
+            Cursor stock = mDb.rawQuery("select * from m_stock_agente;", null);
+            int disponible = 0;
+            int idProducto = 0;
+            while (stock.moveToNext()) {
+                disponible = stock.getInt(7) - stock.getInt(9);
+                idProducto=stock.getInt(1);
+                mDb.execSQL("update m_stock_agente  set st_in_disponible ='" + disponible + "' where st_in_id_producto = '" + idProducto + "' ;");
+            }
+
 
             estado = true;
 
@@ -223,15 +240,17 @@ public class DbAdapter_Canjes_Devoluciones {
 
         return estado;
     }
-    public boolean guardarCambios_dev(int tipo, String idEstablec){
+
+    public boolean guardarCambios_dev(int tipo, String idEstablec) {
         boolean estado = false;
 
         try {
-            Cursor c = mDb.rawQuery("select * from  m_histo_venta_detalle where hg_te_fecha_ope_dev='"+getDatePhone()+"' and hd_in_id_establec='"+idEstablec+"' and hd_te_hora_ope_dev='pendiente'",null);
+            Cursor c = mDb.rawQuery("select * from  m_histo_venta_detalle where hg_te_fecha_ope_dev='" + getDatePhone() + "' and hd_in_id_establec='" + idEstablec + "' and hd_te_hora_ope_dev='pendiente';", null);
 
-            while (c.moveToFirst()){
-                mDb.execSQL("update m_histo_venta_detalle set hd_te_hora_ope_dev='"+getTimePhone()+"' where  hd_in_id_detalle='"+c.getString(1)+"'");
+            while (c.moveToNext()) {
+                mDb.execSQL("update m_histo_venta_detalle set hd_te_hora_ope_dev='" + getTimePhone() + "' where  hd_in_id_detalle='" + c.getString(1) + "'");
             }
+
 
             estado = true;
 
@@ -242,19 +261,20 @@ public class DbAdapter_Canjes_Devoluciones {
 
         return estado;
     }
-    public boolean cancelarCambios(int tipo, String idEstablec,String columna){
+
+    public boolean cancelarCambios(int tipo, String idEstablec, String columna) {
         boolean estado = false;
 
         try {
-            Cursor c = mDb.rawQuery("select * from  m_histo_venta_detalle where  hd_in_id_tipoper='"+tipo+"'  and  hg_te_fecha_ope='"+getDatePhone()+"' and hd_in_id_establec='"+idEstablec+"' and hd_te_hora_ope='pendiente'",null);
+            Cursor c = mDb.rawQuery("select * from  m_histo_venta_detalle where  hd_in_id_tipoper='" + tipo + "'  and  hg_te_fecha_ope='" + getDatePhone() + "' and hd_in_id_establec='" + idEstablec + "' and hd_te_hora_ope='pendiente'", null);
 
-            while (c.moveToNext()){
-                if(c.getString(1).equals("")){
-                    mDb.execSQL("DELETE FROM m_histo_venta_detalle WHERE _id='"+c.getString(0)+"'");
+            while (c.moveToNext()) {
+                if (c.getString(1).equals("")) {
+                    mDb.execSQL("DELETE FROM m_histo_venta_detalle WHERE _id='" + c.getString(0) + "'");
 
                 }
-                mDb.execSQL("update m_stock_agente set " + columna + "='0' where st_in_id_producto='"+c.getString(4)+"'; ");
-                mDb.execSQL("update m_histo_venta_detalle set hd_in_id_tipoper='',hd_in_categoria_ope='',hd_in_cantidad_ope='',hd_re_importe_ope='',hg_te_fecha_ope='',hd_te_hora_ope='' where hd_in_id_detalle='" +c.getString(1)+"';");
+                mDb.execSQL("update m_stock_agente set " + columna + "='0' where st_in_id_producto='" + c.getString(4) + "'; ");
+                mDb.execSQL("update m_histo_venta_detalle set hd_in_id_tipoper='',hd_in_categoria_ope='',hd_in_cantidad_ope='',hd_re_importe_ope='',hg_te_fecha_ope='',hd_te_hora_ope='' where hd_in_id_detalle='" + c.getString(1) + "';");
 
             }
 
@@ -267,19 +287,20 @@ public class DbAdapter_Canjes_Devoluciones {
 
         return estado;
     }
-    public boolean cancelarCambios_dev(int tipo, String idEstablec,String columna){
+
+    public boolean cancelarCambios_dev(int tipo, String idEstablec, String columna) {
         boolean estado = false;
 
         try {
-            Cursor c = mDb.rawQuery("select * from  m_histo_venta_detalle where hg_te_fecha_ope_dev='"+getDatePhone()+"' and hd_in_id_establec='"+idEstablec+"' and hd_te_hora_ope_dev='pendiente'",null);
+            Cursor c = mDb.rawQuery("select * from  m_histo_venta_detalle where hg_te_fecha_ope_dev='" + getDatePhone() + "' and hd_in_id_establec='" + idEstablec + "' and hd_te_hora_ope_dev='pendiente'", null);
 
-            while (c.moveToFirst()){
-                if(c.getString(1).equals("")){
-                    mDb.execSQL("DELETE FROM m_histo_venta_detalle WHERE _id='"+c.getString(0)+"'");
+            while (c.moveToNext()) {
+                if (c.getString(1).equals("") ) {
+                    mDb.execSQL("DELETE FROM m_histo_venta_detalle WHERE _id='" + c.getString(0) + "'");
 
                 }
-                mDb.execSQL("update m_stock_agente set " + columna + "='0' where st_in_id_producto='"+c.getString(4)+"'; ");
-                mDb.execSQL("update m_histo_venta_detalle set hd_in_id_tipoper='',hd_in_categoria_ope='',hd_in_cantidad_ope='',hd_re_importe_ope='',hg_te_fecha_ope='',hd_te_hora_ope='',hd_in_cantidad_ope_dev='',hd_in_categoria_ope_dev='',hd_re_importe_ope_dev='',hg_te_fecha_ope_dev='',hd_te_hora_ope_dev='' where hd_in_id_detalle='" +c.getString(1)+"';");
+                mDb.execSQL("update m_stock_agente set " + columna + "='0' where st_in_id_producto='" + c.getString(4) + "'; ");
+                mDb.execSQL("update m_histo_venta_detalle set hd_in_id_tipoper='',hd_in_categoria_ope='',hd_in_cantidad_ope='',hd_re_importe_ope='',hg_te_fecha_ope='',hd_te_hora_ope='',hd_in_cantidad_ope_dev='',hd_in_categoria_ope_dev='',hd_re_importe_ope_dev='',hg_te_fecha_ope_dev='',hd_te_hora_ope_dev='' where hd_in_id_detalle='" + c.getString(1) + "';");
 
             }
 
