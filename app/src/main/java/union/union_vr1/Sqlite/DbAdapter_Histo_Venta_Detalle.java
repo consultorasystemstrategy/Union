@@ -55,19 +55,19 @@ public class DbAdapter_Histo_Venta_Detalle {
             "create table "+SQLITE_TABLE_Histo_Venta_Detalle+" ("
                     +HD_id_hventadet+" integer primary key autoincrement,"
                     +HD_id_detalle+" integer,"
-                    +HD_id_comprob+" integer,"
+                    +HD_id_comprob+" integer," //no u
                     +HD_id_establec+" integer,"
                     +HD_id_producto+" integer,"
-                    +HD_id_tipoper+" integer,"
+                    +HD_id_tipoper+" integer," //no
                     +HD_orden+" integer,"
                     +HD_comprobante+" text,"
                     +HD_nom_estab+" text,"
                     +HD_nom_producto+" text,"
                     +HD_cantidad+" integer,"
                     +HD_importe+" real,"
-                    +HD_fecha+" text,"
-                    +HD_hora+" text,"
-                    +HD_valor_unidad+" integer,"
+                    +HD_fecha+" text," //no u
+                    +HD_hora+" text," //no u
+                    +HD_valor_unidad+" integer,"// no u
                     +HD_categoria_ope+" integer,"
                     +HD_forma_ope+" integer,"
                     +HD_cantidad_ope+" integer,"
