@@ -157,8 +157,6 @@ public class VMovil_Venta_Cabecera_AgregarProductos extends Activity implements 
                 toStock,
                 0);
 
-
-
        autoCompleteTextView.setAdapter(adapterProductos);
 
         autoCompleteTextView.addTextChangedListener(new TextWatcher() {
