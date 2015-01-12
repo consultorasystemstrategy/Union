@@ -22,7 +22,6 @@ public class DbAdapter_Precio {
     public static final String PR_hasta = "pr_in_hasta";
 
 
-
     //FALTA TRAER ESTOS CAMPOS
     public static final String PR_nombreProducto = "pr_in_nombre";
     //este campo me parece redundante
@@ -160,21 +159,21 @@ public class DbAdapter_Precio {
 
     public void insertSomePrecio() {
 
-        createPrecio( 1, 1, 11.00, 11.50, 1,1, 1, 30,"Producto1");
-        createPrecio( 1, 2, 12.00, 12.50, 1,1, 31, 60,"Producto1");
-        createPrecio( 1, 3, 12.00, 12.50, 1,1, 61, 100,"Producto1");
-        createPrecio( 2, 1, 21.00, 21.50, 1,1, 1, 30,"Producto2");
-        createPrecio( 2, 2, 22.00, 22.50, 1,1, 31, 60,"Producto2");
-        createPrecio( 2, 3, 23.00, 23.50, 1,1, 61, 1000,"Producto2");
-        createPrecio( 3, 1, 31.00, 31.50, 1,1, 1, 30,"Producto3");
-        createPrecio( 3, 2, 32.00, 32.50, 1,1, 31, 60,"Producto3");
-        createPrecio( 3, 3, 33.00, 33.50, 1,1, 61, 1000,"Producto3");
-        createPrecio( 4, 1, 41.00, 41.50, 1,1, 1, 30,"Producto4");
-        createPrecio( 4, 2, 42.00, 42.50, 1,1, 31, 60,"Producto4");
-        createPrecio( 4, 3, 43.00, 43.50, 1,1,61, 1000,"Producto4");
-        createPrecio( 5, 1, 51.00, 51.50, 1,1, 1, 30,"Producto5");
-        createPrecio( 5, 2, 52.00, 52.50, 1,1, 31, 60,"Producto5");
-        createPrecio( 5, 3, 53.00, 53.50, 1,1, 61, 1000,"Producto5");
+        createPrecio( 1, 1, 11.00, 11.50, 1,1, 1, 30,"Pan Integral Mediano");
+        createPrecio( 1, 2, 12.00, 12.50, 1,1, 31, 60,"Pan Integral Mediano");
+        createPrecio( 1, 3, 12.00, 12.50, 1,1, 61, 100,"Pan Integral Mediano");
+        createPrecio( 2, 1, 21.00, 21.50, 1,1, 1, 30,"Pan Blanco Americano");
+        createPrecio( 2, 2, 22.00, 22.50, 1,1, 31, 60,"Pan Blanco Americano");
+        createPrecio( 2, 3, 23.00, 23.50, 1,1, 61, 1000,"Pan Blanco Americano");
+        createPrecio( 3, 1, 31.00, 31.50, 1,1, 1, 30,"Granola con pasas y almendras");
+        createPrecio( 3, 2, 32.00, 32.50, 1,1, 31, 60,"Granola con pasas y almendras");
+        createPrecio( 3, 3, 33.00, 33.50, 1,1, 61, 1000,"Granola con pasas y almendras");
+        createPrecio( 4, 1, 41.00, 41.50, 1,1, 1, 30,"Panetón Super Boom");
+        createPrecio( 4, 2, 42.00, 42.50, 1,1, 31, 60,"Panetón Super Boom");
+        createPrecio( 4, 3, 43.00, 43.50, 1,1,61, 1000,"Panetón SuperBoom");
+        createPrecio( 5, 1, 51.00, 51.50, 1,1, 1, 30,"Panetón Integral");
+        createPrecio( 5, 2, 52.00, 52.50, 1,1, 31, 60,"Panetón Integral");
+        createPrecio( 5, 3, 53.00, 53.50, 1,1, 61, 1000,"Panetón Integral");
     }
 
 }
