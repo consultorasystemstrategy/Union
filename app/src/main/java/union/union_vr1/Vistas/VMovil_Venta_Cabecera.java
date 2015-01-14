@@ -485,6 +485,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
         Cursor cursorTemp = simpleCursorAdapter.getCursor();
 
 
+
         long comprobVentaDetalle = 0;
         for (cursorTemp.moveToFirst(); !cursorTemp.isAfterLast();cursorTemp.moveToNext()){
 
@@ -503,7 +504,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
             comprobVentaDetalle = dbHelper_Comprob_Venta_Detalle.createComprobVentaDetalle(id_comprobante, id_producto, nombre_producto, cantidad, importe,0, precio_unitario, promedio_anterior, devuelto,0);
             dbHelper_Stock_Agente.updateStockAgenteCantidad(id_producto,-cantidad);
 
-            textoImpresion+=cantidad + "     " + nombre_producto + "     " +importe + "\n";
+            textoImpresion+=String.format("%-6s",cantidad) + String.format("%-35s",nombre_producto) +String.format("%-6s",importe) + "\n";
 
             datosConcatenados+="Producto  "+ nombre_producto + "Vendido satisfactoriamente con id : "+ comprobVentaDetalle;
         }
@@ -515,9 +516,11 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
         datosConcatenados+="base impornible: " + base_imponible;
         datosConcatenados+="igv : " + igv;
 
-        textoImpresion += "SUB TOTAL: S/."+ formatDecimal(base_imponible)+"\n";
-        textoImpresion += "IGV: S/."+  formatDecimal(igv)+"\n";
-        textoImpresion += "TOTAL: S/."+  formatDecimal(monto_total)+"\n";
+        DecimalFormat df = new DecimalFormat("#.00");
+
+        textoImpresion += "SUB TOTAL: S/ "+ df.format(base_imponible)+"\n";
+        textoImpresion += "IGV: S/ "+  df.format(igv)+"\n";
+        textoImpresion += "TOTAL: S/ "+  df.format(monto_total)+"\n";
 
 
 

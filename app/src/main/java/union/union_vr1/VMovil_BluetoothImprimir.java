@@ -17,6 +17,9 @@ import android.widget.TextView;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PrintStream;
+import java.nio.charset.Charset;
+import java.util.Collection;
 import java.util.Set;
 import java.util.UUID;
 
@@ -69,6 +72,7 @@ public class VMovil_BluetoothImprimir extends Activity{
 
             Log.d("Bluetooth message", "Async Task Imprimir begin");
             if (mmDevice==null){
+                Log.d("Bluetooth message", "Device is null");
                 findBT();
                 try {
                     openBT();
@@ -87,7 +91,7 @@ public class VMovil_BluetoothImprimir extends Activity{
         @Override
         protected void onPostExecute(String s) {
             try {
-                sendData(s);
+                sendData(textoImpresion);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -174,6 +178,7 @@ public class VMovil_BluetoothImprimir extends Activity{
                             int bytesAvailable = mmInputStream.available();
                             if (bytesAvailable > 0) {
                                 byte[] packetBytes = new byte[bytesAvailable];
+
                                 mmInputStream.read(packetBytes);
                                 for (int i = 0; i < bytesAvailable; i++) {
                                     byte b = packetBytes[i];
@@ -183,7 +188,9 @@ public class VMovil_BluetoothImprimir extends Activity{
                                                 encodedBytes, 0,
                                                 encodedBytes.length);
                                         final String data = new String(
-                                                encodedBytes, "US-ASCII");
+                                                encodedBytes,
+                                                Charset.forName("UTF-8")
+                                        );
                                         readBufferPosition = 0;
 
                                         handler.post(new Runnable() {
@@ -212,42 +219,21 @@ public class VMovil_BluetoothImprimir extends Activity{
             e.printStackTrace();
         }
     }
-    public void sendData(String textoImpresion) throws IOException {
+    public void sendData(String textoImprimir) throws IOException {
         try {
+            String textoCleaned = cleanAcentos(textoImprimir);
+            mmOutputStream.write(textoCleaned.getBytes());
+            /*
+            Collection<Charset> charsets= Charset.availableCharsets().values();
+            for (Charset c: charsets){
+                mmOutputStream.write((c.name()+"  áéíóú\n").getBytes(Charset.forName(c.name())));
+                Log.d("Avalaible charset", ""+ c.name());
+            }
+            */
 
-
-            String texto = ".\n";
-            texto += "    UNIVERSIDAD PERUANA UNION   \n";
-            texto += "     Cent.aplc. Prod. Union     \n";
-            texto += "   C. Central Km 19 Villa Union \n";
-            texto += " Lurigancho-Chosica Fax: 6186311\n";
-            texto += "      Telf: 6186309-6186310     \n";
-            texto += " Casilla 3564, Lima 1, LIMA PERU\n";
-            texto += "         RUC: 20138122256       \n";
-            texto += "--------------------------------\n";
-            //texto += "Factura Nro. 030-000212\n";
-            //texto += "Fecha: 12/11/2014\n";
-            //texto += "Cajero: Juan Perez Perez\n";
-            //texto += "Cliente: Perico Palotes Palotes\n";
-            //texto += "DNI: 47678934\n";
-            //texto += "Direccion: Alameda Nro 2039 - Chosica\n";
-            //texto += "--------------------------------\n";
-            //texto += "Cant. Producto           Importe\n";
-            //texto += "--------------------------------\n";
-            //texto += String.format("%-6s", 5) + String.format("%-19s", "Pan Americano Mediano Union".substring(0, 17) + ".") + String.format("%7s", 40.50) + "\n";
-            //texto += String.format("%-6s", 5) + String.format("%-19s", "Rollo de caneladddddddddd".substring(0, 17) + ".") + String.format("%7s", 30.50) + "\n";
-            //texto += String.format("%-6s", 5) + String.format("%-19s", "Paneton Unioneeeeeeeeee".substring(0, 17) + ".") + String.format("%7s", 10.50) + "\n";
-            //texto += String.format("%-6s", 5) + String.format("%-19s", "Paneton Super Bom".substring(0, 17) + ".") + String.format("%7s", 3.40) + "\n";
-            //texto += String.format("%-6s", 5) + String.format("%-19s", "Pan Americano Sandwich".substring(0, 17) + ".") + String.format("%7s", 100.3) + "\n";
-            //texto += String.format("%-6s", 5) + String.format("%-19s", "Pan Americano Mediano Union".substring(0, 17) + ".") + String.format("%7s", 2.34) + "\n";
-            //texto += String.format("%-25s", "SUB TOTAL:") + String.format("%7s", 1000.00) + "\n";
-            //texto += String.format("%-25s", "IGV:") + String.format("%7s", 180.00) + "\n";
-            //texto += String.format("%-25s", "TOTAL:") + String.format("%7s", 1800.00) + "\n";
-
-            mmOutputStream.write(textoImpresion.getBytes());
 
             // tell the user data were sent
-            Log.d("Bluetooth message","Data Sent");
+            Log.d("Bluetooth message", "Data Sent");
 
         } catch (NullPointerException e) {
             e.printStackTrace();
@@ -270,4 +256,29 @@ public class VMovil_BluetoothImprimir extends Activity{
             e.printStackTrace();
         }
     }
+
+    @Override
+    protected void onStop() {
+
+        super.onStop();
+        try {
+            closeBT();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public static String cleanAcentos(String string) {
+        String original = "áàäéèëíìïóòöúùuñÁÀÄÉÈËÍÌÏÓÒÖÚÙÜÑçÇü·':";
+        String ascii = "aaaeeeiiiooouuunAAAEEEIIIOOOUUUNcCu   ";
+        if (string != null) {
+            //Recorro la cadena y remplazo los caracteres originales por aquellos sin acentos
+            for (int i = 0; i < original.length(); i++ ) {
+                string = string.replace(original.charAt(i), ascii.charAt(i));
+            }
+        }
+        return string;
+    }
+
 }
