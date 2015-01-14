@@ -23,6 +23,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 import union.union_vr1.R;
 import union.union_vr1.Sqlite.DBAdapter_Temp_Venta;
@@ -35,7 +39,9 @@ import union.union_vr1.Sqlite.DbAdapter_Histo_Venta_Detalle;
 import union.union_vr1.Sqlite.DbAdapter_Precio;
 import union.union_vr1.Sqlite.DbAdapter_Stock_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Comprob_Cobro;
+import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 import union.union_vr1.Utils.MyApplication;
+import union.union_vr1.VMovil_BluetoothImprimir;
 
 public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
 
@@ -48,7 +54,17 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
     private DbAdapter_Temp_Comprob_Cobro dbHelper_Temp_Comprob_Cobros;
     private DbAdapter_Comprob_Cobro dbHelper_Comprob_Cobros;
     private DbAdapter_Stock_Agente dbHelper_Stock_Agente;
+    private DbAdaptert_Evento_Establec dbHelper_Evento_Establecimiento;
 
+    private String textoImpresion = ".\n"
+                +"    UNIVERSIDAD PERUANA UNION   \n"
+                +"     Cent.aplc. Prod. Union     \n"
+                +"   C. Central Km 19 Villa Union \n"
+                +" Lurigancho-Chosica Fax: 6186311\n"
+                +"      Telf: 6186309-6186310     \n"
+                +" Casilla 3564, Lima 1, LIMA PERU\n"
+                +"         RUC: 20138122256       \n"
+                +"--------------------------------\n";
     private int idEstablecimiento;
     int id_agente_venta;
     private SimpleCursorAdapter simpleCursorAdapter;
@@ -130,6 +146,9 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
 
         dbHelper_Stock_Agente = new DbAdapter_Stock_Agente(this);
         dbHelper_Stock_Agente.open();
+
+        dbHelper_Evento_Establecimiento = new DbAdaptert_Evento_Establec(this);
+        dbHelper_Evento_Establecimiento.open();
 
 
         idEstablecimiento=((MyApplication)this.getApplication()).getIdEstablecimiento();
@@ -431,6 +450,31 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
                 "Forma de pago : " + formaPago + "\n" +
                 "Tipo Documento : " + tipoDocumento+ "\n" + "---------------------------";
 
+        Cursor cursorAgente = dbHelperAgente.fetchAgentesByIds(""+id_agente_venta);
+        cursorAgente.moveToFirst();
+        String nombreAgenteVenta = cursorAgente.getString(cursorAgente.getColumnIndexOrThrow(dbHelperAgente.AG_nombre_agente));
+
+        Cursor cursorEstablecimiento = dbHelper_Evento_Establecimiento.fetchEstablecsById(""+idEstablecimiento);
+        cursorEstablecimiento.moveToFirst();
+        String nombreCliente = cursorEstablecimiento.getString(cursorEstablecimiento.getColumnIndexOrThrow(dbHelper_Evento_Establecimiento.EE_nom_cliente));
+        String documentoCliente = cursorEstablecimiento.getString(cursorEstablecimiento.getColumnIndexOrThrow(dbHelper_Evento_Establecimiento.EE_doc_cliente));
+        textoImpresion+= "Factura Nro. 030-000212\n";
+        textoImpresion+= "Fecha: "+ getDatePhone()+"\n";
+        textoImpresion+= "Vendedor: "+ nombreAgenteVenta+"\n";
+        textoImpresion+= "Cliente: "+ nombreCliente+"\n";
+        textoImpresion+= "DNI: "+ documentoCliente+"\n";
+        textoImpresion+= "Direccion: Alameda Nro 2039 - Chosica\n";
+        textoImpresion+= "-----------------------------------------------\n";
+        textoImpresion+= "Cant.             Producto              Importe\n";
+        textoImpresion+= "-----------------------------------------------\n";
+
+
+
+
+
+
+
+
         long id = dbHelper_Comprob_Venta.createComprobVenta(idEstablecimiento,i_tipoDocumento,i_formaPago,tipoVenta,codigo_erp,serie,numero_documento,base_imponible,igv,monto_total,null,null,estado_comprobante, estado_conexion,id_agente_venta);
 
 
@@ -459,6 +503,8 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
             comprobVentaDetalle = dbHelper_Comprob_Venta_Detalle.createComprobVentaDetalle(id_comprobante, id_producto, nombre_producto, cantidad, importe,0, precio_unitario, promedio_anterior, devuelto,0);
             dbHelper_Stock_Agente.updateStockAgenteCantidad(id_producto,-cantidad);
 
+            textoImpresion+=cantidad + "     " + nombre_producto + "     " +importe + "\n";
+
             datosConcatenados+="Producto  "+ nombre_producto + "Vendido satisfactoriamente con id : "+ comprobVentaDetalle;
         }
 
@@ -468,6 +514,12 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
         datosConcatenados+="total de gasto : " + monto_total;
         datosConcatenados+="base impornible: " + base_imponible;
         datosConcatenados+="igv : " + igv;
+
+        textoImpresion += "SUB TOTAL: S/."+ formatDecimal(base_imponible)+"\n";
+        textoImpresion += "IGV: S/."+  formatDecimal(igv)+"\n";
+        textoImpresion += "TOTAL: S/."+  formatDecimal(monto_total)+"\n";
+
+
 
         if (i_formaPago==2){
             for (cursorTempComprobCobros.moveToFirst(); cursorTempComprobCobros.isAfterLast();cursorTempComprobCobros.moveToNext()){
@@ -482,7 +534,9 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
         dbHelper_temp_venta.deleteAllTempVentaDetalle();
         dbHelper_Temp_Comprob_Cobros.deleteAllComprobCobros();
 
-        Intent intent= new Intent(this, VMovil_Evento_Indice.class);
+
+        Intent intent= new Intent(this, VMovil_BluetoothImprimir.class);
+        intent.putExtra("textoImpresion",textoImpresion);
         finish();
         Toast.makeText(getApplicationContext(),"Venta Satisfactoria",Toast.LENGTH_LONG).show();
         startActivity(intent);
@@ -627,4 +681,17 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
     }
 
 
+    public String getDatePhone()
+    {
+        Calendar cal = new GregorianCalendar();
+        Date date = cal.getTime();
+        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        return df.format(date);
+    }
+
+    double formatDecimal(double d)
+    {
+        DecimalFormat df = new DecimalFormat("#,00");
+        return Double.valueOf(df.format(d));
+    }
     }

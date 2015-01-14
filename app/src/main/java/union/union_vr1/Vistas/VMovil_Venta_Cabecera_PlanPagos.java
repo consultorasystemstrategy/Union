@@ -182,12 +182,8 @@ public class VMovil_Venta_Cabecera_PlanPagos extends Activity{
         }
         return super.onOptionsItemSelected(item);
     }
-    double roundTwoDecimals(double d)
-    {
-        DecimalFormat twoDForm = new DecimalFormat("#.##");
-        return Double.valueOf(twoDForm.format(d));
-    }
-    private Date getDatePhone()
+
+    public Date getDatePhone()
     {
         Calendar cal = new GregorianCalendar();
         Date date = cal.getTime();

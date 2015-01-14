@@ -209,11 +209,11 @@ public class DbAdapter_Histo_Comprob_Anterior {
 
     public void insertSomeHistoComprobAnterior() {
 
-        createHistoComprobAnterior( 1, 1, "PAN", 1, "3", "0", 1, 1);
-        createHistoComprobAnterior( 1, 2, "AGUA", 2, "3", "0", 1, 1);
-        createHistoComprobAnterior( 2, 1, "PAN", 1, "3", "0", 1, 1);
-        createHistoComprobAnterior( 2, 2, "AGUA", 2, "3", "0", 1, 1);
-        createHistoComprobAnterior( 3, 2, "AGUA", 3, "3", "0", 1, 1);
+        createHistoComprobAnterior( 1, 1, "Pan Blanco Americano", 1, "3", "0", 1, 1);
+        createHistoComprobAnterior( 1, 2, "Panetón Integral Superboom", 2, "3", "0", 1, 1);
+        createHistoComprobAnterior( 2, 1, "Pan Blanco Americano", 1, "3", "0", 1, 1);
+        createHistoComprobAnterior( 2, 2, "Palitos", 2, "3", "0", 1, 1);
+        createHistoComprobAnterior( 3, 2, "Néctar de Fruta", 3, "3", "0", 1, 1);
 
     }
 
