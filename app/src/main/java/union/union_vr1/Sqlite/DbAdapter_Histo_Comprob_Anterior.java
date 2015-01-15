@@ -20,6 +20,7 @@ public class DbAdapter_Histo_Comprob_Anterior {
     public static final String HC_devuelto = "hc_te_devuelto";
     public static final String HC_valor_unidad = "hc_in_valor_unidad";
     public static final String HC_id_agente = "hc_in_id_agente";
+    public static final String estado_sincronizacion = "estado_sincronizacion";
 
     public static final String TAG = "Histo_Comprob_Anterior";
     private DbHelper mDbHelper;
@@ -40,7 +41,8 @@ public class DbAdapter_Histo_Comprob_Anterior {
                     +HC_prom_anterior+" text,"
                     +HC_devuelto+" integer,"
                     +HC_valor_unidad+" integer,"
-                    +HC_id_agente+" integer);";
+                    +HC_id_agente+" integer " +
+                    estado_sincronizacion+" integer);";
 
     public static final String DELETE_TABLE_HISTO_COMPROB_ANTERIOR = "DROP TABLE IF EXISTS " + SQLITE_TABLE_Histo_Comprob_Anterior;
 

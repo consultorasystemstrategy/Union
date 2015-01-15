@@ -36,6 +36,7 @@ public class DbAdapter_Stock_Agente {
     public static final String ST_buenos = "st_in_buenos";
     public static final String ST_malos = "st_in_malos";
     public static final String ST_fisico = "st_in_fisico";
+    public static final String estado_sincronizacion = "estado_sincronizacion";
 
 
 
@@ -64,7 +65,8 @@ public class DbAdapter_Stock_Agente {
                     +ST_buenos+" integer,"
                     +ST_malos+" integer,"
                     +ST_fisico+" integer,"
-                    +ST_id_agente+" integer);";
+                    +ST_id_agente+" integer, " +
+                    estado_sincronizacion+" integer);";
 
 
     public static final String DELETE_TABLE_STOCK_AGENTE = "DROP TABLE IF EXISTS " + SQLITE_TABLE_Stock_Agente;

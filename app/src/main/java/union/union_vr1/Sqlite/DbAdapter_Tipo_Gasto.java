@@ -13,6 +13,7 @@ public class DbAdapter_Tipo_Gasto {
     public static final String TG_id_tipo_gasto = "_id";
     public static final String TG_id_tgasto = "tg_in_id_tgasto";
     public static final String TG_nom_tipo_gasto = "tg_te_nom_tipo_gasto";
+    public static final String estado_sincronizacion = "estado_sincronizacion";
 
     public static final String TAG = "Tipo_Gasto";
     private DbHelper mDbHelper;
@@ -27,7 +28,8 @@ public class DbAdapter_Tipo_Gasto {
             "create table if not exists "+SQLITE_TABLE_Tipo_Gasto+" ("
                     +TG_id_tipo_gasto+" integer primary key autoincrement,"
                     +TG_id_tgasto+" integer,"
-                    +TG_nom_tipo_gasto+" text);";
+                    +TG_nom_tipo_gasto+" text, " +
+                    estado_sincronizacion+" integer);";
 
     public static final String DELETE_TABLE_TIPO_GASTO = "DROP TABLE IF EXISTS " + SQLITE_TABLE_Tipo_Gasto;
 

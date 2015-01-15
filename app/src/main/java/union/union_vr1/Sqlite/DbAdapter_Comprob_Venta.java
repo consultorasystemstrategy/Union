@@ -26,6 +26,7 @@ public class DbAdapter_Comprob_Venta {
     public static final String CV_igv = "cv_re_igv";
     public static final String CV_total = "cv_re_total";
     public static final String CV_id_agente = "cv_in_id_agente";
+    public static final String estado_sincronizacion = "estado_sincronizacion";
 
     //FALTA OBTENER ESTAS COLUMNAS
     public static final String CV_fecha_doc = "cv_te_fecha_doc";
@@ -62,7 +63,8 @@ public class DbAdapter_Comprob_Venta {
                     +CV_hora_doc+" text,"
                     +CV_estado_comp+" integer,"
                     +CV_estado_conexion+" integer,"
-                    +CV_id_agente+" integer);";
+                    +CV_id_agente+" integer, "
+                    +estado_sincronizacion+" integer);";
 
     public static final String DELETE_TABLE_COMPROB_VENTA = "DROP TABLE IF EXISTS " + SQLITE_TABLE_Comprob_Venta;
 

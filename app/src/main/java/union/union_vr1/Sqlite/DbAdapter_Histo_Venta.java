@@ -23,6 +23,7 @@ public class DbAdapter_Histo_Venta {
     public static final String HV_estado_comp = "hv_in_estado_comp";
     public static final String HV_estado_conexion = "hv_in_estado_conexion";
     public static final String HV_id_agente = "hv_in_id_agente";
+    public static final String estado_sincronizacion = "estado_sincronizacion";
 
     public static final String TAG = "Histo_Venta";
     private DbHelper mDbHelper;
@@ -46,7 +47,8 @@ public class DbAdapter_Histo_Venta {
                     +HV_hora_doc+" text,"
                     +HV_estado_comp+" integer,"
                     +HV_estado_conexion+" integer,"
-                    +HV_id_agente+" integer);";
+                    +HV_id_agente+" integer, " +
+                    estado_sincronizacion+" integer);";
 
     public static final String DELETE_TABLE_HISTO_VENTA = "DROP TABLE IF EXISTS " + SQLITE_TABLE_Histo_Venta;
 
