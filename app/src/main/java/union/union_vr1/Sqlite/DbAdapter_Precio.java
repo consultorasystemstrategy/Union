@@ -9,7 +9,7 @@ import android.util.Log;
 
 import union.union_vr1.Conexion.DbHelper;
 
-public class DbAdapter_Precio {
+public class  DbAdapter_Precio {
 
 
     //PROCEDIMIENTO TRAE ESTOS CAMPOS

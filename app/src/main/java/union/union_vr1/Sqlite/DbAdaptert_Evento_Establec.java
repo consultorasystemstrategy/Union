@@ -24,7 +24,6 @@ public class DbAdaptert_Evento_Establec {
     public static final String EE_dias_credito = "ee_in_dias_credito";
     public static final String EE_id_agente = "ee_in_id_agente";
 
-
     //FALTA OBTENER ESTE CAMPO
     public static final String EE_monto_credito = "ee_re_monto_credito";
 
@@ -104,6 +103,7 @@ public class DbAdaptert_Evento_Establec {
 
         return mDb.insert(SQLITE_TABLE_Evento_Establec, null, initialValues);
     }
+
 
     public void updateEstadoNoAtendido(String id, int estado, int estadoNoAtendido, String comentario){
         ContentValues initialValues = new ContentValues();

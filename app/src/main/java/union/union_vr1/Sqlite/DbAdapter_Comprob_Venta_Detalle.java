@@ -128,7 +128,6 @@ public class DbAdapter_Comprob_Venta_Detalle {
             mCursor = mDb.query(SQLITE_TABLE_Comprob_Venta_Detalle, new String[] {CD_comp_detalle,
                             CD_id_comprob, CD_nom_producto, CD_cantidad, CD_precio_unit, CD_importe},
                     null, null, null, null, null);
-
         }
         else {
             mCursor = mDb.query(true, SQLITE_TABLE_Comprob_Venta_Detalle, new String[] {CD_comp_detalle,
@@ -140,7 +139,6 @@ public class DbAdapter_Comprob_Venta_Detalle {
             mCursor.moveToFirst();
         }
         return mCursor;
-
     }
 
     public Cursor fetchAllComprobVentaDetalle() {
