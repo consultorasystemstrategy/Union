@@ -65,7 +65,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/VEE_BTNreport"
         android:layout_alignRight="@+id/VEE_BTNreport"
-        android:layout_alignEnd="@+id/VEE_BTNreport"
         android:id="@+id/linearLayout"
         android:layout_marginTop="32dp">
 

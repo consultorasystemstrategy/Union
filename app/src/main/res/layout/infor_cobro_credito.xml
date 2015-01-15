@@ -16,24 +16,21 @@
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:text="fecpr"
-        android:layout_toRightOf="@+id/VCCR_numdocinf"
-        android:layout_toEndOf="@+id/VCCR_numdocinf" />
+        android:layout_toRightOf="@+id/VCCR_numdocinf" />
 
     <TextView
         android:id="@+id/VCCR_montosinf"
         android:layout_width="60dp"
         android:layout_height="wrap_content"
         android:text="mont"
-        android:layout_toRightOf="@+id/VCCR_fecproinf"
-        android:layout_toEndOf="@+id/VCCR_fecproinf"/>
+        android:layout_toRightOf="@+id/VCCR_fecproinf"/>
 
     <TextView
         android:id="@+id/VCCR_estadoinf"
         android:layout_width="40dp"
         android:layout_height="wrap_content"
         android:text="estad"
-        android:layout_toRightOf="@+id/VCCR_montosinf"
-        android:layout_toEndOf="@+id/VCCR_montosinf"/>
+        android:layout_toRightOf="@+id/VCCR_montosinf"/>
 
 
 </RelativeLayout>

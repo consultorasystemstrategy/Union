@@ -3,7 +3,8 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="6dip">
+    android:padding="6dip"
+    >
 
     <TextView
         android:id="@+id/VCH_compr"
@@ -16,30 +17,27 @@
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:text="produ"
-        android:layout_toRightOf="@+id/VCH_compr"
-        android:layout_toEndOf="@+id/VCH_compr" />
+        android:layout_toRightOf="@+id/VCH_compr" />
 
     <TextView
         android:id="@+id/VCH_canti"
         android:layout_width="40dp"
         android:layout_height="wrap_content"
         android:text="canti"
-        android:layout_toRightOf="@+id/VCH_produ"
-        android:layout_toEndOf="@+id/VCH_produ"/>
+        android:layout_toRightOf="@+id/VCH_produ"/>
 
     <TextView
         android:id="@+id/VCH_tipos"
         android:layout_width="40dp"
         android:layout_height="wrap_content"
         android:text="tipos"
-        android:layout_toRightOf="@+id/VCH_canti"
-        android:layout_toEndOf="@+id/VCH_canti"/>
+        android:layout_toRightOf="@+id/VCH_canti"/>
 
     <TextView
         android:id="@+id/VCH_categ"
         android:layout_width="40dp"
         android:layout_height="wrap_content"
         android:text="estad"
-        android:layout_toRightOf="@+id/VCH_tipos"
-        android:layout_toEndOf="@+id/VCH_tipos"/>
+        android:layout_toRightOf="@+id/VCH_tipos"/>
+
 </RelativeLayout>

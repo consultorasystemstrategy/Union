@@ -22,17 +22,14 @@
         android:ems="10"
         android:layout_height="wrap_content"
         android:id="@+id/VVP_cantid"
-        android:layout_toEndOf="@+id/VVP_buscar"
         android:layout_below="@+id/VVP_titulo"
         android:layout_toRightOf="@+id/VVP_buscar"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentRight="true" />
 
     <ListView android:id="@+id/VVP_listar"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
         android:layout_below="@+id/VVP_buscar" />
 
 </RelativeLayout>

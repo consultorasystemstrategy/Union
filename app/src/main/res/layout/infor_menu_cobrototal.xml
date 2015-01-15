@@ -13,8 +13,7 @@
         android:text="cliente"
         android:id="@+id/nomcliente"
         android:layout_below="@+id/factotales"
-        android:layout_alignRight="@+id/factotales"
-        android:layout_alignEnd="@+id/factotales" />
+        android:layout_alignRight="@+id/factotales" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -23,8 +22,7 @@
         android:text="fecha"
         android:id="@+id/fechpro"
         android:layout_above="@+id/textView9"
-        android:layout_alignLeft="@+id/localCobro"
-        android:layout_alignStart="@+id/localCobro" />
+        android:layout_alignLeft="@+id/localCobro"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -34,7 +32,6 @@
         android:id="@+id/factotales"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
         android:layout_marginRight="86dp" />
 
     <TextView
@@ -44,8 +41,7 @@
         android:text="monto"
         android:id="@+id/repagar"
         android:layout_below="@+id/fechpro"
-        android:layout_alignRight="@+id/fechpro"
-        android:layout_alignEnd="@+id/fechpro" />
+        android:layout_alignRight="@+id/fechpro" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -54,8 +50,7 @@
         android:text="Doc:"
         android:id="@+id/textView6"
         android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentLeft="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -64,8 +59,7 @@
         android:text="Cliente:"
         android:id="@+id/textView7"
         android:layout_alignTop="@+id/nomcliente"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentLeft="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -73,9 +67,8 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Fecha:"
         android:id="@+id/textView8"
-        android:layout_below="@+id/Doc:"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_below="@+id/Doc"
+        android:layout_alignParentLeft="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -84,18 +77,16 @@
         android:text="Monto:"
         android:id="@+id/textView9"
         android:layout_below="@+id/textView8"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentLeft="true" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Establec:"
-        android:id="@+id/Doc:"
+        android:id="@+id/Doc"
         android:layout_below="@+id/textView7"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentLeft="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -104,8 +95,7 @@
         android:text="local"
         android:id="@+id/localCobro"
         android:layout_below="@+id/nomcliente"
-        android:layout_alignRight="@+id/nomcliente"
-        android:layout_alignEnd="@+id/nomcliente" />
+        android:layout_alignRight="@+id/nomcliente" />
 
 
 

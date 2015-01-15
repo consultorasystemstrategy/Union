@@ -43,10 +43,8 @@
         android:src="@drawable/logo"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
         android:layout_above="@+id/textView1"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentLeft="true" />
 
     <TextView
         android:id="@+id/TextView01"
@@ -54,8 +52,7 @@
         android:layout_height="wrap_content"
         android:text="Contraseña"
         android:layout_below="@+id/username"
-        android:layout_alignLeft="@+id/password"
-        android:layout_alignStart="@+id/password" />
+        android:layout_alignLeft="@+id/password" />
 
     <EditText
         android:id="@+id/username"
@@ -64,7 +61,6 @@
         android:ems="10"
         android:layout_below="@+id/textView1"
         android:layout_alignLeft="@+id/password"
-        android:layout_alignStart="@+id/password"
         android:text="orlando" />
 
     <TextView
@@ -73,7 +69,6 @@
         android:layout_height="wrap_content"
         android:text="Usuario"
         android:layout_centerVertical="true"
-        android:layout_alignLeft="@+id/username"
-        android:layout_alignStart="@+id/username" />
+        android:layout_alignLeft="@+id/username" />
 
 </RelativeLayout>

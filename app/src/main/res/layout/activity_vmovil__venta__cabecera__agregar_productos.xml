@@ -25,9 +25,7 @@
                 android:id="@+id/VCAP_AutoCompleteProductos"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
                 android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
                 android:hint="Buscar productos"
                 android:layout_weight="1" />
         </LinearLayout>

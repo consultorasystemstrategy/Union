@@ -38,7 +38,6 @@
         android:layout_height="wrap_content"
         android:text="TextView"
         android:layout_above="@+id/VCPA_textView2NombreProducto"
-        android:layout_toRightOf="@+id/VCPA_textView2NombreProducto"
-        android:layout_toEndOf="@+id/VCPA_textView2NombreProducto" />
+        android:layout_toRightOf="@+id/VCPA_textView2NombreProducto" />
 
 </RelativeLayout>

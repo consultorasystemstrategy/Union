@@ -27,5 +27,4 @@
     android:ellipsize="marquee"
     android:text="Agregar Otro?"
     android:background="@color/verde"
-    android:textAlignment="center"
     android:textColor="#fff" />

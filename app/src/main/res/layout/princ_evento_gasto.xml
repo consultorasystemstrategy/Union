@@ -96,7 +96,6 @@
                     android:id="@+id/VEG_textViewTotal1"
                     android:layout_centerVertical="true"
                     android:layout_toRightOf="@+id/VEG_textViewIdTipoGasto1"
-                    android:layout_toEndOf="@+id/VEG_textViewIdTipoGasto1"
                     android:text="Total"
                     android:textStyle="bold" />
 
@@ -106,7 +105,6 @@
                     android:id="@+id/VEG_textViewSubtotal1"
                     android:layout_centerVertical="true"
                     android:layout_toRightOf="@+id/VEG_textViewTotal"
-                    android:layout_toEndOf="@+id/VEG_textViewTotal1"
                     android:text="Subtotal"
                     android:textStyle="bold" />
 
@@ -116,7 +114,6 @@
                     android:id="@+id/VEG_textViewIgv1"
                     android:layout_centerVertical="true"
                     android:layout_toRightOf="@+id/VEG_textViewSubtotal1"
-                    android:layout_toEndOf="@+id/VEG_textViewSubtotal1"
                     android:text="igv"
                     android:textStyle="bold" />
 
@@ -127,7 +124,6 @@
                     android:id="@+id/VEG_textViewReferencia1"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true"
                     android:textStyle="bold"
                     android:layout_weight="0.87" />
 
@@ -137,8 +133,7 @@
                     android:layout_height="200dp"
                     android:id="@+id/VEG_listViewInformeGasto"
                     android:layout_below="@+id/VEG_linearLayoutHeader"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"/>
+                    android:layout_alignParentLeft="true"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -147,16 +142,14 @@
                 android:id="@+id/VEG_textViewIdTipoGasto"
                 android:singleLine="false"
                 android:layout_below="@+id/VEG_listViewInformeGasto"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"/>
+                android:layout_alignParentLeft="true"/>
 
             <Spinner
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/spinner_VEG_tipoGasto"
                 android:layout_below="@+id/VEG_textViewIdTipoGasto"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
+                android:layout_alignParentLeft="true" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -164,7 +157,6 @@
                 android:id="@+id/VEG_textViewTotal"
                 android:layout_below="@+id/spinner_VEG_tipoGasto"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
                 android:text="Procedencia de Gasto" />
 
             <Spinner
@@ -172,8 +164,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/spinner_VEG_procedenciaGasto"
                 android:layout_below="@+id/VEG_textViewTotal"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
+                android:layout_alignParentLeft="true" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -181,16 +172,14 @@
                 android:text="Tipo de Documento"
                 android:id="@+id/VEG_textViewSubtotal"
                 android:layout_below="@+id/spinner_VEG_procedenciaGasto"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
+                android:layout_alignParentLeft="true"/>
 
             <Spinner
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/spinner_VEG_tipoDocumento"
                 android:layout_below="@+id/VEG_textViewSubtotal"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
+                android:layout_alignParentLeft="true" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -198,8 +187,7 @@
                 android:text="Importe "
                 android:id="@+id/textView4"
                 android:layout_below="@+id/spinner_VEG_tipoDocumento"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
+                android:layout_alignParentLeft="true"/>
 
             <EditText
                 android:layout_width="wrap_content"
@@ -208,8 +196,7 @@
                 android:ems="10"
                 android:id="@+id/editText_VEG_total"
                 android:layout_below="@+id/textView4"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
+                android:layout_alignParentLeft="true" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -217,8 +204,7 @@
                 android:text="Referencia"
                 android:id="@+id/VEG_textViewIgv"
                 android:layout_below="@+id/editText_VEG_total"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
+                android:layout_alignParentLeft="true" />
 
             <EditText
                 android:layout_width="wrap_content"
@@ -226,9 +212,7 @@
                 android:id="@+id/editText_VEG_referencia"
                 android:layout_below="@+id/VEG_textViewIgv"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_alignRight="@+id/editText_VEG_total"
-                android:layout_alignEnd="@+id/editText_VEG_total" />
+                android:layout_alignRight="@+id/editText_VEG_total" />
 
             <Button
                 android:layout_width="wrap_content"
@@ -237,7 +221,6 @@
                 android:id="@+id/VEE_BTNEstadoNoAtendido"
                 android:layout_below="@+id/editText_VEG_referencia"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
                 android:onClick="agegarGastos" />
         </RelativeLayout>
     </ScrollView>

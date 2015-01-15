@@ -13,8 +13,7 @@
         android:text="@string/VVCR_titulo" android:textSize="20sp"
         android:id="@+id/VVCR_titulo"
         android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentLeft="true" />
 
     <Button
         android:layout_width="wrap_content"
@@ -23,17 +22,14 @@
         android:id="@+id/VVCR_BTNrecalcuz"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignLeft="@+id/VVCR_BTNcancelar"
-        android:layout_alignStart="@+id/VVCR_BTNcancelar" />
+        android:layout_alignLeft="@+id/VVCR_BTNcancelar" />
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/VVCR_SPNcredit"
         android:layout_below="@+id/VVCR_LSTcresel"
-        android:layout_alignRight="@+id/VVCR_BTNcancelar"
-        android:layout_alignEnd="@+id/VVCR_BTNcancelar" />
+        android:layout_alignRight="@+id/VVCR_BTNcancelar" />
 
     <Button
         android:layout_width="wrap_content"
@@ -41,8 +37,7 @@
         android:text=" +  -  Actualizar  -  + "
         android:id="@+id/VVCR_BTNactualiz"
         android:layout_below="@+id/VVCR_SPNcredit"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentLeft="true" />
 
     <Button
         android:layout_width="wrap_content"
@@ -50,8 +45,7 @@
         android:text=" +  -   Cancelar   -  + "
         android:id="@+id/VVCR_BTNcancelar"
         android:layout_below="@+id/VVCR_SPNcredit"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentRight="true" />
 
     <ListView
         android:layout_width="wrap_content"

@@ -239,16 +239,16 @@ return insert;
 
     public void insertSomeComprobCobros() {
 
-        createComprobCobros(1, 1, 1, 1, "FACTURA", "FAC-0001", "2014-12-12", 1000, "",
-                "", 0, 0, 1,1,"historial");
-        createComprobCobros(1, 1, 1, 2, "FACTURA", "FAC-0001", "2014-12-19", 1000, "",
-                "", 0, 0, 1,1,"historial");
-        createComprobCobros(1, 1, 1, 2, "FACTURA", "FAC-0001", "2014-12-19", 500, "",
-                "", 0, 0, 1,1,"historial");
-        createComprobCobros(1, 1, 1, 2, "FACTURA", "FAC-0001", "2014-12-01", 200, "",
-                "", 0, 0, 1,1,"historial");
-        createComprobCobros(2, 2, 2, 2, "FACTURA", "FAC-0002", "2014-12-11", 200, "",
-                "", 0, 0, 1,1,"historial");
+        createComprobCobros(1, 1, 1, 1, "FACTURA", "FAC-0001", "14/01/2015", 1000, "",
+                "", 1, 1, 1,1,"historial");
+        createComprobCobros(1, 1, 1, 2, "FACTURA", "FAC-0001", "14/01/2015", 1000, "",
+                "", 1, 1, 1,1,"historial");
+        createComprobCobros(1, 1, 1, 2, "FACTURA", "FAC-0001", "14/01/2015", 500, "",
+                "", 1, 1, 1,1,"historial");
+        createComprobCobros(1, 1, 1, 2, "BOLETA", "FAC-0001", "14/01/2015", 200, "",
+                "", 1, 1, 1,1,"historial");
+        createComprobCobros(2, 2, 2, 2, "BOLETA", "FAC-0002", "14/01/2015", 200, "",
+                "", 1, 1, 1,1,"historial");
     }
 
 }

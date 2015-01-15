@@ -133,7 +133,8 @@ public class VMovil_Resumen_Caja extends TabActivity {
     }
 
     public void displayListIngresosGastos() {
-        Cursor cursor = dbHelperGastosIngr.listarTodo(((MyApplication) this.getApplication()).getIdAgente());
+        //Cursor cursor = dbHelperGastosIngr.listarTodo(((MyApplication) this.getApplication()).getIdAgente());
+        Cursor cursor = dbHelperGastosIngr.listarTodo(14);
         String[] columns = new String[]{
                 DbAdapter_Resumen_Caja.RC_descripcionComprobante,
                 DbAdapter_Resumen_Caja.RC_cantidad,
