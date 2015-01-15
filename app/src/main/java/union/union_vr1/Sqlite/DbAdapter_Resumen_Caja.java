@@ -29,7 +29,6 @@ public class DbAdapter_Resumen_Caja {
     public static final String RC_cobrado = "rc_re_cobrado";
     public static final String RC_fecha_reporte = "rc_re_fecha_reporte";
 
-
     public static final String TAG = "Resumen_Caja";
     private DbHelper mDbHelper;
     private SQLiteDatabase mDb;
@@ -46,7 +45,7 @@ public class DbAdapter_Resumen_Caja {
                     +RC_vendido+ " real,"
                     +RC_pagado+ " real,"
                     +RC_cobrado+ " real,"
-                    +RC_fecha_reporte+" text);";
+                    +RC_fecha_reporte+" text );";
 
 
     public static final String DELETE_TABLE_RESUMEN_CAJA = "DROP TABLE IF EXISTS " + SQLITE_TABLE_Resumen_Caja;

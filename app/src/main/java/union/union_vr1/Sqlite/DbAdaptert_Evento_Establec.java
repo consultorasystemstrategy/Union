@@ -23,6 +23,7 @@ public class DbAdaptert_Evento_Establec {
     public static final String EE_surtido_venta_ant = "ee_in_surtido_venta_ant";
     public static final String EE_dias_credito = "ee_in_dias_credito";
     public static final String EE_id_agente = "ee_in_id_agente";
+    public static final String estado_sincronizacion = "estado_sincronizacion";
 
     //FALTA OBTENER ESTE CAMPO
     public static final String EE_monto_credito = "ee_re_monto_credito";
@@ -30,6 +31,8 @@ public class DbAdaptert_Evento_Establec {
     //ESTOS CAMPOS LOS RELLENAMOS NOSOTROS[ACTUALIZAMOS]
     public static final String EE_id_estado_no_atencion = "ee_in_id_estado_no_atencion";
     public static final String EE_estado_no_atencion_comentario ="ee_in_estado_no_atencion_comentario";
+
+
     //OBTIENE DE MÁS 2 CAMPOS[SON LOS PARÁMETROS PARA OBTENER LOS ESTABLECIMIENTOS POR RUTA]
     //CAJA LIQUIDACIÓN
     //FECHA
@@ -59,7 +62,8 @@ public class DbAdaptert_Evento_Establec {
                     +EE_dias_credito+" integer,"
                     +EE_id_estado_no_atencion+" integer,"
                     +EE_estado_no_atencion_comentario+" text,"
-                    +EE_id_agente+" integer);";
+                    +EE_id_agente+" integer, " +
+                    estado_sincronizacion+" integer);";
 
     public static final String DELETE_TABLE_EVENTO_ESTABLEC = "DROP TABLE IF EXISTS " + SQLITE_TABLE_Evento_Establec;
 

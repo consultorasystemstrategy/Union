@@ -25,6 +25,7 @@ public class DbAdapter_Comprob_Venta_Detalle {
     public static final String CD_devuelto = "cd_te_devuelto";
     //este campo es redundante[lo mismo que precio unitario (preguntar)]
     public static final String CD_valor_unidad = "cd_in_valor_unidad";
+    public static final String estado_sincronizacion = "estado_sincronizacion";
 
     public static final String TAG = "Comprob_Venta_Detalle";
     private DbHelper mDbHelper;
@@ -47,7 +48,8 @@ public class DbAdapter_Comprob_Venta_Detalle {
                     +CD_precio_unit+" real,"
                     +CD_prom_anterior+" text,"
                     +CD_devuelto+" text,"
-                    +CD_valor_unidad+" integer);";
+                    +CD_valor_unidad+" integer, "
+                    +estado_sincronizacion+" integer);";
 
     public static final String DELETE_TABLE_COMPROB_VENTA_DETALLE = "DROP TABLE IF EXISTS " + SQLITE_TABLE_Comprob_Venta_Detalle;
 

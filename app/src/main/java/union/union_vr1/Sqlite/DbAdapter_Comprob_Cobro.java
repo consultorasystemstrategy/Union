@@ -23,6 +23,7 @@ public class DbAdapter_Comprob_Cobro {
     public static final String CC_doc = "cc_te_doc";
     public static final String CC_fecha_programada = "cc_te_fecha_programada";
     public static final String CC_monto_a_pagar = "cc_re_monto_a_pagar";
+    public static final String estado_sincronizacion = "estado_sincronizacion";
 
 
     //ESTOS CAMPOS ACTUALIZAMOS AL REALIZAR UN COBRO
@@ -60,7 +61,8 @@ public class DbAdapter_Comprob_Cobro {
                     +CC_estado_cobro+" integer,"
                     +CC_id_agente+" integer,"
                     +CC_id_forma_cobro+" integer,"
-                    +CC_lugar_registro+" text);";
+                    +CC_lugar_registro+" text, "
+                    +estado_sincronizacion+" integer);";
 
     public static final String DELETE_TABLE_COMPROB_COBRO = "DROP TABLE IF EXISTS " + SQLITE_TABLE_Comprob_Cobro;
 

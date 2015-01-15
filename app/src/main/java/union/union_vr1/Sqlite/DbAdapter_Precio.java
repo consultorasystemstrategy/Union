@@ -20,6 +20,7 @@ public class  DbAdapter_Precio {
     public static final String PR_precio_unit = "pr_re_precio_unit";
     public static final String PR_desde = "pr_in_desde";
     public static final String PR_hasta = "pr_in_hasta";
+    public static final String estado_sincronizacion = "estado_sincronizacion";
 
 
     //FALTA TRAER ESTOS CAMPOS
@@ -49,7 +50,8 @@ public class  DbAdapter_Precio {
                     +PR_id_agente+" integer,"
                     +PR_desde+" integer,"
                     +PR_hasta+" integer,"
-                    +PR_nombreProducto+" text);"
+                    +PR_nombreProducto+" text, " +
+                    estado_sincronizacion+" integer);"
             ;
 
     public static final String DELETE_TABLE_PRECIO = "DROP TABLE IF EXISTS " + SQLITE_TABLE_Precio;

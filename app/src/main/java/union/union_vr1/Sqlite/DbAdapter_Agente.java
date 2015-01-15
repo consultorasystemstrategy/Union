@@ -28,6 +28,7 @@ public class DbAdapter_Agente {
     public static final String AG_serie_factura = "ag_te_serie_factura";
     public static final String AG_correlativo_boleta = "ag_in_correlativo_boleta";
     public static final String AG_correlativo_factura = "ag_in_correlativo_factura";
+    public static final String estado_sincronizacion = "estado_sincronizacion";
 
     //FALTA TRAER ESTOS CAMPOS
     public static final String AG_correlativo_rrpp = "ag_in_correlativo_rrpp";
@@ -63,7 +64,8 @@ public class DbAdapter_Agente {
                     +AG_serie_rrpp+" text,"
                     +AG_correlativo_boleta+" integer,"
                     +AG_correlativo_factura+" integer,"
-                    +AG_correlativo_rrpp+" integer);";
+                    +AG_correlativo_rrpp+" integer, "
+                    +estado_sincronizacion+ " integer);";
 
     public static final String DELETE_TABLE_AGENTE = "DROP TABLE IF EXISTS " + SQLITE_TABLE_Agente;
 
