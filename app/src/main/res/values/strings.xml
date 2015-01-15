@@ -114,5 +114,6 @@
     <string name="action_example">Example action</string>
     <string name="title_activity_db_manager__agente__get">DbManager_Agente_GET</string>
     <string name="title_activity_mostrar_can_dev_facturas">mostrar_can_dev_facturas</string>
+    <string name="title_activity_vmovil__bluetooth_imprimir">VMovil_BluetoothImprimir</string>
 
 </resources>

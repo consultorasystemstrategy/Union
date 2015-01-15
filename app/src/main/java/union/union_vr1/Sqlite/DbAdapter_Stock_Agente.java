@@ -66,6 +66,7 @@ public class DbAdapter_Stock_Agente {
                     +ST_fisico+" integer,"
                     +ST_id_agente+" integer);";
 
+
     public static final String DELETE_TABLE_STOCK_AGENTE = "DROP TABLE IF EXISTS " + SQLITE_TABLE_Stock_Agente;
 
     public DbAdapter_Stock_Agente(Context ctx) {

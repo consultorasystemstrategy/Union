@@ -24,7 +24,6 @@ public class DbAdaptert_Evento_Establec {
     public static final String EE_dias_credito = "ee_in_dias_credito";
     public static final String EE_id_agente = "ee_in_id_agente";
 
-
     //FALTA OBTENER ESTE CAMPO
     public static final String EE_monto_credito = "ee_re_monto_credito";
 
@@ -105,6 +104,7 @@ public class DbAdaptert_Evento_Establec {
         return mDb.insert(SQLITE_TABLE_Evento_Establec, null, initialValues);
     }
 
+
     public void updateEstadoNoAtendido(String id, int estado, int estadoNoAtendido, String comentario){
         ContentValues initialValues = new ContentValues();
         initialValues.put(EE_id_estado_atencion, estado);
@@ -179,8 +179,10 @@ public class DbAdaptert_Evento_Establec {
         Log.w(TAG, inputText);
         Cursor mCursor = null;
         mCursor = mDb.query(true, SQLITE_TABLE_Evento_Establec, new String[] {EE_id_evt_establec,
-                        EE_id_establec, EE_id_cat_est, EE_nom_establec, EE_nom_cliente, EE_orden,
-                        EE_id_estado_atencion,EE_monto_credito,EE_dias_credito},
+                        EE_id_establec, EE_id_cat_est, EE_id_tipo_doc_cliente, EE_id_estado_atencion,
+                        EE_nom_establec, EE_nom_cliente, EE_doc_cliente, EE_orden, EE_surtido_stock_ant,
+                        EE_surtido_venta_ant, EE_monto_credito, EE_dias_credito, EE_id_estado_no_atencion,
+                        EE_id_agente},
                 EE_id_establec + " = " + inputText, null,
                 null, null, null, null);
         if (mCursor != null) {
