@@ -5,6 +5,7 @@ package union.union_vr1.Objects;
  */
 public class Precio {
 
+    private int idPrecioCategoria;
     private int idProducto;
     private int idCategoriaEstablecimiento;
     private Double costoVenta;
@@ -16,7 +17,8 @@ public class Precio {
     private String nombreProducto;
     private int estadoSincronizacion;
 
-    public Precio(int idProducto, int idCategoriaEstablecimiento, Double costoVenta, Double precioUnitario, int valorUnidad, int idAgente, int desde, int hasta, String nombreProducto, int estadoSincronizacion) {
+    public Precio(int idPrecioCategoria, int idProducto, int idCategoriaEstablecimiento, Double costoVenta, Double precioUnitario, int valorUnidad, int idAgente, int desde, int hasta, String nombreProducto, int estadoSincronizacion) {
+        this.idPrecioCategoria = idPrecioCategoria;
         this.idProducto = idProducto;
         this.idCategoriaEstablecimiento = idCategoriaEstablecimiento;
         this.costoVenta = costoVenta;
@@ -27,6 +29,14 @@ public class Precio {
         this.hasta = hasta;
         this.nombreProducto = nombreProducto;
         this.estadoSincronizacion = estadoSincronizacion;
+    }
+
+    public int getIdPrecioCategoria() {
+        return idPrecioCategoria;
+    }
+
+    public void setIdPrecioCategoria(int idPrecioCategoria) {
+        this.idPrecioCategoria = idPrecioCategoria;
     }
 
     public int getIdProducto() {

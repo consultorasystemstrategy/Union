@@ -527,7 +527,9 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
                 nombre_producto=nombre_producto.substring(0,28);
                 nombre_producto+="...";
             }
-            textoImpresion+=String.format("%-6s",cantidad) + String.format("%-34s",nombre_producto) +String.format("%-5s",importe) + "\n";
+
+            DecimalFormat df = new DecimalFormat("#.00");
+            textoImpresion+=String.format("%-6s",cantidad) + String.format("%-34s",nombre_producto) +String.format("%-5s",df.format(importe)) + "\n";
 
             datosConcatenados+="Producto  "+ nombre_producto + "Vendido satisfactoriamente con id : "+ comprobVentaDetalle;
         }

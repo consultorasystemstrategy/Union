@@ -25,6 +25,8 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.DecimalFormat;
+
 import union.union_vr1.R;
 import union.union_vr1.Sqlite.DBAdapter_Temp_Venta;
 import union.union_vr1.Sqlite.DbAdapter_Precio;
@@ -225,6 +227,7 @@ public class VMovil_Venta_Cabecera_AgregarProductos extends Activity implements 
     private Dialog myTextDialog() {
         final View layout = View.inflate(this, R.layout.dialog_cantidad_productos, null);
 
+        DecimalFormat df = new DecimalFormat("#.00");
         final EditText savedText = ((EditText) layout.findViewById(R.id.VCAP_editTextCantidad));
         final TextView nombreProducto = ((TextView) layout.findViewById(R.id.VCPA_textView2NombreProducto));
         final TextView precio = ((TextView) layout.findViewById(R.id.VCPA_textViewPrecio));
@@ -232,7 +235,7 @@ public class VMovil_Venta_Cabecera_AgregarProductos extends Activity implements 
         Cursor mCursorPrecioUnitarioGeneral = dbHelper_Precio.fetchAllPrecioByIdProductoAndCategoeria(id_producto,id_categoria_establecimiento);
         if (mCursorPrecioUnitarioGeneral.getCount()>0) {
             double precio_unitario = mCursorPrecioUnitarioGeneral.getDouble(mCursorPrecioUnitarioGeneral.getColumnIndexOrThrow(DbAdapter_Precio.PR_precio_unit));
-            precio.setText("Precio : S/. "+precio_unitario);
+            precio.setText("Precio : S/. "+ df.format(precio_unitario));
         }else{
             precio.setText("Precio : S/. No encontrado");
         }
