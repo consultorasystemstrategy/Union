@@ -98,7 +98,7 @@ public class  DbAdapter_Precio {
         initialValues.put(PR_id_producto,precioCategoria.getIdProducto());
         initialValues.put(PR_id_cat_est,precioCategoria.getIdCategoriaEstablecimiento());
         initialValues.put(PR_costo_venta,precioCategoria.getCostoVenta());
-        initialValues.put(PR_precio_unit,precioCategoria.getCostoVenta());
+        initialValues.put(PR_precio_unit,precioCategoria.getPrecioUnitario());
         initialValues.put(PR_valor_unidad,precioCategoria.getValorUnidad());
         initialValues.put(PR_id_agente,idAgente);
         initialValues.put(PR_desde,precioCategoria.getDesde());
@@ -114,7 +114,7 @@ public class  DbAdapter_Precio {
         initialValues.put(PR_id_producto,precioCategoria.getIdProducto());
         initialValues.put(PR_id_cat_est,precioCategoria.getIdCategoriaEstablecimiento());
         initialValues.put(PR_costo_venta,precioCategoria.getCostoVenta());
-        initialValues.put(PR_precio_unit,precioCategoria.getValorUnidad());
+        initialValues.put(PR_precio_unit,precioCategoria.getPrecioUnitario());
         initialValues.put(PR_valor_unidad,precioCategoria.getValorUnidad());
         initialValues.put(PR_id_agente,idAgente);
         initialValues.put(PR_desde,precioCategoria.getDesde());
