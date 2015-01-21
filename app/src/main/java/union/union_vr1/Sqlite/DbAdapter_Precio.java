@@ -98,7 +98,7 @@ public class  DbAdapter_Precio {
         initialValues.put(PR_id_producto,precioCategoria.getIdProducto());
         initialValues.put(PR_id_cat_est,precioCategoria.getIdCategoriaEstablecimiento());
         initialValues.put(PR_costo_venta,precioCategoria.getCostoVenta());
-        initialValues.put(PR_precio_unit,precioCategoria.getValorUnidad());
+        initialValues.put(PR_precio_unit,precioCategoria.getCostoVenta());
         initialValues.put(PR_valor_unidad,precioCategoria.getValorUnidad());
         initialValues.put(PR_id_agente,idAgente);
         initialValues.put(PR_desde,precioCategoria.getDesde());
@@ -181,11 +181,11 @@ public class  DbAdapter_Precio {
 
     }
 
-    public Cursor fetchAllPrecioByIdProductoAndCategoeria(String val01, String val02) {
+    public Cursor fetchAllPrecioByIdProductoAndCategoeria(int idProducto, int idCategoriaEstablecimiento) {
 
         Cursor mCursor = mDb.query(SQLITE_TABLE_Precio, new String[] {PR_id_precio,
                         PR_id_producto, PR_id_cat_est, PR_costo_venta, PR_precio_unit},
-                PR_id_producto + " = " + val01 + " AND " + PR_id_cat_est + " = " + val02,
+                PR_id_producto + " = " + idProducto + " AND " + PR_id_cat_est + " = " + idCategoriaEstablecimiento,
                 null, null, null, null, null);
 
         if (mCursor != null) {
@@ -193,11 +193,11 @@ public class  DbAdapter_Precio {
         }
         return mCursor;
     }
-    public Cursor fetchAllPrecioByIdProductoAndCantidad(int id_producto, int cantidad) {
+    public Cursor fetchAllPrecioByIdProductoAndCantidad(int id_producto, int cantidad, int idCategoriaEstablecimiento) {
 
         Cursor mCursor = mDb.query(SQLITE_TABLE_Precio, new String[] {PR_id_precio,
                         PR_id_producto, PR_id_cat_est, PR_costo_venta, PR_precio_unit},
-                PR_id_producto + " = " + id_producto+ " AND " + PR_desde + " <= " + cantidad+ " AND " + PR_hasta + " >= " + cantidad,
+                PR_id_producto + " = " + id_producto+ " AND " + PR_desde + " <= " + cantidad+ " AND " + PR_hasta + " >= " + cantidad + " AND " + PR_id_cat_est + " = " + idCategoriaEstablecimiento,
                 null, null, null, null, null);
 
         if (mCursor != null) {

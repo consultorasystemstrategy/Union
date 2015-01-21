@@ -161,7 +161,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
         cursorEstablecimiento.moveToFirst();
 
         int idTipoDocCliente = 0;
-        if (cursorEstablecimiento!=null) {
+        if (cursorEstablecimiento.getCount()>0) {
             idTipoDocCliente = cursorEstablecimiento.getInt(cursorEstablecimiento.getColumnIndexOrThrow(DbAdaptert_Evento_Establec.EE_id_tipo_doc_cliente));
         }
         if (idTipoDocCliente==1){

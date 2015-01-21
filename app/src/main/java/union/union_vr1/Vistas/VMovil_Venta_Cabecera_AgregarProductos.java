@@ -229,11 +229,15 @@ public class VMovil_Venta_Cabecera_AgregarProductos extends Activity implements 
         final TextView nombreProducto = ((TextView) layout.findViewById(R.id.VCPA_textView2NombreProducto));
         final TextView precio = ((TextView) layout.findViewById(R.id.VCPA_textViewPrecio));
 
-        Cursor mCursorPrecioUnitarioGeneral = dbHelper_Precio.fetchAllPrecioByIdProductoAndCategoeria(""+id_producto,""+1);
-        double precio_unitario = mCursorPrecioUnitarioGeneral.getDouble(mCursorPrecioUnitarioGeneral.getColumnIndex(DbAdapter_Precio.PR_precio_unit));
-
+        Cursor mCursorPrecioUnitarioGeneral = dbHelper_Precio.fetchAllPrecioByIdProductoAndCategoeria(id_producto,id_categoria_establecimiento);
+        if (mCursorPrecioUnitarioGeneral.getCount()>0) {
+            double precio_unitario = mCursorPrecioUnitarioGeneral.getDouble(mCursorPrecioUnitarioGeneral.getColumnIndexOrThrow(DbAdapter_Precio.PR_precio_unit));
+            precio.setText("Precio : S/. "+precio_unitario);
+        }else{
+            precio.setText("Precio : S/. No encontrado");
+        }
         nombreProducto.setText(nombre);
-        precio.setText("Precio : S/. "+precio_unitario);
+
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Cantidad");
@@ -244,12 +248,19 @@ public class VMovil_Venta_Cabecera_AgregarProductos extends Activity implements 
 
                 Toast.makeText(getApplicationContext(),"Cantidad : "+cantidad + " id_producto : "+ id_producto,Toast.LENGTH_LONG).show();
 
-                Cursor mCursorPrecioUnitario = dbHelper_Precio.fetchAllPrecioByIdProductoAndCantidad(id_producto,cantidad);
+                Cursor mCursorPrecioUnitario = dbHelper_Precio.fetchAllPrecioByIdProductoAndCantidad(id_producto,cantidad, id_categoria_establecimiento);
+
                 double precio_unitario = 10.0;
-                if (mCursorPrecioUnitario==null){
-                    Toast.makeText(getApplicationContext(), "No se encontró un precio para esta cantidad de productos, agregar el precio a la base de datos", Toast.LENGTH_LONG).show();;
-                }else{
+                if (mCursorPrecioUnitario.getCount()!=0){
                     precio_unitario = mCursorPrecioUnitario.getDouble(mCursorPrecioUnitario.getColumnIndex(DbAdapter_Precio.PR_precio_unit));
+                }else{
+                    Cursor mCursorPrecioUnitarioGeneral = dbHelper_Precio.fetchAllPrecioByIdProductoAndCategoeria(id_producto,id_categoria_establecimiento);
+                    mCursorPrecioUnitarioGeneral.moveToFirst();
+                    if (mCursorPrecioUnitarioGeneral.getCount()>0) {
+                        precio_unitario = mCursorPrecioUnitarioGeneral.getDouble(mCursorPrecioUnitarioGeneral.getColumnIndexOrThrow(DbAdapter_Precio.PR_precio_unit));
+                    }else{
+                        Toast.makeText(getApplicationContext(), "No se encontró un precio para esta cantidad de productos, agregar el precio a la base de datos", Toast.LENGTH_LONG).show();;
+                    }
                 }
 
                 double total_importe = precio_unitario*cantidad;

@@ -312,6 +312,7 @@ public class DbAdaptert_Evento_Establec {
         return mCursor;
     }
 
+    /*
     public void insertSomeEstablecs() {
 
         createEstablecs(1, 1, 1, 1, "TIENDA NAs", "JUAN", "10001", 1, 50, 4, 100, 3, 1, 1);
@@ -321,5 +322,6 @@ public class DbAdaptert_Evento_Establec {
         createEstablecs(5, 1, 2, 2, "PERSON NAs", "JUAN", "10001", 1, 11, 21, 5000, 31, 1, 1);
 
     }
+    */
 
 }

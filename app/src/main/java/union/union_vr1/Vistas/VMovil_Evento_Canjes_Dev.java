@@ -54,9 +54,7 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity {
         //------------------------------------------------------
         DbAdaptert_Evento_Establec evenEsta = new DbAdaptert_Evento_Establec(this);
         evenEsta.open();
-        evenEsta.deleteAllEstablecs();
-        evenEsta.insertSomeEstablecs();
-        //--------------------------------------------------------
+
 
         Bundle idE = getIntent().getExtras();
         establec = idE.getString("idEstabX");
