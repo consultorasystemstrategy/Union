@@ -8,11 +8,13 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.ParcelUuid;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,9 +25,12 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.UUID;
 
+import union.union_vr1.Utils.DialogSincronizarOffLine;
+
 public class VMovil_BluetoothImprimir extends Activity{
 
     private Button buttonImprimir;
+    private Button buttonSincronizar;
     private TextView textViewImprimir;
 
     private String textoImpresion = "";
@@ -51,6 +56,7 @@ public class VMovil_BluetoothImprimir extends Activity{
         setContentView(R.layout.activity_vmovil__bluetooth_imprimir);
 
         buttonImprimir = (Button) findViewById(R.id.button);
+        buttonSincronizar = (Button) findViewById(R.id.buttonSincronizar);
         textViewImprimir = (TextView) findViewById(R.id.textView);
 
         textoImpresion = getIntent().getExtras().getString("textoImpresion");
@@ -60,6 +66,17 @@ public class VMovil_BluetoothImprimir extends Activity{
             @Override
             public void onClick(View view) {
                 new AsyncTaskImprimir().execute(textoImpresion);
+            }
+        });
+        buttonSincronizar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                findBT();
+                try {
+                    openBT();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -119,19 +136,28 @@ public class VMovil_BluetoothImprimir extends Activity{
                     .getBondedDevices();
             if (pairedDevices.size() > 0) {
                 for (BluetoothDevice device : pairedDevices) {
-
+                    Log.d("Bluetooth name : ", device.getName());
                     // MP300 is the name of the bluetooth printer device
                     if (device.getName().equals("Star Micronics")) {
+
+                        Toast.makeText(getApplicationContext(), "Sincronizado con : "+device.getName().toString(), Toast.LENGTH_LONG).show();
+                        Log.d("Bluetooth message","Bluetooth Device Found");
                         mmDevice = device;
+                        device.getUuids();
+                        ParcelUuid[] parcelUuids= device.getUuids();
+
+
+
+
+                        Log.d("Bluetooth, UUIDS  ",parcelUuids[1].getUuid().toString());
                         break;
                     }
                 }
             }
-            Log.d("Bluetooth message","Bluetooth Device Found");
         } catch (NullPointerException e) {
-            e.printStackTrace();
+            Log.d("Bluetooth message", e.getMessage());
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.d("Bluetooth message", e.getMessage());
         }
     }
 

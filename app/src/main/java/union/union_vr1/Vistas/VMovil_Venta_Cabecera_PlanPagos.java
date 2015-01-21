@@ -42,6 +42,7 @@ public class VMovil_Venta_Cabecera_PlanPagos extends Activity {
     private TextView textViewMontoTotal;
     private Button butttonCalcularCuotas;
 
+    DecimalFormat df = new DecimalFormat("#.00");
 
     private Cursor cursorEstablecimiento;
     private DbAdaptert_Evento_Establec dbHelperEventoEstablecimiento;
@@ -98,7 +99,7 @@ public class VMovil_Venta_Cabecera_PlanPagos extends Activity {
         final Intent intent = getIntent();
         total = intent.getDoubleExtra("total", 0.0);
 
-        textViewMontoTotal.setText("S/. " + total);
+        textViewMontoTotal.setText("S/. " + df.format(total));
 
         idEstablecimiento = ((MyApplication) this.getApplication()).getIdEstablecimiento();
         idAgente = ((MyApplication) this.getApplication()).getIdAgente();
@@ -221,6 +222,7 @@ public class VMovil_Venta_Cabecera_PlanPagos extends Activity {
                         "Cuotas Establecidos \nYa no podrá agregar productos, ni eliminar productos", Toast.LENGTH_SHORT).show();
 
                 Intent intent = new Intent(this, VMovil_Venta_Cabecera.class);
+                finish();
                 startActivity(intent);
 
                 break;

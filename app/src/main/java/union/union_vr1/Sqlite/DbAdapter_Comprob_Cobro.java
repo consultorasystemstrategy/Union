@@ -157,7 +157,7 @@ public class DbAdapter_Comprob_Cobro {
         mDb.update(SQLITE_TABLE_Comprob_Cobro, initialValues,
                 CC_id_comprobante_cobro + " = ?",
                 new String[]{
-                        ""+comprobanteCobro.getIdComprobanteCobro(),
+                        ""+comprobanteCobro.getIdComprobanteCobro()
                 });
     }
 

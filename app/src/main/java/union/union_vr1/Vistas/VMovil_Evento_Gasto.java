@@ -71,7 +71,6 @@ public class VMovil_Evento_Gasto extends Activity /*implements OnClickListener *
         dbHelperTipoGasto = new DbAdapter_Tipo_Gasto(this);
         dbHelperTipoGasto.open();
 
-
         /*
         dbHelperTipoGasto.deleteAllTipoGastos();
         dbHelperInformeGasto.deleteAllInformeGastos();
@@ -91,11 +90,18 @@ public class VMovil_Evento_Gasto extends Activity /*implements OnClickListener *
         editTextReferencia = (EditText) findViewById(R.id.editText_VEG_referencia);
 
         addItemsOnSpinners();
+
+        /*
         spinnerTipoGasto.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 String tipoGasto = adapterView.getItemAtPosition(i).toString();
-                TipoDeGasto tipoDeGasto = TipoDeGasto.valueOf(tipoGasto);
+                TipoDeGasto tipoDeGasto = null;
+                try{
+                    tipoDeGasto = TipoDeGasto.valueOf(tipoGasto);
+                }catch (Exception e){
+                    Log.d("Value of Tipo Gasto ", e.getMessage());
+                }
 
                 switch (tipoDeGasto) {
                     case Combustible:
@@ -124,8 +130,9 @@ public class VMovil_Evento_Gasto extends Activity /*implements OnClickListener *
                     case Nuevo:
                         addItemsTipoDocumento();
                         break;
-
-
+                    default:
+                        addItemsTipoDocumento();
+                        break;
                 }
             }
 
@@ -133,7 +140,7 @@ public class VMovil_Evento_Gasto extends Activity /*implements OnClickListener *
             public void onNothingSelected(AdapterView<?> adapterView) {
 
             }
-        });
+        });*/
         spinnerProcedenciaGasto.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -357,6 +364,7 @@ public class VMovil_Evento_Gasto extends Activity /*implements OnClickListener *
 
 
         Cursor cursor = dbHelperInformeGasto.fetchAllInformeGastos();
+        cursor.moveToFirst();
 
         // The desired columns to be bound
         String[] columns = new String[]{

@@ -291,7 +291,7 @@ public class StockAgenteRestApi {
         return result;
     }
 
-    public JSONObject GetEstablecimeintoXRuta(int idCajaLiqui,String fecha) throws Exception {
+    public JSONObject GetEstablecimeintoXRuta(int idCajaLiqui,String fecha,int idAgente) throws Exception {
         JSONObject result = null;
         JSONObject o = new JSONObject();
         JSONObject p = new JSONObject();
@@ -299,6 +299,7 @@ public class StockAgenteRestApi {
         o.put("method", "GetEstablecimeintoXRuta");
         p.put("idCajaLiqui",mapObject(idCajaLiqui));
         p.put("fecha",mapObject(fecha));
+        p.put("idAgente",mapObject(idAgente));
         o.put("parameters", p);
         String s = o.toString();
         String r = load(s);
