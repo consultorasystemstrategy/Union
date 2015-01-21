@@ -34,6 +34,7 @@ public class ParserPrecio {
             {
                 jsonObj=jsonArray.getJSONObject(i);
                 arrayList.add(new Precio(
+                        jsonObj.getInt("idPrecioCategoria"),
                         jsonObj.getInt("idProducto"),
                         jsonObj.getInt("idCateEstablec"),
                         jsonObj.getDouble("costoVenta"),

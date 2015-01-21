@@ -7,6 +7,8 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import java.text.DecimalFormat;
+
 import union.union_vr1.Conexion.DbHelper;
 import union.union_vr1.Objects.Precio;
 
@@ -15,6 +17,7 @@ public class  DbAdapter_Precio {
 
     //PROCEDIMIENTO TRAE ESTOS CAMPOS
     public static final String PR_id_precio = "_id";
+    public static final String PR_id_precio_categoria = "pr_in_id_precio_categoria";
     public static final String PR_id_producto = "pr_in_id_producto";
     public static final String PR_id_cat_est = "pr_in_id_cat_estt";
     public static final String PR_costo_venta = "pr_re_costo_venta";
@@ -43,6 +46,7 @@ public class  DbAdapter_Precio {
     public static final String CREATE_TABLE_PRECIO =
             "create table "+SQLITE_TABLE_Precio+" ("
                     +PR_id_precio+" integer primary key autoincrement,"
+                    +PR_id_precio_categoria+" integer,"
                     +PR_id_producto+" integer,"
                     +PR_id_cat_est+" integer,"
                     +PR_costo_venta+" real,"
@@ -95,6 +99,7 @@ public class  DbAdapter_Precio {
     public long createPrecios(Precio precioCategoria, int idAgente){
 
         ContentValues initialValues = new ContentValues();
+        initialValues.put(PR_id_producto,precioCategoria.getIdPrecioCategoria());
         initialValues.put(PR_id_producto,precioCategoria.getIdProducto());
         initialValues.put(PR_id_cat_est,precioCategoria.getIdCategoriaEstablecimiento());
         initialValues.put(PR_costo_venta,precioCategoria.getCostoVenta());
@@ -112,6 +117,7 @@ public class  DbAdapter_Precio {
 
         ContentValues initialValues = new ContentValues();
         initialValues.put(PR_id_producto,precioCategoria.getIdProducto());
+        initialValues.put(PR_id_producto,precioCategoria.getIdPrecioCategoria());
         initialValues.put(PR_id_cat_est,precioCategoria.getIdCategoriaEstablecimiento());
         initialValues.put(PR_costo_venta,precioCategoria.getCostoVenta());
         initialValues.put(PR_precio_unit,precioCategoria.getPrecioUnitario());
@@ -124,11 +130,9 @@ public class  DbAdapter_Precio {
 
         return mDb.update(SQLITE_TABLE_Precio,
                 initialValues,
-                PR_id_producto + "=? AND "+PR_id_cat_est + "=? AND "+PR_valor_unidad + "=?",
+                PR_id_precio_categoria + "=?",
                 new String[]{
-                        ""+precioCategoria.getIdProducto(),
-                        ""+precioCategoria.getIdCategoriaEstablecimiento(),
-                        ""+precioCategoria.getValorUnidad()
+                        ""+precioCategoria.getIdPrecioCategoria()
                 });
     }
 
@@ -235,6 +239,12 @@ public class  DbAdapter_Precio {
         createPrecio( 5, 1, 51.00, 51.50, 1,1, 1, 30,"Panetón Integral");
         createPrecio( 5, 2, 52.00, 52.50, 1,1, 31, 60,"Panetón Integral");
         createPrecio( 5, 3, 53.00, 53.50, 1,1, 61, 1000,"Panetón Integral");
+    }
+
+    double formatDecimal(double d)
+    {
+        DecimalFormat df = new DecimalFormat("#,00");
+        return Double.valueOf(df.format(d));
     }
 
 }

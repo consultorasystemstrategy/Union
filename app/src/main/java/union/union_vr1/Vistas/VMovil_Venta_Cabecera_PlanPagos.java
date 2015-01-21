@@ -36,7 +36,7 @@ import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 import union.union_vr1.Utils.MyApplication;
 
 
-public class VMovil_Venta_Cabecera_PlanPagos extends Activity{
+public class VMovil_Venta_Cabecera_PlanPagos extends Activity {
 
     private Spinner spinnerCuotas;
     private TextView textViewMontoTotal;
@@ -98,28 +98,28 @@ public class VMovil_Venta_Cabecera_PlanPagos extends Activity{
         final Intent intent = getIntent();
         total = intent.getDoubleExtra("total", 0.0);
 
-        textViewMontoTotal.setText("S/. "+total);
+        textViewMontoTotal.setText("S/. " + total);
 
-        idEstablecimiento = ((MyApplication)this.getApplication()).getIdEstablecimiento();
-        idAgente = ((MyApplication)this.getApplication()).getIdAgente();
+        idEstablecimiento = ((MyApplication) this.getApplication()).getIdEstablecimiento();
+        idAgente = ((MyApplication) this.getApplication()).getIdAgente();
 
 
-        cursorEstablecimiento = dbHelperEventoEstablecimiento.fetchEstablecsById(""+idEstablecimiento);
+        cursorEstablecimiento = dbHelperEventoEstablecimiento.fetchEstablecsById("" + idEstablecimiento);
 
         cursorEstablecimiento.moveToFirst();
         monto_credito = cursorEstablecimiento.getDouble(cursorEstablecimiento.getColumnIndex(DbAdaptert_Evento_Establec.EE_monto_credito));
         dias_credito = cursorEstablecimiento.getInt(cursorEstablecimiento.getColumnIndex(DbAdaptert_Evento_Establec.EE_dias_credito));
 
-        Log.d("Establecimiento count cursor : ", ""+cursorEstablecimiento.getCount());
+        Log.d("Establecimiento count cursor : ", "" + cursorEstablecimiento.getCount());
 
-        if (monto_credito<total) {
+        if (monto_credito < total) {
             DialogCreditoInsuficiente(this).show();
         }
 
-        switch (dias_credito){
+        switch (dias_credito) {
             case 3:
-                 adapterCuotas = ArrayAdapter.createFromResource(this, R.array.nCuota1, android.R.layout.simple_spinner_item);
-                 numeroCuotas = 1;
+                adapterCuotas = ArrayAdapter.createFromResource(this, R.array.nCuota1, android.R.layout.simple_spinner_item);
+                numeroCuotas = 1;
                 break;
             case 7:
                 adapterCuotas = ArrayAdapter.createFromResource(this, R.array.nCuota1, android.R.layout.simple_spinner_item);
@@ -138,12 +138,12 @@ public class VMovil_Venta_Cabecera_PlanPagos extends Activity{
                 numeroCuotas = 1;
                 break;
 
-      }
+        }
         adapterCuotas.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerCuotas.setAdapter(adapterCuotas);
 
 
-        header = getLayoutInflater().inflate(R.layout.venta_cabecera_plan_pagos,null);
+        header = getLayoutInflater().inflate(R.layout.venta_cabecera_plan_pagos, null);
         listView.addHeaderView(header);
 
     }
@@ -153,7 +153,7 @@ public class VMovil_Venta_Cabecera_PlanPagos extends Activity{
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Crédito Insuficiente");
         builder.setMessage("Monto de Crédito : " + monto_credito + "\n" + " < " +
-                "Saldo : " + total);
+                "Saldo : " + formatDecimal(total));
         builder.setPositiveButton("OK", new Dialog.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 Intent intent = new Intent(context, VMovil_Venta_Cabecera.class);
@@ -183,125 +183,126 @@ public class VMovil_Venta_Cabecera_PlanPagos extends Activity{
         return super.onOptionsItemSelected(item);
     }
 
-    public Date getDatePhone()
-    {
+    public Date getDatePhone() {
         Calendar cal = new GregorianCalendar();
         Date date = cal.getTime();
         return date;
     }
-    private String getTimePhone()
-    {
+
+    private String getTimePhone() {
         Calendar cal = new GregorianCalendar();
         Date date = cal.getTime();
         SimpleDateFormat df = new SimpleDateFormat("hh:mm:ss");
         String formatteTime = df.format(date);
         return formatteTime;
     }
-    public static Date sumaDias(Date fecha, int dias){
+
+    public static Date sumaDias(Date fecha, int dias) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(fecha);
         cal.add(Calendar.DAY_OF_YEAR, dias);
         return cal.getTime();
     }
 
-    public static String dateToString(Date date){
+    public static String dateToString(Date date) {
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         return df.format(date);
     }
-    public void CalcularCuotas(View view){
+
+    public void CalcularCuotas(View view) {
 
         switch (view.getId()) {
             case R.id.VCPP_buttonCalcularCuotas:
                 calcular();
                 break;
-            case  R.id.VCPP_buttonEstablecer:
-              //  ((MyApplication)this.getApplication()).setCuotasEstablecidas(true);
+            case R.id.VCPP_buttonEstablecer:
+                //  ((MyApplication)this.getApplication()).setCuotasEstablecidas(true);
                 Toast.makeText(getApplicationContext(),
                         "Cuotas Establecidos \nYa no podrá agregar productos, ni eliminar productos", Toast.LENGTH_SHORT).show();
 
-                Intent intent = new Intent(this,VMovil_Venta_Cabecera.class);
+                Intent intent = new Intent(this, VMovil_Venta_Cabecera.class);
                 startActivity(intent);
 
                 break;
         }
     }
 
-    public void calcular(){
+    public void calcular() {
 
         dbHelper_TempComprobCobro.deleteAllComprobCobros();
 
         int cuotas = Integer.parseInt(spinnerCuotas.getSelectedItem().toString());
 
 
-        switch (cuotas){
+        switch (cuotas) {
             case 1:
-                if (dias_credito==3){
-                    Date date = sumaDias(getDatePhone(),3);
-                    dbHelper_TempComprobCobro.createComprobCobros(idEstablecimiento, id_comprobante,id_plan_pago,id_plan_pago_detalle,tipo_documento,doc,dateToString(date),total,fecha_cobro,hora_cobro,monto_cobrado,estado_cobro,idAgente,id_forma_cobro,lugar_registro);
+                if (dias_credito == 3) {
+                    Date date = sumaDias(getDatePhone(), 3);
+                    dbHelper_TempComprobCobro.createComprobCobros(idEstablecimiento, id_comprobante, id_plan_pago, id_plan_pago_detalle, tipo_documento, doc, dateToString(date), total, fecha_cobro, hora_cobro, monto_cobrado, estado_cobro, idAgente, id_forma_cobro, lugar_registro);
 
-                }else{
-                    Date date = sumaDias(getDatePhone(),7);
-                    dbHelper_TempComprobCobro.createComprobCobros(idEstablecimiento, id_comprobante,id_plan_pago,id_plan_pago_detalle,tipo_documento,doc,dateToString(date),total,fecha_cobro,hora_cobro,monto_cobrado,estado_cobro,idAgente,id_forma_cobro,lugar_registro);
+                } else {
+                    Date date = sumaDias(getDatePhone(), 7);
+                    dbHelper_TempComprobCobro.createComprobCobros(idEstablecimiento, id_comprobante, id_plan_pago, id_plan_pago_detalle, tipo_documento, doc, dateToString(date), total, fecha_cobro, hora_cobro, monto_cobrado, estado_cobro, idAgente, id_forma_cobro, lugar_registro);
 
                 }
 
                 break;
             case 2:
                 Date date = null;
-                Double sub_monto = total/2;
-                for (int i = 1; i<=cuotas;i++){
-                    if (i==1){
-                        date = sumaDias(getDatePhone(),7);
-                    }else if(i==2){
-                        date = sumaDias(getDatePhone(),14);
+                Double sub_monto = total / 2;
+                for (int i = 1; i <= cuotas; i++) {
+                    if (i == 1) {
+                        date = sumaDias(getDatePhone(), 7);
+                    } else if (i == 2) {
+                        date = sumaDias(getDatePhone(), 14);
                     }
-                    dbHelper_TempComprobCobro.createComprobCobros(idEstablecimiento, id_comprobante,id_plan_pago,id_plan_pago_detalle,tipo_documento,doc,dateToString(date),sub_monto,fecha_cobro,hora_cobro,monto_cobrado,estado_cobro,idAgente,id_forma_cobro,lugar_registro);
+                    dbHelper_TempComprobCobro.createComprobCobros(idEstablecimiento, id_comprobante, id_plan_pago, id_plan_pago_detalle, tipo_documento, doc, dateToString(date), sub_monto, fecha_cobro, hora_cobro, monto_cobrado, estado_cobro, idAgente, id_forma_cobro, lugar_registro);
                 }
                 break;
             case 3:
                 Date date3 = null;
-                Double sub_monto3 = total/3;
-                for (int i = 1; i<=cuotas;i++){
-                    switch (i){
+                Double sub_monto3 = total / 3;
+                for (int i = 1; i <= cuotas; i++) {
+                    switch (i) {
                         case 1:
-                            date3 = sumaDias(getDatePhone(),7);
+                            date3 = sumaDias(getDatePhone(), 7);
                             break;
                         case 2:
-                            date3 = sumaDias(getDatePhone(),14);
+                            date3 = sumaDias(getDatePhone(), 14);
                             break;
                         case 3:
-                            date3 = sumaDias(getDatePhone(),21);
+                            date3 = sumaDias(getDatePhone(), 21);
                             break;
                         default:
 
                             break;
                     }
-                    dbHelper_TempComprobCobro.createComprobCobros(idEstablecimiento, id_comprobante,id_plan_pago,id_plan_pago_detalle,tipo_documento,doc,dateToString(date3),sub_monto3,fecha_cobro,hora_cobro,monto_cobrado,estado_cobro,idAgente,id_forma_cobro,lugar_registro);
+                    dbHelper_TempComprobCobro.createComprobCobros(idEstablecimiento, id_comprobante, id_plan_pago, id_plan_pago_detalle, tipo_documento, doc, dateToString(date3), sub_monto3, fecha_cobro, hora_cobro, monto_cobrado, estado_cobro, idAgente, id_forma_cobro, lugar_registro);
                 }
                 break;
             case 4:
                 Date date4 = getDatePhone();
-                Double sub_monto4 = total/4;
-                for (int i = 1; i<=cuotas;i++){
-                    switch (i){
+                Double sub_monto4 = total / 4;
+                for (int i = 1; i <= cuotas; i++) {
+                    switch (i) {
                         case 1:
-                            date4 = sumaDias(getDatePhone(),7);
+                            date4 = sumaDias(getDatePhone(), 7);
                             break;
                         case 2:
-                            date4 = sumaDias(getDatePhone(),14);
+                            date4 = sumaDias(getDatePhone(), 14);
                             break;
                         case 3:
-                            date4 = sumaDias(getDatePhone(),21);
+                            date4 = sumaDias(getDatePhone(), 21);
                             break;
                         case 4:
-                            date4 = sumaDias(getDatePhone(),28);
+                            date4 = sumaDias(getDatePhone(), 28);
                             break;
                         default:
-                            Log.d("Default","Cuotas 4");
-                            date = sumaDias(getDatePhone(),7);
+                            Log.d("Default", "Cuotas 4");
+                            date = sumaDias(getDatePhone(), 7);
                             break;
                     }
-                    dbHelper_TempComprobCobro.createComprobCobros(idEstablecimiento, id_comprobante,id_plan_pago,id_plan_pago_detalle,tipo_documento,doc,dateToString(date4),sub_monto4,fecha_cobro,hora_cobro,monto_cobrado,estado_cobro,idAgente,id_forma_cobro,lugar_registro);
+                    dbHelper_TempComprobCobro.createComprobCobros(idEstablecimiento, id_comprobante, id_plan_pago, id_plan_pago_detalle, tipo_documento, doc, dateToString(date4), sub_monto4, fecha_cobro, hora_cobro, monto_cobrado, estado_cobro, idAgente, id_forma_cobro, lugar_registro);
                 }
 
                 break;
@@ -331,5 +332,10 @@ public class VMovil_Venta_Cabecera_PlanPagos extends Activity{
                 0);
 
         listView.setAdapter(simpleCursorAdapter);
+    }
+
+    double formatDecimal(double d) {
+        DecimalFormat df = new DecimalFormat("#,00");
+        return Double.valueOf(df.format(d));
     }
 }
