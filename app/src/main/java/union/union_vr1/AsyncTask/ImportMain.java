@@ -82,7 +82,7 @@ public class ImportMain extends AsyncTask<String, String, String> {
         dbAdapter_histo_venta_detalle.open();
 
         idAgente = ((MyApplication)mainActivity.getApplication()).getIdAgente();
-
+        dbAdapter_tipo_gasto.deleteAllTipoGastos();
 
         this.mainActivity = mainActivity;
         listView = (ListView) mainActivity.findViewById(R.id.listView);
@@ -120,7 +120,7 @@ public class ImportMain extends AsyncTask<String, String, String> {
             JSONObject jsonObjectTipoGasto = api.GetTipoGasto();
             JSONObject jsonObjectPrecio = api.GetPrecioCategoria(idLiquidacion,idAgente);
             publishProgress(""+20);
-            JSONObject jsonObjectEventoEstablecimiento = api.GetEstablecimeintoXRuta(1,"01/08/2014");
+            JSONObject jsonObjectEventoEstablecimiento = api.GetEstablecimeintoXRuta(1,"01/08/2014", idAgente);
             JSONObject jsonObjectComprobanteCobro = api.GetHistorialCobrosPendientes();
             JSONObject jsonObjectHistorialVentaDetalle = api.GetHistorialVentaDetalle(idAgente);
             publishProgress(""+30);

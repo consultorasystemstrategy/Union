@@ -37,8 +37,15 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:text="Imprimir"
-                android:id="@+id/button"
-                android:layout_below="@+id/editText" />
+                android:id="@+id/button"/>
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Sincdronizar"
+                android:id="@+id/buttonSincronizar"/>
+
+
         </LinearLayout>
     </ScrollView>
 
