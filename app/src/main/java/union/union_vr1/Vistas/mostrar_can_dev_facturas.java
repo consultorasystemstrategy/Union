@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -30,6 +32,7 @@ import union.union_vr1.Sqlite.CursorAdapterFacturas_Canjes_Dev;
 import union.union_vr1.Sqlite.CursorAdapter_Facturas_Canjes_Dev;
 import union.union_vr1.Sqlite.DbAdapter_Canjes_Devoluciones;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
+import union.union_vr1.VMovil_BluetoothImprimir;
 
 public class mostrar_can_dev_facturas extends TabActivity {
     private String idEstablec;
@@ -140,6 +143,7 @@ public class mostrar_can_dev_facturas extends TabActivity {
     }
 
     private void displayListDevoluciones() {
+
         TextView view_dev = new TextView(getApplicationContext());
         TextView footer = new TextView(getApplicationContext());
         Cursor cabecera = dbHelper_CanDev.obtener_cabecera(idEstablec);
@@ -257,25 +261,6 @@ public class mostrar_can_dev_facturas extends TabActivity {
     }
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.mostrar_can_dev_facturas, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     private String getDatePhone() {
         Calendar cal = new GregorianCalendar();
         Date date = cal.getTime();
@@ -313,11 +298,6 @@ public class mostrar_can_dev_facturas extends TabActivity {
         return super.onKeyDown(keyCode, event);
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        dialog_regresar();
-    }
 
     public void exito() {
 
@@ -378,5 +358,66 @@ public class mostrar_can_dev_facturas extends TabActivity {
         alertDialog.show();
 
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.mostrar_can_dev_facturas, menu);
+        return true;
+    }
+    private String text(){
+        Cursor cabecera = dbHelper_CanDev.obtener_cabecera(idEstablec);
+        cabecera.moveToFirst();
+        String textoImpresion = ".\n"
+                +"    UNIVERSIDAD PERUANA UNION   \n"
+                +"     Cent.aplc. Prod. Union     \n"
+                +"   C. Central Km 19 Villa Union \n"
+                +" Lurigancho-Chosica Fax: 6186311\n"
+                +"      Telf: 6186309-6186310     \n"
+                +" Casilla 3564, Lima 1, LIMA PERU\n"
+                +"         RUC: 20138122256       \n"
+                +"--------------------------------\n"
+                +"        NOTA DE CREDITO         \n"
+                +"--------------------------------\n"
+                +"Descripcion                     \n"
+                +"                                \n"
+                +"Nota de Credito Nro: "+cabecera.getString(7)+"\n"
+                +"Fecha: "+getDatePhone()+"       \n"
+                +"Cliente: "+cabecera.getString(6)+"\n";
+        Cursor cr = dbHelper_CanDev.obtener_facturas_canjes(1, idEstablec);
+        ArrayList<String> texto = new ArrayList<String>();
+        cr.moveToFirst();
+        for(int g =0;g<cr.getCount();g++){
+
+            texto.add(""+cr.getString(17)+" "+cr.getString(9)+" "+cr.getDouble(18)*cr.getInt(17)+"\n"
+                    +"-----------------------------------\n");
+        }
+
+        return textoImpresion+texto.toString().replace("[","").replace("]","").replace(",","");
+    }
+
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int idTab=tabHost.getCurrentTab();
+        //item.setVisible(false);
+        switch (item.getItemId()) {
+            case R.id.printCanjesDev:
+                if(idTab==0){
+                Intent  i = new Intent(getApplicationContext(),VMovil_BluetoothImprimir.class);
+                i.putExtra("textoImpresion",text());
+                startActivity(i);
+                }else{
+                    Toast.makeText(getApplicationContext(),"Usted no Puede Imprimir devoluciones",Toast.LENGTH_SHORT).show();
+
+                }
+                break;
+        }
+        return true;
+    }
+
 }
 

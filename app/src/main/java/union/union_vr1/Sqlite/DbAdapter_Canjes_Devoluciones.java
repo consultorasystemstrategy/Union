@@ -44,7 +44,7 @@ public class DbAdapter_Canjes_Devoluciones {
     public boolean insertarCanjes(String idEstablec, int idProducto, int idtipoOpe, String comprobante, String nomEstablec, String nomProducto, int idCategoria, int cantidad, double importe, String lote, int idAgente) {
         boolean estado = false;
         try {
-            mDb.execSQL("insert into m_histo_venta_detalle values (null,'', '', '" + idEstablec + "','" + idProducto + "','" + idtipoOpe + "','','" + comprobante + "', '" + nomEstablec + "', '" + nomProducto + "', '','', '', '', '', '" + idCategoria + "','','" + cantidad + "','" + importe + "','" + getDatePhone() + "','pendiente','" + lote + "','','1','" + idAgente + "',0,0,0.0,'','');");
+            mDb.execSQL("insert into m_histo_venta_detalle values (null,'', '', '" + idEstablec + "','" + idProducto + "','" + idtipoOpe + "','','" + comprobante + "', '" + nomEstablec + "', '" + nomProducto + "', '','', '', '', '', '" + idCategoria + "','','" + cantidad + "','" + importe + "','" + getDatePhone() + "','pendiente','" + lote + "','','1','" + idAgente + "',0,0,0.0,'','','"+Constants._CREADO+"');");
             Cursor cr = mDb.rawQuery("select * from m_stock_agente where st_in_id_producto='" + idProducto + "'", null);
             cr.moveToFirst();
             int devol_canjes = cr.getInt(cr.getColumnIndex("st_in_canjes"));
@@ -63,8 +63,8 @@ public class DbAdapter_Canjes_Devoluciones {
     public boolean insertar_Dev(String idEstablec, int idProducto, int idtipoOpe, String comprobante, String nomEstablec, String nomProducto, int idCategoria, int cantidad_dev, double importe, String lote, int idAgente) {
         boolean estado = false;
         try {
-            mDb.execSQL("insert into m_histo_venta_detalle (_id,hd_in_id_detalle,hd_in_id_establec,hd_in_id_producto,hd_te_comprobante,hd_te_nom_estab,hd_te_nom_producto,hd_te_lote,hd_in_estado,hd_in_id_agente,hd_in_cantidad_ope_dev,hd_in_categoria_ope_dev,hd_re_importe_ope_dev,hg_te_fecha_ope_dev,hd_te_hora_ope_dev) " +
-                    "values(null,'','" + idEstablec + "','" + idProducto + "','" + comprobante + "','" + nomEstablec + "','" + nomProducto + "','" + lote + "','1','" + idAgente + "','" + cantidad_dev + "','" + idCategoria + "','" + importe + "','" + getDatePhone() + "','pendiente') ");
+            mDb.execSQL("insert into m_histo_venta_detalle (_id,hd_in_id_detalle,hd_in_id_establec,hd_in_id_producto,hd_te_comprobante,hd_te_nom_estab,hd_te_nom_producto,hd_te_lote,hd_in_estado,hd_in_id_agente,hd_in_cantidad_ope_dev,hd_in_categoria_ope_dev,hd_re_importe_ope_dev,hg_te_fecha_ope_dev,hd_te_hora_ope_dev,estado_sincronizacion) " +
+                    "values(null,'','" + idEstablec + "','" + idProducto + "','" + comprobante + "','" + nomEstablec + "','" + nomProducto + "','" + lote + "','1','" + idAgente + "','" + cantidad_dev + "','" + idCategoria + "','" + importe + "','" + getDatePhone() + "','pendiente','"+Constants._CREADO+"') ");
             Cursor cr = mDb.rawQuery("select * from m_stock_agente where st_in_id_producto='" + idProducto + "'", null);
             cr.moveToFirst();
             int devol_canjes = cr.getInt(cr.getColumnIndex("st_in_devoluciones"));
@@ -81,7 +81,7 @@ public class DbAdapter_Canjes_Devoluciones {
     }
 
     public Cursor obtenerStock(int id, int idProducto) {
-        Cursor cr = mDb.rawQuery("select *,st_in_disponible- (st_in_canjes+st_in_devoluciones) as 'disponible' from m_stock_agente where st_in_id_producto='" + idProducto + "' and st_in_id_agente='" + id + "'", null);
+        Cursor cr = mDb.rawQuery("select *,st_in_disponible- (st_in_canjes) as 'disponible' from m_stock_agente where st_in_id_producto='" + idProducto + "' and st_in_id_agente='" + id + "'", null);
         return cr;
     }
 
@@ -177,7 +177,7 @@ public class DbAdapter_Canjes_Devoluciones {
     }
 
     public Cursor obtener_igv(int id, String idEstablec) {
-        Cursor cr = mDb.rawQuery("select sum(hd_in_cantidad_ope*hd_re_importe_ope )  as total,sum(hd_re_importe_ope*hd_in_cantidad_ope)/1.18 as subtotal,sum(hd_re_importe_ope*hd_in_cantidad_ope)-sum(hd_re_importe_ope*hd_in_cantidad_ope)/1.18  as igv from  m_histo_venta_detalle where  hd_in_id_tipoper='" + id + "'  and  hg_te_fecha_ope='" + getDatePhone() + "' and hd_te_hora_ope ='pendiente' and hd_in_id_establec='" + idEstablec + "'", null);
+        Cursor cr = mDb.rawQuery("select ROUND(sum(hd_in_cantidad_ope*hd_re_importe_ope ),1)  as total,ROUND(sum(hd_re_importe_ope*hd_in_cantidad_ope)/1.18,1) as subtotal,ROUND((sum(hd_re_importe_ope*hd_in_cantidad_ope)-sum(hd_re_importe_ope*hd_in_cantidad_ope)/1.18),1)  as igv from  m_histo_venta_detalle where  hd_in_id_tipoper='" + id + "'  and  hg_te_fecha_ope='" + getDatePhone() + "' and hd_te_hora_ope ='pendiente' and hd_in_id_establec='" + idEstablec + "'", null);
         return cr;
     }
 
@@ -221,7 +221,8 @@ public class DbAdapter_Canjes_Devoluciones {
             while (c.moveToNext()) {
                 mDb.execSQL("update m_histo_venta_detalle set hd_te_hora_ope='" + getTimePhone() + "' where  hd_in_id_detalle='" + c.getString(1) + "';");
             }
-            Cursor stock = mDb.rawQuery("select * from m_stock_agente;", null);
+            Cursor stock = mDb.rawQuery("select distinct(ag._id),ag.st_in_id_producto,ag.st_te_nombre,ag. st_te_codigo,ag.st_te_codigo_barras,ag.st_in_inicial,ag.st_in_final,ag.st_in_disponible,ag.st_in_ventas,ag.st_in_canjes,ag.st_in_devoluciones,\n" +
+                    "ag.st_in_buenos,ag.st_in_malos,ag.st_in_fisico,ag.st_in_id_agente from m_stock_agente ag,m_histo_venta_detalle mv where ag.st_in_id_producto=mv.hd_in_id_producto and mv.hd_te_hora_ope_dev='pendiente'", null);
             int disponible = 0;
             int idProducto = 0;
             while (stock.moveToNext()) {

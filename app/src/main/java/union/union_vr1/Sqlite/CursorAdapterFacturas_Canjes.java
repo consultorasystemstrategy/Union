@@ -9,6 +9,8 @@ import android.view.WindowManager;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
+
 /**
  * Created by Usuario on 30/12/2014.
  */
@@ -37,12 +39,14 @@ public class CursorAdapterFacturas_Canjes extends CursorAdapter{
         String cantidad = cursor.getString(17);
         Double precio = cursor.getDouble(18);
         String idProducto = cursor.getString(4);
+        DecimalFormat df= new DecimalFormat("#0.00");
+
 
 
         String textAdapter = "Producto: "+producto+"" +
                 "\nCantidad: "+cantidad+"" +
                 "\nP.U: "+precio+"" +
-                "\nTot: "+precio*cursor.getInt(17)+"" +
+                "\nTot: "+df.format(precio*cursor.getInt(17))+"" +
                 "\nRef: "+idProducto+"";
         textView.setText(textAdapter);
     }
