@@ -78,6 +78,13 @@
         <item>boleta</item>
         <item>ficha</item>
     </string-array>
+    <string-array name="tipoDocumentoFactura">
+        <item>factura</item>
+    </string-array>
+    <string-array name="tipoDocumentoBoleta">
+        <item>boleta</item>
+    </string-array>
+
     <string-array name="tipoDocumentoCombustiblePlanta">
         <item>ficha</item>
     </string-array>

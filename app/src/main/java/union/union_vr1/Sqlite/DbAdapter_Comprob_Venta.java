@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import union.union_vr1.Conexion.DbHelper;
+import union.union_vr1.Objects.ComprobanteVenta;
 
 public class DbAdapter_Comprob_Venta {
 
@@ -107,6 +108,71 @@ public class DbAdapter_Comprob_Venta {
         initialValues.put(CV_id_agente,id_agente);
 
         return mDb.insert(SQLITE_TABLE_Comprob_Venta, null, initialValues);
+    }
+
+    public long createComprobVentas(ComprobanteVenta comprobante, int id_agente){
+
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(CV_id_establec,comprobante.getIdEstablecimiento());
+        initialValues.put(CV_id_tipo_doc, comprobante.getIdTipoDocumento());
+        initialValues.put(CV_id_forma_pago,comprobante.getIdFormaPago());
+        initialValues.put(CV_id_tipo_venta,comprobante.getIdTipoVenta());
+        initialValues.put(CV_codigo_erp,comprobante.getCodigoErp());
+        initialValues.put(CV_serie,comprobante.getSerie());
+        initialValues.put(CV_num_doc,comprobante.getNumeroDocumento());
+        initialValues.put(CV_base_imp,comprobante.getBaseImponible());
+        initialValues.put(CV_igv,comprobante.getIgv());
+        initialValues.put(CV_total,comprobante.getTotal());
+        initialValues.put(CV_fecha_doc, comprobante.getFechaDoc());
+        initialValues.put(CV_hora_doc,comprobante.getHoraDoc());
+        initialValues.put(CV_estado_comp, comprobante.getEstadoComprobante());
+        initialValues.put(CV_estado_conexion, comprobante.getEstadoConexion());
+        initialValues.put(CV_id_agente,id_agente);
+
+        return mDb.insert(SQLITE_TABLE_Comprob_Venta, null, initialValues);
+    }
+
+    public void updateComprobantes(ComprobanteVenta comprobante, int id_agente){
+
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(CV_id_establec,comprobante.getIdEstablecimiento());
+        initialValues.put(CV_id_tipo_doc, comprobante.getIdTipoDocumento());
+        initialValues.put(CV_id_forma_pago,comprobante.getIdFormaPago());
+        initialValues.put(CV_id_tipo_venta,comprobante.getIdTipoVenta());
+        initialValues.put(CV_codigo_erp,comprobante.getCodigoErp());
+        initialValues.put(CV_serie,comprobante.getSerie());
+        initialValues.put(CV_num_doc,comprobante.getNumeroDocumento());
+        initialValues.put(CV_base_imp,comprobante.getBaseImponible());
+        initialValues.put(CV_igv,comprobante.getIgv());
+        initialValues.put(CV_total,comprobante.getTotal());
+        initialValues.put(CV_fecha_doc, comprobante.getFechaDoc());
+        initialValues.put(CV_hora_doc,comprobante.getHoraDoc());
+        initialValues.put(CV_estado_comp, comprobante.getEstadoComprobante());
+        initialValues.put(CV_estado_conexion, comprobante.getEstadoConexion());
+        initialValues.put(CV_id_agente,id_agente);
+
+        mDb.update(SQLITE_TABLE_Comprob_Venta, initialValues,
+                CV_id_establec+"=?",new String[]{""+comprobante.getIdEstablecimiento()});
+    }
+
+    public boolean existeComprobVentaById(int id) {
+        boolean exists = false;
+        Cursor mCursor = mDb.query(SQLITE_TABLE_Comprob_Venta, new String[] {CV_id_comprob,
+
+                        CV_id_establec, CV_id_tipo_doc, CV_id_forma_pago, CV_id_tipo_venta,
+                        CV_codigo_erp, CV_serie, CV_num_doc, CV_base_imp, CV_igv, CV_total,
+                        CV_fecha_doc, CV_hora_doc, CV_estado_comp, CV_estado_conexion, CV_id_agente
+                },
+                CV_id_establec + " = " + id, null, null, null, null);
+
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+            exists = true;
+        }
+        if (mCursor.getCount()==0){
+            exists = false;
+        }
+        return exists;
     }
 
     public boolean deleteAllComprobVenta() {

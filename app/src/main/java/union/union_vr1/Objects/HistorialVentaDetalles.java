@@ -5,11 +5,11 @@ package union.union_vr1.Objects;
  */
 public class HistorialVentaDetalles {
 
-    private int idDetalle;
+    private String idDetalle;
     private int idComprobante;
     private int idEstablecimiento;
     private int idProducto;
-    private int idTipoPersona;
+    private int idTipoOperacion;
     private int orden;
     private String comprobante;
     private String nombreEstablecimiento;
@@ -36,12 +36,12 @@ public class HistorialVentaDetalles {
     private String horaOperacionesDevuelto;
     private int estadoSincronizacion;
 
-    public HistorialVentaDetalles(int idDetalle, int idComprobante, int idEstablecimiento, int idProducto, int idTipoPersona, int orden, String comprobante, String nombreEstablecimiento, String nombreProducto, int cantidad, Double importe, String fecha, String hora, int valorUnidad, int categoriaOperacion, int formaOperacion, int cantidadOperacion, Double importeOperacion, String fechaOperacion, String horaOperacion, String lote, String lugarRegistro, int estado, int idAgente, int cantidadOperacionesDevuelto, int categoriaOperacionesDevuelto, Double importeOperacionesDevuelto, String fechaOperacionesDevuelto, String horaOperacionesDevuelto, int estadoSincronizacion) {
+    public HistorialVentaDetalles(String idDetalle, int idComprobante, int idEstablecimiento, int idProducto, int idTipoOperacion, int orden, String comprobante, String nombreEstablecimiento, String nombreProducto, int cantidad, Double importe, String fecha, String hora, int valorUnidad, int categoriaOperacion, int formaOperacion, int cantidadOperacion, Double importeOperacion, String fechaOperacion, String horaOperacion, String lote, String lugarRegistro, int estado, int idAgente, int cantidadOperacionesDevuelto, int categoriaOperacionesDevuelto, Double importeOperacionesDevuelto, String fechaOperacionesDevuelto, String horaOperacionesDevuelto, int estadoSincronizacion) {
         this.idDetalle = idDetalle;
         this.idComprobante = idComprobante;
         this.idEstablecimiento = idEstablecimiento;
         this.idProducto = idProducto;
-        this.idTipoPersona = idTipoPersona;
+        this.idTipoOperacion = idTipoOperacion;
         this.orden = orden;
         this.comprobante = comprobante;
         this.nombreEstablecimiento = nombreEstablecimiento;
@@ -69,11 +69,11 @@ public class HistorialVentaDetalles {
         this.estadoSincronizacion = estadoSincronizacion;
     }
 
-    public int getIdDetalle() {
+    public String getIdDetalle() {
         return idDetalle;
     }
 
-    public void setIdDetalle(int idDetalle) {
+    public void setIdDetalle(String idDetalle) {
         this.idDetalle = idDetalle;
     }
 
@@ -101,12 +101,12 @@ public class HistorialVentaDetalles {
         this.idProducto = idProducto;
     }
 
-    public int getIdTipoPersona() {
-        return idTipoPersona;
+    public int getidTipoOperacion() {
+        return idTipoOperacion;
     }
 
-    public void setIdTipoPersona(int idTipoPersona) {
-        this.idTipoPersona = idTipoPersona;
+    public void setidTipoOperacion(int idTipoOperacion) {
+        this.idTipoOperacion = idTipoOperacion;
     }
 
     public int getOrden() {

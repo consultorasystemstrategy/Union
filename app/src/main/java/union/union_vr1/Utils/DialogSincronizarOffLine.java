@@ -48,7 +48,7 @@ public class DialogSincronizarOffLine extends DialogFragment implements View.OnC
             Intent i = new Intent(getActivity(),DbManager_Agente_GET.class);
             i.putExtra("putIdAgenteVenta", displayAgenteById());
             startActivity(i);
-            Toast.makeText(getActivity(),"Sincronizando Datos de Online a Ofline . . .",Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(),"Sincronizando Datos de Online a Offline . . .",Toast.LENGTH_LONG).show();
         }else{
             dismiss();
             Toast.makeText(getActivity(),"Cancelado",Toast.LENGTH_LONG).show();

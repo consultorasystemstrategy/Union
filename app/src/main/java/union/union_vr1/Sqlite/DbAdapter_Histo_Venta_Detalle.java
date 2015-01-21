@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import union.union_vr1.Conexion.DbHelper;
+import union.union_vr1.Objects.HistorialVentaDetalles;
 
 public class DbAdapter_Histo_Venta_Detalle {
 
@@ -55,20 +56,20 @@ public class DbAdapter_Histo_Venta_Detalle {
     public static final String CREATE_TABLE_HISTO_VENTA_DETALLE =
             "create table "+SQLITE_TABLE_Histo_Venta_Detalle+" ("
                     +HD_id_hventadet+" integer primary key autoincrement,"
-                    +HD_id_detalle+" integer,"
-                    +HD_id_comprob+" integer," //no u
+                    +HD_id_detalle+" text,"
+                    +HD_id_comprob+" integer,"
                     +HD_id_establec+" integer,"
                     +HD_id_producto+" integer,"
-                    +HD_id_tipoper+" integer," //no
+                    +HD_id_tipoper+" integer,"
                     +HD_orden+" integer,"
                     +HD_comprobante+" text,"
                     +HD_nom_estab+" text,"
                     +HD_nom_producto+" text,"
                     +HD_cantidad+" integer,"
                     +HD_importe+" real,"
-                    +HD_fecha+" text," //no u
-                    +HD_hora+" text," //no u
-                    +HD_valor_unidad+" integer,"// no u
+                    +HD_fecha+" text,"
+                    +HD_hora+" text,"
+                    +HD_valor_unidad+" integer,"
                     +HD_categoria_ope+" integer,"
                     +HD_forma_ope+" integer,"
                     +HD_cantidad_ope+" integer,"
@@ -83,7 +84,7 @@ public class DbAdapter_Histo_Venta_Detalle {
                     +HD_categoria_ope_dev+" integer,"
                     +HD_importe_ope_dev+" real,"
                     +HD_fecha_ope_dev+" text,"
-                    +HD_hora_ope_dev+" text " +
+                    +HD_hora_ope_dev+" text, " +
                     estado_sincronizacion+" integer);";
 
     public static final String DELETE_TABLE_HISTO_VENTA_DETALLE = "DROP TABLE IF EXISTS " + SQLITE_TABLE_Histo_Venta_Detalle;
@@ -145,6 +146,97 @@ public class DbAdapter_Histo_Venta_Detalle {
         return mDb.insert(SQLITE_TABLE_Histo_Venta_Detalle, null, initialValues);
     }
 
+    public long createHistoVentaDetalle(HistorialVentaDetalles historialVentaDetalles){
+
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(HD_id_detalle,historialVentaDetalles.getIdDetalle());
+        initialValues.put(HD_id_comprob,historialVentaDetalles.getIdComprobante());
+        initialValues.put(HD_id_establec,historialVentaDetalles.getIdEstablecimiento());
+        initialValues.put(HD_id_producto,historialVentaDetalles.getIdProducto());
+        initialValues.put(HD_id_tipoper,historialVentaDetalles.getidTipoOperacion());
+        initialValues.put(HD_orden,historialVentaDetalles.getOrden());
+        initialValues.put(HD_comprobante,historialVentaDetalles.getComprobante());
+        initialValues.put(HD_nom_estab,historialVentaDetalles.getNombreEstablecimiento());
+        initialValues.put(HD_nom_producto,historialVentaDetalles.getNombreProducto());
+        initialValues.put(HD_cantidad,historialVentaDetalles.getCantidad());
+        initialValues.put(HD_importe,historialVentaDetalles.getImporte());
+        initialValues.put(HD_fecha,historialVentaDetalles.getFecha());
+        initialValues.put(HD_hora,historialVentaDetalles.getHora());
+        initialValues.put(HD_valor_unidad,historialVentaDetalles.getValorUnidad());
+        initialValues.put(HD_categoria_ope,historialVentaDetalles.getCategoriaOperacion());
+        initialValues.put(HD_forma_ope,historialVentaDetalles.getFormaOperacion());
+        initialValues.put(HD_cantidad_ope,historialVentaDetalles.getCantidadOperacion());
+        initialValues.put(HD_importe_ope,historialVentaDetalles.getImporteOperacion());
+        initialValues.put(HD_fecha_ope,historialVentaDetalles.getFechaOperacion());
+        initialValues.put(HD_hora_ope,historialVentaDetalles.getHoraOperacion());
+        initialValues.put(HD_lote, historialVentaDetalles.getLote());
+        initialValues.put(HD_lugar_registro,historialVentaDetalles.getLugarRegistro());
+        initialValues.put(HD_estado, historialVentaDetalles.getEstado());
+        initialValues.put(HD_id_agente,historialVentaDetalles.getIdAgente());
+        initialValues.put(HD_cantidad_ope_dev,historialVentaDetalles.getCantidadOperacionesDevuelto());
+        initialValues.put(HD_categoria_ope_dev,historialVentaDetalles.getCategoriaOperacionesDevuelto());
+        initialValues.put(HD_importe_ope_dev,historialVentaDetalles.getImporteOperacionesDevuelto());
+        initialValues.put(HD_fecha_ope_dev,historialVentaDetalles.getFechaOperacionesDevuelto());
+        initialValues.put(HD_hora_ope_dev,historialVentaDetalles.getHoraOperacionesDevuelto());
+        initialValues.put(Constants._SINCRONIZAR,historialVentaDetalles.getEstadoSincronizacion());
+
+        return mDb.insert(SQLITE_TABLE_Histo_Venta_Detalle, null, initialValues);
+    }
+
+    public void updateHistoVentaDetalle(HistorialVentaDetalles historialVentaDetalles){
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(HD_id_detalle,historialVentaDetalles.getIdDetalle());
+        initialValues.put(HD_id_comprob,historialVentaDetalles.getIdComprobante());
+        initialValues.put(HD_id_establec,historialVentaDetalles.getIdEstablecimiento());
+        initialValues.put(HD_id_producto,historialVentaDetalles.getIdProducto());
+        initialValues.put(HD_id_tipoper,historialVentaDetalles.getidTipoOperacion());
+        initialValues.put(HD_orden,historialVentaDetalles.getOrden());
+        initialValues.put(HD_comprobante,historialVentaDetalles.getComprobante());
+        initialValues.put(HD_nom_estab,historialVentaDetalles.getNombreEstablecimiento());
+        initialValues.put(HD_nom_producto,historialVentaDetalles.getNombreProducto());
+        initialValues.put(HD_cantidad,historialVentaDetalles.getCantidad());
+        initialValues.put(HD_importe,historialVentaDetalles.getImporte());
+        initialValues.put(HD_fecha,historialVentaDetalles.getFecha());
+        initialValues.put(HD_hora,historialVentaDetalles.getHora());
+        initialValues.put(HD_valor_unidad,historialVentaDetalles.getValorUnidad());
+        initialValues.put(HD_categoria_ope,historialVentaDetalles.getCategoriaOperacion());
+        initialValues.put(HD_forma_ope,historialVentaDetalles.getFormaOperacion());
+        initialValues.put(HD_cantidad_ope,historialVentaDetalles.getCantidadOperacion());
+        initialValues.put(HD_importe_ope,historialVentaDetalles.getImporteOperacion());
+        initialValues.put(HD_fecha_ope,historialVentaDetalles.getFechaOperacion());
+        initialValues.put(HD_hora_ope,historialVentaDetalles.getHoraOperacion());
+        initialValues.put(HD_lote, historialVentaDetalles.getLote());
+        initialValues.put(HD_lugar_registro,historialVentaDetalles.getLugarRegistro());
+        initialValues.put(HD_estado, historialVentaDetalles.getEstado());
+        initialValues.put(HD_id_agente,historialVentaDetalles.getIdAgente());
+        initialValues.put(HD_cantidad_ope_dev,historialVentaDetalles.getCantidadOperacionesDevuelto());
+        initialValues.put(HD_categoria_ope_dev,historialVentaDetalles.getCategoriaOperacionesDevuelto());
+        initialValues.put(HD_importe_ope_dev,historialVentaDetalles.getImporteOperacionesDevuelto());
+        initialValues.put(HD_fecha_ope_dev,historialVentaDetalles.getFechaOperacionesDevuelto());
+        initialValues.put(HD_hora_ope_dev,historialVentaDetalles.getHoraOperacionesDevuelto());
+        initialValues.put(Constants._SINCRONIZAR,historialVentaDetalles.getEstadoSincronizacion());
+
+        mDb.update(SQLITE_TABLE_Histo_Venta_Detalle, initialValues,
+                HD_id_detalle+"=?",new String[]{""+historialVentaDetalles.getIdDetalle()});
+    }
+
+    public boolean existeHistoVentaDetalle(String idDetalle) {
+        boolean exists = false;
+        Cursor mCursor = mDb.query(SQLITE_TABLE_Histo_Venta_Detalle, new String[] {HD_id_hventadet,
+                        HD_id_detalle, HD_id_comprob, HD_id_establec, HD_id_producto, HD_id_tipoper,
+                        HD_orden, HD_comprobante, HD_nom_producto, HD_cantidad, HD_importe, HD_fecha,
+                        HD_categoria_ope, HD_forma_ope, HD_cantidad_ope, HD_importe_ope, HD_fecha_ope, HD_estado},
+                HD_id_detalle + " = " + idDetalle, null, null, null, null);
+
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+            exists=true;
+        }
+        if (mCursor.getCount()==0){
+            exists=false;
+        }
+        return exists;
+    }
     public void updateHistoVentaDetalle1(String idorig, int id_tipoper, int categoria_ope, int forma_ope,
             int cantidad_ope, double importe_ope, String fecha_ope, String hora_ope, String lote,
             String lugar_registro, int estado){

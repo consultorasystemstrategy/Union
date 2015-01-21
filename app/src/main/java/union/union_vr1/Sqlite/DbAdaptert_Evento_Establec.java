@@ -7,6 +7,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import union.union_vr1.Conexion.DbHelper;
+import union.union_vr1.Objects.EventoEstablecimiento;
 
 public class DbAdaptert_Evento_Establec {
 
@@ -54,7 +55,7 @@ public class DbAdaptert_Evento_Establec {
                     +EE_id_estado_atencion+" integer,"
                     +EE_nom_establec+" text,"
                     +EE_nom_cliente+" text,"
-                    +EE_doc_cliente+" text,"
+                    +EE_doc_cliente         +" text,"
                     +EE_orden+" integer,"
                     +EE_surtido_stock_ant+" integer,"
                     +EE_surtido_venta_ant+" integer,"
@@ -108,7 +109,65 @@ public class DbAdaptert_Evento_Establec {
         return mDb.insert(SQLITE_TABLE_Evento_Establec, null, initialValues);
     }
 
+    public long createEstablecimientos(EventoEstablecimiento establecimiento, int id_agente) {
 
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(EE_id_establec,establecimiento.getIdEstablecimiento());
+        initialValues.put(EE_id_cat_est,establecimiento.getIdCategoriaEstablecimiento());
+        initialValues.put(EE_id_tipo_doc_cliente,establecimiento.getTipoDocCliente());
+        initialValues.put(EE_id_estado_atencion, establecimiento.getEstadoAtencion());
+        initialValues.put(EE_nom_establec,establecimiento.getNombreEstablecimiento());
+        initialValues.put(EE_nom_cliente,establecimiento.getNombreCliente());
+        initialValues.put(EE_doc_cliente,establecimiento.getDocCliente());
+        initialValues.put(EE_orden,establecimiento.getOrden());
+        initialValues.put(EE_surtido_stock_ant,establecimiento.getSurtidoStockAnterior());
+        initialValues.put(EE_surtido_venta_ant,establecimiento.getSurtidoVentaAnterior());
+        initialValues.put(EE_monto_credito,establecimiento.getMontoCredito());
+        initialValues.put(EE_dias_credito,establecimiento.getDiasCredito());
+        initialValues.put(EE_id_estado_no_atencion,establecimiento.getIdEstadoNoAtencion());
+        initialValues.put(EE_id_agente,id_agente);
+
+        return mDb.insert(SQLITE_TABLE_Evento_Establec, null, initialValues);
+    }
+    public void updateEstablecimientos(EventoEstablecimiento establecimiento, int id_agente){
+
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(EE_id_establec,establecimiento.getIdEstablecimiento());
+        initialValues.put(EE_id_cat_est,establecimiento.getIdCategoriaEstablecimiento());
+        initialValues.put(EE_id_tipo_doc_cliente,establecimiento.getTipoDocCliente());
+        initialValues.put(EE_id_estado_atencion, establecimiento.getEstadoAtencion());
+        initialValues.put(EE_nom_establec,establecimiento.getNombreEstablecimiento());
+        initialValues.put(EE_nom_cliente,establecimiento.getNombreCliente());
+        initialValues.put(EE_doc_cliente,establecimiento.getDocCliente());
+        initialValues.put(EE_orden,establecimiento.getOrden());
+        initialValues.put(EE_surtido_stock_ant,establecimiento.getSurtidoStockAnterior());
+        initialValues.put(EE_surtido_venta_ant,establecimiento.getSurtidoVentaAnterior());
+        initialValues.put(EE_monto_credito,establecimiento.getMontoCredito());
+        initialValues.put(EE_dias_credito,establecimiento.getDiasCredito());
+        initialValues.put(EE_id_estado_no_atencion,establecimiento.getIdEstadoNoAtencion());
+        initialValues.put(EE_id_agente,id_agente);
+        mDb.update(SQLITE_TABLE_Evento_Establec, initialValues,
+                EE_id_establec+"=?",new String[]{""+establecimiento.getIdEstablecimiento()});
+    }
+
+    public boolean existeEstablecsById(int idEstablec) throws SQLException {
+        boolean exists = false;
+        Cursor mCursor = null;
+        mCursor = mDb.query(true, SQLITE_TABLE_Evento_Establec, new String[] {EE_id_evt_establec,
+                        EE_id_establec, EE_id_cat_est, EE_nom_establec, EE_nom_cliente, EE_orden,
+                        EE_id_estado_atencion,EE_monto_credito,EE_dias_credito},
+                EE_id_establec + " = " + idEstablec, null,
+                null, null, null, null);
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+            exists = true;
+        }
+        if (mCursor.getCount()==0){
+            exists= false;
+        }
+        return exists;
+
+    }
     public void updateEstadoNoAtendido(String id, int estado, int estadoNoAtendido, String comentario){
         ContentValues initialValues = new ContentValues();
         initialValues.put(EE_id_estado_atencion, estado);
@@ -255,11 +314,11 @@ public class DbAdaptert_Evento_Establec {
 
     public void insertSomeEstablecs() {
 
-        createEstablecs(1, 1, 3, 1, "TIENDA NAs", "JUAN", "10001", 1, 50, 4, 100, 3, 1, 1);
-        createEstablecs(2, 1, 4, 2, "TIENDA NBs", "JUAN", "10001", 1, 11, 21, 300, 7, 2, 1);
-        createEstablecs(3, 1, 5, 3, "GRIFO NAs",  "JUAN", "10001", 1, 11, 21, 1000, 15, 3, 1);
-        createEstablecs(4, 1, 6, 1, "GRIFO NBs",  "JUAN", "10001", 1, 11, 21, 5000, 31, 4, 1);
-        createEstablecs(5, 1, 7, 2, "PERSON NAs", "JUAN", "10001", 1, 11, 21, 5000, 31, 1, 1);
+        createEstablecs(1, 1, 1, 1, "TIENDA NAs", "JUAN", "10001", 1, 50, 4, 100, 3, 1, 1);
+        createEstablecs(2, 1, 1, 2, "TIENDA NBs", "JUAN", "10001", 1, 11, 21, 300, 7, 2, 1);
+        createEstablecs(3, 1, 1, 3, "GRIFO NAs",  "JUAN", "10001", 1, 11, 21, 1000, 15, 3, 1);
+        createEstablecs(4, 1, 2, 1, "GRIFO NBs",  "JUAN", "10001", 1, 11, 21, 5000, 31, 4, 1);
+        createEstablecs(5, 1, 2, 2, "PERSON NAs", "JUAN", "10001", 1, 11, 21, 5000, 31, 1, 1);
 
     }
 

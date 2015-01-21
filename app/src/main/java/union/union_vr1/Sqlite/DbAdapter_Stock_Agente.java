@@ -9,6 +9,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import union.union_vr1.Conexion.DbHelper;
+import union.union_vr1.Objects.StockAgente;
 
 public class DbAdapter_Stock_Agente {
 
@@ -110,6 +111,72 @@ public class DbAdapter_Stock_Agente {
 
         return mDb.insert(SQLITE_TABLE_Stock_Agente, null, initialValues);
     }
+
+    public long createStockAgentes(StockAgente stockAgente, int idAgente, int sincronizado){
+
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(ST_id_producto,stockAgente.getIdProducto());
+        initialValues.put(ST_nombre,stockAgente.getNombre());
+        initialValues.put(ST_codigo,stockAgente.getCodigo());
+        initialValues.put(ST_codigo_barras,stockAgente.getCodigoBarras());
+        initialValues.put(ST_inicial,stockAgente.getStockInicial());
+        initialValues.put(ST_final,stockAgente.getStockFinal());
+        initialValues.put(ST_disponible,stockAgente.getDisponible());
+        initialValues.put(ST_ventas,stockAgente.getVentas());
+        initialValues.put(ST_canjes,stockAgente.getCanjes());
+        initialValues.put(ST_devoluciones,stockAgente.getDevoluciones());
+        initialValues.put(ST_buenos,stockAgente.getBuenos());
+        initialValues.put(ST_malos,stockAgente.getMalos());
+        initialValues.put(ST_fisico,stockAgente.getFisico());
+        initialValues.put(ST_id_agente,idAgente);
+        initialValues.put(Constants._SINCRONIZAR, sincronizado);
+
+        return mDb.insert(SQLITE_TABLE_Stock_Agente, null, initialValues);
+    }
+    public void updateStockAgentes(StockAgente stockAgente, int idAgente){
+
+
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(ST_id_producto,stockAgente.getIdProducto());
+        initialValues.put(ST_nombre,stockAgente.getNombre());
+        initialValues.put(ST_codigo,stockAgente.getCodigo());
+        initialValues.put(ST_codigo_barras,stockAgente.getCodigoBarras());
+        initialValues.put(ST_inicial,stockAgente.getStockInicial());
+        initialValues.put(ST_final,stockAgente.getStockFinal());
+        initialValues.put(ST_disponible,stockAgente.getDisponible());
+        initialValues.put(ST_ventas,stockAgente.getVentas());
+        initialValues.put(ST_canjes,stockAgente.getCanjes());
+        initialValues.put(ST_devoluciones,stockAgente.getDevoluciones());
+        initialValues.put(ST_buenos,stockAgente.getBuenos());
+        initialValues.put(ST_malos,stockAgente.getMalos());
+        initialValues.put(ST_fisico,stockAgente.getFisico());
+        initialValues.put(ST_id_agente,idAgente);
+        initialValues.put(Constants._SINCRONIZAR, Constants._ACTUALIZADO);
+
+        mDb.update(SQLITE_TABLE_Stock_Agente, initialValues,
+                ST_id_producto+"=?",new String[]{""+stockAgente.getIdProducto()});
+    }
+
+
+    public boolean existsStockAgenteByIdProd(String inputText) throws SQLException {
+        boolean exists = false;
+        Log.w(TAG, inputText);
+        Cursor mCursor = null;
+        mCursor = mDb.query(true, SQLITE_TABLE_Stock_Agente, new String[] {ST_id_producto,
+                        ST_final, ST_disponible, ST_ventas, ST_fisico},
+                ST_id_producto + " = " + inputText, null, null, null, null, null);
+
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+            exists = true;
+        }
+        if (mCursor.getCount()==0){
+            exists = false;
+        }
+        return exists;
+
+    }
+
 
     public boolean deleteAllStockAgente() {
 

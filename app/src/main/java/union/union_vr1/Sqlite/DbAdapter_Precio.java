@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import union.union_vr1.Conexion.DbHelper;
+import union.union_vr1.Objects.Precio;
 
 public class  DbAdapter_Precio {
 
@@ -91,6 +92,64 @@ public class  DbAdapter_Precio {
         return mDb.insert(SQLITE_TABLE_Precio, null, initialValues);
     }
 
+    public long createPrecios(Precio precioCategoria, int idAgente){
+
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(PR_id_producto,precioCategoria.getIdProducto());
+        initialValues.put(PR_id_cat_est,precioCategoria.getIdCategoriaEstablecimiento());
+        initialValues.put(PR_costo_venta,precioCategoria.getCostoVenta());
+        initialValues.put(PR_precio_unit,precioCategoria.getValorUnidad());
+        initialValues.put(PR_valor_unidad,precioCategoria.getValorUnidad());
+        initialValues.put(PR_id_agente,idAgente);
+        initialValues.put(PR_desde,precioCategoria.getDesde());
+        initialValues.put(PR_hasta,precioCategoria.getHasta());
+        initialValues.put(PR_nombreProducto,precioCategoria.getNombreProducto());
+
+
+        return mDb.insert(SQLITE_TABLE_Precio, null, initialValues);
+    }
+    public long updatePrecios(Precio precioCategoria, int idAgente){
+
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(PR_id_producto,precioCategoria.getIdProducto());
+        initialValues.put(PR_id_cat_est,precioCategoria.getIdCategoriaEstablecimiento());
+        initialValues.put(PR_costo_venta,precioCategoria.getCostoVenta());
+        initialValues.put(PR_precio_unit,precioCategoria.getValorUnidad());
+        initialValues.put(PR_valor_unidad,precioCategoria.getValorUnidad());
+        initialValues.put(PR_id_agente,idAgente);
+        initialValues.put(PR_desde,precioCategoria.getDesde());
+        initialValues.put(PR_hasta,precioCategoria.getHasta());
+        initialValues.put(PR_nombreProducto,precioCategoria.getNombreProducto());
+
+
+        return mDb.update(SQLITE_TABLE_Precio,
+                initialValues,
+                PR_id_producto + "=? AND "+PR_id_cat_est + "=? AND "+PR_valor_unidad + "=?",
+                new String[]{
+                        ""+precioCategoria.getIdProducto(),
+                        ""+precioCategoria.getIdCategoriaEstablecimiento(),
+                        ""+precioCategoria.getValorUnidad()
+                });
+    }
+
+    public boolean existePrecio(int idProducto, int catEstablec, Double precioUnitario) {
+
+        boolean exists = false;
+        Cursor mCursor = mDb.query(SQLITE_TABLE_Precio, new String[] {PR_id_precio,
+                        PR_id_producto, PR_id_cat_est, PR_costo_venta, PR_precio_unit},
+                PR_id_producto + " = " + idProducto + " AND " + PR_id_cat_est + " = " + catEstablec + " AND " + PR_precio_unit+ " = " + precioUnitario ,
+                null, null, null, null, null);
+
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+            exists = true;
+        }
+        if(mCursor.getCount()==0){
+            exists=false;
+        }
+        return exists;
+    }
+
     public boolean deleteAllPrecio() {
 
         int doneDelete = 0;
@@ -150,7 +209,7 @@ public class  DbAdapter_Precio {
     public Cursor fetchAllPrecio() {
 
         Cursor mCursor = mDb.query(SQLITE_TABLE_Precio, new String[] {PR_id_precio,
-                        PR_id_producto, PR_id_cat_est, PR_costo_venta, PR_precio_unit},
+                        PR_id_producto, PR_id_cat_est, PR_costo_venta, PR_precio_unit, PR_nombreProducto},
                 null, null, null, null, null);
 
         if (mCursor != null) {

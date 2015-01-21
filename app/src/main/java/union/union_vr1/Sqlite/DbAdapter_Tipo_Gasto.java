@@ -7,6 +7,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import union.union_vr1.Conexion.DbHelper;
+import union.union_vr1.Objects.TipoGasto;
 
 public class DbAdapter_Tipo_Gasto {
 
@@ -59,6 +60,29 @@ public class DbAdapter_Tipo_Gasto {
         return mDb.insert(SQLITE_TABLE_Tipo_Gasto, null, initialValues);
     }
 
+    public long createTipoGasto(TipoGasto tipoGasto) {
+
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(TG_id_tgasto,tipoGasto.getIdTipoGasto());
+        initialValues.put(TG_nom_tipo_gasto,tipoGasto.getNombreTipoGasto());
+        initialValues.put(Constants._SINCRONIZAR,tipoGasto.getEstadoSincronizacion());
+
+        return mDb.insert(SQLITE_TABLE_Tipo_Gasto, null, initialValues);
+    }
+    public int  updateTipoGasto(TipoGasto tipoGasto) {
+
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(TG_id_tgasto,tipoGasto.getIdTipoGasto());
+        initialValues.put(TG_nom_tipo_gasto,tipoGasto.getNombreTipoGasto());
+        initialValues.put(Constants._SINCRONIZAR,tipoGasto.getEstadoSincronizacion());
+
+        return mDb.update(SQLITE_TABLE_Tipo_Gasto, initialValues, TG_id_tgasto + "=?", new String[]{""+tipoGasto.getIdTipoGasto()} );
+
+    }
+
+
+
+
     public boolean deleteAllTipoGastos() {
 
         int doneDelete = 0;
@@ -88,6 +112,23 @@ public class DbAdapter_Tipo_Gasto {
         }
         return mCursor;
 
+    }
+    public boolean existeTipoGastos(int idTipoGasto) throws SQLException {
+
+        boolean exists = false;
+        Cursor mCursor = null;
+            mCursor = mDb.query(true, SQLITE_TABLE_Tipo_Gasto, new String[] {TG_id_tipo_gasto,
+                            TG_id_tgasto, TG_nom_tipo_gasto},
+                    TG_id_tgasto + " = " + idTipoGasto  , null,
+                    null, null, null, null);
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+            exists = true;
+        }
+        if (mCursor.getCount()==0){
+            exists = false;
+        }
+        return exists;
     }
 
     public Cursor fetchAllTipoGastos() {

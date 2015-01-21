@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -16,6 +17,11 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import union.union_vr1.Conexion.JSONParser;
+import union.union_vr1.JSONParser.ParserAgente;
+import union.union_vr1.Objects.Agente;
+import union.union_vr1.RestApi.StockAgenteRestApi;
+import union.union_vr1.Sqlite.DbAdapter_Agente;
+import union.union_vr1.Utils.MyApplication;
 import union.union_vr1.Vistas.VMovil_Evento_Indice;
 import union.union_vr1.Vistas.VMovil_Online_Pumovil;
 
@@ -28,7 +34,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Login extends Activity implements OnClickListener{
-	
+
+
+    private Login loginClass;
+    private boolean succesLogin;
+    ProgressDialog prgDialog;
 	private EditText user, pass;
 	private Button mSubmit, mSalirs;
     private EditText Txt;
@@ -39,6 +49,7 @@ public class Login extends Activity implements OnClickListener{
     JSONParser jsonParser = new JSONParser();
 
     private String var1 = "";
+    private DbAdapter_Agente dbAdapter_agente;
 
     public void setVar1(String var1){
         this.var1=var1;
@@ -86,7 +97,13 @@ public class Login extends Activity implements OnClickListener{
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.login);
-		
+
+        loginClass = this;
+
+        dbAdapter_agente = new DbAdapter_Agente(this);
+        dbAdapter_agente.open();
+
+
 		//setup input fields
 		user = (EditText)findViewById(R.id.username);
 		pass = (EditText)findViewById(R.id.password);
@@ -164,7 +181,33 @@ public class Login extends Activity implements OnClickListener{
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.login:
-			new AttemptLogin().execute();
+
+            succesLogin = false;
+
+
+            Cursor mCursorAgente = dbAdapter_agente.login(user.getText().toString(), pass.getText().toString());
+            if (mCursorAgente!=null){
+                mCursorAgente.moveToFirst();
+                succesLogin=true;
+            }
+            if(mCursorAgente.getCount()==0){
+                succesLogin=false;
+            }
+
+            if (succesLogin){
+                ((MyApplication) loginClass.getApplication()).setIdAgente(mCursorAgente.getInt(mCursorAgente.getColumnIndexOrThrow(dbAdapter_agente.AG_id_agente_venta)));
+                ((MyApplication) loginClass.getApplication()).setDisplayedHistorialComprobanteAnterior(false);
+                Toast.makeText(getApplicationContext(), "Login correcto", Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(Login.this, VMovil_Online_Pumovil.class);
+                finish();
+                startActivity(i);
+            }else{
+                if (conectadoRedMovil()||conectadoWifi()){
+                    new LoginRest().execute();
+                }
+            }
+
+			//new AttemptLogin().execute();
 			break;
 		case R.id.salir:
             finish();
@@ -173,6 +216,81 @@ public class Login extends Activity implements OnClickListener{
 			break;
 		}
 	}
+
+    class LoginRest extends AsyncTask<String, String, String>{
+
+        @Override
+        protected String doInBackground(String... strings) {
+            StockAgenteRestApi api = new StockAgenteRestApi();
+            ArrayList<Agente> agenteLista = null;
+            JSONObject jsonObjAgente = null;
+            try {
+                jsonObjAgente = api.GetAgenteVenta(user.getText().toString(),pass.getText().toString());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            ParserAgente parserAgente = new ParserAgente();
+
+            publishProgress(""+25);
+            agenteLista = parserAgente.parserAgente(jsonObjAgente);
+            Log.d("JSON OBJECT AGENTE", ""+jsonObjAgente.toString());
+
+
+            publishProgress(""+50);
+            if (agenteLista.size()>0){
+                succesLogin = true;
+                for (int i = 0; i < agenteLista.size() ; i++) {
+                    Log.d("Agente"+i, "Nombre : "+agenteLista.get(i).getNombreAgente());
+
+                    //VARIABLE GLOBAL, PARA OBTENERLA DESDE CUALQUIER SITIO DE LA APLICACIÓN
+                    ((MyApplication) loginClass.getApplication()).setIdAgente(agenteLista.get(i).getIdAgenteVenta());
+                    ((MyApplication) loginClass.getApplication()).setDisplayedHistorialComprobanteAnterior(false);
+
+                    agenteLista.get(i).getIdAgenteVenta();
+                    boolean existe = dbAdapter_agente.existeAgentesById(agenteLista.get(i).getIdAgenteVenta());
+                    Log.d("EXISTE ", ""+existe);
+                    if (existe){
+                        dbAdapter_agente.updateAgente(agenteLista.get(i));
+                    }else {
+                        //NO EXISTE ENTONCES CREEMOS UNO NUEVO
+                        dbAdapter_agente.createAgente(agenteLista.get(i));
+                    }
+                }
+            }
+            publishProgress(""+75);
+
+
+            return null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            createProgressDialog();
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            prgDialog.setProgress(100);
+            prgDialog.dismiss();
+
+            if (succesLogin){
+
+                Toast.makeText(getApplicationContext(), "Login correcto", Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(Login.this, VMovil_Online_Pumovil.class);
+                finish();
+                startActivity(i);
+            }else{
+                Toast.makeText(getApplicationContext(), "Usuario y/o password incorrecto", Toast.LENGTH_SHORT).show();
+            }
+            super.onPostExecute(s);
+        }
+
+        @Override
+        protected void onProgressUpdate(String... values) {
+            prgDialog.setProgress(Integer.parseInt(values[0]));
+        }
+    }
 
 	class AttemptLogin extends AsyncTask<String, String, String> {
 
@@ -261,6 +379,17 @@ public class Login extends Activity implements OnClickListener{
         }
 		
 	}
+
+    public void createProgressDialog(){
+        prgDialog = new ProgressDialog(this);
+        prgDialog.setMessage("Logeando...");
+        prgDialog.setIndeterminate(false);
+        prgDialog.setMax(100);
+        prgDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        prgDialog.setCancelable(false);
+        prgDialog.show();
+
+    }
 		 
 
 }

@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import union.union_vr1.Conexion.DbHelper;
+import union.union_vr1.Objects.ComprobanteCobro;
 
 public class DbAdapter_Comprob_Cobro {
 
@@ -15,6 +16,7 @@ public class DbAdapter_Comprob_Cobro {
 
     //ESTOS CAMPOS OBTENEMOS DEL PROCEDIMIENTO
     public static final String CC_id_cob_historial = "_id";
+    public static final String CC_id_comprobante_cobro  = "cc_in_id_comprobante_cobro";
     public static final String CC_id_establec = "cc_in_id_establec";
     public static final String CC_id_comprob = "cc_in_id_comprob";
     public static final String CC_id_plan_pago = "cc_in_id_plan_pago";
@@ -47,6 +49,7 @@ public class DbAdapter_Comprob_Cobro {
     public static final String CREATE_TABLE_COMPROB_COBRO =
             "create table if not exists "+SQLITE_TABLE_Comprob_Cobro+" ("
                     +CC_id_cob_historial+" integer primary key autoincrement,"
+                    +CC_id_comprobante_cobro+" text,"
                     +CC_id_establec+" integer,"
                     +CC_id_comprob+" integer,"
                     +CC_id_plan_pago+" integer,"
@@ -107,6 +110,76 @@ public class DbAdapter_Comprob_Cobro {
         return mDb.insert(SQLITE_TABLE_Comprob_Cobro, null, initialValues);
     }
 
+    public long createComprobCobro(ComprobanteCobro comprobanteCobro) {
+
+        ContentValues initialValues = new ContentValues();
+
+        initialValues.put(CC_id_comprobante_cobro,comprobanteCobro.getIdComprobanteCobro());
+        initialValues.put(CC_id_establec,comprobanteCobro.getIdEstablecimiento());
+        initialValues.put(CC_id_comprob,comprobanteCobro.getIdComprobante());
+        initialValues.put(CC_id_plan_pago,comprobanteCobro.getIdPlanPago());
+        initialValues.put(CC_id_plan_pago_detalle,comprobanteCobro.getIdPlanPagoDetalle());
+        initialValues.put(CC_desc_tipo_doc,comprobanteCobro.getDescTipoDoc());
+        initialValues.put(CC_doc, comprobanteCobro.getDoc());
+        initialValues.put(CC_fecha_programada,comprobanteCobro.getFechaCobro());
+        initialValues.put(CC_monto_a_pagar,comprobanteCobro.getMontoPagar());
+        initialValues.put(CC_fecha_cobro, comprobanteCobro.getFechaCobro());
+        initialValues.put(CC_hora_cobro,comprobanteCobro.getHoraCobro());
+        initialValues.put(CC_monto_cobrado, comprobanteCobro.getMontoCobrado());
+        initialValues.put(CC_estado_cobro,comprobanteCobro.getEstadoCobro());
+        initialValues.put(CC_id_agente,comprobanteCobro.getIdAgente());
+        initialValues.put(CC_id_forma_cobro, comprobanteCobro.getIdFormaCobro());
+        initialValues.put(CC_lugar_registro, comprobanteCobro.getLugarRegistro());
+        return mDb.insert(SQLITE_TABLE_Comprob_Cobro, null, initialValues);
+    }
+
+    public void updateComprobCobros(ComprobanteCobro comprobanteCobro){
+
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(CC_id_comprobante_cobro,comprobanteCobro.getIdComprobanteCobro());
+        initialValues.put(CC_id_establec,comprobanteCobro.getIdEstablecimiento());
+        initialValues.put(CC_id_comprob,comprobanteCobro.getIdComprobante());
+        initialValues.put(CC_id_plan_pago,comprobanteCobro.getIdPlanPago());
+        initialValues.put(CC_id_plan_pago_detalle,comprobanteCobro.getIdPlanPagoDetalle());
+        initialValues.put(CC_desc_tipo_doc,comprobanteCobro.getDescTipoDoc());
+        initialValues.put(CC_doc, comprobanteCobro.getDoc());
+        initialValues.put(CC_fecha_programada,comprobanteCobro.getFechaCobro());
+        initialValues.put(CC_monto_a_pagar,comprobanteCobro.getMontoPagar());
+        initialValues.put(CC_fecha_cobro, comprobanteCobro.getFechaCobro());
+        initialValues.put(CC_hora_cobro,comprobanteCobro.getHoraCobro());
+        initialValues.put(CC_monto_cobrado, comprobanteCobro.getMontoCobrado());
+        initialValues.put(CC_estado_cobro,comprobanteCobro.getEstadoCobro());
+        initialValues.put(CC_id_agente,comprobanteCobro.getIdAgente());
+        initialValues.put(CC_id_forma_cobro, comprobanteCobro.getIdFormaCobro());
+        initialValues.put(CC_lugar_registro, comprobanteCobro.getLugarRegistro());
+
+
+        mDb.update(SQLITE_TABLE_Comprob_Cobro, initialValues,
+                CC_id_comprobante_cobro + " = ?",
+                new String[]{
+                        ""+comprobanteCobro.getIdComprobanteCobro(),
+                });
+    }
+
+
+    public boolean  existeComprobCobro(String comprobanteCobro) throws SQLException {
+        boolean exists = false;
+        Cursor mCursor = null;
+        mCursor = mDb.query(true, SQLITE_TABLE_Comprob_Cobro, new String[] {CC_id_cob_historial,
+                        CC_id_establec, CC_id_comprob, CC_desc_tipo_doc, CC_doc, CC_fecha_programada,
+                        CC_monto_a_pagar, CC_estado_cobro},
+                CC_id_comprobante_cobro + " = '" + comprobanteCobro+"'" ,
+                null, null, null, null, null);
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+            exists = true;
+        }
+        if (mCursor.getCount()==0){
+            exists= false;
+        }
+        return exists;
+
+    }
 
     public void updateComprobCobros(String id, double valor){
         ContentValues initialValues = new ContentValues();
@@ -197,7 +270,9 @@ return insert;
 
     public Cursor fetchAllComprobCobros() {
 
-        Cursor mCursor = mDb.query(SQLITE_TABLE_Comprob_Cobro, new String[] {CC_id_cob_historial,
+        Cursor mCursor = mDb.query(SQLITE_TABLE_Comprob_Cobro, new String[] {
+
+                        CC_id_comprobante_cobro,CC_id_cob_historial,
                         CC_id_establec, CC_id_comprob, CC_id_plan_pago, CC_id_plan_pago_detalle,
                         CC_desc_tipo_doc, CC_doc, CC_fecha_programada, CC_monto_a_pagar,
                         CC_fecha_cobro, CC_monto_cobrado, CC_estado_cobro},

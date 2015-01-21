@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import union.union_vr1.Conexion.DbHelper;
+import union.union_vr1.Objects.Agente;
 
 public class DbAdapter_Agente {
 
@@ -113,7 +114,73 @@ public class DbAdapter_Agente {
 
         return mDb.insert(SQLITE_TABLE_Agente, null, initialValues);
     }
+    public long createAgente(Agente agente) {
 
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(AG_id_agente_venta,agente.getIdAgenteVenta());
+        initialValues.put(AG_id_empresa,agente.getIdEmpresa());
+        initialValues.put(AG_id_usuario,agente.getIdUsuario());
+        initialValues.put(AG_nombre_agente,agente.getNombreAgente());
+        initialValues.put(AG_nom_usuario,agente.getNombreUsuario());
+        initialValues.put(AG_pass_usuario,agente.getPassUsuario());
+        initialValues.put(AG_liquidacion,agente.getLiquidacion());
+        initialValues.put(AG_km_inicial,agente.getKmInicial());
+        initialValues.put(AG_km_final,agente.getKmFinal());
+        initialValues.put(AG_nombre_ruta,agente.getNombreRuta());
+        initialValues.put(AG_nro_bodegas,agente.getNroBodegas());
+        initialValues.put(AG_serie_boleta,agente.getSerieBoleta());
+        initialValues.put(AG_serie_factura,agente.getSerieFactura());
+        initialValues.put(AG_serie_rrpp, agente.getSerieRrpp());
+        initialValues.put(AG_correlativo_boleta,agente.getCorrelativoBoleta());
+        initialValues.put(AG_correlativo_factura,agente.getCorrelativoFactura());
+        initialValues.put(AG_correlativo_rrpp, agente.getCorrelativoRrpp());
+
+        return mDb.insert(SQLITE_TABLE_Agente, null, initialValues);
+    }
+
+
+    public void updateAgente(Agente agente){
+
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(AG_id_agente_venta,agente.getIdAgenteVenta());
+        initialValues.put(AG_id_empresa,agente.getIdEmpresa());
+        initialValues.put(AG_id_usuario,agente.getIdUsuario());
+        initialValues.put(AG_nombre_agente,agente.getNombreAgente());
+        initialValues.put(AG_nom_usuario,agente.getNombreUsuario());
+        initialValues.put(AG_pass_usuario,agente.getPassUsuario());
+        initialValues.put(AG_liquidacion,agente.getLiquidacion());
+        initialValues.put(AG_km_inicial,agente.getKmInicial());
+        initialValues.put(AG_km_final,agente.getKmFinal());
+        initialValues.put(AG_nombre_ruta,agente.getNombreRuta());
+        initialValues.put(AG_nro_bodegas,agente.getNroBodegas());
+        initialValues.put(AG_serie_boleta,agente.getSerieBoleta());
+        initialValues.put(AG_serie_factura,agente.getSerieFactura());
+        initialValues.put(AG_serie_rrpp, agente.getSerieRrpp());
+        initialValues.put(AG_correlativo_boleta,agente.getCorrelativoBoleta());
+        initialValues.put(AG_correlativo_factura,agente.getCorrelativoFactura());
+        initialValues.put(AG_correlativo_rrpp, agente.getCorrelativoRrpp());
+
+        mDb.update(SQLITE_TABLE_Agente, initialValues,
+                AG_id_agente_venta+"=?",new String[]{""+agente.getIdAgenteVenta()});
+    }
+    public boolean existeAgentesById(int idAgenteVenta) throws SQLException {
+        boolean exists = false;
+        Cursor mCursor = null;
+        mCursor = mDb.query(true, SQLITE_TABLE_Agente, new String[] {AG_id_agente,
+                        AG_id_agente_venta, AG_nombre_agente, AG_nombre_ruta, AG_nro_bodegas},
+                AG_id_agente_venta + " = " + idAgenteVenta, null,
+                null, null, null, null);
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+            exists = true;
+        }
+
+        if (mCursor.getCount()==0){
+            exists=false;
+        }
+        return exists;
+
+    }
     public void updateAgentesBO(String idagen, String seribo, String corrbo){
         ContentValues initialValues = new ContentValues();
         initialValues.put(AG_serie_boleta,seribo);
@@ -151,7 +218,8 @@ public class DbAdapter_Agente {
         Log.w(TAG, inputText);
         Cursor mCursor = null;
         mCursor = mDb.query(true, SQLITE_TABLE_Agente, new String[] {AG_id_agente,
-                        AG_id_agente_venta, AG_nombre_agente, AG_nombre_ruta, AG_nro_bodegas},
+                        AG_id_agente_venta,AG_id_empresa, AG_id_usuario, AG_nombre_agente,AG_nom_usuario,
+                        AG_pass_usuario, AG_liquidacion, AG_km_inicial, AG_km_final,  AG_nombre_ruta, AG_nro_bodegas},
                 AG_id_agente_venta + " = " + inputText, null,
                 null, null, null, null);
         if (mCursor != null) {
@@ -160,6 +228,8 @@ public class DbAdapter_Agente {
         return mCursor;
 
     }
+
+
 
     public String getSerieFacturaByIdAgente(String idAgente) throws SQLException {
         Cursor mCursor = null;
@@ -175,6 +245,29 @@ public class DbAdapter_Agente {
         return mCursor.getString(mCursor.getColumnIndex(AG_serie_factura));
 
     }
+
+    public Cursor login(String usuario, String password) throws SQLException {
+
+        boolean existeUser = false;
+        Cursor mCursor = null;
+        mCursor = mDb.query(true, SQLITE_TABLE_Agente, new String[] {AG_id_agente,
+                        AG_id_agente_venta, AG_nombre_agente, AG_nombre_ruta, AG_nro_bodegas, AG_serie_boleta, AG_serie_factura, AG_serie_rrpp},
+                AG_nom_usuario + " = '" + usuario + "' AND "+ AG_pass_usuario + " = '" + password+"'", null,
+                null, null, null, null);
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+            existeUser=true;
+        }
+        if (mCursor.getCount()==0){
+            existeUser=false;
+        }
+
+
+        return mCursor;
+
+    }
+
+
     public String getSerieBoletaByIdAgente(String idAgente) throws SQLException {
         Cursor mCursor = null;
         mCursor = mDb.query(true, SQLITE_TABLE_Agente, new String[] {AG_id_agente,
@@ -285,19 +378,8 @@ public class DbAdapter_Agente {
     private String M_correlativo_rrpp;
 
     public void insertSomeAgentes() {
-
         createAgentes(14, 1, 1, "URLISH", "AGENTE01", "123456", 1, 1000, 1000, "LIMA 01", 5, "BO001",
                 "FA001", "RP001", 1000, 2000, 3000);
-/*
-        createAgentes(2, 1, 1, "JOSE", "AGENTE02", "123456", 1, 2000, 2000, "LIMA 02", 5, "BO002",
-                "FA002", "RP002", 12, 22, 32);
-        createAgentes(3, 1, 1, "SCANER", "AGENTE03", "123456", 1, 3000, 3000, "LIMA 03", 5, "BO003",
-                "FA003", "RP003", 13, 23, 33);
-        createAgentes(4, 1, 1, "RUBEN", "AGENTE04", "123456", 1, 4000, 4000, "LIMA 04", 5, "BO004",
-                "FA004", "RP004", 14, 24, 34);
-        createAgentes(5, 1, 1, "PEDRO", "AGENTE05", "123456", 1, 5000, 5000, "LIMA 05", 5, "BO005",
-                "FA005", "RP005", 15, 25, 35);
-*/
     }
 
 }

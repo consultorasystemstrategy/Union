@@ -71,10 +71,14 @@ public class VMovil_Evento_Gasto extends Activity /*implements OnClickListener *
         dbHelperTipoGasto = new DbAdapter_Tipo_Gasto(this);
         dbHelperTipoGasto.open();
 
+
+        /*
         dbHelperTipoGasto.deleteAllTipoGastos();
         dbHelperInformeGasto.deleteAllInformeGastos();
         dbHelperTipoGasto.insertSomeTipoGastos();
         dbHelperInformeGasto.insertSomeInformeGastos();
+
+        */
 
 
         spinnerTipoGasto = (Spinner) findViewById(R.id.spinner_VEG_tipoGasto);

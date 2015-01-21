@@ -157,17 +157,38 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
         setContentView(R.layout.princ_venta_cabecera);
 
 
+        Cursor cursorEstablecimiento = dbHelper_Evento_Establecimiento.fetchEstablecsById(""+idEstablecimiento);
+        cursorEstablecimiento.moveToFirst();
+
+        int idTipoDocCliente = 0;
+        if (cursorEstablecimiento!=null) {
+            idTipoDocCliente = cursorEstablecimiento.getInt(cursorEstablecimiento.getColumnIndexOrThrow(DbAdaptert_Evento_Establec.EE_id_tipo_doc_cliente));
+        }
+        if (idTipoDocCliente==1){
+            spinnerTipoDocumento = (Spinner) findViewById(R.id.VC_spinnerTipoDocumento);
+            ArrayAdapter<CharSequence> adapterTipoDocumento = ArrayAdapter.createFromResource(this,R.array.tipoDocumentoBoleta,android.R.layout.simple_spinner_item);
+            adapterTipoDocumento.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinnerTipoDocumento.setAdapter(adapterTipoDocumento);
+        }else if (idTipoDocCliente==2){
+            spinnerTipoDocumento = (Spinner) findViewById(R.id.VC_spinnerTipoDocumento);
+            ArrayAdapter<CharSequence> adapterTipoDocumento = ArrayAdapter.createFromResource(this,R.array.tipoDocumentoFactura,android.R.layout.simple_spinner_item);
+            adapterTipoDocumento.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinnerTipoDocumento.setAdapter(adapterTipoDocumento);
+        }else{
+            spinnerTipoDocumento = (Spinner) findViewById(R.id.VC_spinnerTipoDocumento);
+            ArrayAdapter<CharSequence> adapterTipoDocumento = ArrayAdapter.createFromResource(this,R.array.tipoDocumento,android.R.layout.simple_spinner_item);
+            adapterTipoDocumento.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinnerTipoDocumento.setAdapter(adapterTipoDocumento);
+        }
 
 
-        spinnerTipoDocumento = (Spinner) findViewById(R.id.VC_spinnerTipoDocumento);
-        ArrayAdapter<CharSequence> adapterTipoDocumento = ArrayAdapter.createFromResource(this,R.array.tipoDocumento,android.R.layout.simple_spinner_item);
-        adapterTipoDocumento.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerTipoDocumento.setAdapter(adapterTipoDocumento);
+
+
 
 
 
         spinnerFormaPago = (Spinner) findViewById(R.id.VC_spinnerFormaPago);
-        ArrayAdapter<CharSequence> adapterFormaPago = ArrayAdapter.createFromResource(this,R.array.forma_pago,android.R.layout.simple_spinner_item);
+        final ArrayAdapter<CharSequence> adapterFormaPago = ArrayAdapter.createFromResource(this,R.array.forma_pago,android.R.layout.simple_spinner_item);
         adapterFormaPago.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerFormaPago.setAdapter(adapterFormaPago);
 
@@ -223,7 +244,12 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
                                     .setTitle("Está seguro que es toda su venta")
                                     .setMessage("Si define las cuotas ya no podrá agregar productos a la venta, ni eliminarlos\n" +
                                             "¿Está seguro que está todo listo?")
-                                    .setNegativeButton(android.R.string.no, null)
+                                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            spinnerFormaPago.setAdapter(adapterFormaPago);
+                                        }
+                                    })
                                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int id) {
                                             Intent intent = new Intent(getApplicationContext(), VMovil_Venta_Cabecera_PlanPagos.class);
@@ -467,13 +493,6 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
         textoImpresion+= "-----------------------------------------------\n";
         textoImpresion+= "Cant.             Producto              Importe\n";
         textoImpresion+= "-----------------------------------------------\n";
-
-
-
-
-
-
-
 
         long id = dbHelper_Comprob_Venta.createComprobVenta(idEstablecimiento,i_tipoDocumento,i_formaPago,tipoVenta,codigo_erp,serie,numero_documento,base_imponible,igv,monto_total,null,null,estado_comprobante, estado_conexion,id_agente_venta);
 

@@ -9,7 +9,7 @@
     tools:context="union.union_vr1.Vistas.VMovil_Online_Pumovil">
 
 
-
+<!--
     <WebView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -17,15 +17,25 @@
         android:layout_alignParentBottom="true"
         android:layout_below="@+id/VEE_BTNEstadoNoAtendido"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true" />
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />-->
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Sincronizar con Offline"
-        android:id="@+id/VEE_BTNEstadoNoAtendido"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignRight="@+id/webView"/>
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <Button
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Sincronizar con Offline"
+            android:id="@+id/VEE_BTNEstadoNoAtendido"/>
+
+        <ListView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/listView" />
+    </LinearLayout>
 
 </RelativeLayout>

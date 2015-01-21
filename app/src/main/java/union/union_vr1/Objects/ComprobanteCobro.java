@@ -5,6 +5,7 @@ package union.union_vr1.Objects;
  */
 public class ComprobanteCobro {
 
+    private String idComprobanteCobro;
     private int idEstablecimiento;
     private int idComprobante;
     private int idPlanPago;
@@ -22,7 +23,8 @@ public class ComprobanteCobro {
     private String lugarRegistro;
     private int estadoSincronizado;
 
-    public ComprobanteCobro(int idEstablecimiento, int idComprobante, int idPlanPago, int idPlanPagoDetalle, String descTipoDoc, String doc, String fechaProgramada, Double montoPagar, String fechaCobro, String horaCobro, Double montoCobrado, int estadoCobro, int idAgente, int idFormaCobro, String lugarRegistro, int estadoSincronizado) {
+    public ComprobanteCobro(String idComprobanteCobro, int idEstablecimiento, int idComprobante, int idPlanPago, int idPlanPagoDetalle, String descTipoDoc, String doc, String fechaProgramada, Double montoPagar, String fechaCobro, String horaCobro, Double montoCobrado, int estadoCobro, int idAgente, int idFormaCobro, String lugarRegistro, int estadoSincronizado) {
+        this.idComprobanteCobro = idComprobanteCobro;
         this.idEstablecimiento = idEstablecimiento;
         this.idComprobante = idComprobante;
         this.idPlanPago = idPlanPago;
@@ -41,6 +43,13 @@ public class ComprobanteCobro {
         this.estadoSincronizado = estadoSincronizado;
     }
 
+    public String getIdComprobanteCobro() {
+        return idComprobanteCobro;
+    }
+
+    public void setIdComprobanteCobro(String idComprobanteCobro) {
+        this.idComprobanteCobro = idComprobanteCobro;
+    }
 
     public int getIdEstablecimiento() {
         return idEstablecimiento;
@@ -169,4 +178,6 @@ public class ComprobanteCobro {
     public void setEstadoSincronizado(int estadoSincronizado) {
         this.estadoSincronizado = estadoSincronizado;
     }
+
+
 }

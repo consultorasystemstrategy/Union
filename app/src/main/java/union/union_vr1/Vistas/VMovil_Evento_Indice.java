@@ -80,6 +80,7 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
 
         //Agregando datos de prueba  cada vez que se inicia esta vista
 
+        /*
         dbHelper.deleteAllEstablecs();
         dbHelper.insertSomeEstablecs();
 
@@ -90,10 +91,10 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         dbHelper3.deleteAllAgentes();
         dbHelper3.insertSomeAgentes();
 
-      /*  dbHelper4.insertSomeComprobCobros();
+        dbHelper4.insertSomeComprobCobros();
         dbHelper4.deleteAllComprobCobros();
         dbHelper4.insertSomeComprobCobros();
-*/
+
         //dbHelper5.deleteAllHistoVentaDetalle();
         //dbHelper5.insertSomeHistoVentaDetalle();
         dbHelper6.deleteAllStockAgente();
@@ -102,6 +103,8 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         dbHelper7.insertSomePrecio();
         dbHelper8.deleteAllHistoComprobAnterior();
         dbHelper8.insertSomeHistoComprobAnterior();
+
+        */
         mClient = (Button) findViewById(R.id.VEI_BTNclient);
         mInfgas = (Button) findViewById(R.id.VEI_BTNinfgas);
         mResume = (Button) findViewById(R.id.VEI_BTNresume);

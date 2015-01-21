@@ -3,8 +3,6 @@ package union.union_vr1.Vistas;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.FragmentManager;
-import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,40 +12,28 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
-import android.widget.SimpleCursorAdapter;
-import android.widget.TextView;
-import android.widget.Toast;
 
+import union.union_vr1.AsyncTask.ExportMain;
+import union.union_vr1.AsyncTask.ImportMain;
 import union.union_vr1.R;
-import union.union_vr1.Sqlite.DbAdapter_Agente;
-import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
 import union.union_vr1.Sqlite.DbAdapter_Histo_Venta_Detalle;
 import union.union_vr1.Sqlite.DbAdapter_Precio;
 import union.union_vr1.Sqlite.DbAdapter_Stock_Agente;
 import union.union_vr1.Utils.DialogSincronizarOffLine;
-import union.union_vr1.Utils.MyApplication;
 
 
 public class VMovil_Online_Pumovil extends Activity {
-    private DbAdapter_Comprob_Cobro dbHelper4;
 
     private WebView view;
-    private TextView textView;
-
-    private DbAdapter_Agente dbHelper;
-    private SimpleCursorAdapter dataAdapter;
-
+    private VMovil_Online_Pumovil mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.princ_web_view);
 
-
-        //datos de prueba
-
-
-        //--ñ-
+        mContext = this;
+/*
         DbAdapter_Stock_Agente dbHelper_Stock;
         DbAdapter_Histo_Venta_Detalle dbHelper_Hi_De;
         dbHelper_Stock = new DbAdapter_Stock_Agente(this);
@@ -64,14 +50,26 @@ public class VMovil_Online_Pumovil extends Activity {
         adapprecio.open();
         adapprecio.deleteAllPrecio();
         adapprecio.insertSomePrecio();
-        //---
+*/
+        //showWebPU();
 
-        //
+        final Button button = (Button) findViewById(R.id.VEE_BTNEstadoNoAtendido);
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                /*
+                FragmentManager manager = getFragmentManager();
+                DialogSincronizarOffLine dialogConfirm = new DialogSincronizarOffLine();
+                dialogConfirm.show(manager, "DialogSincronizarOffLine");
+                */
 
-        Bundle bundle = getIntent().getExtras();
-        Toast.makeText(VMovil_Online_Pumovil.this, "Password :" + bundle.getString("putPassUsuario") + "\n\n" + "Nombre Agente: " + bundle.getString("putNombreAgente"), Toast.LENGTH_LONG).show();
+                new ImportMain(mContext).execute();
+            }
+        });
 
-        view = (WebView) this.findViewById(R.id.webView);
+    }
+
+    public void showWebPU(){
+        //view = (WebView) this.findViewById(R.id.webView);
         view.getSettings().setJavaScriptEnabled(true);
         view.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
         view.loadUrl("http://192.168.0.104:8084/SysMovilProductosUnion");
@@ -88,26 +86,8 @@ public class VMovil_Online_Pumovil extends Activity {
         Esta clase permite controlar los eventos que se producen
         en el navegador:*/
         view.setWebChromeClient(new MiWebCromeClient());
-
-        final Button button = (Button) findViewById(R.id.VEE_BTNEstadoNoAtendido);
-        button.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                FragmentManager manager = getFragmentManager();
-                DialogSincronizarOffLine dialogConfirm = new DialogSincronizarOffLine();
-                dialogConfirm.show(manager, "DialogSincronizarOffLine");
-            }
-        });
-
-        displayUpdateAgente();
-
-        dbHelper4 = new DbAdapter_Comprob_Cobro(this);
-        dbHelper4.open();
-        /*
-        dbHelper4.insertSomeComprobCobros();
-        dbHelper4.deleteAllComprobCobros();
-        dbHelper4.insertSomeComprobCobros();
-        */
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -127,28 +107,6 @@ public class VMovil_Online_Pumovil extends Activity {
         }
         return super.onOptionsItemSelected(item);
     }
-
-    public void displayUpdateAgente() {
-        dbHelper = new DbAdapter_Agente(this);
-        dbHelper.open();
-        dbHelper.deleteAllAgentes();
-        dbHelper.insertSomeAgentes();
-        Bundle bundle = getIntent().getExtras();
-        String nombre_usuario = bundle.getString("putNombreUsuario");
-        String nombre_agente = bundle.getString("putNombreAgente");
-        String pass_usuario = bundle.getString("putPassUsuario");
-        String id_agente_venta = bundle.getString("putIdAgenteVenta");
-        String id_usuario = bundle.getString("putIdUsuario");
-        String id_empresa = bundle.getString("putIdEmpresa");
-
-
-        //VARIABLE GLOBAL, PARA OBTENERLA DESDE CUALQUIER SITIO DE LA APLICACIÓN
-        ((MyApplication) this.getApplication()).setIdAgente(Integer.parseInt(id_agente_venta));
-        ((MyApplication) this.getApplication()).setDisplayedHistorialComprobanteAnterior(false);
-
-        dbHelper.updateAgente(id_agente_venta, id_usuario, id_empresa, nombre_usuario, nombre_agente, pass_usuario);
-    }
-
 
     private class MiWebViewClient extends WebViewClient {
         @Override
