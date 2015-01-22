@@ -251,7 +251,8 @@ public class DbAdapter_Agente {
         boolean existeUser = false;
         Cursor mCursor = null;
         mCursor = mDb.query(true, SQLITE_TABLE_Agente, new String[] {AG_id_agente,
-                        AG_id_agente_venta, AG_nombre_agente, AG_nombre_ruta, AG_nro_bodegas, AG_serie_boleta, AG_serie_factura, AG_serie_rrpp},
+                        AG_id_agente_venta,AG_id_empresa, AG_id_usuario, AG_nombre_agente,AG_nom_usuario,
+                        AG_pass_usuario, AG_liquidacion, AG_km_inicial, AG_km_final,  AG_nombre_ruta, AG_nro_bodegas},
                 AG_nom_usuario + " = '" + usuario + "' AND "+ AG_pass_usuario + " = '" + password+"'", null,
                 null, null, null, null);
         if (mCursor != null) {

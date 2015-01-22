@@ -54,6 +54,7 @@ public class VMovil_Online_Pumovil extends Activity {
         //showWebPU();
 
         final Button button = (Button) findViewById(R.id.VEE_BTNEstadoNoAtendido);
+        final Button buttonExport = (Button) findViewById(R.id.buttonExportar);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 /*
@@ -63,6 +64,12 @@ public class VMovil_Online_Pumovil extends Activity {
                 */
 
                 new ImportMain(mContext).execute();
+            }
+        });
+        buttonExport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new ExportMain(mContext).execute();
             }
         });
 

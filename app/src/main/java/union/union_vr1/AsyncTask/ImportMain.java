@@ -91,7 +91,6 @@ public class ImportMain extends AsyncTask<String, String, String> {
 
         idAgente = ((MyApplication)mainActivity.getApplication()).getIdAgente();
 
-        this.mainActivity = mainActivity;
         listView = (ListView) mainActivity.findViewById(R.id.listView);
     }
 

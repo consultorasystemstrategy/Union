@@ -48,7 +48,8 @@ public class DbAdapter_Informe_Gastos {
                     +GA_hora+" text,"
                     +GA_estado+" integer,"
                     +GA_referencia+" text,"
-                    +GA_id_agente+" integer);";
+                    +GA_id_agente+" integer,"
+                    +Constants._SINCRONIZAR+" text);";
 
     public static final String DELETE_TABLE_INFORME_GASTOS = "DROP TABLE IF EXISTS " + SQLITE_TABLE_Informe_Gastos;
 
@@ -71,7 +72,7 @@ public class DbAdapter_Informe_Gastos {
     public long createInformeGastos(
             int id_tipo_gasto, int id_procedencia_gasto, int id_tipo_doc, String nom_tipo_gasto,
             double subtotal, double igv, double total, String fecha, String hora, int estado, String referencia,
-            int id_agente) {
+            int id_agente, int estadoSincronizado) {
 
         ContentValues initialValues = new ContentValues();
         initialValues.put(GA_id_tipo_gasto,id_tipo_gasto);
@@ -86,6 +87,7 @@ public class DbAdapter_Informe_Gastos {
         initialValues.put(GA_estado,estado);
         initialValues.put(GA_referencia, referencia);
         initialValues.put(GA_id_agente,id_agente);
+        initialValues.put(Constants._SINCRONIZAR, estadoSincronizado);
 
         return mDb.insert(SQLITE_TABLE_Informe_Gastos, null, initialValues);
     }
@@ -121,6 +123,21 @@ public class DbAdapter_Informe_Gastos {
 
     }
 
+    public Cursor filterExport() {
+        Cursor mCursor = null;
+        mCursor = mDb.query(true, SQLITE_TABLE_Informe_Gastos, new String[] {GA_id_gasto,
+                        GA_id_tipo_gasto, GA_id_proced_gasto, GA_id_tipo_doc,
+                        GA_nom_tipo_gasto, GA_subtotal, GA_igv, GA_total, GA_fecha,
+                        GA_hora, GA_referencia, GA_id_agente
+                },
+                Constants._SINCRONIZAR + " = " + Constants._CREADO + " OR " + Constants._SINCRONIZAR + " = " + Constants._ACTUALIZADO, null,
+                null, null, null, null);
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+    }
+
     public Cursor fetchAllInformeGastos() {
 
         /*Cursor mCursor = mDb.query(SQLITE_TABLE_Informe_Gastos, new String[] {GA_id_gasto,GA_id_tipo_gasto,
@@ -136,10 +153,10 @@ public class DbAdapter_Informe_Gastos {
         }
         return mCursor;
     }
-
+/*
     public void insertSomeInformeGastos() {
         createInformeGastos(1, 1, 1, "COMBUSTIBLE", 10.5, 1.0, 11.5, "2014-11-12", "08:10:00", 1,"A001",  1);
         createInformeGastos(2, 2, 2, "COMIDA", 20.5, 2.0, 22.5, "2014-11-12", "08:10:00", 1,"A002", 1);
     }
-
+*/
 }

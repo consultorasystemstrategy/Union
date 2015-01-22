@@ -196,6 +196,7 @@ public class Login extends Activity implements OnClickListener{
 
             if (succesLogin){
                 ((MyApplication) loginClass.getApplication()).setIdAgente(mCursorAgente.getInt(mCursorAgente.getColumnIndexOrThrow(dbAdapter_agente.AG_id_agente_venta)));
+                ((MyApplication) loginClass.getApplication()).setIdLiquidacion(mCursorAgente.getInt(mCursorAgente.getColumnIndexOrThrow(dbAdapter_agente.AG_liquidacion)));
                 ((MyApplication) loginClass.getApplication()).setDisplayedHistorialComprobanteAnterior(false);
                 Toast.makeText(getApplicationContext(), "Login correcto", Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(Login.this, VMovil_Online_Pumovil.class);
@@ -246,6 +247,7 @@ public class Login extends Activity implements OnClickListener{
 
                     //VARIABLE GLOBAL, PARA OBTENERLA DESDE CUALQUIER SITIO DE LA APLICACIÓN
                     ((MyApplication) loginClass.getApplication()).setIdAgente(agenteLista.get(i).getIdAgenteVenta());
+                    ((MyApplication) loginClass.getApplication()).setIdLiquidacion(agenteLista.get(i).getLiquidacion());
                     ((MyApplication) loginClass.getApplication()).setDisplayedHistorialComprobanteAnterior(false);
 
                     agenteLista.get(i).getIdAgenteVenta();

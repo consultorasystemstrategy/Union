@@ -10,6 +10,15 @@ public class MyApplication extends Application{
         private int idAgente;
         private int idEstablecimiento;
         private boolean DisplayedHistorialComprobanteAnterior;
+        private int idLiquidacion;
+
+    public int getIdLiquidacion() {
+        return idLiquidacion;
+    }
+
+    public void setIdLiquidacion(int idLiquidacion) {
+        this.idLiquidacion = idLiquidacion;
+    }
 
     public boolean isDisplayedHistorialComprobanteAnterior() {
         return DisplayedHistorialComprobanteAnterior;

@@ -19,6 +19,7 @@ import java.util.List;
 
 import union.union_vr1.CustomOnItemSelectedListener;
 import union.union_vr1.R;
+import union.union_vr1.Sqlite.Constants;
 import union.union_vr1.Sqlite.DbAdapter_Informe_Gastos;
 import union.union_vr1.Sqlite.DbAdapter_Tipo_Gasto;
 
@@ -294,17 +295,17 @@ public class VMovil_Evento_Gasto extends Activity /*implements OnClickListener *
                 igv = IGV * total / 100;
                 subtotal = total - igv;
                 positionTipoDocumento = 1;
-                idRegistroGastoInsertado = dbHelperInformeGasto.createInformeGastos(positionTipoGasto, positionProcedenciaGasto, positionTipoDocumento, null, subtotal, igv, total, null, null, estado, referencia, agente);
+                idRegistroGastoInsertado = dbHelperInformeGasto.createInformeGastos(positionTipoGasto, positionProcedenciaGasto, positionTipoDocumento, null, subtotal, igv, total, null, null, estado, referencia, agente, Constants._CREADO);
                 Log.d("TIPO DOCUMENTO", "FACTURA");
                 break;
             case boleta:
                 positionTipoDocumento = 2;
-                idRegistroGastoInsertado = dbHelperInformeGasto.createInformeGastos(positionTipoGasto, positionProcedenciaGasto, positionTipoDocumento, null, subtotal, igv, total, null, null, estado, referencia, agente);
+                idRegistroGastoInsertado = dbHelperInformeGasto.createInformeGastos(positionTipoGasto, positionProcedenciaGasto, positionTipoDocumento, null, subtotal, igv, total, null, null, estado, referencia, agente, Constants._CREADO);
                 Log.d("TIPO DOCUMENTO", "BOLETA");
                 break;
             case ficha:
                 positionTipoDocumento = 4;
-                idRegistroGastoInsertado = dbHelperInformeGasto.createInformeGastos(positionTipoGasto, positionProcedenciaGasto, positionTipoDocumento, null, subtotal, igv, total, null, null, estado, referencia, agente);
+                idRegistroGastoInsertado = dbHelperInformeGasto.createInformeGastos(positionTipoGasto, positionProcedenciaGasto, positionTipoDocumento, null, subtotal, igv, total, null, null, estado, referencia, agente, Constants._CREADO);
                 Log.d("TIPO DOCUMENTO", "FICHA");
                 break;
         }

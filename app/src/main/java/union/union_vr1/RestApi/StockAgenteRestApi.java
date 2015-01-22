@@ -106,6 +106,30 @@ public class StockAgenteRestApi {
         }
         return finalValue;
     }
+
+    public JSONObject CreateInformeGastos(int idCajaLiquidacion,double importe,String fechaHora,int usuario,int idComprobanteVenta,int idTipoGasto,double valorVenta,int igv,String referencia,int idCategoriaTipoGasto) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","RestAPI");
+        o.put("method", "CreateInformeGastos");
+        p.put("idCajaLiquidacion",mapObject(idCajaLiquidacion));
+        p.put("importe",mapObject(importe));
+        p.put("fechaHora",mapObject(fechaHora));
+        p.put("usuario",mapObject(usuario));
+        p.put("idComprobanteVenta",mapObject(idComprobanteVenta));
+        p.put("idTipoGasto",mapObject(idTipoGasto));
+        p.put("valorVenta",mapObject(valorVenta));
+        p.put("igv",mapObject(igv));
+        p.put("referencia",mapObject(referencia));
+        p.put("idCategoriaTipoGasto",mapObject(idCategoriaTipoGasto));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+
     public JSONObject GetComprobanteVentaDetalle_Env() throws Exception {
         JSONObject result = null;
         JSONObject o = new JSONObject();
@@ -159,6 +183,7 @@ public class StockAgenteRestApi {
         result = new JSONObject(r);
         return result;
     }
+
 
     public JSONObject CreateInsertarCaja(int idLiquidacionCaja,int idCategoriaMovimiento,double importeDecimal,int estado,String fecha,String referencia,int idusuario,int idcomprbante) throws Exception {
         JSONObject result = null;

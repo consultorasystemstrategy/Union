@@ -25,12 +25,13 @@ import union.union_vr1.Sqlite.DbAdapter_Histo_Venta_Detalle;
  */
 public class DbHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 5;
     private static final String DATABASE_NAME = "ProdUniondb.sqlite";
 
     public DbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
+
 
     @Override
     public void onCreate(SQLiteDatabase db) {

@@ -88,7 +88,7 @@ public class DbAdapter_Comprob_Venta {
     public long createComprobVenta(
             int id_establec, int id_tipo_doc, int id_forma_pago, int id_tipo_venta,
             String codigo_erp, String serie, int num_doc, double base_imp, double igv, double total,
-            String fecha_doc, String hora_doc, int estado_comp, int estado_conexion, int id_agente){
+            String fecha_doc, String hora_doc, int estado_comp, int estado_conexion, int id_agente, int estadoSincronizacion){
 
         ContentValues initialValues = new ContentValues();
         initialValues.put(CV_id_establec,id_establec);
@@ -106,6 +106,8 @@ public class DbAdapter_Comprob_Venta {
         initialValues.put(CV_estado_comp,estado_comp);
         initialValues.put(CV_estado_conexion,estado_conexion);
         initialValues.put(CV_id_agente,id_agente);
+        initialValues.put(Constants._SINCRONIZAR, estadoSincronizacion);
+
 
         return mDb.insert(SQLITE_TABLE_Comprob_Venta, null, initialValues);
     }
@@ -233,6 +235,21 @@ public class DbAdapter_Comprob_Venta {
         return mCursor;
 
     }
+    public Cursor filterExport() {
+        Cursor mCursor = null;
+        mCursor = mDb.query(true, SQLITE_TABLE_Comprob_Venta,new String[] {CV_id_comprob,
+
+                        CV_id_establec, CV_id_tipo_doc, CV_id_forma_pago, CV_id_tipo_venta,
+                        CV_codigo_erp, CV_serie, CV_num_doc, CV_base_imp, CV_igv, CV_total,
+                        CV_fecha_doc, CV_hora_doc, CV_estado_comp, CV_estado_conexion, CV_id_agente
+                },
+                Constants._SINCRONIZAR + " = " + Constants._CREADO + " OR " + Constants._SINCRONIZAR + " = " + Constants._ACTUALIZADO, null,
+                null, null, null, null);
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+    }
 
     public Cursor fetchAllComprobVenta() {
 
@@ -250,6 +267,7 @@ public class DbAdapter_Comprob_Venta {
         return mCursor;
     }
 
+
     public Cursor fetchAllComprobVentaByEstable(String id) {
 
         Cursor mCursor = mDb.query(SQLITE_TABLE_Comprob_Venta, new String[] {CV_id_comprob,
@@ -265,7 +283,7 @@ public class DbAdapter_Comprob_Venta {
         }
         return mCursor;
     }
-
+/*
     public void insertSomeComprobVenta() {
 
         createComprobVenta( 1, 1, 1, 1, "0001", "1A", 1, 10, 0, 10, "14/01/2015", "08:10:00", 1, 0, 1);
@@ -274,6 +292,6 @@ public class DbAdapter_Comprob_Venta {
         createComprobVenta( 4, 2, 2, 1, "0004", "4A", 4, 10, 0, 40, "14/01/2015", "08:10:00", 1, 0, 1);
         createComprobVenta( 5, 2, 2, 1, "0005", "5A", 5, 10, 0, 50, "14/01/2015", "08:10:00", 0, 0, 1);
 
-    }
+    }*/
 
 }

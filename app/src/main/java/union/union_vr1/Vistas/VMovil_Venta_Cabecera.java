@@ -29,6 +29,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import union.union_vr1.R;
+import union.union_vr1.Sqlite.Constants;
 import union.union_vr1.Sqlite.DBAdapter_Temp_Venta;
 import union.union_vr1.Sqlite.DbAdapter_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
@@ -495,7 +496,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
         textoImpresion+= "Cant.             Producto              Importe\n";
         textoImpresion+= "-----------------------------------------------\n";
 
-        long id = dbHelper_Comprob_Venta.createComprobVenta(idEstablecimiento,i_tipoDocumento,i_formaPago,tipoVenta,codigo_erp,serie,numero_documento,base_imponible,igv,monto_total,null,null,estado_comprobante, estado_conexion,id_agente_venta);
+        long id = dbHelper_Comprob_Venta.createComprobVenta(idEstablecimiento,i_tipoDocumento,i_formaPago,tipoVenta,codigo_erp,serie,numero_documento,base_imponible,igv,monto_total,getDatePhone(),null,estado_comprobante, estado_conexion,id_agente_venta, Constants._CREADO);
 
 
 
@@ -715,7 +716,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
     {
         Calendar cal = new GregorianCalendar();
         Date date = cal.getTime();
-        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
         return df.format(date);
     }
 
