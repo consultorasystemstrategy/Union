@@ -318,10 +318,10 @@ public class ImportMain extends AsyncTask<String, String, String> {
         );
 
         listView.setAdapter(simpleCursorAdapter);
-
+/*
         Intent intent = new Intent(mainActivity, VMovil_Evento_Indice.class);
         mainActivity.finish();
-        mainActivity.startActivity(intent);
+        mainActivity.startActivity(intent);*/
     }
 
     @Override

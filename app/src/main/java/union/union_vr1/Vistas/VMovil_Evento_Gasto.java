@@ -109,6 +109,8 @@ public class VMovil_Evento_Gasto extends Activity /*implements OnClickListener *
                             addItemsTipoDocumento_CombustibleRuta();
                             break;
                     }
+                }else{
+                    addItemsTipoDocumento();
                 }
                 /*TipoDeGasto tipoDeGasto = null;
                 tipoDeGasto = TipoDeGasto.valueOf(tipoGasto);
