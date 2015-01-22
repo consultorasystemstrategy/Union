@@ -32,6 +32,7 @@ import union.union_vr1.Sqlite.DbAdapter_Histo_Venta_Detalle;
 import union.union_vr1.Sqlite.DbAdapter_Precio;
 import union.union_vr1.Sqlite.DbAdapter_Stock_Agente;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
+import union.union_vr1.Utils.MyApplication;
 
 
 public class VMovil_Evento_Indice extends Activity implements View.OnClickListener {
@@ -57,6 +58,8 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.princ_evento_indice);
+        ((MyApplication)this.getApplication()).setDisplayedHistorialComprobanteAnterior(false);
+
         dbHelper1 = new DbAdapter_Comprob_Venta(this);
         dbHelper1.open();
         dbHelper2 = new DbAdapter_Comprob_Venta_Detalle(this);

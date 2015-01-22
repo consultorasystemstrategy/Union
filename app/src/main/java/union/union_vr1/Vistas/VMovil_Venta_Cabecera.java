@@ -109,6 +109,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
                         // FIRE ZE MISSILES!
 
                         dbHelper_temp_venta.deleteAllTempVentaDetalle();
+                        ((MyApplication)mContext.getApplicationContext()).setDisplayedHistorialComprobanteAnterior(false);
                         finish();
                         Intent intent = new Intent(mContext,VMovil_Evento_Indice.class);
                         startActivity(intent);
@@ -604,6 +605,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
             int id_producto = cursor.getInt(indice_id_producto);
             String nombre_producto = cursor.getString(indice_nombre_producto);
             int cantidad = cursor.getInt(indice_cantidad);
+            Log.d("CANTIDAD HCA - VC", ""+cantidad);
             Double precio_unitario = cursor.getDouble(indice_precio_unitario);
             Double importe = cursor.getDouble(indice_importe);
 

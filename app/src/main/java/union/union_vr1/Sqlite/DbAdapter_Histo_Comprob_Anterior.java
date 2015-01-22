@@ -8,10 +8,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import union.union_vr1.Conexion.DbHelper;
+import union.union_vr1.Objects.ComprobanteVentaDetalle;
 
 public class DbAdapter_Histo_Comprob_Anterior {
 
     public static final String HC_id_hist_comprob = "_id";
+    public static final String HC_id_comprobante = "hc_in_id_comprobante";
     public static final String HC_id_establec = "hc_in_id_establec";
     public static final String HC_id_producto = "hc_in_id_producto";
     public static final String HC_nom_producto = "hc_te_nom_producto";
@@ -34,6 +36,7 @@ public class DbAdapter_Histo_Comprob_Anterior {
     public static final String CREATE_TABLE_HISTO_COMPROB_ANTERIOR =
             "create table "+SQLITE_TABLE_Histo_Comprob_Anterior+" ("
                     +HC_id_hist_comprob+" integer primary key autoincrement,"
+                    +HC_id_comprobante+" integer,"
                     +HC_id_establec+" integer,"
                     +HC_id_producto+" integer,"
                     +HC_nom_producto+" text,"
@@ -41,7 +44,7 @@ public class DbAdapter_Histo_Comprob_Anterior {
                     +HC_prom_anterior+" text,"
                     +HC_devuelto+" integer,"
                     +HC_valor_unidad+" integer,"
-                    +HC_id_agente+" integer " +
+                    +HC_id_agente+" integer, " +
                     estado_sincronizacion+" integer);";
 
     public static final String DELETE_TABLE_HISTO_COMPROB_ANTERIOR = "DROP TABLE IF EXISTS " + SQLITE_TABLE_Histo_Comprob_Anterior;
@@ -77,6 +80,58 @@ public class DbAdapter_Histo_Comprob_Anterior {
         initialValues.put(HC_id_agente,id_agente);
 
         return mDb.insert(SQLITE_TABLE_Histo_Comprob_Anterior, null, initialValues);
+    }
+
+    public long createHistoComprobAnterior(ComprobanteVentaDetalle comprobanteVentaDetalle){
+
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(HC_id_comprobante, comprobanteVentaDetalle.getIdComprobante());
+        initialValues.put(HC_id_establec,comprobanteVentaDetalle.getIdEstablecimiento());
+        initialValues.put(HC_id_producto,comprobanteVentaDetalle.getIdProducto());
+        initialValues.put(HC_nom_producto,comprobanteVentaDetalle.getNombreProducto());
+        initialValues.put(HC_cantidad,comprobanteVentaDetalle.getCantidad());
+        initialValues.put(HC_prom_anterior,comprobanteVentaDetalle.getPromedioAnterior());
+        initialValues.put(HC_devuelto,comprobanteVentaDetalle.getDevuelto());
+        initialValues.put(HC_valor_unidad,comprobanteVentaDetalle.getValorUnidad());
+        initialValues.put(HC_id_agente,comprobanteVentaDetalle.getIdAgente());
+        initialValues.put(Constants._SINCRONIZAR,Constants._IMPORTADO);
+
+        return mDb.insert(SQLITE_TABLE_Histo_Comprob_Anterior, null, initialValues);
+    }
+
+    public void updateHistoComprobAnterior(ComprobanteVentaDetalle comprobanteVentaDetalle){
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(HC_id_comprobante, comprobanteVentaDetalle.getIdComprobante());
+        initialValues.put(HC_id_establec,comprobanteVentaDetalle.getIdEstablecimiento());
+        initialValues.put(HC_id_producto,comprobanteVentaDetalle.getIdProducto());
+        initialValues.put(HC_nom_producto,comprobanteVentaDetalle.getNombreProducto());
+        initialValues.put(HC_cantidad,comprobanteVentaDetalle.getCantidad());
+        initialValues.put(HC_prom_anterior,comprobanteVentaDetalle.getPromedioAnterior());
+        initialValues.put(HC_devuelto,comprobanteVentaDetalle.getDevuelto());
+        initialValues.put(HC_valor_unidad,comprobanteVentaDetalle.getValorUnidad());
+        initialValues.put(HC_id_agente,comprobanteVentaDetalle.getIdAgente());
+        initialValues.put(Constants._SINCRONIZAR,Constants._IMPORTADO);
+
+        mDb.update(SQLITE_TABLE_Histo_Comprob_Anterior, initialValues,
+                HC_id_comprobante+"=?",new String[]{""+comprobanteVentaDetalle.getIdComprobante()});
+    }
+
+    public boolean existeComprobanteVentaAnterior(int idComprobanteVentaAnterior) {
+
+        boolean exists = false;
+        Cursor mCursor = mDb.query(SQLITE_TABLE_Histo_Comprob_Anterior, new String[] {HC_id_hist_comprob,
+                        HC_id_establec, HC_id_producto, HC_nom_producto, HC_cantidad, HC_prom_anterior,
+                        HC_devuelto,HC_valor_unidad,HC_id_agente},
+                HC_id_hist_comprob + " = " + idComprobanteVentaAnterior, null, null, null, null);
+
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+            exists = true;
+        }
+        if (mCursor.getCount()==0){
+            exists= false;
+        }
+        return exists;
     }
 
     public void updateHistoComprobAnterior1(String idorig, String iddest, String vals){
@@ -189,9 +244,10 @@ public class DbAdapter_Histo_Comprob_Anterior {
         return mCursor;
     }
 
+
     public Cursor fetchAllHistoComprobAnteriorByIdEstRawQuery(int id) {
 
-        String sql = "SELECT HCA._id AS _id, HCA.hc_in_id_producto AS id_producto, HCA.hc_te_nom_producto AS nombre_producto, HCA.hc_te_prom_anterior||\"/\"||HCA.hc_in_cantidad AS pa, HCA.hc_te_devuelto AS devuelto, HCA.hc_te_prom_anterior AS cantidad, EE.ee_in_id_cat_est,P.pr_re_precio_unit AS pu, HCA.hc_te_prom_anterior*P.pr_re_precio_unit AS total\n" +
+        String sql = "SELECT HCA._id AS _id, HCA.hc_in_id_producto AS id_producto, HCA.hc_te_nom_producto AS nombre_producto, HCA.hc_te_prom_anterior||\"/\"||HCA.hc_in_cantidad AS pa, HCA.hc_te_devuelto AS devuelto, HCA.hc_in_cantidad AS cantidad, EE.ee_in_id_cat_est,P.pr_re_precio_unit AS pu, HCA.hc_in_cantidad*P.pr_re_precio_unit AS total\n" +
                 "FROM m_histo_comprob_anterior HCA\n" +
                 "INNER JOIN m_evento_establec EE\n" +
                 "ON HCA.hc_in_id_establec = EE.ee_in_id_establec\n" +

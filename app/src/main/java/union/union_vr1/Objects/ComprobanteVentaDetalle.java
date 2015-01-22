@@ -6,6 +6,8 @@ package union.union_vr1.Objects;
 public class ComprobanteVentaDetalle {
 
     private int idComprobante;
+    private int idEstablecimiento;
+    private int idAgente;
     private int idProducto;
     private String nombreProducto;
     private int cantidad;
@@ -17,8 +19,10 @@ public class ComprobanteVentaDetalle {
     private int valorUnidad;
     private int estadoSincronizacion;
 
-    public ComprobanteVentaDetalle(int idComprobante, int idProducto, String nombreProducto, int cantidad, Double importe, Double costoVenta, Double precioUnitario, String promedioAnterior, String devuelto, int valorUnidad, int estadoSincronizacion) {
+    public ComprobanteVentaDetalle(int idComprobante, int idEstablecimiento, int idAgente, int idProducto, String nombreProducto, int cantidad, Double importe, Double costoVenta, Double precioUnitario, String promedioAnterior, String devuelto, int valorUnidad, int estadoSincronizacion) {
         this.idComprobante = idComprobante;
+        this.idEstablecimiento = idEstablecimiento;
+        this.idAgente = idAgente;
         this.idProducto = idProducto;
         this.nombreProducto = nombreProducto;
         this.cantidad = cantidad;
@@ -37,6 +41,22 @@ public class ComprobanteVentaDetalle {
 
     public void setIdComprobante(int idComprobante) {
         this.idComprobante = idComprobante;
+    }
+
+    public int getIdEstablecimiento() {
+        return idEstablecimiento;
+    }
+
+    public void setIdEstablecimiento(int idEstablecimiento) {
+        this.idEstablecimiento = idEstablecimiento;
+    }
+
+    public int getIdAgente() {
+        return idAgente;
+    }
+
+    public void setIdAgente(int idAgente) {
+        this.idAgente = idAgente;
     }
 
     public int getIdProducto() {

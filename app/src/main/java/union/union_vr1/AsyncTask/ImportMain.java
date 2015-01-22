@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import union.union_vr1.Conexion.JSONParser;
 import union.union_vr1.JSONParser.ParserAgente;
 import union.union_vr1.JSONParser.ParserComprobanteCobro;
+import union.union_vr1.JSONParser.ParserComprobanteVentaDetalle;
 import union.union_vr1.JSONParser.ParserEventoEstablecimiento;
 import union.union_vr1.JSONParser.ParserHistorialVentaDetalles;
 import union.union_vr1.JSONParser.ParserPrecio;
@@ -36,6 +37,7 @@ import union.union_vr1.RestApi.StockAgenteRestApi;
 import union.union_vr1.Sqlite.Constants;
 import union.union_vr1.Sqlite.DbAdapter_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
+import union.union_vr1.Sqlite.DbAdapter_Histo_Comprob_Anterior;
 import union.union_vr1.Sqlite.DbAdapter_Histo_Venta_Detalle;
 import union.union_vr1.Sqlite.DbAdapter_Precio;
 import union.union_vr1.Sqlite.DbAdapter_Stock_Agente;
@@ -60,6 +62,7 @@ public class ImportMain extends AsyncTask<String, String, String> {
     private DbAdapter_Tipo_Gasto dbAdapter_tipo_gasto;
     private DbAdapter_Comprob_Cobro dbAdapter_comprob_cobro;
     private DbAdapter_Histo_Venta_Detalle dbAdapter_histo_venta_detalle;
+    private DbAdapter_Histo_Comprob_Anterior dbAdapter_histo_comprob_anterior;
 
 
     private ListView listView;
@@ -83,6 +86,8 @@ public class ImportMain extends AsyncTask<String, String, String> {
         dbAdapter_comprob_cobro.open();
         dbAdapter_histo_venta_detalle = new DbAdapter_Histo_Venta_Detalle(mainActivity);
         dbAdapter_histo_venta_detalle.open();
+        dbAdapter_histo_comprob_anterior = new DbAdapter_Histo_Comprob_Anterior(mainActivity);
+        dbAdapter_histo_comprob_anterior.open();
 
         idAgente = ((MyApplication)mainActivity.getApplication()).getIdAgente();
 
@@ -112,6 +117,7 @@ public class ImportMain extends AsyncTask<String, String, String> {
         ArrayList<EventoEstablecimiento> eventoEstablecimientos = null;
         ArrayList<ComprobanteCobro> comprobanteCobros = null;
         ArrayList<HistorialVentaDetalles> historialVentaDetalleses = null;
+        ArrayList<ComprobanteVentaDetalle> comprobanteVentaDetalles = null;
 
         Log.d("idAgente, idLiquidacion, Fecha", idAgente+", "+idLiquidacion+", 19/01/2015");
 
@@ -125,6 +131,8 @@ public class ImportMain extends AsyncTask<String, String, String> {
             JSONObject jsonObjectEventoEstablecimiento = api.GetEstablecimeintoXRuta(1,"01/08/2014", idAgente);
             JSONObject jsonObjectComprobanteCobro = api.GetHistorialCobrosPendientes();
             JSONObject jsonObjectHistorialVentaDetalle = api.GetHistorialVentaDetalle(idAgente);
+            JSONObject jsonObjectHistorialComprobanteAnterior = api.GetComprobanteVentaDetalle_Env();
+
             publishProgress(""+30);
             Log.d("JSON OBJECT STOCK AGENTE : ", jsonObjectStockAgente.toString());
             Log.d("JSON OBJECT PRECIO : ", jsonObjectPrecio.toString());
@@ -132,6 +140,7 @@ public class ImportMain extends AsyncTask<String, String, String> {
             Log.d("JSON OBJECT EVENTO ESTABLECIMIENTO : ", jsonObjectEventoEstablecimiento.toString());
             Log.d("JSON OBJECT COMPROBANTE COBRO : ", jsonObjectComprobanteCobro.toString());
             Log.d("JSON OBJECT HISTORIAL VENTA DETALLE : ", jsonObjectHistorialVentaDetalle.toString());
+            Log.d("JSON OBJECT HISTORIAL VENTA ANTERIOR ", jsonObjectHistorialComprobanteAnterior.toString());
 
 
             ParserStockAgente parserStockAgente = new ParserStockAgente();
@@ -140,6 +149,7 @@ public class ImportMain extends AsyncTask<String, String, String> {
             ParserEventoEstablecimiento parserEventoEstablecimiento = new ParserEventoEstablecimiento();
             ParserComprobanteCobro  parserComprobanteCobro = new ParserComprobanteCobro();
             ParserHistorialVentaDetalles parserHistorialVentaDetalles = new ParserHistorialVentaDetalles();
+            ParserComprobanteVentaDetalle parserComprobanteVentaDetalle = new ParserComprobanteVentaDetalle();
 
             stockAgentes = parserStockAgente.parserStockAgente(jsonObjectStockAgente);
             tipoGastos = parserTipoGasto.parserTipoGasto(jsonObjectTipoGasto);
@@ -147,6 +157,7 @@ public class ImportMain extends AsyncTask<String, String, String> {
             eventoEstablecimientos = parserEventoEstablecimiento.parserEventoEstablecimiento(jsonObjectEventoEstablecimiento);
             comprobanteCobros = parserComprobanteCobro.parserComprobanteCobro(jsonObjectComprobanteCobro);
             historialVentaDetalleses = parserHistorialVentaDetalles.parserHistorialVentaDetalles(jsonObjectHistorialVentaDetalle);
+            comprobanteVentaDetalles = parserComprobanteVentaDetalle.parserComprobanteVentaDetalle(jsonObjectHistorialComprobanteAnterior);
 
             publishProgress(""+40);
             Log.d("IMPORTANDO ", "INICIANDO ...");
@@ -229,6 +240,22 @@ public class ImportMain extends AsyncTask<String, String, String> {
                     dbAdapter_histo_venta_detalle.createHistoVentaDetalle(historialVentaDetalleses.get(i));
                 }
             }
+
+            for (int i = 0; i < comprobanteVentaDetalles.size() ; i++) {
+                Log.d("HISTORIAL VENTA ANTERIOR : " + i, " NOMBRE PRODUCTO : " + comprobanteVentaDetalles.get(i).getNombreProducto());
+
+                boolean existe = dbAdapter_histo_comprob_anterior.existeComprobanteVentaAnterior(comprobanteVentaDetalles.get(i).getIdComprobante());
+
+                Log.d("EXISTE ", ""+existe);
+                if (existe){
+                    dbAdapter_histo_comprob_anterior.updateHistoComprobAnterior(comprobanteVentaDetalles.get(i));
+                }else {
+                    //NO EXISTE ENTONCES CREEMOS UNO NUEVO
+                    dbAdapter_histo_comprob_anterior.createHistoComprobAnterior(comprobanteVentaDetalles.get(i));
+                }
+            }
+
+
             publishProgress(""+99);
 
 

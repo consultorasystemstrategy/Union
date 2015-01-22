@@ -29,8 +29,11 @@ public class ParserComprobanteVentaDetalle {
             for(int i=0;i<jsonArray.length();i++)
             {
                 jsonObj=jsonArray.getJSONObject(i);
+                Log.d("CANTIDAD HCA", ""+jsonObj.getInt("ComdICantidad"));
                 arrayList.add(new ComprobanteVentaDetalle(
                         jsonObj.getInt("idComprobVentDetalle"),
+                        jsonObj.getInt("EstIEstablecimientoId"),
+                        jsonObj.getInt("ComIAgenteVentaId"),
                         jsonObj.getInt("ProIProductoId"),
                         jsonObj.getString("ProVNombre"),
                         jsonObj.getInt("ComdICantidad"),
