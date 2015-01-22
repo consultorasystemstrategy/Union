@@ -205,7 +205,7 @@ public class ImportMain extends AsyncTask<String, String, String> {
             }
             publishProgress(""+80);
             for (int i = 0; i < comprobanteCobros.size() ; i++) {
-                Log.d("HISTORIAL COBROS PENDIENTES : " + i, " Monto a pagar : " + comprobanteCobros.get(i).getMontoPagar());
+                Log.d("HISTORIAL COBROS PENDIENTES : " + i, " Monto a pagar : " + comprobanteCobros.get(i).getMontoPagar()+"-fecha-"+comprobanteCobros.get(i).getFechaCobro());
                 boolean existe = dbAdapter_comprob_cobro.existeComprobCobro(comprobanteCobros.get(i).getIdComprobanteCobro());
                 Log.d("EXISTE ", ""+existe);
                 if (existe){
