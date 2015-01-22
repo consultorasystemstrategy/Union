@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -66,7 +67,7 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
         Cursor cr = dbHelperCanjes_Dev.nom_establecimiento(idEstablec);
         cr.moveToFirst();
         nomEstablecimiento = cr.getString(1);
-        idCategoriaEstablec = cr.getInt(2);
+        idCategoriaEstablec = cr.getInt(3);
         imprimeStock(idAgente, idProducto);
         listarFacturas_Productos(idProducto, idAgente, idEstablec, nomProducto);
     }
@@ -749,13 +750,14 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
             idCat_tipo = 4;
         }
         //Obteniendo el nombre del establecimiento, categoria.
-
+       Log.d("Parametros",""+idProducto+"-"+idCategoriaEstablec+"-"+idEstablec);
         String precio = dbHelperCanjes_Dev.obtenerPrecio(idProducto, idCategoriaEstablec, ctx,idEstablec);
         double importe = Double.parseDouble(precio);
 
         //Evaluando tipo de Operacion:
         if (tipo_op.equals("Canje")) {
             idTipo_Op = 1;
+            Log.d("MasParametros","["+idEstablec+"-"+idProducto+"-"+idTipo_Op+"-"+compro+"-"+nomEstablecimiento+"-"+idCat_tipo+"-"+cantidad2+"-"+importe*cantidad2+"-"+lote+"-"+idAgente);
             boolean estado = dbHelperCanjes_Dev.insertarCanjes(idEstablec, idProducto, idTipo_Op, compro, nomEstablecimiento, nomProducto, idCat_tipo, cantidad2, importe*cantidad2, lote, idAgente);
             if (estado) {
                 confirmar();

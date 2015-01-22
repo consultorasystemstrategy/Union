@@ -32,14 +32,14 @@ public class DbGastos_Ingresos {
     }
 
     public Cursor listarTodo(int idAgente) {
-        DbAdapter_Comprob_Venta cv = new DbAdapter_Comprob_Venta(mCtx);
+ /*       DbAdapter_Comprob_Venta cv = new DbAdapter_Comprob_Venta(mCtx);
         cv.open();
         cv.deleteAllComprobVenta();
         cv.insertSomeComprobVenta();
         DbAdapter_Comprob_Cobro cc = new DbAdapter_Comprob_Cobro(mCtx);
         cc.open();
         cc.deleteAllComprobCobros();
-        cc.insertSomeComprobCobros();
+        cc.insertSomeComprobCobros();*/
         listarGatos_Boletas_Emitidas(idAgente);
         listarGatos_Facturas_Emitidas(idAgente);
         listarGatos_Notas_Credito_Emitidas(idAgente);
