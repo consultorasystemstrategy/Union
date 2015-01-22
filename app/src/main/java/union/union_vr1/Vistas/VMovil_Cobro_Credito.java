@@ -256,9 +256,9 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         idValNew = Double.parseDouble(mSPNcredit.getText().toString()) + idVal2;
-                        dbHelper.updateComprobCobrosCan(idCobro, "", "", 0, "0");
+                        dbHelper.updateComprobCobrosCan(idCobro, "", "", 0, "1");
                         Toast.makeText(getApplicationContext(),
-                                "Anulado", Toast.LENGTH_SHORT).show();
+                                "Guardado", Toast.LENGTH_SHORT).show();
                         Back();
                         // displayListViewVCC();
                         mSPNcredit.setText("0.0");
@@ -284,20 +284,20 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
         // TODO Auto-generated method stub
         switch (v.getId()) {
             case R.id.VCCR_BTNactualiz:
-                if (Integer.parseInt(idEstado) == 0) {
+                if (Integer.parseInt(idEstado) == 1) {
                     if (idDeuda == Double.parseDouble(mSPNcredit.getText().toString())) {
-                        select("1");
+                        select("0");
                     } else {
                         if (idDeuda > Double.parseDouble(mSPNcredit.getText().toString())) {
-                            select("0");
+                            select("1");
                         }
                         if (idDeuda < Double.parseDouble(mSPNcredit.getText().toString())) {
-                            Toast.makeText(getApplicationContext(), "El ingreso sobrepasa la deuda", Toast.LENGTH_SHORT).show();
+                          //  Toast.makeText(getApplicationContext(), "El ingreso sobrepasa la deuda", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
-                if (Integer.parseInt(idEstado) == 1) {
-                    Toast.makeText(getApplicationContext(), "No posee deuda", Toast.LENGTH_SHORT).show();
+                if (Integer.parseInt(idEstado) == 0) {
+                   // Toast.makeText(getApplicationContext(), "No posee deuda", Toast.LENGTH_SHORT).show();
                     select2();
                 }
                 //dbHelper.updateComprobCobrosCan(String.valueOf(valIdCredito),getDatePhone(),getTimePhone(),Double.parseDouble(mSPNcredit.getText().toString()));

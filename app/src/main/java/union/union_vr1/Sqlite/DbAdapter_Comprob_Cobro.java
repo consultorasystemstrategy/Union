@@ -309,7 +309,7 @@ return insert;
         return mCursor;
     }
     public Cursor listarComprobantesToCobrosMante(String idEstablec){
-        Cursor mCursor = mDb.rawQuery("SELECT mc._id, mc.cc_te_doc,me.ee_te_nom_cliente,me.ee_te_nom_establec,mc.cc_te_fecha_cobro,mc.cc_te_hora_cobro, mc.cc_re_monto_cobrado, case when mc.cc_in_estado_cobro=0 then 'Anulado' else 'Cobrado' end as estado ,mc.cc_in_id_establec,mc.cc_te_fecha_programada from m_comprob_cobro mc,m_evento_establec me where mc.cc_in_id_establec=me.ee_in_id_establec and mc.cc_te_hora_cobro !=\"\" and me.ee_in_id_establec='"+idEstablec+"' order by mc.cc_te_fecha_programada asc",null);
+        Cursor mCursor = mDb.rawQuery("SELECT mc._id, mc.cc_te_doc,me.ee_te_nom_cliente,me.ee_te_nom_establec,mc.cc_te_fecha_cobro,mc.cc_te_hora_cobro, mc.cc_re_monto_cobrado, case when mc.cc_in_estado_cobro=0 then 'Cobrado' else 'Anulado' end as estado ,mc.cc_in_id_establec,mc.cc_te_fecha_programada from m_comprob_cobro mc,m_evento_establec me where mc.cc_in_id_establec=me.ee_in_id_establec and mc.cc_te_hora_cobro !=\"\" and me.ee_in_id_establec='"+idEstablec+"' order by mc.cc_te_fecha_programada asc",null);
         return mCursor;
     }
 

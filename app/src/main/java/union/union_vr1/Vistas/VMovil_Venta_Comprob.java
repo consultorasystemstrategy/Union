@@ -46,6 +46,7 @@ public class VMovil_Venta_Comprob extends Activity {
     private DbAdapter_Canjes_Devoluciones dbHelper_Canjes_Dev;
     private SimpleCursorAdapter adapter;
     private int idComprobante;
+    private int idAgente;
 
 
 
@@ -104,6 +105,8 @@ public class VMovil_Venta_Comprob extends Activity {
         dbHelper_Canjes_Dev = new DbAdapter_Canjes_Devoluciones(this);
         dbHelper_Canjes_Dev.open();
 
+        idAgente=((MyApplication) this.getApplication()).getIdAgente();
+
         tH = (TabHost) findViewById(R.id.tabMante);
         tH.setup();
         idEstablec = ((MyApplication) this.getApplication()).getIdEstablecimiento();
@@ -146,7 +149,7 @@ public class VMovil_Venta_Comprob extends Activity {
         */
     }
     private void listarCanjes_devoluciones(int idEstabl){
-        System.out.println("here"+idEstabl);
+
 
         Cursor cr = dbHelper_Canjes_Dev.listarCanjesDev(idEstabl);
         cr.moveToFirst();
@@ -196,12 +199,14 @@ public class VMovil_Venta_Comprob extends Activity {
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
-                        dbHelper_Comprob_Cobro.updateComprobCobrosMan(idCompro, fecha, hora, monto, "0");
+                        dbHelper_Comprob_Cobro.updateComprobCobrosMan(idCompro, fecha, hora, monto, "1");
                         Toast.makeText(getApplicationContext(),
                                 "Actualizado", Toast.LENGTH_SHORT).show();
 
                         Intent w = new Intent(getApplicationContext(), VMovil_Evento_Establec.class);
-                        w.putExtra("idEstab", idEstablec);
+                        w.putExtra("idEstab", ""+idEstablec);
+                        w.putExtra("idAgente", idAgente);
+
                         startActivity(w);
                     }
 
