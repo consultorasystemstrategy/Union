@@ -84,7 +84,6 @@ public class ImportMain extends AsyncTask<String, String, String> {
         dbAdapter_histo_venta_detalle.open();
 
         idAgente = ((MyApplication)mainActivity.getApplication()).getIdAgente();
-        dbAdapter_tipo_gasto.deleteAllTipoGastos();
 
         this.mainActivity = mainActivity;
         listView = (ListView) mainActivity.findViewById(R.id.listView);
@@ -289,15 +288,14 @@ public class ImportMain extends AsyncTask<String, String, String> {
                 DbAdaptert_Evento_Establec.EE_nom_establec
         };
 */
-        /*
         Cursor cursor = dbAdapter_comprob_cobro.fetchAllComprobCobros();
 
         String from[] = {
-                DbAdapter_Comprob_Cobro.CC_id_comprobante_cobro
+                DbAdapter_Comprob_Cobro.CC_fecha_programada
         };
 
-        */
 
+/*
 
         Cursor cursor = dbAdapter_histo_venta_detalle.fetchAllHistoVentaDetalle();
 
@@ -305,7 +303,7 @@ public class ImportMain extends AsyncTask<String, String, String> {
                 DbAdapter_Histo_Venta_Detalle.HD_id_detalle
         };
 
-
+*/
 
         int to[] = {
                 R.id.textView_detalles

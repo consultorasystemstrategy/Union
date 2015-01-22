@@ -121,7 +121,7 @@ public class DbAdapter_Comprob_Cobro {
         initialValues.put(CC_id_plan_pago_detalle,comprobanteCobro.getIdPlanPagoDetalle());
         initialValues.put(CC_desc_tipo_doc,comprobanteCobro.getDescTipoDoc());
         initialValues.put(CC_doc, comprobanteCobro.getDoc());
-        initialValues.put(CC_fecha_programada,comprobanteCobro.getFechaCobro());
+        initialValues.put(CC_fecha_programada,comprobanteCobro.getFechaProgramada());
         initialValues.put(CC_monto_a_pagar,comprobanteCobro.getMontoPagar());
         initialValues.put(CC_fecha_cobro, comprobanteCobro.getFechaCobro());
         initialValues.put(CC_hora_cobro,comprobanteCobro.getHoraCobro());

@@ -91,17 +91,28 @@ public class VMovil_Evento_Gasto extends Activity /*implements OnClickListener *
 
         addItemsOnSpinners();
 
-        /*
+
         spinnerTipoGasto.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 String tipoGasto = adapterView.getItemAtPosition(i).toString();
-                TipoDeGasto tipoDeGasto = null;
-                try{
-                    tipoDeGasto = TipoDeGasto.valueOf(tipoGasto);
-                }catch (Exception e){
-                    Log.d("Value of Tipo Gasto ", e.getMessage());
+                Toast.makeText(getApplicationContext(), tipoGasto, Toast.LENGTH_SHORT).show();
+
+                if (tipoGasto.equals("Combustible")) {
+                    String itemProcedenciaGasto = (String) spinnerProcedenciaGasto.getSelectedItem();
+                    ProcedenciaGasto procedenciaGasto = ProcedenciaGasto.valueOf(itemProcedenciaGasto);
+                    switch (procedenciaGasto) {
+                        case planta:
+                            addItemsTipoDocumento_CombustiblePlanta();
+                            break;
+                        case ruta:
+                            addItemsTipoDocumento_CombustibleRuta();
+                            break;
+                    }
                 }
+                /*TipoDeGasto tipoDeGasto = null;
+                tipoDeGasto = TipoDeGasto.valueOf(tipoGasto);
+
 
                 switch (tipoDeGasto) {
                     case Combustible:
@@ -133,14 +144,13 @@ public class VMovil_Evento_Gasto extends Activity /*implements OnClickListener *
                     default:
                         addItemsTipoDocumento();
                         break;
-                }
+                }*/
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-
             }
-        });*/
+        });
         spinnerProcedenciaGasto.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {

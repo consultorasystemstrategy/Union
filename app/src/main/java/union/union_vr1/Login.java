@@ -204,6 +204,8 @@ public class Login extends Activity implements OnClickListener{
             }else{
                 if (conectadoRedMovil()||conectadoWifi()){
                     new LoginRest().execute();
+                }else{
+                    Toast.makeText(getApplicationContext(), "Necesita estar conectado a internet la primera vez", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -265,7 +267,6 @@ public class Login extends Activity implements OnClickListener{
 
         @Override
         protected void onPreExecute() {
-            super.onPreExecute();
             createProgressDialog();
         }
 

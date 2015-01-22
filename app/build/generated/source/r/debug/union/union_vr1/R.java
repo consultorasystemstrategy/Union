@@ -57,21 +57,22 @@ public final class R {
         public static final int even_row=0x7f020002;
         public static final int ic_chk=0x7f020003;
         public static final int ic_launcher=0x7f020004;
-        public static final int listview_selector=0x7f020005;
-        public static final int listview_selector_even=0x7f020006;
-        public static final int listview_selector_odd=0x7f020007;
-        public static final int logo=0x7f020008;
-        public static final int odd_row=0x7f020009;
-        public static final int rounded_corner=0x7f02000a;
+        public static final int ic_print=0x7f020005;
+        public static final int listview_selector=0x7f020006;
+        public static final int listview_selector_even=0x7f020007;
+        public static final int listview_selector_odd=0x7f020008;
+        public static final int logo=0x7f020009;
+        public static final int odd_row=0x7f02000a;
+        public static final int rounded_corner=0x7f02000b;
     }
     public static final class id {
         public static final int BTN_aceptarDialogSinc=0x7f0a002a;
         public static final int BTN_cancelarDialogSinc=0x7f0a002b;
         public static final int Doc=0x7f0a0044;
         public static final int JS_AG_BTN_sig=0x7f0a00ac;
-        public static final int MnuOpc1=0x7f0a00e0;
-        public static final int MnuOpc2=0x7f0a00e1;
-        public static final int MnuOpc3=0x7f0a00e2;
+        public static final int MnuOpc1=0x7f0a00e1;
+        public static final int MnuOpc2=0x7f0a00e2;
+        public static final int MnuOpc3=0x7f0a00e3;
         public static final int TextView01=0x7f0a007d;
         public static final int VCAP_AutoCompleteProductos=0x7f0a000c;
         public static final int VCAP_buttonAgregar=0x7f0a000e;
@@ -209,7 +210,7 @@ public final class R {
         public static final int VVP_precio=0x7f0a0072;
         public static final int VVP_produc=0x7f0a0073;
         public static final int VVP_titulo=0x7f0a00cd;
-        public static final int action_example=0x7f0a00df;
+        public static final int action_example=0x7f0a00e0;
         public static final int action_settings=0x7f0a00de;
         public static final int autcomcan_dev=0x7f0a0025;
         public static final int autocomplete=0x7f0a0006;
@@ -261,8 +262,9 @@ public final class R {
         public static final int nombre=0x7f0a0076;
         public static final int nomcliente=0x7f0a003b;
         public static final int password=0x7f0a007c;
+        public static final int printCanjesDev=0x7f0a00df;
         public static final int repagar=0x7f0a0040;
-        public static final int retrocederActivity=0x7f0a00e3;
+        public static final int retrocederActivity=0x7f0a00e4;
         public static final int salir=0x7f0a007a;
         public static final int scrollView=0x7f0a0001;
         public static final int spinner1=0x7f0a0080;
