@@ -28,6 +28,7 @@ public class ParserComprobanteCobro {
             for(int i=0;i<jsonArray.length();i++)
             {
                 jsonObj=jsonArray.getJSONObject(i);
+                Log.d("FECHA COBRO", jsonObj.getString("fechaCobro"));
                 arrayList.add(new ComprobanteCobro(
                         jsonObj.getString("idComprobanteCobro"),
                         jsonObj.getInt("idEstablec"),
@@ -36,7 +37,7 @@ public class ParserComprobanteCobro {
                         jsonObj.getInt("idPlanpagoDetalle"),
                         jsonObj.getString("descripcion"),
                         jsonObj.getString("Doc"),
-                        jsonObj.getString("FechaCobro"),
+                        jsonObj.getString("fechaCobro"),
                         jsonObj.getDouble("montoaPagar"),
                         null, null, 0.0,
                         jsonObj.getInt("estado")

@@ -154,7 +154,7 @@ public class VMovil_Venta_Cabecera_PlanPagos extends Activity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Crédito Insuficiente");
         builder.setMessage("Monto de Crédito : " + monto_credito + "\n" + " < " +
-                "Saldo : " + formatDecimal(total));
+                "Saldo : " + df.format(total));
         builder.setPositiveButton("OK", new Dialog.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 Intent intent = new Intent(context, VMovil_Venta_Cabecera.class);

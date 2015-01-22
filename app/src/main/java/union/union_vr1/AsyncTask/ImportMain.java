@@ -9,6 +9,8 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -117,6 +119,7 @@ public class ImportMain extends AsyncTask<String, String, String> {
         try{
             publishProgress(""+10);
             JSONObject jsonObjectStockAgente = api.GetStockAgente(idAgente);
+            Log.d("JSON ERROR MESSAGE", getErrorMessage(jsonObjectStockAgente));
             JSONObject jsonObjectTipoGasto = api.GetTipoGasto();
             JSONObject jsonObjectPrecio = api.GetPrecioCategoria(idLiquidacion,idAgente);
             publishProgress(""+20);
@@ -232,6 +235,7 @@ public class ImportMain extends AsyncTask<String, String, String> {
 
         }catch (Exception e){
             Log.d("AysncImport : ", e.getMessage());
+
         }
         return null;
     }
@@ -337,5 +341,21 @@ public class ImportMain extends AsyncTask<String, String, String> {
         progressDialog.setCancelable(false);
         progressDialog.show();
 
+    }
+
+    public String getErrorMessage(JSONObject jsonObj)
+    {
+        String errorMessage = "Error Message null";
+        try {
+            for(int i=0;i<jsonObj.length();i++)
+            {
+                errorMessage +=jsonObj.getString("ErrorMessage");
+            }
+
+        } catch (JSONException e) {
+            // TODO Auto-generated catch block
+            Log.d("JSONParser => parser Error Message", e.getMessage());
+        }
+        return errorMessage;
     }
 }

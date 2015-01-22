@@ -1,5 +1,8 @@
 package union.union_vr1.RestApi;
 
+import android.util.Log;
+import android.widget.Toast;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -46,18 +49,20 @@ public class StockAgenteRestApi {
 
 
     private String load(String contents) throws IOException {
-        URL url = new URL(urlString);
-        HttpURLConnection conn = (HttpURLConnection)url.openConnection();
-        conn.setRequestMethod("POST");
-        conn.setConnectTimeout(60000);
-        conn.setDoOutput(true);
-        conn.setDoInput(true);
-        OutputStreamWriter w = new OutputStreamWriter(conn.getOutputStream());
-        w.write(contents);
-        w.flush();
-        InputStream istream = conn.getInputStream();
-        String result = convertStreamToUTF8String(istream);
-        return result;
+
+
+            URL url = new URL(urlString);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("POST");
+            conn.setConnectTimeout(60000);
+            conn.setDoOutput(true);
+            conn.setDoInput(true);
+            OutputStreamWriter w = new OutputStreamWriter(conn.getOutputStream());
+            w.write(contents);
+            w.flush();
+            InputStream istream = conn.getInputStream();
+            String result = convertStreamToUTF8String(istream);
+            return result;
     }
 
 
