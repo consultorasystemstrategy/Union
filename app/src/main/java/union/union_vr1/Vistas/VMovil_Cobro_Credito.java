@@ -181,10 +181,10 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
                 idVal2 = cursor.getDouble(cursor.getColumnIndexOrThrow("cc_re_monto_cobrado"));
                 idDeuda = idVal1 - idVal2;
                 mSPNcredit.setText(String.valueOf(idDeuda));
-                if (Integer.parseInt(idEstado) == 0) {
+                if (Integer.parseInt(idEstado) == 1) {
                     Estado = "Pendiente " + idDeuda;
                 }
-                if (Integer.parseInt(idEstado) == 1) {
+                if (Integer.parseInt(idEstado) == 0) {
                     Estado = "Cancelado";
                 }
                 Toast.makeText(getApplicationContext(),
