@@ -53,7 +53,7 @@ public class ParserEventoEstablecimiento {
                 }
 
                 arrayList.add(new EventoEstablecimiento(
-                        jsonObj.getInt("EveeIEventoPorEstablecimientoId"),
+                        jsonObj.getInt("EveeIEstablecimientoId"),
                         jsonObj.getInt("EstICatEstablecimientoId"),
                         jsonObj.getInt("TdiTipoDocIdentidadId"),
                         jsonObj.getInt("EveeIAtencionEstablecimientoId"),

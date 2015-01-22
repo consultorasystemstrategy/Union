@@ -25,6 +25,7 @@ import union.union_vr1.JSONParser.ParserStockAgente;
 import union.union_vr1.JSONParser.ParserTipoGasto;
 import union.union_vr1.Objects.Agente;
 import union.union_vr1.Objects.ComprobanteCobro;
+import union.union_vr1.Objects.ComprobanteVentaDetalle;
 import union.union_vr1.Objects.EventoEstablecimiento;
 import union.union_vr1.Objects.HistorialVentaDetalles;
 import union.union_vr1.Objects.Precio;
@@ -113,7 +114,6 @@ public class ImportMain extends AsyncTask<String, String, String> {
         ArrayList<HistorialVentaDetalles> historialVentaDetalleses = null;
 
         Log.d("idAgente, idLiquidacion, Fecha", idAgente+", "+idLiquidacion+", 19/01/2015");
-
 
         try{
             publishProgress(""+10);
