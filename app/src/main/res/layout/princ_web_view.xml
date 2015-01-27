@@ -37,6 +37,12 @@
             android:layout_height="wrap_content"
             android:text="Exportar"
             android:id="@+id/buttonExportar" />
+        <Button
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Ir principal"
+            android:id="@+id/buttonTemp" />
+
 
         <ListView
             android:layout_width="wrap_content"

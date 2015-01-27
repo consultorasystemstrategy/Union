@@ -15,7 +15,6 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import union.union_vr1.Conexion.JSONParser;
 import union.union_vr1.JSONParser.ParserAgente;
 import union.union_vr1.Objects.Agente;
@@ -24,12 +23,10 @@ import union.union_vr1.Sqlite.DbAdapter_Agente;
 import union.union_vr1.Utils.MyApplication;
 import union.union_vr1.Vistas.VMovil_Evento_Indice;
 import union.union_vr1.Vistas.VMovil_Online_Pumovil;
-
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -197,6 +194,7 @@ public class Login extends Activity implements OnClickListener{
             if (succesLogin){
                 ((MyApplication) loginClass.getApplication()).setIdAgente(mCursorAgente.getInt(mCursorAgente.getColumnIndexOrThrow(dbAdapter_agente.AG_id_agente_venta)));
                 ((MyApplication) loginClass.getApplication()).setIdLiquidacion(mCursorAgente.getInt(mCursorAgente.getColumnIndexOrThrow(dbAdapter_agente.AG_liquidacion)));
+                ((MyApplication) loginClass.getApplication()).setIdUsuario(mCursorAgente.getInt(mCursorAgente.getColumnIndexOrThrow(dbAdapter_agente.AG_id_usuario)));
                 ((MyApplication) loginClass.getApplication()).setDisplayedHistorialComprobanteAnterior(false);
                 Toast.makeText(getApplicationContext(), "Login correcto", Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(Login.this, VMovil_Online_Pumovil.class);
@@ -249,6 +247,7 @@ public class Login extends Activity implements OnClickListener{
                     ((MyApplication) loginClass.getApplication()).setIdAgente(agenteLista.get(i).getIdAgenteVenta());
                     ((MyApplication) loginClass.getApplication()).setIdLiquidacion(agenteLista.get(i).getLiquidacion());
                     ((MyApplication) loginClass.getApplication()).setDisplayedHistorialComprobanteAnterior(false);
+                    ((MyApplication) loginClass.getApplication()).setIdUsuario(agenteLista.get(i).getIdUsuario());
 
                     agenteLista.get(i).getIdAgenteVenta();
                     boolean existe = dbAdapter_agente.existeAgentesById(agenteLista.get(i).getIdAgenteVenta());

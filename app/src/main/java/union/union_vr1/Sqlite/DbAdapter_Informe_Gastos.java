@@ -88,7 +88,6 @@ public class DbAdapter_Informe_Gastos {
         initialValues.put(GA_referencia, referencia);
         initialValues.put(GA_id_agente,id_agente);
         initialValues.put(Constants._SINCRONIZAR, estadoSincronizado);
-
         return mDb.insert(SQLITE_TABLE_Informe_Gastos, null, initialValues);
     }
 
@@ -152,6 +151,29 @@ public class DbAdapter_Informe_Gastos {
             mCursor.moveToFirst();
         }
         return mCursor;
+    }
+
+    public void changeEstadoToExport(String[] idsInformeGasto, int estadoSincronizacion){
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(Constants._SINCRONIZAR,estadoSincronizacion);
+
+        String signosInterrogacion = "";
+        for (int i=0; i<idsInformeGasto.length; i++){
+            if (i==idsInformeGasto.length-1)
+            {
+                signosInterrogacion+= "?";
+            }else {
+                signosInterrogacion+= "? OR ";
+            }
+
+        }
+
+        Log.d("SIGNOS INTERROGACIÓN", signosInterrogacion);
+        int cantidadRegistros = mDb.update(SQLITE_TABLE_Informe_Gastos, initialValues,
+                GA_id_gasto+"= "+ signosInterrogacion,idsInformeGasto);
+
+
+        Log.d("REGISTROS ACTUALIZADO ", ""+cantidadRegistros);
     }
 /*
     public void insertSomeInformeGastos() {

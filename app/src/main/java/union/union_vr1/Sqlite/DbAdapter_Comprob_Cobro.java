@@ -107,6 +107,7 @@ public class DbAdapter_Comprob_Cobro {
         initialValues.put(CC_id_agente,id_agente);
         initialValues.put(CC_id_forma_cobro,id_forma_cobro);
         initialValues.put(CC_lugar_registro,lugar_registro);
+        initialValues.put(Constants._SINCRONIZAR, Constants._CREADO);
         return mDb.insert(SQLITE_TABLE_Comprob_Cobro, null, initialValues);
     }
 
@@ -229,16 +230,27 @@ return insert;
 
     }
 
-    public Cursor fetchComprobCobrosByIds(String inputText) throws SQLException {
-        Log.w(TAG, inputText);
-        Cursor mCursor = null;
-        mCursor = mDb.query(true, SQLITE_TABLE_Comprob_Cobro, new String[] {CC_id_cob_historial,
-            CC_id_establec, CC_id_comprob, CC_desc_tipo_doc, CC_doc, CC_fecha_programada,
-            CC_monto_a_pagar, CC_estado_cobro},
-            CC_id_establec + " = " + inputText, null,
+    public Cursor filterExportAndFetchById(int id_comprobante_venta) throws SQLException {
+
+        Cursor mCursor = mDb.query(true, SQLITE_TABLE_Comprob_Cobro, new String[] {
+
+                        CC_id_comprobante_cobro,CC_id_cob_historial,
+                        CC_id_establec, CC_id_comprob, CC_id_plan_pago, CC_id_plan_pago_detalle,
+                        CC_desc_tipo_doc, CC_doc, CC_fecha_programada, CC_monto_a_pagar,
+                        CC_fecha_cobro, CC_monto_cobrado, CC_estado_cobro},
+                CC_id_comprob+ " =  ? "+ " AND "+ Constants._SINCRONIZAR + " = ? OR ?",
+                new String[]{
+                        ""+id_comprobante_venta,
+                        ""+Constants._CREADO,
+                        ""+Constants._ACTUALIZADO,
+                }
+                ,
             null, null, null, null);
         if (mCursor != null) {
             mCursor.moveToFirst();
+        }
+        if(mCursor.getCount()==0){
+            Log.d("FILTER EXPORT PLAN PAGO ", "NULL");
         }
         return mCursor;
 
@@ -275,12 +287,33 @@ return insert;
                         CC_id_comprobante_cobro,CC_id_cob_historial,
                         CC_id_establec, CC_id_comprob, CC_id_plan_pago, CC_id_plan_pago_detalle,
                         CC_desc_tipo_doc, CC_doc, CC_fecha_programada, CC_monto_a_pagar,
-                        CC_fecha_cobro, CC_monto_cobrado, CC_estado_cobro},
+                        CC_fecha_cobro, CC_monto_cobrado, CC_estado_cobro, Constants._SINCRONIZAR},
                 null, null, null, null, null);
 
         if (mCursor != null) {
             mCursor.moveToFirst();
         }
+        return mCursor;
+    }
+
+    public Cursor filterExport() {
+
+        Cursor mCursor = mDb.query(SQLITE_TABLE_Comprob_Cobro, new String[] {
+
+
+                        CC_id_comprobante_cobro,CC_id_cob_historial,
+                        CC_id_establec, CC_id_comprob, CC_id_plan_pago, CC_id_plan_pago_detalle,
+                        CC_desc_tipo_doc, CC_doc, CC_fecha_programada, CC_monto_a_pagar,
+                        CC_fecha_cobro, CC_monto_cobrado, CC_estado_cobro},
+                Constants._SINCRONIZAR + " = " + Constants._CREADO + " OR " + Constants._SINCRONIZAR + " = " + Constants._ACTUALIZADO, null, null, null, null);
+
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }if (mCursor.getCount()==0){
+            Log.d("FILTER EXPORT CC","NO HAY NINGÚN PUTO DATO FILTRADO POR COLUMNA SINCRONIZAR");
+        }
+
+
         return mCursor;
     }
 

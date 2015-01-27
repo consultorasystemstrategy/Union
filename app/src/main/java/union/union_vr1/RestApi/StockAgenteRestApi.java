@@ -107,29 +107,6 @@ public class StockAgenteRestApi {
         return finalValue;
     }
 
-    public JSONObject CreateInformeGastos(int idCajaLiquidacion,double importe,String fechaHora,int usuario,int idComprobanteVenta,int idTipoGasto,double valorVenta,int igv,String referencia,int idCategoriaTipoGasto) throws Exception {
-        JSONObject result = null;
-        JSONObject o = new JSONObject();
-        JSONObject p = new JSONObject();
-        o.put("interface","RestAPI");
-        o.put("method", "CreateInformeGastos");
-        p.put("idCajaLiquidacion",mapObject(idCajaLiquidacion));
-        p.put("importe",mapObject(importe));
-        p.put("fechaHora",mapObject(fechaHora));
-        p.put("usuario",mapObject(usuario));
-        p.put("idComprobanteVenta",mapObject(idComprobanteVenta));
-        p.put("idTipoGasto",mapObject(idTipoGasto));
-        p.put("valorVenta",mapObject(valorVenta));
-        p.put("igv",mapObject(igv));
-        p.put("referencia",mapObject(referencia));
-        p.put("idCategoriaTipoGasto",mapObject(idCategoriaTipoGasto));
-        o.put("parameters", p);
-        String s = o.toString();
-        String r = load(s);
-        result = new JSONObject(r);
-        return result;
-    }
-
     public JSONObject GetComprobanteVentaDetalle_Env() throws Exception {
         JSONObject result = null;
         JSONObject o = new JSONObject();
@@ -156,7 +133,7 @@ public class StockAgenteRestApi {
         return result;
     }
 
-    public JSONObject CreateComprobanteVenta(String serie,int numDoc,int idFormaPago,String fechaDoc,double baseImponible,double igv,double total,int idTipoCompro,int idAgenteVenta,int anulado,double saldo,int idLiquidacion,int idTipoVenta,String codigoERP,int idEstablec) throws Exception {
+    public JSONObject CreateComprobanteVenta(String serie,int numDoc,int idFormaPago,String fechaDoc,double baseImponible,double igv,double total,int idTipoCompro,int idAgenteVenta,int anulado,double saldo,int idLiquidacion,int idTipoVenta,String codigoERP,int idEstablec,int idUsuario) throws Exception {
         JSONObject result = null;
         JSONObject o = new JSONObject();
         JSONObject p = new JSONObject();
@@ -177,13 +154,13 @@ public class StockAgenteRestApi {
         p.put("idTipoVenta",mapObject(idTipoVenta));
         p.put("codigoERP",mapObject(codigoERP));
         p.put("idEstablec",mapObject(idEstablec));
+        p.put("idUsuario",mapObject(idUsuario));
         o.put("parameters", p);
         String s = o.toString();
         String r = load(s);
         result = new JSONObject(r);
         return result;
     }
-
 
     public JSONObject CreateInsertarCaja(int idLiquidacionCaja,int idCategoriaMovimiento,double importeDecimal,int estado,String fecha,String referencia,int idusuario,int idcomprbante) throws Exception {
         JSONObject result = null;
@@ -206,12 +183,12 @@ public class StockAgenteRestApi {
         return result;
     }
 
-    public JSONObject CraeteComprobanteVentaDetalle(int p_ComdBIComprobanteVentaId,int p_ComdIProductoId,int p_ComdICantidad,int p_ComdDOImporte,int p_ComIUsuarioId,double p_ComdDOCostoVenta,double p_ComdDOPrecioUnitario,int p_valor) throws Exception {
+    public JSONObject CreateComprobanteVentaDetalle(int p_ComdBIComprobanteVentaId,int p_ComdIProductoId,int p_ComdICantidad,double p_ComdDOImporte,int p_ComIUsuarioId,double p_ComdDOCostoVenta,double p_ComdDOPrecioUnitario,int p_valor) throws Exception {
         JSONObject result = null;
         JSONObject o = new JSONObject();
         JSONObject p = new JSONObject();
         o.put("interface","RestAPI");
-        o.put("method", "CraeteComprobanteVentaDetalle");
+        o.put("method", "CreateComprobanteVentaDetalle");
         p.put("p_ComdBIComprobanteVentaId",mapObject(p_ComdBIComprobanteVentaId));
         p.put("p_ComdIProductoId",mapObject(p_ComdIProductoId));
         p.put("p_ComdICantidad",mapObject(p_ComdICantidad));
@@ -226,16 +203,14 @@ public class StockAgenteRestApi {
         result = new JSONObject(r);
         return result;
     }
-
-    public JSONObject CraetePlanPagoDetalleExp(int idPlanPago,String fecha,double importeBase,double montoPagar,int idUsuario,String fechaCobro) throws Exception {
+    public JSONObject CreatePlanPagoDetalleExp(int idPlanPago,String fecha,double montoPagar,int idUsuario,String fechaCobro) throws Exception {
         JSONObject result = null;
         JSONObject o = new JSONObject();
         JSONObject p = new JSONObject();
         o.put("interface","RestAPI");
-        o.put("method", "CraetePlanPagoDetalleExp");
+        o.put("method", "CreatePlanPagoDetalleExp");
         p.put("idPlanPago",mapObject(idPlanPago));
         p.put("fecha",mapObject(fecha));
-        p.put("importeBase",mapObject(importeBase));
         p.put("montoPagar",mapObject(montoPagar));
         p.put("idUsuario",mapObject(idUsuario));
         p.put("fechaCobro",mapObject(fechaCobro));
@@ -357,6 +332,28 @@ public class StockAgenteRestApi {
         o.put("interface","RestAPI");
         o.put("method", "GetStockAgente");
         p.put("idAgenteVenta",mapObject(idAgenteVenta));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+
+    public JSONObject CreateInformeGastos(int idLiquidacionCaja,double total,String fecha,int idUsuario,int idTipoGasto,double subtotal,double igv,String referencia,int idprocedenciaGasto) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","RestAPI");
+        o.put("method", "CreateInformeGastos");
+        p.put("idLiquidacionCaja",mapObject(idLiquidacionCaja));
+        p.put("total",mapObject(total));
+        p.put("fecha",mapObject(fecha));
+        p.put("idUsuario",mapObject(idUsuario));
+        p.put("idTipoGasto",mapObject(idTipoGasto));
+        p.put("subtotal",mapObject(subtotal));
+        p.put("igv",mapObject(igv));
+        p.put("referencia",mapObject(referencia));
+        p.put("idprocedenciaGasto",mapObject(idprocedenciaGasto));
         o.put("parameters", p);
         String s = o.toString();
         String r = load(s);

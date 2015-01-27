@@ -85,6 +85,7 @@ public class DbAdapter_Comprob_Venta_Detalle {
         initialValues.put(CD_prom_anterior,prom_anterior);
         initialValues.put(CD_devuelto,devuelto);
         initialValues.put(CD_valor_unidad,valor_unidad);
+        initialValues.put(Constants._SINCRONIZAR, Constants._CREADO);
 
         return mDb.insert(SQLITE_TABLE_Comprob_Venta_Detalle, null, initialValues);
     }
@@ -95,6 +96,29 @@ public class DbAdapter_Comprob_Venta_Detalle {
 
         mDb.update(SQLITE_TABLE_Comprob_Venta_Detalle, initialValues,
                 CD_id_comprob+"=?",new String[]{idorig});
+    }
+
+    public void changeEstadoToExport(String[] idComprobanteDetalle, int estadoSincronizacion){
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(Constants._SINCRONIZAR,estadoSincronizacion);
+
+        String signosInterrogacion = "";
+        for (int i=0; i<idComprobanteDetalle.length; i++){
+            if (i==idComprobanteDetalle.length-1)
+            {
+                signosInterrogacion+= "?";
+            }else {
+                signosInterrogacion+= "? OR ";
+            }
+
+        }
+
+        Log.d("SIGNOS INTERROGACIÓN", signosInterrogacion);
+        int cantidadRegistros = mDb.update(SQLITE_TABLE_Comprob_Venta_Detalle, initialValues,
+                CD_id_comprob+"= "+ signosInterrogacion,idComprobanteDetalle);
+
+
+        Log.d("REGISTROS EXPORTADOS ", ""+cantidadRegistros);
     }
 
     public void updateComprobVentaDetalle2(String idorig, String iddest, String vals){
@@ -186,6 +210,19 @@ public class DbAdapter_Comprob_Venta_Detalle {
                         CD_id_comprob, CD_id_producto, CD_costo_venta, CD_nom_producto, CD_cantidad,
                         CD_precio_unit, CD_importe, CD_prom_anterior, CD_devuelto},
                 CD_id_comprob + " = " + id, null, null, null, null);
+
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+    }
+
+    public Cursor filterExport() {
+
+        Cursor mCursor = mDb.query(SQLITE_TABLE_Comprob_Venta_Detalle, new String[] {CD_comp_detalle,
+                        CD_id_comprob, CD_id_producto, CD_costo_venta, CD_nom_producto, CD_cantidad,
+                        CD_precio_unit, CD_importe, CD_prom_anterior, CD_devuelto, CD_valor_unidad},
+                Constants._SINCRONIZAR + " = " + Constants._CREADO + " OR " + Constants._SINCRONIZAR + " = " + Constants._ACTUALIZADO, null, null, null, null);
 
         if (mCursor != null) {
             mCursor.moveToFirst();

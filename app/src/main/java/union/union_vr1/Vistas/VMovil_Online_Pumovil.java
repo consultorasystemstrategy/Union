@@ -3,6 +3,7 @@ package union.union_vr1.Vistas;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -55,6 +56,7 @@ public class VMovil_Online_Pumovil extends Activity {
 
         final Button button = (Button) findViewById(R.id.VEE_BTNEstadoNoAtendido);
         final Button buttonExport = (Button) findViewById(R.id.buttonExportar);
+        final Button buttonTemp = (Button) findViewById(R.id.buttonTemp);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 /*
@@ -70,6 +72,14 @@ public class VMovil_Online_Pumovil extends Activity {
             @Override
             public void onClick(View v) {
                 new ExportMain(mContext).execute();
+            }
+        });
+        buttonTemp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, VMovil_Evento_Indice.class);
+                finish();
+                startActivity(intent);
             }
         });
 

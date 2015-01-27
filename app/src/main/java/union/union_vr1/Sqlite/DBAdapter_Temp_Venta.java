@@ -75,7 +75,7 @@ public class DBAdapter_Temp_Venta {
 
     public long createTempVentaDetalle(
             int id_comprob, int id_producto, String nom_producto, int cantidad, double importe,
-            double precio_unit, String prom_anterior, String devuelto, int procedencia){
+            double precio_unit, String prom_anterior, String devuelto, int procedencia, int valorUnidad){
 
         ContentValues initialValues = new ContentValues();
         initialValues.put(temp_id_comprob,id_comprob);
@@ -87,6 +87,8 @@ public class DBAdapter_Temp_Venta {
         initialValues.put(temp_prom_anterior,prom_anterior);
         initialValues.put(temp_devuelto,devuelto);
         initialValues.put(temp_procedencia, procedencia);
+        initialValues.put(temp_valor_unidad, valorUnidad);
+
 
         return mDb.insert(SQLITE_TABLE_Temp_Venta_Detalle, null, initialValues);
     }
@@ -129,7 +131,7 @@ public class DBAdapter_Temp_Venta {
     public Cursor fetchAllTempVentaDetalle() {
 
         Cursor mCursor = mDb.query(SQLITE_TABLE_Temp_Venta_Detalle, new String[] {temp_venta_detalle,
-                temp_id_comprob,temp_id_producto, temp_nom_producto, temp_cantidad, temp_precio_unit,temp_precio_unit, temp_importe,
+                temp_id_comprob,temp_id_producto, temp_nom_producto, temp_cantidad, temp_precio_unit,temp_valor_unidad, temp_importe,
                 temp_prom_anterior, temp_devuelto},null, null, null, null, null);
 
         if (mCursor != null) {

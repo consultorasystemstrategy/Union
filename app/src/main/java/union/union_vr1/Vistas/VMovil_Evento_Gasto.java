@@ -14,7 +14,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import union.union_vr1.CustomOnItemSelectedListener;
@@ -295,17 +299,17 @@ public class VMovil_Evento_Gasto extends Activity /*implements OnClickListener *
                 igv = IGV * total / 100;
                 subtotal = total - igv;
                 positionTipoDocumento = 1;
-                idRegistroGastoInsertado = dbHelperInformeGasto.createInformeGastos(positionTipoGasto, positionProcedenciaGasto, positionTipoDocumento, null, subtotal, igv, total, null, null, estado, referencia, agente, Constants._CREADO);
+                idRegistroGastoInsertado = dbHelperInformeGasto.createInformeGastos(positionTipoGasto, positionProcedenciaGasto, positionTipoDocumento, null, subtotal, igv, total, getDatePhone(), null, estado, referencia, agente, Constants._CREADO);
                 Log.d("TIPO DOCUMENTO", "FACTURA");
                 break;
             case boleta:
                 positionTipoDocumento = 2;
-                idRegistroGastoInsertado = dbHelperInformeGasto.createInformeGastos(positionTipoGasto, positionProcedenciaGasto, positionTipoDocumento, null, subtotal, igv, total, null, null, estado, referencia, agente, Constants._CREADO);
+                idRegistroGastoInsertado = dbHelperInformeGasto.createInformeGastos(positionTipoGasto, positionProcedenciaGasto, positionTipoDocumento, null, subtotal, igv, total, getDatePhone(), null, estado, referencia, agente, Constants._CREADO);
                 Log.d("TIPO DOCUMENTO", "BOLETA");
                 break;
             case ficha:
                 positionTipoDocumento = 4;
-                idRegistroGastoInsertado = dbHelperInformeGasto.createInformeGastos(positionTipoGasto, positionProcedenciaGasto, positionTipoDocumento, null, subtotal, igv, total, null, null, estado, referencia, agente, Constants._CREADO);
+                idRegistroGastoInsertado = dbHelperInformeGasto.createInformeGastos(positionTipoGasto, positionProcedenciaGasto, positionTipoDocumento, null, subtotal, igv, total, getDatePhone(), null, estado, referencia, agente, Constants._CREADO);
                 Log.d("TIPO DOCUMENTO", "FICHA");
                 break;
         }
@@ -366,5 +370,13 @@ public class VMovil_Evento_Gasto extends Activity /*implements OnClickListener *
 
         // Assign adapter to ListView
         listViewInformeGasto.setAdapter(dataAdapter);
+    }
+
+    public String getDatePhone()
+    {
+        Calendar cal = new GregorianCalendar();
+        Date date = cal.getTime();
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        return df.format(date);
     }
 }

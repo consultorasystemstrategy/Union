@@ -216,6 +216,7 @@ public class VMovil_Venta_Cabecera_AgregarProductos extends Activity implements 
                 id_producto = cursor.getInt(cursor.getColumnIndex(DbAdapter_Stock_Agente.ST_id_producto));
                 disponible = cursor.getInt(cursor.getColumnIndex(DbAdapter_Stock_Agente.ST_disponible));
 
+
                 myTextDialog().show();
 
             }
@@ -271,7 +272,7 @@ public class VMovil_Venta_Cabecera_AgregarProductos extends Activity implements 
                 String devuelto = null;
 
                 //En una tabla "Temp_Venta" Nos sirve para agregar datos del historial de ventas anteriores y sugerir al usuario, estos son datos temporales
-                long id = dbHelper_Temp_Venta.createTempVentaDetalle(1,id_producto,nombre,cantidad,total_importe, precio_unitario, promedio_anterior, devuelto, procedencia);
+                long id = dbHelper_Temp_Venta.createTempVentaDetalle(1,id_producto,nombre,cantidad,total_importe, precio_unitario, promedio_anterior, devuelto, procedencia, 1);
 
                 Intent intent = new Intent(mContext, VMovil_Venta_Cabecera_AgregarProductos.class);
                 finish();

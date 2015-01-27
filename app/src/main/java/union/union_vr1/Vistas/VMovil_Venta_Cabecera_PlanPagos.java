@@ -217,7 +217,7 @@ public class VMovil_Venta_Cabecera_PlanPagos extends Activity {
                 calcular();
                 break;
             case R.id.VCPP_buttonEstablecer:
-                //  ((MyApplication)this.getApplication()).setCuotasEstablecidas(true);
+                  ((MyApplication)this.getApplication()).setCuotasEstablecidas(true);
                 Toast.makeText(getApplicationContext(),
                         "Cuotas Establecidos \nYa no podrá agregar productos, ni eliminar productos", Toast.LENGTH_SHORT).show();
 

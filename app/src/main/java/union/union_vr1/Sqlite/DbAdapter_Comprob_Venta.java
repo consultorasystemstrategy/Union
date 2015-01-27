@@ -186,12 +186,35 @@ public class DbAdapter_Comprob_Venta {
 
     }
 
-    public void updateComprobante(int id, int estado){
+    public void updateComprobante(int id, int estadoSincronizacion){
         ContentValues initialValues = new ContentValues();
-        initialValues.put(CV_estado_comp,estado);
+        initialValues.put(Constants._SINCRONIZAR,estadoSincronizacion);
 
         mDb.update(SQLITE_TABLE_Comprob_Venta, initialValues,
                 CV_id_comprob+"=?",new String[]{""+id});
+    }
+
+    public void changeEstadoToExport(String[] idComprobante, int estadoSincronizacion){
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(Constants._SINCRONIZAR,estadoSincronizacion);
+
+        String signosInterrogacion = "";
+        for (int i=0; i<idComprobante.length; i++){
+            if (i==idComprobante.length-1)
+            {
+                signosInterrogacion+= "?";
+            }else {
+                signosInterrogacion+= "? OR ";
+            }
+
+        }
+
+        Log.d("SIGNOS INTERROGACIÓN", signosInterrogacion);
+        int cantidadRegistros = mDb.update(SQLITE_TABLE_Comprob_Venta, initialValues,
+                CV_id_comprob+"= "+ signosInterrogacion,idComprobante);
+
+
+        Log.d("REGISTROS EXPORTADOS ", ""+cantidadRegistros);
     }
 
     public void updateComprobanteMontos(long id, Double total, Double igv, Double base_imponible){
@@ -199,6 +222,8 @@ public class DbAdapter_Comprob_Venta {
         initialValues.put(CV_total,total);
         initialValues.put(CV_total,igv);
         initialValues.put(CV_total,base_imponible);
+
+
 
         mDb.update(SQLITE_TABLE_Comprob_Venta, initialValues,
                 CV_id_comprob+"=?",new String[]{""+id});
@@ -283,6 +308,22 @@ public class DbAdapter_Comprob_Venta {
         }
         return mCursor;
     }
+    public Cursor fetchAllComprobVentaById(int id) {
+
+        Cursor mCursor = mDb.query(SQLITE_TABLE_Comprob_Venta, new String[] {CV_id_comprob,
+
+                        CV_id_establec, CV_id_tipo_doc, CV_id_forma_pago, CV_id_tipo_venta,
+                        CV_codigo_erp, CV_serie, CV_num_doc, CV_base_imp, CV_igv, CV_total,
+                        CV_fecha_doc, CV_hora_doc, CV_estado_comp, CV_estado_conexion, CV_id_agente
+                },
+                CV_id_comprob + " = " + id, null, null, null, null);
+
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+    }
+
 /*
     public void insertSomeComprobVenta() {
 

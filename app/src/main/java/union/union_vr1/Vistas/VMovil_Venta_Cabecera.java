@@ -200,7 +200,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
         buttonAgregar.setOnClickListener(this);
         listView = (ListView) findViewById(R.id.VC_listView);
 
-       // isEstablecidasCuotas = ((MyApplication)this.getApplication()).isCuotasEstablecidas();
+        isEstablecidasCuotas = ((MyApplication)this.getApplication()).isCuotasEstablecidas();
         if(isEstablecidasCuotas){
 
             buttonAgregar.setClickable(false);
@@ -256,6 +256,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
                                         public void onClick(DialogInterface dialog, int id) {
                                             Intent intent = new Intent(getApplicationContext(), VMovil_Venta_Cabecera_PlanPagos.class);
                                             intent.putExtra("total", totalFooter);
+                                            finish();
                                             startActivity(intent);
                                         }
                                     }).create().show();
@@ -461,13 +462,15 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
 
             Cursor cursorTempComprobCobros = dbHelper_Temp_Comprob_Cobros.fetchAllComprobCobros();
 
+        Log.d("FORMA DE PAGO ", ""+i_formaPago);
             switch (formaPago1){
                 case Contado:
                     i_formaPago = 1;
                     break;
                 case Credito:
                     i_formaPago = 2;
-                    //((MyApplication)this.getApplication()).setCuotasEstablecidas(false);
+
+                    ((MyApplication)this.getApplication()).setCuotasEstablecidas(false);
                     break;
 
             }
@@ -498,6 +501,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
 
         long id = dbHelper_Comprob_Venta.createComprobVenta(idEstablecimiento,i_tipoDocumento,i_formaPago,tipoVenta,codigo_erp,serie,numero_documento,base_imponible,igv,monto_total,getDatePhone(),null,estado_comprobante, estado_conexion,id_agente_venta, Constants._CREADO);
 
+        Log.d("Export id CV IGUALES",""+id);
 
 
         int id_comprobante = (int) id;
@@ -519,11 +523,12 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
 
             String promedio_anterior = cursorTemp.getString(cursorTemp.getColumnIndex(DBAdapter_Temp_Venta.temp_prom_anterior));
             String devuelto = cursorTemp.getString(cursorTemp.getColumnIndex(DBAdapter_Temp_Venta.temp_devuelto));
+            int valorUnidad = cursorTemp.getInt(cursorTemp.getColumnIndexOrThrow(DBAdapter_Temp_Venta.temp_valor_unidad));
 
             monto_total += importe;
 
-            comprobVentaDetalle = dbHelper_Comprob_Venta_Detalle.createComprobVentaDetalle(id_comprobante, id_producto, nombre_producto, cantidad, importe,0, precio_unitario, promedio_anterior, devuelto,0);
-            dbHelper_Stock_Agente.updateStockAgenteCantidad(id_producto,-cantidad);
+            comprobVentaDetalle = dbHelper_Comprob_Venta_Detalle.createComprobVentaDetalle(id_comprobante, id_producto, nombre_producto, cantidad, importe,0, precio_unitario, promedio_anterior, devuelto, valorUnidad);
+            dbHelper_Stock_Agente.updateStockAgenteCantidad(id_producto,-(cantidad*valorUnidad));
 
             if(nombre_producto.length()>=28){
                 nombre_producto=nombre_producto.substring(0,28);
@@ -552,11 +557,14 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
 
 
         if (i_formaPago==2){
-            for (cursorTempComprobCobros.moveToFirst(); cursorTempComprobCobros.isAfterLast();cursorTempComprobCobros.moveToNext()){
+            for (cursorTempComprobCobros.moveToFirst(); !cursorTempComprobCobros.isAfterLast();cursorTempComprobCobros.moveToNext()){
                 String fecha_programada = cursorTempComprobCobros.getString(cursorTempComprobCobros.getColumnIndex(DbAdapter_Temp_Comprob_Cobro.temp_fecha_programada));
                 Double monto_a_pagar = cursorTempComprobCobros.getDouble(cursorTempComprobCobros.getColumnIndex(DbAdapter_Temp_Comprob_Cobro.temp_monto_a_pagar));
 
-                dbHelper_Comprob_Cobros.createComprobCobros(idEstablecimiento,comprobVentaDetalle,id_plan_pago,id_plan_pago_detalle,tipoDocumento.toUpperCase(),codigo_erp,fecha_programada,monto_a_pagar, fecha_cobro, hora_cobro,monto_cobrado,estado_cobro,id_agente_venta,id_forma_cobro, lugar_registro);
+                Log.d("RECORRE EL CURSOR TEMP COMPROB COBROS", "YES");
+
+                 long registroInsertado = dbHelper_Comprob_Cobros.createComprobCobros(idEstablecimiento,id,id_plan_pago,id_plan_pago_detalle,tipoDocumento.toUpperCase(),codigo_erp,fecha_programada,monto_a_pagar, fecha_cobro, hora_cobro,monto_cobrado,estado_cobro,id_agente_venta,id_forma_cobro, lugar_registro);
+                 Log.d("CC INSERTADO SATISFACTORIAMENTE ", "ID : "+ registroInsertado);
             }
         }
 
@@ -615,7 +623,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
             int procedencia = 0;
 
             //En una tabla "Temp_Venta" Nos sirve para agregar datos del historial de ventas anteriores y sugerir al usuario, estos son datos temporales
-            long id = dbHelper_temp_venta.createTempVentaDetalle(1,id_producto,nombre_producto,cantidad,importe, precio_unitario, promedio_anterior, devuelto, procedencia);
+            long id = dbHelper_temp_venta.createTempVentaDetalle(1,id_producto,nombre_producto,cantidad,importe, precio_unitario, promedio_anterior, devuelto, procedencia, 1);
 
 
         }

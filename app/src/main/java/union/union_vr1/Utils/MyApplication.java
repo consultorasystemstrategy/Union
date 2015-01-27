@@ -9,8 +9,27 @@ public class MyApplication extends Application{
 
         private int idAgente;
         private int idEstablecimiento;
+        private boolean cuotasEstablecidas;
         private boolean DisplayedHistorialComprobanteAnterior;
         private int idLiquidacion;
+        private int idUsuario;
+
+
+    public boolean isCuotasEstablecidas() {
+        return cuotasEstablecidas;
+    }
+
+    public void setCuotasEstablecidas(boolean cuotasEstablecidas) {
+        this.cuotasEstablecidas = cuotasEstablecidas;
+    }
+
+    public int getIdUsuario() {
+        return idUsuario;
+    }
+
+    public void setIdUsuario(int idUsuario) {
+        this.idUsuario = idUsuario;
+    }
 
     public int getIdLiquidacion() {
         return idLiquidacion;
