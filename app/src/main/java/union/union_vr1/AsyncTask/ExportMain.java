@@ -167,10 +167,13 @@ public class ExportMain extends AsyncTask<String, String, String> {
                             for (cursorPlanPago.moveToFirst(); !cursorPlanPago.isAfterLast(); cursorPlanPago.moveToNext()){
 
                                 Log.d("EXPORT PPD", ""+idPlan+"-"+
+                                        cursorComprobanteVenta.getString(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_comprob))+"-"+
                                         cursorComprobanteVenta.getString(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_fecha_doc))+"-"+
                                         cursorPlanPago.getDouble(cursorPlanPago.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_monto_a_pagar))+"-"+
                                         ((MyApplication) mainActivity.getApplication()).getIdUsuario()+"-"+
-                                        cursorPlanPago.getString(cursorPlanPago.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_fecha_programada)));
+                                                cursorPlanPago.getString(cursorPlanPago.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_fecha_programada))+"-"+
+                                                cursorPlanPago.getString(cursorPlanPago.getColumnIndexOrThrow(Constants._SINCRONIZAR))
+                                );
                                  JSONObject jsonObjectSuccess= api.CreatePlanPagoDetalleExp(
                                         idPlan,
                                         cursorComprobanteVenta.getString(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_fecha_doc)),
@@ -178,7 +181,22 @@ public class ExportMain extends AsyncTask<String, String, String> {
                                         ((MyApplication) mainActivity.getApplication()).getIdUsuario(),
                                         cursorPlanPago.getString(cursorPlanPago.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_fecha_programada))
                                         );
+
+                                if (isSuccesfulExport(jsonObjectSuccesfull)){
+                                    listIdComprobanteCobro.add(""+cursorPlanPago.getInt(cursorPlanPago.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_id_cob_historial)));
+                                }
                                 Log.d("EXPORT JSON SUCCESFULL PPD", jsonObjectSuccess.toString());
+                            }
+
+                            String[] idComprobanteCobro = new String[listIdComprobanteCobro.size()];
+                            listIdComprobanteCobro.toArray(idComprobanteCobro);
+
+                            for (int i = 0; i < idComprobanteCobro.length; i++) {
+                                Log.d("ID EXPORTADOS ", "" + idComprobanteCobro[i]);
+                            }
+
+                            if (listIdComprobantes.size()>0) {
+                                dbAdapter_comprob_cobro.changeEstadoToExport(idComprobanteCobro, Constants._EXPORTADO);
                             }
                         }
 

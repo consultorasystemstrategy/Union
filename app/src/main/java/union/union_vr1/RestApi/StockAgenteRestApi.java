@@ -360,4 +360,33 @@ public class StockAgenteRestApi {
         result = new JSONObject(r);
         return result;
     }
+    public JSONObject CreateDevoluciones(int idProducto,int idCategoriaOpe,int idTipoOp,int cantidad,int idEmpresa,int idAgenteVenta,int idGuiaRemision,String referencia,String lote,int idCliente,int idLiquidacion,double subTotal,double igv,double total,int idComprobanteVenta,int idTipoDev,int unidad) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","RestAPI");
+        o.put("method", "CreateDevoluciones");
+        p.put("idProducto",mapObject(idProducto));
+        p.put("idCategoriaOpe",mapObject(idCategoriaOpe));
+        p.put("idTipoOp",mapObject(idTipoOp));
+        p.put("cantidad",mapObject(cantidad));
+        p.put("idEmpresa",mapObject(idEmpresa));
+        p.put("idAgenteVenta",mapObject(idAgenteVenta));
+        p.put("idGuiaRemision",mapObject(idGuiaRemision));
+        p.put("referencia",mapObject(referencia));
+        p.put("lote",mapObject(lote));
+        p.put("idCliente",mapObject(idCliente));
+        p.put("idLiquidacion",mapObject(idLiquidacion));
+        p.put("subTotal",mapObject(subTotal));
+        p.put("igv",mapObject(igv));
+        p.put("total",mapObject(total));
+        p.put("idComprobanteVenta",mapObject(idComprobanteVenta));
+        p.put("idTipoDev",mapObject(idTipoDev));
+        p.put("unidad",mapObject(unidad));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
 }

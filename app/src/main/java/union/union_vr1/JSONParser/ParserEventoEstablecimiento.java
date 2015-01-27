@@ -42,7 +42,7 @@ public class ParserEventoEstablecimiento {
                         diasCredito = 15;
                         break;
                     case 4:
-                        diasCredito = 30;
+                        diasCredito = 31;
                         break;
                     case 5:
                         diasCredito = 0;

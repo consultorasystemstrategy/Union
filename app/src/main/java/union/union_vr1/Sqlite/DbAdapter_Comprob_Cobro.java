@@ -191,6 +191,29 @@ public class DbAdapter_Comprob_Cobro {
                 CC_id_plan_pago_detalle+"=? AND "+CC_id_comprob+"=?",new String[]{id,"0"});
     }
 
+    public void changeEstadoToExport(String[] idComprobante, int estadoSincronizacion){
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(Constants._SINCRONIZAR,estadoSincronizacion);
+
+        String signosInterrogacion = "";
+        for (int i=0; i<idComprobante.length; i++){
+            if (i==idComprobante.length-1)
+            {
+                signosInterrogacion+= "?";
+            }else {
+                signosInterrogacion+= "? OR ";
+            }
+
+        }
+
+        Log.d("SIGNOS INTERROGACIÓN", signosInterrogacion);
+        int cantidadRegistros = mDb.update(SQLITE_TABLE_Comprob_Cobro, initialValues,
+                CC_id_cob_historial+"= "+ signosInterrogacion,idComprobante);
+
+
+        Log.d("REGISTROS EXPORTADOS ", ""+cantidadRegistros);
+    }
+
     public void updateComprobCobrosCan(String id, String fecha, String hora, double valor, String estado){
         ContentValues initialValues = new ContentValues();
         initialValues.put(CC_monto_cobrado,valor);
@@ -237,12 +260,11 @@ return insert;
                         CC_id_comprobante_cobro,CC_id_cob_historial,
                         CC_id_establec, CC_id_comprob, CC_id_plan_pago, CC_id_plan_pago_detalle,
                         CC_desc_tipo_doc, CC_doc, CC_fecha_programada, CC_monto_a_pagar,
-                        CC_fecha_cobro, CC_monto_cobrado, CC_estado_cobro},
-                CC_id_comprob+ " =  ? "+ " AND "+ Constants._SINCRONIZAR + " = ? OR ?",
+                        CC_fecha_cobro, CC_monto_cobrado, CC_estado_cobro, Constants._SINCRONIZAR},
+                CC_id_comprob+ " =  ? "+ " AND "+ Constants._SINCRONIZAR + " = ?",
                 new String[]{
                         ""+id_comprobante_venta,
-                        ""+Constants._CREADO,
-                        ""+Constants._ACTUALIZADO,
+                        ""+Constants._CREADO
                 }
                 ,
             null, null, null, null);
