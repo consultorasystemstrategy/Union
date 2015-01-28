@@ -347,10 +347,47 @@ public class ExportMain extends AsyncTask<String, String, String> {
 
             for (cursorComprobanteVentaDetalle.moveToFirst(); !cursorHistoVentaDetalle.isAfterLast(); cursorHistoVentaDetalle.moveToNext()){
 
-                Log.d("EXPORT HVD", "");
+                Log.d("EXPORT HVD", ""+ cursorHistoVentaDetalle.getInt(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_producto))+"-"+
+                        cursorHistoVentaDetalle.getInt(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_producto))+"-"+
+                        cursorHistoVentaDetalle.getInt(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_producto))+"-"+
+                        cursorHistoVentaDetalle.getInt(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_producto))+"-"+
+                        cursorHistoVentaDetalle.getInt(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_producto))+"-"+
+                        cursorHistoVentaDetalle.getInt(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_producto))+"-"+
+                        cursorHistoVentaDetalle.getInt(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_producto))+"-"+
+                        cursorHistoVentaDetalle.getString(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_producto))+"-"+
+                        cursorHistoVentaDetalle.getString(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_producto))+"-"+
+                        cursorHistoVentaDetalle.getInt(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_producto))+"-"+
+                        cursorHistoVentaDetalle.getInt(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_producto))+"-"+
+                        cursorHistoVentaDetalle.getDouble(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_producto))+"-"+
+                        cursorHistoVentaDetalle.getDouble(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_producto))+"-"+
+                        cursorHistoVentaDetalle.getDouble(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_producto))+"-"+
+                        cursorHistoVentaDetalle.getInt(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_producto))+"-"+
+                        cursorHistoVentaDetalle.getInt(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_producto))+"-"+
+                        cursorHistoVentaDetalle.getInt(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_producto)));
 
                 JSONObject jsonObject = null;
-                jsonObject = api.
+                try {
+                    jsonObject = api.CreateDevoluciones(
+                            cursorHistoVentaDetalle.getInt(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_producto)),
+                            cursorHistoVentaDetalle.getInt(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_categoria_ope)),
+                            cursorHistoVentaDetalle.getInt(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_tipoper)),
+                            cursorHistoVentaDetalle.getInt(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_cantidad)),
+                            1,
+                            cursorHistoVentaDetalle.getInt(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_agente)),
+                            1,
+                            cursorHistoVentaDetalle.getString(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_comprobante)),
+                            cursorHistoVentaDetalle.getString(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_lote)),
+                            cursorHistoVentaDetalle.getInt(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_)),
+                            ((MyApplication)mainActivity.getApplication()).getIdLiquidacion(),
+                            cursorHistoVentaDetalle.getDouble(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_importe_ope)),
+                            cursorHistoVentaDetalle.getInt(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_comprob)),
+                            cursorHistoVentaDetalle.getInt(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_forma_ope)),
+                            1
+                            );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
             }
         }else{
             Log.d("EXPORT ", "TODOS EL HISTORIAL VENTA DETALLE ESTÁ EXPORTADO");
