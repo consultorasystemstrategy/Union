@@ -307,6 +307,21 @@ public class DbAdapter_Histo_Venta_Detalle {
 
     }
 
+    public Cursor filterExport() {
+        Cursor mCursor = null;
+        mCursor = mDb.query(true, SQLITE_TABLE_Histo_Venta_Detalle, new String[] {HD_id_hventadet,
+                        HD_id_detalle, HD_id_comprob, HD_id_establec,HD_id_agente, HD_id_producto, HD_id_tipoper,
+                        HD_orden, HD_comprobante, HD_nom_producto, HD_cantidad, HD_importe, HD_fecha,
+                        HD_categoria_ope, HD_forma_ope, HD_cantidad_ope, HD_importe_ope, HD_fecha_ope, HD_estado, HD_lote},
+                Constants._SINCRONIZAR + " = " + Constants._CREADO + " OR " + Constants._SINCRONIZAR + " = " + Constants._ACTUALIZADO, null,
+                null, null, null, null);
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+    }
+
+
     public Cursor fetchAllHistoVentaDetalle() {
 
         Cursor mCursor = mDb.query(SQLITE_TABLE_Histo_Venta_Detalle, new String[] {HD_id_hventadet,

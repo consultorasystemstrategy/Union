@@ -360,7 +360,7 @@ public class StockAgenteRestApi {
         result = new JSONObject(r);
         return result;
     }
-    public JSONObject CreateDevoluciones(int idProducto,int idCategoriaOpe,int idTipoOp,int cantidad,int idEmpresa,int idAgenteVenta,int idGuiaRemision,String referencia,String lote,int idCliente,int idLiquidacion,double subTotal,double igv,double total,int idComprobanteVenta,int idTipoDev,int unidad) throws Exception {
+    public JSONObject CreateDevoluciones(int idProducto,int idCategoriaOpe,int idTipoOp,int cantidad,int idEmpresa,int idAgenteVenta,int idGuiaRemision,String referencia,String lote,int idLiquidacion,double total,int idComprobanteVenta,int idTipoDev,int unidad,int idEstablec) throws Exception {
         JSONObject result = null;
         JSONObject o = new JSONObject();
         JSONObject p = new JSONObject();
@@ -375,14 +375,12 @@ public class StockAgenteRestApi {
         p.put("idGuiaRemision",mapObject(idGuiaRemision));
         p.put("referencia",mapObject(referencia));
         p.put("lote",mapObject(lote));
-        p.put("idCliente",mapObject(idCliente));
         p.put("idLiquidacion",mapObject(idLiquidacion));
-        p.put("subTotal",mapObject(subTotal));
-        p.put("igv",mapObject(igv));
         p.put("total",mapObject(total));
         p.put("idComprobanteVenta",mapObject(idComprobanteVenta));
         p.put("idTipoDev",mapObject(idTipoDev));
         p.put("unidad",mapObject(unidad));
+        p.put("idEstablec",mapObject(idEstablec));
         o.put("parameters", p);
         String s = o.toString();
         String r = load(s);

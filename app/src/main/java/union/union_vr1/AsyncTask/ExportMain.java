@@ -345,7 +345,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
 
         if (cursorHistoVentaDetalle.getCount()>0){
 
-            for (cursorComprobanteVentaDetalle.moveToFirst(); !cursorHistoVentaDetalle.isAfterLast(); cursorHistoVentaDetalle.moveToNext()){
+            for (cursorHistoVentaDetalle.moveToFirst(); !cursorHistoVentaDetalle.isAfterLast(); cursorHistoVentaDetalle.moveToNext()){
 
                 Log.d("EXPORT HVD", ""+ cursorHistoVentaDetalle.getInt(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_producto))+"-"+
                         cursorHistoVentaDetalle.getInt(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_producto))+"-"+
@@ -371,24 +371,40 @@ public class ExportMain extends AsyncTask<String, String, String> {
                             cursorHistoVentaDetalle.getInt(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_producto)),
                             cursorHistoVentaDetalle.getInt(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_categoria_ope)),
                             cursorHistoVentaDetalle.getInt(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_tipoper)),
-                            cursorHistoVentaDetalle.getInt(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_cantidad)),
+                            cursorHistoVentaDetalle.getInt(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_cantidad_ope)),
                             1,
                             cursorHistoVentaDetalle.getInt(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_agente)),
                             1,
                             cursorHistoVentaDetalle.getString(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_comprobante)),
                             cursorHistoVentaDetalle.getString(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_lote)),
-                            cursorHistoVentaDetalle.getInt(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_)),
                             ((MyApplication)mainActivity.getApplication()).getIdLiquidacion(),
                             cursorHistoVentaDetalle.getDouble(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_importe_ope)),
                             cursorHistoVentaDetalle.getInt(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_comprob)),
                             cursorHistoVentaDetalle.getInt(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_forma_ope)),
-                            1
+                            1,
+                            cursorHistoVentaDetalle.getInt(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_establec))
                             );
+
+                    Log.d("SUCCESFULL EXPORT", ""+isSuccesfulExport(jsonObject));
+                    if (isSuccesfulExport(jsonObject)){
+                        listIdHistorialVentaDetalle.add("" + cursorHistoVentaDetalle.getInt(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_hventadet)));
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
 
             }
+            String[] idsHistorialVentaDetalle = new String[listIdHistorialVentaDetalle.size()];
+            listIdHistorialVentaDetalle.toArray(idsHistorialVentaDetalle);
+
+            for (int i = 0; i < idsHistorialVentaDetalle.length; i++) {
+                Log.d("ID EXPORTADOS ", "" + idsHistorialVentaDetalle[i]);
+            }
+
+            if (listIdInfomeGastos.size()>0){
+                dbAdapter_informe_gastos.changeEstadoToExport(idsHistorialVentaDetalle, Constants._EXPORTADO);
+            }
+
         }else{
             Log.d("EXPORT ", "TODOS EL HISTORIAL VENTA DETALLE ESTÁ EXPORTADO");
         }
@@ -485,5 +501,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
         }
         return idPlanPagoDetalle;
     }
+
+
 
 }
