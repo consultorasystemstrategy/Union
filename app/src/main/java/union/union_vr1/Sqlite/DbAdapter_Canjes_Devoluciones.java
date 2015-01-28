@@ -17,19 +17,27 @@ import union.union_vr1.Conexion.DbHelper;
  * Created by Usuario on 18/12/2014.
  */
 public class DbAdapter_Canjes_Devoluciones {
+    //EMPRESA =1
+    //IDAGENTE
+    //TIPO =4
+    //TOTAL
     private DbHelper mDbHelper;
     private final Context mCtx;
     private SQLiteDatabase mDb;
+    private DbAdapter_Histo_Venta dbHistoVenta ;
 
     public DbAdapter_Canjes_Devoluciones(Context ctx) {
         this.mCtx = ctx;
     }
 
     public DbAdapter_Canjes_Devoluciones open() {
+        dbHistoVenta = new DbAdapter_Histo_Venta(mCtx);
+        dbHistoVenta.open();
         mDbHelper = new DbHelper(mCtx);
         mDb = mDbHelper.getWritableDatabase();
         return this;
     }
+
 
     public Cursor listaFacturasByProducto(int idProducto, int idAgente, String idEstablec) {
         Cursor cr = mDb.rawQuery("select * from m_histo_venta_detalle where hd_in_id_producto=" + idProducto + " and hd_in_id_agente=" + idAgente + " and hd_in_id_establec='" + idEstablec + "' and hd_in_estado=1 and hd_in_id_detalle !=''", null);
@@ -210,8 +218,17 @@ public class DbAdapter_Canjes_Devoluciones {
         Cursor cr = mDb.rawQuery("select * from m_histo_venta_detalle where  hd_in_id_establec=" + idEstablec + " and hg_te_fecha_ope='" + getDatePhone() + "';", null);
         return cr;
     }
+    public String guardarCabecera(int idAgente){
 
-    public boolean guardarCambios(int tipo, String idEstablec) {
+       long id  = dbHistoVenta.createHistoVenta(""+idAgente+"."+getDatePhone()+" "+getTimePhone(),idAgente,0.0,getDatePhone());
+      Cursor cr  = mDb.rawQuery("select * from m_histo_venta where _id="+id+"",null);
+        cr.moveToFirst();
+
+
+        return  cr.getString(1);
+    }
+
+    public boolean guardarCambios(int tipo, String idEstablec,String idGuia) {
         boolean estado = false;
 
         try {
@@ -219,7 +236,7 @@ public class DbAdapter_Canjes_Devoluciones {
             Cursor c = mDb.rawQuery("select * from  m_histo_venta_detalle where  hd_in_id_tipoper='" + tipo + "'  and  hg_te_fecha_ope='" + getDatePhone() + "' and hd_in_id_establec='" + idEstablec + "' and hd_te_hora_ope='pendiente';", null);
 
             while (c.moveToNext()) {
-                mDb.execSQL("update m_histo_venta_detalle set hd_te_hora_ope='" + getTimePhone() + "',estado_sincronizacion='"+ Constants._ACTUALIZADO +"' where  hd_in_id_detalle='" + c.getString(1) + "';");
+                mDb.execSQL("update m_histo_venta_detalle set hd_te_hora_ope='" + getTimePhone() + "',estado_sincronizacion='"+ Constants._ACTUALIZADO +"',"+DbAdapter_Histo_Venta_Detalle.HD_Guia+"="+idGuia+" where  hd_in_id_detalle='" + c.getString(1) + "';");
             }
             Cursor stock = mDb.rawQuery("select distinct(ag._id),ag.st_in_id_producto,ag.st_te_nombre,ag. st_te_codigo,ag.st_te_codigo_barras,ag.st_in_inicial,ag.st_in_final,ag.st_in_disponible,ag.st_in_ventas,ag.st_in_canjes,ag.st_in_devoluciones,\n" +
                     "ag.st_in_buenos,ag.st_in_malos,ag.st_in_fisico,ag.st_in_id_agente from m_stock_agente ag,m_histo_venta_detalle mv where ag.st_in_id_producto=mv.hd_in_id_producto and mv.hd_te_hora_ope_dev='pendiente'", null);
@@ -242,15 +259,20 @@ public class DbAdapter_Canjes_Devoluciones {
         return estado;
     }
 
-    public boolean guardarCambios_dev(int tipo, String idEstablec) {
+    public boolean guardarCambios_dev(String idGuia, String idEstablec) {
+
         boolean estado = false;
 
         try {
+
             Cursor c = mDb.rawQuery("select * from  m_histo_venta_detalle where hg_te_fecha_ope_dev='" + getDatePhone() + "' and hd_in_id_establec='" + idEstablec + "' and hd_te_hora_ope_dev='pendiente';", null);
 
+double subTotal = 0.0;
             while (c.moveToNext()) {
-                mDb.execSQL("update m_histo_venta_detalle set hd_te_hora_ope_dev='" + getTimePhone() + "',estado_sincronizacion='"+ Constants._ACTUALIZADO +"' where  hd_in_id_detalle='" + c.getString(1) + "'");
+                subTotal = subTotal+c.getDouble(27);
+                mDb.execSQL("update m_histo_venta_detalle set hd_te_hora_ope_dev='" + getTimePhone() + "',estado_sincronizacion='"+ Constants._ACTUALIZADO +"',"+DbAdapter_Histo_Venta_Detalle.HD_Guia+"="+idGuia+" where  hd_in_id_detalle='" + c.getString(1) + "'");
             }
+            mDb.execSQL("update Histo_Venta set "+DbAdapter_Histo_Venta.HV_subtotal+"="+subTotal+"",null);
 
 
             estado = true;

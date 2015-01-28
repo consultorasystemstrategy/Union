@@ -34,7 +34,7 @@ public class DbAdapter_Histo_Venta_Detalle {
     public static final String HD_fecha_ope = "hg_te_fecha_ope";
     public static final String HD_hora_ope = "hd_te_hora_ope";
     public static final String HD_lote = "hd_te_lote";
-    public static final String HD_lugar_registro = "hd_te_lugar_registro";
+    public static final String HD_Guia = "hd_te_idGuia";
     public static final String HD_estado = "hd_in_estado";
     public static final String HD_id_agente = "hd_in_id_agente";
     public static final String HD_cantidad_ope_dev = "hd_in_cantidad_ope_dev";
@@ -77,7 +77,7 @@ public class DbAdapter_Histo_Venta_Detalle {
                     +HD_fecha_ope+" text,"
                     +HD_hora_ope+" text,"
                     +HD_lote+" text,"
-                    +HD_lugar_registro+" text,"
+                    +HD_Guia+" text,"
                     +HD_estado+" integer,"
                     +HD_id_agente+" integer,"
                     +HD_cantidad_ope_dev+" integer,"
@@ -134,7 +134,7 @@ public class DbAdapter_Histo_Venta_Detalle {
         initialValues.put(HD_fecha_ope,fecha_ope);
         initialValues.put(HD_hora_ope,hora_ope);
         initialValues.put(HD_lote,lote);
-        initialValues.put(HD_lugar_registro,lugar_registro);
+        initialValues.put(HD_Guia,lugar_registro);
         initialValues.put(HD_estado,estado);
         initialValues.put(HD_id_agente,id_agente);
         initialValues.put(HD_cantidad_ope_dev,cantidad_ope_dev);
@@ -170,7 +170,7 @@ public class DbAdapter_Histo_Venta_Detalle {
         initialValues.put(HD_fecha_ope,historialVentaDetalles.getFechaOperacion());
         initialValues.put(HD_hora_ope,historialVentaDetalles.getHoraOperacion());
         initialValues.put(HD_lote, historialVentaDetalles.getLote());
-        initialValues.put(HD_lugar_registro,historialVentaDetalles.getLugarRegistro());
+        initialValues.put(HD_Guia,historialVentaDetalles.getLugarRegistro());
         initialValues.put(HD_estado, historialVentaDetalles.getEstado());
         initialValues.put(HD_id_agente,historialVentaDetalles.getIdAgente());
         initialValues.put(HD_cantidad_ope_dev,historialVentaDetalles.getCantidadOperacionesDevuelto());
@@ -206,7 +206,7 @@ public class DbAdapter_Histo_Venta_Detalle {
         initialValues.put(HD_fecha_ope,historialVentaDetalles.getFechaOperacion());
         initialValues.put(HD_hora_ope,historialVentaDetalles.getHoraOperacion());
         initialValues.put(HD_lote, historialVentaDetalles.getLote());
-        initialValues.put(HD_lugar_registro,historialVentaDetalles.getLugarRegistro());
+        initialValues.put(HD_Guia,historialVentaDetalles.getLugarRegistro());
         initialValues.put(HD_estado, historialVentaDetalles.getEstado());
         initialValues.put(HD_id_agente,historialVentaDetalles.getIdAgente());
         initialValues.put(HD_cantidad_ope_dev,historialVentaDetalles.getCantidadOperacionesDevuelto());
@@ -249,7 +249,7 @@ public class DbAdapter_Histo_Venta_Detalle {
         initialValues.put(HD_fecha_ope,fecha_ope);
         initialValues.put(HD_hora_ope,hora_ope);
         initialValues.put(HD_lote,lote);
-        initialValues.put(HD_lugar_registro,lugar_registro);
+        initialValues.put(HD_Guia,lugar_registro);
         initialValues.put(HD_estado,estado);
         mDb.update(SQLITE_TABLE_Histo_Venta_Detalle, initialValues,
                 HD_id_hventadet+"=?",new String[]{idorig});

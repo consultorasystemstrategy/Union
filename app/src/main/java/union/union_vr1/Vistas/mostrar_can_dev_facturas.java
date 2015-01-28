@@ -191,17 +191,20 @@ public class mostrar_can_dev_facturas extends TabActivity {
                 .setCancelable(false)
                 .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
+                        String idGuia = dbHelper_CanDev.guardarCabecera(idAgente);
                         if (operacion == 2) {
-                            boolean estado = dbHelper_CanDev.guardarCambios_dev(operacion, idEstablec);
+                            boolean estado = dbHelper_CanDev.guardarCambios_dev(idGuia, idEstablec);
                             if (estado) {
+                                Toast.makeText(getApplicationContext(),""+idGuia,Toast.LENGTH_SHORT).show();
                                 exito();
                             } else {
                                 Toast.makeText(getApplicationContext(), "Ocurrio un Error", Toast.LENGTH_SHORT).show();
                             }
                         }
                         if (operacion == 1) {
-                            boolean estado = dbHelper_CanDev.guardarCambios(operacion, idEstablec);
+                            boolean estado = dbHelper_CanDev.guardarCambios(operacion, idEstablec,idGuia);
                             if (estado) {
+                                Toast.makeText(getApplicationContext(),""+idGuia,Toast.LENGTH_SHORT).show();
                                 exito();
                             } else {
                                 Toast.makeText(getApplicationContext(), "Ocurrio un Error", Toast.LENGTH_SHORT).show();
@@ -406,12 +409,12 @@ public class mostrar_can_dev_facturas extends TabActivity {
         //item.setVisible(false);
         switch (item.getItemId()) {
             case R.id.printCanjesDev:
-                if(idTab==0){
+                if(idTab==1){
                 Intent  i = new Intent(getApplicationContext(),VMovil_BluetoothImprimir.class);
                 i.putExtra("textoImpresion",text());
                 startActivity(i);
                 }else{
-                    Toast.makeText(getApplicationContext(),"Usted no Puede Imprimir devoluciones",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),"Usted no Puede Imprimir Canjes",Toast.LENGTH_SHORT).show();
 
                 }
                 break;
