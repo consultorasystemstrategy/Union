@@ -34,8 +34,8 @@ public class ExportMain extends AsyncTask<String, String, String> {
     private DbAdapter_Informe_Gastos dbAdapter_informe_gastos;
     private DbAdapter_Comprob_Venta dbAdapter_comprob_venta;
     private DbAdapter_Comprob_Venta_Detalle dbAdapter_comprob_venta_detalle;
-    private DbAdapter_Histo_Venta_Detalle dbAdapter_histo_venta_detalle;
     private DbAdapter_Comprob_Cobro dbAdapter_comprob_cobro;
+    private DbAdapter_Histo_Venta_Detalle dbAdapter_histo_venta_detalle;
 
     public ExportMain(VMovil_Online_Pumovil mainActivity) {
         this.mainActivity = mainActivity;
@@ -52,6 +52,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
         dbAdapter_comprob_venta_detalle.open();
         dbAdapter_histo_venta_detalle.open();
         dbAdapter_comprob_cobro.open();
+        dbAdapter_histo_venta_detalle.open();
     }
 
 
@@ -71,7 +72,10 @@ public class ExportMain extends AsyncTask<String, String, String> {
         Cursor cursorComprobanteVenta = dbAdapter_comprob_venta.filterExport();
         Cursor cursorComprobanteVentaDetalle = dbAdapter_comprob_venta_detalle.filterExport();
         Cursor cursorComprobanteCobro = dbAdapter_comprob_cobro.filterExport();
-        Cursor cursorCC = dbAdapter_comprob_cobro.fetchAllComprobCobros();
+        Cursor cursorHistoVentaDetalle = dbAdapter_histo_venta_detalle.filterExport();
+
+/*        Cursor cursorCC = dbAdapter_comprob_cobro.fetchAllComprobCobros();
+
 
         for (cursorCC.moveToFirst(); !cursorCC.isAfterLast(); cursorCC.moveToNext()){
             Log.d("DATOS CC", ""+
@@ -82,7 +86,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
             );
         }
 
-
+*/
 
         Log.d("EXPORT", "INICIANDO EXPORTACIÓN ...");
 
@@ -91,6 +95,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
         List<String> listIdComprobantes = new ArrayList<String>();
         List<String> listIdComprobanteVentaDetalle = new ArrayList<String>();
         List<String> listIdComprobanteCobro = new ArrayList<String>();
+        List<String> listIdHistorialVentaDetalle = new ArrayList<String>();
 
 
 
@@ -336,6 +341,19 @@ public class ExportMain extends AsyncTask<String, String, String> {
         }else{
 
             Log.d("EXPORT ", "TODOS LOS GASTOS ESTÁN EXPORTADOS");
+        }
+
+        if (cursorHistoVentaDetalle.getCount()>0){
+
+            for (cursorComprobanteVentaDetalle.moveToFirst(); !cursorHistoVentaDetalle.isAfterLast(); cursorHistoVentaDetalle.moveToNext()){
+
+                Log.d("EXPORT HVD", "");
+
+                JSONObject jsonObject = null;
+                jsonObject = api.
+            }
+        }else{
+            Log.d("EXPORT ", "TODOS EL HISTORIAL VENTA DETALLE ESTÁ EXPORTADO");
         }
         /*
 

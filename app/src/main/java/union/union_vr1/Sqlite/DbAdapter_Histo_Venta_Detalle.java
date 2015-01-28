@@ -43,6 +43,7 @@ public class DbAdapter_Histo_Venta_Detalle {
     public static final String HD_fecha_ope_dev = "hg_te_fecha_ope_dev";
     public static final String HD_hora_ope_dev = "hd_te_hora_ope_dev";
     public static final String estado_sincronizacion = "estado_sincronizacion";
+    public static final String HD_id_unidad = "hd_id_unidad";
 
     public static final String TAG = "Histo_Venta_Detalle";
     private DbHelper mDbHelper;
@@ -84,6 +85,7 @@ public class DbAdapter_Histo_Venta_Detalle {
                     +HD_categoria_ope_dev+" integer,"
                     +HD_importe_ope_dev+" real,"
                     +HD_fecha_ope_dev+" text,"
+                    +HD_id_unidad+" integer,"
                     +HD_hora_ope_dev+" text, " +
                     estado_sincronizacion+" integer);";
 
@@ -179,6 +181,7 @@ public class DbAdapter_Histo_Venta_Detalle {
         initialValues.put(HD_fecha_ope_dev,historialVentaDetalles.getFechaOperacionesDevuelto());
         initialValues.put(HD_hora_ope_dev,historialVentaDetalles.getHoraOperacionesDevuelto());
         initialValues.put(Constants._SINCRONIZAR,historialVentaDetalles.getEstadoSincronizacion());
+        initialValues.put(HD_id_unidad,historialVentaDetalles.getIdUnidad());
 
         return mDb.insert(SQLITE_TABLE_Histo_Venta_Detalle, null, initialValues);
     }
@@ -305,6 +308,20 @@ public class DbAdapter_Histo_Venta_Detalle {
         }
         return mCursor;
 
+    }
+
+    public Cursor filterExport() {
+        Cursor mCursor = null;
+        mCursor = mDb.query(true, SQLITE_TABLE_Histo_Venta_Detalle, new String[] {HD_id_hventadet,
+                        HD_id_detalle, HD_id_comprob, HD_id_establec, HD_id_producto, HD_id_tipoper,
+                        HD_orden, HD_comprobante, HD_nom_producto, HD_cantidad, HD_importe, HD_fecha,
+                        HD_categoria_ope, HD_forma_ope, HD_cantidad_ope, HD_importe_ope, HD_fecha_ope, HD_estado},
+                Constants._SINCRONIZAR + " = " + Constants._CREADO + " OR " + Constants._SINCRONIZAR + " = " + Constants._ACTUALIZADO, null,
+                null, null, null, null);
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
     }
 
     public Cursor fetchAllHistoVentaDetalle() {

@@ -35,8 +35,9 @@ public class HistorialVentaDetalles {
     private String fechaOperacionesDevuelto;
     private String horaOperacionesDevuelto;
     private int estadoSincronizacion;
+    private int idUnidad;
 
-    public HistorialVentaDetalles(String idDetalle, int idComprobante, int idEstablecimiento, int idProducto, int idTipoOperacion, int orden, String comprobante, String nombreEstablecimiento, String nombreProducto, int cantidad, Double importe, String fecha, String hora, int valorUnidad, int categoriaOperacion, int formaOperacion, int cantidadOperacion, Double importeOperacion, String fechaOperacion, String horaOperacion, String lote, String lugarRegistro, int estado, int idAgente, int cantidadOperacionesDevuelto, int categoriaOperacionesDevuelto, Double importeOperacionesDevuelto, String fechaOperacionesDevuelto, String horaOperacionesDevuelto, int estadoSincronizacion) {
+    public HistorialVentaDetalles(String idDetalle, int idComprobante, int idEstablecimiento, int idProducto, int idTipoOperacion, int orden, String comprobante, String nombreEstablecimiento, String nombreProducto, int cantidad, Double importe, String fecha, String hora, int valorUnidad, int categoriaOperacion, int formaOperacion, int cantidadOperacion, Double importeOperacion, String fechaOperacion, String horaOperacion, String lote, String lugarRegistro, int estado, int idAgente, int cantidadOperacionesDevuelto, int categoriaOperacionesDevuelto, Double importeOperacionesDevuelto, String fechaOperacionesDevuelto, String horaOperacionesDevuelto, int estadoSincronizacion, int idUnidad) {
         this.idDetalle = idDetalle;
         this.idComprobante = idComprobante;
         this.idEstablecimiento = idEstablecimiento;
@@ -67,6 +68,23 @@ public class HistorialVentaDetalles {
         this.fechaOperacionesDevuelto = fechaOperacionesDevuelto;
         this.horaOperacionesDevuelto = horaOperacionesDevuelto;
         this.estadoSincronizacion = estadoSincronizacion;
+        this.idUnidad = idUnidad;
+    }
+
+    public int getIdTipoOperacion() {
+        return idTipoOperacion;
+    }
+
+    public void setIdTipoOperacion(int idTipoOperacion) {
+        this.idTipoOperacion = idTipoOperacion;
+    }
+
+    public int getIdUnidad() {
+        return idUnidad;
+    }
+
+    public void setIdUnidad(int idUnidad) {
+        this.idUnidad = idUnidad;
     }
 
     public String getIdDetalle() {
