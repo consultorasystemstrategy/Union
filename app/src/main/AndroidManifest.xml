@@ -143,6 +143,12 @@
             android:name=".Vistas.VMovil_Facturas_Canjes_Dev"
             android:label="Canjear o Devolver" >
         </activity>
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".Vistas.mostrar_can_dev_facturas"
+            android:label="Canjear o Devolver" >
+        </activity>
+
         <activity android:name=".VMovil_BluetoothImprimir"
                   android:screenOrientation="portrait"
                     android:label="Imprimir"

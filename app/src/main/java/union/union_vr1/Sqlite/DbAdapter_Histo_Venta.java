@@ -67,6 +67,52 @@ public class DbAdapter_Histo_Venta {
 
         return mDb.insert(SQLITE_TABLE_Histo_Venta, null, initialValues);
     }
+    public Cursor filterExport() {
+        Cursor mCursor = null;
+        mCursor = mDb.query(true, SQLITE_TABLE_Histo_Venta, new String[] {HV_id,
+                        HV_id_histo, HV_id_agente, HV_subtotal,HV_fecha, estado_sincronizacion},
+                Constants._SINCRONIZAR + " = " + Constants._CREADO + " OR " + Constants._SINCRONIZAR + " = " + Constants._ACTUALIZADO, null,
+                null, null, null, null);
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+    }
+
+    public void changeEstadoToExport(String[] idsInformeGasto, int estadoSincronizacion){
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(Constants._SINCRONIZAR,estadoSincronizacion);
+
+        String signosInterrogacion = "";
+        for (int i=0; i<idsInformeGasto.length; i++){
+            if (i==idsInformeGasto.length-1)
+            {
+                signosInterrogacion+= "?";
+            }else {
+                signosInterrogacion+= "? OR ";
+            }
+
+        }
+
+        Log.d("SIGNOS INTERROGACIÓN", signosInterrogacion);
+        int cantidadRegistros = mDb.update(SQLITE_TABLE_Histo_Venta, initialValues,
+                HV_id+"= "+ signosInterrogacion,idsInformeGasto);
+
+
+        Log.d("REGISTROS ACTUALIZADO ", ""+cantidadRegistros);
+    }
+
+    public Cursor filterExportUpdated() {
+        Cursor mCursor = null;
+        mCursor = mDb.query(true, SQLITE_TABLE_Histo_Venta, new String[] {HV_id,
+                        HV_id_histo, HV_id_agente, HV_subtotal,HV_fecha, estado_sincronizacion},
+                Constants._SINCRONIZAR + " = " + Constants._ACTUALIZADO, null,
+                null, null, null, null);
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+    }
 /*
     public boolean deleteAllHistoVenta() {
 

@@ -312,8 +312,21 @@ public class DbAdapter_Histo_Venta_Detalle {
         mCursor = mDb.query(true, SQLITE_TABLE_Histo_Venta_Detalle, new String[] {HD_id_hventadet,
                         HD_id_detalle, HD_id_comprob, HD_id_establec,HD_id_agente, HD_id_producto, HD_id_tipoper,
                         HD_orden, HD_comprobante, HD_nom_producto, HD_cantidad, HD_importe, HD_fecha,
-                        HD_categoria_ope, HD_forma_ope, HD_cantidad_ope, HD_importe_ope, HD_fecha_ope, HD_estado, HD_lote},
+                        HD_categoria_ope, HD_categoria_ope_dev, HD_forma_ope, HD_cantidad_ope, HD_cantidad_ope_dev, HD_importe_ope,HD_importe_ope_dev, HD_fecha_ope_dev, HD_hora_ope_dev , HD_fecha_ope, HD_estado, HD_lote},
                 Constants._SINCRONIZAR + " = " + Constants._CREADO + " OR " + Constants._SINCRONIZAR + " = " + Constants._ACTUALIZADO, null,
+                null, null, null, null);
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+    }
+    public Cursor filterExportUpdated() {
+        Cursor mCursor = null;
+        mCursor = mDb.query(true, SQLITE_TABLE_Histo_Venta_Detalle, new String[] {HD_id_hventadet,
+                        HD_id_detalle, HD_id_comprob, HD_id_establec,HD_id_agente, HD_id_producto, HD_id_tipoper,
+                        HD_orden, HD_comprobante, HD_nom_producto, HD_cantidad, HD_importe, HD_fecha,
+                        HD_categoria_ope, HD_forma_ope, HD_cantidad_ope, HD_importe_ope, HD_fecha_ope, HD_estado, HD_lote},
+                Constants._SINCRONIZAR + " = " + Constants._ACTUALIZADO, null,
                 null, null, null, null);
         if (mCursor != null) {
             mCursor.moveToFirst();
@@ -334,6 +347,29 @@ public class DbAdapter_Histo_Venta_Detalle {
             mCursor.moveToFirst();
         }
         return mCursor;
+    }
+
+    public void changeEstadoToExport(String[] idsInformeGasto, int estadoSincronizacion){
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(Constants._SINCRONIZAR,estadoSincronizacion);
+
+        String signosInterrogacion = "";
+        for (int i=0; i<idsInformeGasto.length; i++){
+            if (i==idsInformeGasto.length-1)
+            {
+                signosInterrogacion+= "?";
+            }else {
+                signosInterrogacion+= "? OR ";
+            }
+
+        }
+
+        Log.d("SIGNOS INTERROGACIÓN", signosInterrogacion);
+        int cantidadRegistros = mDb.update(SQLITE_TABLE_Histo_Venta_Detalle, initialValues,
+                HD_id_hventadet+"= "+ signosInterrogacion,idsInformeGasto);
+
+
+        Log.d("REGISTROS ACTUALIZADO ", ""+cantidadRegistros);
     }
 
     public Cursor fetchAllHistoVentaDetalle0() {

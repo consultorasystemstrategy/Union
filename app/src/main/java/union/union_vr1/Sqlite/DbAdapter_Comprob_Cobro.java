@@ -327,12 +327,12 @@ return insert;
                         CC_id_establec, CC_id_comprob, CC_id_plan_pago, CC_id_plan_pago_detalle,
                         CC_desc_tipo_doc, CC_doc, CC_fecha_programada, CC_monto_a_pagar,
                         CC_fecha_cobro, CC_monto_cobrado, CC_estado_cobro},
-                Constants._SINCRONIZAR + " = " + Constants._CREADO + " OR " + Constants._SINCRONIZAR + " = " + Constants._ACTUALIZADO, null, null, null, null);
+                Constants._SINCRONIZAR + " = " + Constants._ACTUALIZADO, null, null, null, null);
 
         if (mCursor != null) {
             mCursor.moveToFirst();
         }if (mCursor.getCount()==0){
-            Log.d("FILTER EXPORT CC","NO HAY NINGÚN PUTO DATO FILTRADO POR COLUMNA SINCRONIZAR");
+            Log.d("FILTER EXPORT CC","NO HAY NINGÚN DATO FILTRADO POR COLUMNA SINCRONIZAR ACTUALIZADO");
         }
 
 

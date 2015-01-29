@@ -36,6 +36,7 @@ import union.union_vr1.Utils.MyApplication;
 
 
 public class VMovil_Evento_Indice extends Activity implements View.OnClickListener {
+
     private Cursor cursor;
     private DbAdapter_Comprob_Cobro cCobro;
     private DbAdaptert_Evento_Establec dbHelper;

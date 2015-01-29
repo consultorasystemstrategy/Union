@@ -17,8 +17,10 @@ import union.union_vr1.Sqlite.Constants;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta_Detalle;
+import union.union_vr1.Sqlite.DbAdapter_Histo_Venta;
 import union.union_vr1.Sqlite.DbAdapter_Histo_Venta_Detalle;
 import union.union_vr1.Sqlite.DbAdapter_Informe_Gastos;
+import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 import union.union_vr1.Utils.MyApplication;
 import union.union_vr1.Vistas.VMovil_Online_Pumovil;
 
@@ -34,8 +36,11 @@ public class ExportMain extends AsyncTask<String, String, String> {
     private DbAdapter_Informe_Gastos dbAdapter_informe_gastos;
     private DbAdapter_Comprob_Venta dbAdapter_comprob_venta;
     private DbAdapter_Comprob_Venta_Detalle dbAdapter_comprob_venta_detalle;
+    private DbAdapter_Histo_Venta dbAdapter_histo_venta;
     private DbAdapter_Comprob_Cobro dbAdapter_comprob_cobro;
     private DbAdapter_Histo_Venta_Detalle dbAdapter_histo_venta_detalle;
+    private DbAdaptert_Evento_Establec dbAdaptert_evento_establec;
+
 
     public ExportMain(VMovil_Online_Pumovil mainActivity) {
         this.mainActivity = mainActivity;
@@ -45,6 +50,8 @@ public class ExportMain extends AsyncTask<String, String, String> {
         dbAdapter_comprob_venta_detalle = new DbAdapter_Comprob_Venta_Detalle(mainActivity);
         dbAdapter_comprob_cobro = new DbAdapter_Comprob_Cobro(mainActivity);
         dbAdapter_histo_venta_detalle = new DbAdapter_Histo_Venta_Detalle(mainActivity);
+        dbAdaptert_evento_establec = new DbAdaptert_Evento_Establec(mainActivity);
+        dbAdapter_histo_venta = new DbAdapter_Histo_Venta(mainActivity);
 
         //ABRO LA CONEXIÓN A LA DB
         dbAdapter_informe_gastos.open();
@@ -53,6 +60,8 @@ public class ExportMain extends AsyncTask<String, String, String> {
         dbAdapter_histo_venta_detalle.open();
         dbAdapter_comprob_cobro.open();
         dbAdapter_histo_venta_detalle.open();
+        dbAdaptert_evento_establec.open();
+        dbAdapter_histo_venta.open();
     }
 
 
@@ -72,7 +81,11 @@ public class ExportMain extends AsyncTask<String, String, String> {
         Cursor cursorComprobanteVenta = dbAdapter_comprob_venta.filterExport();
         Cursor cursorComprobanteVentaDetalle = dbAdapter_comprob_venta_detalle.filterExport();
         Cursor cursorComprobanteCobro = dbAdapter_comprob_cobro.filterExport();
-        Cursor cursorHistoVentaDetalle = dbAdapter_histo_venta_detalle.filterExport();
+        Cursor cursorEventoEstablecimiento = dbAdaptert_evento_establec.filterExportUpdated();
+
+        Cursor cursorHistoVentaCreated = dbAdapter_histo_venta.filterExport();
+        Cursor cursorHistoVentaDetalleCreated = dbAdapter_histo_venta_detalle.filterExport();
+
 
 /*        Cursor cursorCC = dbAdapter_comprob_cobro.fetchAllComprobCobros();
 
@@ -95,10 +108,20 @@ public class ExportMain extends AsyncTask<String, String, String> {
         List<String> listIdComprobantes = new ArrayList<String>();
         List<String> listIdComprobanteVentaDetalle = new ArrayList<String>();
         List<String> listIdComprobanteCobro = new ArrayList<String>();
-        List<String> listIdHistorialVentaDetalle = new ArrayList<String>();
+        List<String> listIdEstablecimientoUpdated = new ArrayList<String>();
 
 
 
+        List<String> listIdHVCreated = new ArrayList<String>();
+        List<String> listIdHVUpdated = new ArrayList<String>();
+        List<String> listIdHVDCreated = new ArrayList<String>();
+        List<String> listIdHVDUpdated = new ArrayList<String>();
+
+
+
+
+
+        //EXPORTAR TODOS LOS REGISTROS CREADOS EN ANDROID [GUARDADOS EN SQLITE]
         if (cursorComprobanteVenta.getCount()>0) {
             for (cursorComprobanteVenta.moveToFirst(); !cursorComprobanteVenta.isAfterLast(); cursorComprobanteVenta.moveToNext()){
                 JSONObject jsonObjectSuccesfull = null;
@@ -343,71 +366,131 @@ public class ExportMain extends AsyncTask<String, String, String> {
             Log.d("EXPORT ", "TODOS LOS GASTOS ESTÁN EXPORTADOS");
         }
 
-        if (cursorHistoVentaDetalle.getCount()>0){
+        if (cursorHistoVentaCreated.getCount()>0){
 
-            for (cursorHistoVentaDetalle.moveToFirst(); !cursorHistoVentaDetalle.isAfterLast(); cursorHistoVentaDetalle.moveToNext()){
-
-                Log.d("EXPORT HVD", ""+ cursorHistoVentaDetalle.getInt(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_producto))+"-"+
-                        cursorHistoVentaDetalle.getInt(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_producto))+"-"+
-                        cursorHistoVentaDetalle.getInt(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_producto))+"-"+
-                        cursorHistoVentaDetalle.getInt(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_producto))+"-"+
-                        cursorHistoVentaDetalle.getInt(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_producto))+"-"+
-                        cursorHistoVentaDetalle.getInt(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_producto))+"-"+
-                        cursorHistoVentaDetalle.getInt(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_producto))+"-"+
-                        cursorHistoVentaDetalle.getString(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_producto))+"-"+
-                        cursorHistoVentaDetalle.getString(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_producto))+"-"+
-                        cursorHistoVentaDetalle.getInt(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_producto))+"-"+
-                        cursorHistoVentaDetalle.getInt(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_producto))+"-"+
-                        cursorHistoVentaDetalle.getDouble(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_producto))+"-"+
-                        cursorHistoVentaDetalle.getDouble(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_producto))+"-"+
-                        cursorHistoVentaDetalle.getDouble(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_producto))+"-"+
-                        cursorHistoVentaDetalle.getInt(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_producto))+"-"+
-                        cursorHistoVentaDetalle.getInt(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_producto))+"-"+
-                        cursorHistoVentaDetalle.getInt(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_producto)));
-
+            for (cursorHistoVentaCreated.moveToFirst(); !cursorHistoVentaCreated.isAfterLast(); cursorHistoVentaCreated.moveToNext()){
                 JSONObject jsonObject = null;
+                Log.d("DATOS EXPORT HV CREATED", ""+0+"-"+
+                        1+"-"+
+                        cursorHistoVentaCreated.getInt(cursorHistoVentaCreated.getColumnIndexOrThrow(dbAdapter_histo_venta.HV_id_agente))+"-"+
+                        4+"-"+
+                        cursorHistoVentaCreated.getInt(cursorHistoVentaCreated.getColumnIndexOrThrow(dbAdapter_histo_venta.HV_subtotal))+"-"+
+
+                        cursorHistoVentaCreated.getString(cursorHistoVentaCreated.getColumnIndexOrThrow(dbAdapter_histo_venta.HV_id_histo))
+                );
                 try {
-                    jsonObject = api.CreateDevoluciones(
-                            cursorHistoVentaDetalle.getInt(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_producto)),
-                            cursorHistoVentaDetalle.getInt(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_categoria_ope)),
-                            cursorHistoVentaDetalle.getInt(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_tipoper)),
-                            cursorHistoVentaDetalle.getInt(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_cantidad_ope)),
+                    jsonObject = api.CreateHeaderDevoluciones(
+                            0,
                             1,
-                            cursorHistoVentaDetalle.getInt(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_agente)),
-                            1,
-                            cursorHistoVentaDetalle.getString(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_comprobante)),
-                            cursorHistoVentaDetalle.getString(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_lote)),
-                            ((MyApplication)mainActivity.getApplication()).getIdLiquidacion(),
-                            cursorHistoVentaDetalle.getDouble(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_importe_ope)),
-                            cursorHistoVentaDetalle.getInt(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_comprob)),
-                            cursorHistoVentaDetalle.getInt(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_forma_ope)),
-                            1,
-                            cursorHistoVentaDetalle.getInt(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_establec))
+                            cursorHistoVentaCreated.getInt(cursorHistoVentaCreated.getColumnIndexOrThrow(dbAdapter_histo_venta.HV_id_agente)),
+                            4,
+                            cursorHistoVentaCreated.getInt(cursorHistoVentaCreated.getColumnIndexOrThrow(dbAdapter_histo_venta.HV_subtotal)),
+                            cursorHistoVentaCreated.getString(cursorHistoVentaCreated.getColumnIndexOrThrow(dbAdapter_histo_venta.HV_id_histo))
+
                             );
 
-                    Log.d("SUCCESFULL EXPORT", ""+isSuccesfulExport(jsonObject));
+                    Log.d("EXPORT HV CREATED", jsonObject.toString());
+
                     if (isSuccesfulExport(jsonObject)){
-                        listIdHistorialVentaDetalle.add("" + cursorHistoVentaDetalle.getInt(cursorHistoVentaDetalle.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_hventadet)));
+                        listIdHVCreated.add(""+cursorHistoVentaCreated.getInt(cursorHistoVentaCreated.getColumnIndexOrThrow(dbAdapter_histo_venta.HV_id)));
                     }
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
-            }
-            String[] idsHistorialVentaDetalle = new String[listIdHistorialVentaDetalle.size()];
-            listIdHistorialVentaDetalle.toArray(idsHistorialVentaDetalle);
-
-            for (int i = 0; i < idsHistorialVentaDetalle.length; i++) {
-                Log.d("ID EXPORTADOS ", "" + idsHistorialVentaDetalle[i]);
             }
 
-            if (listIdInfomeGastos.size()>0){
-                dbAdapter_informe_gastos.changeEstadoToExport(idsHistorialVentaDetalle, Constants._EXPORTADO);
+            String[] idHVCreated = new String[listIdHVCreated.size()];
+            listIdHVCreated.toArray(idHVCreated);
+
+            for (int i = 0; i < idHVCreated.length; i++) {
+                Log.d("ID EXPORTADOS ", "" + idHVCreated[i]);
             }
 
-        }else{
-            Log.d("EXPORT ", "TODOS EL HISTORIAL VENTA DETALLE ESTÁ EXPORTADO");
+            if (listIdHVCreated.size()>0){
+                dbAdapter_histo_venta.changeEstadoToExport(idHVCreated, Constants._EXPORTADO);
+            }
+
+        }else {
+            Log.d("EXPORT HVD", "TODOS EL HISTORIAL DE VENTA CREADO HA SIDO EXPORTADO");
         }
+
+
+        if (cursorHistoVentaDetalleCreated.getCount()>0){
+
+            for (cursorHistoVentaDetalleCreated.moveToFirst(); !cursorHistoVentaDetalleCreated.isAfterLast(); cursorHistoVentaDetalleCreated.moveToNext()){
+                JSONObject jsonObject = null;
+                Log.d("DATOS EXPORT HVD CREATED", ""+cursorHistoVentaDetalleCreated.getInt(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_producto))+"-"+
+                        cursorHistoVentaDetalleCreated.getInt(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_categoria_ope))+"-"+
+                        cursorHistoVentaDetalleCreated.getInt(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_tipoper))+"-"+
+                        cursorHistoVentaDetalleCreated.getInt(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_cantidad_ope))+"-"+
+                        1+"-"+
+                        cursorHistoVentaDetalleCreated.getInt(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_agente))+"-"+
+                        1+"-"+
+                        cursorHistoVentaDetalleCreated.getString(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_comprobante))+"-"+
+                        cursorHistoVentaDetalleCreated.getString(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_lote))+"-"+
+                        ((MyApplication)mainActivity.getApplication()).getIdLiquidacion()+"-"+
+                        cursorHistoVentaDetalleCreated.getDouble(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_importe_ope))+"-"+
+                        cursorHistoVentaDetalleCreated.getInt(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_comprob))+"-"+
+                        cursorHistoVentaDetalleCreated.getInt(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_forma_ope))+"-"+
+                        283+"-"+
+                        cursorHistoVentaDetalleCreated.getInt(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_establec))+"-"+
+                        cursorHistoVentaDetalleCreated.getInt(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_cantidad_ope_dev))+"-"+
+                        cursorHistoVentaDetalleCreated.getInt(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_categoria_ope_dev))+"-"+
+                        cursorHistoVentaDetalleCreated.getDouble(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_importe_ope_dev))+"-"+
+                        cursorHistoVentaDetalleCreated.getString(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_fecha_ope_dev))+"-"+
+                        cursorHistoVentaDetalleCreated.getString(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_hora_ope_dev)));
+                try {
+                    jsonObject = api.CreateDevoluciones(
+                            cursorHistoVentaDetalleCreated.getInt(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_producto)),
+                            cursorHistoVentaDetalleCreated.getInt(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_categoria_ope)),
+                            cursorHistoVentaDetalleCreated.getInt(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_tipoper)),
+                            cursorHistoVentaDetalleCreated.getInt(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_cantidad_ope)),
+                            1,
+                            cursorHistoVentaDetalleCreated.getInt(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_agente)),
+                            1,
+                            cursorHistoVentaDetalleCreated.getString(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_comprobante)),
+                            cursorHistoVentaDetalleCreated.getString(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_lote)),
+                            ((MyApplication)mainActivity.getApplication()).getIdLiquidacion(),
+                            cursorHistoVentaDetalleCreated.getDouble(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_importe_ope)),
+                            cursorHistoVentaDetalleCreated.getInt(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_comprob)),
+                            cursorHistoVentaDetalleCreated.getInt(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_forma_ope)),
+                            283,
+                            cursorHistoVentaDetalleCreated.getInt(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_establec)),
+                            cursorHistoVentaDetalleCreated.getInt(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_cantidad_ope_dev)),
+                            cursorHistoVentaDetalleCreated.getInt(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_categoria_ope_dev)),
+                            cursorHistoVentaDetalleCreated.getDouble(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_importe_ope_dev)),
+                            cursorHistoVentaDetalleCreated.getString(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_fecha_ope_dev)),
+                            cursorHistoVentaDetalleCreated.getString(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_hora_ope_dev))
+                    );
+
+                    Log.d("EXPORT HVD CREATED", jsonObject.toString());
+
+                    if (isSuccesfulExport(jsonObject)){
+                        listIdHVDCreated.add(""+cursorHistoVentaDetalleCreated.getInt(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_hventadet)));
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            String[] idHVDCreated = new String[listIdHVDCreated.size()];
+            listIdHVDCreated.toArray(idHVDCreated);
+
+            for (int i = 0; i < idHVDCreated.length; i++) {
+                Log.d("ID EXPORTADOS ", "" + idHVDCreated[i]);
+            }
+
+            if (listIdHVDCreated.size()>0){
+                dbAdapter_histo_venta_detalle.changeEstadoToExport(idHVDCreated, Constants._EXPORTADO);
+            }
+
+        }else {
+            Log.d("EXPORT HVD", "TODOS EL HISTORIAL DE VENTA DETALLE CREADO HA SIDO EXPORTADO");
+        }
+
+
         /*
 
         if (cursorComprobanteCobro.getCount()>0){
@@ -444,6 +527,54 @@ public class ExportMain extends AsyncTask<String, String, String> {
             Log.d("EXPORT ", "TODOS LOS GASTOS ESTÁN EXPORTADOS");
         }
         */
+
+        //EXPORTAR TODOS LOS REGISTROS ACTUALIZADOS EN ANDROID
+
+        if (cursorEventoEstablecimiento.getCount()>0){
+
+            for (cursorEventoEstablecimiento.moveToFirst(); !cursorEventoEstablecimiento.isAfterLast(); cursorEventoEstablecimiento.moveToNext()){
+                JSONObject jsonObject = null;
+
+                Log.d("EVENTO ESTABLECIMIENTO EXPORT DATOS","" +
+                        cursorEventoEstablecimiento.getInt(cursorEventoEstablecimiento.getColumnIndexOrThrow(dbAdaptert_evento_establec.EE_id_establec))+"-"+
+                        ((MyApplication)mainActivity.getApplication()).getIdLiquidacion()+"-"+
+                        cursorEventoEstablecimiento.getInt(cursorEventoEstablecimiento.getColumnIndexOrThrow(dbAdaptert_evento_establec.EE_id_estado_atencion))+"-"+
+                        cursorEventoEstablecimiento.getInt(cursorEventoEstablecimiento.getColumnIndexOrThrow(dbAdaptert_evento_establec.EE_id_estado_no_atencion)));
+                try {
+                    jsonObject = api.UpdateEstadoEstablecimiento(
+                            cursorEventoEstablecimiento.getInt(cursorEventoEstablecimiento.getColumnIndexOrThrow(dbAdaptert_evento_establec.EE_id_establec)),
+                            ((MyApplication)mainActivity.getApplication()).getIdLiquidacion(),
+                            cursorEventoEstablecimiento.getInt(cursorEventoEstablecimiento.getColumnIndexOrThrow(dbAdaptert_evento_establec.EE_id_estado_atencion)),
+                            cursorEventoEstablecimiento.getInt(cursorEventoEstablecimiento.getColumnIndexOrThrow(dbAdaptert_evento_establec.EE_id_estado_no_atencion))
+                    );
+
+                    Log.d("EXPORT MESSAGE ESTABLECIMIENTO ", jsonObject.toString());
+
+                    if (isSuccesfulExport(jsonObject)){
+                        listIdEstablecimientoUpdated.add(""+cursorEventoEstablecimiento.getInt(cursorEventoEstablecimiento.getColumnIndexOrThrow(dbAdaptert_evento_establec.EE_id_evt_establec)));
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            String[] idsEstablecimientoUpdated = new String[listIdEstablecimientoUpdated.size()];
+            listIdEstablecimientoUpdated.toArray(idsEstablecimientoUpdated);
+
+            for (int i = 0; i < idsEstablecimientoUpdated.length; i++) {
+                Log.d("ID EXPORTADOS ", "" + idsEstablecimientoUpdated[i]);
+            }
+
+            if (listIdInfomeGastos.size()>0){
+                dbAdaptert_evento_establec.changeEstadoToExport(idsEstablecimientoUpdated, Constants._EXPORTADO);
+            }
+
+
+
+        }else{
+            Log.d("EXPORT", "TODOS LOS ESTABLECIMIENTOS ESTÁN EXPORTADOS [ACTUALIZADOS]");
+        }
+
         publishProgress(""+100);
 
 

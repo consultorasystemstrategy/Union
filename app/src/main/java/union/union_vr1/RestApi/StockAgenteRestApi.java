@@ -360,7 +360,7 @@ public class StockAgenteRestApi {
         result = new JSONObject(r);
         return result;
     }
-    public JSONObject CreateDevoluciones(int idProducto,int idCategoriaOpe,int idTipoOp,int cantidad,int idEmpresa,int idAgenteVenta,int idGuiaRemision,String referencia,String lote,int idLiquidacion,double total,int idComprobanteVenta,int idTipoDev,int unidad,int idEstablec) throws Exception {
+    public JSONObject CreateDevoluciones(int idProducto,int idCategoriaOpe,int idTipoOp,int cantidad,int idEmpresa,int idAgenteVenta,int idGuiaRemision,String referencia,String lote,int idLiquidacion,double total,int idComprobanteVenta,int idTipoDev,int unidad,int idEstablec,int cantidadDev,int categoriaDev,double importeDev,String fechaDev,String horaDev) throws Exception {
         JSONObject result = null;
         JSONObject o = new JSONObject();
         JSONObject p = new JSONObject();
@@ -381,6 +381,46 @@ public class StockAgenteRestApi {
         p.put("idTipoDev",mapObject(idTipoDev));
         p.put("unidad",mapObject(unidad));
         p.put("idEstablec",mapObject(idEstablec));
+        p.put("cantidadDev",mapObject(cantidadDev));
+        p.put("categoriaDev",mapObject(categoriaDev));
+        p.put("importeDev",mapObject(importeDev));
+        p.put("fechaDev",mapObject(fechaDev));
+        p.put("horaDev",mapObject(horaDev));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+    public JSONObject UpdateEstadoEstablecimiento(int idEstablecimiento,int idLiquidacion,int estado,int estadoNoAtencion) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","RestAPI");
+        o.put("method", "UpdateEstadoEstablecimiento");
+        p.put("idEstablecimiento",mapObject(idEstablecimiento));
+        p.put("idLiquidacion",mapObject(idLiquidacion));
+        p.put("estado",mapObject(estado));
+        p.put("estadoNoAtencion",mapObject(estadoNoAtencion));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+
+    public JSONObject CreateHeaderDevoluciones(int id,int idEmpresa,int idAgenteVenta,int TipoMovimiento,int subTotal,String idAndroid) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","RestAPI");
+        o.put("method", "CreateHeaderDevoluciones");
+        p.put("id",mapObject(id));
+        p.put("idEmpresa",mapObject(idEmpresa));
+        p.put("idAgenteVenta",mapObject(idAgenteVenta));
+        p.put("TipoMovimiento",mapObject(TipoMovimiento));
+        p.put("subTotal",mapObject(subTotal));
+        p.put("idAndroid",mapObject(idAndroid));
         o.put("parameters", p);
         String s = o.toString();
         String r = load(s);
