@@ -274,11 +274,13 @@ public class DbAdapter_Canjes_Devoluciones {
 
             Cursor c = mDb.rawQuery("select * from  m_histo_venta_detalle where hg_te_fecha_ope_dev='" + getDatePhone() + "' and hd_in_id_establec='" + idEstablec + "' and hd_te_hora_ope_dev='pendiente';", null);
 
-double subTotal = 0.0;
+            double Total = 0.0;
+            double subTotal=0.0;
             while (c.moveToNext()) {
-                subTotal = subTotal+c.getDouble(27);
+                Total = Total+(c.getDouble(27)*c.getInt(25));
                 mDb.execSQL("update m_histo_venta_detalle set hd_te_hora_ope_dev='" + getTimePhone() + "',estado_sincronizacion='"+ Constants._ACTUALIZADO +"',"+DbAdapter_Histo_Venta_Detalle.HD_Guia+"='"+idGuia+"' where  hd_in_id_detalle='" + c.getString(1) + "'");
             }
+            subTotal=subTotal/1.18;
            Log.d("IDGUIA",consultarId(idGuia));
             mDb.execSQL("update m_histo_venta set hv_in_subtotal ='"+subTotal+"' where _id='"+consultarId(idGuia)+"' ;");
 

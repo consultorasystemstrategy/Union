@@ -388,7 +388,7 @@ public class mostrar_can_dev_facturas extends TabActivity {
                 +"Nota de Credito Nro: "+cabecera.getString(7)+"\n"
                 +"Fecha: "+getDatePhone()+"       \n"
                 +"Cliente: "+cabecera.getString(6)+"\n";
-        Cursor cr = dbHelper_CanDev.obtener_facturas_canjes(1, idEstablec);
+        Cursor cr = dbHelper_CanDev.obtener_facturas_dev(2,idEstablec);
         ArrayList<String> texto = new ArrayList<String>();
         cr.moveToFirst();
         for(int g =0;g<cr.getCount();g++){
