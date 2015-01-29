@@ -221,7 +221,7 @@ public class DbAdapter_Canjes_Devoluciones {
     }
     public String guardarCabecera(int idAgente){
 
-       long id  = dbHistoVenta.createHistoVenta(""+idAgente+"."+getDatePhone()+" "+getTimePhone(),idAgente,0.0,getDatePhone());
+       long id  = dbHistoVenta.createHistoVenta(""+idAgente+"."+getDatePhone()+" "+getTimePhone(),idAgente,0.0,getDatePhone(),Constants._CREADO);
       Cursor cr  = mDb.rawQuery("select * from m_histo_venta where _id="+id+"",null);
         cr.moveToFirst();
 
@@ -282,7 +282,7 @@ public class DbAdapter_Canjes_Devoluciones {
             }
             subTotal=subTotal/1.18;
            Log.d("IDGUIA",consultarId(idGuia));
-            mDb.execSQL("update m_histo_venta set hv_in_subtotal ='"+subTotal+"' where _id='"+consultarId(idGuia)+"' ;");
+            mDb.execSQL("update m_histo_venta set hv_in_subtotal ='"+subTotal+"', estado_sincronizacion="+Constants._ACTUALIZADO+" where _id='"+consultarId(idGuia)+"' ;");
 
 
             estado = true;

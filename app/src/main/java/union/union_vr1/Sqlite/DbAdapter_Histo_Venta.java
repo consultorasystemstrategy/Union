@@ -55,13 +55,14 @@ public class DbAdapter_Histo_Venta {
     }
 
     public long createHistoVenta(
-            String id_histo, int id_agente, double subtotal,String fecha){
+            String id_histo, int id_agente, double subtotal,String fecha,int estado){
 
         ContentValues initialValues = new ContentValues();
         initialValues.put(HV_id_histo,id_histo);
         initialValues.put(HV_id_agente,id_agente);
         initialValues.put(HV_subtotal,subtotal);
         initialValues.put(HV_subtotal,fecha);
+        initialValues.put(estado_sincronizacion,estado);
 
 
         return mDb.insert(SQLITE_TABLE_Histo_Venta, null, initialValues);
