@@ -243,7 +243,7 @@ public class DbAdapter_Canjes_Devoluciones {
             Cursor c = mDb.rawQuery("select * from  m_histo_venta_detalle where  hd_in_id_tipoper='" + tipo + "'  and  hg_te_fecha_ope='" + getDatePhone() + "' and hd_in_id_establec='" + idEstablec + "' and hd_te_hora_ope='pendiente';", null);
 
             while (c.moveToNext()) {
-                mDb.execSQL("update m_histo_venta_detalle set hd_te_hora_ope='" + getTimePhone() + "',estado_sincronizacion='"+ Constants._ACTUALIZADO +"',"+DbAdapter_Histo_Venta_Detalle.HD_Guia+"='"+idGuia+"' where  hd_in_id_detalle='" + c.getString(1) + "';");
+                mDb.execSQL("update m_histo_venta_detalle set hd_te_hora_ope='" + getTimePhone() + "',estado_sincronizacion='"+ Constants._CREADO +"',"+DbAdapter_Histo_Venta_Detalle.HD_Guia+"='"+idGuia+"' where  hd_in_id_detalle='" + c.getString(1) + "';");
             }
             Cursor stock = mDb.rawQuery("select distinct(ag._id),ag.st_in_id_producto,ag.st_te_nombre,ag. st_te_codigo,ag.st_te_codigo_barras,ag.st_in_inicial,ag.st_in_final,ag.st_in_disponible,ag.st_in_ventas,ag.st_in_canjes,ag.st_in_devoluciones,\n" +
                     "ag.st_in_buenos,ag.st_in_malos,ag.st_in_fisico,ag.st_in_id_agente from m_stock_agente ag,m_histo_venta_detalle mv where ag.st_in_id_producto=mv.hd_in_id_producto and mv.hd_te_hora_ope_dev='pendiente'", null);
@@ -278,11 +278,11 @@ public class DbAdapter_Canjes_Devoluciones {
             double subTotal=0.0;
             while (c.moveToNext()) {
                 Total = Total+(c.getDouble(27)*c.getInt(25));
-                mDb.execSQL("update m_histo_venta_detalle set hd_te_hora_ope_dev='" + getTimePhone() + "',estado_sincronizacion='"+ Constants._ACTUALIZADO +"',"+DbAdapter_Histo_Venta_Detalle.HD_Guia+"='"+idGuia+"' where  hd_in_id_detalle='" + c.getString(1) + "'");
+                mDb.execSQL("update m_histo_venta_detalle set hd_te_hora_ope_dev='" + getTimePhone() + "',estado_sincronizacion='"+ Constants._CREADO +"',"+DbAdapter_Histo_Venta_Detalle.HD_Guia+"='"+idGuia+"' where  hd_in_id_detalle='" + c.getString(1) + "'");
             }
             subTotal=subTotal/1.18;
            Log.d("IDGUIA",consultarId(idGuia));
-            mDb.execSQL("update m_histo_venta set hv_in_subtotal ='"+subTotal+"', estado_sincronizacion="+Constants._ACTUALIZADO+" where _id='"+consultarId(idGuia)+"' ;");
+            mDb.execSQL("update m_histo_venta set hv_in_subtotal ='"+subTotal+"', estado_sincronizacion="+Constants._CREADO+" where _id='"+consultarId(idGuia)+"' ;");
 
 
             estado = true;
