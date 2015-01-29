@@ -61,7 +61,7 @@ public class DbAdapter_Histo_Venta {
         initialValues.put(HV_id_histo,id_histo);
         initialValues.put(HV_id_agente,id_agente);
         initialValues.put(HV_subtotal,subtotal);
-        initialValues.put(HV_subtotal,fecha);
+        initialValues.put(HV_fecha,fecha);
         initialValues.put(estado_sincronizacion,estado);
 
 

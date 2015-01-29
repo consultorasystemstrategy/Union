@@ -220,13 +220,22 @@ public class DbAdapter_Canjes_Devoluciones {
         return cr;
     }
     public String guardarCabecera(int idAgente){
+        String idCabecera = "";
+       Cursor cursor = mDb.rawQuery("select * from m_histo_venta where hv_in_fecha='"+getDatePhone()+"';",null);
 
-       long id  = dbHistoVenta.createHistoVenta(""+idAgente+"."+getDatePhone()+" "+getTimePhone(),idAgente,0.0,getDatePhone(),Constants._CREADO);
-      Cursor cr  = mDb.rawQuery("select * from m_histo_venta where _id="+id+"",null);
-        cr.moveToFirst();
+        if(cursor.moveToFirst()){
+            idCabecera = cursor.getString(1);
+            Log.d("idCabecera",idCabecera);
+        }else {
+            long id = dbHistoVenta.createHistoVenta("" + idAgente + "." + getDatePhone() + " " + getTimePhone(),idAgente,0.0,getDatePhone(),Constants._CREADO);
+            Cursor cr = mDb.rawQuery("select * from m_histo_venta where _id=" + id + "", null);
+            cr.moveToFirst();
+            idCabecera = cr.getString(1);
+            Log.d("idCabecera2",idCabecera);
+        }
 
 
-        return  cr.getString(1);
+        return idCabecera ;
     }
     private String consultarId(String idGuia){
 

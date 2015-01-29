@@ -220,6 +220,7 @@ public class DbAdapter_Comprob_Cobro {
         initialValues.put(CC_fecha_cobro,fecha);
         initialValues.put(CC_hora_cobro,hora);
         initialValues.put(CC_estado_cobro,estado);
+        initialValues.put(Constants._SINCRONIZAR,Constants._ACTUALIZADO);
         String[] columnas = new String[]{CC_monto_a_pagar};
         mDb.update(SQLITE_TABLE_Comprob_Cobro, initialValues,
                 CC_id_cob_historial+"=?",new String[]{id});
@@ -238,6 +239,7 @@ public class DbAdapter_Comprob_Cobro {
         initialValues.put(CC_fecha_cobro,fecha);
         initialValues.put(CC_hora_cobro,hora);
         initialValues.put(CC_estado_cobro,estado);
+        initialValues.put(Constants._SINCRONIZAR,Constants._ACTUALIZADO);
         String[] columnas = new String[]{CC_monto_a_pagar};
         int insert = mDb.update(SQLITE_TABLE_Comprob_Cobro, initialValues,
                 CC_id_cob_historial+"=?",new String[]{id});
