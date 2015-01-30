@@ -67,7 +67,7 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
         mCanDev.setOnClickListener(this);
         mVentas.setOnClickListener(this);
         mManten.setOnClickListener(this);
-        mReport.setOnClickListener(this);
+        //mReport.setOnClickListener(this);
         mEstadoAtendido.setOnClickListener(this);
         mEstadoNoAtendido.setOnClickListener(this);
         mEstadoPendiente.setOnClickListener(this);

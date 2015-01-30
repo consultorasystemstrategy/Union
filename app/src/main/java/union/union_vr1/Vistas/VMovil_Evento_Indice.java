@@ -119,8 +119,8 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         mClient.setOnClickListener(this);
         mInfgas.setOnClickListener(this);
         mResume.setOnClickListener(this);
-        mCarinv.setOnClickListener(this);
-        mTrainv.setOnClickListener(this);
+        //mCarinv.setOnClickListener(this);
+        //mTrainv.setOnClickListener(this);
         mCobroTotal.setOnClickListener(this);
         cCobro = new DbAdapter_Comprob_Cobro(this);
         cCobro.open();

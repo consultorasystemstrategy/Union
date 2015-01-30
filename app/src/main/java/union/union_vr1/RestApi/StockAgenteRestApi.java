@@ -162,7 +162,8 @@ public class StockAgenteRestApi {
         return result;
     }
 
-    public JSONObject CreateInsertarCaja(int idLiquidacionCaja,int idCategoriaMovimiento,double importeDecimal,int estado,String fecha,String referencia,int idusuario,int idcomprbante) throws Exception {
+
+    public JSONObject CreateInsertarCaja(int idLiquidacionCaja,int idCategoriaMovimiento,double importeDecimal,int estado,String fecha,String referencia,int idusuario,int idcomprbante,int idPlanPago,int idPlanPagoDetalle) throws Exception {
         JSONObject result = null;
         JSONObject o = new JSONObject();
         JSONObject p = new JSONObject();
@@ -176,6 +177,8 @@ public class StockAgenteRestApi {
         p.put("referencia",mapObject(referencia));
         p.put("idusuario",mapObject(idusuario));
         p.put("idcomprbante",mapObject(idcomprbante));
+        p.put("idPlanPago",mapObject(idPlanPago));
+        p.put("idPlanPagoDetalle",mapObject(idPlanPagoDetalle));
         o.put("parameters", p);
         String s = o.toString();
         String r = load(s);

@@ -41,7 +41,6 @@ public class ExportMain extends AsyncTask<String, String, String> {
     private DbAdapter_Histo_Venta_Detalle dbAdapter_histo_venta_detalle;
     private DbAdaptert_Evento_Establec dbAdaptert_evento_establec;
 
-
     public ExportMain(VMovil_Online_Pumovil mainActivity) {
         this.mainActivity = mainActivity;
         //INSTANCIO LAS CLASES DE MIS MANEJADORES DE DB
@@ -81,6 +80,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
         Cursor cursorComprobanteVenta = dbAdapter_comprob_venta.filterExport();
         Cursor cursorComprobanteVentaDetalle = dbAdapter_comprob_venta_detalle.filterExport();
         Cursor cursorComprobanteCobro = dbAdapter_comprob_cobro.filterExport();
+        Cursor cursorInsertarCaja  = dbAdapter_comprob_cobro.filterExportUpdatedAndEstadoCobro();
         Cursor cursorEventoEstablecimiento = dbAdaptert_evento_establec.filterExportUpdated();
 
         Cursor cursorHistoVentaCreated = dbAdapter_histo_venta.filterExport();
@@ -109,7 +109,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
         List<String> listIdComprobanteVentaDetalle = new ArrayList<String>();
         List<String> listIdComprobanteCobro = new ArrayList<String>();
         List<String> listIdEstablecimientoUpdated = new ArrayList<String>();
-
+        List<String> listidInsertarCaja = new ArrayList<String>();
 
 
         List<String> listIdHVCreated = new ArrayList<String>();
@@ -491,42 +491,70 @@ public class ExportMain extends AsyncTask<String, String, String> {
         }
 
 
-        /*
 
-        if (cursorComprobanteCobro.getCount()>0){
-            for (cursorComprobanteCobro.moveToFirst(); !cursorComprobanteCobro.isAfterLast(); cursorComprobanteCobro.moveToNext()){
-                JSONObject jsonObjectSuccesfull = null;
 
+        if (cursorInsertarCaja.getCount()>0){
+
+            for (cursorInsertarCaja.moveToFirst(); !cursorInsertarCaja.isAfterLast(); cursorInsertarCaja.moveToNext()){
+                JSONObject jsonObject = null;
+
+
+                Log.d(" EXPORT INSERT CAJA DATOS ", ""+((MyApplication)mainActivity.getApplication()).getIdLiquidacion()+"-"+
+                        2+"-"+
+                        cursorInsertarCaja.getInt(cursorInsertarCaja.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_monto_cobrado))+"-"+
+                        cursorInsertarCaja.getInt(cursorInsertarCaja.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_estado_cobro))+"-"+
+                        cursorInsertarCaja.getString(cursorInsertarCaja.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_fecha_cobro))+"-"+
+                        String.valueOf(cursorInsertarCaja.getInt(cursorInsertarCaja.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_id_comprobante_cobro)))+"-"+
+                        ((MyApplication)mainActivity.getApplication()).getIdUsuario()+"-"+
+                        cursorInsertarCaja.getInt(cursorInsertarCaja.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_id_comprob))+"-"+
+                        cursorInsertarCaja.getInt(cursorInsertarCaja.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_id_plan_pago))+"-"+
+                        cursorInsertarCaja.getInt(cursorInsertarCaja.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_id_plan_pago_detalle)));
                 try {
-
-                    Log.d("DATOS EXPORT GASTOS", "");
-
-                    Cursor cursorComprobVentaPlanPago = dbAdapter_comprob_venta.fetchAllComprobVentaById(cursorComprobanteCobro.getInt(cursorComprobanteCobro.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_id_comprob)));
-
-
-                    jsonObjectSuccesfull = api.CreatePlanPagoExp(
-                            cursorComprobanteCobro.getInt(cursorComprobanteCobro.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_id_comprob)),
-                            cursorComprobanteCobro.getString(cursorComprobanteCobro.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_fecha_programada)),
-                            0.0,
+                    jsonObject = api.CreateInsertarCaja(
+                            ((MyApplication)mainActivity.getApplication()).getIdLiquidacion(),
+                            2,
+                            cursorInsertarCaja.getInt(cursorInsertarCaja.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_monto_cobrado)),
+                            cursorInsertarCaja.getInt(cursorInsertarCaja.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_estado_cobro)),
+                            cursorInsertarCaja.getString(cursorInsertarCaja.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_fecha_cobro)),
+                            String.valueOf(cursorInsertarCaja.getInt(cursorInsertarCaja.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_id_comprobante_cobro))),
                             ((MyApplication)mainActivity.getApplication()).getIdUsuario(),
-                            cursorComprobVentaPlanPago.getInt(cursorComprobVentaPlanPago.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_forma_pago)),
-                            cursorComprobVentaPlanPago.getInt(cursorComprobVentaPlanPago.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_tipo_venta))
+                            cursorInsertarCaja.getInt(cursorInsertarCaja.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_id_comprob)),
+                            cursorInsertarCaja.getInt(cursorInsertarCaja.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_id_plan_pago)),
+                            cursorInsertarCaja.getInt(cursorInsertarCaja.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_id_plan_pago_detalle))
                             );
+                    Log.d("EXPORT INSERTAR CAAJA MESSAGE", jsonObject.toString());
+                    Log.d("EXPORT INSERTAR CAAJA MESSAGE SUCCESFUL", ""+isSuccesfulExport(jsonObject));
 
-                    Log.d("SUCCESFULL EXPORT", ""+isSuccesfulExport(jsonObjectSuccesfull));
-                    if (isSuccesfulExport(jsonObjectSuccesfull)){
-                        listIdComprobanteCobro.add("" + cursorComprobanteCobro.getInt(cursorComprobanteCobro.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_id_cob_historial)));
+                    if (isSuccesfulExport(jsonObject)){
+                        listidInsertarCaja.add(""+ cursorInsertarCaja.getInt(cursorInsertarCaja.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_id_cob_historial)));
                     }
+
+
 
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-            }
-        }else{
 
-            Log.d("EXPORT ", "TODOS LOS GASTOS ESTÁN EXPORTADOS");
+
+            }
+
+            String[] idCCInsertarCaja = new String[listidInsertarCaja.size()];
+            listidInsertarCaja.toArray(idCCInsertarCaja);
+
+            for (int i = 0; i < idCCInsertarCaja.length; i++) {
+                Log.d("ID EXPORTADOS ", "" + idCCInsertarCaja[i]);
+            }
+
+            if (listidInsertarCaja.size()>0){
+                dbAdapter_comprob_cobro.changeEstadoToExport(idCCInsertarCaja, Constants._EXPORTADO);
+            }
+
+
+        }else{
+            Log.d("EXPORT INSERTAR CAJA", "TODOS LOS REGISTROS INSERTAR CAJA DE COMPROBANTE COBRO ESTÁN EXPORTADOS");
         }
-        */
+
+
 
         //EXPORTAR TODOS LOS REGISTROS ACTUALIZADOS EN ANDROID
 
@@ -632,7 +660,4 @@ public class ExportMain extends AsyncTask<String, String, String> {
         }
         return idPlanPagoDetalle;
     }
-
-
-
 }

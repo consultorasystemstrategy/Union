@@ -230,7 +230,7 @@ public class DbAdapter_Comprob_Cobro {
 
 
 
-        mDb.execSQL("update "+SQLITE_TABLE_Comprob_Cobro+" set "+CC_monto_a_pagar+"="+valor+", "+CC_fecha_programada+"='"+fecha+"',"+CC_hora_cobro+"='"+hora+"', "+CC_estado_cobro+"='"+estado+"',"+CC_monto_cobrado+"=0 where "+CC_id_cob_historial+"='"+id+"'");
+        mDb.execSQL("update "+SQLITE_TABLE_Comprob_Cobro+" set "+CC_monto_a_pagar+"="+valor+", "+CC_fecha_programada+"='"+fecha+"',"+CC_hora_cobro+"='"+hora+"', "+CC_estado_cobro+"='"+estado+"',"+CC_monto_cobrado+"=0, "+ Constants._SINCRONIZAR + " = "+Constants._ACTUALIZADO+" where "+CC_id_cob_historial+"='"+id+"'");
 
     }
     public int updateComprobCobrosCan2(String id, String fecha, String hora, double valor, String estado){
@@ -243,7 +243,7 @@ public class DbAdapter_Comprob_Cobro {
         String[] columnas = new String[]{CC_monto_a_pagar};
         int insert = mDb.update(SQLITE_TABLE_Comprob_Cobro, initialValues,
                 CC_id_cob_historial+"=?",new String[]{id});
-return insert;
+        return insert;
     }
 
     public boolean deleteAllComprobCobros() {
@@ -269,7 +269,7 @@ return insert;
                         ""+Constants._CREADO
                 }
                 ,
-            null, null, null, null);
+                null, null, null, null);
         if (mCursor != null) {
             mCursor.moveToFirst();
         }
@@ -279,6 +279,31 @@ return insert;
         return mCursor;
 
     }
+
+    public Cursor filterExportUpdatedAndEstadoCobro() throws SQLException {
+
+        Cursor mCursor = mDb.query(true, SQLITE_TABLE_Comprob_Cobro, new String[] {
+
+                        CC_id_comprobante_cobro,CC_id_cob_historial,
+                        CC_id_establec, CC_id_comprob, CC_id_plan_pago, CC_id_plan_pago_detalle,
+                        CC_desc_tipo_doc, CC_doc, CC_fecha_programada, CC_monto_a_pagar,
+                        CC_fecha_cobro, CC_monto_cobrado, CC_estado_cobro, Constants._SINCRONIZAR},
+                 Constants._SINCRONIZAR + " = ? AND " +CC_estado_cobro + " = '0'",
+                new String[]{
+                        ""+Constants._ACTUALIZADO,
+                }
+                ,
+                null, null, null, null);
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        if(mCursor.getCount()==0){
+            Log.d("FILTER EXPORT PLAN PAGO ", "NULL");
+        }
+        return mCursor;
+
+    }
+
 
     public Cursor fetchComprobCobrosByName(String inputText) throws SQLException {
         Log.w(TAG, inputText);
