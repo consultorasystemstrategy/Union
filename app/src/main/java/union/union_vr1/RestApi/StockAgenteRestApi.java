@@ -431,4 +431,39 @@ public class StockAgenteRestApi {
         return result;
     }
 
+    public JSONObject GetSolicitudAutorizacionEstablecimiento(int idEstablecimiento) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","RestAPI");
+        o.put("method", "GetSolicitudAutorizacionEstablecimiento");
+        p.put("idEstablecimiento",mapObject(idEstablecimiento));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+
+    public JSONObject CreateSolicitudAutorizacionCreditoExp(int idAgente,String idMotivoSolicitud,int idEstablecimiento,int estadoSolicitud,String observacion,String referencia,int idUsuario,double montoCredito,int vigenciaCredito) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","RestAPI");
+        o.put("method", "CreateSolicitudAutorizacionCreditoExp");
+        p.put("idAgente",mapObject(idAgente));
+        p.put("idMotivoSolicitud",mapObject(idMotivoSolicitud));
+        p.put("idEstablecimiento",mapObject(idEstablecimiento));
+        p.put("estadoSolicitud",mapObject(estadoSolicitud));
+        p.put("observacion",mapObject(observacion));
+        p.put("referencia",mapObject(referencia));
+        p.put("idUsuario",mapObject(idUsuario));
+        p.put("montoCredito",mapObject(montoCredito));
+        p.put("vigenciaCredito",mapObject(vigenciaCredito));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
 }

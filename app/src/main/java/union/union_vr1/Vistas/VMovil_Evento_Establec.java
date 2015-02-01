@@ -62,7 +62,6 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
         mEstadoNoAtendido = (Button) findViewById(R.id.VEE_BTNEstadoNoAtendido);
         mEstadoPendiente = (Button) findViewById(R.id.VEE_BTNEstadoPendiente);
 
-
         mCobros.setOnClickListener(this);
         mCanDev.setOnClickListener(this);
         mVentas.setOnClickListener(this);

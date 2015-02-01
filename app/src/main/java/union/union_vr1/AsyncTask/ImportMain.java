@@ -254,6 +254,35 @@ public class ImportMain extends AsyncTask<String, String, String> {
                 }
             }
 
+            //ACTUALIZAR LOS CRÉDITOS DE LOS ESTABLECIMIENTOS
+
+            Cursor cursorEstablecimiento = dbAdaptert_evento_establec.fetchAllEstablecs();
+
+            for (cursorEstablecimiento.moveToFirst(); !cursorEstablecimiento.isAfterLast(); cursorEstablecimiento.moveToNext()){
+
+                int idEstablecimiento = cursorEstablecimiento.getInt(cursorEstablecimiento.getColumnIndexOrThrow(dbAdaptert_evento_establec.EE_id_establec));
+                JSONObject jsonObject = api.GetSolicitudAutorizacionEstablecimiento(idEstablecimiento);
+
+                Log.d("IMPORT SOLICITUDES DE AUTORIZACIÓN ", jsonObject.toString());
+
+                if (isSuccesfulImport(jsonObject)) {
+
+                    JSONArray jsonArray = jsonObject.getJSONArray("Value");
+                    JSONObject jsonObj=null;
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        jsonObj=jsonArray.getJSONObject(i);
+                        int idEstablecimiento1 = jsonObj.getInt("EstIEstablecimientoId");
+                        int montoCredito = jsonObj.getInt("SolDOMontoCredito");
+                        int diasCredito = jsonObj.getInt("SolIVigenciaCredito");
+                        Log.d("IMPORT SOLICITUDES DATOS", idEstablecimiento + " - " + montoCredito + " - " + diasCredito);
+                        dbAdaptert_evento_establec.updateEstablecsCredito(idEstablecimiento, montoCredito, diasCredito);
+
+                    }
+                }
+
+
+            }
+
 
             publishProgress(""+99);
 
@@ -371,15 +400,25 @@ public class ImportMain extends AsyncTask<String, String, String> {
     {
         String errorMessage = "Error Message null";
         try {
-            for(int i=0;i<jsonObj.length();i++)
-            {
-                errorMessage +=jsonObj.getString("ErrorMessage");
-            }
-
+               errorMessage +=jsonObj.getString("ErrorMessage");
         } catch (JSONException e) {
             // TODO Auto-generated catch block
             Log.d("JSONParser => parser Error Message", e.getMessage());
         }
         return errorMessage;
+    }
+
+    public boolean isSuccesfulImport(JSONObject jsonObj)
+    {
+        boolean succesful= false;
+        try {
+            Log.d("CADEMA A ÁRSEAR BOOLEAN ", jsonObj.toString());
+            succesful= jsonObj.getBoolean("Successful");
+        } catch (JSONException e) {
+            // TODO Auto-generated catch block
+            Log.d("JSONParser => parser Error Message", e.getMessage());
+            Log.d("JSON PARSER => parser Error Message", e.getMessage());
+        }
+        return succesful;
     }
 }

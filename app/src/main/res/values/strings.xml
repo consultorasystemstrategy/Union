@@ -50,6 +50,13 @@
         <item>Normal</item>
         <item>Rpp</item>
     </string-array>
+    <string-array name="dias_credito">
+        <item>3</item>
+        <item>7</item>
+        <item>15</item>
+        <item>30</item>
+    </string-array>
+
     <string-array name="cate_devolucion">
         <item>Bueno</item>
         <item>Vencimiento - Malo</item>

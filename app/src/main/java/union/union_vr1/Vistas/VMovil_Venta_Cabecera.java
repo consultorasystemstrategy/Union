@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -22,13 +24,17 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONObject;
+
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import union.union_vr1.AsyncTask.SolicitarCredito;
 import union.union_vr1.R;
+import union.union_vr1.RestApi.StockAgenteRestApi;
 import union.union_vr1.Sqlite.Constants;
 import union.union_vr1.Sqlite.DBAdapter_Temp_Venta;
 import union.union_vr1.Sqlite.DbAdapter_Agente;
@@ -72,6 +78,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
     private Spinner spinnerTipoDocumento;
     private Spinner spinnerFormaPago;
     private Button buttonAgregar;
+    private Spinner spinnerDiasCredito;
     private TextView textViewFooterText;
     private TextView textViewFooterTotal;
     private TextView textViewFooterSurtidoStock;
@@ -80,6 +87,8 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
     private ListView listView;
     private View header;
     private View footer;
+    private VMovil_Venta_Cabecera mainActivity;
+
     private Context mContext;
 
     private Double totalFooter;
@@ -96,6 +105,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
     final int estado_cobro = 0;
     final int id_forma_cobro = 1;
     final String lugar_registro = "movil";
+    String diasCredito= null;
 
     private boolean isEstablecidasCuotas;
 
@@ -123,6 +133,8 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.princ_venta_cabecera);
+
+        mainActivity = this;
 
         mContext = this;
         dbHelper_Histo_comprob_anterior = new DbAdapter_Histo_Comprob_Anterior(this);
@@ -159,7 +171,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
         setContentView(R.layout.princ_venta_cabecera);
 
 
-        Cursor cursorEstablecimiento = dbHelper_Evento_Establecimiento.fetchEstablecsById(""+idEstablecimiento);
+        final Cursor cursorEstablecimiento = dbHelper_Evento_Establecimiento.fetchEstablecsById(""+idEstablecimiento);
         cursorEstablecimiento.moveToFirst();
 
         int idTipoDocCliente = 0;
@@ -242,24 +254,56 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
                         }
                         else {
 
-                            new AlertDialog.Builder(mContext)
-                                    .setTitle("Está seguro que es toda su venta")
-                                    .setMessage("Si define las cuotas ya no podrá agregar productos a la venta, ni eliminarlos\n" +
-                                            "¿Está seguro que está todo listo?")
-                                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialogInterface, int i) {
-                                            spinnerFormaPago.setAdapter(adapterFormaPago);
+                            Cursor cursorEstablecimientoCredito = dbHelper_Evento_Establecimiento.fetchEstablecsById(""+idEstablecimiento);;
+                            cursorEstablecimiento.moveToFirst();
+                            int montoCredito = -1;
+                            montoCredito = cursorEstablecimientoCredito.getInt(cursorEstablecimientoCredito.getColumnIndexOrThrow(dbHelper_Evento_Establecimiento.EE_monto_credito));
+                            switch (montoCredito){
+                                case -1:
+
+                                    break;
+                                case 0:
+
+                                        if (conectadoWifi()||conectadoRedMovil()) {
+                                            new AlertDialog.Builder(mContext)
+                                                    .setTitle("Ops, No cuenta con crédito")
+                                                    .setMessage("" +
+                                                            "¿Desea solicitar crédito?")
+                                                    .setNegativeButton(android.R.string.no,null)
+                                                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                                        public void onClick(DialogInterface dialog, int id) {
+                                                            dialogSolicitarCredito().show();
+                                                        }
+                                                    }).create().show();
+
+                                        }else{
+                                            Toast.makeText(mContext, "Sin crédito y sin conexión", Toast.LENGTH_SHORT).show();
                                         }
-                                    })
-                                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            Intent intent = new Intent(getApplicationContext(), VMovil_Venta_Cabecera_PlanPagos.class);
-                                            intent.putExtra("total", totalFooter);
-                                            finish();
-                                            startActivity(intent);
-                                        }
-                                    }).create().show();
+
+                                    break;
+                                default:
+
+                                    new AlertDialog.Builder(mContext)
+                                            .setTitle("Está seguro que es toda su venta")
+                                            .setMessage("Si define las cuotas ya no podrá agregar productos a la venta, ni eliminarlos\n" +
+                                                    "¿Está seguro que está todo listo?")
+                                            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialogInterface, int i) {
+                                                    spinnerFormaPago.setAdapter(adapterFormaPago);
+                                                }
+                                            })
+                                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int id) {
+                                                    Intent intent = new Intent(getApplicationContext(), VMovil_Venta_Cabecera_PlanPagos.class);
+                                                    intent.putExtra("total", totalFooter);
+                                                    finish();
+                                                    startActivity(intent);
+                                                }
+                                            }).create().show();
+
+                                    break;
+                            }
 
                         }
                         break;
@@ -358,7 +402,53 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
 
 
     }
+    private Dialog dialogSolicitarCredito() {
 
+        final View layout = View.inflate(this, R.layout.dialog_solicitar_credito, null);
+
+
+
+        final EditText editTextCantidadCredito = ((EditText) layout.findViewById(R.id.VCSC_editText_CantidadCredito));
+        spinnerDiasCredito = ((Spinner) layout.findViewById(R.id.VCSC_spinner_DiasCredito));
+
+
+        final ArrayAdapter<CharSequence> adapterDiasCredito = ArrayAdapter.createFromResource(this,R.array.dias_credito,android.R.layout.simple_spinner_item);
+        adapterDiasCredito.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerDiasCredito.setAdapter(adapterDiasCredito);
+
+
+        spinnerDiasCredito.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                diasCredito = spinnerDiasCredito.getSelectedItem().toString();
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Cantidad a Solicitar");
+        builder.setPositiveButton("OK", new Dialog.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                String cantidad = editTextCantidadCredito.getText().toString().trim();
+                int cantidadCredito = Integer.parseInt(cantidad);
+
+                new SolicitarCredito(mainActivity).execute(""+id_agente_venta,""+idEstablecimiento,""+cantidadCredito,""+diasCredito);
+
+                Toast.makeText(mContext.getApplicationContext(), "Crédito solicitado esperar...",Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(mContext, VMovil_Online_Pumovil.class);
+                finish();
+                startActivity(intent);
+            }
+        });
+        builder.setView(layout);
+        return builder.create();
+    }
     private Dialog myEditDialog(final long id_temp_venta_detalle) {
         final View layout = View.inflate(this, R.layout.dialog_editar_productos, null);
 
@@ -733,4 +823,31 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
         DecimalFormat df = new DecimalFormat("#,00");
         return Double.valueOf(df.format(d));
     }
+
+    protected Boolean conectadoWifi(){
+        ConnectivityManager connectivity = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivity != null) {
+            NetworkInfo info = connectivity.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+            if (info != null) {
+                if (info.isConnected()) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
+
+    protected Boolean conectadoRedMovil(){
+        ConnectivityManager connectivity = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivity != null) {
+            NetworkInfo info = connectivity.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+            if (info != null) {
+                if (info.isConnected()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    }
+
