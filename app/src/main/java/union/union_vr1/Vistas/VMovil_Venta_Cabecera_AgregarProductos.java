@@ -248,6 +248,10 @@ public class VMovil_Venta_Cabecera_AgregarProductos extends Activity implements 
         builder.setPositiveButton("OK", new Dialog.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 String texto = savedText.getText().toString().trim();
+                if(texto.equals("")){
+                    texto = "1";
+                }
+
                 cantidad = Integer.parseInt(texto);
 
                 Toast.makeText(getApplicationContext(),"Cantidad : "+cantidad + " id_producto : "+ id_producto,Toast.LENGTH_LONG).show();

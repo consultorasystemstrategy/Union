@@ -32,7 +32,18 @@
         android:text="Total"
         android:layout_weight="1"
         android:textSize="16dp"
-        android:gravity="right" />
+        android:gravity="center_horizontal" />
+<!--
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="IGV"
+        android:id="@+id/gastoReferencia"
+        android:layout_weight="1"
+        android:gravity="center_vertical|center"
+        android:textColor="@color/PersonalizadoSteve4"
+        android:textSize="16dp" />
+    -->
 
     <!--
         <TextView

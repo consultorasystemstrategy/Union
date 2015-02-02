@@ -2,7 +2,10 @@ package union.union_vr1.Vistas;
 
 import android.app.Activity;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -97,6 +100,33 @@ public class VMovil_Evento_Gasto extends Activity /*implements OnClickListener *
 
         editTextTotal = (EditText) findViewById(R.id.editText_VEG_total);
         editTextReferencia = (EditText) findViewById(R.id.editText_VEG_referencia);
+
+        editTextTotal.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                Log.d("BEFORE TEXT CHANGE", "ON");
+                if (editTextTotal.getText().toString().trim() != "") {
+                    editTextTotal.setError(null);
+                }
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                Log.d("ON TEXT CHANGE", "ON");
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                Log.d("AFTER TEXT CHANGE", "ON");
+                if (editTextTotal.getText().toString().trim().equals("")) {
+                    editTextTotal.setError("Es Requerido");
+                } else {
+                    editTextTotal.setError(null);
+
+                }
+            }
+        });
 
         addItemsOnSpinners();
 
@@ -284,8 +314,15 @@ public class VMovil_Evento_Gasto extends Activity /*implements OnClickListener *
             positionProcedenciaGasto = 2;
         }
 
+        Double total = 0.0;
 
-        Double total = Double.valueOf(editTextTotal.getText().toString());
+        if (editTextTotal.getText().toString().equals("")){
+            total = 0.0;
+        }else{
+            total = Double.valueOf(editTextTotal.getText().toString());
+        }
+
+
         String referencia = editTextReferencia.getText().toString();
 
         String nombreDocumento = (String) spinnerTipoDocumento.getSelectedItem();
@@ -348,19 +385,19 @@ public class VMovil_Evento_Gasto extends Activity /*implements OnClickListener *
                 //DbAdapter_Informe_Gastos.GA_id_gasto,
                 DbAdapter_Tipo_Gasto.TG_nom_tipo_gasto,
                 DbAdapter_Informe_Gastos.GA_total,
-                /*DbAdapter_Informe_Gastos.GA_subtotal,
-                DbAdapter_Informe_Gastos.GA_igv,
-                DbAdapter_Informe_Gastos.GA_referencia*/
+                //DbAdapter_Informe_Gastos.GA_subtotal,
+                //DbAdapter_Informe_Gastos.GA_igv,
+                //DbAdapter_Informe_Gastos.GA_referencia
         };
 
         // the XML defined views which the data will be bound to
         int[] to = new int[]{
                 //R.id.VEG_textViewIdTipoGasto,
                 R.id.gastoNombre,
-                R.id.gastoImporte
-                /*R.id.VEG_textViewSubtotal,
-                R.id.VEG_textViewIgv,
-                R.id.VEG_textViewReferencia,*/
+                R.id.gastoImporte,
+                //R.id.VEG_textViewSubtotal,
+                //R.id.gastoReferencia
+                //R.id.VEG_textViewReferencia,
         };
 
         // create the adapter using the cursor pointing to the desired data

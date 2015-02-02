@@ -7,9 +7,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -63,6 +66,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
     private DbAdapter_Comprob_Cobro dbHelper_Comprob_Cobros;
     private DbAdapter_Stock_Agente dbHelper_Stock_Agente;
     private DbAdaptert_Evento_Establec dbHelper_Evento_Establecimiento;
+    private EditText savedText;
 
     private String textoImpresion = ".\n"
                 +"    UNIVERSIDAD PERUANA UNION   \n"
@@ -477,11 +481,37 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
     private Dialog myEditDialog(final long id_temp_venta_detalle) {
         final View layout = View.inflate(this, R.layout.dialog_editar_productos, null);
 
-        final EditText savedText = ((EditText) layout.findViewById(R.id.VCEP_editTextCantidad));
+         savedText = ((EditText) layout.findViewById(R.id.VCEP_editTextCantidad));
         final TextView nombreProducto = ((TextView) layout.findViewById(R.id.VCEP_textViewNombreProducto));
         final TextView precio = ((TextView) layout.findViewById(R.id.VCEP_textViewPrecio));
         final TextView devuelto = ((TextView) layout.findViewById(R.id.VCEP_textViewDevuelto));
         final TextView promedioAnterior = ((TextView) layout.findViewById(R.id.VCEP_textViewPromedioAnterior));
+
+        savedText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                Log.d("BEFORE TEXT CHANGE", "ON");
+                if (savedText.getText().toString().trim() != "") {
+                    savedText.setError(null);
+                }
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                Log.d("ON TEXT CHANGE", "ON");
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                Log.d("AFTER TEXT CHANGE", "ON");
+                if (savedText.getText().toString().trim().equals("")) {
+                    savedText.setError("Es Requerido");
+                } else {
+                    savedText.setError(null);
+                }
+            }
+        });
 
         Cursor mCursorTempVenta = dbHelper_temp_venta.fetchAllTempVentaDetalleByID(id_temp_venta_detalle);
 
