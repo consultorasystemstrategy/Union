@@ -2,11 +2,14 @@ package union.union_vr1.Vistas;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.LightingColorFilter;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -18,12 +21,15 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import union.union_vr1.AsyncTask.ExportMain;
+import union.union_vr1.AsyncTask.ImportMain;
 import union.union_vr1.R;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
 import union.union_vr1.Sqlite.DbAdapter_Histo_Venta_Detalle;
 import union.union_vr1.Sqlite.DbAdapter_Precio;
 import union.union_vr1.Sqlite.DbAdapter_Stock_Agente;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
+import union.union_vr1.Utils.MyApplication;
 
 //Esti es yb cinebtario
 
@@ -39,6 +45,7 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
     private String valIdEstab;
     private int idAgente;
     private Button mCobros, mCanDev, mVentas, mManten, mReport, mEstadoAtendido, mEstadoNoAtendido, mEstadoPendiente;
+    private VMovil_Evento_Establec mainActivity;
 
     //Esto es un comentario
     @Override
@@ -46,7 +53,7 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.princ_evento_establec);
 
-
+        mainActivity = this;
 
 
 
@@ -131,6 +138,40 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
 
         cursor.close();
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.sincronizar_options, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        switch (id){
+
+            case R.id.buttonImport:
+                new ImportMain(mainActivity).execute();
+                break;
+            case R.id.buttonExportar:
+                new ExportMain(mainActivity).execute();
+                break;
+            case R.id.buttonRedireccionarPrincipal:
+                Intent intent = new Intent(mainActivity, VMovil_Evento_Indice.class);
+                finish();
+                startActivity(intent);
+                break;
+            default:
+                //ON ITEM SELECTED DEFAULT
+                break;
+
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private String fech() throws ParseException {

@@ -3,7 +3,8 @@
 
 
     <color name="ColorPUPrincipal">#006</color>
-    <color name="ColorPUSecundario">#C03533</color>
+    <!--<color name="ColorPUPrincipal">#007FF1</color>-->
+    <color name="ColorPUSecundario">#C03533</color>>
     <color name="ColorPUTercero">#F1EEDA</color>
     <color name="can_dev">#FE9A2E</color>
     

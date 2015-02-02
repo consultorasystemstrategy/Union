@@ -21,6 +21,7 @@ import union.union_vr1.Sqlite.DbAdapter_Histo_Venta_Detalle;
 import union.union_vr1.Sqlite.DbAdapter_Precio;
 import union.union_vr1.Sqlite.DbAdapter_Stock_Agente;
 import union.union_vr1.Utils.DialogSincronizarOffLine;
+import union.union_vr1.Utils.MyApplication;
 
 
 public class VMovil_Online_Pumovil extends Activity {
@@ -34,6 +35,8 @@ public class VMovil_Online_Pumovil extends Activity {
         setContentView(R.layout.princ_web_view);
 
         mContext = this;
+
+        ((MyApplication)getApplication()).setMainActivity(this);
 
         showWebPU();
 /*
@@ -113,7 +116,7 @@ public class VMovil_Online_Pumovil extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.vmovil__online__pumovil, menu);
+        getMenuInflater().inflate(R.menu.sincronizar_options, menu);
         return true;
     }
 

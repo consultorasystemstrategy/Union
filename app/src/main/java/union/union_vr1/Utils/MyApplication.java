@@ -2,6 +2,8 @@ package union.union_vr1.Utils;
 
 import android.app.Application;
 
+import union.union_vr1.Vistas.VMovil_Online_Pumovil;
+
 /**
  * Created by Usuario on 15/12/2014.
  */
@@ -13,7 +15,15 @@ public class MyApplication extends Application{
         private boolean DisplayedHistorialComprobanteAnterior;
         private int idLiquidacion;
         private int idUsuario;
+        private VMovil_Online_Pumovil mainActivity;
 
+    public VMovil_Online_Pumovil getMainActivity() {
+        return mainActivity;
+    }
+
+    public void setMainActivity(VMovil_Online_Pumovil mainActivity) {
+        this.mainActivity = mainActivity;
+    }
 
     public boolean isCuotasEstablecidas() {
         return cuotasEstablecidas;

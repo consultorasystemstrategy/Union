@@ -1,5 +1,6 @@
 package union.union_vr1.AsyncTask;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.Cursor;
@@ -52,7 +53,7 @@ import union.union_vr1.Vistas.VMovil_Online_Pumovil;
  */
 public class ImportMain extends AsyncTask<String, String, String> {
 
-    private VMovil_Online_Pumovil mainActivity;
+    private Activity mainActivity;
     private ProgressDialog progressDialog;
 
     private DbAdapter_Agente dbAdapter_agente;
@@ -70,7 +71,7 @@ public class ImportMain extends AsyncTask<String, String, String> {
 
     private int idAgente;
 
-    public ImportMain(VMovil_Online_Pumovil mainActivity) {
+    public ImportMain(Activity mainActivity) {
         this.mainActivity = mainActivity;
         dbAdapter_agente = new DbAdapter_Agente(mainActivity);
         dbAdapter_agente.open();

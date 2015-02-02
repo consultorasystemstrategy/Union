@@ -2,6 +2,7 @@ package union.union_vr1.Vistas;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -23,18 +24,23 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import union.union_vr1.AsyncTask.ExportMain;
+import union.union_vr1.AsyncTask.ImportMain;
 import union.union_vr1.R;
 import union.union_vr1.Sqlite.CursorAdapterCobrosTotales;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
+import union.union_vr1.Utils.MyApplication;
 
 
 public class VMovil_Cobros_Totales extends Activity {
     DbAdapter_Comprob_Cobro cCobro;
     private SimpleCursorAdapter dataAdapter;
-
+    private VMovil_Cobros_Totales mainActivity;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+        mainActivity = this;
         setContentView(R.layout.activity_vmovil__cobros__totales);
         cCobro = new DbAdapter_Comprob_Cobro(this);
         cCobro.open();
@@ -122,7 +128,7 @@ public class VMovil_Cobros_Totales extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.vmovil__cobros__totales, menu);
+        getMenuInflater().inflate(R.menu.sincronizar_options, menu);
         return true;
     }
 
@@ -132,8 +138,23 @@ public class VMovil_Cobros_Totales extends Activity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
+        switch (id){
+
+            case R.id.buttonImport:
+                new ImportMain(mainActivity).execute();
+                break;
+            case R.id.buttonExportar:
+                new ExportMain(mainActivity).execute();
+                break;
+            case R.id.buttonRedireccionarPrincipal:
+                Intent intent = new Intent(mainActivity, VMovil_Evento_Indice.class);
+                finish();
+                startActivity(intent);
+                break;
+            default:
+                //ON ITEM SELECTED DEFAULT
+                break;
+
         }
         return super.onOptionsItemSelected(item);
     }

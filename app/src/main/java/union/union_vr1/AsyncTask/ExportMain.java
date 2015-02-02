@@ -1,5 +1,6 @@
 package union.union_vr1.AsyncTask;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.database.Cursor;
 import android.os.AsyncTask;
@@ -29,7 +30,7 @@ import union.union_vr1.Vistas.VMovil_Online_Pumovil;
  */
 public class ExportMain extends AsyncTask<String, String, String> {
 
-    private VMovil_Online_Pumovil mainActivity;
+    private Activity mainActivity;
     private ProgressDialog progressDialog;
 
     //DEFINO LAS VARIABLES A MIS MANEJADORES DE LAS TABLAS
@@ -41,7 +42,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
     private DbAdapter_Histo_Venta_Detalle dbAdapter_histo_venta_detalle;
     private DbAdaptert_Evento_Establec dbAdaptert_evento_establec;
 
-    public ExportMain(VMovil_Online_Pumovil mainActivity) {
+    public ExportMain(Activity mainActivity) {
         this.mainActivity = mainActivity;
         //INSTANCIO LAS CLASES DE MIS MANEJADORES DE DB
         dbAdapter_informe_gastos = new DbAdapter_Informe_Gastos(mainActivity);

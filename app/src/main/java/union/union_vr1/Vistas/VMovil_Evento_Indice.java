@@ -1,10 +1,13 @@
 package union.union_vr1.Vistas;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.LightingColorFilter;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.SimpleCursorAdapter;
@@ -20,6 +23,8 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 
 
+import union.union_vr1.AsyncTask.ExportMain;
+import union.union_vr1.AsyncTask.ImportMain;
 import union.union_vr1.MySQL.DbManager_Evento_Establec_GET;
 import union.union_vr1.MySQL.DbManager_Evento_Establec_POST;
 import union.union_vr1.R;
@@ -54,12 +59,14 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
     private String estadox;
     private String valIdEstab;
     private Button mClient, mInfgas, mResume, mCarinv, mTrainv, mCobroTotal;
+    private VMovil_Evento_Indice mainActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.princ_evento_indice);
-        ((MyApplication)this.getApplication()).setDisplayedHistorialComprobanteAnterior(false);
+        mainActivity  = this;
+        ((MyApplication) this.getApplication()).setDisplayedHistorialComprobanteAnterior(false);
 
         dbHelper1 = new DbAdapter_Comprob_Venta(this);
         dbHelper1.open();
@@ -126,6 +133,40 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         cCobro.open();
         AsignarColor(mCobroTotal);
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.sincronizar_options, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        switch (id){
+
+            case R.id.buttonImport:
+                new ImportMain(mainActivity).execute();
+                break;
+            case R.id.buttonExportar:
+                new ExportMain(mainActivity).execute();
+                break;
+            case R.id.buttonRedireccionarPrincipal:
+                Intent intent = new Intent(mainActivity, VMovil_Evento_Indice.class);
+                finish();
+                startActivity(intent);
+                break;
+            default:
+                //ON ITEM SELECTED DEFAULT
+                break;
+
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void AsignarColor(Button btn) {

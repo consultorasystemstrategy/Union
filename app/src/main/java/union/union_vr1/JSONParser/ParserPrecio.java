@@ -1,5 +1,6 @@
 package union.union_vr1.JSONParser;
 
+import android.app.Activity;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -17,8 +18,8 @@ import union.union_vr1.Vistas.VMovil_Online_Pumovil;
  * Created by Usuario on 19/01/2015.
  */
 public class ParserPrecio {
-    private VMovil_Online_Pumovil mainActivity;
-    public ParserPrecio(VMovil_Online_Pumovil mainActivity) {
+    private Activity mainActivity;
+    public ParserPrecio(Activity mainActivity) {
         super();
         this.mainActivity = mainActivity;
 
