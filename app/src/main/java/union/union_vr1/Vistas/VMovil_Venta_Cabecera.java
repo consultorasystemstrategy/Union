@@ -32,6 +32,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import union.union_vr1.AsyncTask.ExportMain;
 import union.union_vr1.AsyncTask.SolicitarCredito;
 import union.union_vr1.R;
 import union.union_vr1.RestApi.StockAgenteRestApi;
@@ -661,6 +662,10 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
 
         dbHelper_temp_venta.deleteAllTempVentaDetalle();
         dbHelper_Temp_Comprob_Cobros.deleteAllComprobCobros();
+
+        if (conectadoWifi()||conectadoRedMovil()){
+            new ExportMain(mainActivity).execute();
+        }
 
 
         Intent intent= new Intent(this, VMovil_BluetoothImprimir.class);

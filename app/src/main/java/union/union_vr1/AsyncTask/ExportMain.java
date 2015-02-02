@@ -618,9 +618,15 @@ public class ExportMain extends AsyncTask<String, String, String> {
 
     @Override
     protected void onPostExecute(String s) {
-        progressDialog.setProgress(100);
-        progressDialog.dismiss();
-        Toast.makeText(mainActivity.getApplicationContext(), "EXPORTACIÓN EXITOSA", Toast.LENGTH_LONG).show();
+
+        if (mainActivity.isFinishing()){
+            progressDialog.dismiss();
+            return;
+        }else{
+            progressDialog.setProgress(100);
+            progressDialog.dismiss();
+            Toast.makeText(mainActivity.getApplicationContext(), "EXPORTACIÓN EXITOSA", Toast.LENGTH_LONG).show();
+        }
         super.onPostExecute(s);
     }
 
