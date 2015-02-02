@@ -65,7 +65,7 @@ public class ImportMain extends AsyncTask<String, String, String> {
     private DbAdapter_Histo_Comprob_Anterior dbAdapter_histo_comprob_anterior;
 
 
-    private ListView listView;
+    //private ListView listView;
     private SimpleCursorAdapter simpleCursorAdapter;
 
     private int idAgente;
@@ -91,7 +91,7 @@ public class ImportMain extends AsyncTask<String, String, String> {
 
         idAgente = ((MyApplication)mainActivity.getApplication()).getIdAgente();
 
-        listView = (ListView) mainActivity.findViewById(R.id.listView);
+        //listView = (ListView) mainActivity.findViewById(R.id.listView);
     }
 
     @Override
@@ -372,7 +372,7 @@ public class ImportMain extends AsyncTask<String, String, String> {
                 0
         );
 
-        listView.setAdapter(simpleCursorAdapter);
+        //listView.setAdapter(simpleCursorAdapter);
 
         Intent intent = new Intent(mainActivity, VMovil_Evento_Indice.class);
         mainActivity.finish();

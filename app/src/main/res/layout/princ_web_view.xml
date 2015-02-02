@@ -1,54 +1,18 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingLeft="0dp"
-    android:paddingRight="0dp"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="0dp"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     tools:context="union.union_vr1.Vistas.VMovil_Online_Pumovil">
-
-
-<!--
-    <WebView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/webView"
-        android:layout_alignParentBottom="true"
-        android:layout_below="@+id/VEE_BTNEstadoNoAtendido"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />-->
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
 
-        <Button
+        <WebView
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="Importar"
-            android:id="@+id/VEE_BTNEstadoNoAtendido"/>
-
-        <Button
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="Exportar"
-            android:id="@+id/buttonExportar" />
-        <Button
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="Ir principal"
-            android:id="@+id/buttonTemp" />
-
-
-        <ListView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/listView" />
-
+            android:layout_height="fill_parent"
+            android:id="@+id/webView" />
     </LinearLayout>
 
 </RelativeLayout>

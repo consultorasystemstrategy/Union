@@ -34,6 +34,8 @@ public class VMovil_Online_Pumovil extends Activity {
         setContentView(R.layout.princ_web_view);
 
         mContext = this;
+
+        showWebPU();
 /*
         DbAdapter_Stock_Agente dbHelper_Stock;
         DbAdapter_Histo_Venta_Detalle dbHelper_Hi_De;
@@ -54,16 +56,18 @@ public class VMovil_Online_Pumovil extends Activity {
 */
         //showWebPU();
 
-        final Button button = (Button) findViewById(R.id.VEE_BTNEstadoNoAtendido);
+        /*
+        final Button button = (Button) findViewById(R.id.buttonImport);
         final Button buttonExport = (Button) findViewById(R.id.buttonExportar);
         final Button buttonTemp = (Button) findViewById(R.id.buttonTemp);
+
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                /*
+
                 FragmentManager manager = getFragmentManager();
                 DialogSincronizarOffLine dialogConfirm = new DialogSincronizarOffLine();
                 dialogConfirm.show(manager, "DialogSincronizarOffLine");
-                */
+
 
                 new ImportMain(mContext).execute();
             }
@@ -82,11 +86,11 @@ public class VMovil_Online_Pumovil extends Activity {
                 startActivity(intent);
             }
         });
-
+*/
     }
 
     public void showWebPU(){
-        //view = (WebView) this.findViewById(R.id.webView);
+        view = (WebView) this.findViewById(R.id.webView);
         view.getSettings().setJavaScriptEnabled(true);
         view.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
         view.loadUrl("http://192.168.0.104:8084/SysMovilProductosUnion");
@@ -119,8 +123,23 @@ public class VMovil_Online_Pumovil extends Activity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
+        switch (id){
+
+            case R.id.buttonImport:
+                new ImportMain(mContext).execute();
+                break;
+            case R.id.buttonExportar:
+                new ExportMain(mContext).execute();
+                break;
+            case R.id.buttonRedireccionarPrincipal:
+                Intent intent = new Intent(mContext, VMovil_Evento_Indice.class);
+                finish();
+                startActivity(intent);
+                break;
+            default:
+                //ON ITEM SELECTED DEFAULT
+                break;
+
         }
         return super.onOptionsItemSelected(item);
     }
