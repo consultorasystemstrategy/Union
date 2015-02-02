@@ -42,6 +42,7 @@ public class VMovil_Evento_Gasto extends Activity /*implements OnClickListener *
 
     private SimpleCursorAdapter dataAdapter;
     private String[] TipoGasto = new String[20];
+    private View header;
 
     /*
     private Cursor cursor, cursorx, cursory;
@@ -90,6 +91,9 @@ public class VMovil_Evento_Gasto extends Activity /*implements OnClickListener *
 
         spinnerTipoDocumento = (Spinner) findViewById(R.id.spinner_VEG_tipoDocumento);
         listViewInformeGasto = (ListView) findViewById(R.id.VEG_listViewInformeGasto);
+
+        header = getLayoutInflater().inflate(R.layout.infor_gasto_cabecera,null);
+        listViewInformeGasto.addHeaderView(header);
 
         editTextTotal = (EditText) findViewById(R.id.editText_VEG_total);
         editTextReferencia = (EditText) findViewById(R.id.editText_VEG_referencia);
@@ -341,22 +345,22 @@ public class VMovil_Evento_Gasto extends Activity /*implements OnClickListener *
 
         // The desired columns to be bound
         String[] columns = new String[]{
-                DbAdapter_Informe_Gastos.GA_id_gasto,
+                //DbAdapter_Informe_Gastos.GA_id_gasto,
                 DbAdapter_Tipo_Gasto.TG_nom_tipo_gasto,
                 DbAdapter_Informe_Gastos.GA_total,
-                DbAdapter_Informe_Gastos.GA_subtotal,
+                /*DbAdapter_Informe_Gastos.GA_subtotal,
                 DbAdapter_Informe_Gastos.GA_igv,
-                DbAdapter_Informe_Gastos.GA_referencia
+                DbAdapter_Informe_Gastos.GA_referencia*/
         };
 
         // the XML defined views which the data will be bound to
         int[] to = new int[]{
-                R.id.VEG_textViewIdTipoGasto,
-                R.id.VEG_textViewNombreGasto,
-                R.id.VEG_textViewTotal,
-                R.id.VEG_textViewSubtotal,
+                //R.id.VEG_textViewIdTipoGasto,
+                R.id.gastoNombre,
+                R.id.gastoImporte
+                /*R.id.VEG_textViewSubtotal,
                 R.id.VEG_textViewIgv,
-                R.id.VEG_textViewReferencia,
+                R.id.VEG_textViewReferencia,*/
         };
 
         // create the adapter using the cursor pointing to the desired data

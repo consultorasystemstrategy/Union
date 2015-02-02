@@ -188,6 +188,7 @@ public class DbAdapter_Comprob_Venta {
 
     public void updateComprobante(int id, int estadoSincronizacion){
         ContentValues initialValues = new ContentValues();
+        initialValues.put(CV_estado_comp, 0);
         initialValues.put(Constants._SINCRONIZAR,estadoSincronizacion);
 
         mDb.update(SQLITE_TABLE_Comprob_Venta, initialValues,

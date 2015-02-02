@@ -1,228 +1,141 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     tools:context="union.union_vr1.Vistas.VMovil_Venta_CabeceraX">
-    <!--
-        <TextView android:layout_width="fill_parent"
-            android:layout_height="wrap_content" android:padding="10dp"
-            android:text="@string/VEG_titulo" android:textSize="20sp"
-            android:id="@+id/VEG_titulo"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Recalcular"
-            android:id="@+id/VEG_BTNrecalcuz"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignLeft="@+id/VEG_BTNcancelar"
-            android:layout_alignStart="@+id/VEG_BTNcancelar" />
-
-        <Spinner
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/VEG_SPNtipgas"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@+id/VEG_BTNrecalcuz" />
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/VEG_SPNgasto"
-            android:layout_below="@+id/VEG_LSTgassel"
-            android:layout_alignRight="@+id/VEG_BTNcancelar"
-            android:layout_alignEnd="@+id/VEG_BTNcancelar" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=" +  -  Actualizar  -  + "
-            android:id="@+id/VEG_BTNactualiz"
-            android:layout_below="@+id/VEG_SPNgasto"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=" +  -   Cancelar   -  + "
-            android:id="@+id/VEG_BTNcancelar"
-            android:layout_below="@+id/VEG_SPNgasto"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
-
-        <ListView
-            android:layout_width="wrap_content"
-            android:layout_height="150dp"
-            android:id="@+id/VEG_LSTgassel"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@+id/VEG_SPNtipgas" />
-    -->
-
-
-    <ScrollView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/scrollView" >
-
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
+            android:layout_height="fill_parent"
+            android:orientation="vertical">
 
 
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/VEG_linearLayoutHeader"
-                android:weightSum="1">
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:baselineAligned="false">
 
-
-                <TextView
-                    android:layout_width="80dp"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/VEG_textViewIdTipoGasto1"
-                    android:text="gasto"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="64dp"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/VEG_textViewTotal1"
-                    android:layout_centerVertical="true"
-                    android:layout_toRightOf="@+id/VEG_textViewIdTipoGasto1"
-                    android:text="Total"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="64dp"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/VEG_textViewSubtotal1"
-                    android:layout_centerVertical="true"
-                    android:layout_toRightOf="@+id/VEG_textViewTotal"
-                    android:text="Subtotal"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="64dp"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/VEG_textViewIgv1"
-                    android:layout_centerVertical="true"
-                    android:layout_toRightOf="@+id/VEG_textViewSubtotal1"
-                    android:text="igv"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="R."
-                    android:id="@+id/VEG_textViewReferencia1"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentRight="true"
-                    android:textStyle="bold"
-                    android:layout_weight="0.87" />
-
+                <ListView
+                       android:layout_width="fill_parent"
+                       android:layout_height="wrap_content"
+                       android:id="@+id/VEG_listViewInformeGasto"
+                    android:layout_weight="1" />
             </LinearLayout>
-             <ListView
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1">
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1">
+
+                    <Spinner
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:id="@+id/spinner_VEG_tipoGasto"
+                        android:layout_weight="1" />
+
+                    <Spinner
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:id="@+id/spinner_VEG_procedenciaGasto"
+                        android:layout_weight="1" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1">
+
+                    <Spinner
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:id="@+id/spinner_VEG_tipoDocumento"
+                        android:layout_weight="1" />
+
+                    <EditText
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:id="@+id/editText_VEG_referencia"
+                        android:layout_weight="1"
+                        android:text="Referencia - 001" />
+
+                </LinearLayout>
+
+                <EditText
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+
+                    android:id="@+id/editText_VEG_total"
+                    android:layout_weight="1"
+                    android:hint="Importe"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="50dp"
+                    android:layout_marginRight="50dp"
+                    android:gravity="center"
+                    android:inputType="numberDecimal"
+                    android:ems="6"/>
+
+
+                <Button
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:text="Agregar Gasto"
+                    android:id="@+id/VEE_BTNEstadoNoAtendido"
+                    android:onClick="agegarGastos"
+                    android:layout_weight="1" />
+
+                <!--
+                <TextView
                     android:layout_width="wrap_content"
-                    android:layout_height="200dp"
-                    android:id="@+id/VEG_listViewInformeGasto"
-                    android:layout_below="@+id/VEG_linearLayoutHeader"
+                    android:layout_height="wrap_content"
+                    android:text="Tipo de Gasto"
+                    android:id="@+id/VEG_textViewIdTipoGasto"
+                    android:singleLine="false"
                     android:layout_alignParentLeft="true"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Tipo de Gasto"
-                android:id="@+id/VEG_textViewIdTipoGasto"
-                android:singleLine="false"
-                android:layout_below="@+id/VEG_listViewInformeGasto"
-                android:layout_alignParentLeft="true"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/VEG_textViewTotal"
+                    android:layout_below="@+id/spinner_VEG_tipoGasto"
+                    android:layout_alignParentLeft="true"
+                    android:text="Procedencia de Gasto" />
 
-            <Spinner
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/spinner_VEG_tipoGasto"
-                android:layout_below="@+id/VEG_textViewIdTipoGasto"
-                android:layout_alignParentLeft="true" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tipo de Documento"
+                    android:id="@+id/VEG_textViewSubtotal"
+                    android:layout_below="@+id/spinner_VEG_procedenciaGasto"
+                    android:layout_alignParentLeft="true"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/VEG_textViewTotal"
-                android:layout_below="@+id/spinner_VEG_tipoGasto"
-                android:layout_alignParentLeft="true"
-                android:text="Procedencia de Gasto" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Importe "
+                    android:id="@+id/textView4"
+                    android:layout_below="@+id/spinner_VEG_tipoDocumento"
+                    android:layout_alignParentLeft="true"/>
 
-            <Spinner
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/spinner_VEG_procedenciaGasto"
-                android:layout_below="@+id/VEG_textViewTotal"
-                android:layout_alignParentLeft="true" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Referencia"
+                    android:id="@+id/VEG_textViewIgv"
+                    android:layout_below="@+id/editText_VEG_total"
+                    android:layout_alignParentLeft="true" />
+                    -->
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Tipo de Documento"
-                android:id="@+id/VEG_textViewSubtotal"
-                android:layout_below="@+id/spinner_VEG_procedenciaGasto"
-                android:layout_alignParentLeft="true"/>
-
-            <Spinner
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/spinner_VEG_tipoDocumento"
-                android:layout_below="@+id/VEG_textViewSubtotal"
-                android:layout_alignParentLeft="true" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Importe "
-                android:id="@+id/textView4"
-                android:layout_below="@+id/spinner_VEG_tipoDocumento"
-                android:layout_alignParentLeft="true"/>
-
-            <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:inputType="number"
-                android:ems="10"
-                android:id="@+id/editText_VEG_total"
-                android:layout_below="@+id/textView4"
-                android:layout_alignParentLeft="true" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Referencia"
-                android:id="@+id/VEG_textViewIgv"
-                android:layout_below="@+id/editText_VEG_total"
-                android:layout_alignParentLeft="true" />
-
-            <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/editText_VEG_referencia"
-                android:layout_below="@+id/VEG_textViewIgv"
-                android:layout_alignParentLeft="true"
-                android:layout_alignRight="@+id/editText_VEG_total" />
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Agregar Gasto"
-                android:id="@+id/VEE_BTNEstadoNoAtendido"
-                android:layout_below="@+id/editText_VEG_referencia"
-                android:layout_alignParentLeft="true"
-                android:onClick="agegarGastos" />
-        </RelativeLayout>
-    </ScrollView>
+            </LinearLayout>
+        </LinearLayout>
 
 </RelativeLayout>
