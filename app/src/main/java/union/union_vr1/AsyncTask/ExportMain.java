@@ -620,11 +620,12 @@ public class ExportMain extends AsyncTask<String, String, String> {
     protected void onPostExecute(String s) {
 
         if (mainActivity.isFinishing()){
+            //dismissProgressDialog();
             progressDialog.dismiss();
             return;
         }else{
             progressDialog.setProgress(100);
-            progressDialog.dismiss();
+            dismissProgressDialog();
             Toast.makeText(mainActivity.getApplicationContext(), "EXPORTACIÓN EXITOSA", Toast.LENGTH_LONG).show();
         }
         super.onPostExecute(s);
@@ -666,5 +667,11 @@ public class ExportMain extends AsyncTask<String, String, String> {
             Log.d("JSONParser => parser Error Message", e.getMessage());
         }
         return idPlanPagoDetalle;
+    }
+
+    public void dismissProgressDialog() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
     }
 }

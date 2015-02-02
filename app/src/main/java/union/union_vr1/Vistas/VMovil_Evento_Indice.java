@@ -1,10 +1,14 @@
 package union.union_vr1.Vistas;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.LightingColorFilter;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -66,6 +70,28 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.princ_evento_indice);
         mainActivity  = this;
+
+        if (!((MyApplication)getApplication()).isExport()||!((MyApplication)getApplication()).isImportado()){
+
+            if (conectadoWifi()||conectadoRedMovil()) {
+                new AlertDialog.Builder(mainActivity)
+                        .setTitle("Hemos detectado una Conexión a Internet")
+                        .setMessage("" +
+                                "¿Desea exportar los datos?")
+                        .setNegativeButton(android.R.string.no,null)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                new ExportMain(mainActivity).execute();
+                                new ImportMain(mainActivity).execute();
+                            }
+                        }).create().show();
+
+                ((MyApplication)getApplication()).setExport(true);
+                ((MyApplication)getApplication()).setImportado(true);
+            }
+        }
+
+
         ((MyApplication) this.getApplication()).setDisplayedHistorialComprobanteAnterior(false);
 
         dbHelper1 = new DbAdapter_Comprob_Venta(this);
@@ -241,5 +267,31 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         String formatteDate = df.format(date);
         return formatteDate;
+    }
+
+    protected Boolean conectadoWifi(){
+        ConnectivityManager connectivity = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivity != null) {
+            NetworkInfo info = connectivity.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+            if (info != null) {
+                if (info.isConnected()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    protected Boolean conectadoRedMovil(){
+        ConnectivityManager connectivity = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivity != null) {
+            NetworkInfo info = connectivity.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+            if (info != null) {
+                if (info.isConnected()) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

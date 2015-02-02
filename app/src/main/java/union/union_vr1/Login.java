@@ -95,10 +95,15 @@ public class Login extends Activity implements OnClickListener{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.login);
 
+        ((MyApplication)getApplication()).setImportado(false);
+        ((MyApplication)getApplication()).setExport(false);
+
         loginClass = this;
 
         dbAdapter_agente = new DbAdapter_Agente(this);
         dbAdapter_agente.open();
+
+
 
 
 		//setup input fields

@@ -16,6 +16,25 @@ public class MyApplication extends Application{
         private int idLiquidacion;
         private int idUsuario;
         private VMovil_Online_Pumovil mainActivity;
+        private boolean export;
+        private boolean importado;
+
+
+    public boolean isExport() {
+        return export;
+    }
+
+    public void setExport(boolean export) {
+        this.export = export;
+    }
+
+    public boolean isImportado() {
+        return importado;
+    }
+
+    public void setImportado(boolean importado) {
+        this.importado = importado;
+    }
 
     public VMovil_Online_Pumovil getMainActivity() {
         return mainActivity;

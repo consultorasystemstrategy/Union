@@ -122,18 +122,22 @@ public class ImportMain extends AsyncTask<String, String, String> {
         Log.d("idAgente, idLiquidacion, Fecha", idAgente+", "+idLiquidacion+", 19/01/2015");
 
         try{
-            publishProgress(""+10);
+            publishProgress(""+5);
             JSONObject jsonObjectStockAgente = api.GetStockAgente(idAgente);
             Log.d("JSON ERROR MESSAGE", getErrorMessage(jsonObjectStockAgente));
+            publishProgress(""+10);
             JSONObject jsonObjectTipoGasto = api.GetTipoGasto();
+            publishProgress(""+15);
             JSONObject jsonObjectPrecio = api.GetPrecioCategoria(idLiquidacion,idAgente);
             publishProgress(""+20);
             JSONObject jsonObjectEventoEstablecimiento = api.GetEstablecimeintoXRuta(1,"01/08/2014", idAgente);
+            publishProgress(""+25);
             JSONObject jsonObjectComprobanteCobro = api.GetHistorialCobrosPendientes();
-            JSONObject jsonObjectHistorialVentaDetalle = api.GetHistorialVentaDetalle(idAgente);
-            JSONObject jsonObjectHistorialComprobanteAnterior = api.GetComprobanteVentaDetalle_Env();
-
             publishProgress(""+30);
+            JSONObject jsonObjectHistorialVentaDetalle = api.GetHistorialVentaDetalle(idAgente);
+            publishProgress(""+35);
+            JSONObject jsonObjectHistorialComprobanteAnterior = api.GetComprobanteVentaDetalle_Env();
+            publishProgress(""+40);
             Log.d("JSON OBJECT STOCK AGENTE : ", jsonObjectStockAgente.toString());
             Log.d("JSON OBJECT PRECIO : ", jsonObjectPrecio.toString());
             Log.d("JSON OBJECT TIPO GASTO : ", jsonObjectTipoGasto.toString());
@@ -159,7 +163,7 @@ public class ImportMain extends AsyncTask<String, String, String> {
             historialVentaDetalleses = parserHistorialVentaDetalles.parserHistorialVentaDetalles(jsonObjectHistorialVentaDetalle);
             comprobanteVentaDetalles = parserComprobanteVentaDetalle.parserComprobanteVentaDetalle(jsonObjectHistorialComprobanteAnterior);
 
-            publishProgress(""+40);
+            publishProgress(""+45);
             Log.d("IMPORTANDO ", "INICIANDO ...");
             for (int i = 0; i < stockAgentes.size() ; i++) {
                 Log.d("Stock Agente"+i, "Nombre : "+stockAgentes.get(i).getNombre());
@@ -187,7 +191,7 @@ public class ImportMain extends AsyncTask<String, String, String> {
                     dbAdapter_tipo_gasto.createTipoGasto(tipoGastos.get(i));
                 }
             }
-            publishProgress(""+60);
+
             for (int i = 0; i < precios.size() ; i++) {
                 Log.d("PRECIO CATEGORÌA : " + i, "Nombre producto : " + precios.get(i).getNombreProducto());
 
@@ -200,7 +204,7 @@ public class ImportMain extends AsyncTask<String, String, String> {
                     dbAdapter_precio.createPrecios(precios.get(i), idAgente);
                 }
             }
-            publishProgress(""+70);
+            publishProgress(""+55);
             for (int i = 0; i < eventoEstablecimientos.size() ; i++) {
                 Log.d("ESTABLECIMIENTOS X RUTAS: " + i, " Nombre Establecimiento : " + eventoEstablecimientos.get(i).getNombreEstablecimiento());
                 boolean existe = dbAdaptert_evento_establec.existeEstablecsById(eventoEstablecimientos.get(i).getIdEstablecimiento());
@@ -214,7 +218,8 @@ public class ImportMain extends AsyncTask<String, String, String> {
                     dbAdaptert_evento_establec.createEstablecimientos(eventoEstablecimientos.get(i), 1);
                 }
             }
-            publishProgress(""+80);
+
+            publishProgress(""+60);
             for (int i = 0; i < comprobanteCobros.size() ; i++) {
                 Log.d("HISTORIAL COBROS PENDIENTES : " + i, " Monto a pagar : " + comprobanteCobros.get(i).getMontoPagar()+"-fecha-"+comprobanteCobros.get(i).getFechaCobro());
                 boolean existe = dbAdapter_comprob_cobro.existeComprobCobro(comprobanteCobros.get(i).getIdComprobanteCobro());
@@ -226,7 +231,7 @@ public class ImportMain extends AsyncTask<String, String, String> {
                     dbAdapter_comprob_cobro.createComprobCobro(comprobanteCobros.get(i));
                 }
             }
-            publishProgress(""+90);
+            publishProgress(""+65);
             for (int i = 0; i < historialVentaDetalleses.size() ; i++) {
                 Log.d("HISTORIAL VENTA DETALLES : " + i, " ID DETALLE : " + historialVentaDetalleses.get(i).getIdDetalle());
                 Log.d("JODER ", "SI HAY DATOS");
@@ -241,6 +246,7 @@ public class ImportMain extends AsyncTask<String, String, String> {
                 }
             }
 
+            publishProgress(""+90);
             for (int i = 0; i < comprobanteVentaDetalles.size() ; i++) {
                 Log.d("HISTORIAL VENTA ANTERIOR : " + i, " NOMBRE PRODUCTO : " + comprobanteVentaDetalles.get(i).getNombreProducto());
 
@@ -255,6 +261,7 @@ public class ImportMain extends AsyncTask<String, String, String> {
                 }
             }
 
+            publishProgress(""+95);
             //ACTUALIZAR LOS CRÉDITOS DE LOS ESTABLECIMIENTOS
 
             Cursor cursorEstablecimiento = dbAdaptert_evento_establec.fetchAllEstablecs();
@@ -303,9 +310,17 @@ public class ImportMain extends AsyncTask<String, String, String> {
 
     @Override
     protected void onPostExecute(String s) {
-        progressDialog.setProgress(100);
-        progressDialog.dismiss();
-        Toast.makeText(mainActivity.getApplicationContext(), "IMPORTACIÓN EXITOSA", Toast.LENGTH_LONG).show();
+        if(mainActivity.isFinishing()){
+            //dismissProgressDialog();
+            progressDialog.dismiss();
+            return;
+        }else {
+
+            progressDialog.setProgress(100);
+            dismissProgressDialog();
+            Toast.makeText(mainActivity.getApplicationContext(), "IMPORTACIÓN EXITOSA", Toast.LENGTH_LONG).show();
+
+        }
         super.onPostExecute(s);
 /*
 //stock agente
@@ -421,5 +436,12 @@ public class ImportMain extends AsyncTask<String, String, String> {
             Log.d("JSON PARSER => parser Error Message", e.getMessage());
         }
         return succesful;
+    }
+
+
+    private void dismissProgressDialog() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
     }
 }

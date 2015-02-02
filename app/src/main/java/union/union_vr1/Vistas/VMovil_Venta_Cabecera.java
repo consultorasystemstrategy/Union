@@ -110,6 +110,15 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
 
     private boolean isEstablecidasCuotas;
 
+    private ExportMain exportMain;
+
+    @Override
+    protected void onDestroy() {
+        exportMain.dismissProgressDialog();
+        Log.d("ON DESTROY", "DISMISS PROGRESS DIALOG");
+        super.onDestroy();
+    }
+
     @Override
     public void onBackPressed() {
         new AlertDialog.Builder(this)
@@ -135,7 +144,10 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.princ_venta_cabecera);
 
+
+
         mainActivity = this;
+        exportMain = new ExportMain(mainActivity);
 
         mContext = this;
         dbHelper_Histo_comprob_anterior = new DbAdapter_Histo_Comprob_Anterior(this);
@@ -241,6 +253,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
         spinnerFormaPago.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
                 String formaDePago = adapterView.getItemAtPosition(i).toString();
                 FormaPago formaPago = FormaPago.valueOf(formaDePago);
 
@@ -359,45 +372,56 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
 
 
-                //Aquí obtengo el cursor posicionado en la fila que ha seleccionado/clickeado
-                Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
-                final long id_tem_detalle = cursor.getLong(cursor.getColumnIndex(DBAdapter_Temp_Venta.temp_venta_detalle));
+
+                int numeroViews =  adapterView.getCount();
+                numeroViews--;
+                if (adapterView.getPositionForView(view) != 0 && adapterView.getPositionForView(view) != numeroViews) {
+
+                    Log.d("POSITION SELECTED", adapterView.getPositionForView(view)+" - " + adapterView.getCount());
+                    Log.d("POSITION ", i +" - " + adapterView.getCount());
 
 
-                new AlertDialog.Builder(mContext)
-                        .setTitle("Seleccionar una acción")
-                        .setItems(R.array.acciones, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                switch (i){
-                                    case 0:
-                                           myEditDialog(id_tem_detalle).show();
-                                        break;
-                                    case 1:
-                                        new AlertDialog.Builder(mContext)
-                                                .setTitle("Eliminar")
-                                                .setMessage("¿Está seguro que desea eliminar este producto de la venta?")
-                                                .setNegativeButton(android.R.string.no, null)
-                                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                                    public void onClick(DialogInterface dialog, int id) {
-                                                        // FIRE ZE MISSILES!
-                                                        boolean succesful = dbHelper_temp_venta.deleteTempVentaDetalleById(id_tem_detalle);
-                                                        if (succesful) {
-                                                            Toast.makeText(getApplicationContext(), "Producto eliminado de la venta actual correctamente", Toast.LENGTH_LONG).show();
-                                                            finish();
-                                                            Intent intent = new Intent(mContext, VMovil_Venta_Cabecera.class);
-                                                            startActivity(intent);
-                                                        }else{
-                                                            Toast.makeText(getApplicationContext(), "No se pudo eliminar intente nuevamente", Toast.LENGTH_LONG).show();
+                    //Aquí obtengo el cursor posicionado en la fila que ha seleccionado/clickeado
+
+                    Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
+                    final long id_tem_detalle = cursor.getLong(cursor.getColumnIndex(DBAdapter_Temp_Venta.temp_venta_detalle));
+
+                    new AlertDialog.Builder(mContext)
+                            .setTitle("Seleccionar una acción")
+                            .setItems(R.array.acciones, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    switch (i) {
+                                        case 0:
+                                            myEditDialog(id_tem_detalle).show();
+                                            break;
+                                        case 1:
+                                            new AlertDialog.Builder(mContext)
+                                                    .setTitle("Eliminar")
+                                                    .setMessage("¿Está seguro que desea eliminar este producto de la venta?")
+                                                    .setNegativeButton(android.R.string.no, null)
+                                                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                                        public void onClick(DialogInterface dialog, int id) {
+                                                            // FIRE ZE MISSILES!
+                                                            boolean succesful = dbHelper_temp_venta.deleteTempVentaDetalleById(id_tem_detalle);
+                                                            if (succesful) {
+                                                                Toast.makeText(getApplicationContext(), "Producto eliminado de la venta actual correctamente", Toast.LENGTH_LONG).show();
+                                                                finish();
+                                                                Intent intent = new Intent(mContext, VMovil_Venta_Cabecera.class);
+                                                                startActivity(intent);
+                                                            } else {
+                                                                Toast.makeText(getApplicationContext(), "No se pudo eliminar intente nuevamente", Toast.LENGTH_LONG).show();
+                                                            }
                                                         }
-                                                    }
-                                                }).create().show();
-                                        break;
+                                                    }).create().show();
+                                            break;
 
+                                    }
                                 }
-                            }
-                        }).create().show();
-                return false;
+                            }).create().show();
+
+                }
+                    return false;
             }
         });
 
@@ -664,7 +688,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
         dbHelper_Temp_Comprob_Cobros.deleteAllComprobCobros();
 
         if (conectadoWifi()||conectadoRedMovil()){
-            new ExportMain(mainActivity).execute();
+            exportMain.execute();
         }
 
 
