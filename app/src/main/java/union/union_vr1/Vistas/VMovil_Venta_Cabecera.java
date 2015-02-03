@@ -530,7 +530,13 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
         builder.setTitle("Cantidad");
         builder.setPositiveButton("OK", new Dialog.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                String texto = savedText.getText().toString().trim();
+                String texto = null;
+                if (savedText.getText().toString().trim().equals("")){
+                    texto = "1";
+                }else{
+                    texto = savedText.getText().toString().trim();
+                }
+
                 int cantidad = Integer.parseInt(texto);
 
                 dbHelper_temp_venta.updateTempVentaDetalleCantidad(id_temp_venta_detalle, cantidad, cantidad * precio_unitario);
