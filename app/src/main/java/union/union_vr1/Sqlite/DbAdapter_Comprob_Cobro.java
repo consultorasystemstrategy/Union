@@ -86,7 +86,7 @@ public class DbAdapter_Comprob_Cobro {
     }
 
     public long createComprobCobros(
-            int id_establec, long id_comprob, int id_plan_pago, int id_plan_pago_detalle,
+            int id_establec, int id_comprob, int id_plan_pago, int id_plan_pago_detalle,
             String desc_tipo_doc, String doc, String fecha_programada, double monto_a_pagar,
             String fecha_cobro, String hora_cobro, double monto_cobrado, int estado_cobro,
             int id_agente,int id_forma_cobro, String lugar_registro) {
@@ -373,9 +373,10 @@ public class DbAdapter_Comprob_Cobro {
                         CC_id_establec, CC_id_comprob, CC_id_plan_pago, CC_id_plan_pago_detalle,
                         CC_desc_tipo_doc, CC_doc, CC_fecha_programada, CC_monto_a_pagar,
                         CC_fecha_cobro, CC_monto_cobrado, CC_estado_cobro},
-                CC_id_establec + " = " + inputText +" and cc_in_estado_cobro ='1'  order by cc_te_fecha_programada asc", null,
+                CC_id_establec + " = " + inputText +" and cc_in_estado_cobro ='1'  order by cc_te_fecha_programada desc", null,
                 null, null, null, null);
         if (mCursor != null) {
+
             mCursor.moveToFirst();
         }
         return mCursor;

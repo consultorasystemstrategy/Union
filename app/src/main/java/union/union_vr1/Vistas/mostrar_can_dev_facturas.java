@@ -319,6 +319,7 @@ public class mostrar_can_dev_facturas extends TabActivity {
                         in.putExtra("idEstabX", idEstablec);
                         in.putExtra("idAgente", idAgente);
                         startActivity(in);
+                        finish();
                     }
 
                 });
@@ -347,6 +348,7 @@ public class mostrar_can_dev_facturas extends TabActivity {
                         in.putExtra("idEstabX", idEstablec);
                         in.putExtra("idAgente", idAgente);
                         startActivity(in);
+                        finish();
                     }
 
                 })
@@ -413,6 +415,7 @@ public class mostrar_can_dev_facturas extends TabActivity {
                 Intent  i = new Intent(getApplicationContext(),VMovil_BluetoothImprimir.class);
                 i.putExtra("textoImpresion",text());
                 startActivity(i);
+                    finish();
                 }else{
                     Toast.makeText(getApplicationContext(),"Usted no Puede Imprimir Canjes",Toast.LENGTH_SHORT).show();
 

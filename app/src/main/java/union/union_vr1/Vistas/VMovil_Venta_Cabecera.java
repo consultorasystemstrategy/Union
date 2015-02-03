@@ -708,7 +708,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
 
                 Log.d("RECORRE EL CURSOR TEMP COMPROB COBROS", "YES");
 
-                 long registroInsertado = dbHelper_Comprob_Cobros.createComprobCobros(idEstablecimiento,id,id_plan_pago,id_plan_pago_detalle,tipoDocumento.toUpperCase(),codigo_erp,fecha_programada,monto_a_pagar, fecha_cobro, hora_cobro,monto_cobrado,estado_cobro,id_agente_venta,id_forma_cobro, lugar_registro);
+                 long registroInsertado = dbHelper_Comprob_Cobros.createComprobCobros(idEstablecimiento,Integer.parseInt(id+""),id_plan_pago,id_plan_pago_detalle,tipoDocumento.toUpperCase(),codigo_erp,fecha_programada,monto_a_pagar, fecha_cobro, hora_cobro,monto_cobrado,estado_cobro,id_agente_venta,id_forma_cobro, lugar_registro);
                  Log.d("CC INSERTADO SATISFACTORIAMENTE ", "ID : "+ registroInsertado);
             }
         }

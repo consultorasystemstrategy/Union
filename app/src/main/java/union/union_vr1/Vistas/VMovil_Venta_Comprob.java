@@ -49,31 +49,6 @@ public class VMovil_Venta_Comprob extends Activity {
     private int idAgente;
 
 
-
-    /*private Cursor cursor, cursorx;
-    private DbAdapter_Comprob_Venta dbHelper;
-    private SimpleCursorAdapter dataAdapter;
-    private String idComprob;
-    private String txtResultado;
-    private DbAdapter_Comprob_Venta_Detalle dbHelpery;
-    private String valIdEstabX;
-
-    BluetoothAdapter mBluetoothAdapter;
-    BluetoothSocket mmSocket;
-    BluetoothDevice mmDevice;
-
-    OutputStream mmOutputStream;
-    InputStream mmInputStream;
-    Thread workerThread;
-
-    byte[] readBuffer;
-    int readBufferPosition;
-    int counter;
-    volatile boolean stopWorker;
-    */
-
-
-    //
     TabHost tH;
 
     @Override
@@ -134,7 +109,7 @@ public class VMovil_Venta_Comprob extends Activity {
         TabHost.TabSpec spec4 = tH.newTabSpec("4");
         spec4.setContent(R.id.autoriz);
         spec4.setIndicator("Autorización");
-        displayListView();
+        displayAutorizaciones();
         tH.addTab(spec4);
 
 
@@ -224,6 +199,10 @@ public class VMovil_Venta_Comprob extends Activity {
 
         // show it
         alertDialog.show();
+
+    }
+    private void displayAutorizaciones(){
+       // Cursor cursor =
 
     }
 

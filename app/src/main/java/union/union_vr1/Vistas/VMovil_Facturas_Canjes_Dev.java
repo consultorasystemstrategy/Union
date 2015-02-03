@@ -91,9 +91,7 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
 
 
     }
-    private void addNewTick(){
 
-    }
 
     private void listarFacturas_Productos(int producto, final int idAgente, final String idEstablec, final String nomProducto) {
         Cursor cr = dbHelperCanjes_Dev.listaFacturasByProducto(producto, idAgente, idEstablec);

@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import union.union_vr1.Sqlite.DBAdapter_Temp_Autorizacion_Cobro;
 import union.union_vr1.Sqlite.DBAdapter_Temp_Venta;
 import union.union_vr1.Sqlite.DbAdapter_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
@@ -25,7 +26,7 @@ import union.union_vr1.Sqlite.DbAdapter_Histo_Venta_Detalle;
  */
 public class DbHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 30;
+    private static final int DATABASE_VERSION = 3;
     private static final String DATABASE_NAME = "ProdUniondb.sqlite";
 
     public DbHelper(Context context) {
@@ -61,9 +62,9 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(DbAdapter_Histo_Comprob_Anterior.CREATE_TABLE_HISTO_COMPROB_ANTERIOR);
         //Log.w(DbAdapter_Resumen_Caja.TAG, DbAdapter_Resumen_Caja.CREATE_TABLE_RESUMEN_CAJA);
         db.execSQL(DbAdapter_Resumen_Caja.CREATE_TABLE_RESUMEN_CAJA);
-
         db.execSQL(DBAdapter_Temp_Venta.CREATE_TABLE_TEMP_VENTA_DETALLE);
         db.execSQL(DbAdapter_Temp_Comprob_Cobro.CREATE_TABLE_TEMP_COMPROB_COBRO);
+        db.execSQL(DBAdapter_Temp_Autorizacion_Cobro.CREATE_TABLE_TEMP_Autorizacion_Cobro);
 
 
     }
@@ -87,6 +88,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(DbAdapter_Resumen_Caja.DELETE_TABLE_RESUMEN_CAJA);
         db.execSQL(DBAdapter_Temp_Venta.DELETE_TABLE_TEMP_VENTA_DETALLE);
         db.execSQL(DbAdapter_Temp_Comprob_Cobro.DELETE_TABLE_TEMP_COMPROB_COBRO);
+        db.execSQL(DBAdapter_Temp_Autorizacion_Cobro.DELETE_TABLE_AUTORIZACION_COBRO);
 
         onCreate(db);
     }
