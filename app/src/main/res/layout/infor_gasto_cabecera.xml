@@ -24,7 +24,7 @@
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:text="Importe"
+            android:text="Costo"
             android:id="@+id/gastoImporteCabecera"
             android:layout_weight="1"
             android:gravity="center_vertical|center"

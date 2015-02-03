@@ -10,7 +10,7 @@
         android:orderInCategory="100"
         android:showAsAction="never" />
     <item android:id="@+id/buttonRedireccionarPrincipal"
-        android:title="Ir a principal"
+        android:title="Ir a Offline"
         android:orderInCategory="100"
         android:showAsAction="never" />
 </menu>
