@@ -20,13 +20,16 @@ import android.widget.FilterQueryProvider;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TabHost;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
 import union.union_vr1.R;
 import union.union_vr1.Sqlite.CursorAdapterComprobanteVenta;
+import union.union_vr1.Sqlite.CursorAdapter_Autorizacion_Cobros;
 import union.union_vr1.Sqlite.CursorAdapter_Man_Can_Dev;
 import union.union_vr1.Sqlite.CursorAdapter_Man_Cbrz;
+import union.union_vr1.Sqlite.DBAdapter_Temp_Autorizacion_Cobro;
 import union.union_vr1.Sqlite.DbAdapter_Canjes_Devoluciones;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta;
@@ -44,7 +47,7 @@ public class VMovil_Venta_Comprob extends Activity {
     private DbAdapter_Stock_Agente dbHelper_Stock_Agente;
     private DbAdapter_Comprob_Cobro dbHelper_Comprob_Cobro;
     private DbAdapter_Canjes_Devoluciones dbHelper_Canjes_Dev;
-    private SimpleCursorAdapter adapter;
+    private DBAdapter_Temp_Autorizacion_Cobro dbAutorizaciones;
     private int idComprobante;
     private int idAgente;
 
@@ -61,6 +64,8 @@ public class VMovil_Venta_Comprob extends Activity {
         //-----------borrar luego
          DbAdapter_Histo_Venta_Detalle k = new DbAdapter_Histo_Venta_Detalle(getApplication());
         k.open();
+        dbAutorizaciones = new DBAdapter_Temp_Autorizacion_Cobro(this);
+        dbAutorizaciones.open();
         //k.deleteAllHistoVentaDetalle();
         //k.insertSomeHistoVentaDetalle();
         //-----------------
@@ -202,9 +207,121 @@ public class VMovil_Venta_Comprob extends Activity {
 
     }
     private void displayAutorizaciones(){
-       // Cursor cursor =
+
+        Cursor cursor = dbAutorizaciones.listarAutorizaciones();
+        CursorAdapter_Autorizacion_Cobros adapterAutorizacion = new CursorAdapter_Autorizacion_Cobros(getApplicationContext(),cursor);
+        ListView listAuCobros = (ListView) findViewById(R.id.listAutorizacionCobros);
+        listAuCobros.setAdapter(adapterAutorizacion);
+        listAuCobros.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Cursor crCobros = (Cursor)adapterView.getItemAtPosition(i);
+                crCobros.moveToPosition(i);
+                String id = crCobros.getString(crCobros.getColumnIndexOrThrow(DBAdapter_Temp_Autorizacion_Cobro.temp_autorizacion_cobro));
+                String estado = crCobros.getString(crCobros.getColumnIndexOrThrow(DBAdapter_Temp_Autorizacion_Cobro.temp_id_estado_solicitud));
+                String idDetalleCobro = crCobros.getString(crCobros.getColumnIndexOrThrow(DBAdapter_Temp_Autorizacion_Cobro.temp_vigencia_credito));
+                String idComprobante = crCobros.getString(crCobros.getColumnIndexOrThrow(DBAdapter_Temp_Autorizacion_Cobro.temp_id_comprobante));
+                if(estado.equals("1")){
+                    select(id,idDetalleCobro);
+                   // Toast.makeText(getApplicationContext(),"Solicitud Aun por Aprobarse",Toast.LENGTH_SHORT).show();
+                }if(estado.equals("2")){
+                   // select();
+
+                }if(estado.equals("4")){
+
+                    Toast.makeText(getApplicationContext(),"Solicitud No a sido Aprobada",Toast.LENGTH_SHORT).show();
+
+                }if(estado.equals("5")){
+                    selectEliminar(id,idDetalleCobro,idComprobante);
+                    Toast.makeText(getApplicationContext(),"Ya Ejecutada"+id+"-"+idDetalleCobro+"",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+
+
 
     }
+    public void selectEliminar(final String idAutorizacion, final String idDetalleCobro, final String idComprobante){
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+
+        // set title
+        alertDialogBuilder.setTitle("Cancelar el Proceso");
+
+        // set dialog message
+        AlertDialog.Builder builder = alertDialogBuilder
+                .setMessage("Se ha Negado la Prologa de Credito, tiene que Anular el Proceso.")
+                .setCancelable(false)
+                .setPositiveButton("Anular", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        boolean up = dbAutorizaciones.anularAutorizacion(idAutorizacion, idDetalleCobro, idComprobante);
+                        if (up) {
+                            back();
+                            Toast.makeText(getApplicationContext(), "Anulado Correctamente", Toast.LENGTH_SHORT).show();
+
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Ocurrio un Error", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                });
+
+
+        // create alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+
+        // show it
+        alertDialog.show();
+
+    }
+    public void select(final String idAutorizacion, final String idDetalleCobro){
+
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+
+            // set title
+            alertDialogBuilder.setTitle("Confirmar Prologa de Pagos");
+
+            // set dialog message
+            AlertDialog.Builder builder = alertDialogBuilder
+                    .setMessage("Al Confirmar se agregara el nuevo comprobante de cobro con la deuda actualizada")
+                    .setCancelable(false)
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            boolean up = dbAutorizaciones.updateAutorizacionAprobado(idAutorizacion, idDetalleCobro);
+                            if (up) {
+                                back();
+                                Toast.makeText(getApplicationContext(), "Guardado Correctamente", Toast.LENGTH_SHORT).show();
+
+                            } else {
+                                Toast.makeText(getApplicationContext(), "Ocurrio un Error", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                    })
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            Toast.makeText(getApplicationContext(),
+                                    "Cancelo", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+
+            // create alert dialog
+            AlertDialog alertDialog = alertDialogBuilder.create();
+
+            // show it
+            alertDialog.show();
+
+        }
+
+private void back(){
+    Intent w = new Intent(getApplicationContext(), VMovil_Evento_Establec.class);
+    w.putExtra("idEstab", ""+idEstablec);
+    w.putExtra("idAgente", idAgente);
+
+    startActivity(w);
+}
 
 
     private void displayListView() {

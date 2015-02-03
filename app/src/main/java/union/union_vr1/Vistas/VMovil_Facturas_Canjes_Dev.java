@@ -110,6 +110,7 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
                             back.putExtra("idEstabX", idEstablec);
                             back.putExtra("idAgente", idAgente);
                             startActivity(back);
+                            finish();
                         }
                         if (i == 3) {
                             mostrar_alertdialog_spinners(nomProducto);
@@ -161,6 +162,7 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
                         back.putExtra("idEstabX", idEstablec);
                         back.putExtra("idAgente", idAgente);
                         startActivity(back);
+                        finish();
                     }
                     if (i == 3) {
                         mostrar_alertdialog_spinners(nomProducto);

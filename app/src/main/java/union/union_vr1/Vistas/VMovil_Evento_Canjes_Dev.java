@@ -1,8 +1,10 @@
 package union.union_vr1.Vistas;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.TabActivity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -26,6 +28,7 @@ import union.union_vr1.R;
 import union.union_vr1.Sqlite.CursorAdapterFacturas;
 import union.union_vr1.Sqlite.CursorAdapterFacturas_dev;
 import union.union_vr1.Sqlite.DbAdapter_Canjes_Devoluciones;
+import union.union_vr1.Sqlite.DbAdapter_Histo_Venta_Detalle;
 import union.union_vr1.Sqlite.DbAdapter_Stock_Agente;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 
@@ -134,6 +137,7 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity {
                 faCanjeDev.putExtra("idProducto", idProducto);
                 faCanjeDev.putExtra("nomProducto", nom);
                 startActivity(faCanjeDev);
+                finish();
             }
         });
 
@@ -143,7 +147,7 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity {
     private void listar_Facturas_can() {
         Cursor cr = dbHelper_CanDev.obtener_facturas_can(establec);
         final ListView lista_facturas = (ListView) findViewById(R.id.guias_can_dev);
-        if (cr.moveToFirst()) {
+
             CursorAdapterFacturas adapter = new CursorAdapterFacturas(getApplicationContext(), cr);
             lista_facturas.setAdapter(adapter);
             btn_mostrar_guias = (Button) findViewById(R.id.button_mostrar_guias);
@@ -161,17 +165,71 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity {
 
                 }
             });
-        } else {
+        lista_facturas.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Cursor cr = (Cursor)adapterView.getItemAtPosition(i);
+                cr.moveToPosition(i);
+                String idHistoVenta = cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Histo_Venta_Detalle.HD_id_hventadet));
+                String idProducto = cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Histo_Venta_Detalle.HD_id_producto));
+                String idHistoDetalle = cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Histo_Venta_Detalle.HD_id_detalle));
+                int cantProductos = cr.getInt(cr.getColumnIndexOrThrow(DbAdapter_Histo_Venta_Detalle.HD_cantidad_ope));
 
+                select("1","Canje",idHistoVenta,idProducto,idHistoDetalle,cantProductos);
+                return false;
+            }
+        });
 
-        }
 
 
     }
+    private void select (final String idOperacion,String Operacion, final String idHistoVenta, final String idProducto, final String idHistoDetalle, final int cantProductos ){
+
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+            alertDialogBuilder.setTitle("Anular "+Operacion+" ");
+            AlertDialog.Builder builder = alertDialogBuilder
+                    .setMessage("¿Desea Anular?")
+                    .setCancelable(false)
+                    .setPositiveButton("Quitar", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            boolean estado =false;
+                            if (idOperacion.equals("1")) {//cannje
+                                estado =  dbHelper_CanDev.cancelarCabiosByIdCanjes(idProducto,cantProductos,idHistoVenta,idHistoDetalle);
+                                if(estado){
+                                    Toast.makeText(getApplicationContext(),"Quitado de la Lista",Toast.LENGTH_SHORT).show();
+                                    regresar();
+                                }else{
+                                    Toast.makeText(getApplicationContext(),"Ocurrio un Error",Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                            if(idOperacion.equals("2")){//devoluciones
+                                estado =  dbHelper_CanDev.cancelarCabiosByIdDevoluciones(idProducto,cantProductos,idHistoVenta,idHistoDetalle);
+                                if(estado){
+                                    Toast.makeText(getApplicationContext(),"Quitado de la Lista",Toast.LENGTH_SHORT).show();
+                                    regresar();
+                                }else{
+                                    Toast.makeText(getApplicationContext(),"Ocurrio un Error",Toast.LENGTH_SHORT).show();
+                                }
+
+                            }
+
+                        }
+
+                    })
+                    .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                        }
+                    });
+            AlertDialog alertDialog = alertDialogBuilder.create();
+            alertDialog.show();
+
+        }
+
     private void listar_Facturas_dev() {
         Cursor cr = dbHelper_CanDev.obtener_facturas_dev(establec);
         final ListView lista_facturas = (ListView) findViewById(R.id.guias_can_2);
-        if (cr.moveToFirst()) {
+
             CursorAdapterFacturas_dev adapter = new CursorAdapterFacturas_dev(getApplicationContext(), cr);
             lista_facturas.setAdapter(adapter);
             btn_mostrar_guias = (Button) findViewById(R.id.button_mostrar_guias);
@@ -182,17 +240,27 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity {
                     back();
                 }
             });
-        } else {
+        lista_facturas.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Cursor cr = (Cursor)adapterView.getItemAtPosition(i);
+                cr.moveToPosition(i);
+                String idHistoVenta = cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Histo_Venta_Detalle.HD_id_hventadet));
+                String idProducto = cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Histo_Venta_Detalle.HD_id_producto));
+                String idHistoDetalle = cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Histo_Venta_Detalle.HD_id_detalle));
+                int cantProductos = cr.getInt(cr.getColumnIndexOrThrow(DbAdapter_Histo_Venta_Detalle.HD_cantidad_ope));
+                select("2", "Devolucion",idHistoVenta,idProducto,idHistoDetalle,cantProductos);
+                return false;
+            }
+        });
 
-
-        }
     }
     public void back(){
         Intent i = new Intent(getApplicationContext(), mostrar_can_dev_facturas.class);
         i.putExtra("idEstablec", establec);
         i.putExtra("idAgente", idAgente);
         this.startActivity(i);
-        this.finish();
+        finish();
     }
 
 
@@ -220,7 +288,7 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity {
         i.putExtra("idEstab", establec);
         i.putExtra("idAgente", idAgente);
         this.startActivity(i);
-        this.finish();
+        finish();
     }
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {

@@ -132,7 +132,7 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
                 idMontoCancelado = cursor.getString(cursor.getColumnIndexOrThrow("cc_re_monto_cobrado"));
                 idVal1 = cursor.getDouble(cursor.getColumnIndexOrThrow("cc_re_monto_a_pagar"));
                 idVal2 = cursor.getDouble(cursor.getColumnIndexOrThrow("cc_re_monto_cobrado"));
-                idDeuda = idVal1 - idVal2;
+                idDeuda = idVal1 ;
                 mSPNcredit.setText(String.valueOf(idDeuda));
                 if (Integer.parseInt(idEstado) == 1) {
                     Estado = "Pendiente " + idDeuda;
@@ -154,7 +154,8 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
 
                 mSPNcredit.setText("");
                 Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
-                autorizacion(cursor);
+
+                autorizacion(cursor,i);
                 return false;
             }
         });
@@ -209,11 +210,11 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
         finish();
     }
 
-    private void autorizacion(Cursor cursor) {
+    private void autorizacion(Cursor cursor,int p ) {
         //Variables Operacion
         final Double[] valorProloga = {0.0,0.0};
         //Obteniendo Datos del Cursor
-        cursor.moveToFirst();
+        cursor.moveToPosition(p);
         comprobanteVenta = cursor.getInt(cursor.getColumnIndexOrThrow("cc_in_id_comprob"));
         idPlanPago = cursor.getInt(cursor.getColumnIndexOrThrow("cc_in_id_plan_pago"));
         idPlanPagoDetalle = cursor.getInt(cursor.getColumnIndexOrThrow("cc_in_id_plan_pago_detalle"));
@@ -224,7 +225,7 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
         idVal1 = cursor.getDouble(cursor.getColumnIndexOrThrow("cc_re_monto_a_pagar"));
         idVal2 = cursor.getDouble(cursor.getColumnIndexOrThrow("cc_re_monto_cobrado"));
 
-        idDeuda = idVal1 - idVal2;
+        idDeuda = idVal1 ;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         TextView title = new TextView(this);
         title.setText("Esta Realizando la Prologa de la Deuda a Pagar:");
@@ -252,6 +253,7 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
                 Log.d("Parametros","idDeuda"+idDeuda+"Monto a Pagar:"+idVal1+"Monto Pagado"+idVal2+"");
 
                 if( valorHoy.length() >0 ){
+
                     valorProloga[0] = idDeuda-Double.parseDouble(valorHoy.toString());
                     if(valorProloga[0]<=0 || valorProloga[0] >= idDeuda){
                         valorProloga[1]= Double.parseDouble(valorHoy.toString());
@@ -273,20 +275,26 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
         builder.setPositiveButton("Guardar",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
+
                         DecimalFormat df = new DecimalFormat("#.00");
                         int dia = fechaProloga.getDayOfMonth();
-                        int mes = fechaProloga.getMonth();
+                        int mes = fechaProloga.getMonth()+1;
                         int año = fechaProloga.getYear();
-                        double  valorR = Double.parseDouble(df.format(valorProloga[0]));
-                        double valorP= Double.parseDouble(df.format(valorProloga[1]));;
+                        double valorP = Double.parseDouble(cantidadHoy.getText().toString());
+                        double valorR = Double.parseDouble(cantidadProloga.getText().toString());
                         String fechaP = dia+"/"+mes+"/"+año;
                         if(fechaP!="" || valorP !=0.0 ){
 
                             int idAgente = ((MyApplication)getApplicationContext()).getIdAgente();
-                            long idAutorizacion = dbAutorizacionCobro.createTempAutorizacionPago(idAgente,4,1,comprobanteVenta,valorP,0.0,Integer.parseInt(estabX),Constants._CREADO);
-                            long idDetalleCobro = dbComprobanteCobro.createComprobCobros(Integer.parseInt(estabX),comprobanteVenta,idPlanPago,idPlanPagoDetalle,tipoDoc,doc,fechaP,valorR,"","",0.0,1,idAgente,2,"");
-                            if(idAutorizacion!=0 && idDetalleCobro !=0){
+                            long idDetalleCobro = dbComprobanteCobro.createComprobCobros(Integer.parseInt(estabX),comprobanteVenta,idPlanPago,idPlanPagoDetalle,tipoDoc,doc,fechaP,valorP,"","",0.0,2,idAgente,2,"");
+                            Log.d("parametroscobros",""+valorP+"-"+valorR);
+                            boolean upCobros = dbComprobanteCobro.updateCobro(idCobro,valorP,valorR);
+                            long idAutorizacion = dbAutorizacionCobro.createTempAutorizacionPago(idAgente,4,1,comprobanteVenta,valorP,Integer.parseInt(idDetalleCobro+""),Integer.parseInt(estabX),Constants._CREADO,Integer.parseInt(idCobro));
+
+                            if(idAutorizacion!=0 && idDetalleCobro !=0 && upCobros==true){
                                 Toast.makeText(getApplicationContext(),"Guardado Correctamente",Toast.LENGTH_SHORT).show();
+                                Back();
+
                             }else{
                                 Toast.makeText(getApplicationContext(),"Ocurrio un Error",Toast.LENGTH_SHORT).show();
                             }

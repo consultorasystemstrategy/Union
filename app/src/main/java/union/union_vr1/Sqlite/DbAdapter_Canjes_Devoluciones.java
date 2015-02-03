@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import union.union_vr1.Conexion.DbHelper;
+import union.union_vr1.Objects.StockAgente;
 
 /**
  * Created by Usuario on 18/12/2014.
@@ -37,6 +38,66 @@ public class DbAdapter_Canjes_Devoluciones {
         mDbHelper = new DbHelper(mCtx);
         mDb = mDbHelper.getWritableDatabase();
         return this;
+    }
+    public boolean cancelarCabiosByIdDevoluciones(String idProducto, int canProducto,String idHistoVenta,String idDetalle) {
+        boolean estado = false;
+
+        try {
+            Cursor crProductos = mDb.rawQuery("select * from m_stock_agente where st_in_id_producto='" + idProducto + "'", null);
+            crProductos.moveToFirst();
+            int cantidadDev = crProductos.getInt(crProductos.getColumnIndexOrThrow(DbAdapter_Stock_Agente.ST_devoluciones));
+            cantidadDev=cantidadDev-canProducto;
+
+                if (idDetalle.equals("") ) {
+                    mDb.execSQL("DELETE FROM m_histo_venta_detalle WHERE _id='" + idHistoVenta + "'");
+
+                }
+                mDb.execSQL("update m_stock_agente set " + DbAdapter_Stock_Agente.ST_devoluciones + "='"+cantidadDev+"' where st_in_id_producto='" + idProducto + "'; ");
+                mDb.execSQL("update m_histo_venta_detalle set hd_in_id_tipoper='',hd_in_categoria_ope='',hd_in_cantidad_ope='',hd_re_importe_ope='',hg_te_fecha_ope='',hd_te_hora_ope='',hd_in_cantidad_ope_dev='',hd_in_categoria_ope_dev='',hd_re_importe_ope_dev='',hg_te_fecha_ope_dev='',hd_te_hora_ope_dev='' where hd_in_id_detalle='" + idDetalle + "';");
+
+
+
+            estado = true;
+
+        } catch (android.database.SQLException e) {
+            e.printStackTrace();
+            estado = false;
+        }
+
+        return estado;
+    }
+
+    public boolean cancelarCabiosByIdCanjes(String idProducto, int canProducto,String idHistoVenta,String idDetalle) {
+
+        boolean estado = false;
+        try {
+            Cursor crProductos = mDb.rawQuery("select * from m_stock_agente where st_in_id_producto='" + idProducto + "'", null);
+            crProductos.moveToFirst();
+            int cantidadProducto = crProductos.getInt(crProductos.getColumnIndexOrThrow(DbAdapter_Stock_Agente.ST_disponible));
+            int canjesDisponibles = crProductos.getInt(crProductos.getColumnIndexOrThrow(DbAdapter_Stock_Agente.ST_canjes));
+
+            int canjes = canjesDisponibles-canProducto;
+            int total = cantidadProducto;
+            Log.d("canjesdev",""+canjes+"-"+total);
+
+
+            if (idDetalle.equals("")) {
+                mDb.execSQL("DELETE FROM m_histo_venta_detalle WHERE _id='" + idHistoVenta + "'");
+
+            }else{}
+            mDb.execSQL("update m_stock_agente set " + DbAdapter_Stock_Agente.ST_canjes + "='" + canjes + "' where st_in_id_producto='" + idProducto + "'; ");
+            mDb.execSQL("update m_stock_agente set " + DbAdapter_Stock_Agente.ST_disponible + "='" + total + "' where st_in_id_producto='" + idProducto + "'; ");
+            mDb.execSQL("update m_histo_venta_detalle set hd_in_id_tipoper='',hd_in_categoria_ope='',hd_in_cantidad_ope='',hd_re_importe_ope='',hg_te_fecha_ope='',hd_te_hora_ope='' where hd_in_id_detalle='" + idDetalle + "';");
+
+           estado = true;
+
+        } catch (android.database.SQLException e) {
+            e.printStackTrace();
+            estado = false;
+        }
+
+        return estado;
+
     }
 
 

@@ -43,7 +43,7 @@ public class DbAdapter_Comprob_Cobro {
 
     //private static final int DATABASE_VERSION = 1;
     //private static final String DATABASE_NAME = "ProdUnion.sqlite";
-    private static final String SQLITE_TABLE_Comprob_Cobro = "m_comprob_cobro";
+    public  static final String SQLITE_TABLE_Comprob_Cobro = "m_comprob_cobro";
     private final Context mCtx;
 
     public static final String CREATE_TABLE_COMPROB_COBRO =
@@ -109,6 +109,19 @@ public class DbAdapter_Comprob_Cobro {
         initialValues.put(CC_lugar_registro,lugar_registro);
         initialValues.put(Constants._SINCRONIZAR, Constants._CREADO);
         return mDb.insert(SQLITE_TABLE_Comprob_Cobro, null, initialValues);
+    }
+    public boolean updateCobro(String idCobro,double valorP,double valorR){
+        boolean estado = false;
+        try {
+            mDb.execSQL("update "+SQLITE_TABLE_Comprob_Cobro+" set "+CC_monto_cobrado+"='"+valorP+"', "+CC_monto_a_pagar+"='"+valorR+"',"+Constants._SINCRONIZAR+"="+Constants._ACTUALIZADO+" where "+CC_id_cob_historial+"='"+idCobro+"'");
+            estado = true;
+
+        } catch (android.database.SQLException e) {
+            e.printStackTrace();
+            estado = false;
+        }
+
+        return estado;
     }
 
     public long createComprobCobro(ComprobanteCobro comprobanteCobro) {
