@@ -280,15 +280,13 @@ public class ImportMain extends AsyncTask<String, String, String> {
                 Log.d("IMPORT AUTORIZACION COBROS  ", jsonObject.toString());
 
 
-                Log.d("IS SUCCESSFULL EXPORT AUTORIZACION COBRO", ""+isSuccesfulImport(jsonObjectAutorizacion));
-
-                if (isSuccesfulImport(jsonObjectAutorizacion)){
-
+                if (true) {
 
                     JSONArray jsonArray = jsonObjectAutorizacion.getJSONArray("Value");
-                    JSONObject jsonObj=null;
+                    JSONObject jsonObj = null;
+
                     for (int i = 0; i < jsonArray.length(); i++) {
-                        jsonObj=jsonArray.getJSONObject(i);
+                        jsonObj = jsonArray.getJSONObject(i);
 
                         int idEstablecimiento1 = jsonObj.getInt("EstIEstablecimientoId");
                         int estadoSolicitud = jsonObj.getInt("SolIEstadoSolicitudId");
@@ -296,10 +294,10 @@ public class ImportMain extends AsyncTask<String, String, String> {
 
                         boolean exists = dbAdapter_temp_autorizacion_cobro.existeAutorizacionCobro(idAutorizacionCobro);
 
-                        Log.d("EXISTE AC", ""+exists);
-                        if (exists){
-                             int isActualizado = dbAdapter_temp_autorizacion_cobro.updateAutorizacionCobro(idAutorizacionCobro, estadoSolicitud, idEstablecimiento);
-                            Log.d("IMPORT REGISTRO AUTORIZACION COBRO ACTUALIZADO ", ""+isActualizado);
+                        Log.d("EXISTE AC", "" + exists);
+                        if (exists) {
+                            int isActualizado = dbAdapter_temp_autorizacion_cobro.updateAutorizacionCobro(idAutorizacionCobro, estadoSolicitud, idEstablecimiento);
+                            Log.d("IMPORT REGISTRO AUTORIZACION COBRO ACTUALIZADO ", "" + isActualizado);
 
                         }
                     }
