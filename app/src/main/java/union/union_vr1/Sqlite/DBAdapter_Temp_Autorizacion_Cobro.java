@@ -38,7 +38,7 @@ public class DBAdapter_Temp_Autorizacion_Cobro {
     public static final String CREATE_TABLE_TEMP_Autorizacion_Cobro =
             "create table "+SQLITE_TABLE_Temp_Autorizacion_Cobro+"("
                     +temp_autorizacion_cobro+" integer primary key autoincrement,"
-                    +temp_id_autorizacion_cobro+" integer  autoincrement,"
+                    +temp_id_autorizacion_cobro+" integer ,"
                     +temp_id_agente+" integer,"
                     +temp_id_motivo_solicitud+" integer,"
                     +temp_id_estado_solicitud+" integer,"
@@ -80,7 +80,13 @@ public class DBAdapter_Temp_Autorizacion_Cobro {
         initialValues.put(temp_vigencia_credito,creditoPagar);
         initialValues.put(estado_sincronizacion,sincronizacion);
         initialValues.put(temp_id_comprobante,idComprobante);
+        initialValues.put(temp_id_autorizacion_cobro,incrementable());
         return mDb.insert(SQLITE_TABLE_Temp_Autorizacion_Cobro, null, initialValues);
+    }
+    private int incrementable (){
+        Cursor cr = mDb.rawQuery("select * from "+SQLITE_TABLE_Temp_Autorizacion_Cobro+";",null);
+        Log.d("idKELV",""+cr.getCount());
+        return cr.getCount()+1;
     }
     public Cursor listarAutorizaciones(){
 
@@ -93,7 +99,7 @@ public class DBAdapter_Temp_Autorizacion_Cobro {
         mCursor = mDb.query(true, SQLITE_TABLE_Temp_Autorizacion_Cobro, new String[] {
                         temp_autorizacion_cobro,temp_id_agente,
                         temp_establec, temp_id_motivo_solicitud, temp_id_estado_solicitud,
-                        temp_referencia, temp_montoCredito, temp_vigencia_credito, estado_sincronizacion, temp_id_comprobante
+                        temp_referencia, temp_montoCredito, temp_vigencia_credito, estado_sincronizacion, temp_id_comprobante, temp_id_autorizacion_cobro
                 },
                 Constants._SINCRONIZAR + " = " + Constants._CREADO + " AND " + temp_id_estado_solicitud + " = '1'" , null,
                 null, null, null, null);
