@@ -488,4 +488,17 @@ public class StockAgenteRestApi {
         result = new JSONObject(r);
         return result;
     }
+    public JSONObject GetConsultarAutorizacion(int idEstablecimiento) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","RestAPI");
+        o.put("method", "GetConsultarAutorizacion");
+        p.put("idEstablecimiento",mapObject(idEstablecimiento));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
 }

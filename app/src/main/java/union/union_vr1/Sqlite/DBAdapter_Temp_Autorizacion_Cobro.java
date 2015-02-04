@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import union.union_vr1.Conexion.DbHelper;
+import union.union_vr1.Objects.ComprobanteVentaDetalle;
 
 /**
  * Created by Usuario on 15/12/2014.
@@ -102,6 +103,26 @@ public class DBAdapter_Temp_Autorizacion_Cobro {
         return mCursor;
     }
 
+    public boolean existeAutorizacionCobro(int idAutorizacionCobro) {
+        boolean exists = false;
+        Cursor mCursor = null;
+        mCursor = mDb.query(true, SQLITE_TABLE_Temp_Autorizacion_Cobro, new String[] {
+                        temp_autorizacion_cobro,temp_id_agente,
+                        temp_establec, temp_id_motivo_solicitud, temp_id_estado_solicitud,
+                        temp_referencia, temp_montoCredito, temp_vigencia_credito, estado_sincronizacion, temp_id_comprobante
+                },
+                 temp_id_autorizacion_cobro+ " = " + idAutorizacionCobro, null,
+                null, null, null, null);
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+
+        }
+        if (mCursor.getCount()>0){
+            exists = true;
+        }
+        return exists;
+    }
+
     public boolean updateAutorizacionAprobado(String id,String idDetalleCobro){
         boolean estado = false;
         try {
@@ -116,6 +137,16 @@ public class DBAdapter_Temp_Autorizacion_Cobro {
 
         return estado;
     }
+        public int  updateAutorizacionCobro(int idAutorizacionCobro, int estadoSolicitud, int idEstablecimiento){
+
+            ContentValues initialValues = new ContentValues();
+            initialValues.put(temp_id_estado_solicitud, estadoSolicitud );
+            initialValues.put(Constants._SINCRONIZAR,Constants._IMPORTADO);
+
+            return mDb.update(SQLITE_TABLE_Temp_Autorizacion_Cobro, initialValues,
+                    temp_id_autorizacion_cobro+"=? AND " + temp_establec + " = ?",new String[]{""+idAutorizacionCobro, ""+idEstablecimiento});
+        }
+
     public void changeEstadoToExport(String[] id, int estadoSincronizacion){
         ContentValues initialValues = new ContentValues();
         initialValues.put(Constants._SINCRONIZAR,estadoSincronizacion);

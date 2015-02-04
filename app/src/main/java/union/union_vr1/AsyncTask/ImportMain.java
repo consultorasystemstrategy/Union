@@ -36,6 +36,7 @@ import union.union_vr1.Objects.TipoGasto;
 import union.union_vr1.R;
 import union.union_vr1.RestApi.StockAgenteRestApi;
 import union.union_vr1.Sqlite.Constants;
+import union.union_vr1.Sqlite.DBAdapter_Temp_Autorizacion_Cobro;
 import union.union_vr1.Sqlite.DbAdapter_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
 import union.union_vr1.Sqlite.DbAdapter_Histo_Comprob_Anterior;
@@ -64,6 +65,7 @@ public class ImportMain extends AsyncTask<String, String, String> {
     private DbAdapter_Comprob_Cobro dbAdapter_comprob_cobro;
     private DbAdapter_Histo_Venta_Detalle dbAdapter_histo_venta_detalle;
     private DbAdapter_Histo_Comprob_Anterior dbAdapter_histo_comprob_anterior;
+    private DBAdapter_Temp_Autorizacion_Cobro dbAdapter_temp_autorizacion_cobro;
 
 
     //private ListView listView;
@@ -89,6 +91,8 @@ public class ImportMain extends AsyncTask<String, String, String> {
         dbAdapter_histo_venta_detalle.open();
         dbAdapter_histo_comprob_anterior = new DbAdapter_Histo_Comprob_Anterior(mainActivity);
         dbAdapter_histo_comprob_anterior.open();
+        dbAdapter_temp_autorizacion_cobro = new DBAdapter_Temp_Autorizacion_Cobro(mainActivity);
+        dbAdapter_temp_autorizacion_cobro.open();
 
         idAgente = ((MyApplication)mainActivity.getApplication()).getIdAgente();
 
@@ -270,8 +274,35 @@ public class ImportMain extends AsyncTask<String, String, String> {
 
                 int idEstablecimiento = cursorEstablecimiento.getInt(cursorEstablecimiento.getColumnIndexOrThrow(dbAdaptert_evento_establec.EE_id_establec));
                 JSONObject jsonObject = api.GetSolicitudAutorizacionEstablecimiento(idEstablecimiento);
+                JSONObject jsonObjectAutorizacion = api.GetConsultarAutorizacion(idEstablecimiento);
 
                 Log.d("IMPORT SOLICITUDES DE AUTORIZACIÓN ", jsonObject.toString());
+                Log.d("IMPORT AUTORIZACION COBROS  ", jsonObject.toString());
+
+
+                if (isSuccesfulImport(jsonObjectAutorizacion)){
+
+
+                    JSONArray jsonArray = jsonObjectAutorizacion.getJSONArray("Value");
+                    JSONObject jsonObj=null;
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        jsonObj=jsonArray.getJSONObject(i);
+
+                        int idEstablecimiento1 = jsonObj.getInt("EstIEstablecimientoId");
+                        int estadoSolicitud = jsonObj.getInt("SolIEstadoSolicitudId");
+                        int idAutorizacionCobro = jsonObj.getInt("SolObservacion");
+
+                        boolean exists = dbAdapter_temp_autorizacion_cobro.existeAutorizacionCobro(idAutorizacionCobro);
+
+                        if (exists){
+                             int isActualizado = dbAdapter_temp_autorizacion_cobro.updateAutorizacionCobro(idAutorizacionCobro, estadoSolicitud, idEstablecimiento);
+                            Log.d("IMPORT REGISTRO AUTORIZACION COBRO ACTUALIZADO ", ""+isActualizado);
+
+                        }
+                    }
+
+                }
+
 
                 if (isSuccesfulImport(jsonObject)) {
 
