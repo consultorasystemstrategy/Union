@@ -578,8 +578,9 @@ public class ExportMain extends AsyncTask<String, String, String> {
                             cursorAutorizacionCobro.getString(cursorAutorizacionCobro.getColumnIndexOrThrow(dbAdapter_temp_autorizacion_cobro.temp_referencia)),
                             cursorAutorizacionCobro.getDouble(cursorAutorizacionCobro.getColumnIndexOrThrow(dbAdapter_temp_autorizacion_cobro.temp_montoCredito)),
                             0.0,
-                            ((MyApplication) mainActivity.getApplication()).getIdUsuario()
-                    );
+                            ((MyApplication) mainActivity.getApplication()).getIdUsuario(),
+                            cursorAutorizacionCobro.getInt(cursorAutorizacionCobro.getColumnIndexOrThrow(dbAdapter_temp_autorizacion_cobro.temp_id_autorizacion_cobro))
+                            );
                     Log.d("EXPORT AUTORIZACION COBROS", jsonObject.toString());
                     Log.d("EXPORT AUTORIZACION COBRO SUCCESFUL", ""+isSuccesfulExport(jsonObject));
 
@@ -587,9 +588,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
                         listIdAutorizacionCobro.add(""+ cursorAutorizacionCobro.getInt(cursorAutorizacionCobro.getColumnIndexOrThrow(dbAdapter_temp_autorizacion_cobro.temp_autorizacion_cobro)));
                     }
 
-
-
-                } catch (Exception e) {
+               } catch (Exception e) {
                     e.printStackTrace();
                 }
 

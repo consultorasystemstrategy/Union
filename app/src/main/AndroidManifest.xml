@@ -104,7 +104,6 @@
         <activity
             android:screenOrientation="portrait"
             android:name=".Vistas.VMovil_Online_Pumovil"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
             android:label="Sincronizar" >
         </activity>
         <activity

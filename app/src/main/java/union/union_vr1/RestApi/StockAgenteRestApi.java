@@ -467,7 +467,7 @@ public class StockAgenteRestApi {
         return result;
     }
 
-    public JSONObject CreateSolicitudAutorizacionCobro(int idAgente,int motivoSolicitud,int idEStablecimiento,int estadoSolicitud,String referencia,double montoCreditoPagado,double montoCreditoPagar,int usuario) throws Exception {
+    public JSONObject CreateSolicitudAutorizacionCobro(int idAgente,int motivoSolicitud,int idEStablecimiento,int estadoSolicitud,String referencia,double montoCreditoPagado,double montoCreditoPagar,int usuario,int idAutorizacion) throws Exception {
         JSONObject result = null;
         JSONObject o = new JSONObject();
         JSONObject p = new JSONObject();
@@ -481,11 +481,11 @@ public class StockAgenteRestApi {
         p.put("montoCreditoPagado",mapObject(montoCreditoPagado));
         p.put("montoCreditoPagar",mapObject(montoCreditoPagar));
         p.put("usuario",mapObject(usuario));
+        p.put("idAutorizacion",mapObject(idAutorizacion));
         o.put("parameters", p);
         String s = o.toString();
         String r = load(s);
         result = new JSONObject(r);
         return result;
     }
-
 }
