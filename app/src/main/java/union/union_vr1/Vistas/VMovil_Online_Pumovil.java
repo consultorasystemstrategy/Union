@@ -96,7 +96,7 @@ public class VMovil_Online_Pumovil extends Activity {
         view = (WebView) this.findViewById(R.id.webView);
         view.getSettings().setJavaScriptEnabled(true);
         view.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
-        view.loadUrl("http://192.168.0.106:8084/SysMovilProductosUnion");
+        view.loadUrl("http://192.168.0.100:8084/SysMovilProductosUnion");
 
         /*Asignamos a la vista web el cliente (navegador)
         que hemos creado como clase privada (ver más abajo
