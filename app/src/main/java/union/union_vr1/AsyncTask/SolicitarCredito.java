@@ -91,7 +91,6 @@ public class SolicitarCredito extends AsyncTask<String, String, String> {
 
             publishProgress(""+50);
 
-
         }catch (Exception e){
             Log.d("AysncImport : ", e.getMessage());
 

@@ -15,6 +15,7 @@ import java.util.List;
 
 import union.union_vr1.RestApi.StockAgenteRestApi;
 import union.union_vr1.Sqlite.Constants;
+import union.union_vr1.Sqlite.DBAdapter_Temp_Autorizacion_Cobro;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta_Detalle;
@@ -41,6 +42,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
     private DbAdapter_Comprob_Cobro dbAdapter_comprob_cobro;
     private DbAdapter_Histo_Venta_Detalle dbAdapter_histo_venta_detalle;
     private DbAdaptert_Evento_Establec dbAdaptert_evento_establec;
+    private DBAdapter_Temp_Autorizacion_Cobro dbAdapter_temp_autorizacion_cobro;
 
     public ExportMain(Activity mainActivity) {
         this.mainActivity = mainActivity;
@@ -52,6 +54,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
         dbAdapter_histo_venta_detalle = new DbAdapter_Histo_Venta_Detalle(mainActivity);
         dbAdaptert_evento_establec = new DbAdaptert_Evento_Establec(mainActivity);
         dbAdapter_histo_venta = new DbAdapter_Histo_Venta(mainActivity);
+        dbAdapter_temp_autorizacion_cobro = new DBAdapter_Temp_Autorizacion_Cobro(mainActivity);
 
         //ABRO LA CONEXIÓN A LA DB
         dbAdapter_informe_gastos.open();
@@ -62,6 +65,8 @@ public class ExportMain extends AsyncTask<String, String, String> {
         dbAdapter_histo_venta_detalle.open();
         dbAdaptert_evento_establec.open();
         dbAdapter_histo_venta.open();
+        dbAdapter_temp_autorizacion_cobro.open();
+
     }
 
 
@@ -86,7 +91,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
 
         Cursor cursorHistoVentaCreated = dbAdapter_histo_venta.filterExport();
         Cursor cursorHistoVentaDetalleCreated = dbAdapter_histo_venta_detalle.filterExport();
-
+        Cursor cursorAutorizacionCobro = dbAdapter_temp_autorizacion_cobro.filterExport();
 
 /*        Cursor cursorCC = dbAdapter_comprob_cobro.fetchAllComprobCobros();
 
@@ -111,12 +116,14 @@ public class ExportMain extends AsyncTask<String, String, String> {
         List<String> listIdComprobanteCobro = new ArrayList<String>();
         List<String> listIdEstablecimientoUpdated = new ArrayList<String>();
         List<String> listidInsertarCaja = new ArrayList<String>();
+        List<String> listIdAutorizacionCobro = new ArrayList<String>();
 
 
         List<String> listIdHVCreated = new ArrayList<String>();
         List<String> listIdHVUpdated = new ArrayList<String>();
         List<String> listIdHVDCreated = new ArrayList<String>();
         List<String> listIdHVDUpdated = new ArrayList<String>();
+
 
 
 
@@ -522,7 +529,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
                             cursorInsertarCaja.getInt(cursorInsertarCaja.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_id_comprob)),
                             cursorInsertarCaja.getInt(cursorInsertarCaja.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_id_plan_pago)),
                             cursorInsertarCaja.getInt(cursorInsertarCaja.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_id_plan_pago_detalle))
-                            );
+                    );
                     Log.d("EXPORT INSERTAR CAAJA MESSAGE", jsonObject.toString());
                     Log.d("EXPORT INSERTAR CAAJA MESSAGE SUCCESFUL", ""+isSuccesfulExport(jsonObject));
 
@@ -554,6 +561,57 @@ public class ExportMain extends AsyncTask<String, String, String> {
         }else{
             Log.d("EXPORT INSERTAR CAJA", "TODOS LOS REGISTROS INSERTAR CAJA DE COMPROBANTE COBRO ESTÁN EXPORTADOS");
         }
+
+        if (cursorAutorizacionCobro.getCount()>0){
+
+            for (cursorAutorizacionCobro.moveToFirst(); !cursorAutorizacionCobro.isAfterLast(); cursorAutorizacionCobro.moveToNext()){
+                JSONObject jsonObject = null;
+
+
+                Log.d(" EXPORT AUTORIZACIÓN COBROS ", "");
+                try {
+                    jsonObject = api.CreateSolicitudAutorizacionCobro(
+                            ((MyApplication) mainActivity.getApplication()).getIdAgente(),
+                            cursorAutorizacionCobro.getInt(cursorAutorizacionCobro.getColumnIndexOrThrow(dbAdapter_temp_autorizacion_cobro.temp_id_motivo_solicitud)),
+                            cursorAutorizacionCobro.getInt(cursorAutorizacionCobro.getColumnIndexOrThrow(dbAdapter_temp_autorizacion_cobro.temp_establec)),
+                            cursorAutorizacionCobro.getInt(cursorAutorizacionCobro.getColumnIndexOrThrow(dbAdapter_temp_autorizacion_cobro.temp_id_estado_solicitud)),
+                            cursorAutorizacionCobro.getString(cursorAutorizacionCobro.getColumnIndexOrThrow(dbAdapter_temp_autorizacion_cobro.temp_referencia)),
+                            cursorAutorizacionCobro.getInt(cursorAutorizacionCobro.getColumnIndexOrThrow(dbAdapter_temp_autorizacion_cobro.temp_montoCredito)),
+                            0.0,
+                            ((MyApplication) mainActivity.getApplication()).getIdUsuario()
+                    );
+                    Log.d("EXPORT AUTORIZACION COBROS", jsonObject.toString());
+                    Log.d("EXPORT AUTORIZACION COBRO SUCCESFUL", ""+isSuccesfulExport(jsonObject));
+
+                    if (isSuccesfulExport(jsonObject)){
+                        listIdAutorizacionCobro.add(""+ cursorAutorizacionCobro.getInt(cursorAutorizacionCobro.getColumnIndexOrThrow(dbAdapter_temp_autorizacion_cobro.temp_autorizacion_cobro)));
+                    }
+
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+
+            String[] idAutorizacionCobro = new String[listIdAutorizacionCobro.size()];
+            listIdAutorizacionCobro.toArray(idAutorizacionCobro);
+
+            for (int i = 0; i < idAutorizacionCobro.length; i++) {
+                Log.d("ID EXPORTADOS ", "" + idAutorizacionCobro[i]);
+            }
+
+            if (listIdAutorizacionCobro.size()>0){
+                dbAdapter_temp_autorizacion_cobro.changeEstadoToExport(idAutorizacionCobro, Constants._EXPORTADO);
+            }
+
+
+        }else{
+            Log.d("EXPORT AUTORIZACION COBRO", "TODOS LAS AUTORIZACIONES DE COBRO ESÁN EXPORTADAS");
+        }
+
 
 
 

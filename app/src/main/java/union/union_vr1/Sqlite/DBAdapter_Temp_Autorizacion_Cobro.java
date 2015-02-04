@@ -84,6 +84,20 @@ public class DBAdapter_Temp_Autorizacion_Cobro {
 
         return cr;
     }
+    public Cursor filterExport() {
+        Cursor mCursor = null;
+        mCursor = mDb.query(true, SQLITE_TABLE_Temp_Autorizacion_Cobro, new String[] {temp_id_agente,
+                        temp_establec, temp_id_motivo_solicitud, temp_id_estado_solicitud,
+                        temp_referencia, temp_montoCredito, temp_vigencia_credito, estado_sincronizacion, temp_id_comprobante
+                },
+                Constants._SINCRONIZAR + " = " + Constants._CREADO + " AND " + temp_id_estado_solicitud + " = '1'" , null,
+                null, null, null, null);
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+    }
+
     public boolean updateAutorizacionAprobado(String id,String idDetalleCobro){
         boolean estado = false;
         try {
@@ -97,6 +111,28 @@ public class DBAdapter_Temp_Autorizacion_Cobro {
         }
 
         return estado;
+    }
+    public void changeEstadoToExport(String[] id, int estadoSincronizacion){
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(Constants._SINCRONIZAR,estadoSincronizacion);
+
+        String signosInterrogacion = "";
+        for (int i=0; i<id.length; i++){
+            if (i==id.length-1)
+            {
+                signosInterrogacion+= "?";
+            }else {
+                signosInterrogacion+= "? OR ";
+            }
+
+        }
+
+        Log.d("SIGNOS INTERROGACIÓN", signosInterrogacion);
+        int cantidadRegistros = mDb.update(SQLITE_TABLE_Temp_Autorizacion_Cobro, initialValues,
+                temp_autorizacion_cobro+"= "+ signosInterrogacion,id);
+
+
+        Log.d("REGISTROS EXPORTADOS ", ""+cantidadRegistros);
     }
     public boolean anularAutorizacion(String id,String idDetalleCobro, String idComprobante){
         boolean estado = false;
