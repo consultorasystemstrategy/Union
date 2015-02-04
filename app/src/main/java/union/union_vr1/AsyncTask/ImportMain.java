@@ -280,6 +280,8 @@ public class ImportMain extends AsyncTask<String, String, String> {
                 Log.d("IMPORT AUTORIZACION COBROS  ", jsonObject.toString());
 
 
+                Log.d("IS SUCCESSFULL EXPORT AUTORIZACION COBRO", ""+isSuccesfulImport(jsonObjectAutorizacion));
+
                 if (isSuccesfulImport(jsonObjectAutorizacion)){
 
 
@@ -294,6 +296,7 @@ public class ImportMain extends AsyncTask<String, String, String> {
 
                         boolean exists = dbAdapter_temp_autorizacion_cobro.existeAutorizacionCobro(idAutorizacionCobro);
 
+                        Log.d("EXISTE AC", ""+exists);
                         if (exists){
                              int isActualizado = dbAdapter_temp_autorizacion_cobro.updateAutorizacionCobro(idAutorizacionCobro, estadoSolicitud, idEstablecimiento);
                             Log.d("IMPORT REGISTRO AUTORIZACION COBRO ACTUALIZADO ", ""+isActualizado);

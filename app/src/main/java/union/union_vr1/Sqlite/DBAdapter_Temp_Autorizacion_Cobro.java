@@ -111,8 +111,7 @@ public class DBAdapter_Temp_Autorizacion_Cobro {
 
     public boolean existeAutorizacionCobro(int idAutorizacionCobro) {
         boolean exists = false;
-        Cursor mCursor = null;
-        mCursor = mDb.query(true, SQLITE_TABLE_Temp_Autorizacion_Cobro, new String[] {
+        Cursor mCursor = mDb.query(true, SQLITE_TABLE_Temp_Autorizacion_Cobro, new String[] {
                         temp_autorizacion_cobro,temp_id_agente,
                         temp_establec, temp_id_motivo_solicitud, temp_id_estado_solicitud,
                         temp_referencia, temp_montoCredito, temp_vigencia_credito, estado_sincronizacion, temp_id_comprobante
