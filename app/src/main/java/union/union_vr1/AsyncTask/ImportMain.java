@@ -280,7 +280,7 @@ public class ImportMain extends AsyncTask<String, String, String> {
                 Log.d("IMPORT AUTORIZACION COBROS  ", jsonObject.toString());
 
 
-                if (true) {
+                if (isSuccesfulImport(jsonObjectAutorizacion)) {
 
                     JSONArray jsonArray = jsonObjectAutorizacion.getJSONArray("Value");
                     JSONObject jsonObj = null;
