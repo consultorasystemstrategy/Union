@@ -121,11 +121,12 @@ public class DBAdapter_Temp_Autorizacion_Cobro {
                 null, null, null, null);
         if (mCursor != null) {
             mCursor.moveToFirst();
-
-        }
-        if (mCursor.getCount()>0){
             exists = true;
         }
+        if (mCursor.getCount()==0){
+            exists = false;
+        }
+        Log.d("EXISTE AUTORIZACION COBRO ", ""+exists);
         return exists;
     }
 
