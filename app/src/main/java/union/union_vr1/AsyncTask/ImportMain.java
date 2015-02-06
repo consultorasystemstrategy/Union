@@ -171,6 +171,7 @@ public class ImportMain extends AsyncTask<String, String, String> {
             Log.d("IMPORTANDO ", "INICIANDO ...");
             for (int i = 0; i < stockAgentes.size() ; i++) {
                 Log.d("Stock Agente"+i, "Nombre : "+stockAgentes.get(i).getNombre());
+                Log.d("Stock Agente"+i, "CÓDIGO DE BARRAS : "+stockAgentes.get(i).getCodigoBarras());
 
                 boolean existe = dbAdapter_stock_agente.existsStockAgenteByIdProd(""+stockAgentes.get(i).getIdProducto());
                 Log.d("EXISTE ", ""+existe);

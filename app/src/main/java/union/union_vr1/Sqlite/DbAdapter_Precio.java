@@ -197,6 +197,10 @@ public class  DbAdapter_Precio {
         }
         return mCursor;
     }
+
+
+
+
     public Cursor fetchAllPrecioByIdProductoAndCantidad(int id_producto, int cantidad, int idCategoriaEstablecimiento) {
 
         Cursor mCursor = mDb.query(SQLITE_TABLE_Precio, new String[] {PR_id_precio,

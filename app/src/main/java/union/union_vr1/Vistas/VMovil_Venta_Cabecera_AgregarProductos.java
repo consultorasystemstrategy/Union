@@ -27,6 +27,8 @@ import android.widget.Toast;
 
 import java.text.DecimalFormat;
 
+import union.union_vr1.BarcodeScanner.IntentIntegrator;
+import union.union_vr1.BarcodeScanner.IntentResult;
 import union.union_vr1.R;
 import union.union_vr1.Sqlite.DBAdapter_Temp_Venta;
 import union.union_vr1.Sqlite.DbAdapter_Precio;
@@ -38,6 +40,7 @@ import union.union_vr1.Utils.MyApplication;
 public class VMovil_Venta_Cabecera_AgregarProductos extends Activity implements View.OnClickListener{
 
     private Button buttonAgregarProductos;
+    private Button buttonScan;
     private AutoCompleteTextView autoCompleteTextView;
     private int idEstablecimiento;
     private int id_categoria_establecimiento = 1;
@@ -53,7 +56,7 @@ public class VMovil_Venta_Cabecera_AgregarProductos extends Activity implements 
     private int disponible = 1;
     private String nombre = null;
     private  int id_producto = 0;
-
+    private Activity mainActivity;
     private ListView listView;
     private View header;
 
@@ -69,6 +72,7 @@ public class VMovil_Venta_Cabecera_AgregarProductos extends Activity implements 
 
 
         mContext = this;
+        this.mainActivity = this;
         dbHelper_Stock_Agente = new DbAdapter_Stock_Agente(this);
         dbHelper_Stock_Agente.open();
 
@@ -85,11 +89,12 @@ public class VMovil_Venta_Cabecera_AgregarProductos extends Activity implements 
 
 
         buttonAgregarProductos = (Button) findViewById(R.id.VCAP_buttonAgregar);
+        buttonScan = (Button) findViewById(R.id.VCAP_buttonScanear);
         autoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.VCAP_AutoCompleteProductos);
 
 
         buttonAgregarProductos.setOnClickListener(this);
-
+        buttonScan.setOnClickListener(this);
         idEstablecimiento = ((MyApplication)this.getApplication()).getIdEstablecimiento();
 
         final Cursor cursorEstablecimiento = dbHelper_Evento_Establecimiento.fetchEstablecsById(String.valueOf(idEstablecimiento));
@@ -315,7 +320,102 @@ public class VMovil_Venta_Cabecera_AgregarProductos extends Activity implements 
                 finish();
                 startActivity(intent);
                 break;
+            case R.id.VCAP_buttonScanear:
+
+                IntentIntegrator intentIntegrator = new IntentIntegrator(mainActivity);
+                intentIntegrator.initiateScan();
+
+                break;
+
 
         }
+
+
+    }
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
+        if (scanResult != null) {
+            // handle scan result}
+            String contents = scanResult.getContents();
+            String format = scanResult.getFormatName();
+
+            /*textViewContent.setText("CODEBAR CONTEN : "+contents);
+            textViewFormat.setText("FORMAT : "+format);*/
+
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    "CODEBAR CONTENT : "+contents + "\nFORMAT : "+format, Toast.LENGTH_SHORT);
+            toast.show();
+
+
+
+        }
+        // else continue with any other code you need in the method
+        else{
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    "No scan data received!", Toast.LENGTH_SHORT);
+            toast.show();
+        }
+    }
+
+    private Dialog scannerDialog() {
+        final View layout = View.inflate(this, R.layout.dialog_cantidad_productos, null);
+
+        DecimalFormat df = new DecimalFormat("#.00");
+        final EditText savedText = ((EditText) layout.findViewById(R.id.VCAP_editTextCantidad));
+        final TextView nombreProducto = ((TextView) layout.findViewById(R.id.VCPA_textView2NombreProducto));
+        final TextView precio = ((TextView) layout.findViewById(R.id.VCPA_textViewPrecio));
+
+        Cursor mCursorPrecioUnitarioGeneral = dbHelper_Precio.fetchAllPrecioByIdProductoAndCategoeria(id_producto,id_categoria_establecimiento);
+        if (mCursorPrecioUnitarioGeneral.getCount()>0) {
+            double precio_unitario = mCursorPrecioUnitarioGeneral.getDouble(mCursorPrecioUnitarioGeneral.getColumnIndexOrThrow(DbAdapter_Precio.PR_precio_unit));
+            precio.setText("Precio : S/. "+ df.format(precio_unitario));
+        }else{
+            precio.setText("Precio : S/. No encontrado");
+        }
+        nombreProducto.setText(nombre);
+
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Cantidad");
+        builder.setPositiveButton("OK", new Dialog.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                String texto = savedText.getText().toString().trim();
+                if(texto.equals("")){
+                    texto = "1";
+                }
+
+                cantidad = Integer.parseInt(texto);
+
+                Toast.makeText(getApplicationContext(),"Cantidad : "+cantidad + " id_producto : "+ id_producto,Toast.LENGTH_LONG).show();
+
+                Cursor mCursorPrecioUnitario = dbHelper_Precio.fetchAllPrecioByIdProductoAndCantidad(id_producto,cantidad, id_categoria_establecimiento);
+
+                double precio_unitario = 10.0;
+                if (mCursorPrecioUnitario.getCount()!=0){
+                    precio_unitario = mCursorPrecioUnitario.getDouble(mCursorPrecioUnitario.getColumnIndex(DbAdapter_Precio.PR_precio_unit));
+                }else{
+                    Cursor mCursorPrecioUnitarioGeneral = dbHelper_Precio.fetchAllPrecioByIdProductoAndCategoeria(id_producto,id_categoria_establecimiento);
+                    mCursorPrecioUnitarioGeneral.moveToFirst();
+                    if (mCursorPrecioUnitarioGeneral.getCount()>0) {
+                        precio_unitario = mCursorPrecioUnitarioGeneral.getDouble(mCursorPrecioUnitarioGeneral.getColumnIndexOrThrow(DbAdapter_Precio.PR_precio_unit));
+                    }else{
+                        Toast.makeText(getApplicationContext(), "No se encontró un precio para esta cantidad de productos, agregar el precio a la base de datos", Toast.LENGTH_LONG).show();;
+                    }
+                }
+
+                double total_importe = precio_unitario*cantidad;
+                String promedio_anterior = null;
+                String devuelto = null;
+
+                //En una tabla "Temp_Venta" Nos sirve para agregar datos del historial de ventas anteriores y sugerir al usuario, estos son datos temporales
+                long id = dbHelper_Temp_Venta.createTempVentaDetalle(1,id_producto,nombre,cantidad,total_importe, precio_unitario, promedio_anterior, devuelto, procedencia, 1);
+
+                Intent intent = new Intent(mContext, VMovil_Venta_Cabecera_AgregarProductos.class);
+                finish();
+                startActivity(intent);
+            }
+        });
+        builder.setView(layout);
+        return builder.create();
     }
 }

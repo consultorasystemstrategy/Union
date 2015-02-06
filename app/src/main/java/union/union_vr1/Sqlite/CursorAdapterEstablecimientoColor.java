@@ -42,9 +42,10 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter{
             String nombre_cliente = cursor.getString(cursor.getColumnIndex(DbAdaptert_Evento_Establec.EE_nom_cliente));
             String doc_cliente = cursor.getString(cursor.getColumnIndex(DbAdaptert_Evento_Establec.EE_doc_cliente));
             int id_estado_atencion = Integer.parseInt(cursor.getString(cursor.getColumnIndex(DbAdaptert_Evento_Establec.EE_id_estado_atencion)));
+            int orden = cursor.getInt(cursor.getColumnIndexOrThrow(DbAdaptert_Evento_Establec.EE_orden));
 
 
-            String establecimiento = "Còdigo : "+id_establecimiento+
+            String establecimiento = "Còdigo : "+id_establecimiento+ " - n° orden : " + orden+
                     "\nEstablec : "+ nombre_establecimiento+
                     "\nNombre : "+ nombre_cliente +
                     "\nDocum : "+doc_cliente;

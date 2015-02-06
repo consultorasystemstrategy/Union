@@ -22,6 +22,11 @@
         <item name="android:actionBarStyle">@style/ActionBarPersonalizadoSteve</item>
         <item name="android:buttonStyle">@style/ButtonStylePersonalizadoSteve</item>
     </style>
+    <style name="TemaPersonalizadoMaterialDesign" parent="android:Theme.Holo.Light.DarkActionBar">
+        <item name="android:actionBarStyle">@style/ActionBarPersonalizadoMaterialDeign</item>
+        <item name="android:buttonStyle">@style/ButtonStylePersonalizadoMaterialDesign</item>
+    </style>
+
 
 
     <style name="ActionBarUnion" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
@@ -41,8 +46,9 @@
     </style>
 
     <style name="ActionBarPersonalizadoSteve" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
-    <item name="android:background">@color/PersonalizadoSteve1</item>
-</style>
+        <item name="android:background">@color/Personalizado1</item>
+    </style>
+
     <style name="ButtonStylePersonalizadoSteve" parent="@android:style/Widget.Holo.Light.Button">
         <item name="android:background">@drawable/border_bottom_personalizado_steve</item>
         <item name="android:textColor">@color/PersonalizadoSteve3</item>
@@ -55,6 +61,24 @@
         <item name="android:layout_marginBottom">0dp</item>
         <item name="android:layout_marginTop">0dp</item>
     </style>
+
+    <style name="ActionBarPersonalizadoMaterialDeign" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
+        <item name="android:background">@color/Personalizado1</item>
+    </style>
+    <style name="ButtonStylePersonalizadoMaterialDesign" parent="@android:style/Widget.Holo.Light.Button">
+        <item name="android:background">@drawable/border_bottom_personalizado_material_design</item>
+        <item name="android:textColor">@color/Personalizado3</item>
+        <item name="android:layout_width" >fill_parent</item>
+        <item name="android:layout_height" >wrap_content</item>
+        <item name="android:gravity" >center</item>
+        <item name="android:textSize" >12dp</item>
+        <item name="android:textStyle" >bold</item>
+        <item name="android:shadowRadius">2</item>
+        <item name="android:layout_marginBottom">0dp</item>
+        <item name="android:layout_marginTop">0dp</item>
+    </style>
+
+
 
 
 </resources>
