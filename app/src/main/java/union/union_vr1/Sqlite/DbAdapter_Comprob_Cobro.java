@@ -36,6 +36,8 @@ public class DbAdapter_Comprob_Cobro {
     public static final String CC_id_agente = "cc_in_id_agente";
     public static final String CC_id_forma_cobro = "cc_id_forma_cobro";
     public static final String CC_lugar_registro = "cc_lugar_registro";
+    public static final String CC_id_autorizacion = "cc_idAutorizacion";
+    public static final String CC_estado_prologa = "cc_estado_prologa";
 
     public static final String TAG = "Comprob_Cobro";
     private DbHelper mDbHelper;
@@ -65,7 +67,9 @@ public class DbAdapter_Comprob_Cobro {
                     +CC_id_agente+" integer,"
                     +CC_id_forma_cobro+" integer,"
                     +CC_lugar_registro+" text, "
-                    +estado_sincronizacion+" integer);";
+                    +estado_sincronizacion+" integer,"
+                    +CC_id_autorizacion+" integer,"
+                    +CC_estado_prologa+" text );";
 
     public static final String DELETE_TABLE_COMPROB_COBRO = "DROP TABLE IF EXISTS " + SQLITE_TABLE_Comprob_Cobro;
 
@@ -145,6 +149,9 @@ public class DbAdapter_Comprob_Cobro {
         initialValues.put(CC_id_forma_cobro, comprobanteCobro.getIdFormaCobro());
         initialValues.put(CC_lugar_registro, comprobanteCobro.getLugarRegistro());
         return mDb.insert(SQLITE_TABLE_Comprob_Cobro, null, initialValues);
+    }
+    public void updateEstadoEnviado(int idComprobanteCobro, int estado,String idAutorizacion){
+        mDb.execSQL("update "+SQLITE_TABLE_Comprob_Cobro+" set "+CC_estado_prologa+"='"+estado+"',"+CC_id_autorizacion+"='"+idAutorizacion+"' where "+CC_id_comprobante_cobro+"='"+idComprobanteCobro+"';");
     }
 
     public void updateComprobCobros(ComprobanteCobro comprobanteCobro){
@@ -382,10 +389,10 @@ public class DbAdapter_Comprob_Cobro {
     public Cursor fetchAllComprobCobrosByEst(String inputText) throws SQLException {
         Log.w(TAG, inputText);
         Cursor mCursor = null;
-        mCursor = mDb.query(true, SQLITE_TABLE_Comprob_Cobro, new String[] {CC_id_cob_historial,
+        mCursor = mDb.query(true, SQLITE_TABLE_Comprob_Cobro, new String[] {CC_id_comprobante_cobro , CC_id_cob_historial,
                         CC_id_establec, CC_id_comprob, CC_id_plan_pago, CC_id_plan_pago_detalle,
                         CC_desc_tipo_doc, CC_doc, CC_fecha_programada, CC_monto_a_pagar,
-                        CC_fecha_cobro, CC_monto_cobrado, CC_estado_cobro},
+                        CC_fecha_cobro, CC_monto_cobrado, CC_estado_cobro,CC_estado_prologa,CC_id_autorizacion},
                 CC_id_establec + " = " + inputText +" and cc_in_estado_cobro ='1'  order by cc_te_fecha_programada desc", null,
                 null, null, null, null);
         if (mCursor != null) {

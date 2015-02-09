@@ -7,6 +7,8 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import java.text.SimpleDateFormat;
+
 import union.union_vr1.Conexion.DbHelper;
 import union.union_vr1.Objects.ComprobanteVentaDetalle;
 
@@ -26,6 +28,7 @@ public class DBAdapter_Temp_Autorizacion_Cobro {
     public static final String temp_montoCredito = "temp_MontoCredito";
     public static final String temp_establec = "temp_Establecimiento";
     public static final String temp_vigencia_credito = "temp_Vigencia_Credito";
+    public static final String temp_fechaLimite = "temp_fecha_limite";
     public static final String estado_sincronizacion = "estado_sincronizacion";
     public static final String temp_id_comprobante = "estado_id_comprobante";
     public static final String TAG = "Temp_autorizacion_cobros";
@@ -46,8 +49,9 @@ public class DBAdapter_Temp_Autorizacion_Cobro {
                     +temp_montoCredito+" real,"
                     +temp_establec+" integer,"
                     +temp_id_comprobante+" integer,"
-                    +temp_vigencia_credito+" text,"
-                    +estado_sincronizacion+" integer );";
+                    +temp_vigencia_credito+" real,"
+                    +estado_sincronizacion+" integer ," +
+                    temp_fechaLimite+" text );";
 
     public static final String DELETE_TABLE_AUTORIZACION_COBRO = "DROP TABLE IF EXISTS " + SQLITE_TABLE_Temp_Autorizacion_Cobro;
 
@@ -67,8 +71,16 @@ public class DBAdapter_Temp_Autorizacion_Cobro {
         }
     }
 
-    public long createTempAutorizacionPago(int idAgente, int motivoSolicitud, int estadoSolicitud, int referencia, double montoCreditoPagado,
-            int creditoPagar,int idEstablec,int sincronizacion, int idComprobante){
+    public Cursor consultarfecha(int idAutorizacion){
+        Cursor c = mDb.rawQuery("select * from "+SQLITE_TABLE_Temp_Autorizacion_Cobro+" where "+temp_autorizacion_cobro+"='"+idAutorizacion+"'",null);
+
+        return c;
+
+    }
+
+
+    public long createTempAutorizacionPago(int idAgente, int motivoSolicitud, int estadoSolicitud, int referencia, double aPagar,
+            double pagado,int idEstablec,int sincronizacion, int idComprobante){
 
         ContentValues initialValues = new ContentValues();
         initialValues.put(temp_id_agente,idAgente);
@@ -76,8 +88,8 @@ public class DBAdapter_Temp_Autorizacion_Cobro {
         initialValues.put(temp_id_motivo_solicitud,motivoSolicitud);
         initialValues.put(temp_id_estado_solicitud,estadoSolicitud);
         initialValues.put(temp_referencia,referencia);
-        initialValues.put(temp_montoCredito,montoCreditoPagado);
-        initialValues.put(temp_vigencia_credito,creditoPagar);
+        initialValues.put(temp_montoCredito,aPagar);
+        initialValues.put(temp_vigencia_credito,pagado);
         initialValues.put(estado_sincronizacion,sincronizacion);
         initialValues.put(temp_id_comprobante,idComprobante);
         initialValues.put(temp_id_autorizacion_cobro,incrementable());
@@ -88,9 +100,9 @@ public class DBAdapter_Temp_Autorizacion_Cobro {
         Log.d("idKELV",""+cr.getCount());
         return cr.getCount()+1;
     }
-    public Cursor listarAutorizaciones(){
+    public Cursor listarAutorizaciones(int idEstablec){
 
-        Cursor cr = mDb.rawQuery("Select * from "+SQLITE_TABLE_Temp_Autorizacion_Cobro+";",null);
+        Cursor cr = mDb.rawQuery("Select * from "+SQLITE_TABLE_Temp_Autorizacion_Cobro+" where "+temp_establec+"='"+idEstablec+"';",null);
 
         return cr;
     }
@@ -114,7 +126,7 @@ public class DBAdapter_Temp_Autorizacion_Cobro {
         Cursor mCursor = mDb.query(true, SQLITE_TABLE_Temp_Autorizacion_Cobro, new String[] {
                         temp_autorizacion_cobro,temp_id_agente,
                         temp_establec, temp_id_motivo_solicitud, temp_id_estado_solicitud,
-                        temp_referencia, temp_montoCredito, temp_vigencia_credito, estado_sincronizacion, temp_id_comprobante
+                        temp_referencia, temp_montoCredito, temp_vigencia_credito, estado_sincronizacion, temp_id_comprobante,temp_fechaLimite
                 },
                  temp_id_autorizacion_cobro+ " = " + idAutorizacionCobro, null,
                 null, null, null, null);
@@ -130,10 +142,15 @@ public class DBAdapter_Temp_Autorizacion_Cobro {
     }
 
     public boolean updateAutorizacionAprobado(String id,String idDetalleCobro){
+        DbAdapter_Comprob_Venta_Detalle adapterVenta= new DbAdapter_Comprob_Venta_Detalle(mCtx);
+        adapterVenta.open();
         boolean estado = false;
         try {
             mDb.execSQL(" update "+SQLITE_TABLE_Temp_Autorizacion_Cobro+" set "+temp_id_estado_solicitud+"='5',"+Constants._SINCRONIZAR+"="+Constants._ACTUALIZADO+" where "+temp_autorizacion_cobro+"='"+id+"'; ");
             mDb.execSQL(" update "+DbAdapter_Comprob_Cobro.SQLITE_TABLE_Comprob_Cobro+" set "+DbAdapter_Comprob_Cobro.CC_estado_cobro+"='1',"+Constants._SINCRONIZAR+"="+Constants._CREADO+" where "+DbAdapter_Comprob_Cobro.CC_id_cob_historial+"='"+idDetalleCobro+"'; ");
+            Cursor cursor = mDb.rawQuery("select * from "+DbAdapter_Comprob_Cobro.SQLITE_TABLE_Comprob_Cobro+" where "+DbAdapter_Comprob_Cobro.CC_id_cob_historial+"='"+idDetalleCobro+"'; ",null);
+            cursor.moveToFirst();
+           // adapterVenta.createComprobVentaDetalle(intidComprobante,intidProducto,StringnombreProducto,intcantidad,intimporte,doublecostoVenta,doubleprecioUnitario,"","",0);
             estado = true;
 
         } catch (android.database.SQLException e) {
@@ -143,15 +160,25 @@ public class DBAdapter_Temp_Autorizacion_Cobro {
 
         return estado;
     }
-        public int  updateAutorizacionCobro(int idAutorizacionCobro, int estadoSolicitud, int idEstablecimiento){
+        public int  updateAutorizacionCobro(int idAutorizacionCobro, int estadoSolicitud, int idEstablecimiento,String fechaLimite){
 
             ContentValues initialValues = new ContentValues();
             initialValues.put(temp_id_estado_solicitud, estadoSolicitud );
             initialValues.put(Constants._SINCRONIZAR,Constants._IMPORTADO);
+            initialValues.put(temp_fechaLimite,fechaLimite);
+            mDb.execSQL("update "+DbAdapter_Comprob_Cobro.SQLITE_TABLE_Comprob_Cobro+" set "+DbAdapter_Comprob_Cobro.CC_estado_prologa+"='2' where "+DbAdapter_Comprob_Cobro.CC_id_autorizacion+"='"+idAutorizacionCobro+"'");
 
             return mDb.update(SQLITE_TABLE_Temp_Autorizacion_Cobro, initialValues,
                     temp_id_autorizacion_cobro+"=? AND " + temp_establec + " = ?",new String[]{""+idAutorizacionCobro, ""+idEstablecimiento});
+
         }
+    private String fechaFormat (String fecha){
+
+        SimpleDateFormat sm = new SimpleDateFormat("MM-dd-yyyy");
+
+        String strDate = sm.format(fecha);
+        return strDate;
+    }
 
     public void changeEstadoToExport(String[] id, int estadoSincronizacion){
         ContentValues initialValues = new ContentValues();

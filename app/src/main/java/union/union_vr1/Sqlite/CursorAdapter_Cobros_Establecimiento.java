@@ -2,6 +2,7 @@ package union.union_vr1.Sqlite;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +26,6 @@ public class CursorAdapter_Cobros_Establecimiento extends CursorAdapter {
         super(context, c);
 
 
-
     }
 
     @Override
@@ -43,19 +43,28 @@ public class CursorAdapter_Cobros_Establecimiento extends CursorAdapter {
 
         WindowManager.LayoutParams layout_791 = new WindowManager.LayoutParams();
         layout_791.width = WindowManager.LayoutParams.MATCH_PARENT;
-        layout_791.height  = WindowManager.LayoutParams.WRAP_CONTENT;
+        layout_791.height = WindowManager.LayoutParams.WRAP_CONTENT;
         textView.setLayoutParams(layout_791);
-
 
 
         String doc = cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Comprob_Cobro.CC_doc));
         String fecha = cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Comprob_Cobro.CC_fecha_programada));
-        String monto= cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Comprob_Cobro.CC_monto_a_pagar));
-
+        String monto = cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Comprob_Cobro.CC_monto_a_pagar));
+        String estado = cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Comprob_Cobro.CC_estado_prologa));
+        if (estado != null) {
+            if (estado.equals("1")) {
+                estado = "En Proceso";
+            }
+            if (estado.equals("2")) {
+                estado = "Aprobado";
+            }
+        }else{
+            estado="";
+        }
         String cobros_Man =
-                "Nro Doc: "+doc+"," +
-                "\nFecha: "+fecha+"," +
-                "\nMonto: "+monto+"," ;
+                "Nro Doc: " + doc + ",             " + estado + " " +
+                        "\nFecha: " + fecha + "," +
+                        "\nMonto: " + monto + ",";
 
 
         textView.setText(cobros_Man);
@@ -68,20 +77,19 @@ public class CursorAdapter_Cobros_Establecimiento extends CursorAdapter {
             if (dSqlite.before(dSistema)) {
 
 
-                textView.setBackgroundColor(0xffff0000);
+                textView.setBackgroundColor(Color.parseColor("#E64A4A"));
 
             }
             if (dSqlite.after(dSistema)) {
 
 
-
-                textView.setBackgroundColor(0xffffff00);
+                textView.setBackgroundColor(Color.parseColor("#F7D358"));
 
             }
             if (dSqlite.equals(dSistema)) {
 
 
-                textView.setBackgroundColor(0xffff0000);
+                textView.setBackgroundColor(Color.parseColor("#E64A4A"));
 
             }
         } catch (ParseException e) {
@@ -89,8 +97,8 @@ public class CursorAdapter_Cobros_Establecimiento extends CursorAdapter {
         }
 
 
+    }
 
-}
     private String getDatePhone() {
         Calendar cal = new GregorianCalendar();
         Date date = cal.getTime();

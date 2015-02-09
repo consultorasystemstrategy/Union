@@ -278,7 +278,7 @@ public class ImportMain extends AsyncTask<String, String, String> {
                 JSONObject jsonObjectAutorizacion = api.GetConsultarAutorizacion(idEstablecimiento);
 
                 Log.d("IMPORT SOLICITUDES DE AUTORIZACIÓN ", jsonObject.toString());
-                Log.d("IMPORT AUTORIZACION COBROS  ", jsonObject.toString());
+                Log.d("IMPORT AUTORIZACION COBROS  ", jsonObjectAutorizacion.toString());
 
 
                 if (isSuccesfulImport(jsonObjectAutorizacion)) {
@@ -292,12 +292,14 @@ public class ImportMain extends AsyncTask<String, String, String> {
                         int idEstablecimiento1 = jsonObj.getInt("EstIEstablecimientoId");
                         int estadoSolicitud = jsonObj.getInt("SolIEstadoSolicitudId");
                         int idAutorizacionCobro = jsonObj.getInt("SolObservacion");
+                        String fechaLimite = jsonObj.getString("CliDTFechaLimiteCredito");
+                        Log.d("HolaMundo",fechaLimite+"-"+idEstablecimiento1+"-"+idAutorizacionCobro);
 
                         boolean exists = dbAdapter_temp_autorizacion_cobro.existeAutorizacionCobro(idAutorizacionCobro);
 
                         Log.d("EXISTE AC", "" + exists);
                         if (exists) {
-                            int isActualizado = dbAdapter_temp_autorizacion_cobro.updateAutorizacionCobro(idAutorizacionCobro, estadoSolicitud, idEstablecimiento);
+                            int isActualizado = dbAdapter_temp_autorizacion_cobro.updateAutorizacionCobro(idAutorizacionCobro, estadoSolicitud, idEstablecimiento1,fechaLimite);
                             Log.d("IMPORT REGISTRO AUTORIZACION COBRO ACTUALIZADO ", "" + isActualizado);
 
                         }
