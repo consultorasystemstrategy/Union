@@ -217,7 +217,7 @@ public class VMovil_Venta_Comprob extends Activity {
     }
     private void displayAutorizaciones(){
 
-        Cursor cursor = dbAutorizaciones.listarAutorizaciones();
+        Cursor cursor = dbAutorizaciones.listarAutorizaciones(idEstablec);
         CursorAdapter_Autorizacion_Cobros adapterAutorizacion = new CursorAdapter_Autorizacion_Cobros(getApplicationContext(),cursor);
         ListView listAuCobros = (ListView) findViewById(R.id.listAutorizacionCobros);
         listAuCobros.setAdapter(adapterAutorizacion);
@@ -231,17 +231,17 @@ public class VMovil_Venta_Comprob extends Activity {
                 String idDetalleCobro = crCobros.getString(crCobros.getColumnIndexOrThrow(DBAdapter_Temp_Autorizacion_Cobro.temp_vigencia_credito));
                 String idComprobante = crCobros.getString(crCobros.getColumnIndexOrThrow(DBAdapter_Temp_Autorizacion_Cobro.temp_id_comprobante));
                 if(estado.equals("1")){
-                    select(id,idDetalleCobro);
-                   // Toast.makeText(getApplicationContext(),"Solicitud Aun por Aprobarse",Toast.LENGTH_SHORT).show();
+
+                    Toast.makeText(getApplicationContext(),"Solicitud Aun por Aprobarse",Toast.LENGTH_SHORT).show();
                 }if(estado.equals("2")){
-                   // select();
+                    select(id,idDetalleCobro);
 
                 }if(estado.equals("4")){
-
-                    Toast.makeText(getApplicationContext(),"Solicitud No a sido Aprobada",Toast.LENGTH_SHORT).show();
+                    selectEliminar(id,idDetalleCobro,idComprobante);
+                    //Toast.makeText(getApplicationContext(),"Solicitud Anulada",Toast.LENGTH_SHORT).show();
 
                 }if(estado.equals("5")){
-                    selectEliminar(id,idDetalleCobro,idComprobante);
+
                     Toast.makeText(getApplicationContext(),"Ya Ejecutada"+id+"-"+idDetalleCobro+"",Toast.LENGTH_SHORT).show();
                 }
             }
