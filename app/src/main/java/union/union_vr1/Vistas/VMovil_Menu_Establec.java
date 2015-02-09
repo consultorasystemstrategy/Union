@@ -23,14 +23,19 @@ import union.union_vr1.Sqlite.CursorAdapterEstablecimientoColor;
 import union.union_vr1.Sqlite.DbAdapter_Histo_Venta_Detalle;
 import union.union_vr1.Sqlite.DbAdapter_Precio;
 import union.union_vr1.Sqlite.DbAdapter_Stock_Agente;
+import union.union_vr1.Sqlite.DbAdapter_Temp_Barcode_Scanner;
+import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 import union.union_vr1.Utils.MyApplication;
 
 public class VMovil_Menu_Establec extends Activity {
 
+
+    private DbAdapter_Temp_Session session;
     private DbAdaptert_Evento_Establec dbHelper;
     private SimpleCursorAdapter dataAdapter;
     private CursorAdapterEstablecimientoColor cursorAdapterEstablecimientoColor;
+    private DbAdapter_Temp_Barcode_Scanner dbAdapter_temp_barcode_scanner;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -38,11 +43,14 @@ public class VMovil_Menu_Establec extends Activity {
         setContentView(R.layout.princ_menu_establec);
 
 
+        session = new DbAdapter_Temp_Session(this);
+        session.open();
 
 
         dbHelper = new DbAdaptert_Evento_Establec(this);
         dbHelper.open();
-
+        dbAdapter_temp_barcode_scanner = new DbAdapter_Temp_Barcode_Scanner(this);
+        dbAdapter_temp_barcode_scanner.open();
         //Add some data
 
         //Generate ListView from SQLite Database
@@ -53,8 +61,11 @@ public class VMovil_Menu_Establec extends Activity {
     private void eleccion(String idEstabl, int idAgente) {
         Intent i = new Intent(this, VMovil_Evento_Establec.class);
 
-        ((MyApplication) this.getApplication()).setIdEstablecimiento(Integer.parseInt(idEstabl));
-
+        dbAdapter_temp_barcode_scanner.deleteAll();
+        //((MyApplication) this.getApplication()).setIdEstablecimiento(Integer.parseInt(idEstabl));
+        session.deleteVariable(2);
+        session.createTempSession(2,Integer.parseInt(idEstabl));
+        dbAdapter_temp_barcode_scanner.createTempScanner(Integer.parseInt(idEstabl));
         i.putExtra("idEstab", idEstabl);
         i.putExtra("idAgente", idAgente);
         finish();

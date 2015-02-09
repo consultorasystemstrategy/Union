@@ -40,12 +40,14 @@ import union.union_vr1.Sqlite.DbAdapter_Histo_Comprob_Anterior;
 import union.union_vr1.Sqlite.DbAdapter_Histo_Venta_Detalle;
 import union.union_vr1.Sqlite.DbAdapter_Precio;
 import union.union_vr1.Sqlite.DbAdapter_Stock_Agente;
+import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 import union.union_vr1.Utils.MyApplication;
 
 
 public class VMovil_Evento_Indice extends Activity implements View.OnClickListener {
 
+    private DbAdapter_Temp_Session session;
     private Cursor cursor;
     private DbAdapter_Comprob_Cobro cCobro;
     private DbAdaptert_Evento_Establec dbHelper;
@@ -71,6 +73,12 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         setContentView(R.layout.princ_evento_indice);
         mainActivity  = this;
 
+        session = new DbAdapter_Temp_Session(this);
+        session.open();
+
+
+
+        /*
         if (!((MyApplication)getApplication()).isExport()||!((MyApplication)getApplication()).isImportado()){
 
             if (conectadoWifi()||conectadoRedMovil()) {
@@ -94,6 +102,69 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
 
         ((MyApplication) this.getApplication()).setDisplayedHistorialComprobanteAnterior(false);
 
+        */
+
+        boolean export = false;
+        boolean importado = false;
+
+        switch (session.fetchVarible(7)){
+            case 0:
+                export = false;
+                break;
+            case 1:
+                export = true;
+                break;
+            default:
+                export = false;
+                break;
+        }
+
+        switch (session.fetchVarible(8)){
+            case 0:
+                importado = false;
+                break;
+            case 1:
+                importado = true;
+                break;
+            default:
+                importado = false;
+                break;
+        }
+
+
+
+        if (!export||!importado){
+
+            if (conectadoWifi()||conectadoRedMovil()) {
+                new AlertDialog.Builder(mainActivity)
+                        .setTitle("Hemos detectado una Conexión a Internet")
+                        .setMessage("" +
+                                "¿Desea exportar los datos?")
+                        .setNegativeButton(android.R.string.no,null)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                new ExportMain(mainActivity).execute();
+                                new ImportMain(mainActivity).execute();
+                            }
+                        }).create().show();
+
+                /*
+                ((MyApplication)getApplication()).setExport(true);
+                ((MyApplication)getApplication()).setImportado(true);
+                */
+                session.deleteVariable(7);
+                session.deleteVariable(8);
+                session.createTempSession(7,1);
+                session.createTempSession(8,1);
+
+            }
+        }
+
+
+        //((MyApplication) this.getApplication()).setDisplayedHistorialComprobanteAnterior(false);
+        session.deleteVariable(6);
+        session.createTempSession(6,0);
+
         dbHelper1 = new DbAdapter_Comprob_Venta(this);
         dbHelper1.open();
         dbHelper2 = new DbAdapter_Comprob_Venta_Detalle(this);
@@ -115,7 +186,11 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         dbHelper8 = new DbAdapter_Histo_Comprob_Anterior(this);
         dbHelper8.open();
 
-        ((MyApplication) this.getApplication()).setCuotasEstablecidas(false);
+        //((MyApplication) this.getApplication()).setCuotasEstablecidas(false);
+
+        session.deleteVariable(5);
+        session.createTempSession(5,0);
+
         //Agregando datos de prueba  cada vez que se inicia esta vista
 
         /*

@@ -11,13 +11,16 @@ public class MyApplication extends Application{
 
         private int idAgente;
         private int idEstablecimiento;
-        private boolean cuotasEstablecidas;
-        private boolean DisplayedHistorialComprobanteAnterior;
         private int idLiquidacion;
         private int idUsuario;
-        private VMovil_Online_Pumovil mainActivity;
+
+        private boolean cuotasEstablecidas;
+        private boolean DisplayedHistorialComprobanteAnterior;
         private boolean export;
         private boolean importado;
+
+        private VMovil_Online_Pumovil mainActivity;
+
 
 
     public boolean isExport() {

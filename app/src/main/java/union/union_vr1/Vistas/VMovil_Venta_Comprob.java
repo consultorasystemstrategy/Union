@@ -36,10 +36,13 @@ import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta_Detalle;
 import union.union_vr1.Sqlite.DbAdapter_Histo_Venta_Detalle;
 import union.union_vr1.Sqlite.DbAdapter_Stock_Agente;
+import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 import union.union_vr1.Utils.MyApplication;
 
 public class VMovil_Venta_Comprob extends Activity {
 
+
+    private DbAdapter_Temp_Session session;
     private int idEstablec;
     private DbAdapter_Comprob_Venta dbHelper;
     private CursorAdapterComprobanteVenta cursorAdapterComprobanteVenta;
@@ -59,6 +62,9 @@ public class VMovil_Venta_Comprob extends Activity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.princ_venta_comprob);
+
+        session = new DbAdapter_Temp_Session(this);
+        session.open();
 
 
         //-----------borrar luego
@@ -85,11 +91,14 @@ public class VMovil_Venta_Comprob extends Activity {
         dbHelper_Canjes_Dev = new DbAdapter_Canjes_Devoluciones(this);
         dbHelper_Canjes_Dev.open();
 
-        idAgente=((MyApplication) this.getApplication()).getIdAgente();
+        //idAgente=((MyApplication) this.getApplication()).getIdAgente();
+        idAgente = session.fetchVarible(1);
 
         tH = (TabHost) findViewById(R.id.tabMante);
         tH.setup();
-        idEstablec = ((MyApplication) this.getApplication()).getIdEstablecimiento();
+        //idEstablec = ((MyApplication) this.getApplication()).getIdEstablecimiento();
+
+        idEstablec =session.fetchVarible(2);
 
 
         //Item1

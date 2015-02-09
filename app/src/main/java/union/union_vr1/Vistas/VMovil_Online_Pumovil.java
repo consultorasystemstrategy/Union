@@ -36,7 +36,7 @@ public class VMovil_Online_Pumovil extends Activity {
 
         mContext = this;
 
-        ((MyApplication)getApplication()).setMainActivity(this);
+        //((MyApplication)getApplication()).setMainActivity(this);
 
         showWebPU();
 /*

@@ -11,7 +11,9 @@ import union.union_vr1.Sqlite.DbAdapter_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
 import union.union_vr1.Sqlite.DbAdapter_Histo_Comprob_Anterior;
 import union.union_vr1.Sqlite.DbAdapter_Resumen_Caja;
+import union.union_vr1.Sqlite.DbAdapter_Temp_Barcode_Scanner;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Comprob_Cobro;
+import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 import union.union_vr1.Sqlite.DbAdapter_Tipo_Gasto;
 import union.union_vr1.Sqlite.DbAdapter_Informe_Gastos;
@@ -26,7 +28,7 @@ import union.union_vr1.Sqlite.DbAdapter_Histo_Venta_Detalle;
  */
 public class DbHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION =  3;
+    private static final int DATABASE_VERSION =  7;
     private static final String DATABASE_NAME = "ProdUniondb.sqlite";
 
     public DbHelper(Context context) {
@@ -65,6 +67,9 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(DBAdapter_Temp_Venta.CREATE_TABLE_TEMP_VENTA_DETALLE);
         db.execSQL(DbAdapter_Temp_Comprob_Cobro.CREATE_TABLE_TEMP_COMPROB_COBRO);
         db.execSQL(DBAdapter_Temp_Autorizacion_Cobro.CREATE_TABLE_TEMP_Autorizacion_Cobro);
+        db.execSQL(DbAdapter_Temp_Barcode_Scanner.CREATE_TABLE_Temp_scanner);
+        db.execSQL(DbAdapter_Temp_Session.CREATE_TABLE_Temp_Session);
+
 
 
     }
@@ -89,6 +94,8 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(DBAdapter_Temp_Venta.DELETE_TABLE_TEMP_VENTA_DETALLE);
         db.execSQL(DbAdapter_Temp_Comprob_Cobro.DELETE_TABLE_TEMP_COMPROB_COBRO);
         db.execSQL(DBAdapter_Temp_Autorizacion_Cobro.DELETE_TABLE_AUTORIZACION_COBRO);
+        db.execSQL(DbAdapter_Temp_Barcode_Scanner.DELETE_TABLE_Temp_scanner);
+        db.execSQL(DbAdapter_Temp_Session.CREATE_TABLE_Temp_Session);
 
         onCreate(db);
     }

@@ -38,6 +38,7 @@ import union.union_vr1.Sqlite.DbAdapter_Histo_Comprob_Anterior;
 import union.union_vr1.Sqlite.DbAdapter_Histo_Venta_Detalle;
 import union.union_vr1.Sqlite.DbAdapter_Precio;
 import union.union_vr1.Sqlite.DbAdapter_Stock_Agente;
+import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 import union.union_vr1.Sqlite.DbAdapter_Tipo_Gasto;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 import union.union_vr1.Utils.MyApplication;
@@ -50,6 +51,10 @@ import union.union_vr1.Vistas.VMovil_Venta_Cabecera;
  */
 public class SolicitarCredito extends AsyncTask<String, String, String> {
 
+
+
+    private DbAdapter_Temp_Session session;
+
     private VMovil_Venta_Cabecera mainActivity;
     private ProgressDialog progressDialog;
     private DbAdaptert_Evento_Establec dbAdaptert_evento_establec;
@@ -60,6 +65,10 @@ public class SolicitarCredito extends AsyncTask<String, String, String> {
         this.mainActivity = mainActivity;
         dbAdaptert_evento_establec = new DbAdaptert_Evento_Establec(mainActivity);
         dbAdaptert_evento_establec.open();
+
+        session = new DbAdapter_Temp_Session(mainActivity);
+        session.open();
+
     }
 
     @Override
@@ -83,7 +92,8 @@ public class SolicitarCredito extends AsyncTask<String, String, String> {
                         1,
                         "",
                         "",
-                        ((MyApplication)mainActivity.getApplication()).getIdUsuario(),
+//                        ((MyApplication)mainActivity.getApplication()).getIdUsuario(),
+                        session.fetchVarible(4),
                         montoCredito,
                         diasCredito
                 );

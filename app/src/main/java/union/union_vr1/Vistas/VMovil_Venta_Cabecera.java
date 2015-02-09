@@ -50,12 +50,15 @@ import union.union_vr1.Sqlite.DbAdapter_Histo_Venta_Detalle;
 import union.union_vr1.Sqlite.DbAdapter_Precio;
 import union.union_vr1.Sqlite.DbAdapter_Stock_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Comprob_Cobro;
+import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 import union.union_vr1.Utils.MyApplication;
 import union.union_vr1.VMovil_BluetoothImprimir;
 
 public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
 
+
+    private DbAdapter_Temp_Session session;
 
     private DbAdapter_Histo_Comprob_Anterior dbHelper_Histo_comprob_anterior;
     private DBAdapter_Temp_Venta dbHelper_temp_venta;
@@ -134,7 +137,10 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
                         // FIRE ZE MISSILES!
 
                         dbHelper_temp_venta.deleteAllTempVentaDetalle();
-                        ((MyApplication)mContext.getApplicationContext()).setDisplayedHistorialComprobanteAnterior(false);
+                        //((MyApplication)mContext.getApplicationContext()).setDisplayedHistorialComprobanteAnterior(false);
+                        session.deleteVariable(6);
+                        session.createTempSession(6,0);
+
                         finish();
                         Intent intent = new Intent(mContext,VMovil_Evento_Indice.class);
                         startActivity(intent);
@@ -149,6 +155,8 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
         setContentView(R.layout.princ_venta_cabecera);
 
 
+        session = new DbAdapter_Temp_Session(this);
+        session.open();
 
         mainActivity = this;
         exportMain = new ExportMain(mainActivity);
@@ -182,8 +190,13 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
         dbHelper_Evento_Establecimiento.open();
 
 
-        idEstablecimiento=((MyApplication)this.getApplication()).getIdEstablecimiento();
-        id_agente_venta= ((MyApplication) this.getApplication()).getIdAgente();
+        //idEstablecimiento=((MyApplication)this.getApplication()).getIdEstablecimiento();
+        //id_agente_venta= ((MyApplication) this.getApplication()).getIdAgente();
+
+        idEstablecimiento = session.fetchVarible(2);
+
+        id_agente_venta = session.fetchVarible(1);
+
 
         setContentView(R.layout.princ_venta_cabecera);
 
@@ -229,7 +242,20 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
         buttonAgregar.setOnClickListener(this);
         listView = (ListView) findViewById(R.id.VC_listView);
 
-        isEstablecidasCuotas = ((MyApplication)this.getApplication()).isCuotasEstablecidas();
+        //isEstablecidasCuotas = ((MyApplication)this.getApplication()).isCuotasEstablecidas();
+        switch (session.fetchVarible(5)){
+            case 0:
+                isEstablecidasCuotas = false;
+                break;
+            case 1:
+                isEstablecidasCuotas = true;
+                break;
+            default:
+                isEstablecidasCuotas = false;
+                break;
+        }
+
+
         if(isEstablecidasCuotas){
 
             buttonAgregar.setClickable(false);
@@ -246,8 +272,22 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
 
         }
 
-        boolean isDisplayed = ((MyApplication)this.getApplication()).isDisplayedHistorialComprobanteAnterior();
+        //boolean isDisplayed = ((MyApplication)this.getApplication()).isDisplayedHistorialComprobanteAnterior();
+        boolean isDisplayed= false;
+        switch (session.fetchVarible(6)){
+            case 0:
+                isDisplayed = false;
+                break;
+            case 1:
+                isDisplayed = true;
+                break;
+            default:
+                isDisplayed = false;
+                break;
+        }
 
+
+        displayHistorialComprobanteAnterior();
         if (isDisplayed) {
             //NO SE MUESTRA EL HISTORIAL DEL COMPROBANTE ANTERIOR COMO SUGERENCIA DE VENTA AL USUARIO
         }else{
@@ -367,6 +407,34 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+
+                int numeroViews =  parent.getCount();
+                numeroViews--;
+
+
+                if (parent.getPositionForView(view) != 0 && parent.getPositionForView(view) != numeroViews) {
+
+                    Log.d("POSITION SELECTED", parent.getPositionForView(view)+" - " + parent.getCount());
+                    Log.d("POSITION ", position +" - " + parent.getCount());
+
+
+                    //Aquí obtengo el cursor posicionado en la fila que ha seleccionado/clickeado
+
+                    Cursor cursor = (Cursor) parent.getItemAtPosition(position);
+                    final long id_tem_detalle = cursor.getLong(cursor.getColumnIndex(DBAdapter_Temp_Venta.temp_venta_detalle));
+                    myEditDialog(id_tem_detalle).show();
+
+                }
+
 
             }
         });
@@ -561,7 +629,11 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
                 startActivity(intent);
                 break;
             case R.id.VC_buttonVender:
-                    ((MyApplication)this.getApplication()).setDisplayedHistorialComprobanteAnterior(false);
+                    //((MyApplication)this.getApplication()).setDisplayedHistorialComprobanteAnterior(false);
+
+                    session.deleteVariable(6);
+                    session.createTempSession(6,0);
+
                     vender();
                 break;
             default:
@@ -621,7 +693,9 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
                 case Credito:
                     i_formaPago = 2;
 
-                    ((MyApplication)this.getApplication()).setCuotasEstablecidas(false);
+                    //((MyApplication)this.getApplication()).setCuotasEstablecidas(false)
+                    session.deleteVariable(5);
+                    session.createTempSession(5,0);
                     break;
 
             }
@@ -745,7 +819,11 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
     private void displayHistorialComprobanteAnterior() {
 
 
-        ((MyApplication)this.getApplication()).setDisplayedHistorialComprobanteAnterior(true);
+        Log.d("DISPLAY ID ESTABLECIMIENTO ", ""+idEstablecimiento);;
+
+        //((MyApplication)this.getApplication()).setDisplayedHistorialComprobanteAnterior(true);
+        session.deleteVariable(6);
+        session.createTempSession(6,1);
         Cursor cursor = dbHelper_Histo_comprob_anterior.fetchAllHistoComprobAnteriorByIdEstRawQuery(idEstablecimiento);
         //OBTENGO LAS PJOSICIONES DE LAS COLUMNAS DEL CURSOR
         int indice_id = cursor.getColumnIndex("_id");

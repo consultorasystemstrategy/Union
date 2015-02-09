@@ -122,7 +122,8 @@ public class DbAdapter_Histo_Comprob_Anterior {
         Cursor mCursor = mDb.query(SQLITE_TABLE_Histo_Comprob_Anterior, new String[] {HC_id_hist_comprob,
                         HC_id_establec, HC_id_producto, HC_nom_producto, HC_cantidad, HC_prom_anterior,
                         HC_devuelto,HC_valor_unidad,HC_id_agente},
-                HC_id_hist_comprob + " = " + idComprobanteVentaAnterior, null, null, null, null);
+
+                HC_id_comprobante + " = " + idComprobanteVentaAnterior, null, null, null, null);
 
         if (mCursor != null) {
             mCursor.moveToFirst();

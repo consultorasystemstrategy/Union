@@ -214,6 +214,11 @@ public class  DbAdapter_Precio {
         return mCursor;
     }
 
+    public Cursor getProductoByCodigo(int idCategoria,String codigoBarras){
+        return mDb.rawQuery("select *  from m_precio mp,m_stock_agente sa where mp.pr_in_id_producto=sa.st_in_id_producto and st_te_codigo_barras='"+codigoBarras+"' and mp.pr_in_id_cat_estt='"+idCategoria+"'",null);
+
+    }
+
     public Cursor fetchAllPrecio() {
 
         Cursor mCursor = mDb.query(SQLITE_TABLE_Precio, new String[] {PR_id_precio,

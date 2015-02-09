@@ -29,7 +29,6 @@ import union.union_vr1.Sqlite.DbAdapter_Histo_Venta_Detalle;
 import union.union_vr1.Sqlite.DbAdapter_Precio;
 import union.union_vr1.Sqlite.DbAdapter_Stock_Agente;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
-import union.union_vr1.Utils.MyApplication;
 
 //Esti es yb cinebtario
 

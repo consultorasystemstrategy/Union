@@ -22,6 +22,7 @@ import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta_Detalle;
 import union.union_vr1.Sqlite.DbAdapter_Histo_Venta;
 import union.union_vr1.Sqlite.DbAdapter_Histo_Venta_Detalle;
 import union.union_vr1.Sqlite.DbAdapter_Informe_Gastos;
+import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 import union.union_vr1.Utils.MyApplication;
 import union.union_vr1.Vistas.VMovil_Online_Pumovil;
@@ -31,9 +32,20 @@ import union.union_vr1.Vistas.VMovil_Online_Pumovil;
  */
 public class ExportMain extends AsyncTask<String, String, String> {
 
+
+
+    private DbAdapter_Temp_Session session;
+
+
     private Activity mainActivity;
     private ProgressDialog progressDialog;
 
+
+    private int idLiquidacion;
+    private int idUsuario;
+    private int idAgente;
+
+    
     //DEFINO LAS VARIABLES A MIS MANEJADORES DE LAS TABLAS
     private DbAdapter_Informe_Gastos dbAdapter_informe_gastos;
     private DbAdapter_Comprob_Venta dbAdapter_comprob_venta;
@@ -47,6 +59,11 @@ public class ExportMain extends AsyncTask<String, String, String> {
     public ExportMain(Activity mainActivity) {
         this.mainActivity = mainActivity;
         //INSTANCIO LAS CLASES DE MIS MANEJADORES DE DB
+
+
+        session = new DbAdapter_Temp_Session(mainActivity);
+        session.open();
+
         dbAdapter_informe_gastos = new DbAdapter_Informe_Gastos(mainActivity);
         dbAdapter_comprob_venta = new DbAdapter_Comprob_Venta(mainActivity);
         dbAdapter_comprob_venta_detalle = new DbAdapter_Comprob_Venta_Detalle(mainActivity);
@@ -92,6 +109,10 @@ public class ExportMain extends AsyncTask<String, String, String> {
         Cursor cursorHistoVentaCreated = dbAdapter_histo_venta.filterExport();
         Cursor cursorHistoVentaDetalleCreated = dbAdapter_histo_venta_detalle.filterExport();
         Cursor cursorAutorizacionCobro = dbAdapter_temp_autorizacion_cobro.filterExport();
+
+        idAgente = session.fetchVarible(1);
+        idUsuario = session.fetchVarible(4);
+        idLiquidacion = session.fetchVarible(3);
 
 /*        Cursor cursorCC = dbAdapter_comprob_cobro.fetchAllComprobCobros();
 
@@ -144,7 +165,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
                         cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_agente))+ " - " +
                         cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_estado_comp))+ " - " +
                         0+ " - " +
-                        ((MyApplication) mainActivity.getApplication()).getIdLiquidacion()+ " - " +
+                        idLiquidacion+ " - " +
                         cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_tipo_venta))+ " - " +
                         cursorComprobanteVenta.getString(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_codigo_erp))+ " - " +
                         cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_establec)));
@@ -164,11 +185,11 @@ public class ExportMain extends AsyncTask<String, String, String> {
                                 cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_agente)),
                                 cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_estado_comp)),
                                 0,
-                                ((MyApplication) mainActivity.getApplication()).getIdLiquidacion(),
+                                idLiquidacion,
                                 cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_tipo_venta)),
                                 cursorComprobanteVenta.getString(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_codigo_erp)),
                                 cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_establec)),
-                                ((MyApplication) mainActivity.getApplication()).getIdUsuario()
+                                idUsuario
                         );
 
 
@@ -187,11 +208,11 @@ public class ExportMain extends AsyncTask<String, String, String> {
                                 cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_agente)),
                                 cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_estado_comp)),
                                 0,
-                                ((MyApplication) mainActivity.getApplication()).getIdLiquidacion(),
+                                idLiquidacion,
                                 cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_tipo_venta)),
                                 cursorComprobanteVenta.getString(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_codigo_erp)),
                                 cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_establec)),
-                                ((MyApplication) mainActivity.getApplication()).getIdUsuario()
+                                idUsuario
                         );
 
                         if (isSuccesfulExport(jsonObjectSuccesfull)){
@@ -206,7 +227,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
                                         cursorComprobanteVenta.getString(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_comprob))+"-"+
                                         cursorComprobanteVenta.getString(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_fecha_doc))+"-"+
                                         cursorPlanPago.getDouble(cursorPlanPago.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_monto_a_pagar))+"-"+
-                                        ((MyApplication) mainActivity.getApplication()).getIdUsuario()+"-"+
+                                        idUsuario+"-"+
                                                 cursorPlanPago.getString(cursorPlanPago.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_fecha_programada))+"-"+
                                                 cursorPlanPago.getString(cursorPlanPago.getColumnIndexOrThrow(Constants._SINCRONIZAR))
                                 );
@@ -214,7 +235,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
                                         idPlan,
                                         cursorComprobanteVenta.getString(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_fecha_doc)),
                                         cursorPlanPago.getDouble(cursorPlanPago.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_monto_a_pagar)),
-                                        ((MyApplication) mainActivity.getApplication()).getIdUsuario(),
+                                        idUsuario,
                                         cursorPlanPago.getString(cursorPlanPago.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_fecha_programada))
                                         );
 
@@ -279,7 +300,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
                             cursorComprobanteVentaDetalle.getInt(cursorComprobanteVentaDetalle.getColumnIndexOrThrow(dbAdapter_comprob_venta_detalle.CD_id_producto)) + "-" +
                             cursorComprobanteVentaDetalle.getInt(cursorComprobanteVentaDetalle.getColumnIndexOrThrow(dbAdapter_comprob_venta_detalle.CD_cantidad)) + "-" +
                             cursorComprobanteVentaDetalle.getDouble(cursorComprobanteVentaDetalle.getColumnIndexOrThrow(dbAdapter_comprob_venta_detalle.CD_importe)) + "-" +
-                            ((MyApplication) mainActivity.getApplication()).getIdUsuario() + "-" +
+                            idUsuario + "-" +
                             cursorComprobanteVentaDetalle.getDouble(cursorComprobanteVentaDetalle.getColumnIndexOrThrow(dbAdapter_comprob_venta_detalle.CD_costo_venta)) + "-" +
                             cursorComprobanteVentaDetalle.getDouble(cursorComprobanteVentaDetalle.getColumnIndexOrThrow(dbAdapter_comprob_venta_detalle.CD_precio_unit)) + "-" +
                             cursorComprobanteVentaDetalle.getInt(cursorComprobanteVentaDetalle.getColumnIndexOrThrow(dbAdapter_comprob_venta_detalle.CD_valor_unidad)));
@@ -289,7 +310,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
                             cursorComprobanteVentaDetalle.getInt(cursorComprobanteVentaDetalle.getColumnIndexOrThrow(dbAdapter_comprob_venta_detalle.CD_id_producto)),
                             cursorComprobanteVentaDetalle.getInt(cursorComprobanteVentaDetalle.getColumnIndexOrThrow(dbAdapter_comprob_venta_detalle.CD_cantidad)),
                             cursorComprobanteVentaDetalle.getDouble(cursorComprobanteVentaDetalle.getColumnIndexOrThrow(dbAdapter_comprob_venta_detalle.CD_importe)),
-                            ((MyApplication) mainActivity.getApplication()).getIdUsuario(),
+                            idUsuario,
                             cursorComprobanteVentaDetalle.getDouble(cursorComprobanteVentaDetalle.getColumnIndexOrThrow(dbAdapter_comprob_venta_detalle.CD_costo_venta)),
                             cursorComprobanteVentaDetalle.getDouble(cursorComprobanteVentaDetalle.getColumnIndexOrThrow(dbAdapter_comprob_venta_detalle.CD_precio_unit)),
                             cursorComprobanteVentaDetalle.getInt(cursorComprobanteVentaDetalle.getColumnIndexOrThrow(dbAdapter_comprob_venta_detalle.CD_valor_unidad))
@@ -326,10 +347,10 @@ public class ExportMain extends AsyncTask<String, String, String> {
 
                 try {
 
-                    Log.d("DATOS EXPORT GASTOS", ""+((MyApplication)mainActivity.getApplication()).getIdLiquidacion()+"-"+
+                    Log.d("DATOS EXPORT GASTOS", ""+idLiquidacion+"-"+
                             cursorInformeGastos.getDouble(cursorInformeGastos.getColumnIndexOrThrow(dbAdapter_informe_gastos.GA_total))+"-"+
                             cursorInformeGastos.getString(cursorInformeGastos.getColumnIndexOrThrow(dbAdapter_informe_gastos.GA_fecha))+"-"+
-                            ((MyApplication)mainActivity.getApplication()).getIdUsuario()+"-"+
+                            idUsuario+"-"+
                             cursorInformeGastos.getInt(cursorInformeGastos.getColumnIndexOrThrow(dbAdapter_informe_gastos.GA_id_tipo_gasto))+"-"+
                             cursorInformeGastos.getDouble(cursorInformeGastos.getColumnIndexOrThrow(dbAdapter_informe_gastos.GA_subtotal))+"-"+
                             cursorInformeGastos.getInt(cursorInformeGastos.getColumnIndexOrThrow(dbAdapter_informe_gastos.GA_igv))+"-"+
@@ -338,10 +359,10 @@ public class ExportMain extends AsyncTask<String, String, String> {
 
                     jsonObjectSuccesfull = api.CreateInformeGastos(
 
-                            ((MyApplication)mainActivity.getApplication()).getIdLiquidacion(),
+                            idLiquidacion,
                             cursorInformeGastos.getDouble(cursorInformeGastos.getColumnIndexOrThrow(dbAdapter_informe_gastos.GA_total)),
                             cursorInformeGastos.getString(cursorInformeGastos.getColumnIndexOrThrow(dbAdapter_informe_gastos.GA_fecha)),
-                            ((MyApplication)mainActivity.getApplication()).getIdUsuario(),
+                            idUsuario,
                             cursorInformeGastos.getInt(cursorInformeGastos.getColumnIndexOrThrow(dbAdapter_informe_gastos.GA_id_tipo_gasto)),
                             cursorInformeGastos.getDouble(cursorInformeGastos.getColumnIndexOrThrow(dbAdapter_informe_gastos.GA_subtotal)),
                             cursorInformeGastos.getDouble(cursorInformeGastos.getColumnIndexOrThrow(dbAdapter_informe_gastos.GA_igv)),
@@ -437,7 +458,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
                         1+"-"+
                         cursorHistoVentaDetalleCreated.getString(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_comprobante))+"-"+
                         cursorHistoVentaDetalleCreated.getString(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_lote))+"-"+
-                        ((MyApplication)mainActivity.getApplication()).getIdLiquidacion()+"-"+
+                        idLiquidacion+"-"+
                         cursorHistoVentaDetalleCreated.getDouble(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_importe_ope))+"-"+
                         cursorHistoVentaDetalleCreated.getInt(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_comprob))+"-"+
                         cursorHistoVentaDetalleCreated.getInt(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_forma_ope))+"-"+
@@ -459,7 +480,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
                             1,
                             cursorHistoVentaDetalleCreated.getString(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_comprobante)),
                             cursorHistoVentaDetalleCreated.getString(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_lote)),
-                            ((MyApplication)mainActivity.getApplication()).getIdLiquidacion(),
+                            idLiquidacion,
                             cursorHistoVentaDetalleCreated.getDouble(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_importe_ope)),
                             cursorHistoVentaDetalleCreated.getInt(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_comprob)),
                             cursorHistoVentaDetalleCreated.getInt(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_forma_ope)),
@@ -507,25 +528,25 @@ public class ExportMain extends AsyncTask<String, String, String> {
                 JSONObject jsonObject = null;
 
 
-                Log.d(" EXPORT INSERT CAJA DATOS ", ""+((MyApplication)mainActivity.getApplication()).getIdLiquidacion()+"-"+
+                Log.d(" EXPORT INSERT CAJA DATOS ", ""+idLiquidacion+"-"+
                         2+"-"+
                         cursorInsertarCaja.getInt(cursorInsertarCaja.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_monto_cobrado))+"-"+
                         cursorInsertarCaja.getInt(cursorInsertarCaja.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_estado_cobro))+"-"+
                         cursorInsertarCaja.getString(cursorInsertarCaja.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_fecha_cobro))+"-"+
                         String.valueOf(cursorInsertarCaja.getInt(cursorInsertarCaja.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_id_comprobante_cobro)))+"-"+
-                        ((MyApplication)mainActivity.getApplication()).getIdUsuario()+"-"+
+                        idUsuario+"-"+
                         cursorInsertarCaja.getInt(cursorInsertarCaja.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_id_comprob))+"-"+
                         cursorInsertarCaja.getInt(cursorInsertarCaja.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_id_plan_pago))+"-"+
                         cursorInsertarCaja.getInt(cursorInsertarCaja.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_id_plan_pago_detalle)));
                 try {
                     jsonObject = api.CreateInsertarCaja(
-                            ((MyApplication)mainActivity.getApplication()).getIdLiquidacion(),
+                            idLiquidacion,
                             2,
                             cursorInsertarCaja.getDouble(cursorInsertarCaja.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_monto_cobrado)),
                             cursorInsertarCaja.getInt(cursorInsertarCaja.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_estado_cobro)),
                             cursorInsertarCaja.getString(cursorInsertarCaja.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_fecha_cobro)),
                             String.valueOf(cursorInsertarCaja.getInt(cursorInsertarCaja.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_id_comprobante_cobro))),
-                            ((MyApplication)mainActivity.getApplication()).getIdUsuario(),
+                            idUsuario,
                             cursorInsertarCaja.getInt(cursorInsertarCaja.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_id_comprob)),
                             cursorInsertarCaja.getInt(cursorInsertarCaja.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_id_plan_pago)),
                             cursorInsertarCaja.getInt(cursorInsertarCaja.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_id_plan_pago_detalle))
@@ -571,14 +592,14 @@ public class ExportMain extends AsyncTask<String, String, String> {
                 Log.d(" EXPORT AUTORIZACIÓN COBROS ", "");
                 try {
                     jsonObject = api.CreateSolicitudAutorizacionCobro(
-                            ((MyApplication) mainActivity.getApplication()).getIdAgente(),
+                            idAgente,
                             cursorAutorizacionCobro.getInt(cursorAutorizacionCobro.getColumnIndexOrThrow(dbAdapter_temp_autorizacion_cobro.temp_id_motivo_solicitud)),
                             cursorAutorizacionCobro.getInt(cursorAutorizacionCobro.getColumnIndexOrThrow(dbAdapter_temp_autorizacion_cobro.temp_establec)),
                             cursorAutorizacionCobro.getInt(cursorAutorizacionCobro.getColumnIndexOrThrow(dbAdapter_temp_autorizacion_cobro.temp_id_estado_solicitud)),
                             cursorAutorizacionCobro.getString(cursorAutorizacionCobro.getColumnIndexOrThrow(dbAdapter_temp_autorizacion_cobro.temp_referencia)),
                             cursorAutorizacionCobro.getDouble(cursorAutorizacionCobro.getColumnIndexOrThrow(dbAdapter_temp_autorizacion_cobro.temp_montoCredito)),
                             0.0,
-                            ((MyApplication) mainActivity.getApplication()).getIdUsuario(),
+                            idUsuario,
                             cursorAutorizacionCobro.getInt(cursorAutorizacionCobro.getColumnIndexOrThrow(dbAdapter_temp_autorizacion_cobro.temp_id_autorizacion_cobro))
                             );
                     Log.d("EXPORT AUTORIZACION COBROS", jsonObject.toString());
@@ -623,13 +644,13 @@ public class ExportMain extends AsyncTask<String, String, String> {
 
                 Log.d("EVENTO ESTABLECIMIENTO EXPORT DATOS","" +
                         cursorEventoEstablecimiento.getInt(cursorEventoEstablecimiento.getColumnIndexOrThrow(dbAdaptert_evento_establec.EE_id_establec))+"-"+
-                        ((MyApplication)mainActivity.getApplication()).getIdLiquidacion()+"-"+
+                        idLiquidacion+"-"+
                         cursorEventoEstablecimiento.getInt(cursorEventoEstablecimiento.getColumnIndexOrThrow(dbAdaptert_evento_establec.EE_id_estado_atencion))+"-"+
                         cursorEventoEstablecimiento.getInt(cursorEventoEstablecimiento.getColumnIndexOrThrow(dbAdaptert_evento_establec.EE_id_estado_no_atencion)));
                 try {
                     jsonObject = api.UpdateEstadoEstablecimiento(
                             cursorEventoEstablecimiento.getInt(cursorEventoEstablecimiento.getColumnIndexOrThrow(dbAdaptert_evento_establec.EE_id_establec)),
-                            ((MyApplication)mainActivity.getApplication()).getIdLiquidacion(),
+                            idLiquidacion,
                             cursorEventoEstablecimiento.getInt(cursorEventoEstablecimiento.getColumnIndexOrThrow(dbAdaptert_evento_establec.EE_id_estado_atencion)),
                             cursorEventoEstablecimiento.getInt(cursorEventoEstablecimiento.getColumnIndexOrThrow(dbAdaptert_evento_establec.EE_id_estado_no_atencion))
                     );

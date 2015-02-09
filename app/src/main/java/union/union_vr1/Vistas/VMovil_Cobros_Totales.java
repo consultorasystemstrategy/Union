@@ -29,7 +29,6 @@ import union.union_vr1.AsyncTask.ImportMain;
 import union.union_vr1.R;
 import union.union_vr1.Sqlite.CursorAdapterCobrosTotales;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
-import union.union_vr1.Utils.MyApplication;
 
 
 public class VMovil_Cobros_Totales extends Activity {

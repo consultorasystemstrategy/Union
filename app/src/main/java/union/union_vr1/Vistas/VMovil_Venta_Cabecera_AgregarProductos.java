@@ -33,6 +33,7 @@ import union.union_vr1.R;
 import union.union_vr1.Sqlite.DBAdapter_Temp_Venta;
 import union.union_vr1.Sqlite.DbAdapter_Precio;
 import union.union_vr1.Sqlite.DbAdapter_Stock_Agente;
+import union.union_vr1.Sqlite.DbAdapter_Temp_Barcode_Scanner;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 import union.union_vr1.Utils.MyApplication;
 
@@ -59,6 +60,10 @@ public class VMovil_Venta_Cabecera_AgregarProductos extends Activity implements 
     private Activity mainActivity;
     private ListView listView;
     private View header;
+    private Cursor mCursorScannerProducto;
+    private String barcodeScan;
+    private String formatScan;
+    private DbAdapter_Temp_Barcode_Scanner dbAdapter_temp_barcode_scanner;
 
     @Override
     public void onBackPressed() {
@@ -75,6 +80,9 @@ public class VMovil_Venta_Cabecera_AgregarProductos extends Activity implements 
         this.mainActivity = this;
         dbHelper_Stock_Agente = new DbAdapter_Stock_Agente(this);
         dbHelper_Stock_Agente.open();
+
+        dbAdapter_temp_barcode_scanner = new DbAdapter_Temp_Barcode_Scanner(this);
+        dbAdapter_temp_barcode_scanner.open();
 
         dbHelper_Precio = new DbAdapter_Precio(this);
         dbHelper_Precio.open();
@@ -95,7 +103,25 @@ public class VMovil_Venta_Cabecera_AgregarProductos extends Activity implements 
 
         buttonAgregarProductos.setOnClickListener(this);
         buttonScan.setOnClickListener(this);
-        idEstablecimiento = ((MyApplication)this.getApplication()).getIdEstablecimiento();
+
+/*
+        if (((MyApplication)this.getApplication()).getIdEstablecimiento()==0){
+
+            Cursor cursorTempScanner = dbAdapter_temp_barcode_scanner.fetchAll();
+            idEstablecimiento = cursorTempScanner.getInt(cursorTempScanner.getColumnIndexOrThrow(dbAdapter_temp_barcode_scanner.temp_id_establecimiento));
+        }else{
+            idEstablecimiento = ((MyApplication)this.getApplication()).getIdEstablecimiento();
+        }
+
+*/
+
+        Cursor cursorTempScanner = dbAdapter_temp_barcode_scanner.fetchAll();
+        cursorTempScanner.moveToFirst();
+        idEstablecimiento = cursorTempScanner.getInt(cursorTempScanner.getColumnIndexOrThrow(dbAdapter_temp_barcode_scanner.temp_id_establecimiento));
+
+
+        Log.d("VARIABLE GLOBAL ID ESTABLECIMIENTO ",""+idEstablecimiento);
+
 
         final Cursor cursorEstablecimiento = dbHelper_Evento_Establecimiento.fetchEstablecsById(String.valueOf(idEstablecimiento));
         cursorEstablecimiento.moveToFirst();
@@ -336,15 +362,24 @@ public class VMovil_Venta_Cabecera_AgregarProductos extends Activity implements 
         IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
         if (scanResult != null) {
             // handle scan result}
-            String contents = scanResult.getContents();
-            String format = scanResult.getFormatName();
+            barcodeScan = scanResult.getContents();
+            formatScan = scanResult.getFormatName();
 
             /*textViewContent.setText("CODEBAR CONTEN : "+contents);
             textViewFormat.setText("FORMAT : "+format);*/
 
-            Toast toast = Toast.makeText(getApplicationContext(),
-                    "CODEBAR CONTENT : "+contents + "\nFORMAT : "+format, Toast.LENGTH_SHORT);
-            toast.show();
+            if (barcodeScan.length()>0){
+
+                mCursorScannerProducto = dbHelper_Precio.getProductoByCodigo(id_categoria_establecimiento, barcodeScan);
+
+                if (mCursorScannerProducto.getCount()>0){
+                    scannerDialog().show();
+                }else {
+                    Toast.makeText(getApplicationContext(), "Producto con código de barras : "+ barcodeScan + "no disponible en el Stock Actual y/o Categoría establecimiento", Toast.LENGTH_SHORT).show();;
+                }
+            }else{
+                Toast.makeText(getApplicationContext(), "No ha Scaneado ningún producto", Toast.LENGTH_SHORT).show();;
+            }
 
 
 
@@ -358,6 +393,9 @@ public class VMovil_Venta_Cabecera_AgregarProductos extends Activity implements 
     }
 
     private Dialog scannerDialog() {
+
+        int idProducto = -1;
+        String nombreP = null;
         final View layout = View.inflate(this, R.layout.dialog_cantidad_productos, null);
 
         DecimalFormat df = new DecimalFormat("#.00");
@@ -365,18 +403,24 @@ public class VMovil_Venta_Cabecera_AgregarProductos extends Activity implements 
         final TextView nombreProducto = ((TextView) layout.findViewById(R.id.VCPA_textView2NombreProducto));
         final TextView precio = ((TextView) layout.findViewById(R.id.VCPA_textViewPrecio));
 
-        Cursor mCursorPrecioUnitarioGeneral = dbHelper_Precio.fetchAllPrecioByIdProductoAndCategoeria(id_producto,id_categoria_establecimiento);
-        if (mCursorPrecioUnitarioGeneral.getCount()>0) {
-            double precio_unitario = mCursorPrecioUnitarioGeneral.getDouble(mCursorPrecioUnitarioGeneral.getColumnIndexOrThrow(DbAdapter_Precio.PR_precio_unit));
+        mCursorScannerProducto.moveToFirst();
+        if (mCursorScannerProducto.getCount()>0) {
+            double precio_unitario = mCursorScannerProducto.getDouble(mCursorScannerProducto.getColumnIndexOrThrow(DbAdapter_Precio.PR_precio_unit));
+            nombreP =  mCursorScannerProducto.getString(mCursorScannerProducto.getColumnIndexOrThrow(DbAdapter_Precio.PR_nombreProducto));
+            idProducto = mCursorScannerProducto.getInt(mCursorScannerProducto.getColumnIndexOrThrow(DbAdapter_Precio.PR_id_producto));
             precio.setText("Precio : S/. "+ df.format(precio_unitario));
+            nombreProducto.setText("Nombre : S/. " + nombreP);
         }else{
-            precio.setText("Precio : S/. No encontrado");
+            precio.setText("Producto Scaneado no disponible en el Stock Actual");
+
         }
-        nombreProducto.setText(nombre);
+
 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Cantidad");
+        final int finalIdProducto = idProducto;
+        final String finalNombreP = nombreP;
         builder.setPositiveButton("OK", new Dialog.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 String texto = savedText.getText().toString().trim();
@@ -388,13 +432,13 @@ public class VMovil_Venta_Cabecera_AgregarProductos extends Activity implements 
 
                 Toast.makeText(getApplicationContext(),"Cantidad : "+cantidad + " id_producto : "+ id_producto,Toast.LENGTH_LONG).show();
 
-                Cursor mCursorPrecioUnitario = dbHelper_Precio.fetchAllPrecioByIdProductoAndCantidad(id_producto,cantidad, id_categoria_establecimiento);
+                Cursor mCursorPrecioUnitario = dbHelper_Precio.fetchAllPrecioByIdProductoAndCantidad(finalIdProducto,cantidad, id_categoria_establecimiento);
 
                 double precio_unitario = 10.0;
                 if (mCursorPrecioUnitario.getCount()!=0){
                     precio_unitario = mCursorPrecioUnitario.getDouble(mCursorPrecioUnitario.getColumnIndex(DbAdapter_Precio.PR_precio_unit));
                 }else{
-                    Cursor mCursorPrecioUnitarioGeneral = dbHelper_Precio.fetchAllPrecioByIdProductoAndCategoeria(id_producto,id_categoria_establecimiento);
+                    Cursor mCursorPrecioUnitarioGeneral = dbHelper_Precio.fetchAllPrecioByIdProductoAndCategoeria(finalIdProducto,id_categoria_establecimiento);
                     mCursorPrecioUnitarioGeneral.moveToFirst();
                     if (mCursorPrecioUnitarioGeneral.getCount()>0) {
                         precio_unitario = mCursorPrecioUnitarioGeneral.getDouble(mCursorPrecioUnitarioGeneral.getColumnIndexOrThrow(DbAdapter_Precio.PR_precio_unit));
@@ -408,7 +452,7 @@ public class VMovil_Venta_Cabecera_AgregarProductos extends Activity implements 
                 String devuelto = null;
 
                 //En una tabla "Temp_Venta" Nos sirve para agregar datos del historial de ventas anteriores y sugerir al usuario, estos son datos temporales
-                long id = dbHelper_Temp_Venta.createTempVentaDetalle(1,id_producto,nombre,cantidad,total_importe, precio_unitario, promedio_anterior, devuelto, procedencia, 1);
+                long id = dbHelper_Temp_Venta.createTempVentaDetalle(1,finalIdProducto, finalNombreP,cantidad,total_importe, precio_unitario, promedio_anterior, devuelto, procedencia, 1);
 
                 Intent intent = new Intent(mContext, VMovil_Venta_Cabecera_AgregarProductos.class);
                 finish();

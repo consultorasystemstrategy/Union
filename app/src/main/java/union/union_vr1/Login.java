@@ -20,6 +20,7 @@ import union.union_vr1.JSONParser.ParserAgente;
 import union.union_vr1.Objects.Agente;
 import union.union_vr1.RestApi.StockAgenteRestApi;
 import union.union_vr1.Sqlite.DbAdapter_Agente;
+import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 import union.union_vr1.Utils.MyApplication;
 import union.union_vr1.Vistas.VMovil_Evento_Indice;
 import union.union_vr1.Vistas.VMovil_Online_Pumovil;
@@ -33,6 +34,8 @@ import java.util.List;
 public class Login extends Activity implements OnClickListener{
 
 
+
+    private DbAdapter_Temp_Session session;
     private Login loginClass;
     private boolean succesLogin;
     ProgressDialog prgDialog;
@@ -95,8 +98,26 @@ public class Login extends Activity implements OnClickListener{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.login);
 
-        ((MyApplication)getApplication()).setImportado(false);
-        ((MyApplication)getApplication()).setExport(false);
+
+        session = new DbAdapter_Temp_Session(this);
+        session.open();
+
+
+
+
+        //((MyApplication)getApplication()).setImportado(false);
+        //((MyApplication)getApplication()).setExport(false);
+
+
+        session.deleteVariable(7);
+        session.createTempSession(7,0);
+        session.deleteVariable(8);
+        session.createTempSession(8,0);
+
+
+
+
+
 
         loginClass = this;
 
@@ -197,10 +218,25 @@ public class Login extends Activity implements OnClickListener{
             }
 
             if (succesLogin){
+                /*
                 ((MyApplication) loginClass.getApplication()).setIdAgente(mCursorAgente.getInt(mCursorAgente.getColumnIndexOrThrow(dbAdapter_agente.AG_id_agente_venta)));
                 ((MyApplication) loginClass.getApplication()).setIdLiquidacion(mCursorAgente.getInt(mCursorAgente.getColumnIndexOrThrow(dbAdapter_agente.AG_liquidacion)));
                 ((MyApplication) loginClass.getApplication()).setIdUsuario(mCursorAgente.getInt(mCursorAgente.getColumnIndexOrThrow(dbAdapter_agente.AG_id_usuario)));
                 ((MyApplication) loginClass.getApplication()).setDisplayedHistorialComprobanteAnterior(false);
+
+*/
+
+                session.deleteVariable(1);
+                session.deleteVariable(3);
+                session.deleteVariable(4);
+                session.deleteVariable(6);
+
+                session.createTempSession(1,mCursorAgente.getInt(mCursorAgente.getColumnIndexOrThrow(dbAdapter_agente.AG_id_agente_venta)));
+                session.createTempSession(3,mCursorAgente.getInt(mCursorAgente.getColumnIndexOrThrow(dbAdapter_agente.AG_liquidacion)));
+                session.createTempSession(4,mCursorAgente.getInt(mCursorAgente.getColumnIndexOrThrow(dbAdapter_agente.AG_id_usuario)));
+                session.createTempSession(6,0);
+
+
                 Toast.makeText(getApplicationContext(), "Login correcto", Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(Login.this, VMovil_Online_Pumovil.class);
                 finish();
@@ -248,11 +284,24 @@ public class Login extends Activity implements OnClickListener{
                 for (int i = 0; i < agenteLista.size() ; i++) {
                     Log.d("Agente"+i, "Nombre : "+agenteLista.get(i).getNombreAgente());
 
+                    /*
                     //VARIABLE GLOBAL, PARA OBTENERLA DESDE CUALQUIER SITIO DE LA APLICACIÓN
                     ((MyApplication) loginClass.getApplication()).setIdAgente(agenteLista.get(i).getIdAgenteVenta());
                     ((MyApplication) loginClass.getApplication()).setIdLiquidacion(agenteLista.get(i).getLiquidacion());
                     ((MyApplication) loginClass.getApplication()).setDisplayedHistorialComprobanteAnterior(false);
                     ((MyApplication) loginClass.getApplication()).setIdUsuario(agenteLista.get(i).getIdUsuario());
+*/
+
+                    session.deleteVariable(1);
+                    session.deleteVariable(3);
+                    session.deleteVariable(4);
+                    session.deleteVariable(6);
+
+                    session.createTempSession(1,agenteLista.get(i).getIdAgenteVenta());
+                    session.createTempSession(3,agenteLista.get(i).getLiquidacion());
+                    session.createTempSession(4,agenteLista.get(i).getIdUsuario());
+                    session.createTempSession(6,0);
+
 
                     agenteLista.get(i).getIdAgenteVenta();
                     boolean existe = dbAdapter_agente.existeAgentesById(agenteLista.get(i).getIdAgenteVenta());
@@ -397,6 +446,5 @@ public class Login extends Activity implements OnClickListener{
         prgDialog.show();
 
     }
-		 
 
 }

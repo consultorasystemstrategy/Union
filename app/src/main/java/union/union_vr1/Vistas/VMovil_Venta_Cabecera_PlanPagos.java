@@ -32,11 +32,15 @@ import union.union_vr1.R;
 import union.union_vr1.Sqlite.DBAdapter_Temp_Venta;
 import union.union_vr1.Sqlite.DbAdapter_Precio;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Comprob_Cobro;
+import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 import union.union_vr1.Utils.MyApplication;
 
 
 public class VMovil_Venta_Cabecera_PlanPagos extends Activity {
+
+
+    private DbAdapter_Temp_Session session;
 
     private Spinner spinnerCuotas;
     private TextView textViewMontoTotal;
@@ -84,6 +88,10 @@ public class VMovil_Venta_Cabecera_PlanPagos extends Activity {
         setContentView(R.layout.activity_vmovil__venta__cabecera__plan_pagos);
         mContext = this;
 
+
+        session = new DbAdapter_Temp_Session(this);
+        session.open();
+
         dbHelperEventoEstablecimiento = new DbAdaptert_Evento_Establec(this);
         dbHelperEventoEstablecimiento.open();
 
@@ -101,8 +109,12 @@ public class VMovil_Venta_Cabecera_PlanPagos extends Activity {
 
         textViewMontoTotal.setText("S/. " + df.format(total));
 
-        idEstablecimiento = ((MyApplication) this.getApplication()).getIdEstablecimiento();
-        idAgente = ((MyApplication) this.getApplication()).getIdAgente();
+        //idEstablecimiento = ((MyApplication) this.getApplication()).getIdEstablecimiento();
+        //idAgente = ((MyApplication) this.getApplication()).getIdAgente();
+
+        idEstablecimiento = session.fetchVarible(2);
+        idAgente = session.fetchVarible(1);
+
 
 
         cursorEstablecimiento = dbHelperEventoEstablecimiento.fetchEstablecsById("" + idEstablecimiento);
@@ -223,6 +235,10 @@ public class VMovil_Venta_Cabecera_PlanPagos extends Activity {
                 break;
             case R.id.VCPP_buttonEstablecer:
                   ((MyApplication)this.getApplication()).setCuotasEstablecidas(true);
+
+                session.deleteVariable(5);
+                session.createTempSession(5,1);
+
                 Toast.makeText(getApplicationContext(),
                         "Cuotas Establecidos \nYa no podrá agregar productos, ni eliminar productos", Toast.LENGTH_SHORT).show();
 

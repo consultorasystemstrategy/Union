@@ -40,12 +40,16 @@ import union.union_vr1.Sqlite.Constants;
 import union.union_vr1.Sqlite.CursorAdapter_Cobros_Establecimiento;
 import union.union_vr1.Sqlite.DBAdapter_Temp_Autorizacion_Cobro;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
+import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 import union.union_vr1.Utils.MyApplication;
 
 
 import static union.union_vr1.R.layout.prompts_cobros;
 
 public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
+
+    private DbAdapter_Temp_Session session;
+
     private Cursor cursor, cursorx;
     private SimpleCursorAdapter dataAdapter;
     final Context context = this;
@@ -56,6 +60,8 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
     private String estabX;
     private double valCredito;
     private int pase = 0;
+
+
 
     int idPlanPago;
     int idPlanPagoDetalle;
@@ -74,6 +80,9 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        session = new DbAdapter_Temp_Session(this);
+        session.open();
 
         Bundle bundle = getIntent().getExtras();
         estabX = bundle.getString("idEstabX");
@@ -285,7 +294,10 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
                         String fechaP = dia+"/"+mes+"/"+año;
                         if(fechaP!="" || valorP !=0.0 ){
 
-                            int idAgente = ((MyApplication)getApplicationContext()).getIdAgente();
+                            //int idAgente = ((MyApplication)getApplicationContext()).getIdAgente();
+
+                            int idAgente = session.fetchVarible(1);
+
                             long idDetalleCobro = dbComprobanteCobro.createComprobCobros(Integer.parseInt(estabX),comprobanteVenta,idPlanPago,idPlanPagoDetalle,tipoDoc,doc,fechaP,valorP,"","",0.0,2,idAgente,2,"");
                             Log.d("parametroscobros",""+valorP+"-"+valorR);
                             boolean upCobros = dbComprobanteCobro.updateCobro(idCobro,valorP,valorR);

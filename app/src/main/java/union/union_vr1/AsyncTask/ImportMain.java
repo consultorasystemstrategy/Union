@@ -43,6 +43,7 @@ import union.union_vr1.Sqlite.DbAdapter_Histo_Comprob_Anterior;
 import union.union_vr1.Sqlite.DbAdapter_Histo_Venta_Detalle;
 import union.union_vr1.Sqlite.DbAdapter_Precio;
 import union.union_vr1.Sqlite.DbAdapter_Stock_Agente;
+import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 import union.union_vr1.Sqlite.DbAdapter_Tipo_Gasto;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 import union.union_vr1.Utils.MyApplication;
@@ -54,6 +55,10 @@ import union.union_vr1.Vistas.VMovil_Online_Pumovil;
  */
 public class ImportMain extends AsyncTask<String, String, String> {
 
+
+
+
+    private DbAdapter_Temp_Session session;
     private Activity mainActivity;
     private ProgressDialog progressDialog;
 
@@ -75,6 +80,10 @@ public class ImportMain extends AsyncTask<String, String, String> {
 
     public ImportMain(Activity mainActivity) {
         this.mainActivity = mainActivity;
+
+        session = new DbAdapter_Temp_Session(mainActivity);
+        session.open();
+
         dbAdapter_agente = new DbAdapter_Agente(mainActivity);
         dbAdapter_agente.open();
         dbAdapter_stock_agente = new DbAdapter_Stock_Agente(mainActivity);
@@ -94,7 +103,8 @@ public class ImportMain extends AsyncTask<String, String, String> {
         dbAdapter_temp_autorizacion_cobro = new DBAdapter_Temp_Autorizacion_Cobro(mainActivity);
         dbAdapter_temp_autorizacion_cobro.open();
 
-        idAgente = ((MyApplication)mainActivity.getApplication()).getIdAgente();
+//        idAgente = ((MyApplication)mainActivity.getApplication()).getIdAgente();
+            idAgente = session.fetchVarible(1);
 
         //listView = (ListView) mainActivity.findViewById(R.id.listView);
     }
@@ -253,7 +263,7 @@ public class ImportMain extends AsyncTask<String, String, String> {
 
             publishProgress(""+90);
             for (int i = 0; i < comprobanteVentaDetalles.size() ; i++) {
-                Log.d("HISTORIAL VENTA ANTERIOR : " + i, " NOMBRE PRODUCTO : " + comprobanteVentaDetalles.get(i).getNombreProducto());
+                Log.d("HISTORIAL VENTA ANTERIOR : " + i + " - "+ comprobanteVentaDetalles.get(i).getIdComprobante()+ " - " + comprobanteVentaDetalles.get(i).getIdEstablecimiento(), " NOMBRE PRODUCTO : " + comprobanteVentaDetalles.get(i).getNombreProducto());
 
                 boolean existe = dbAdapter_histo_comprob_anterior.existeComprobanteVentaAnterior(comprobanteVentaDetalles.get(i).getIdComprobante());
 
