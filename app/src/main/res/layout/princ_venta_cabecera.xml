@@ -58,7 +58,7 @@
                 android:text="Agregar Productos"
                 android:id="@+id/VC_buttonAgregarProductos"
                 android:layout_weight="1"
-                android:background="@color/PersonalizadoSteve2" />
+                android:background="@color/Dark3" />
 
             <Button
                 android:layout_width="fill_parent"

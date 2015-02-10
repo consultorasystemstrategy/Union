@@ -74,7 +74,7 @@ public class VMovil_Menu_Establec extends Activity {
 
     private void displayListView() {
 
-        Cursor cursor = dbHelper.fetchAllEstablecsXX();
+        Cursor cursor = dbHelper.listarEstablecimientos();
 
         /*
         // The desired columns to be bound
@@ -142,9 +142,9 @@ public class VMovil_Menu_Establec extends Activity {
 
                 // Get the state's capital from this row in the database.
                 String idEstablec =
-                        cursor.getString(cursor.getColumnIndexOrThrow("ee_in_id_establec"));
+                        cursor.getString(cursor.getColumnIndexOrThrow("idEstablecimiento"));
 
-                int id_agente = cursor.getInt(cursor.getColumnIndexOrThrow("ee_in_id_agente"));
+                int id_agente = cursor.getInt(cursor.getColumnIndexOrThrow("idAgente"));
 
                 //if(idEstEst == 1){
                 //    view.setBackgroundColor(Color.BLUE);
@@ -186,7 +186,7 @@ public class VMovil_Menu_Establec extends Activity {
 
         cursorAdapterEstablecimientoColor.setFilterQueryProvider(new FilterQueryProvider() {
             public Cursor runQuery(CharSequence constraint) {
-                return dbHelper.fetchEstablecsByName(constraint.toString());
+                return dbHelper.listarEstablecimientosPorNombre(constraint.toString());
             }
         });
 

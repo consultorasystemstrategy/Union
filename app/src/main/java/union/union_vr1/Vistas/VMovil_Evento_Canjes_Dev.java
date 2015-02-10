@@ -89,14 +89,35 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity {
     }
 
     private void autoComplete() {
-        Cursor cr = dbHelper_Stock.listarProductos();
+
+        Cursor cr = dbHelper_Stock.listarProductosAndStock();
         cr.moveToFirst();
-        String[] colum = new String[]{
-                cr.getColumnName(1)};
-        int[] to = new int[]{
-                R.id.autcomcan_dev
+
+
+        String[] columnasStock = new String[]{
+                cr.getColumnName(1),
+                cr.getColumnName(2)
+
         };
-        adapter = new SimpleCursorAdapter(this, R.layout.infor_canjes_dev, cr, colum, to, 0);
+
+        // the XML defined views which the data will be bound to
+        int[] toStock = new int[]{
+                R.id.VCAP_producto,
+                R.id.VCPA_stock,
+
+        };
+
+        adapter = new SimpleCursorAdapter(this,
+                R.layout.infor_venta_cabecera_productos,
+                cr,
+                columnasStock,
+                toStock,
+                0);
+
+
+
+
+
         autoComple.setAdapter(adapter);
         autoComple.addTextChangedListener(new TextWatcher() {
             @Override
@@ -119,14 +140,18 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity {
         adapter.setFilterQueryProvider(new FilterQueryProvider() {
             @Override
             public Cursor runQuery(CharSequence charSequence) {
-                Cursor cr = dbHelper_Stock.listarbyIdProducto(charSequence.toString());
+                Cursor cr = dbHelper_Stock.listarbyIdProductoAndStock(charSequence.toString());
                 return cr;
             }
         });
+
+
         autoComple.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                adapterView.setBackgroundColor(0x00000000);
+                //adapterView.setBackgroundColor(0x00000000);
+
+
                 Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
                 String nom = cursor.getString(1);
                 idProducto = cursor.getInt(0);

@@ -110,15 +110,21 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
 
                     if (dSqlite.equals(dSistema)) {
                         Toast.makeText(getApplicationContext(), "Hay Deudas por Cobrar ", Toast.LENGTH_SHORT).show();
-                        mCobros.getBackground().setColorFilter(new LightingColorFilter(0xffff0000, 0xffff0000));
+                        //mCobros.getBackground().setColorFilter(new LightingColorFilter(0xffff0000, 0xffff0000));
+                        mCobros.setBackground(getApplicationContext().getResources().getDrawable(R.drawable.border_right_red));
+
                     }
                     if (dSqlite.before(dSistema)) {
                         Toast.makeText(getApplicationContext(), "Hay Deudas por Cobrar", Toast.LENGTH_SHORT).show();
-                        mCobros.getBackground().setColorFilter(new LightingColorFilter(0xffff0000, 0xffff0000));
+                        //mCobros.getBackground().setColorFilter(new LightingColorFilter(0xffff0000, 0xffff0000));
+                        mCobros.setBackground(getApplicationContext().getResources().getDrawable(R.drawable.border_right_red));
+
                     }
                     if (dSqlite.after(dSistema)) {
                         Toast.makeText(getApplicationContext(), "Fechas Proximas", Toast.LENGTH_SHORT).show();
-                        mCobros.getBackground().setColorFilter(new LightingColorFilter(0xffffff00, 0xffffff00));
+                        //mCobros.getBackground().setColorFilter(new LightingColorFilter(0xffffff00, 0xffffff00));
+                        mCobros.setBackground(getApplicationContext().getResources().getDrawable(R.drawable.border_right_yellow));
+
                     }
 
 
@@ -131,7 +137,8 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
         }
         if (cursor.getCount() <= 0) {
             Toast.makeText(getApplicationContext(), "No hay Deudas Por Cobrar", Toast.LENGTH_SHORT).show();
-            mCobros.getBackground().setColorFilter(new LightingColorFilter(0xff00ff00, 0xff00ff00));
+            mCobros.setBackground(getApplicationContext().getResources().getDrawable(R.drawable.border_right_green));
+
         }
 
 

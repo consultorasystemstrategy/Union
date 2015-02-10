@@ -54,14 +54,14 @@
                 android:text="SCAN"
                 android:id="@+id/VCAP_buttonScanear"
                 android:layout_weight="1"
-                android:background="@color/Personalizado2" />
+                android:background="@color/Dark4" />
             <Button
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:text="AgregarProductos"
                 android:id="@+id/VCAP_buttonAgregar"
                 android:layout_weight="1"
-                android:background="@color/PersonalizadoSteve4" />
+                android:background="@color/Dark3" />
 
         </LinearLayout>
     </LinearLayout>

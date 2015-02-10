@@ -12,20 +12,15 @@ import android.os.ParcelUuid;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PrintStream;
 import java.nio.charset.Charset;
-import java.util.Collection;
 import java.util.Set;
 import java.util.UUID;
-
-import union.union_vr1.Utils.DialogSincronizarOffLine;
 
 public class VMovil_BluetoothImprimir extends Activity{
 
@@ -57,7 +52,7 @@ public class VMovil_BluetoothImprimir extends Activity{
 
         buttonImprimir = (Button) findViewById(R.id.button);
         buttonSincronizar = (Button) findViewById(R.id.buttonSincronizar);
-        textViewImprimir = (TextView) findViewById(R.id.textView);
+        textViewImprimir = (TextView) findViewById(R.id.textViewEstablecimientoNombre);
 
         textoImpresion = getIntent().getExtras().getString("textoImpresion");
         textViewImprimir.setText(textoImpresion);

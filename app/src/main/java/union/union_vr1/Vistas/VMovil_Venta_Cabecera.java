@@ -915,6 +915,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
 
         textViewFooterText = (TextView)footer.findViewById(R.id.VCAP_textViewFooterText);
         textViewFooterTotal = (TextView)footer.findViewById(R.id.VCAP_textViewFooterTotal);
+
         textViewFooterSurtidoStock = (TextView)footer.findViewById(R.id.VCAP_textViewSurtidoStock);
         textViewFooterSurtidoVenta = (TextView)footer.findViewById(R.id.VCAP_textViewSurtiDoVenta);
 

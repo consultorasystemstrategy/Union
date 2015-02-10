@@ -392,10 +392,31 @@ public class DbAdapter_Stock_Agente {
         Cursor cr = mDb.rawQuery("select DISTINCT(pr_in_id_producto) _id,(pr_in_nombre) from m_precio ",null);
         return  cr ;
     }
-    public Cursor listarbyIdProducto  (String nombre)  throws SQLException{
-     Cursor cr = mDb.rawQuery("select DISTINCT(pr_in_id_producto) _id,(pr_in_nombre) from m_precio where pr_in_nombre LIKE '%"+nombre+"%'",null);
-      return cr;
+
+    public Cursor listarProductosAndStock(){
+        Cursor cr = mDb.rawQuery("SELECT DISTINCT(SA.st_in_id_producto) AS _id, SA.st_te_nombre, SA.st_in_disponible\n" +
+                "FROM m_stock_agente SA\n" +
+                "INNER JOIN m_precio P\n" +
+                "ON  SA.st_in_id_producto = P.pr_in_id_producto;\n ",null);
+        return  cr ;
     }
+
+
+    public Cursor listarbyIdProducto  (String nombre)  throws SQLException{
+        Cursor cr = mDb.rawQuery("select DISTINCT(pr_in_id_producto) _id,(pr_in_nombre) from m_precio where pr_in_nombre LIKE '%"+nombre+"%'",null);
+        return cr;
+    }
+
+    public Cursor listarbyIdProductoAndStock  (String nombre)  throws SQLException{
+        Cursor cr = mDb.rawQuery("SELECT DISTINCT(SA.st_in_id_producto) AS _id, SA.st_te_nombre, SA.st_in_disponible\n" +
+                "FROM m_stock_agente SA\n" +
+                "INNER JOIN m_precio P\n" +
+                "ON  SA.st_in_id_producto = P.pr_in_id_producto\n" +
+                "WHERE SA.st_te_nombre LIKE '%"+nombre+"%';",null);
+        return cr;
+    }
+
+
 
     public Cursor fetchAllStockAgenteVentas() {
 

@@ -19,6 +19,7 @@ import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -39,6 +40,13 @@ public class mostrar_can_dev_facturas extends TabActivity {
     private int idAgente;
     private TabHost tabHost;
     private DbAdapter_Canjes_Devoluciones dbHelper_CanDev;
+
+
+    private TextView textViewFooterText;
+    private TextView textViewFooterTotal;
+    private TextView textViewHeader;
+    private View header;
+    private View footer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,8 +110,15 @@ public class mostrar_can_dev_facturas extends TabActivity {
 
 
     private void displayListCanjes() {
-        TextView view_canjes = new TextView(getApplicationContext());
-        TextView footer = new TextView(getApplicationContext());
+        header = getLayoutInflater().inflate(R.layout.header_canjes_devoluciones, null);
+
+         textViewHeader = (TextView) header.findViewById(R.id.textViewHeaderText);
+
+        footer = getLayoutInflater().inflate(R.layout.footer_canjes_devoluciones,null);
+
+        textViewFooterText = (TextView)footer.findViewById(R.id.textViewFooterText);
+        textViewFooterTotal = (TextView)footer.findViewById(R.id.textViewFooterTotal);
+
         String textoView = "";
         Cursor cabecera = dbHelper_CanDev.obtener_cabecera(idEstablec);
 
@@ -123,15 +138,25 @@ public class mostrar_can_dev_facturas extends TabActivity {
         Cursor precio = dbHelper_CanDev.obtener_igv(1, idEstablec);
         String textFooter = "";
         if (precio.moveToFirst()) {
-            textFooter = "Sub: " + precio.getString(1) + "" +
-                    "\nIgv: " + precio.getString(2) + "" +
-                    "\nTot: " + precio.getString(0) + "";
+
+            DecimalFormat df = new DecimalFormat("#.00");
+
+            textViewFooterText.setText("Total :\n" +
+                    "Base imponible :\n" +
+                    "IGV :");
+
+            textViewFooterTotal.setText(" S/. "+precio.getString(0)+"\n" +
+                    "S/. "+precio.getString(1)+ "\n" +
+                    "S/. "+precio.getString(2));
+
         }
-        footer.setText(textFooter);
+
         lista_facturas.addFooterView(footer);
         if (cr.moveToFirst()) {
-            view_canjes.setText(textoView);
-            lista_facturas.addHeaderView(view_canjes);
+
+
+            textViewHeader.setText(textoView);
+            lista_facturas.addHeaderView(header);
             CursorAdapterFacturas_Canjes adapter_facturas = new CursorAdapterFacturas_Canjes(getApplicationContext(), cr);
             lista_facturas.setAdapter(adapter_facturas);
 
@@ -144,8 +169,16 @@ public class mostrar_can_dev_facturas extends TabActivity {
 
     private void displayListDevoluciones() {
 
-        TextView view_dev = new TextView(getApplicationContext());
-        TextView footer = new TextView(getApplicationContext());
+        header = getLayoutInflater().inflate(R.layout.header_canjes_devoluciones, null);
+
+        textViewHeader = (TextView) header.findViewById(R.id.textViewHeaderText);
+
+        footer = getLayoutInflater().inflate(R.layout.footer_canjes_devoluciones,null);
+
+        textViewFooterText = (TextView)footer.findViewById(R.id.textViewFooterText);
+        textViewFooterTotal = (TextView)footer.findViewById(R.id.textViewFooterTotal);
+
+
         Cursor cabecera = dbHelper_CanDev.obtener_cabecera(idEstablec);
         String textoAdpater = "";
         if (cabecera.moveToFirst()) {
@@ -165,15 +198,24 @@ public class mostrar_can_dev_facturas extends TabActivity {
         Cursor precio = dbHelper_CanDev.obtener_igv_dev(2, idEstablec);
         String textFooter = "";
         if (precio.moveToFirst()) {
-            textFooter = "Sub: " + precio.getString(1) + "" +
-                    "\nIgv: " + precio.getString(2) + "" +
-                    "\nTot: " + precio.getString(0) + "";
+
+
+            DecimalFormat df = new DecimalFormat("#.00");
+
+            textViewFooterText.setText("Total :\n" +
+                    "Base imponible :\n" +
+                    "IGV :");
+
+            textViewFooterTotal.setText(" S/. "+precio.getString(0)+"\n" +
+                    "S/. "+precio.getString(1)+ "\n" +
+                    "S/. "+precio.getString(2));
+
         }
-        footer.setText(textFooter);
+
         lista_facturas.addFooterView(footer);
         if (cr.moveToFirst()) {
-            view_dev.setText(textoAdpater);
-            lista_facturas.addHeaderView(view_dev);
+            textViewHeader.setText(textoAdpater);
+            lista_facturas.addHeaderView(header);
             CursorAdapterFacturas_Canjes_Dev adapter_facturas = new CursorAdapterFacturas_Canjes_Dev(getApplicationContext(), cr);
             lista_facturas.setAdapter(adapter_facturas);
 

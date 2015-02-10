@@ -3,7 +3,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/PersonalizadoSteve5"
     android:orientation="vertical">
 
     <LinearLayout
@@ -39,8 +38,8 @@
                         android:layout_height="fill_parent">
 
                         <ListView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
                             android:id="@+id/listViewCanjes" />
 
                     </LinearLayout>
@@ -52,9 +51,9 @@
 
 
                         <ListView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/listViewDevoluciones"/>
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:id="@+id/listViewDevoluciones" />
 
                     </LinearLayout>
 
@@ -73,16 +72,18 @@
         <Button
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:text="Guardar"
             android:layout_weight="1"
-            android:id="@+id/btn_fac_guardar" />
+            android:background="@color/Dark3"
+            android:text="Borrar los Cambios"
+            android:id="@+id/btn_fac_cancel" />
 
         <Button
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
+            android:text="Guardar"
             android:layout_weight="1"
-            android:background="@color/rojo"
-            android:text="Borrar los Cambios"
-            android:id="@+id/btn_fac_cancel" />
+            android:id="@+id/btn_fac_guardar"
+            android:background="@color/Dark1" />
+
     </LinearLayout>
 </LinearLayout>

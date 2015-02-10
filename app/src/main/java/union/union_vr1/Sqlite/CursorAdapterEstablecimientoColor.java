@@ -9,8 +9,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.CursorAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import union.union_vr1.R;
@@ -19,66 +22,81 @@ import union.union_vr1.R;
  * Created by Usuario on 08/12/2014.
  */
 public class CursorAdapterEstablecimientoColor extends CursorAdapter{
+
+    private LayoutInflater cursorInflater;
+
+
     private DbAdaptert_Evento_Establec dbHelper;
     public CursorAdapterEstablecimientoColor(Context context, Cursor c) {
         super(context, c);
         dbHelper = new DbAdaptert_Evento_Establec(context);
         dbHelper.open();
+        cursorInflater = (LayoutInflater) context.getSystemService(
+                Context.LAYOUT_INFLATER_SERVICE);
 
     }
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup viewGroup) {
-        final LayoutInflater inflater  = LayoutInflater.from(context);
-        final View view = inflater.inflate(android.R.layout.simple_dropdown_item_1line, viewGroup,false);
-        return view;
+        /*final LayoutInflater inflater  = LayoutInflater.from(context);
+        final View view = inflater.inflate(R.layout.establecimiento_lista, viewGroup,false);
+        return view;*/
+        return cursorInflater.inflate(R.layout.establecimiento_lista, viewGroup, false);
+
+
     }
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
 
-            String id_establecimiento = cursor.getString(cursor.getColumnIndex(DbAdaptert_Evento_Establec.EE_id_establec));
-            String nombre_establecimiento = cursor.getString(cursor.getColumnIndex(DbAdaptert_Evento_Establec.EE_nom_establec));
-            String nombre_cliente = cursor.getString(cursor.getColumnIndex(DbAdaptert_Evento_Establec.EE_nom_cliente));
-            String doc_cliente = cursor.getString(cursor.getColumnIndex(DbAdaptert_Evento_Establec.EE_doc_cliente));
-            int id_estado_atencion = Integer.parseInt(cursor.getString(cursor.getColumnIndex(DbAdaptert_Evento_Establec.EE_id_estado_atencion)));
-            int orden = cursor.getInt(cursor.getColumnIndexOrThrow(DbAdaptert_Evento_Establec.EE_orden));
-
-
-            String establecimiento = "Còdigo : "+id_establecimiento+ " - n° orden : " + orden+
-                    "\nEstablec : "+ nombre_establecimiento+
-                    "\nNombre : "+ nombre_cliente +
-                    "\nDocum : "+doc_cliente;
+        TextView nombreEstablecimiento = (TextView) view.findViewById(R.id.textViewEstablecimientoNombre);
+        TextView nombreCliente = (TextView) view.findViewById(R.id.textViewEstablecimientoCliente);
+        TextView deuda = (TextView) view.findViewById(R.id.textViewEstablecimientoDeuda);
+        LinearLayout linearLayoutColor = (LinearLayout) view.findViewById(R.id.linearLayoutEstablecimientoColor);
+        TextView orden = (TextView) view.findViewById(R.id.textViewEstablecimientoOrden);
 
 
 
-            TextView textView = (TextView) view;
-            textView.setSingleLine(false);
-            textView.setText(establecimiento);
-            textView.setTextColor(context.getResources().getColor(R.color.PersonalizadoSteve4));
 
-            WindowManager.LayoutParams layout_791 = new WindowManager.LayoutParams();
-            layout_791.width = WindowManager.LayoutParams.MATCH_PARENT;
-            layout_791.height  = WindowManager.LayoutParams.WRAP_CONTENT;
-            textView.setLayoutParams(layout_791);
 
-            //TextView textView =(TextView) view;
 
-            textView.setText(establecimiento);
+
+
+        if (cursor.getCount()>0){
+
+            String id_establecimiento = cursor.getString(cursor.getColumnIndex("idEstablecimiento"));
+            String nombre_establecimiento = cursor.getString(cursor.getColumnIndex("nombreEstablecimiento"));
+            String nombre_cliente = cursor.getString(cursor.getColumnIndex("nombrecliente"));
+            int id_estado_atencion = Integer.parseInt(cursor.getString(cursor.getColumnIndex("estadoAtencion")));
+            int numeroOrden = cursor.getInt(cursor.getColumnIndexOrThrow("orden"));
+            double deudaTotal = cursor.getDouble(cursor.getColumnIndexOrThrow("deudaTotal")) ;
+
+
+            DecimalFormat df= new DecimalFormat("#0.00");
+
+
+
+            nombreEstablecimiento.setText(nombre_establecimiento);
+            nombreEstablecimiento.setSingleLine(false);
+            nombreCliente.setText(nombre_cliente);
+            orden.setText("Orden "+numeroOrden);
+            deuda.setText("S/. "+df.format(deudaTotal));
+
             switch (id_estado_atencion){
                 case 1:
-                    textView.setBackgroundColor(context.getResources().getColor(R.color.azul));
+                    linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.azul));
                     break;
                 case 2:
-                    textView.setBackgroundColor(context.getResources().getColor(R.color.verde));
+                    linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.verde));
                     break;
                 case 3:
-                    textView.setBackgroundColor(context.getResources().getColor(R.color.rojo));
+                    linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.rojo));
                     break;
                 case 4:
-                    textView.setBackgroundColor(context.getResources().getColor(R.color.amarillo));
+                    linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.amarillo));
                     break;
 
             }
+        }
     }
 }

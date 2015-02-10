@@ -6,5 +6,5 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:ellipsize="marquee"
-    android:textColor="@color/can_dev"
-    android:background="@color/PersonalizadoSteve5"/>
+    android:textColor="@color/Dark2"
+    android:background="@color/Dark5"/>

@@ -279,14 +279,13 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
                 Date dSqlite = df.parse(fecha_Programada);
                 Date dSistema = df.parse(getDatePhone());
                 if (dSqlite.before(dSistema)) {
-                    btn.setBackgroundColor(0xffff0000);
-
+                    btn.setBackground(getApplicationContext().getResources().getDrawable(R.drawable.border_right_red));
                 }
                 if (dSqlite.after(dSistema)) {
-                    btn.setBackgroundColor(0xffffff00);
+                    btn.setBackground(getApplicationContext().getResources().getDrawable(R.drawable.border_right_yellow));
                 }
                 if (dSqlite.equals(dSistema)) {
-                    btn.setBackgroundColor(0xffff0000);
+                    btn.setBackground(getApplicationContext().getResources().getDrawable(R.drawable.border_right_red));
                 }
             } catch (ParseException e) {
                 e.printStackTrace();
@@ -294,8 +293,9 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
 
         }
         if (cursor.getCount() <= 0) {
+            //verde
             Toast.makeText(getApplicationContext(), "No hay Deudas Por Cobrar", Toast.LENGTH_SHORT).show();
-            btn.setBackgroundColor(0xff00ff00);
+            btn.setBackground(getApplicationContext().getResources().getDrawable(R.drawable.border_right_green));
         }
 
 

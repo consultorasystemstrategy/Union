@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="96dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginRight="12dp">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="3"
+            android:background="@color/Personalizado4"
+            android:id="@+id/linearLayoutCobroColor">
+
+            <ImageView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:id="@+id/imageViewEstablecimiento"
+                android:src="@drawable/ic_action_make_available_offline"
+                android:contentDescription="Place"
+                android:layout_margin="4dp"
+                android:baselineAlignBottom="false" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:layout_marginLeft="16dp">
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:text="24/02/2015"
+                android:id="@+id/textViewCobroFecha"
+                android:layout_weight="1"
+                android:layout_gravity="bottom"
+                android:gravity="bottom"
+                android:textSize="16dp"
+                android:textStyle="normal|bold" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:text="Bodegas Don Ramón"
+                android:id="@+id/textViewCobroDocumento"
+                android:layout_weight="1"
+                android:textSize="12dp"
+                android:textStyle="italic" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:text="Documento 30-01"
+                android:id="@+id/textViewCobroEstado"
+                android:layout_weight="1"
+                android:layout_gravity="top|left"
+                android:gravity="top|left"
+                android:textSize="12dp"
+                android:textStyle="italic"
+                android:layout_marginTop="-8dp" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:text="S/. 19.85"
+                android:id="@+id/textViewCobroMontoDeuda"
+                android:layout_weight="1"
+                android:gravity="bottom|right"
+                android:layout_marginRight="4dp"
+                android:textColor="@color/verde" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

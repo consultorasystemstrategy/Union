@@ -33,7 +33,8 @@
         android:text="Canjes / Devoluciones"
         android:id="@+id/VEE_BTNcandev"
         android:layout_below="@+id/VEE_BTNcobros"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/border_bottom_top_dark" />
 
     <Button
         android:layout_width="match_parent"
