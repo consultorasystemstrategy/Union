@@ -5,7 +5,7 @@
     android:layout_height="fill_parent"
     android:background="@color/PersonalizadoSteve4">
 
-
+<!-- Hoola Mundo-->
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="fill_parent"
