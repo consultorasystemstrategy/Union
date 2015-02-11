@@ -222,6 +222,16 @@ public class DbAdapter_Comprob_Cobro {
         mDb.update(SQLITE_TABLE_Comprob_Cobro, initialValues,
                 CC_id_plan_pago_detalle + "=? AND " + CC_id_comprob + "=?", new String[]{id, "0"});
     }
+    public int updateComprobCobros_Auto(String id, double valor,String fecha) {
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(CC_monto_cobrado, valor);
+        initialValues.put(CC_fecha_programada, fecha);
+        initialValues.put(Constants._SINCRONIZAR, Constants._ACTUALIZADO);
+
+        int i = mDb.update(SQLITE_TABLE_Comprob_Cobro, initialValues,
+                CC_id_comprobante_cobro + "=?", new String[]{id});
+        return  i ;
+    }
 
     public void changeEstadoToExport(String[] idComprobante, int estadoSincronizacion) {
         ContentValues initialValues = new ContentValues();

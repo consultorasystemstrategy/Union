@@ -138,7 +138,7 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
                 idMontoCancelado = cursor.getString(cursor.getColumnIndexOrThrow("cc_re_monto_cobrado"));
                 idVal1 = cursor.getDouble(cursor.getColumnIndexOrThrow("cc_re_monto_a_pagar"));
                 idVal2 = cursor.getDouble(cursor.getColumnIndexOrThrow("cc_re_monto_cobrado"));
-                idDeuda = idVal1;
+                idDeuda = idVal1-idVal2;
                 mSPNcredit.setText(String.valueOf(idDeuda));
                 if (Integer.parseInt(idEstado) == 1) {
                     Estado = "Pendiente " + idDeuda;
@@ -162,6 +162,7 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
                 mSPNcredit.setText("");
                 Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
                 int idComprobante = cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Comprob_Cobro.CC_id_comprobante_cobro));
+
                 int estado = dbComprobanteCobro.verProceso(idComprobante);
                 if (estado == 0) {
                     autorizacion(cursor,i);
@@ -172,6 +173,7 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
                 }
                 if (estado == 2) {
                     Toast.makeText(getApplicationContext(), "Aprobado", Toast.LENGTH_SHORT).show();
+
                 }
                 if (estado == 4) {
                     Toast.makeText(getApplicationContext(), "Anulado", Toast.LENGTH_SHORT).show();
@@ -235,6 +237,7 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
         finish();
     }
 
+
     private void autorizacion(Cursor cursor, int p) {
         //Variables Operacion
         final Double[] valorProloga = {0.0, 0.0};
@@ -251,10 +254,10 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
         idVal1 = cursor.getDouble(cursor.getColumnIndexOrThrow("cc_re_monto_a_pagar"));
         idVal2 = cursor.getDouble(cursor.getColumnIndexOrThrow("cc_re_monto_cobrado"));
 
-        idDeuda = idVal1;
+        idDeuda = idVal1-idVal2;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         TextView title = new TextView(this);
-        title.setText("Esta Realizando la Prologa de la Deuda a Pagar:");
+        title.setText("Esta Realizando la Solicitud  de Prologa para Deuda: "+idVal1+"");
         builder.setCustomTitle(title);
         LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View layout_cobros = inflater.inflate(prompts_cobros, null);
@@ -308,9 +311,9 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
                         if (valorPago != 0.0 && valorCobrar != 0.0) {
 
                             int idAgente = session.fetchVarible(1);
-                            Log.d("parametroscobros", "" + valorPago + "-" + valorCobrar + "IDCOMPRO" + idComprobante);
                             long idAutorizacion = dbAutorizacionCobro.createTempAutorizacionPago(idAgente, 4, 1, comprobanteVenta, valorCobrar, valorPago, Integer.parseInt(estabX), Constants._CREADO, idComprobante);
-                            Log.d("parametrosco", "" + idAutorizacion);
+
+                           Back();
 
                         } else {
                             Toast.makeText(getApplicationContext(), "Por favor Ingrese Todos los Campos", Toast.LENGTH_SHORT).show();
