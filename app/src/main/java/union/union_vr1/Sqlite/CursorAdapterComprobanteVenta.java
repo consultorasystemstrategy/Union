@@ -48,9 +48,6 @@ public class CursorAdapterComprobanteVenta extends CursorAdapter {
         LinearLayout linearLayoutColor = (LinearLayout) view.findViewById(R.id.linearLayoutLista);
         ImageView imageView = (ImageView) view.findViewById(R.id.imageViewLista);
 
-
-        cursor.moveToFirst();
-
         if (cursor.getCount()>0) {
 
             int _id = Integer.parseInt(cursor.getString(cursor.getColumnIndex(DbAdapter_Comprob_Venta.CV_id_comprob)));
@@ -61,22 +58,6 @@ public class CursorAdapterComprobanteVenta extends CursorAdapter {
             int estado = Integer.parseInt(cursor.getString(cursor.getColumnIndex(DbAdapter_Comprob_Venta.CV_estado_comp)));
 
 
-            String formaPago = null;
-            switch (id_forma_pago){
-                case 1:
-                    formaPago = "AL CONTADO";
-                    break;
-                case 2:
-                    formaPago = "CRÉDITO";
-                    break;
-                case 3:
-                    formaPago = "NOTA DE CRÉDITO";
-                    break;
-                case 4:
-                    break;
-                default:
-                    break;
-            }
 
             String nombreEstado =null;
             switch (estado){
@@ -87,8 +68,31 @@ public class CursorAdapterComprobanteVenta extends CursorAdapter {
                     break;
                 case 1:
                     nombreEstado  = "CANCELADO";
-                    linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.azul));
+                    linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.Dark1));
                     imageView.setImageDrawable(context.getApplicationContext().getResources().getDrawable(R.drawable.ic_action_accept));
+                    break;
+                default:
+                    break;
+            }
+
+
+            String formaPago = null;
+            switch (id_forma_pago){
+                case 1:
+                    formaPago = "AL CONTADO";
+                    break;
+                case 2:
+                    formaPago = "CRÉDITO";
+                    if (estado==0){
+                        imageView.setImageDrawable(context.getApplicationContext().getResources().getDrawable(R.drawable.ic_action_cancel));
+                    }else {
+                        imageView.setImageDrawable(context.getApplicationContext().getResources().getDrawable(R.drawable.ic_action_make_available_offline));
+                    }
+                    break;
+                case 3:
+                    formaPago = "NOTA DE CRÉDITO";
+                    break;
+                case 4:
                     break;
                 default:
                     break;
@@ -104,7 +108,7 @@ public class CursorAdapterComprobanteVenta extends CursorAdapter {
 
             DecimalFormat df= new DecimalFormat("#0.00");
 
-            textViewTitulo.setText("Documento " + numero_documento);
+            textViewTitulo.setText("Documento " + numero_documento +  " Id " + _id );
             textViewSubtitulo.setText(formaPago);
             textViewComment.setText(nombreEstado);
             textViewMonto.setText("S/. "+ df.format(total));

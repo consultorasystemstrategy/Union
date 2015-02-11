@@ -60,18 +60,13 @@ public class CursorAdapterCobrosTotales extends CursorAdapter {
 
         TextView textViewDeuda= (TextView) view.findViewById(R.id.textViewCobroTotalMontoDeuda);
 
-
-
-
-        cursor.moveToFirst();
-
-        String factotales = cursor.getString(1);
-        String nomcliente = cursor.getString(2);
-        String localCobro = cursor.getString(5);
-        String fechpro = cursor.getString(3);
-        String repagar = cursor.getString(4);
-
         if (cursor.getCount()>0){
+
+            String factotales = cursor.getString(1);
+            String nomcliente = cursor.getString(2);
+            String localCobro = cursor.getString(5);
+            String fechpro = cursor.getString(3);
+            String repagar = cursor.getString(4);
 
             textViewNombreEstablecimiento.setText(localCobro);
             textViewFecha.setText(fechpro);

@@ -41,8 +41,6 @@ public class CursorAdapterFacturas extends CursorAdapter {
         ImageView imageView = (ImageView) view.findViewById(R.id.imageViewLista);
 
 
-        cursor.moveToFirst();
-
         if (cursor.getCount()>0){
 
             String producto = cursor.getString(9);

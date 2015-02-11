@@ -51,9 +51,6 @@ public class CursorAdapter_Cobros_Establecimiento extends CursorAdapter {
 
         TextView textViewEstado= (TextView) view.findViewById(R.id.textViewCobroEstado);
 
-
-
-        cursor.moveToFirst();
         if (cursor.getCount()>0){
 
 

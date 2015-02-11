@@ -224,7 +224,7 @@ public class ImportMain extends AsyncTask<String, String, String> {
                 Log.d("ESTABLECIMIENTOS X RUTAS: " + i, " Nombre Establecimiento : " + eventoEstablecimientos.get(i).getNombreEstablecimiento());
                 boolean existe = dbAdaptert_evento_establec.existeEstablecsById(eventoEstablecimientos.get(i).getIdEstablecimiento());
 
-                Log.d("EXISTE ", ""+existe);
+                Log.d("EXISTE ESTABLECIMIENTO", ""+existe);
                 if (existe){
                     //dbAdapter_comprob_cobro.updateComprobCobros(comprobanteCobros.get(i));
                     dbAdaptert_evento_establec.updateEstablecimientos(eventoEstablecimientos.get(i), 1);

@@ -45,8 +45,6 @@ public class CursorAdapterFacturas_dev extends CursorAdapter {
         ImageView imageView = (ImageView) view.findViewById(R.id.imageViewLista);
 
 
-        cursor.moveToFirst();
-
         if (cursor.getCount()>0){
 
 

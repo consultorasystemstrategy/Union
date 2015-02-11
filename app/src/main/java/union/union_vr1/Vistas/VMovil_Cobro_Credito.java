@@ -114,7 +114,7 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
     private void displayListViewVCC() {
 
         Cursor cursor = dbHelper.fetchAllComprobCobrosByEst(estabX);
-
+        Log.d("COBRO DE CRÉDITO ", "ESTABLECIMIENTO ID : " + estabX);
         CursorAdapter_Cobros_Establecimiento  adapterCobros = new CursorAdapter_Cobros_Establecimiento(getApplicationContext(),cursor);
 
         final ListView listView = (ListView) findViewById(R.id.VCCR_LSTcresez);

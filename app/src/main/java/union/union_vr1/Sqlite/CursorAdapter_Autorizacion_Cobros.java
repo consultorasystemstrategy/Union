@@ -52,9 +52,6 @@ public class CursorAdapter_Autorizacion_Cobros extends CursorAdapter {
         LinearLayout linearLayoutColor = (LinearLayout) view.findViewById(R.id.linearLayoutLista);
         ImageView imageView = (ImageView) view.findViewById(R.id.imageViewLista);
 
-
-        cursor.moveToFirst();
-
         if (cursor.getCount()>0) {
 
 

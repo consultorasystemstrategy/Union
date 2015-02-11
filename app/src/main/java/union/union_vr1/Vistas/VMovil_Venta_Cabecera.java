@@ -110,7 +110,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
     final String fecha_cobro = null;
     final String hora_cobro = null;
     final Double monto_cobrado = 0.0;
-    final int estado_cobro = 0;
+    final int estado_cobro = 1;// 1 NO ESTÁ COBRADO //JAJA ESTÁ AL REVÉS
     final int id_forma_cobro = 1;
     final String lugar_registro = "movil";
     String diasCredito= null;

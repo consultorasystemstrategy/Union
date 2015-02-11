@@ -48,8 +48,6 @@ public class CursorAdapterFacturas_Canjes extends CursorAdapter{
         ImageView imageView = (ImageView) view.findViewById(R.id.imageViewLista);
 
 
-        cursor.moveToFirst();
-
         if (cursor.getCount()>0){
 
 
