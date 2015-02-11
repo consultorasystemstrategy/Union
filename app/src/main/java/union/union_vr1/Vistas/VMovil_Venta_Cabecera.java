@@ -71,7 +71,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
     private DbAdaptert_Evento_Establec dbHelper_Evento_Establecimiento;
     private EditText savedText;
 
-    private String textoImpresion = ".\n"
+    private String textoImpresionCabecera = ".\n"
                 +"    UNIVERSIDAD PERUANA UNION   \n"
                 +"     Cent.aplc. Prod. Union     \n"
                 +"   C. Central Km 19 Villa Union \n"
@@ -79,7 +79,20 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
                 +"      Telf: 6186309-6186310     \n"
                 +" Casilla 3564, Lima 1, LIMA PERU\n"
                 +"         RUC: 20138122256       \n"
-                +"--------------------------------\n";
+                +"------------------------------------------------\n";
+
+    private String textoImpresionContenidoLeft = "";
+    private String textoImpresionContenidoRight = "";
+    private String textoImpresion  = ".\n"
+            +"    UNIVERSIDAD PERUANA UNION   \n"
+            +"     Cent.aplc. Prod. Union     \n"
+            +"   C. Central Km 19 Villa Union \n"
+            +" Lurigancho-Chosica Fax: 6186311\n"
+            +"      Telf: 6186309-6186310     \n"
+            +" Casilla 3564, Lima 1, LIMA PERU\n"
+            +"         RUC: 20138122256       \n"
+            +"--------------------------------\n";
+
     private int idEstablecimiento;
     int id_agente_venta;
     private SimpleCursorAdapter simpleCursorAdapter;
@@ -724,6 +737,17 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
         textoImpresion+= "Cant.             Producto              Importe\n";
         textoImpresion+= "-----------------------------------------------\n";
 
+
+        textoImpresionCabecera+= "Factura Nro. 030-000212\n";
+        textoImpresionCabecera+= "Fecha: "+ getDatePhone()+"\n";
+        textoImpresionCabecera+= "Vendedor: "+ nombreAgenteVenta+"\n";
+        textoImpresionCabecera+= "Cliente: "+ nombreCliente+"\n";
+        textoImpresionCabecera+= "DNI: "+ documentoCliente+"\n";
+        textoImpresionCabecera+= "Direccion: Alameda Nro 2039 - Chosica\n";
+        textoImpresionCabecera+= "------------------------------------------------\n";
+        textoImpresionCabecera+= "Cant.             Producto              Importe\n";
+        textoImpresionCabecera+= "------------------------------------------------\n";
+
         long id = dbHelper_Comprob_Venta.createComprobVenta(idEstablecimiento,i_tipoDocumento,i_formaPago,tipoVenta,codigo_erp,serie,numero_documento,base_imponible,igv,monto_total,getDatePhone(),null,estado_comprobante, estado_conexion,id_agente_venta, Constants._CREADO);
 
         Log.d("Export id CV IGUALES",""+id);
@@ -755,13 +779,15 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
             comprobVentaDetalle = dbHelper_Comprob_Venta_Detalle.createComprobVentaDetalle(id_comprobante, id_producto, nombre_producto, cantidad, importe,0, precio_unitario, promedio_anterior, devuelto, valorUnidad);
             dbHelper_Stock_Agente.updateStockAgenteCantidad(id_producto,-(cantidad*valorUnidad));
 
-            if(nombre_producto.length()>=28){
-                nombre_producto=nombre_producto.substring(0,28);
+            if(nombre_producto.length()>=25){
+                nombre_producto=nombre_producto.substring(0,25);
                 nombre_producto+="...";
             }
 
             DecimalFormat df = new DecimalFormat("#.00");
             textoImpresion+=String.format("%-6s",cantidad) + String.format("%-34s",nombre_producto) +String.format("%-5s",df.format(importe)) + "\n";
+            textoImpresionContenidoLeft +=String.format("%-6s",cantidad) + String.format("%-31s",nombre_producto)+ "\n";
+            textoImpresionContenidoRight+= String.format("%-5s",df.format(importe)) + "\n";
 
             datosConcatenados+="Producto  "+ nombre_producto + "Vendido satisfactoriamente con id : "+ comprobVentaDetalle;
         }
@@ -776,8 +802,17 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
         DecimalFormat df = new DecimalFormat("#.00");
 
         textoImpresion += String.format("%-37s","SUB TOTAL:")+ "S/ "+ df.format(base_imponible)+"\n";
-        textoImpresion += String.format("%-37s","IGV:")+  "S/ "+ df.format(igv)+"\n";
-        textoImpresion += String.format("%-37s","TOTAL:")+  "S/ "+ df.format(monto_total)+"\n";
+        textoImpresion += String.format("%-37s","IGV:")+  "S/ "+ df.format(base_imponible)+"\n";
+        textoImpresion += String.format("%-37s","TOTAL:")+  "S/ "+ df.format(base_imponible)+"\n";
+
+        textoImpresionContenidoLeft+=String.format("%-34s","SUB TOTAL:")+"\n";
+        textoImpresionContenidoLeft+=String.format("%-34s","IGV:")+"\n";
+        textoImpresionContenidoLeft+=String.format("%-34s","TOTAL:")+"\n";
+
+        textoImpresionContenidoRight+= "S/ "+ df.format(base_imponible)+"\n";
+        textoImpresionContenidoRight+= "S/ "+ df.format(base_imponible)+"\n";
+        textoImpresionContenidoRight+= "S/ "+ df.format(base_imponible)+"\n";
+
 
 
 
@@ -804,6 +839,9 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
 
         Intent intent= new Intent(this, VMovil_BluetoothImprimir.class);
         intent.putExtra("textoImpresion",textoImpresion);
+        intent.putExtra("textoImpresionCabecera", textoImpresionCabecera);
+        intent.putExtra("textoImpresionContenidoLeft", textoImpresionContenidoLeft);
+        intent.putExtra("textoImpresionContenidoRight", textoImpresionContenidoRight);
         finish();
         Toast.makeText(getApplicationContext(),"Venta Satisfactoria",Toast.LENGTH_LONG).show();
         startActivity(intent);

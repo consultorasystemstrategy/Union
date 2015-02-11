@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ParcelUuid;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -26,9 +27,15 @@ public class VMovil_BluetoothImprimir extends Activity{
 
     private Button buttonImprimir;
     private Button buttonSincronizar;
-    private TextView textViewImprimir;
+    private TextView textViewImprimirCabecera;
+    private TextView textViewImprimirContenidoLeft;
+    private TextView textViewImprimirContenidoRight;
+
 
     private String textoImpresion = "";
+    private String textoImpresionCabecera = "";
+    private String textoImpresionContenidoLeft = "";
+    private String textoImpresionContenidoRight = "";
 
 
     // android built in classes for bluetooth operations
@@ -52,10 +59,20 @@ public class VMovil_BluetoothImprimir extends Activity{
 
         buttonImprimir = (Button) findViewById(R.id.button);
         buttonSincronizar = (Button) findViewById(R.id.buttonSincronizar);
-        textViewImprimir = (TextView) findViewById(R.id.textViewEstablecimientoNombre);
+        textViewImprimirCabecera = (TextView) findViewById(R.id.textViewImprimirCabecera);
+        textViewImprimirContenidoLeft = (TextView) findViewById(R.id.textViewImprimirContenidoLeft);
+        textViewImprimirContenidoRight = (TextView) findViewById(R.id.textViewImprimirContenidoRight);
+
 
         textoImpresion = getIntent().getExtras().getString("textoImpresion");
-        textViewImprimir.setText(textoImpresion);
+        textoImpresionCabecera = getIntent().getExtras().getString("textoImpresionCabecera");
+        textoImpresionContenidoLeft = getIntent().getExtras().getString("textoImpresionContenidoLeft");
+        textoImpresionContenidoRight = getIntent().getExtras().getString("textoImpresionContenidoRight");
+
+
+        textViewImprimirCabecera.setText(textoImpresionCabecera);
+        textViewImprimirContenidoLeft.setText(textoImpresionContenidoLeft);
+        textViewImprimirContenidoRight.setText(textoImpresionContenidoRight);
 
         buttonImprimir.setOnClickListener(new View.OnClickListener() {
             @Override

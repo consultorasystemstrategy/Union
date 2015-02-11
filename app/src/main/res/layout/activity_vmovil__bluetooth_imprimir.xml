@@ -30,8 +30,29 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:text="New Text"
-                android:id="@+id/textViewEstablecimientoNombre"
+                android:id="@+id/textViewImprimirCabecera"
                 android:textIsSelectable="true" />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="New Text"
+                    android:id="@+id/textViewImprimirContenidoLeft"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="New Text"
+                    android:id="@+id/textViewImprimirContenidoRight"
+                    android:layout_weight="1"
+                    android:textStyle="bold" />
+            </LinearLayout>
 
             <Button
                 android:layout_width="fill_parent"
