@@ -73,6 +73,7 @@ public class ImportMain extends AsyncTask<String, String, String> {
     private DBAdapter_Temp_Autorizacion_Cobro dbAdapter_temp_autorizacion_cobro;
 
 
+
     //private ListView listView;
     private SimpleCursorAdapter simpleCursorAdapter;
 
@@ -120,9 +121,13 @@ public class ImportMain extends AsyncTask<String, String, String> {
 
         int idLiquidacion = 0;
 
+
+        idLiquidacion = session.fetchVarible(3);
+
+        /*
         if (cursor.getCount()>0){
             idLiquidacion = cursor.getInt(cursor.getColumnIndexOrThrow(dbAdapter_agente.AG_liquidacion));
-        }
+        }*/
 
 
         ArrayList<StockAgente> stockAgentes = null;

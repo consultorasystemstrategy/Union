@@ -380,7 +380,7 @@ public class DbAdaptert_Evento_Establec {
     public Cursor listarEstablecimientosPorNombre(String nombreEstablecimiento){
         Cursor mCursor = mDb.rawQuery("select ee._id AS _id, ee.ee_in_id_agente AS idAgente, ee.ee_in_id_establec AS idEstablecimiento, ee.ee_te_nom_establec AS nombreEstablecimiento, ee.ee_te_nom_cliente AS nombrecliente,ee.ee_in_orden AS orden, ee_in_id_estado_atencion AS estadoAtencion, SUM(cc.cc_re_monto_a_pagar) as deudaTotal from m_evento_establec ee\n" +
                 "LEFT OUTER JOIN m_comprob_cobro cc \n" +
-                "ON ee.ee_in_id_establec = cc.cc_in_id_establec   AND \n" +
+                "ON ee.ee_in_id_establec = cc.cc_in_id_establec   WHERE \n" +
                 "ee.ee_te_nom_establec like '%"+nombreEstablecimiento+"%' \n" +
                 "GROUP BY  ee.ee_in_id_establec, ee.ee_te_nom_establec \n" +
                 "ORDER BY ee.ee_in_id_estado_atencion;",null);
