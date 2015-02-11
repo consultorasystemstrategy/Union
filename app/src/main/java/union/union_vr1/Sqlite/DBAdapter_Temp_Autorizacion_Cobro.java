@@ -36,7 +36,7 @@ public class DBAdapter_Temp_Autorizacion_Cobro {
     private SQLiteDatabase mDb;
 
 
-    private static final String SQLITE_TABLE_Temp_Autorizacion_Cobro = "m_temp_autorizacion_cobro";
+    public static final String SQLITE_TABLE_Temp_Autorizacion_Cobro = "m_temp_autorizacion_cobro";
     private final Context mCtx;
     public static final String CREATE_TABLE_TEMP_Autorizacion_Cobro =
             "create table "+SQLITE_TABLE_Temp_Autorizacion_Cobro+"("

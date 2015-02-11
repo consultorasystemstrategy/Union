@@ -78,6 +78,7 @@ public class VMovil_Canc_Histo extends Activity {
                 DbAdapter_Histo_Venta_Detalle.HD_id_tipoper,
                 DbAdapter_Histo_Venta_Detalle.HD_categoria_ope
         };
+        // hola que k aseaaaa
 
         // the XML defined views which the data will be bound to
         int[] to = new int[]{
