@@ -36,7 +36,7 @@ public class DBAdapter_Temp_Autorizacion_Cobro {
     private SQLiteDatabase mDb;
 
 
-    private static final String SQLITE_TABLE_Temp_Autorizacion_Cobro = "m_temp_autorizacion_cobro";
+    public static final String SQLITE_TABLE_Temp_Autorizacion_Cobro = "m_temp_autorizacion_cobro";
     private final Context mCtx;
     public static final String CREATE_TABLE_TEMP_Autorizacion_Cobro =
             "create table "+SQLITE_TABLE_Temp_Autorizacion_Cobro+"("
@@ -97,7 +97,7 @@ public class DBAdapter_Temp_Autorizacion_Cobro {
     }
     private int incrementable (){
         Cursor cr = mDb.rawQuery("select * from "+SQLITE_TABLE_Temp_Autorizacion_Cobro+";",null);
-        Log.d("idKELV",""+cr.getCount());
+
         return cr.getCount()+1;
     }
     public Cursor listarAutorizaciones(int idEstablec){
@@ -162,16 +162,27 @@ public class DBAdapter_Temp_Autorizacion_Cobro {
     }
         public int  updateAutorizacionCobro(int idAutorizacionCobro, int estadoSolicitud, int idEstablecimiento,String fechaLimite){
 
-            ContentValues initialValues = new ContentValues();
-            initialValues.put(temp_id_estado_solicitud, estadoSolicitud );
-            initialValues.put(Constants._SINCRONIZAR,Constants._IMPORTADO);
-            initialValues.put(temp_fechaLimite,fechaLimite);
-            mDb.execSQL("update "+DbAdapter_Comprob_Cobro.SQLITE_TABLE_Comprob_Cobro+" set "+DbAdapter_Comprob_Cobro.CC_estado_prologa+"='2' where "+DbAdapter_Comprob_Cobro.CC_id_autorizacion+"='"+idAutorizacionCobro+"'");
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(temp_id_estado_solicitud, estadoSolicitud );
+        initialValues.put(Constants._SINCRONIZAR,Constants._IMPORTADO);
+        initialValues.put(temp_fechaLimite,fechaLimite);
+        mDb.execSQL("update "+DbAdapter_Comprob_Cobro.SQLITE_TABLE_Comprob_Cobro+" set "+DbAdapter_Comprob_Cobro.CC_estado_prologa+"='2' where "+DbAdapter_Comprob_Cobro.CC_id_autorizacion+"='"+idAutorizacionCobro+"'");
 
-            return mDb.update(SQLITE_TABLE_Temp_Autorizacion_Cobro, initialValues,
-                    temp_id_autorizacion_cobro+"=? AND " + temp_establec + " = ?",new String[]{""+idAutorizacionCobro, ""+idEstablecimiento});
+        return mDb.update(SQLITE_TABLE_Temp_Autorizacion_Cobro, initialValues,
+                temp_id_autorizacion_cobro+"=? AND " + temp_establec + " = ?",new String[]{""+idAutorizacionCobro, ""+idEstablecimiento});
 
-        }
+    }
+    public int  updateAutorizacionCobro_Au(int idAutorizacionCobro, int estadoSolicitud, int idEstablecimiento,String fechaLimite){
+
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(temp_id_estado_solicitud, estadoSolicitud );
+        initialValues.put(Constants._SINCRONIZAR,Constants._ACTUALIZADO);
+        initialValues.put(temp_fechaLimite,fechaLimite);
+
+        return mDb.update(SQLITE_TABLE_Temp_Autorizacion_Cobro, initialValues,
+                temp_id_autorizacion_cobro+"=? AND " + temp_establec + " = ?",new String[]{""+idAutorizacionCobro, ""+idEstablecimiento});
+
+    }
     private String fechaFormat (String fecha){
 
         SimpleDateFormat sm = new SimpleDateFormat("MM-dd-yyyy");

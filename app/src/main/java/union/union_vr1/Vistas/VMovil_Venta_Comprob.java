@@ -2,12 +2,15 @@ package union.union_vr1.Vistas;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,6 +18,7 @@ import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.FilterQueryProvider;
 import android.widget.ListView;
@@ -23,6 +27,12 @@ import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 import union.union_vr1.R;
 import union.union_vr1.Sqlite.CursorAdapterComprobanteVenta;
@@ -38,6 +48,9 @@ import union.union_vr1.Sqlite.DbAdapter_Histo_Venta_Detalle;
 import union.union_vr1.Sqlite.DbAdapter_Stock_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 import union.union_vr1.Utils.MyApplication;
+
+import static union.union_vr1.R.layout.prompts_cobros;
+import static union.union_vr1.R.layout.prompts_cobros_fecha;
 
 public class VMovil_Venta_Comprob extends Activity {
 
@@ -228,13 +241,14 @@ public class VMovil_Venta_Comprob extends Activity {
                 crCobros.moveToPosition(i);
                 String id = crCobros.getString(crCobros.getColumnIndexOrThrow(DBAdapter_Temp_Autorizacion_Cobro.temp_autorizacion_cobro));
                 String estado = crCobros.getString(crCobros.getColumnIndexOrThrow(DBAdapter_Temp_Autorizacion_Cobro.temp_id_estado_solicitud));
-                String idDetalleCobro = crCobros.getString(crCobros.getColumnIndexOrThrow(DBAdapter_Temp_Autorizacion_Cobro.temp_vigencia_credito));
+                String idDetalleCobro = crCobros.getString(crCobros.getColumnIndexOrThrow(DBAdapter_Temp_Autorizacion_Cobro.temp_montoCredito));
                 String idComprobante = crCobros.getString(crCobros.getColumnIndexOrThrow(DBAdapter_Temp_Autorizacion_Cobro.temp_id_comprobante));
+                String fecha = crCobros.getString(crCobros.getColumnIndexOrThrow(DBAdapter_Temp_Autorizacion_Cobro.temp_fechaLimite));
                 if(estado.equals("1")){
 
                     Toast.makeText(getApplicationContext(),"Solicitud Aun por Aprobarse",Toast.LENGTH_SHORT).show();
                 }if(estado.equals("2")){
-                    select(id,idDetalleCobro);
+                    select(crCobros,fecha);
 
                 }if(estado.equals("4")){
                     selectEliminar(id,idDetalleCobro,idComprobante);
@@ -264,8 +278,8 @@ public class VMovil_Venta_Comprob extends Activity {
                 .setCancelable(false)
                 .setPositiveButton("Anular", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        boolean up = dbAutorizaciones.anularAutorizacion(idAutorizacion, idDetalleCobro, idComprobante);
-                        if (up) {
+                       // boolean up = dbAutorizaciones.anularAutorizacion(idAutorizacion, idDetalleCobro, idComprobante);
+                        if (true) {
                             back();
                             Toast.makeText(getApplicationContext(), "Anulado Correctamente", Toast.LENGTH_SHORT).show();
 
@@ -284,7 +298,102 @@ public class VMovil_Venta_Comprob extends Activity {
         alertDialog.show();
 
     }
-    public void select(final String idAutorizacion, final String idDetalleCobro){
+    private String getDatePhone() {
+        Calendar cal = new GregorianCalendar();
+        Date date = cal.getTime();
+        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        String formatteDate = df.format(date);
+        return formatteDate;
+    }
+    public long calcularFecha(String fecha){
+        long startDate=0;
+        Log.d("FECHA","  fecha:"+fecha);
+        try {
+            String dateString = fecha;
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            Date date = sdf.parse(dateString);
+            startDate = date.getTime();
+            Log.d("FECHA","lon:"+startDate+"  fecha:"+fecha);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+
+        return  startDate;
+    }
+    public long calcularFechaHoy(){
+        long startDate=0;
+
+        try {
+            String dateString = getDatePhone();
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            Date date = sdf.parse(dateString);
+            startDate = date.getTime();
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+
+        return  startDate;
+    }
+
+    public void cambiarFecha(Cursor cr, final String fecha){
+        final int idAutorizacion = cr.getInt(cr.getColumnIndexOrThrow(DBAdapter_Temp_Autorizacion_Cobro.temp_id_autorizacion_cobro));
+        final int idAEstablecimiento = cr.getInt(cr.getColumnIndexOrThrow(DBAdapter_Temp_Autorizacion_Cobro.temp_establec));
+        final String idComprobanteCobro = cr.getString(cr.getColumnIndexOrThrow(DBAdapter_Temp_Autorizacion_Cobro.temp_id_comprobante));
+        final Double montoCredito = cr.getDouble(cr.getColumnIndexOrThrow(DBAdapter_Temp_Autorizacion_Cobro.temp_vigencia_credito));
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        // set title
+        alertDialogBuilder.setTitle("Confirmar Prologa de Pagos");
+        LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View layout_cobros = inflater.inflate(prompts_cobros_fecha, null);
+        final DatePicker dp = (DatePicker) layout_cobros.findViewById(R.id.fechakel);
+        Log.d("PARAMS",""+idComprobanteCobro+"-"+montoCredito);
+        dp.setMaxDate(calcularFecha(fecha));
+        dp.setMinDate(calcularFechaHoy());
+        alertDialogBuilder.setView(layout_cobros);
+        // set dialog message
+        AlertDialog.Builder builder = alertDialogBuilder
+                .setMessage("La Feha Limite es: "+fecha)
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        int day = dp.getDayOfMonth();
+                        int month = dp.getMonth()+1;
+                        int year = dp.getYear();
+                        String fechaRenovada = day + "/" + month + "/" + year;
+                        int aut = dbAutorizaciones.updateAutorizacionCobro_Au(idAutorizacion, 5, idAEstablecimiento, fecha);
+                        int cobr = dbHelper_Comprob_Cobro.updateComprobCobros_Auto(idComprobanteCobro, montoCredito, fechaRenovada);
+
+                        if (cobr == 1 && aut==1) {
+                            Toast.makeText(getApplicationContext(), "Inserto Correctamente", Toast.LENGTH_SHORT).show();
+                            back();
+
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Ocurrio un Error", Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+
+                })
+                .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Toast.makeText(getApplicationContext(),
+                                "Cancelo", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+
+        // create alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+
+        // show it
+        alertDialog.show();
+
+    }
+    public void select(final Cursor cr,final String fecha){
 
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
 
@@ -293,13 +402,13 @@ public class VMovil_Venta_Comprob extends Activity {
 
             // set dialog message
             AlertDialog.Builder builder = alertDialogBuilder
-                    .setMessage("Al Confirmar se agregara el nuevo comprobante de cobro con la deuda actualizada")
+                    .setMessage("Aprobado, la Fecha Limite para el cobro es: " + fecha + "")
                     .setCancelable(false)
-                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    .setPositiveButton("Ir", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            boolean up = dbAutorizaciones.updateAutorizacionAprobado(idAutorizacion, idDetalleCobro);
-                            if (up) {
-                                back();
+                            // boolean up = dbAutorizaciones.updateAutorizacionAprobado(idAutorizacion, idDetalleCobro);
+                            if (true) {
+                                cambiarFecha(cr,fecha);
                                 Toast.makeText(getApplicationContext(), "Guardado Correctamente", Toast.LENGTH_SHORT).show();
 
                             } else {
@@ -307,12 +416,6 @@ public class VMovil_Venta_Comprob extends Activity {
                             }
                         }
 
-                    })
-                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            Toast.makeText(getApplicationContext(),
-                                    "Cancelo", Toast.LENGTH_SHORT).show();
-                        }
                     });
 
 
@@ -322,7 +425,7 @@ public class VMovil_Venta_Comprob extends Activity {
             // show it
             alertDialog.show();
 
-        }
+    }
 
 private void back(){
     Intent w = new Intent(getApplicationContext(), VMovil_Evento_Establec.class);

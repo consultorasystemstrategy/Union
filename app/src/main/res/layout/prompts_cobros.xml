@@ -69,21 +69,6 @@
         android:layout_height="fill_parent"
         android:layout_weight="1">
 
-        <TextView
-            android:textColor="@color/ColorPUTercero"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Ingrese fecha de nuevo pago:"
-            android:id="@+id/textView6"
-            android:layout_marginBottom="10dp"/>
-
-        <DatePicker
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/dateProloga"
-            android:calendarViewShown="false" />
-
     </LinearLayout>
 
 </LinearLayout>
