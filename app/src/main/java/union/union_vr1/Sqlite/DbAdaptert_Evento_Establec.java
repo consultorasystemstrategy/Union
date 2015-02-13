@@ -372,33 +372,38 @@ public class DbAdaptert_Evento_Establec {
         Cursor mCursor = mDb.rawQuery("select ee._id AS _id, ee.ee_in_id_agente AS idAgente, ee.ee_in_id_establec AS idEstablecimiento, ee.ee_te_nom_establec AS nombreEstablecimiento, ee.ee_te_nom_cliente AS nombrecliente,ee.ee_in_orden AS orden, ee_in_id_estado_atencion AS estadoAtencion, SUM(cc.cc_re_monto_a_pagar) as deudaTotal from m_evento_establec ee\n" +
                 "LEFT OUTER JOIN m_comprob_cobro cc \n" +
                 "ON ee.ee_in_id_establec = cc.cc_in_id_establec \n" +
+                "WHERE cc.cc_in_estado_cobro = 1 \n" +
                 "GROUP BY  ee.ee_in_id_establec, ee.ee_te_nom_establec \n" +
                 "ORDER BY ee.ee_in_id_estado_atencion;",null);
         return mCursor;
     }
+
+    public Cursor listarEstablecimientosByID(int idEstablecimiento){
+        Cursor mCursor = mDb.rawQuery("select ee._id AS _id, ee.ee_in_id_agente AS idAgente, ee.ee_in_id_establec AS idEstablecimiento, ee.ee_te_nom_establec AS nombreEstablecimiento, ee.ee_te_nom_cliente AS nombrecliente,ee.ee_in_orden AS orden, ee_in_id_estado_atencion AS estadoAtencion, SUM(cc.cc_re_monto_a_pagar) as deudaTotal from m_evento_establec ee\n" +
+                "LEFT OUTER JOIN m_comprob_cobro cc \n" +
+                "ON ee.ee_in_id_establec = cc.cc_in_id_establec \n" +
+                "WHERE ee.ee_in_id_establec = '"+idEstablecimiento+"' \n" +
+                "AND cc.cc_in_estado_cobro = 1 \n" +
+                "GROUP BY  ee.ee_in_id_establec, ee.ee_te_nom_establec \n" +
+                "ORDER BY ee.ee_in_id_estado_atencion;",null);
+        return mCursor;
+    }
+
+
+
+
 
     public Cursor listarEstablecimientosPorNombre(String nombreEstablecimiento){
         Cursor mCursor = mDb.rawQuery("select ee._id AS _id, ee.ee_in_id_agente AS idAgente, ee.ee_in_id_establec AS idEstablecimiento, ee.ee_te_nom_establec AS nombreEstablecimiento, ee.ee_te_nom_cliente AS nombrecliente,ee.ee_in_orden AS orden, ee_in_id_estado_atencion AS estadoAtencion, SUM(cc.cc_re_monto_a_pagar) as deudaTotal from m_evento_establec ee\n" +
                 "LEFT OUTER JOIN m_comprob_cobro cc \n" +
                 "ON ee.ee_in_id_establec = cc.cc_in_id_establec   WHERE \n" +
                 "ee.ee_te_nom_establec like '%"+nombreEstablecimiento+"%' \n" +
+                "AND cc.cc_in_estado_cobro = 1 \n" +
                 "GROUP BY  ee.ee_in_id_establec, ee.ee_te_nom_establec \n" +
                 "ORDER BY ee.ee_in_id_estado_atencion;",null);
 
         return mCursor;
     }
 
-
-    /*
-    public void insertSomeEstablecs() {
-
-        createEstablecs(1, 1, 1, 1, "TIENDA NAs", "JUAN", "10001", 1, 50, 4, 100, 3, 1, 1);
-        createEstablecs(2, 1, 1, 2, "TIENDA NBs", "JUAN", "10001", 1, 11, 21, 300, 7, 2, 1);
-        createEstablecs(3, 1, 1, 3, "GRIFO NAs",  "JUAN", "10001", 1, 11, 21, 1000, 15, 3, 1);
-        createEstablecs(4, 1, 2, 1, "GRIFO NBs",  "JUAN", "10001", 1, 11, 21, 5000, 31, 4, 1);
-        createEstablecs(5, 1, 2, 2, "PERSON NAs", "JUAN", "10001", 1, 11, 21, 5000, 31, 1, 1);
-
-    }
-    */
 
 }

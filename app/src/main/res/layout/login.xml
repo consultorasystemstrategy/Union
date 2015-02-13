@@ -21,7 +21,8 @@
         android:layout_above="@+id/salir"
         android:layout_alignLeft="@+id/password"
         android:layout_alignRight="@+id/password"
-        android:text="Ingresar" />
+        android:text="Ingresar"
+        android:background="@drawable/border_bottom_dark" />
 
     <EditText
         android:id="@+id/password"

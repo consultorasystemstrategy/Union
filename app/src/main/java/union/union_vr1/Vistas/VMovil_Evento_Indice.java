@@ -162,8 +162,11 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
 
 
         //((MyApplication) this.getApplication()).setDisplayedHistorialComprobanteAnterior(false);
+
+        /*
         session.deleteVariable(6);
         session.createTempSession(6,0);
+*/
 
         dbHelper1 = new DbAdapter_Comprob_Venta(this);
         dbHelper1.open();
@@ -221,8 +224,8 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         mClient = (Button) findViewById(R.id.VEI_BTNclient);
         mInfgas = (Button) findViewById(R.id.VEI_BTNinfgas);
         mResume = (Button) findViewById(R.id.VEI_BTNresume);
-        mCarinv = (Button) findViewById(R.id.VEI_BTNcarinv);
-        mTrainv = (Button) findViewById(R.id.VEI_BTNtrainv);
+        //mCarinv = (Button) findViewById(R.id.VEI_BTNcarinv);
+        //mTrainv = (Button) findViewById(R.id.VEI_BTNtrainv);
         mCobroTotal = (Button) findViewById(R.id.VEI_BTNcobrarTodo);
         mClient.setOnClickListener(this);
         mInfgas.setOnClickListener(this);
@@ -318,14 +321,14 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
                 Intent ir = new Intent(this, VMovil_Resumen_Caja.class);
                 startActivity(ir);
                 break;
-            case R.id.VEI_BTNcarinv:
+           /* case R.id.VEI_BTNcarinv:
                 Intent is = new Intent(this, DbManager_Evento_Establec_GET.class);
                 startActivity(is);
                 break;
             case R.id.VEI_BTNtrainv:
                 Intent ip = new Intent(this, DbManager_Evento_Establec_POST.class);
                 startActivity(ip);
-                break;
+                break;*/
             case R.id.VEI_BTNcobrarTodo:
                 Intent cT = new Intent(this, VMovil_Cobros_Totales.class);
                 startActivity(cT);

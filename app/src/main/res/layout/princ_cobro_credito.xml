@@ -17,14 +17,16 @@
             android:layout_height="fill_parent"
             android:id="@+id/VCCR_LSTcresez"
             android:layout_centerHorizontal="true"
-            android:layout_above="@+id/textViewEstablecimientoNombre" />
+            android:layout_above="@+id/textViewEstablecimientoNombre"
+            />
     </LinearLayout>
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_weight="5">
+        android:layout_weight="5"
+        android:background="@color/Dark1">
 
         <TextView
             android:layout_width="fill_parent"
@@ -34,7 +36,10 @@
             android:id="@+id/textViewEstablecimientoNombre"
             android:layout_below="@+id/VCCR_SPNcredit"
             android:layout_alignParentLeft="true"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:textColor="@color/Dark2"
+            android:gravity="center"
+            android:textStyle="bold" />
 
         <TextView
             android:textAppearance="?android:attr/textAppearanceLarge"
@@ -44,8 +49,10 @@
             android:focusableInTouchMode="false"
             android:focusable="false"
             android:text=""
-            android:textColor="@color/ColorPUPrincipal"
-            android:layout_weight="1" />
+            android:textColor="@color/Dark2"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textStyle="bold" />
     </LinearLayout>
 
     <LinearLayout

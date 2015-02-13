@@ -66,8 +66,9 @@ public class VMovil_Menu_Establec extends Activity {
         session.deleteVariable(2);
         session.createTempSession(2,Integer.parseInt(idEstabl));
         dbAdapter_temp_barcode_scanner.createTempScanner(Integer.parseInt(idEstabl));
-        i.putExtra("idEstab", idEstabl);
-        i.putExtra("idAgente", idAgente);
+        session.deleteVariable(2);
+        session.createTempSession(2, Integer.parseInt(idEstabl));
+
         finish();
         startActivity(i);
     }

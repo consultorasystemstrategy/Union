@@ -55,6 +55,7 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter{
         LinearLayout linearLayoutColor = (LinearLayout) view.findViewById(R.id.linearLayoutEstablecimientoColor);
         TextView orden = (TextView) view.findViewById(R.id.textViewEstablecimientoOrden);
 
+
         if (cursor.getCount()>0){
 
             String id_establecimiento = cursor.getString(cursor.getColumnIndex("idEstablecimiento"));
@@ -69,10 +70,10 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter{
 
 
 
-            nombreEstablecimiento.setText(nombre_establecimiento);
+            nombreEstablecimiento.setText(numeroOrden + ". " +nombre_establecimiento);
             nombreEstablecimiento.setSingleLine(false);
             nombreCliente.setText(nombre_cliente);
-            orden.setText("Orden "+numeroOrden);
+            orden.setText("");
             deuda.setText("S/. "+df.format(deudaTotal));
 
             switch (id_estado_atencion){

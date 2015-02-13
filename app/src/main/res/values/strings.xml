@@ -115,6 +115,13 @@
         <item>Editar</item>
         <item>Eliminar</item>
     </string-array>
+    <string-array name="estadoAtencion">
+        <item>Atendido</item>
+        <item>No atendido</item>
+        <item>Pendiente</item>
+    </string-array>
+
+
 
     <string name="title_activity_princ_venta_principal">princ_venta_principal</string>
     <string name="title_activity_vmovil__evento__establec">VMovil_Evento_Establec</string>

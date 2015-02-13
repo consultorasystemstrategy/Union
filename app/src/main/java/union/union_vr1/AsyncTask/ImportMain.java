@@ -140,6 +140,7 @@ public class ImportMain extends AsyncTask<String, String, String> {
 
         Log.d("idAgente, idLiquidacion, Fecha", idAgente+", "+idLiquidacion+", 19/01/2015");
 
+
         try{
             publishProgress(""+5);
             JSONObject jsonObjectStockAgente = api.GetStockAgente(idAgente);

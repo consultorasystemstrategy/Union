@@ -16,6 +16,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -107,6 +108,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
     private Button buttonVender;
     private ListView listView;
     private View header;
+    private View headerNombreEstablecimiento;
     private View footer;
     private VMovil_Venta_Cabecera mainActivity;
 
@@ -155,7 +157,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
                         session.createTempSession(6,0);
 
                         finish();
-                        Intent intent = new Intent(mContext,VMovil_Evento_Indice.class);
+                        Intent intent = new Intent(mContext,VMovil_Evento_Establec.class);
                         startActivity(intent);
                     }
                 }).create().show();
@@ -568,6 +570,8 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
         final TextView devuelto = ((TextView) layout.findViewById(R.id.VCEP_textViewDevuelto));
         final TextView promedioAnterior = ((TextView) layout.findViewById(R.id.VCEP_textViewPromedioAnterior));
 
+
+
         savedText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -607,7 +611,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
         devuelto.setText("Devueltos : "+devueltoText);
         promedioAnterior.setText("Promedio Anterior : " +promedioAnteriorText);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Cantidad");
         builder.setPositiveButton("OK", new Dialog.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
@@ -626,8 +630,20 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
                 startActivity(intent);
             }
         });
+
         builder.setView(layout);
-        return builder.create();
+
+        final AlertDialog alertDialog = builder.create();
+        savedText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                }
+            }
+        });
+
+        return alertDialog;
     }
     private enum FormaPago{
         Contado, Credito
@@ -809,11 +825,10 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
         textoImpresionContenidoLeft+=String.format("%-34s","IGV:")+"\n";
         textoImpresionContenidoLeft+=String.format("%-34s","TOTAL:")+"\n";
 
+        textoImpresionContenidoRight+= "S/ " +
+                ""+ df.format(base_imponible)+"\n";
         textoImpresionContenidoRight+= "S/ "+ df.format(base_imponible)+"\n";
         textoImpresionContenidoRight+= "S/ "+ df.format(base_imponible)+"\n";
-        textoImpresionContenidoRight+= "S/ "+ df.format(base_imponible)+"\n";
-
-
 
 
         if (i_formaPago==2){
@@ -929,6 +944,19 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
                 to,
                 0);
         header = getLayoutInflater().inflate(R.layout.infor_venta_cabecera,null);
+        headerNombreEstablecimiento = getLayoutInflater().inflate(R.layout.header_venta,null);
+        TextView textViewNombreEstablecimiento = (TextView) headerNombreEstablecimiento.findViewById(R.id.headerEstablecimientoNombre);
+
+
+        Cursor cursorEstablecimiento = dbHelper_Evento_Establecimiento.fetchEstablecsById(""+idEstablecimiento);
+        cursorEstablecimiento.moveToFirst();
+        String nombreEstablecimiento = "";
+        if (cursorEstablecimiento.getCount()>0) {
+            nombreEstablecimiento = cursorEstablecimiento.getString(cursorEstablecimiento.getColumnIndexOrThrow(dbHelper_Evento_Establecimiento.EE_nom_establec));
+        }
+        textViewNombreEstablecimiento.setText(nombreEstablecimiento);
+
+        listView.addHeaderView(headerNombreEstablecimiento);
         listView.addHeaderView(header);
         //AQUÍ TIENE QUE ESTAR EL CÓDIGO QUE MUESTRE EL MONTO TOTAL DE LA VENTA
 

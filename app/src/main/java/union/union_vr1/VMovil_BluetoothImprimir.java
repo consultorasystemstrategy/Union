@@ -23,6 +23,9 @@ import java.nio.charset.Charset;
 import java.util.Set;
 import java.util.UUID;
 
+import union.union_vr1.Vistas.VMovil_Evento_Establec;
+import union.union_vr1.Vistas.VMovil_Evento_Indice;
+
 public class VMovil_BluetoothImprimir extends Activity{
 
     private Button buttonImprimir;
@@ -51,6 +54,14 @@ public class VMovil_BluetoothImprimir extends Activity{
     int readBufferPosition;
     int counter;
     volatile boolean stopWorker;
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(this, VMovil_Evento_Establec.class);
+        finish();
+        startActivity(intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
