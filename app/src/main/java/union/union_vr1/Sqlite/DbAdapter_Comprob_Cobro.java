@@ -38,6 +38,7 @@ public class DbAdapter_Comprob_Cobro {
     public static final String CC_lugar_registro = "cc_lugar_registro";
     public static final String CC_id_autorizacion = "cc_idAutorizacion";
     public static final String CC_estado_prologa = "cc_estado_prologa";
+    public static final String CC_liquidacion = "id_liquidacion";
 
     public static final String TAG = "Comprob_Cobro";
     private DbHelper mDbHelper;
@@ -69,6 +70,7 @@ public class DbAdapter_Comprob_Cobro {
                     + CC_lugar_registro + " text, "
                     + estado_sincronizacion + " integer,"
                     + CC_id_autorizacion + " integer,"
+                    +CC_liquidacion+" integer, "
                     + CC_estado_prologa + " text );";
 
     public static final String DELETE_TABLE_COMPROB_COBRO = "DROP TABLE IF EXISTS " + SQLITE_TABLE_Comprob_Cobro;
@@ -93,7 +95,7 @@ public class DbAdapter_Comprob_Cobro {
             int id_establec, int id_comprob, int id_plan_pago, int id_plan_pago_detalle,
             String desc_tipo_doc, String doc, String fecha_programada, double monto_a_pagar,
             String fecha_cobro, String hora_cobro, double monto_cobrado, int estado_cobro,
-            int id_agente, int id_forma_cobro, String lugar_registro) {
+            int id_agente, int id_forma_cobro, String lugar_registro, int liquidacion) {
 
         ContentValues initialValues = new ContentValues();
         initialValues.put(CC_id_establec, id_establec);
@@ -111,6 +113,7 @@ public class DbAdapter_Comprob_Cobro {
         initialValues.put(CC_id_agente, id_agente);
         initialValues.put(CC_id_forma_cobro, id_forma_cobro);
         initialValues.put(CC_lugar_registro, lugar_registro);
+        initialValues.put(CC_liquidacion, liquidacion);
         initialValues.put(Constants._SINCRONIZAR, Constants._CREADO);
         return mDb.insert(SQLITE_TABLE_Comprob_Cobro, null, initialValues);
     }
@@ -446,7 +449,7 @@ public class DbAdapter_Comprob_Cobro {
         return mCursor;
     }
 
-
+/*
     public void insertSomeComprobCobros() {
 
         createComprobCobros(1, 1, 1, 1, "FACTURA", "FAC-0001", "14/01/2015", 1000, "",
@@ -460,5 +463,5 @@ public class DbAdapter_Comprob_Cobro {
         createComprobCobros(2, 2, 2, 2, "BOLETA", "FAC-0002", "14/01/2015", 200, "",
                 "", 1, 1, 1, 1, "historial");
     }
-
+*/
 }

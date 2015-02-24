@@ -6,231 +6,359 @@
     android:orientation="vertical"
     android:background="@color/PersonalizadoSteve3">
 
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/scrollView" >
+
+
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="fill_parent"
         android:layout_margin="4dp">
 
         <LinearLayout
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="1">
+            android:layout_height="wrap_content">
 
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="CLIENTES"
-                android:id="@+id/VEI_BTNclient"
-                android:layout_weight="1"
-                android:layout_margin="2dp"
-                android:drawableLeft="@drawable/ic_action_person"
-                android:typeface="monospace"
-                android:background="@color/azul" />
 
-            <Button
-                android:layout_width="match_parent"
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="CLIENTES X RUTA"
+                    android:id="@+id/VEI_BTNclient"
+                    android:layout_weight="1"
+                    android:layout_margin="2dp"
+                    android:drawableLeft="@drawable/ic_action_person"
+                    android:typeface="monospace"
+                    android:background="@color/azul" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="COBRANZAS"
+                    android:id="@+id/VEI_BTNcobrarTodo"
+                    android:layout_weight="1"
+                    android:layout_margin="2dp"
+                    android:drawableLeft="@drawable/ic_action_read"
+                    android:typeface="monospace" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="AGREGAR GASTOS"
+                    android:id="@+id/VEI_BTNinfgas"
+                    android:layout_weight="1"
+                    android:layout_margin="2dp"
+                    android:drawableLeft="@drawable/ic_action_new_label"
+                    android:typeface="monospace" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="RESUMEN"
+                    android:id="@+id/VEI_BTNresume"
+                    android:layout_weight="1"
+                    android:layout_margin="2dp"
+                    android:drawableLeft="@drawable/ic_action_view_as_list"
+                    android:typeface="monospace" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="COBRANZAS"
-                android:id="@+id/VEI_BTNcobrarTodo"
-                android:layout_weight="1"
-                android:layout_margin="2dp"
-                android:drawableLeft="@drawable/ic_action_read"
-                android:typeface="monospace" />
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Lunes 16 de Febrero"
+                    android:id="@+id/textViewFecha"
+                    android:layout_weight="1"
+                    android:textStyle="bold"
+                    android:typeface="monospace" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginBottom="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Ruta : Agustino"
+                    android:id="@+id/textViewNombreRuta"
+                    android:layout_weight="1"
+                    android:textStyle="bold"
+                    android:typeface="monospace" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="24dp"
+                    android:text="26"
+                    android:id="@+id/buttonNumeroEstablecimiento"
+                    android:textSize="16dp"
+                    android:background="@color/azul"
+                    android:textStyle="bold" />
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="1">
-
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="AGREGAR GASTOS"
-                android:id="@+id/VEI_BTNinfgas"
-                android:layout_weight="1"
-                android:layout_margin="2dp"
-                android:drawableLeft="@drawable/ic_action_new_label"
-                android:typeface="monospace" />
-
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="RESUMEN"
-                android:id="@+id/VEI_BTNresume"
-                android:layout_weight="1"
-                android:layout_margin="2dp"
-                android:drawableLeft="@drawable/ic_action_view_as_list"
-                android:typeface="monospace" />
-        </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
-
-        <ScrollView
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/scrollView" >
+            android:layout_marginTop="16dp"
+            android:background="@drawable/border_bottom_top_dark">
 
-            <LinearLayout
+            <HorizontalScrollView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/horizontalScrollView"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content">
+
+
+                            <Button
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Rentabilidad"
+                                android:id="@+id/button2"
+                                android:drawableTop="@drawable/ic_action_costo_distribucion"
+                                android:background="@color/Personalizado3"
+                                android:textColor="@color/Dark5"
+                                android:layout_gravity="center"
+                                android:layout_marginLeft="8dp"
+                                android:layout_marginRight="8dp" />
+
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Costos de Distribución"
+                        android:id="@+id/button3"
+                        android:drawableTop="@drawable/ic_action_rentabilidad"
+                        android:background="@color/Personalizado3"
+                        android:textColor="@color/Dark5"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="8dp" />
+
+                    <Button
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="% Devueltos"
+                                android:id="@+id/button4"
+                                android:drawableTop="@drawable/ic_action_devuelto"
+                                android:background="@color/Personalizado3"
+                                android:textColor="@color/Dark5"
+                        android:layout_marginRight="8dp"
+                        android:layout_marginLeft="8dp" />
+
+                </LinearLayout>
+            </HorizontalScrollView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="275dp">
+
+            <ListView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:id="@+id/listViewRutaSemanal" />
+        </LinearLayout>
+
+
+        <!--
+                <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
+                android:layout_height="wrap_content">
 
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content">
 
                     <LinearLayout
-                        android:orientation="horizontal"
+                        android:orientation="vertical"
                         android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="16dp"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginRight="8dp"
-                        android:layout_marginBottom="8dp">
+                        android:layout_height="fill_parent">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Productos Top"
-                            android:id="@+id/textView"
-                            android:layout_weight="1"
-                            android:textStyle="bold"
-                            android:typeface="monospace" />
 
-                        <Button
-                            android:layout_width="wrap_content"
-                            android:layout_height="24dp"
-                            android:text="MÁS"
-                            android:id="@+id/button"
-                            android:textSize="8dp"
-                            android:background="@color/verde" />
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:text="BSC - RUTA"
+                                android:id="@+id/textView2" />
+                            <union.union_vr1.Charts.BarGraph
+                                android:layout_width="fill_parent"
+                                android:layout_height="200dp"
+                                android:id="@+id/graph" />
+
+                        </LinearLayout>
+
+
+
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content">
+
+                            <LinearLayout
+                                android:orientation="horizontal"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="16dp"
+                                android:layout_marginTop="16dp"
+                                android:layout_marginRight="8dp"
+                                android:layout_marginBottom="8dp">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Productos Top"
+                                    android:id="@+id/textView"
+                                    android:layout_weight="1"
+                                    android:textStyle="bold"
+                                    android:typeface="monospace" />
+
+                                <Button
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="24dp"
+                                    android:text="MÁS"
+                                    android:id="@+id/button"
+                                    android:textSize="8dp"
+                                    android:background="@color/verde" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:orientation="horizontal"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content">
+
+                                <ListView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/listViewProductosTop" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content">
+
+                            <LinearLayout
+                                android:orientation="horizontal"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="16dp"
+                                android:layout_marginTop="16dp"
+                                android:layout_marginRight="8dp"
+                                android:layout_marginBottom="8dp">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Clientes Top"
+                                    android:layout_weight="1"
+                                    android:textStyle="bold"
+                                    android:typeface="monospace" />
+
+                                <Button
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="24dp"
+                                    android:text="MÁS"
+                                    android:textSize="8dp"
+                                    android:background="@color/verde" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:orientation="horizontal"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content">
+
+                                <ListView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/listViewClientesTop" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content">
+
+                            <LinearLayout
+                                android:orientation="horizontal"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="16dp"
+                                android:layout_marginTop="16dp"
+                                android:layout_marginRight="8dp"
+                                android:layout_marginBottom="8dp">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Cobros Urgentes"
+                                    android:layout_weight="1"
+                                    android:textStyle="bold"
+                                    android:typeface="monospace" />
+
+                                <Button
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="24dp"
+                                    android:text="MÁS"
+                                    android:textSize="8dp"
+                                    android:background="@color/verde" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:orientation="horizontal"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content">
+
+                                <ListView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/listViewCobrosVencidos"></ListView>
+                            </LinearLayout>
+                        </LinearLayout>
+
                     </LinearLayout>
-
-                    <LinearLayout
-                        android:orientation="horizontal"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content">
-
-                        <ListView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/listViewProductosTop" />
-                    </LinearLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content">
-
-                    <LinearLayout
-                        android:orientation="horizontal"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="16dp"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginRight="8dp"
-                        android:layout_marginBottom="8dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Clientes Top"
-                            android:layout_weight="1"
-                            android:textStyle="bold"
-                            android:typeface="monospace" />
-
-                        <Button
-                            android:layout_width="wrap_content"
-                            android:layout_height="24dp"
-                            android:text="MÁS"
-                            android:textSize="8dp"
-                            android:background="@color/verde" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:orientation="horizontal"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content">
-
-                        <ListView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/listViewClientesTop" />
-                    </LinearLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content">
-
-                    <LinearLayout
-                        android:orientation="horizontal"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="16dp"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginRight="8dp"
-                        android:layout_marginBottom="8dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Cobros Urgentes"
-                            android:layout_weight="1"
-                            android:textStyle="bold"
-                            android:typeface="monospace" />
-
-                        <Button
-                            android:layout_width="wrap_content"
-                            android:layout_height="24dp"
-                            android:text="MÁS"
-                            android:textSize="8dp"
-                            android:background="@color/verde" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:orientation="horizontal"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content">
-
-                        <ListView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/listViewCobrosVencidos"></ListView>
-                    </LinearLayout>
-                </LinearLayout>
 
             </LinearLayout>
-        </ScrollView>
+        -->
     </LinearLayout>
-
-    <!--
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Carga Inventario"
-            android:id="@+id/VEI_BTNcarinv"
-            android:layout_below="@+id/VEI_BTNresume"
-            android:layout_centerHorizontal="true"/>
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Transferencia de Inventario"
-            android:id="@+id/VEI_BTNtrainv"
-            android:layout_below="@+id/VEI_BTNcarinv"
-            android:layout_centerHorizontal="true"/>
-    -->
-
+    </ScrollView>
 </LinearLayout>

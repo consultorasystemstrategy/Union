@@ -116,11 +116,21 @@ public class SolicitarCredito extends AsyncTask<String, String, String> {
 
     @Override
     protected void onPostExecute(String s) {
-        progressDialog.dismiss();
+
+        if(mainActivity.isFinishing()){
+            //dismissProgressDialog();
+            progressDialog.dismiss();
+            return;
+        }else {
+            Log.d("JSON SOLICTTUD CRÉDITO", jsonObject.toString());
+
+            progressDialog.setProgress(100);
+            dismissProgressDialog();
+
+
+        }
+
         super.onPostExecute(s);
-
-        Log.d("JSON SOLICTTUD CRÉDITO", jsonObject.toString());
-
         Intent intent = new Intent(mainActivity, VMovil_Online_Pumovil.class);
         mainActivity.finish();
         mainActivity.startActivity(intent);
@@ -141,6 +151,12 @@ public class SolicitarCredito extends AsyncTask<String, String, String> {
         progressDialog.setCancelable(false);
         progressDialog.show();
 
+    }
+
+    private void dismissProgressDialog() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
     }
 
 }

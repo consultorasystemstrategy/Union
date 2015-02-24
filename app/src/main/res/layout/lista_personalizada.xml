@@ -68,6 +68,7 @@
                 android:layout_gravity="top|left"
                 android:gravity="top|left"
                 android:textSize="12dp"
+                android:singleLine="false"
                 android:textStyle="italic"
                 android:layout_marginTop="-8dp"
                 android:textColor="@color/Dark1" />

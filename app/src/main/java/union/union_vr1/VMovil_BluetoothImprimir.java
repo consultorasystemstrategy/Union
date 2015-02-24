@@ -31,12 +31,14 @@ public class VMovil_BluetoothImprimir extends Activity{
     private Button buttonImprimir;
     private Button buttonSincronizar;
     private TextView textViewImprimirCabecera;
+    private TextView textViewVentaCabecera;
     private TextView textViewImprimirContenidoLeft;
     private TextView textViewImprimirContenidoRight;
 
 
     private String textoImpresion = "";
     private String textoImpresionCabecera = "";
+    private String textoVentaImpresion = "";
     private String textoImpresionContenidoLeft = "";
     private String textoImpresionContenidoRight = "";
 
@@ -73,15 +75,18 @@ public class VMovil_BluetoothImprimir extends Activity{
         textViewImprimirCabecera = (TextView) findViewById(R.id.textViewImprimirCabecera);
         textViewImprimirContenidoLeft = (TextView) findViewById(R.id.textViewImprimirContenidoLeft);
         textViewImprimirContenidoRight = (TextView) findViewById(R.id.textViewImprimirContenidoRight);
+        textViewVentaCabecera = (TextView) findViewById(R.id.textViewVentaCabecera);
 
 
         textoImpresion = getIntent().getExtras().getString("textoImpresion");
         textoImpresionCabecera = getIntent().getExtras().getString("textoImpresionCabecera");
         textoImpresionContenidoLeft = getIntent().getExtras().getString("textoImpresionContenidoLeft");
         textoImpresionContenidoRight = getIntent().getExtras().getString("textoImpresionContenidoRight");
+        textoVentaImpresion = getIntent().getExtras().getString("textoVentaImpresion");
 
 
         textViewImprimirCabecera.setText(textoImpresionCabecera);
+        textViewVentaCabecera.setText(textoVentaImpresion);
         textViewImprimirContenidoLeft.setText(textoImpresionContenidoLeft);
         textViewImprimirContenidoRight.setText(textoImpresionContenidoRight);
 

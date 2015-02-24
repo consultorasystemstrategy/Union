@@ -58,12 +58,12 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter{
 
         if (cursor.getCount()>0){
 
-            String id_establecimiento = cursor.getString(cursor.getColumnIndex("idEstablecimiento"));
-            String nombre_establecimiento = cursor.getString(cursor.getColumnIndex("nombreEstablecimiento"));
-            String nombre_cliente = cursor.getString(cursor.getColumnIndex("nombrecliente"));
-            int id_estado_atencion = Integer.parseInt(cursor.getString(cursor.getColumnIndex("estadoAtencion")));
-            int numeroOrden = cursor.getInt(cursor.getColumnIndexOrThrow("orden"));
-            double deudaTotal = cursor.getDouble(cursor.getColumnIndexOrThrow("deudaTotal")) ;
+            String id_establecimiento = cursor.getString(cursor.getColumnIndex(dbHelper.EE_id_establec));
+            String nombre_establecimiento = cursor.getString(cursor.getColumnIndex(dbHelper.EE_nom_establec));
+            String nombre_cliente = cursor.getString(cursor.getColumnIndex(dbHelper.EE_nom_cliente));
+            int id_estado_atencion = Integer.parseInt(cursor.getString(cursor.getColumnIndex(dbHelper.EE_id_estado_atencion)));
+            int numeroOrden = cursor.getInt(cursor.getColumnIndexOrThrow(dbHelper.EE_orden));
+            double deudaTotal = cursor.getDouble(cursor.getColumnIndexOrThrow("cc_re_monto_a_pagar")) ;
 
 
             DecimalFormat df= new DecimalFormat("#0.00");

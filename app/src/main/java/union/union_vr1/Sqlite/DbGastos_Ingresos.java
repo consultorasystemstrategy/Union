@@ -199,6 +199,53 @@ public class DbGastos_Ingresos {
         return null;
     }
 
+    public Cursor listarIngresosGastos(int liquidacion){
+        Cursor mCursor = null;
+
+        mCursor = mDb.rawQuery("SELECT 1 as _id, 'Facturas Emitidas' AS comprobante,\n" +
+                "\tCOUNT(*) AS n,\n" +
+                "\tROUND(SUM(cv_re_total)) AS emitidas, \n" +
+                "\t(SELECT ROUND(SUM(cv_re_total)) FROM m_comprob_venta WHERE cv_in_id_tipo_doc = '1' AND cv_in_id_forma_pago = '1' AND id_liquidacion = '"+liquidacion+"') AS pagado,\n" +
+                "\t0 AS cobrado \n" +
+                "FROM m_comprob_venta\n" +
+                "WHERE cv_in_id_tipo_doc = '1'\n" +
+                "AND id_liquidacion  = '"+liquidacion+"'\n" +
+                "UNION\n" +
+                "SELECT 2 as _id, 'Boletas Emitidas' AS comprobante,\n" +
+                "\tCOUNT(*) AS n,\n" +
+                "\tROUND(SUM(cv_re_total)) AS emitidas, \n" +
+                "\t(SELECT ROUND(SUM(cv_re_total)) FROM m_comprob_venta WHERE cv_in_id_tipo_doc = '2' AND cv_in_id_forma_pago = '1' AND id_liquidacion = '"+liquidacion+"') AS pagado,\n" +
+                "\t0 AS cobrado \n" +
+                "FROM m_comprob_venta\n" +
+                "WHERE cv_in_id_tipo_doc = '2'\n" +
+                "AND id_liquidacion  = '"+liquidacion+"'\n" +
+                "\n" +
+                "UNION \n" +
+                "\n" +
+                "SELECT \t 3 as _id, 'Facturas Cobradas' AS comprobante,\n" +
+                "\t(SELECT COUNT(DISTINCT(cc_in_id_comprob)) FROM m_comprob_cobro WHERE UPPER(cc_te_desc_tipo_doc) like '%FACTURA%' AND  cc_in_estado_cobro='0' AND '"+getDatePhone()+"') AS n,\n" +
+                "\t0 AS emitidas,\n" +
+                "\t0 AS pagado,\n" +
+                "\t(SELECT ROUND(SUM(cc_re_monto_cobrado)) FROM m_comprob_cobro WHERE UPPER(cc_te_desc_tipo_doc) like '%FACTURA%' AND cc_in_estado_cobro='0' AND '"+getDatePhone()+"') AS cobrado\n" +
+                "\n" +
+                "UNION \n" +
+                "\n" +
+                "SELECT \t 4 as _id, 'Boletas Cobradas' AS comprobante,\n" +
+                "\t(SELECT COUNT(DISTINCT(cc_in_id_comprob)) FROM m_comprob_cobro WHERE UPPER(cc_te_desc_tipo_doc) like '%BOLETA%' AND  cc_in_estado_cobro='0' AND '"+getDatePhone()+"') AS n,\n" +
+                "\t0 AS emitidas,\n" +
+                "\t0 AS pagado,\n" +
+                "\t(SELECT ROUND(SUM(cc_re_monto_cobrado)) FROM m_comprob_cobro WHERE UPPER(cc_te_desc_tipo_doc) like '%BOLETA%'  AND cc_in_estado_cobro='0' AND '"+getDatePhone()+"') AS cobrado",null);
+
+        if (mCursor!=null){
+            mCursor.moveToFirst();
+        }
+        if (mCursor.getCount()==0){
+            //CURSOR VACÍO
+        }
+
+        return  mCursor;
+    }
+
     public void insertar(int idAgente, String descripcion, int tipo_gi) {
 
         mDb.execSQL("insert into m_resumen_caja values (null," + idAgente + ",'" + descripcion + "'," + tipo_gi + ",'','','','','" + getDatePhone() + "')");

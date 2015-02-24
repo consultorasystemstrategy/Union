@@ -42,7 +42,7 @@ public class MyAndroidAppActivity extends Activity {
         dbHelperx.deleteAllPrecio();
         dbHelpery.deleteAllComprobVentaDetalle();
         //Add some data
-        dbHelper.insertSomeStockAgente();
+        //dbHelper.insertSomeStockAgente();
         dbHelperx.insertSomePrecio();
 
         spinner1 = (Spinner) findViewById(R.id.spinner1);

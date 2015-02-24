@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -49,23 +50,39 @@ public class VMovil_Cobros_Totales extends Activity {
     public void listarCobrosTotales() {
 
         Cursor cursor = cCobro.listarComprobantesToCobros();
+
+
+
         CursorAdapterCobrosTotales cACobros = new CursorAdapterCobrosTotales(this, cursor);
 
         final ListView listCobros = (ListView) findViewById(R.id.listaCobrosTotales);
+
+
+        if (cursor.getCount()==0){
+
+            View headerSinDatos= getLayoutInflater().inflate(R.layout.header_datos_vacios,null);
+            listCobros.addHeaderView(headerSinDatos,null, false);
+        }else if(cursor.getCount()<0){
+
+            View headerSinDatos= getLayoutInflater().inflate(R.layout.header_datos_vacios,null);
+            listCobros.addHeaderView(headerSinDatos,null, false);
+
+        }
         listCobros.setAdapter(cACobros);
-
-
         listCobros.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Cursor cr2 = (Cursor) listCobros.getItemAtPosition(i);
-                String establec = cr2.getString(cr2.getColumnIndexOrThrow("ee_te_nom_establec"));
-                String cliente = cr2.getString(cr2.getColumnIndexOrThrow("ee_te_nom_cliente"));
-                String idCCobro = cr2.getString(0);
-                int monto = cr2.getInt(cr2.getColumnIndexOrThrow("cc_re_monto_a_pagar"));
-                //System.out.println("here"+establec+"-"+idCCobro+"-"+monto+"-"+cliente);
-                view.setBackgroundColor(0xffcccccc);
-                Dialog(establec, monto, idCCobro, cliente);
+
+
+                    Cursor cr2 = (Cursor) listCobros.getItemAtPosition(i);
+                    String establec = cr2.getString(cr2.getColumnIndexOrThrow("ee_te_nom_establec"));
+                    String cliente = cr2.getString(cr2.getColumnIndexOrThrow("ee_te_nom_cliente"));
+                    String idCCobro = cr2.getString(0);
+                    int monto = cr2.getInt(cr2.getColumnIndexOrThrow("cc_re_monto_a_pagar"));
+                    //System.out.println("here"+establec+"-"+idCCobro+"-"+monto+"-"+cliente);
+                    view.setBackgroundColor(0xffcccccc);
+                    Dialog(establec, monto, idCCobro, cliente);
+
 
             }
         });
@@ -88,14 +105,14 @@ public class VMovil_Cobros_Totales extends Activity {
                     public void onClick(DialogInterface dialog, int id) {
 
                         cCobro.open();
-                        int estado = cCobro.updateComprobCobrosCan2(idCCobro, getDatePhone(), getTimePhone(), deuda, "1");
+                        int estado = cCobro.updateComprobCobrosCan2(idCCobro, getDatePhone(), getTimePhone(), deuda, "0");
 
                         if (estado == 1) {
                             listarCobrosTotales();
 
                             Toast.makeText(getApplicationContext(), "Actualizado", Toast.LENGTH_SHORT).show();
 
-                            Back();
+                            //Back();
 
                         } else {
                             Toast.makeText(getApplicationContext(), "Error Interno", Toast.LENGTH_SHORT).show();

@@ -53,6 +53,7 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
     private Button mCobros, mCanDev, mVentas, mManten, mReport, mEstadoAtendido, mEstadoNoAtendido, mEstadoPendiente;
     private ImageButton estadoAtencion;
     private VMovil_Evento_Establec mainActivity;
+    private int idLiquidacion;
 
     //Esto es un comentario
     @Override
@@ -100,6 +101,7 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
         session.deleteVariable(6);
         session.createTempSession(6,0);
 
+        idLiquidacion = session.fetchVarible(3);
 
 
         Bundle bundle = getIntent().getExtras();
@@ -140,7 +142,7 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
         int idEstab = Integer.parseInt(valIdEstab);
 
 
-        Cursor cursorEstablecimiento = dbHelper.listarEstablecimientosByID(idEstab);
+        Cursor cursorEstablecimiento = dbHelper.listarEstablecimientosByID(idEstab, idLiquidacion);
 
 
         TextView nombreEstablecimiento = (TextView) findViewById(R.id.textViewEstablecimientoNombre);
@@ -153,12 +155,12 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
 
         if (cursorEstablecimiento.getCount()>0){
 
-            String id_establecimiento = cursorEstablecimiento.getString(cursorEstablecimiento.getColumnIndex("idEstablecimiento"));
-            String nombre_establecimiento = cursorEstablecimiento.getString(cursorEstablecimiento.getColumnIndex("nombreEstablecimiento"));
-            String nombre_cliente = cursorEstablecimiento.getString(cursorEstablecimiento.getColumnIndex("nombrecliente"));
-            int id_estado_atencion = Integer.parseInt(cursorEstablecimiento.getString(cursorEstablecimiento.getColumnIndex("estadoAtencion")));
-            int numeroOrden = cursorEstablecimiento.getInt(cursorEstablecimiento.getColumnIndexOrThrow("orden"));
-            double deudaTotal = cursorEstablecimiento.getDouble(cursorEstablecimiento.getColumnIndexOrThrow("deudaTotal")) ;
+            String id_establecimiento = cursorEstablecimiento.getString(cursorEstablecimiento.getColumnIndex(dbHelper.EE_id_establec));
+            String nombre_establecimiento = cursorEstablecimiento.getString(cursorEstablecimiento.getColumnIndex(dbHelper.EE_nom_establec));
+            String nombre_cliente = cursorEstablecimiento.getString(cursorEstablecimiento.getColumnIndex(dbHelper.EE_nom_cliente));
+            int id_estado_atencion = Integer.parseInt(cursorEstablecimiento.getString(cursorEstablecimiento.getColumnIndex(dbHelper.EE_id_estado_atencion)));
+            int numeroOrden = cursorEstablecimiento.getInt(cursorEstablecimiento.getColumnIndexOrThrow(dbHelper.EE_orden));
+            double deudaTotal = cursorEstablecimiento.getDouble(cursorEstablecimiento.getColumnIndexOrThrow("cc_re_monto_a_pagar")) ;
 
 
             DecimalFormat df= new DecimalFormat("#0.00");
@@ -353,6 +355,7 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
             case R.id.VEE_BTNcobros:
                 Intent i = new Intent(this, VMovil_Cobro_Credito.class);
                 i.putExtra("idEstabX", valIdEstab);
+                finish();
                 startActivity(i);
                 //Toast.makeText(getApplicationContext(),
                 //        "1", Toast.LENGTH_SHORT).show();

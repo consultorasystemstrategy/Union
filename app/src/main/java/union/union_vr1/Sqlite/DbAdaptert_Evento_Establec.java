@@ -24,6 +24,7 @@ public class DbAdaptert_Evento_Establec {
     public static final String EE_surtido_venta_ant = "ee_in_surtido_venta_ant";
     public static final String EE_dias_credito = "ee_in_dias_credito";
     public static final String EE_id_agente = "ee_in_id_agente";
+    public static final String EE_id_liquidacion = "ee_in_id_liquidacion";
     public static final String estado_sincronizacion = "estado_sincronizacion";
 
     //FALTA OBTENER ESTE CAMPO
@@ -63,7 +64,8 @@ public class DbAdaptert_Evento_Establec {
                     +EE_dias_credito+" integer,"
                     +EE_id_estado_no_atencion+" integer,"
                     +EE_estado_no_atencion_comentario+" text,"
-                    +EE_id_agente+" integer, " +
+                    +EE_id_agente+" integer, "
+                    +EE_id_liquidacion+" integer, " +
                     estado_sincronizacion+" integer);";
 
     public static final String DELETE_TABLE_EVENTO_ESTABLEC = "DROP TABLE IF EXISTS " + SQLITE_TABLE_Evento_Establec;
@@ -88,7 +90,7 @@ public class DbAdaptert_Evento_Establec {
             int id_establec, int id_cat_est, int id_tipo_doc_cliente, int id_estado_atencion,
             String nom_establec, String nom_cliente, String doc_cliente, int orden,
             int surtido_stock_ant, int surtido_venta_ant, double monto_credito, int dias_credito,
-            int estado_no_atencion, int id_agente) {
+            int estado_no_atencion, int id_agente, int id_liquidacion) {
 
         ContentValues initialValues = new ContentValues();
         initialValues.put(EE_id_establec,id_establec);
@@ -105,11 +107,13 @@ public class DbAdaptert_Evento_Establec {
         initialValues.put(EE_dias_credito,dias_credito);
         initialValues.put(EE_id_estado_no_atencion,estado_no_atencion);
         initialValues.put(EE_id_agente,id_agente);
+        initialValues.put(EE_id_liquidacion,id_liquidacion);
+
 
         return mDb.insert(SQLITE_TABLE_Evento_Establec, null, initialValues);
     }
 
-    public long createEstablecimientos(EventoEstablecimiento establecimiento, int id_agente) {
+    public long createEstablecimientos(EventoEstablecimiento establecimiento, int id_agente, int id_liquidacion) {
 
         ContentValues initialValues = new ContentValues();
         initialValues.put(EE_id_establec,establecimiento.getIdEstablecimiento());
@@ -126,10 +130,11 @@ public class DbAdaptert_Evento_Establec {
         initialValues.put(EE_dias_credito,establecimiento.getDiasCredito());
         initialValues.put(EE_id_estado_no_atencion,establecimiento.getIdEstadoNoAtencion());
         initialValues.put(EE_id_agente,id_agente);
+        initialValues.put(EE_id_liquidacion,id_liquidacion);
 
         return mDb.insert(SQLITE_TABLE_Evento_Establec, null, initialValues);
     }
-    public void updateEstablecimientos(EventoEstablecimiento establecimiento, int id_agente){
+    public void updateEstablecimientos(EventoEstablecimiento establecimiento, int id_agente, int id_liquidacion){
 
         ContentValues initialValues = new ContentValues();
         initialValues.put(EE_id_establec,establecimiento.getIdEstablecimiento());
@@ -146,6 +151,8 @@ public class DbAdaptert_Evento_Establec {
         initialValues.put(EE_dias_credito,establecimiento.getDiasCredito());
         initialValues.put(EE_id_estado_no_atencion,establecimiento.getIdEstadoNoAtencion());
         initialValues.put(EE_id_agente,id_agente);
+        initialValues.put(EE_id_liquidacion,id_liquidacion);
+
         mDb.update(SQLITE_TABLE_Evento_Establec, initialValues,
                 EE_id_establec+"=?",new String[]{""+establecimiento.getIdEstablecimiento()});
     }
@@ -368,24 +375,40 @@ public class DbAdaptert_Evento_Establec {
         return mCursor;
     }
 
-    public Cursor listarEstablecimientos(){
-        Cursor mCursor = mDb.rawQuery("select ee._id AS _id, ee.ee_in_id_agente AS idAgente, ee.ee_in_id_establec AS idEstablecimiento, ee.ee_te_nom_establec AS nombreEstablecimiento, ee.ee_te_nom_cliente AS nombrecliente,ee.ee_in_orden AS orden, ee_in_id_estado_atencion AS estadoAtencion, SUM(cc.cc_re_monto_a_pagar) as deudaTotal from m_evento_establec ee\n" +
-                "LEFT OUTER JOIN m_comprob_cobro cc \n" +
+    public Cursor listarEstablecimientos(int idLiquidacion){
+        Cursor mCursor = mDb.rawQuery("SELECT ee.*,  SUM(cc.cc_re_monto_a_pagar) as cc_re_monto_a_pagar\n" +
+                "FROM m_evento_establec ee\n" +
+                "LEFT OUTER JOIN m_comprob_cobro cc\n" +
                 "ON ee.ee_in_id_establec = cc.cc_in_id_establec \n" +
-                "WHERE cc.cc_in_estado_cobro = 1 \n" +
-                "GROUP BY  ee.ee_in_id_establec, ee.ee_te_nom_establec \n" +
-                "ORDER BY ee.ee_in_id_estado_atencion;",null);
+                "WHERE cc_in_estado_cobro = 1 \n" +
+                "AND ee_in_id_liquidacion = '"+idLiquidacion+"' \n" +
+                "GROUP BY  ee.ee_in_id_establec, cc_in_estado_cobro\n" +
+                "UNION \n" +
+                "SELECT ee.*,  SUM(cc.cc_re_monto_a_pagar) as cc_re_monto_a_pagar\n" +
+                "FROM m_evento_establec ee\n" +
+                "LEFT OUTER JOIN m_comprob_cobro cc\n" +
+                "ON ee.ee_in_id_establec = cc.cc_in_id_establec \n" +
+                "WHERE  ee_in_id_liquidacion = '"+idLiquidacion+"' AND cc_in_estado_cobro IS NULL\n" +
+                "GROUP BY  ee.ee_in_id_establec, cc_in_estado_cobro\n" +
+                "UNION\n" +
+                "select ee.*,  SUM(0) as cc_re_monto_a_pagar\n" +
+                "from m_comprob_cobro cc,\n" +
+                "m_evento_establec ee \n" +
+                "where ee.ee_in_id_establec = cc.cc_in_id_establec \n" +
+                "AND ee_in_id_liquidacion = '"+idLiquidacion+"'\n" +
+                "GROUP BY  ee.ee_in_id_establec \n" +
+                "having sum(cc.cc_in_estado_cobro)=0",null);
         return mCursor;
     }
 
-    public Cursor listarEstablecimientosByID(int idEstablecimiento){
-        Cursor mCursor = mDb.rawQuery("select ee._id AS _id, ee.ee_in_id_agente AS idAgente, ee.ee_in_id_establec AS idEstablecimiento, ee.ee_te_nom_establec AS nombreEstablecimiento, ee.ee_te_nom_cliente AS nombrecliente,ee.ee_in_orden AS orden, ee_in_id_estado_atencion AS estadoAtencion, SUM(cc.cc_re_monto_a_pagar) as deudaTotal from m_evento_establec ee\n" +
-                "LEFT OUTER JOIN m_comprob_cobro cc \n" +
-                "ON ee.ee_in_id_establec = cc.cc_in_id_establec \n" +
-                "WHERE ee.ee_in_id_establec = '"+idEstablecimiento+"' \n" +
-                "AND cc.cc_in_estado_cobro = 1 \n" +
-                "GROUP BY  ee.ee_in_id_establec, ee.ee_te_nom_establec \n" +
-                "ORDER BY ee.ee_in_id_estado_atencion;",null);
+    public Cursor listarEstablecimientosByID(int idEstablecimiento, int idLiquidacion){
+        Cursor mCursor = mDb.rawQuery("SELECT *,  (SELECT SUM(cc_re_monto_a_pagar) AS cc_re_monto_a_pagar \n" +
+                "FROM m_comprob_cobro \n" +
+                "WHERE cc_in_id_establec = '"+idEstablecimiento+"' \n" +
+                "AND cc_in_estado_cobro = 1  ) AS cc_re_monto_a_pagar \n" +
+                "FROM m_evento_establec \n" +
+                "WHERE ee_in_id_establec = '"+idEstablecimiento+"' \n" +
+                "AND ee_in_id_liquidacion = '"+idLiquidacion+"' ;",null);
         return mCursor;
     }
 
@@ -393,14 +416,30 @@ public class DbAdaptert_Evento_Establec {
 
 
 
-    public Cursor listarEstablecimientosPorNombre(String nombreEstablecimiento){
-        Cursor mCursor = mDb.rawQuery("select ee._id AS _id, ee.ee_in_id_agente AS idAgente, ee.ee_in_id_establec AS idEstablecimiento, ee.ee_te_nom_establec AS nombreEstablecimiento, ee.ee_te_nom_cliente AS nombrecliente,ee.ee_in_orden AS orden, ee_in_id_estado_atencion AS estadoAtencion, SUM(cc.cc_re_monto_a_pagar) as deudaTotal from m_evento_establec ee\n" +
-                "LEFT OUTER JOIN m_comprob_cobro cc \n" +
-                "ON ee.ee_in_id_establec = cc.cc_in_id_establec   WHERE \n" +
-                "ee.ee_te_nom_establec like '%"+nombreEstablecimiento+"%' \n" +
-                "AND cc.cc_in_estado_cobro = 1 \n" +
-                "GROUP BY  ee.ee_in_id_establec, ee.ee_te_nom_establec \n" +
-                "ORDER BY ee.ee_in_id_estado_atencion;",null);
+    public Cursor listarEstablecimientosPorNombre(String nombreEstablecimiento, int idLiquidacion){
+        Cursor mCursor = mDb.rawQuery("SELECT ee.*,  SUM(cc.cc_re_monto_a_pagar) as cc_re_monto_a_pagar\n" +
+                "FROM m_evento_establec ee\n" +
+                "LEFT OUTER JOIN m_comprob_cobro cc\n" +
+                "ON ee.ee_in_id_establec = cc.cc_in_id_establec \n" +
+                "WHERE ee_te_nom_establec LIKE '%"+nombreEstablecimiento+"%'   \n" +
+                "AND ee_in_id_liquidacion = '"+idLiquidacion+"' AND cc_in_estado_cobro = 1\n" +
+                "GROUP BY  ee.ee_in_id_establec\n" +
+                "UNION\n" +
+                "SELECT ee.*,  SUM(cc.cc_re_monto_a_pagar) as cc_re_monto_a_pagar\n" +
+                "FROM m_evento_establec ee\n" +
+                "LEFT OUTER JOIN m_comprob_cobro cc\n" +
+                "ON ee.ee_in_id_establec = cc.cc_in_id_establec \n" +
+                "WHERE ee_te_nom_establec LIKE '%"+nombreEstablecimiento+"%'   \n" +
+                "AND ee_in_id_liquidacion = '"+idLiquidacion+"' AND cc_in_estado_cobro IS NULL\n" +
+                "GROUP BY  ee.ee_in_id_establec\n" +
+                "UNION\n" +
+                "select ee.*,sum(0) as  cc_re_monto_a_pagar\n" +
+                "from m_comprob_cobro cc,m_evento_establec ee \n" +
+                "where ee.ee_in_id_establec = cc.cc_in_id_establec \n" +
+                "AND ee_te_nom_establec LIKE '%"+nombreEstablecimiento+"%'   \n" +
+                "AND ee_in_id_liquidacion = '"+idLiquidacion+"'\n" +
+                "GROUP BY  ee.ee_in_id_establec \n" +
+                "having sum(cc.cc_in_estado_cobro)=0",null);
 
         return mCursor;
     }

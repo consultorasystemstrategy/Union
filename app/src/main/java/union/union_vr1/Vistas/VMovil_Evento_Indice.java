@@ -6,18 +6,24 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.graphics.LightingColorFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.w3c.dom.Text;
+
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -29,6 +35,8 @@ import java.util.HashMap;
 
 import union.union_vr1.AsyncTask.ExportMain;
 import union.union_vr1.AsyncTask.ImportMain;
+import union.union_vr1.Charts.Bar;
+import union.union_vr1.Charts.BarGraph;
 import union.union_vr1.MySQL.DbManager_Evento_Establec_GET;
 import union.union_vr1.MySQL.DbManager_Evento_Establec_POST;
 import union.union_vr1.R;
@@ -39,6 +47,7 @@ import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta_Detalle;
 import union.union_vr1.Sqlite.DbAdapter_Histo_Comprob_Anterior;
 import union.union_vr1.Sqlite.DbAdapter_Histo_Venta_Detalle;
 import union.union_vr1.Sqlite.DbAdapter_Precio;
+import union.union_vr1.Sqlite.DbAdapter_Ruta_Distribucion;
 import union.union_vr1.Sqlite.DbAdapter_Stock_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
@@ -64,8 +73,11 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
     private Button estado;
     private String estadox;
     private String valIdEstab;
-    private Button mClient, mInfgas, mResume, mCarinv, mTrainv, mCobroTotal;
+    private Button mClient, mInfgas, mResume, mCarinv, mTrainv, mCobroTotal,  mNumeroEstablecimientos;
+    private TextView mNombreRuta, mFecha;
     private VMovil_Evento_Indice mainActivity;
+    private DbAdapter_Ruta_Distribucion dbAdapter_ruta_distribucion;
+    private int idLiquidacion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +89,33 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         session.open();
 
 
+        /*
+        ArrayList<Bar> points = new ArrayList<Bar>();
+        Bar d = new Bar();
+        d.setColor(Color.parseColor("#049DBF"));
+        d.setName("Rentabilidad");
+        d.setValue(50);
+
+        Bar d2 = new Bar();
+        d2.setColor(Color.parseColor("#009D84"));
+        d2.setName("Devolución");
+        d2.setValue(40);
+
+        Bar d3 = new Bar();
+        d3.setColor(Color.parseColor("#FED94E"));
+        d3.setName("Costos de Distribución");
+        d3.setValue(60);
+
+
+        points.add(d);
+        points.add(d2);
+        points.add(d3);
+
+        BarGraph barGraph = (BarGraph)findViewById(R.id.graph);
+        barGraph.setBars(points);
+        barGraph.setUnit("%");
+
+        */
 
         /*
         if (!((MyApplication)getApplication()).isExport()||!((MyApplication)getApplication()).isImportado()){
@@ -189,10 +228,15 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         dbHelper8 = new DbAdapter_Histo_Comprob_Anterior(this);
         dbHelper8.open();
 
+        dbAdapter_ruta_distribucion = new DbAdapter_Ruta_Distribucion(this);
+        dbAdapter_ruta_distribucion.open();
+
         //((MyApplication) this.getApplication()).setCuotasEstablecidas(false);
 
         session.deleteVariable(5);
         session.createTempSession(5,0);
+
+
 
         //Agregando datos de prueba  cada vez que se inicia esta vista
 
@@ -224,6 +268,27 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         mClient = (Button) findViewById(R.id.VEI_BTNclient);
         mInfgas = (Button) findViewById(R.id.VEI_BTNinfgas);
         mResume = (Button) findViewById(R.id.VEI_BTNresume);
+        mNombreRuta = (TextView) findViewById(R.id.textViewNombreRuta);
+        mNumeroEstablecimientos  = (Button) findViewById(R.id.buttonNumeroEstablecimiento);
+        mFecha = (TextView) findViewById(R.id.textViewFecha);
+
+
+        int idAgente = session.fetchVarible(1);
+        idLiquidacion = session.fetchVarible(3);
+        Cursor cursorAgente = dbHelper3.fetchAgentesByIds(idAgente,idLiquidacion);
+        cursorAgente.moveToFirst();
+
+        String nombreRuta = "";
+        int numeroEstablecimientoxRuta = 0;
+        if (cursorAgente.getCount()>0){
+            nombreRuta = cursorAgente.getString(cursorAgente.getColumnIndexOrThrow(dbHelper3.AG_nombre_ruta));
+            numeroEstablecimientoxRuta = cursorAgente.getInt(cursorAgente.getColumnIndexOrThrow(dbHelper3.AG_nro_bodegas));
+
+        }
+        mNombreRuta.setText("" + nombreRuta);
+        mNumeroEstablecimientos.setText(""+numeroEstablecimientoxRuta);
+        mFecha.setText(""+getDateFull().substring(0, 1).toUpperCase() + getDateFull().substring(1));
+
         //mCarinv = (Button) findViewById(R.id.VEI_BTNcarinv);
         //mTrainv = (Button) findViewById(R.id.VEI_BTNtrainv);
         mCobroTotal = (Button) findViewById(R.id.VEI_BTNcobrarTodo);
@@ -236,6 +301,38 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         cCobro = new DbAdapter_Comprob_Cobro(this);
         cCobro.open();
         AsignarColor(mCobroTotal);
+
+
+        Log.d("ID AGENTE ", ""+idAgente);
+
+        Cursor cursorRutaSemanal = dbAdapter_ruta_distribucion.fetchRutaDistribucionByIdAgente(idAgente);
+        cursorAgente.moveToFirst();
+// The desired columns to be bound
+        String[] columns = new String[]{
+                DbAdapter_Ruta_Distribucion.RD_dia_semana,
+                DbAdapter_Ruta_Distribucion.RD_nombre_ruta,
+                DbAdapter_Ruta_Distribucion.RD_numero_establecimientos
+        };
+
+        // the XML defined views which the data will be bound to
+        int[] to = new int[]{
+                R.id.textViewDiaSemana,
+                R.id.textViewNombreRuta,
+                R.id.textViewNumeroEstablecimiento
+        };
+
+        // create the adapter using the cursor pointing to the desired data
+        //as well as the layout information
+        SimpleCursorAdapter simpleCursorAdapter = new SimpleCursorAdapter(
+                this, R.layout.lista_ruta_semanal,
+                cursorRutaSemanal,
+                columns,
+                to,
+                0);
+
+        ListView listView = (ListView) findViewById(R.id.listViewRutaSemanal);
+        // Assign adapter to ListView
+        listView.setAdapter(simpleCursorAdapter);
 
     }
 
@@ -347,6 +444,16 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         return formatteDate;
     }
 
+    private String getDateFull() {
+        Calendar cal = new GregorianCalendar();
+        Date date = cal.getTime();
+        DateFormat format = DateFormat.getDateInstance(DateFormat.FULL);
+        String formatteDate = format.format(date);
+        return formatteDate;
+    }
+
+
+
     protected Boolean conectadoWifi(){
         ConnectivityManager connectivity = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivity != null) {
@@ -372,4 +479,5 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         }
         return false;
     }
+
 }

@@ -1,8 +1,13 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     tools:context="union.union_vr1.Vistas.VMovil_Venta_CabeceraX">
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/scrollView" >
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -11,30 +16,15 @@
 
 
             <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_weight="1"
-                android:baselineAligned="false">
-
-                <ListView
-                       android:layout_width="fill_parent"
-                       android:layout_height="wrap_content"
-                       android:id="@+id/VEG_listViewInformeGasto"
-                    android:layout_weight="1" />
-            </LinearLayout>
-
-            <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_weight="1">
+                android:layout_height="wrap_content"
+                android:background="@drawable/border_bottom_top_dark">
 
                 <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:layout_weight="1">
+                    android:layout_height="64dp">
 
                     <Spinner
                         android:layout_width="fill_parent"
@@ -52,8 +42,7 @@
                 <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:layout_weight="1">
+                    android:layout_height="64dp">
 
                     <Spinner
                         android:layout_width="fill_parent"
@@ -72,10 +61,9 @@
 
                 <EditText
                     android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
+                    android:layout_height="48dp"
 
                     android:id="@+id/editText_VEG_total"
-                    android:layout_weight="1"
                     android:hint="Importe"
                     android:layout_gravity="center"
                     android:layout_marginLeft="50dp"
@@ -87,11 +75,12 @@
 
                 <Button
                     android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
+                    android:layout_height="48dp"
                     android:text="Agregar Gasto"
                     android:id="@+id/VEE_BTNEstadoNoAtendido"
                     android:onClick="agegarGastos"
-                    android:layout_weight="1" />
+                    android:layout_marginLeft="32dp"
+                    android:layout_marginRight="32dp" />
 
                 <!--
                 <TextView
@@ -136,6 +125,20 @@
                     -->
 
             </LinearLayout>
-        </LinearLayout>
 
-</RelativeLayout>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="320dp"
+                android:baselineAligned="false">
+
+                <ListView
+                       android:layout_width="fill_parent"
+                       android:layout_height="wrap_content"
+                       android:id="@+id/VEG_listViewInformeGasto" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

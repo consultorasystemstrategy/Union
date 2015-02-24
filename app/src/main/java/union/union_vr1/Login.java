@@ -10,11 +10,16 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import union.union_vr1.AsyncTask.ExportMain;
+import union.union_vr1.AsyncTask.ImportMain;
 import union.union_vr1.Conexion.JSONParser;
 import union.union_vr1.JSONParser.ParserAgente;
 import union.union_vr1.Objects.Agente;
@@ -28,7 +33,12 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 public class Login extends Activity implements OnClickListener{
@@ -47,6 +57,7 @@ public class Login extends Activity implements OnClickListener{
     private String pru;
     // JSON parser class
     JSONParser jsonParser = new JSONParser();
+    Activity mainActivity;
 
     private String var1 = "";
     private DbAdapter_Agente dbAdapter_agente;
@@ -90,7 +101,8 @@ public class Login extends Activity implements OnClickListener{
     private static final String TAG_nombre_agente = "nombre_agente";
     private static final String TAG_nombre_usuario = "nombre_usuario";
     private static final String TAG_pass_usuario = "pass_usuario";
-
+    private int idAgente;
+    private int idLiquidacion;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -98,12 +110,15 @@ public class Login extends Activity implements OnClickListener{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.login);
 
-
+        mainActivity = this;
         session = new DbAdapter_Temp_Session(this);
         session.open();
 
 
 
+
+        idAgente = session.fetchVarible(1);
+        idLiquidacion = session.fetchVarible(3);
 
         //((MyApplication)getApplication()).setImportado(false);
         //((MyApplication)getApplication()).setExport(false);
@@ -113,11 +128,6 @@ public class Login extends Activity implements OnClickListener{
         session.createTempSession(7,0);
         session.deleteVariable(8);
         session.createTempSession(8,0);
-
-
-
-
-
 
         loginClass = this;
 
@@ -146,6 +156,31 @@ public class Login extends Activity implements OnClickListener{
         //}
 
 	}
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.nuevo_dia, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        switch (id){
+
+            case R.id.buttonNewDay:
+                dbAdapter_agente.deleteAllAgentes();
+                break;
+            default:
+                //ON ITEM SELECTED DEFAULT
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     public boolean isOnline() {
         ConnectivityManager cm =
@@ -207,13 +242,23 @@ public class Login extends Activity implements OnClickListener{
 
             succesLogin = false;
 
-
-            Cursor mCursorAgente = dbAdapter_agente.login(user.getText().toString(), pass.getText().toString());
-            if (mCursorAgente!=null){
-                mCursorAgente.moveToFirst();
+            Cursor cursorAgenteCajaActual = dbAdapter_agente.fetchAgentesByIds(idAgente,idLiquidacion);
+            cursorAgenteCajaActual.moveToFirst();
+            String fechaCaja = null;
+            if (cursorAgenteCajaActual.getCount()>0) {
                 succesLogin=true;
+                fechaCaja = cursorAgenteCajaActual.getString(cursorAgenteCajaActual.getColumnIndexOrThrow(dbAdapter_agente.AG_fecha));
+
+                if (getDatePhone().equals(fechaCaja)){
+                    succesLogin=true;
+                }else{
+                    succesLogin=false;
+                    Toast.makeText(getApplicationContext(), "Abriendo nueva caja...", Toast.LENGTH_LONG).show();
+                }
             }
-            if(mCursorAgente.getCount()==0){
+
+
+            if(cursorAgenteCajaActual.getCount()==0){
                 succesLogin=false;
             }
 
@@ -231,14 +276,14 @@ public class Login extends Activity implements OnClickListener{
                 session.deleteVariable(4);
                 session.deleteVariable(6);
 
-                session.createTempSession(1,mCursorAgente.getInt(mCursorAgente.getColumnIndexOrThrow(dbAdapter_agente.AG_id_agente_venta)));
-                session.createTempSession(3,mCursorAgente.getInt(mCursorAgente.getColumnIndexOrThrow(dbAdapter_agente.AG_liquidacion)));
-                session.createTempSession(4,mCursorAgente.getInt(mCursorAgente.getColumnIndexOrThrow(dbAdapter_agente.AG_id_usuario)));
+                session.createTempSession(1,cursorAgenteCajaActual.getInt(cursorAgenteCajaActual.getColumnIndexOrThrow(dbAdapter_agente.AG_id_agente_venta)));
+                session.createTempSession(3,cursorAgenteCajaActual.getInt(cursorAgenteCajaActual.getColumnIndexOrThrow(dbAdapter_agente.AG_liquidacion)));
+                session.createTempSession(4,cursorAgenteCajaActual.getInt(cursorAgenteCajaActual.getColumnIndexOrThrow(dbAdapter_agente.AG_id_usuario)));
                 session.createTempSession(6,0);
 
 
                 Toast.makeText(getApplicationContext(), "Login correcto", Toast.LENGTH_SHORT).show();
-                Intent i = new Intent(Login.this, VMovil_Online_Pumovil.class);
+                Intent i = new Intent(Login.this, VMovil_Evento_Indice.class);
                 finish();
                 startActivity(i);
             }else{
@@ -267,7 +312,9 @@ public class Login extends Activity implements OnClickListener{
             ArrayList<Agente> agenteLista = null;
             JSONObject jsonObjAgente = null;
             try {
-                jsonObjAgente = api.GetAgenteVenta(user.getText().toString(),pass.getText().toString());
+                Log.d("LOGIN DATOS , ", ""+user.getText().toString()+" - " + pass.getText().toString() + " - "+getDatePhone());
+                jsonObjAgente = api.GetAgenteVenta(user.getText().toString(),pass.getText().toString(), getDatePhone());
+                Log.d("JSON OBJECT AGENTE", ""+jsonObjAgente.toString());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -275,7 +322,6 @@ public class Login extends Activity implements OnClickListener{
 
             publishProgress(""+25);
             agenteLista = parserAgente.parserAgente(jsonObjAgente);
-            Log.d("JSON OBJECT AGENTE", ""+jsonObjAgente.toString());
 
 
             publishProgress(""+50);
@@ -307,10 +353,10 @@ public class Login extends Activity implements OnClickListener{
                     boolean existe = dbAdapter_agente.existeAgentesById(agenteLista.get(i).getIdAgenteVenta());
                     Log.d("EXISTE ", ""+existe);
                     if (existe){
-                        dbAdapter_agente.updateAgente(agenteLista.get(i));
+                        dbAdapter_agente.updateAgente(agenteLista.get(i), getDatePhone());
                     }else {
                         //NO EXISTE ENTONCES CREEMOS UNO NUEVO
-                        dbAdapter_agente.createAgente(agenteLista.get(i));
+                        dbAdapter_agente.createAgente(agenteLista.get(i), getDatePhone());
                     }
                 }
             }
@@ -325,19 +371,32 @@ public class Login extends Activity implements OnClickListener{
             createProgressDialog();
         }
 
+        private void dismissProgressDialog() {
+            if (prgDialog != null && prgDialog.isShowing()) {
+                prgDialog.dismiss();
+            }
+        }
+
         @Override
         protected void onPostExecute(String s) {
-            prgDialog.setProgress(100);
-            prgDialog.dismiss();
+            if(mainActivity.isFinishing()){
+                //dismissprgDialog();
+                prgDialog.dismiss();
+                return;
+            }else {
+
+                prgDialog.setProgress(100);
+                dismissProgressDialog();
+            }
 
             if (succesLogin){
 
                 Toast.makeText(getApplicationContext(), "Login correcto", Toast.LENGTH_SHORT).show();
-                Intent i = new Intent(Login.this, VMovil_Online_Pumovil.class);
+                Intent i = new Intent(Login.this, VMovil_Evento_Indice.class);
                 finish();
                 startActivity(i);
             }else{
-                Toast.makeText(getApplicationContext(), "Usuario y/o password incorrecto", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Debe abrir Caja para hoy, o las credenciales son incorrectas", Toast.LENGTH_SHORT).show();
             }
             super.onPostExecute(s);
         }
@@ -363,6 +422,8 @@ public class Login extends Activity implements OnClickListener{
             pDialog.setIndeterminate(false);
             pDialog.setCancelable(true);
             pDialog.show();
+
+
         }
 		
 		@Override
@@ -446,5 +507,11 @@ public class Login extends Activity implements OnClickListener{
         prgDialog.show();
 
     }
-
+    private String getDatePhone() {
+        Calendar cal = new GregorianCalendar();
+        Date date = cal.getTime();
+        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        String formatteDate = df.format(date);
+        return formatteDate;
+    }
 }

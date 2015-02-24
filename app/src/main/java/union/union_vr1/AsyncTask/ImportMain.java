@@ -14,7 +14,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 import union.union_vr1.Conexion.JSONParser;
 import union.union_vr1.JSONParser.ParserAgente;
@@ -42,6 +46,7 @@ import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
 import union.union_vr1.Sqlite.DbAdapter_Histo_Comprob_Anterior;
 import union.union_vr1.Sqlite.DbAdapter_Histo_Venta_Detalle;
 import union.union_vr1.Sqlite.DbAdapter_Precio;
+import union.union_vr1.Sqlite.DbAdapter_Ruta_Distribucion;
 import union.union_vr1.Sqlite.DbAdapter_Stock_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 import union.union_vr1.Sqlite.DbAdapter_Tipo_Gasto;
@@ -71,6 +76,7 @@ public class ImportMain extends AsyncTask<String, String, String> {
     private DbAdapter_Histo_Venta_Detalle dbAdapter_histo_venta_detalle;
     private DbAdapter_Histo_Comprob_Anterior dbAdapter_histo_comprob_anterior;
     private DBAdapter_Temp_Autorizacion_Cobro dbAdapter_temp_autorizacion_cobro;
+    private DbAdapter_Ruta_Distribucion dbAdapter_ruta_distribucion;
 
 
 
@@ -78,6 +84,7 @@ public class ImportMain extends AsyncTask<String, String, String> {
     private SimpleCursorAdapter simpleCursorAdapter;
 
     private int idAgente;
+    private int idLiquidacion;
 
     public ImportMain(Activity mainActivity) {
         this.mainActivity = mainActivity;
@@ -103,9 +110,14 @@ public class ImportMain extends AsyncTask<String, String, String> {
         dbAdapter_histo_comprob_anterior.open();
         dbAdapter_temp_autorizacion_cobro = new DBAdapter_Temp_Autorizacion_Cobro(mainActivity);
         dbAdapter_temp_autorizacion_cobro.open();
+        dbAdapter_ruta_distribucion = new DbAdapter_Ruta_Distribucion(mainActivity);
+        dbAdapter_ruta_distribucion.open();
+
+
 
 //        idAgente = ((MyApplication)mainActivity.getApplication()).getIdAgente();
             idAgente = session.fetchVarible(1);
+            idLiquidacion = session.fetchVarible(3);
 
         //listView = (ListView) mainActivity.findViewById(R.id.listView);
     }
@@ -116,13 +128,9 @@ public class ImportMain extends AsyncTask<String, String, String> {
 
         StockAgenteRestApi api = new StockAgenteRestApi();
 
-        Cursor cursor = dbAdapter_agente.fetchAgentesByIds(""+idAgente);
+        Cursor cursor = dbAdapter_agente.fetchAgentesByIds(idAgente, idLiquidacion);
         cursor.moveToFirst();
 
-        int idLiquidacion = 0;
-
-
-        idLiquidacion = session.fetchVarible(3);
 
         /*
         if (cursor.getCount()>0){
@@ -138,8 +146,16 @@ public class ImportMain extends AsyncTask<String, String, String> {
         ArrayList<HistorialVentaDetalles> historialVentaDetalleses = null;
         ArrayList<ComprobanteVentaDetalle> comprobanteVentaDetalles = null;
 
-        Log.d("idAgente, idLiquidacion, Fecha", idAgente+", "+idLiquidacion+", 19/01/2015");
+        String fecha = getDatePhone();
 
+        Log.d("iIMPORT DATOS REALES dAgente, idLiquidacion, Fecha", idAgente+", "+idLiquidacion+","+fecha);
+
+/*
+        idAgente = 3;
+        idLiquidacion = 10;
+        fecha = "02/02/2015";
+*/
+        Log.d("IMPORT DATOS DE PRUEBA ESTABLECIMIENTO X RUTA idAgente, idLiquidacion, Fecha", idAgente+", "+idLiquidacion+","+fecha);
 
         try{
             publishProgress(""+5);
@@ -150,7 +166,7 @@ public class ImportMain extends AsyncTask<String, String, String> {
             publishProgress(""+15);
             JSONObject jsonObjectPrecio = api.GetPrecioCategoria(idLiquidacion,idAgente);
             publishProgress(""+20);
-            JSONObject jsonObjectEventoEstablecimiento = api.GetEstablecimeintoXRuta(1,"01/08/2014", idAgente);
+            JSONObject jsonObjectEventoEstablecimiento = api.GetEstablecimeintoXRuta(idLiquidacion,fecha, idAgente);
             publishProgress(""+25);
             JSONObject jsonObjectComprobanteCobro = api.GetHistorialCobrosPendientes();
             publishProgress(""+30);
@@ -158,6 +174,9 @@ public class ImportMain extends AsyncTask<String, String, String> {
             publishProgress(""+35);
             JSONObject jsonObjectHistorialComprobanteAnterior = api.GetComprobanteVentaDetalle_Env();
             publishProgress(""+40);
+            JSONObject jsonObjectRutaDistribucion = api.GetConsultarPlan_Distribucion(idAgente);
+
+
             Log.d("JSON OBJECT STOCK AGENTE : ", jsonObjectStockAgente.toString());
             Log.d("JSON OBJECT PRECIO : ", jsonObjectPrecio.toString());
             Log.d("JSON OBJECT TIPO GASTO : ", jsonObjectTipoGasto.toString());
@@ -165,6 +184,8 @@ public class ImportMain extends AsyncTask<String, String, String> {
             Log.d("JSON OBJECT COMPROBANTE COBRO : ", jsonObjectComprobanteCobro.toString());
             Log.d("JSON OBJECT HISTORIAL VENTA DETALLE : ", jsonObjectHistorialVentaDetalle.toString());
             Log.d("JSON OBJECT HISTORIAL VENTA ANTERIOR ", jsonObjectHistorialComprobanteAnterior.toString());
+            Log.d("JSON OBJECT RUTA DISTRIBUCION ", jsonObjectRutaDistribucion.toString());
+
 
 
             ParserStockAgente parserStockAgente = new ParserStockAgente();
@@ -227,22 +248,24 @@ public class ImportMain extends AsyncTask<String, String, String> {
             }
             publishProgress(""+55);
             for (int i = 0; i < eventoEstablecimientos.size() ; i++) {
-                Log.d("ESTABLECIMIENTOS X RUTAS: " + i, " Nombre Establecimiento : " + eventoEstablecimientos.get(i).getNombreEstablecimiento());
+                Log.d("ESTABLECIMIENTOS X RUTAS: " + i, " Nombre Establecimiento : " + eventoEstablecimientos.get(i).getNombreEstablecimiento() + ", orden : " + eventoEstablecimientos.get(i).getOrden());
                 boolean existe = dbAdaptert_evento_establec.existeEstablecsById(eventoEstablecimientos.get(i).getIdEstablecimiento());
 
                 Log.d("EXISTE ESTABLECIMIENTO", ""+existe);
                 if (existe){
                     //dbAdapter_comprob_cobro.updateComprobCobros(comprobanteCobros.get(i));
-                    dbAdaptert_evento_establec.updateEstablecimientos(eventoEstablecimientos.get(i), 1);
+                    dbAdaptert_evento_establec.updateEstablecimientos(eventoEstablecimientos.get(i), idAgente, idLiquidacion);
                 }else {
                     //NO EXISTE ENTONCES CREEMOS UNO NUEVO
-                    dbAdaptert_evento_establec.createEstablecimientos(eventoEstablecimientos.get(i), 1);
+                    long id = dbAdaptert_evento_establec.createEstablecimientos(eventoEstablecimientos.get(i), idAgente, idLiquidacion);
+
+                    Log.d("IMPORT INSERT ESTABLECIMIENTO id ", ""+id);
                 }
             }
 
             publishProgress(""+60);
             for (int i = 0; i < comprobanteCobros.size() ; i++) {
-                Log.d("HISTORIAL COBROS PENDIENTES : " + i, " Monto a pagar : " + comprobanteCobros.get(i).getMontoPagar()+"-fecha-"+comprobanteCobros.get(i).getFechaCobro());
+                Log.d("HISTORIAL COBROS PENDIENTES : " + i, " Monto a pagar : " + comprobanteCobros.get(i).getMontoPagar()+"-fecha-"+comprobanteCobros.get(i).getFechaProgramada());
                 boolean existe = dbAdapter_comprob_cobro.existeComprobCobro(comprobanteCobros.get(i).getIdComprobanteCobro());
                 Log.d("EXISTE ", ""+existe);
                 if (existe){
@@ -335,8 +358,34 @@ public class ImportMain extends AsyncTask<String, String, String> {
                         int diasCredito = jsonObj.getInt("SolIVigenciaCredito");
                         Log.d("IMPORT SOLICITUDES DATOS", idEstablecimiento + " - " + montoCredito + " - " + diasCredito);
                         dbAdaptert_evento_establec.updateEstablecsCredito(idEstablecimiento, montoCredito, diasCredito);
-
                     }
+                }
+
+
+            }
+
+            if (isSuccesfulImport(jsonObjectRutaDistribucion)){
+                JSONArray jsonArray = jsonObjectRutaDistribucion.getJSONArray("Value");
+                JSONObject jsonObj=null;
+
+                dbAdapter_ruta_distribucion.delleteAllRutaByIdAgente(idAgente);
+
+                for (int i=0; i< jsonArray.length(); i++){
+                    jsonObj = jsonArray.getJSONObject(i);
+
+                    int id = jsonObj.getInt("Id");
+                    int idRuta = jsonObj.getInt("RutaID");
+                    String nombre = jsonObj.getString("Ruta");
+                    String diaSemana = jsonObj.getString("DiaSemana");
+                    int numeroEstablecimiento = jsonObj.getInt("Establecimientos");
+
+
+
+
+                    Log.d("IMPORT RUTA SEMANAL DATOS", diaSemana + " - " + nombre + " - " + numeroEstablecimiento + " - "+ idAgente);
+                    long idRutaInsertada = dbAdapter_ruta_distribucion.createRutaDistribucion(id, idRuta, nombre, diaSemana, numeroEstablecimiento, idAgente);
+                    Log.d("IMPORT ID RUTA INSERTADA", ""+ idRutaInsertada);
+
                 }
 
 
@@ -495,4 +544,12 @@ public class ImportMain extends AsyncTask<String, String, String> {
             progressDialog.dismiss();
         }
     }
+    private String getDatePhone() {
+        Calendar cal = new GregorianCalendar();
+        Date date = cal.getTime();
+        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        String formatteDate = df.format(date);
+        return formatteDate;
+    }
+
 }

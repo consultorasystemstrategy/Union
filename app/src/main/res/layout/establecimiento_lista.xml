@@ -7,7 +7,7 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="fill_parent"
-        android:layout_height="72dp"
+        android:layout_height="96dp"
         android:layout_marginLeft="12dp"
         android:layout_marginTop="12dp"
         android:layout_marginRight="12dp">
@@ -39,7 +39,7 @@
 
             <TextView
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
+                android:layout_height="wrap_content"
                 android:text="Productos Unión S.A.C"
                 android:id="@+id/textViewEstablecimientoNombre"
                 android:layout_weight="1"
@@ -50,7 +50,7 @@
 
             <TextView
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
+                android:layout_height="wrap_content"
                 android:text="Productos Unión"
                 android:id="@+id/textViewEstablecimientoCliente"
                 android:layout_weight="1"
@@ -60,7 +60,7 @@
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1">
 
                 <TextView

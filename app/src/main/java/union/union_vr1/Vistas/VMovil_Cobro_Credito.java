@@ -75,6 +75,8 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
     private int valIdCredito = 0;
     private DBAdapter_Temp_Autorizacion_Cobro dbAutorizacionCobro;
     private DbAdapter_Comprob_Cobro dbComprobanteCobro;
+    private Context mContext;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -82,6 +84,8 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
 
         session = new DbAdapter_Temp_Session(this);
         session.open();
+
+        mContext = this;
 
         Bundle bundle = getIntent().getExtras();
         estabX = bundle.getString("idEstabX");
@@ -113,13 +117,29 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
     private void displayListViewVCC() {
 
         Cursor cursor = dbHelper.fetchAllComprobCobrosByEst(estabX);
+
+
         Log.d("COBRO DE CRÉDITO ", "ESTABLECIMIENTO ID : " + estabX);
         CursorAdapter_Cobros_Establecimiento adapterCobros = new CursorAdapter_Cobros_Establecimiento(getApplicationContext(), cursor);
 
         final ListView listView = (ListView) findViewById(R.id.VCCR_LSTcresez);
         // Assign adapter to ListView
-        listView.setAdapter(adapterCobros);
 
+
+        if (cursor.getCount()==0){
+
+            if (listView.getHeaderViewsCount()<1){
+            View headerSinDatos= getLayoutInflater().inflate(R.layout.header_datos_vacios,null);
+            listView.addHeaderView(headerSinDatos,null, false);
+            }
+
+        }else if(cursor.getCount()<0){
+            if (listView.getHeaderViewsCount()<1){
+                View headerSinDatos= getLayoutInflater().inflate(R.layout.header_datos_vacios,null);
+                listView.addHeaderView(headerSinDatos,null, false);
+            }
+        }
+        listView.setAdapter(adapterCobros);
         //----------------------------------------------------------------
 
 
@@ -130,24 +150,30 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
             public void onItemClick(AdapterView<?> listView, View view,
                                     int position, long id) {
                 // Get the cursor, positioned to the corresponding row in the result set
-                Cursor cursor = (Cursor) listView.getItemAtPosition(position);
 
-                // Get the state's capital from this row in the database.
-                idEstado = cursor.getString(cursor.getColumnIndexOrThrow("cc_in_estado_cobro"));
-                idCobro = cursor.getString(cursor.getColumnIndexOrThrow("_id"));
-                idMontoCancelado = cursor.getString(cursor.getColumnIndexOrThrow("cc_re_monto_cobrado"));
-                idVal1 = cursor.getDouble(cursor.getColumnIndexOrThrow("cc_re_monto_a_pagar"));
-                idVal2 = cursor.getDouble(cursor.getColumnIndexOrThrow("cc_re_monto_cobrado"));
-                idDeuda = idVal1-idVal2;
-                mSPNcredit.setText(String.valueOf(idDeuda));
-                if (Integer.parseInt(idEstado) == 1) {
-                    Estado = "Pendiente " + idDeuda;
-                }
-                if (Integer.parseInt(idEstado) == 0) {
-                    Estado = "Cancelado";
-                }
-                Toast.makeText(getApplicationContext(),
-                        Estado, Toast.LENGTH_SHORT).show();
+
+                    Cursor cursor = (Cursor) listView.getItemAtPosition(position);
+
+                    // Get the state's capital from this row in the database.
+                    idEstado = cursor.getString(cursor.getColumnIndexOrThrow("cc_in_estado_cobro"));
+                    idCobro = cursor.getString(cursor.getColumnIndexOrThrow("_id"));
+                    idMontoCancelado = cursor.getString(cursor.getColumnIndexOrThrow("cc_re_monto_cobrado"));
+                    idVal1 = cursor.getDouble(cursor.getColumnIndexOrThrow("cc_re_monto_a_pagar"));
+                    idVal2 = cursor.getDouble(cursor.getColumnIndexOrThrow("cc_re_monto_cobrado"));
+                    idDeuda = idVal1 - idVal2;
+                    mSPNcredit.setText(String.valueOf(idDeuda));
+
+
+                    if (Integer.parseInt(idEstado) == 1) {
+                        Estado = "Pendiente " + idDeuda;
+                    }
+                    if (Integer.parseInt(idEstado) == 0) {
+                        Estado = "Cancelado";
+                    }
+                    Toast.makeText(getApplicationContext(),
+                            Estado, Toast.LENGTH_SHORT).show();
+
+
             }
 
         });
@@ -231,10 +257,11 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
 
     public void Back() {
 
-        Intent returnAc = new Intent(this, VMovil_Evento_Establec.class);
+        Intent returnAc = new Intent(mContext, VMovil_Evento_Establec.class);
         returnAc.putExtra("idEstab", estabX);
-        startActivity(returnAc);
         finish();
+        startActivity(returnAc);
+
     }
 
 

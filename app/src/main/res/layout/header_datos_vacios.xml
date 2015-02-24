@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="48dp"
+        android:text="¡Felicidades!"
+        android:id="@+id/textView"
+        android:textSize="16dp"
+        android:gravity="center"
+        android:textColor="@color/azul"
+        android:textStyle="bold"
+        android:background="@drawable/border_bottom_personalizado_steve" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="32dp"
+        android:text="No hay Deudas por Cobrar"
+        android:id="@+id/textView2"
+        android:gravity="center" />
+</LinearLayout>

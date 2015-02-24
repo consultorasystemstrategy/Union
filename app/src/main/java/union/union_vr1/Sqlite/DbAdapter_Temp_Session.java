@@ -31,7 +31,7 @@ public class DbAdapter_Temp_Session {
                     +session_id_variable+" integer, "
                     +session_valor + " integer);";
 
-    public static final String DELETE_TABLE_Temp_scanner = "DROP TABLE IF EXISTS " + SQLITE_TABLE_Temp_session;
+    public static final String DELETE_TABLE_Temp_session = "DROP TABLE IF EXISTS " + SQLITE_TABLE_Temp_session;
 
     public DbAdapter_Temp_Session(Context ctx) {
         this.mCtx = ctx;
@@ -82,7 +82,8 @@ public class DbAdapter_Temp_Session {
 
         if (mCursor != null) {
             mCursor.moveToFirst();
-        }else if (mCursor.getCount()==0){
+        }
+        if (mCursor.getCount()==0){
             Log.d("SESSION", "valor 0");
             return 0;
         }

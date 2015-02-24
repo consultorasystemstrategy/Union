@@ -9,11 +9,19 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
+import android.widget.TextView;
 
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 import union.union_vr1.R;
+import union.union_vr1.Sqlite.DbAdapter_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Resumen_Caja;
 import union.union_vr1.Sqlite.DbAdapter_Stock_Agente;
+import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 import union.union_vr1.Sqlite.DbGastos_Ingresos;
 import union.union_vr1.Utils.MyApplication;
 
@@ -26,12 +34,47 @@ public class VMovil_Resumen_Caja extends TabActivity {
     private DbAdapter_Resumen_Caja dbHelperRC;
     private SimpleCursorAdapter dataAdapterRC;
     private DbGastos_Ingresos dbHelperGastosIngr;
+    private DbAdapter_Agente dbAdapter_agente;
+    private DbAdapter_Temp_Session session;
+    private int idLiquidacion;
+    private int idAgente;
+    private String nombreAgente =  "Agente 001";
+    private TextView textViewFecha, textViewLiquidacion, textViewAgente;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.princ_resumen_caja);
+
+        session = new DbAdapter_Temp_Session(this);
+        session.open();
+
+        dbAdapter_agente = new DbAdapter_Agente(this);
+        dbAdapter_agente.open();
+
+
+
+
+        idAgente = session.fetchVarible(1);
+        idLiquidacion = session.fetchVarible(3);
+
+        Cursor cursor = dbAdapter_agente.fetchAgentesByIds(idAgente, idLiquidacion);
+        cursor.moveToFirst();
+        if (cursor.getCount()>0){
+            nombreAgente = cursor.getString(cursor.getColumnIndexOrThrow(dbAdapter_agente.AG_nombre_agente));
+        }
+
+
+        textViewAgente = (TextView) findViewById(R.id.textViewEjecutivo);
+        textViewLiquidacion = (TextView) findViewById(R.id.textViewLiquidacionNumero);
+        textViewFecha = (TextView) findViewById(R.id.textViewFecha);
+
+        textViewAgente.setText("Ejecutivo : "+nombreAgente);
+        textViewFecha.setText("Fecha : "+ getDatePhone());
+        textViewLiquidacion.setText("Liquidación Nro : "+idLiquidacion);
+
+
         dbHelperGastosIngr =  new DbGastos_Ingresos(this);
         dbHelperGastosIngr.open();
 
@@ -134,14 +177,16 @@ public class VMovil_Resumen_Caja extends TabActivity {
     }
 
     public void displayListIngresosGastos() {
-        //Cursor cursor = dbHelperGastosIngr.listarTodo(((MyApplication) this.getApplication()).getIdAgente());
-        Cursor cursor = dbHelperGastosIngr.listarTodo(14);
+
+
+        Cursor cursor = dbHelperGastosIngr.listarIngresosGastos(idLiquidacion);
+
         String[] columns = new String[]{
-                DbAdapter_Resumen_Caja.RC_descripcionComprobante,
-                DbAdapter_Resumen_Caja.RC_cantidad,
-                DbAdapter_Resumen_Caja.RC_vendido,
-                DbAdapter_Resumen_Caja.RC_pagado,
-                DbAdapter_Resumen_Caja.RC_cobrado};
+                "comprobante",
+                "n",
+                "emitidas",
+                "pagado",
+                "cobrado"};
 
 
         int[] to = new int[]{
@@ -161,6 +206,12 @@ public class VMovil_Resumen_Caja extends TabActivity {
         ListView listView = (ListView) findViewById(R.id.VRC_listarResumenCaja);
         listView.setAdapter(dataAdapterRC);
     }
-
+    private String getDatePhone() {
+        Calendar cal = new GregorianCalendar();
+        Date date = cal.getTime();
+        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        String formatteDate = df.format(date);
+        return formatteDate;
+    }
 }
 

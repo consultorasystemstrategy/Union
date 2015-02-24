@@ -429,7 +429,7 @@ public class DbAdapter_Stock_Agente {
         }
         return mCursor;
     }
-
+/*
     public void insertSomeStockAgente() {
 
         createStockAgente( 1, "Pan Integral Mediano", "1A", "11", 1, 10, 10, 0, 0, 0, 0, 0, 10, 1);
@@ -439,5 +439,5 @@ public class DbAdapter_Stock_Agente {
         createStockAgente( 5, "Panetón Integral", "5A", "55", 50, 50, 50, 0, 0, 0, 0, 0, 50, 1);
 
     }
-
+*/
 }

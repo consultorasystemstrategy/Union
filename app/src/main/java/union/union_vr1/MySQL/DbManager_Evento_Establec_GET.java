@@ -111,7 +111,8 @@ public class DbManager_Evento_Establec_GET extends ListActivity {
                     Double.parseDouble(tabla[j][12]),
                     Integer.parseInt(tabla[j][13]),
                     Integer.parseInt(tabla[j][14]),
-                    Integer.parseInt(tabla[j][15])
+                    Integer.parseInt(tabla[j][15]),
+                    1
             );
         }
     }
@@ -191,7 +192,7 @@ public class DbManager_Evento_Establec_GET extends ListActivity {
                                 M_monto_credito,
                                 M_dias_credito,
                                 M_estado_no_atencion,
-                                M_id_agente);
+                                M_id_agente,1);
 
                         // creating new HashMap
                         HashMap<String, String> map = new HashMap<String, String>();

@@ -30,6 +30,7 @@ public class DbAdapter_Agente {
     public static final String AG_correlativo_boleta = "ag_in_correlativo_boleta";
     public static final String AG_correlativo_factura = "ag_in_correlativo_factura";
     public static final String estado_sincronizacion = "estado_sincronizacion";
+    public static final String AG_fecha = "fecha";
 
     //FALTA TRAER ESTOS CAMPOS
     public static final String AG_correlativo_rrpp = "ag_in_correlativo_rrpp";
@@ -66,6 +67,7 @@ public class DbAdapter_Agente {
                     +AG_correlativo_boleta+" integer,"
                     +AG_correlativo_factura+" integer,"
                     +AG_correlativo_rrpp+" integer, "
+                    +AG_fecha+" text, "
                     +estado_sincronizacion+ " integer);";
 
     public static final String DELETE_TABLE_AGENTE = "DROP TABLE IF EXISTS " + SQLITE_TABLE_Agente;
@@ -91,7 +93,7 @@ public class DbAdapter_Agente {
             String nombre_agente, String nom_usuario, String pass_usuario, int liquidacion,
             double km_inicial, double km_final, String nombre_ruta, int nro_bodegas,
             String serie_boleta, String serie_factura, String serie_rrpp, int correlativo_boleta,
-            int correlativo_factura, int correlativo_rrpp) {
+            int correlativo_factura, int correlativo_rrpp, String fecha) {
 
         ContentValues initialValues = new ContentValues();
         initialValues.put(AG_id_agente_venta,id_agente_venta);
@@ -111,10 +113,11 @@ public class DbAdapter_Agente {
         initialValues.put(AG_correlativo_boleta,correlativo_boleta);
         initialValues.put(AG_correlativo_factura,correlativo_factura);
         initialValues.put(AG_correlativo_rrpp,correlativo_rrpp);
+        initialValues.put(AG_fecha, fecha);
 
         return mDb.insert(SQLITE_TABLE_Agente, null, initialValues);
     }
-    public long createAgente(Agente agente) {
+    public long createAgente(Agente agente, String fecha) {
 
         ContentValues initialValues = new ContentValues();
         initialValues.put(AG_id_agente_venta,agente.getIdAgenteVenta());
@@ -134,12 +137,15 @@ public class DbAdapter_Agente {
         initialValues.put(AG_correlativo_boleta,agente.getCorrelativoBoleta());
         initialValues.put(AG_correlativo_factura,agente.getCorrelativoFactura());
         initialValues.put(AG_correlativo_rrpp, agente.getCorrelativoRrpp());
+        initialValues.put(AG_correlativo_rrpp, agente.getCorrelativoRrpp());
+        initialValues.put(AG_fecha, fecha);
+
 
         return mDb.insert(SQLITE_TABLE_Agente, null, initialValues);
     }
 
 
-    public void updateAgente(Agente agente){
+    public void updateAgente(Agente agente, String fecha){
 
         ContentValues initialValues = new ContentValues();
         initialValues.put(AG_id_agente_venta,agente.getIdAgenteVenta());
@@ -159,6 +165,7 @@ public class DbAdapter_Agente {
         initialValues.put(AG_correlativo_boleta,agente.getCorrelativoBoleta());
         initialValues.put(AG_correlativo_factura,agente.getCorrelativoFactura());
         initialValues.put(AG_correlativo_rrpp, agente.getCorrelativoRrpp());
+        initialValues.put(AG_fecha, fecha);
 
         mDb.update(SQLITE_TABLE_Agente, initialValues,
                 AG_id_agente_venta+"=?",new String[]{""+agente.getIdAgenteVenta()});
@@ -167,7 +174,7 @@ public class DbAdapter_Agente {
         boolean exists = false;
         Cursor mCursor = null;
         mCursor = mDb.query(true, SQLITE_TABLE_Agente, new String[] {AG_id_agente,
-                        AG_id_agente_venta, AG_nombre_agente, AG_nombre_ruta, AG_nro_bodegas},
+                        AG_id_agente_venta, AG_nombre_agente, AG_nombre_ruta, AG_nro_bodegas, AG_fecha},
                 AG_id_agente_venta + " = " + idAgenteVenta, null,
                 null, null, null, null);
         if (mCursor != null) {
@@ -214,13 +221,13 @@ public class DbAdapter_Agente {
 
     }
 
-    public Cursor fetchAgentesByIds(String inputText) throws SQLException {
-        Log.w(TAG, inputText);
+    public Cursor fetchAgentesByIds(int  idAgenteVenta, int idLiquidacion) throws SQLException {
+        Log.w(TAG, ""+idAgenteVenta);
         Cursor mCursor = null;
         mCursor = mDb.query(true, SQLITE_TABLE_Agente, new String[] {AG_id_agente,
                         AG_id_agente_venta,AG_id_empresa, AG_id_usuario, AG_nombre_agente,AG_nom_usuario,
-                        AG_pass_usuario, AG_liquidacion, AG_km_inicial, AG_km_final,  AG_nombre_ruta, AG_nro_bodegas},
-                AG_id_agente_venta + " = " + inputText, null,
+                        AG_pass_usuario, AG_liquidacion, AG_km_inicial, AG_km_final,  AG_nombre_ruta, AG_nro_bodegas, AG_fecha},
+                AG_id_agente_venta + " = '" + idAgenteVenta+"' AND "+AG_liquidacion + " = '" + idLiquidacion + "'", null,
                 null, null, null, null);
         if (mCursor != null) {
             mCursor.moveToFirst();
@@ -231,14 +238,17 @@ public class DbAdapter_Agente {
 
 
 
-    public String getSerieFacturaByIdAgente(String idAgente) throws SQLException {
+    public String getSerieFacturaByIdAgente(int idAgente, int idLiquidacion) throws SQLException {
         Cursor mCursor = null;
         mCursor = mDb.query(true, SQLITE_TABLE_Agente, new String[] {AG_id_agente,
-                        AG_id_agente_venta, AG_nombre_agente, AG_nombre_ruta, AG_nro_bodegas, AG_serie_boleta, AG_serie_factura, AG_serie_rrpp},
+                        AG_id_agente_venta, AG_nombre_agente, AG_nombre_ruta, AG_nro_bodegas, AG_serie_boleta, AG_serie_factura, AG_serie_rrpp, AG_fecha},
                 AG_id_agente_venta + " = " + idAgente, null,
                 null, null, null, null);
         if (mCursor != null) {
             mCursor.moveToFirst();
+        }
+        if (mCursor.getCount()==0){
+            return null;
         }
 
 
@@ -252,15 +262,12 @@ public class DbAdapter_Agente {
         Cursor mCursor = null;
         mCursor = mDb.query(true, SQLITE_TABLE_Agente, new String[] {AG_id_agente,
                         AG_id_agente_venta,AG_id_empresa, AG_id_usuario, AG_nombre_agente,AG_nom_usuario,
-                        AG_pass_usuario, AG_liquidacion, AG_km_inicial, AG_km_final,  AG_nombre_ruta, AG_nro_bodegas},
+                        AG_pass_usuario, AG_liquidacion, AG_km_inicial, AG_km_final,  AG_nombre_ruta, AG_nro_bodegas, AG_fecha},
                 AG_nom_usuario + " = '" + usuario + "' AND "+ AG_pass_usuario + " = '" + password+"'", null,
                 null, null, null, null);
         if (mCursor != null) {
             mCursor.moveToFirst();
             existeUser=true;
-        }
-        if (mCursor.getCount()==0){
-            existeUser=false;
         }
 
 
@@ -269,14 +276,17 @@ public class DbAdapter_Agente {
     }
 
 
-    public String getSerieBoletaByIdAgente(String idAgente) throws SQLException {
+    public String getSerieBoletaByIdAgente(int idAgente, int idLiquidacion) throws SQLException {
         Cursor mCursor = null;
         mCursor = mDb.query(true, SQLITE_TABLE_Agente, new String[] {AG_id_agente,
-                        AG_id_agente_venta, AG_nombre_agente, AG_nombre_ruta, AG_nro_bodegas, AG_serie_boleta, AG_serie_factura, AG_serie_rrpp},
+                        AG_id_agente_venta, AG_nombre_agente, AG_nombre_ruta, AG_nro_bodegas, AG_serie_boleta, AG_serie_factura, AG_serie_rrpp, AG_fecha},
                 AG_id_agente_venta + " = " + idAgente, null,
                 null, null, null, null);
         if (mCursor != null) {
             mCursor.moveToFirst();
+        }
+        if (mCursor.getCount()==0){
+            return null;
         }
 
 
@@ -290,13 +300,13 @@ public class DbAdapter_Agente {
         Cursor mCursor = null;
         if (inputText == null  ||  inputText.length () == 0)  {
             mCursor = mDb.query(SQLITE_TABLE_Agente, new String[] {AG_id_agente,
-                            AG_id_agente_venta, AG_nombre_agente, AG_nombre_ruta, AG_nro_bodegas},
+                            AG_id_agente_venta, AG_nombre_agente, AG_nombre_ruta, AG_nro_bodegas, AG_fecha},
                     null, null, null, null, null);
 
         }
         else {
             mCursor = mDb.query(true, SQLITE_TABLE_Agente, new String[] {AG_id_agente,
-                            AG_id_agente_venta, AG_nombre_agente, AG_nombre_ruta, AG_nro_bodegas},
+                            AG_id_agente_venta, AG_nombre_agente, AG_nombre_ruta, AG_nro_bodegas, AG_fecha},
                     AG_nombre_agente + " like '%" + inputText + "%'", null,
                     null, null, null, null);
         }
@@ -310,7 +320,7 @@ public class DbAdapter_Agente {
     public Cursor fetchAllAgentes() {
 
         Cursor mCursor = mDb.query(SQLITE_TABLE_Agente, new String[] {AG_id_agente,
-                        AG_id_agente_venta, AG_nombre_agente, AG_nombre_ruta, AG_nro_bodegas},
+                        AG_id_agente_venta, AG_nombre_agente, AG_nombre_ruta, AG_nro_bodegas, AG_fecha},
                 null, null, null, null, null);
 
         if (mCursor != null) {
@@ -323,7 +333,7 @@ public class DbAdapter_Agente {
 
         Cursor mCursor = mDb.query(SQLITE_TABLE_Agente, new String[] {AG_id_agente,
                         AG_id_agente_venta, AG_serie_boleta, AG_serie_factura, AG_serie_rrpp,
-                        AG_correlativo_boleta, AG_correlativo_factura, AG_correlativo_rrpp},
+                        AG_correlativo_boleta, AG_correlativo_factura, AG_correlativo_rrpp, AG_fecha},
                 null, null, null, null, null);
 
         if (mCursor != null) {
@@ -378,9 +388,6 @@ public class DbAdapter_Agente {
     private String M_correlativo_factura;
     private String M_correlativo_rrpp;
 
-    public void insertSomeAgentes() {
-        createAgentes(14, 1, 1, "URLISH", "AGENTE01", "123456", 1, 1000, 1000, "LIMA 01", 5, "BO001",
-                "FA001", "RP001", 1000, 2000, 3000);
-    }
+
 
 }

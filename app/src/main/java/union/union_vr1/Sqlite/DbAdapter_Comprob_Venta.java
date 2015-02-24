@@ -34,6 +34,7 @@ public class DbAdapter_Comprob_Venta {
     public static final String CV_hora_doc = "cv_te_hora_doc";
         //ACTUALIZAMOS ESTE CAMPO[CUANDO UN CLIENTE NOS DICE QUE QUIERE DEVOLVER UN PRODUCTO]
     public static final String CV_estado_comp = "cv_in_estado_comp";
+    public static final String CV_liquidacion = "id_liquidacion";
 
     public static final String CV_estado_conexion = "cv_in_estado_conexion";
 
@@ -65,6 +66,7 @@ public class DbAdapter_Comprob_Venta {
                     +CV_estado_comp+" integer,"
                     +CV_estado_conexion+" integer,"
                     +CV_id_agente+" integer, "
+                    +CV_liquidacion+" integer, "
                     +estado_sincronizacion+" integer);";
 
     public static final String DELETE_TABLE_COMPROB_VENTA = "DROP TABLE IF EXISTS " + SQLITE_TABLE_Comprob_Venta;
@@ -88,7 +90,7 @@ public class DbAdapter_Comprob_Venta {
     public long createComprobVenta(
             int id_establec, int id_tipo_doc, int id_forma_pago, int id_tipo_venta,
             String codigo_erp, String serie, int num_doc, double base_imp, double igv, double total,
-            String fecha_doc, String hora_doc, int estado_comp, int estado_conexion, int id_agente, int estadoSincronizacion){
+            String fecha_doc, String hora_doc, int estado_comp, int estado_conexion, int id_agente, int estadoSincronizacion, int liquidacion){
 
         ContentValues initialValues = new ContentValues();
         initialValues.put(CV_id_establec,id_establec);
@@ -106,6 +108,7 @@ public class DbAdapter_Comprob_Venta {
         initialValues.put(CV_estado_comp,estado_comp);
         initialValues.put(CV_estado_conexion,estado_conexion);
         initialValues.put(CV_id_agente,id_agente);
+        initialValues.put(CV_liquidacion,liquidacion);
         initialValues.put(Constants._SINCRONIZAR, estadoSincronizacion);
 
 
@@ -277,7 +280,7 @@ public class DbAdapter_Comprob_Venta {
         return mCursor;
     }
 
-    public Cursor fetchAllComprobVenta() {
+    public Cursor fetchAllComprobVenta(int idEstablecimiento) {
 
         Cursor mCursor = mDb.query(SQLITE_TABLE_Comprob_Venta, new String[] {CV_id_comprob,
 
@@ -285,7 +288,7 @@ public class DbAdapter_Comprob_Venta {
                         CV_codigo_erp, CV_serie, CV_num_doc, CV_base_imp, CV_igv, CV_total,
                         CV_fecha_doc, CV_hora_doc, CV_estado_comp, CV_estado_conexion, CV_id_agente
                 },
-                null, null, null, null, null);
+                CV_id_establec + " = ?", new String[]{""+idEstablecimiento}, null, null, null);
 
         if (mCursor != null) {
             mCursor.moveToFirst();

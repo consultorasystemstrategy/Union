@@ -72,15 +72,19 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
     private DbAdaptert_Evento_Establec dbHelper_Evento_Establecimiento;
     private EditText savedText;
 
-    private String textoImpresionCabecera = ".\n"
+
+    private String textoVentaImpresion = "";
+
+    private String textoImpresionCabecera = "\n"
                 +"    UNIVERSIDAD PERUANA UNION   \n"
                 +"     Cent.aplc. Prod. Union     \n"
                 +"   C. Central Km 19 Villa Union \n"
                 +" Lurigancho-Chosica Fax: 6186311\n"
                 +"      Telf: 6186309-6186310     \n"
                 +" Casilla 3564, Lima 1, LIMA PERU\n"
-                +"         RUC: 20138122256       \n"
-                +"------------------------------------------------\n";
+                +"         RUC: 20138122256       ";
+
+
 
     private String textoImpresionContenidoLeft = "";
     private String textoImpresionContenidoRight = "";
@@ -96,6 +100,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
 
     private int idEstablecimiento;
     int id_agente_venta;
+    private int idLiquidacion;
     private SimpleCursorAdapter simpleCursorAdapter;
     private Spinner spinnerTipoDocumento;
     private Spinner spinnerFormaPago;
@@ -211,6 +216,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
         idEstablecimiento = session.fetchVarible(2);
 
         id_agente_venta = session.fetchVarible(1);
+        idLiquidacion = session.fetchVarible(3);
 
 
         setContentView(R.layout.princ_venta_cabecera);
@@ -436,7 +442,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
                 numeroViews--;
 
 
-                if (parent.getPositionForView(view) != 0 && parent.getPositionForView(view) != numeroViews) {
+                if (parent.getPositionForView(view) != 1 && parent.getPositionForView(view) != numeroViews ) {
 
                     Log.d("POSITION SELECTED", parent.getPositionForView(view)+" - " + parent.getCount());
                     Log.d("POSITION ", position +" - " + parent.getCount());
@@ -462,7 +468,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
 
                 int numeroViews =  adapterView.getCount();
                 numeroViews--;
-                if (adapterView.getPositionForView(view) != 0 && adapterView.getPositionForView(view) != numeroViews) {
+                if (adapterView.getPositionForView(view) != 1 && adapterView.getPositionForView(view) != numeroViews) {
 
                     Log.d("POSITION SELECTED", adapterView.getPositionForView(view)+" - " + adapterView.getCount());
                     Log.d("POSITION ", i +" - " + adapterView.getCount());
@@ -699,13 +705,13 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
                 case factura:
                     i_tipoDocumento = 1;
                     erp_stringTipoDocumento="FV";
-                    serie = dbHelperAgente.getSerieFacturaByIdAgente("14");
+                    serie = dbHelperAgente.getSerieFacturaByIdAgente(id_agente_venta,idLiquidacion );
                     codigo_erp = erp_stringTipoDocumento+serie;
                     break;
                 case boleta:
                     i_tipoDocumento = 2;
                     erp_stringTipoDocumento="BV";
-                    serie = dbHelperAgente.getSerieBoletaByIdAgente("14");
+                    serie = dbHelperAgente.getSerieBoletaByIdAgente(id_agente_venta, idLiquidacion);
                     codigo_erp = erp_stringTipoDocumento+serie;
                     break;
                 case ficha:
@@ -735,7 +741,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
                 "Forma de pago : " + formaPago + "\n" +
                 "Tipo Documento : " + tipoDocumento+ "\n" + "---------------------------";
 
-        Cursor cursorAgente = dbHelperAgente.fetchAgentesByIds(""+id_agente_venta);
+        Cursor cursorAgente = dbHelperAgente.fetchAgentesByIds(id_agente_venta, idLiquidacion);
         cursorAgente.moveToFirst();
         String nombreAgenteVenta = cursorAgente.getString(cursorAgente.getColumnIndexOrThrow(dbHelperAgente.AG_nombre_agente));
 
@@ -743,28 +749,25 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
         cursorEstablecimiento.moveToFirst();
         String nombreCliente = cursorEstablecimiento.getString(cursorEstablecimiento.getColumnIndexOrThrow(dbHelper_Evento_Establecimiento.EE_nom_cliente));
         String documentoCliente = cursorEstablecimiento.getString(cursorEstablecimiento.getColumnIndexOrThrow(dbHelper_Evento_Establecimiento.EE_doc_cliente));
-        textoImpresion+= "Factura Nro. 030-000212\n";
+        textoImpresion+= "Código ERP:  "+codigo_erp+"\n";
         textoImpresion+= "Fecha: "+ getDatePhone()+"\n";
         textoImpresion+= "Vendedor: "+ nombreAgenteVenta+"\n";
         textoImpresion+= "Cliente: "+ nombreCliente+"\n";
         textoImpresion+= "DNI: "+ documentoCliente+"\n";
-        textoImpresion+= "Direccion: Alameda Nro 2039 - Chosica\n";
+        //textoImpresion+= "Direccion: Alameda Nro 2039 - Chosica\n";
         textoImpresion+= "-----------------------------------------------\n";
         textoImpresion+= "Cant.             Producto              Importe\n";
         textoImpresion+= "-----------------------------------------------\n";
 
 
-        textoImpresionCabecera+= "Factura Nro. 030-000212\n";
-        textoImpresionCabecera+= "Fecha: "+ getDatePhone()+"\n";
-        textoImpresionCabecera+= "Vendedor: "+ nombreAgenteVenta+"\n";
-        textoImpresionCabecera+= "Cliente: "+ nombreCliente+"\n";
-        textoImpresionCabecera+= "DNI: "+ documentoCliente+"\n";
-        textoImpresionCabecera+= "Direccion: Alameda Nro 2039 - Chosica\n";
-        textoImpresionCabecera+= "------------------------------------------------\n";
-        textoImpresionCabecera+= "Cant.             Producto              Importe\n";
-        textoImpresionCabecera+= "------------------------------------------------\n";
+        textoVentaImpresion+= "Código ERP:  "+codigo_erp+"\n";
+        textoVentaImpresion+= "Fecha: "+ getDatePhone()+"\n";
+        textoVentaImpresion+= "Vendedor: "+ nombreAgenteVenta+"\n";
+        textoVentaImpresion+= "Cliente: "+ nombreCliente+"\n";
+        textoVentaImpresion+= "DNI: "+ documentoCliente;
+        //textoVentaImpresion+= "Direccion: Alameda Nro 2039 - Chosica\n";
 
-        long id = dbHelper_Comprob_Venta.createComprobVenta(idEstablecimiento,i_tipoDocumento,i_formaPago,tipoVenta,codigo_erp,serie,numero_documento,base_imponible,igv,monto_total,getDatePhone(),null,estado_comprobante, estado_conexion,id_agente_venta, Constants._CREADO);
+        long id = dbHelper_Comprob_Venta.createComprobVenta(idEstablecimiento,i_tipoDocumento,i_formaPago,tipoVenta,codigo_erp,serie,numero_documento,base_imponible,igv,monto_total,getDatePhone(),null,estado_comprobante, estado_conexion,id_agente_venta, Constants._CREADO, idLiquidacion);
 
         Log.d("Export id CV IGUALES",""+id);
 
@@ -838,7 +841,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
 
                 Log.d("RECORRE EL CURSOR TEMP COMPROB COBROS", "YES");
 
-                 long registroInsertado = dbHelper_Comprob_Cobros.createComprobCobros(idEstablecimiento,Integer.parseInt(id+""),id_plan_pago,id_plan_pago_detalle,tipoDocumento.toUpperCase(),codigo_erp,fecha_programada,monto_a_pagar, fecha_cobro, hora_cobro,monto_cobrado,estado_cobro,id_agente_venta,id_forma_cobro, lugar_registro);
+                 long registroInsertado = dbHelper_Comprob_Cobros.createComprobCobros(idEstablecimiento,Integer.parseInt(id+""),id_plan_pago,id_plan_pago_detalle,tipoDocumento.toUpperCase(),codigo_erp,fecha_programada,monto_a_pagar, fecha_cobro, hora_cobro,monto_cobrado,estado_cobro,id_agente_venta,id_forma_cobro, lugar_registro, idLiquidacion);
                  Log.d("CC INSERTADO SATISFACTORIAMENTE ", "ID : "+ registroInsertado);
             }
         }
@@ -855,6 +858,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
         Intent intent= new Intent(this, VMovil_BluetoothImprimir.class);
         intent.putExtra("textoImpresion",textoImpresion);
         intent.putExtra("textoImpresionCabecera", textoImpresionCabecera);
+        intent.putExtra("textoVentaImpresion", textoVentaImpresion);
         intent.putExtra("textoImpresionContenidoLeft", textoImpresionContenidoLeft);
         intent.putExtra("textoImpresionContenidoRight", textoImpresionContenidoRight);
         finish();

@@ -251,7 +251,8 @@ public class DbManager_Agente_GET extends Activity {
                                 ce.getDouble(TAG_monto_credito),
                                 ce.getInt(TAG_dias_credito),
                                 ce.getInt(TAG_estado_no_atencion),
-                                ce.getInt(TAG_id_agente)
+                                ce.getInt(TAG_id_agente),
+                                1
                         );
                     }
 
@@ -310,7 +311,8 @@ public class DbManager_Agente_GET extends Activity {
                                 co.getInt(TAG_estado_cobro),
                                 co.getInt(TAG_id_agente_cobro),
                                 co.getInt(TAG_id_forma_cobro),
-                                co.getString(TAG_lugar_registro)
+                                co.getString(TAG_lugar_registro),
+                                0
                         );
                     }
 

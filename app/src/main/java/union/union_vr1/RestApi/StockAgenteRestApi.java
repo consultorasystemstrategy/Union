@@ -26,7 +26,7 @@ import java.util.Map;
  * Created by Usuario on 19/01/2015.
  */
 public class StockAgenteRestApi {
-    private final String urlString = "http://192.168.0.115:84/StockAgente.ashx";
+    private final String urlString = "http://192.168.0.112/Restfull/StockAgente.ashx";
 
     private static String convertStreamToUTF8String(InputStream stream) throws IOException {
         String result = "";
@@ -243,7 +243,7 @@ public class StockAgenteRestApi {
         return result;
     }
 
-    public JSONObject GetAgenteVenta(String usuario,String clave) throws Exception {
+    public JSONObject GetAgenteVenta(String usuario,String clave,String fecha) throws Exception {
         JSONObject result = null;
         JSONObject o = new JSONObject();
         JSONObject p = new JSONObject();
@@ -251,6 +251,7 @@ public class StockAgenteRestApi {
         o.put("method", "GetAgenteVenta");
         p.put("usuario",mapObject(usuario));
         p.put("clave",mapObject(clave));
+        p.put("fecha",mapObject(fecha));
         o.put("parameters", p);
         String s = o.toString();
         String r = load(s);
@@ -501,4 +502,18 @@ public class StockAgenteRestApi {
         result = new JSONObject(r);
         return result;
     }
+    public JSONObject GetConsultarPlan_Distribucion(int idAgente) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","RestAPI");
+        o.put("method", "GetConsultarPlan_Distribucion");
+        p.put("idAgente",mapObject(idAgente));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+
 }

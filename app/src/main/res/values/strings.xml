@@ -56,7 +56,6 @@
         <item>15</item>
         <item>30</item>
     </string-array>
-
     <string-array name="cate_devolucion">
         <item>Bueno</item>
         <item>Vencimiento - Malo</item>
@@ -91,7 +90,6 @@
     <string-array name="tipoDocumentoBoleta">
         <item>boleta</item>
     </string-array>
-
     <string-array name="tipoDocumentoCombustiblePlanta">
         <item>ficha</item>
     </string-array>
@@ -121,8 +119,6 @@
         <item>Pendiente</item>
     </string-array>
 
-
-
     <string name="title_activity_princ_venta_principal">princ_venta_principal</string>
     <string name="title_activity_vmovil__evento__establec">VMovil_Evento_Establec</string>
     <string name="title_activity_vmovil__cobros__totales">VMovil_Cobros_Totales</string>
@@ -137,5 +133,7 @@
     <string name="title_activity_mostrar_can_dev_facturas">mostrar_can_dev_facturas</string>
     <string name="title_activity_vmovil__bluetooth_imprimir">VMovil_BluetoothImprimir</string>
     <string name="fechakel">10-02-2015</string>
+    <string name="title_activity_prueba">Prueba</string>
+    <string name="cabecera_productos_union"></string>
 
 </resources>

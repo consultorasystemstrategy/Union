@@ -15,11 +15,13 @@ import android.widget.EditText;
 import android.widget.FilterQueryProvider;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
 import union.union_vr1.R;
 import union.union_vr1.Sqlite.CursorAdapterEstablecimientoColor;
+import union.union_vr1.Sqlite.DbAdapter_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Histo_Venta_Detalle;
 import union.union_vr1.Sqlite.DbAdapter_Precio;
 import union.union_vr1.Sqlite.DbAdapter_Stock_Agente;
@@ -36,6 +38,11 @@ public class VMovil_Menu_Establec extends Activity {
     private SimpleCursorAdapter dataAdapter;
     private CursorAdapterEstablecimientoColor cursorAdapterEstablecimientoColor;
     private DbAdapter_Temp_Barcode_Scanner dbAdapter_temp_barcode_scanner;
+    private DbAdapter_Agente dbAdapter_agente;
+    private TextView textViewNombreRuta;
+    private int idLiquidacion;
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,12 +53,31 @@ public class VMovil_Menu_Establec extends Activity {
         session = new DbAdapter_Temp_Session(this);
         session.open();
 
+        idLiquidacion = session.fetchVarible(3);
 
+
+        dbAdapter_agente = new DbAdapter_Agente(this);
+        dbAdapter_agente.open();
         dbHelper = new DbAdaptert_Evento_Establec(this);
         dbHelper.open();
         dbAdapter_temp_barcode_scanner = new DbAdapter_Temp_Barcode_Scanner(this);
         dbAdapter_temp_barcode_scanner.open();
-        //Add some data
+
+
+        textViewNombreRuta = (TextView) findViewById(R.id.textViewNombreRuta);
+
+        int idAgente = session.fetchVarible(1);
+        Cursor cursorAgente = dbAdapter_agente.fetchAgentesByIds(idAgente, idLiquidacion);
+        cursorAgente.moveToFirst();
+
+        String nombreRuta = "";
+        int numeroEstablecimientoxRuta = 0;
+        if (cursorAgente.getCount()>0){
+            nombreRuta = cursorAgente.getString(cursorAgente.getColumnIndexOrThrow(dbAdapter_agente.AG_nombre_ruta));
+            numeroEstablecimientoxRuta = cursorAgente.getInt(cursorAgente.getColumnIndexOrThrow(dbAdapter_agente.AG_nro_bodegas));
+
+        }
+        textViewNombreRuta.setText("Ruta : "+nombreRuta);
 
         //Generate ListView from SQLite Database
         displayListView();
@@ -75,7 +101,7 @@ public class VMovil_Menu_Establec extends Activity {
 
     private void displayListView() {
 
-        Cursor cursor = dbHelper.listarEstablecimientos();
+        Cursor cursor = dbHelper.listarEstablecimientos(idLiquidacion);
 
         /*
         // The desired columns to be bound
@@ -143,9 +169,9 @@ public class VMovil_Menu_Establec extends Activity {
 
                 // Get the state's capital from this row in the database.
                 String idEstablec =
-                        cursor.getString(cursor.getColumnIndexOrThrow("idEstablecimiento"));
+                        cursor.getString(cursor.getColumnIndexOrThrow(DbAdaptert_Evento_Establec.EE_id_establec));
 
-                int id_agente = cursor.getInt(cursor.getColumnIndexOrThrow("idAgente"));
+                int id_agente = cursor.getInt(cursor.getColumnIndexOrThrow(DbAdaptert_Evento_Establec.EE_id_agente));
 
                 //if(idEstEst == 1){
                 //    view.setBackgroundColor(Color.BLUE);
@@ -187,7 +213,7 @@ public class VMovil_Menu_Establec extends Activity {
 
         cursorAdapterEstablecimientoColor.setFilterQueryProvider(new FilterQueryProvider() {
             public Cursor runQuery(CharSequence constraint) {
-                return dbHelper.listarEstablecimientosPorNombre(constraint.toString());
+                return dbHelper.listarEstablecimientosPorNombre(constraint.toString(), idLiquidacion);
             }
         });
 

@@ -438,7 +438,7 @@ private void back(){
 
     private void displayListView() {
 
-        Cursor cursor = dbHelper.fetchAllComprobVenta();
+        Cursor cursor = dbHelper.fetchAllComprobVenta(idEstablec);
         cursorAdapterComprobanteVenta = new CursorAdapterComprobanteVenta(this, cursor);
 
 

@@ -16,6 +16,7 @@ import android.widget.Button;
 
 import union.union_vr1.AsyncTask.ExportMain;
 import union.union_vr1.AsyncTask.ImportMain;
+import union.union_vr1.Login;
 import union.union_vr1.R;
 import union.union_vr1.Sqlite.DbAdapter_Histo_Venta_Detalle;
 import union.union_vr1.Sqlite.DbAdapter_Precio;
@@ -96,7 +97,7 @@ public class VMovil_Online_Pumovil extends Activity {
         view = (WebView) this.findViewById(R.id.webView);
         view.getSettings().setJavaScriptEnabled(true);
         view.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
-        view.loadUrl("http://192.168.0.120:8084/SysMovilProductosUnion");
+        view.loadUrl("http://192.168.0.158:8080/SysMovilProductosUnion");
 
         /*Asignamos a la vista web el cliente (navegador)
         que hemos creado como clase privada (ver más abajo
@@ -135,7 +136,7 @@ public class VMovil_Online_Pumovil extends Activity {
                 new ExportMain(mContext).execute();
                 break;
             case R.id.buttonRedireccionarPrincipal:
-                Intent intent = new Intent(mContext, VMovil_Evento_Indice.class);
+                Intent intent = new Intent(mContext, Login.class);
                 finish();
                 startActivity(intent);
                 break;
