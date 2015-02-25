@@ -397,7 +397,8 @@ public class DbAdaptert_Evento_Establec {
                 "where ee.ee_in_id_establec = cc.cc_in_id_establec \n" +
                 "AND ee_in_id_liquidacion = '"+idLiquidacion+"'\n" +
                 "GROUP BY  ee.ee_in_id_establec \n" +
-                "having sum(cc.cc_in_estado_cobro)=0",null);
+                "having sum(cc.cc_in_estado_cobro)=0 " +
+                "ORDER BY ee_in_id_estado_atencion ASC",null);
         return mCursor;
     }
 
@@ -411,10 +412,6 @@ public class DbAdaptert_Evento_Establec {
                 "AND ee_in_id_liquidacion = '"+idLiquidacion+"' ;",null);
         return mCursor;
     }
-
-
-
-
 
     public Cursor listarEstablecimientosPorNombre(String nombreEstablecimiento, int idLiquidacion){
         Cursor mCursor = mDb.rawQuery("SELECT ee.*,  SUM(cc.cc_re_monto_a_pagar) as cc_re_monto_a_pagar\n" +
@@ -439,7 +436,8 @@ public class DbAdaptert_Evento_Establec {
                 "AND ee_te_nom_establec LIKE '%"+nombreEstablecimiento+"%'   \n" +
                 "AND ee_in_id_liquidacion = '"+idLiquidacion+"'\n" +
                 "GROUP BY  ee.ee_in_id_establec \n" +
-                "having sum(cc.cc_in_estado_cobro)=0",null);
+                "having sum(cc.cc_in_estado_cobro)=0 " +
+                "ORDER BY ee_in_id_estado_atencion ASC",null);
 
         return mCursor;
     }

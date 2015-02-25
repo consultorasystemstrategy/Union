@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="RESUMEN"
+        android:id="@+id/textView2"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:typeface="monospace"
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="4dp" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="24dp"
+            android:gravity="center_vertical"
+            android:id="@+id/linearLayout2">
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Ingresos"
+                android:id="@+id/textView7"
+                android:layout_weight="1"
+                android:textStyle="italic"
+                android:typeface="monospace"
+                android:textSize="12sp"
+                android:textColor="@color/Personalizado4" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="S/. 1000.00"
+                android:id="@+id/resumenIngresosTotales"
+                android:layout_weight="2"
+                android:textStyle="italic"
+                android:textSize="12sp"
+                android:textColor="@color/Personalizado4"
+                android:gravity="left" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="24dp"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Gastos"
+                android:id="@+id/textView3"
+                android:layout_weight="1"
+                android:textStyle="italic"
+                android:typeface="monospace"
+                android:textSize="12sp"
+                android:textColor="@color/Personalizado4" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="S/. 250.00"
+                android:id="@+id/resumenGastosTotales"
+                android:layout_weight="2"
+                android:textStyle="italic"
+                android:textSize="12sp"
+                android:textColor="@color/Personalizado4"
+                android:gravity="left" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="24dp"
+            android:gravity="center_vertical"
+            android:id="@+id/linearLayout">
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Efectivo a rendir"
+                android:id="@+id/textView5"
+                android:layout_weight="1"
+                android:textStyle="italic"
+                android:typeface="monospace"
+                android:textSize="12sp"
+                android:textColor="@color/Personalizado4" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="S/. 750.00"
+                android:id="@+id/resumenEfectivoARendir"
+                android:layout_weight="2"
+                android:textStyle="italic"
+                android:textSize="12sp"
+                android:textColor="@color/Personalizado4"
+                android:gravity="left" />
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        android:layout_width="72dp"
+        android:layout_height="wrap_content"
+        android:text="Total"
+        android:id="@+id/resumen_total_descripcion"
+        android:textStyle="bold|italic"
+        android:textSize="12dp"
+        android:textColor="@color/Personalizado4" />
+
+    <TextView
+        android:layout_width="48dp"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="0"
+        android:id="@+id/resumen_total_n"
+        android:textStyle="bold"
+        android:textColor="@color/PersonalizadoSteve2"
+        android:textSize="12dp" />
+
+    <TextView
+        android:layout_width="64dp"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="0"
+        android:id="@+id/resumen_total_emitido"
+        android:textStyle="bold"
+        android:textColor="@color/Personalizado4"
+        android:textSize="12dp" />
+
+    <TextView
+        android:layout_width="64dp"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="0"
+        android:id="@+id/resumen_total_pagado"
+        android:textStyle="bold"
+        android:textColor="@color/Personalizado4"
+        android:textSize="12dp" />
+
+    <TextView
+        android:layout_width="64dp"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="0"
+        android:id="@+id/resumen_total_cobrado"
+        android:textStyle="bold"
+        android:textColor="@color/Personalizado4"
+        android:textSize="12dp" />
+
+</LinearLayout>

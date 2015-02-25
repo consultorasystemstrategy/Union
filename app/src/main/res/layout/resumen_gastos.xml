@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="GASTOS"
+        android:id="@+id/textView"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:typeface="monospace"
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="4dp" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="24dp"
+            android:id="@+id/textviewNombre"
+            android:textSize="14dp"
+            android:textStyle="bold|italic"
+            android:layout_weight="1"
+            android:gravity="left|center_vertical|center_horizontal"
+            android:textColor="@color/PersonalizadoSteve4" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="24dp"
+            android:text="Ruta"
+            android:id="@+id/textViewGastoRuta"
+            android:layout_weight="2"
+            android:gravity="left|center"
+            android:textColor="@color/PersonalizadoSteve4"
+            android:textSize="14dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="24dp"
+            android:text="Planta"
+            android:id="@+id/textViewGastoPlanta"
+            android:layout_weight="2"
+            android:gravity="left|center"
+            android:textColor="@color/PersonalizadoSteve4"
+            android:textSize="14dp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <ListView
+        android:layout_width="fill_parent"
+        android:layout_height="256dp"
+        android:id="@+id/listViewResumenGastos" />
+
+</LinearLayout>

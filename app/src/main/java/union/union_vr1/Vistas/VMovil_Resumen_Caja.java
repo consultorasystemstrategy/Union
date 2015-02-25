@@ -3,8 +3,10 @@ package union.union_vr1.Vistas;
 
 import android.app.TabActivity;
 import android.database.Cursor;
+import android.graphics.Typeface;
 import android.os.Bundle;
 
+import android.view.View;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TabHost;
@@ -12,6 +14,7 @@ import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -19,6 +22,7 @@ import java.util.GregorianCalendar;
 
 import union.union_vr1.R;
 import union.union_vr1.Sqlite.DbAdapter_Agente;
+import union.union_vr1.Sqlite.DbAdapter_Informe_Gastos;
 import union.union_vr1.Sqlite.DbAdapter_Resumen_Caja;
 import union.union_vr1.Sqlite.DbAdapter_Stock_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
@@ -32,6 +36,7 @@ public class VMovil_Resumen_Caja extends TabActivity {
     private DbAdapter_Stock_Agente dbHelper;
     private SimpleCursorAdapter dataAdapter;
     private DbAdapter_Resumen_Caja dbHelperRC;
+    private DbAdapter_Informe_Gastos dbAdapter_informe_gastos;
     private SimpleCursorAdapter dataAdapterRC;
     private DbGastos_Ingresos dbHelperGastosIngr;
     private DbAdapter_Agente dbAdapter_agente;
@@ -40,6 +45,35 @@ public class VMovil_Resumen_Caja extends TabActivity {
     private int idAgente;
     private String nombreAgente =  "Agente 001";
     private TextView textViewFecha, textViewLiquidacion, textViewAgente;
+    private View viewResumenTotal;
+    private TextView textViewTotalDescripcion;
+    private TextView textViewTotalN;
+    private TextView textViewTotalEmitido;
+    private TextView textViewTotalPagado;
+    private TextView textViewTotalCobrado;
+
+    private View viewResumenGastos;
+    private ListView listViewResumenGastos;
+    private TextView textViewResumenGastosTotalRuta;
+    private TextView textViewResumenGastosTotalPlanta;
+    private View viewlayoutFooterGastos;
+    private TextView textViewResumenGastoNombre;
+
+    private TextView textViewResumenIngresos;
+    private TextView textViewResumenGastos;
+    private TextView textViewResumenARendir;
+    private View viewResumen;
+
+
+
+    Double totalRuta = 0.0;
+    Double totalPlanta = 0.0;
+
+    int nTotal = 0;
+    Double emitidoTotal = 0.0;
+    Double pagadoTotal = 0.0;
+    Double cobradoTotal = 0.0;
+
 
 
     @Override
@@ -53,6 +87,8 @@ public class VMovil_Resumen_Caja extends TabActivity {
         dbAdapter_agente = new DbAdapter_Agente(this);
         dbAdapter_agente.open();
 
+        dbAdapter_informe_gastos = new DbAdapter_Informe_Gastos(this);
+        dbAdapter_informe_gastos.open();
 
 
 
@@ -181,6 +217,15 @@ public class VMovil_Resumen_Caja extends TabActivity {
 
         Cursor cursor = dbHelperGastosIngr.listarIngresosGastos(idLiquidacion);
 
+
+        viewResumenTotal = getLayoutInflater().inflate(R.layout.resumen_total, null);
+        textViewTotalDescripcion = (TextView) viewResumenTotal.findViewById(R.id.resumen_total_descripcion);
+        textViewTotalN = (TextView) viewResumenTotal.findViewById(R.id.resumen_total_n);
+        textViewTotalEmitido = (TextView) viewResumenTotal.findViewById(R.id.resumen_total_emitido);
+        textViewTotalPagado = (TextView) viewResumenTotal.findViewById(R.id.resumen_total_pagado);
+        textViewTotalCobrado = (TextView) viewResumenTotal.findViewById(R.id.resumen_total_cobrado);
+
+
         String[] columns = new String[]{
                 "comprobante",
                 "n",
@@ -203,8 +248,113 @@ public class VMovil_Resumen_Caja extends TabActivity {
                 columns,
                 to,
                 0);
+        Cursor cursorResumen = dataAdapterRC.getCursor();
+        cursorResumen.moveToFirst();
+
+
+        for (cursorResumen.moveToFirst(); !cursorResumen.isAfterLast(); cursorResumen.moveToNext()) {
+            int n = cursorResumen.getInt(cursorResumen.getColumnIndexOrThrow("n"));
+            Double emitido = cursorResumen.getDouble(cursorResumen.getColumnIndexOrThrow("emitidas"));
+            Double pagado = cursorResumen.getDouble(cursorResumen.getColumnIndexOrThrow("pagado"));
+            Double cobrado = cursorResumen.getDouble(cursorResumen.getColumnIndexOrThrow("cobrado"));
+            nTotal += n;
+            emitidoTotal += emitido;
+            pagadoTotal += pagado;
+            cobradoTotal += cobrado;
+
+        }
+
+        textViewTotalCobrado.setText("Total");
+        textViewTotalN.setText("" + nTotal);
+        textViewTotalEmitido.setText("S/" + emitidoTotal);
+        textViewTotalPagado.setText("S/" + pagadoTotal);
+        textViewTotalCobrado.setText("S/" + cobradoTotal);
+
+
         ListView listView = (ListView) findViewById(R.id.VRC_listarResumenCaja);
+        viewResumen = getLayoutInflater().inflate(R.layout.resumen,null);
+
+        textViewResumenIngresos = (TextView) viewResumen.findViewById(R.id.resumenIngresosTotales);
+        textViewResumenGastos = (TextView) viewResumen.findViewById(R.id.resumenGastosTotales);
+        textViewResumenARendir = (TextView) viewResumen.findViewById(R.id.resumenEfectivoARendir);
+
+        listView.addHeaderView(viewResumen);
+        listView.addHeaderView(getLayoutInflater().inflate(R.layout.resumen_informe_ingresos_cabecera,null));
+
+        listView.addFooterView(viewResumenTotal);
+
+        viewResumenGastos = getLayoutInflater().inflate(R.layout.resumen_gastos, null);
+
+        listViewResumenGastos = (ListView) viewResumenGastos.findViewById(R.id.listViewResumenGastos);
+
+
+
+
+        viewlayoutFooterGastos = getLayoutInflater().inflate(R.layout.resumen_informe_gastos, null);
+        listViewResumenGastos.addFooterView(viewlayoutFooterGastos);
+        textViewResumenGastoNombre      = (TextView) viewlayoutFooterGastos.findViewById(R.id.textviewNombre);
+        textViewResumenGastosTotalPlanta = (TextView) viewlayoutFooterGastos.findViewById(R.id.textViewGastoPlanta);
+        textViewResumenGastosTotalRuta = (TextView) viewlayoutFooterGastos.findViewById(R.id.textViewGastoRuta);
+
+
+
+
+
+        Cursor cursorGastos =dbAdapter_informe_gastos.resumenInformeGastos(getDatePhone());
+
+        String[] de = {
+                "tg_te_nom_tipo_gasto",
+                "RUTA",
+                "PLANTA"
+        };
+        int[] para = {
+                R.id.textviewNombre,
+                R.id.textViewGastoRuta,
+                R.id.textViewGastoPlanta
+
+        };
+
+        SimpleCursorAdapter simpleCursorAdapter = new SimpleCursorAdapter(
+                this,
+                R.layout.resumen_informe_gastos,
+                cursorGastos,
+                de,
+                para
+        );
+        listViewResumenGastos.setAdapter(simpleCursorAdapter);
+        Cursor cursorTotalGastos = cursorGastos;
+        cursorTotalGastos.moveToFirst();
+
+        for (cursorTotalGastos.moveToFirst(); !cursorTotalGastos.isAfterLast(); cursorTotalGastos.moveToNext()){
+            Double rutaGasto = cursorTotalGastos.getDouble(cursorTotalGastos.getColumnIndexOrThrow("RUTA"));
+            Double plantaGasto = cursorTotalGastos.getDouble(cursorTotalGastos.getColumnIndexOrThrow("PLANTA"));
+
+            totalRuta += rutaGasto;
+            totalPlanta += plantaGasto;
+        }
+        textViewResumenGastoNombre.setText("Total");
+        textViewResumenGastoNombre.setTypeface(null, Typeface.BOLD);
+
+        textViewResumenGastosTotalPlanta.setText("S/. " + totalPlanta);
+        textViewResumenGastosTotalPlanta.setTypeface(null, Typeface.BOLD);
+
+        textViewResumenGastosTotalRuta.setText("S/. " + totalRuta);
+        textViewResumenGastosTotalRuta.setTypeface(null, Typeface.BOLD);
+
+        //listViewResumenGastos.addFooterView(viewlayoutFooterGastos);
+
+        Double ingresosTotales = cobradoTotal + pagadoTotal;
+        Double gastosTotales = totalRuta;
+        Double aRendir = ingresosTotales-gastosTotales;
+        DecimalFormat df = new DecimalFormat("#.0");
+        textViewResumenIngresos.setText("S/. "+ingresosTotales);
+        textViewResumenGastos.setText("S/. "+gastosTotales);
+        textViewResumenARendir.setText("S/. "+df.format(aRendir));
+
+
         listView.setAdapter(dataAdapterRC);
+        listView.addFooterView(viewResumenGastos);
+
     }
     private String getDatePhone() {
         Calendar cal = new GregorianCalendar();

@@ -1028,7 +1028,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
     {
         Calendar cal = new GregorianCalendar();
         Date date = cal.getTime();
-        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         return df.format(date);
     }
 

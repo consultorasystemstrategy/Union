@@ -417,7 +417,7 @@ public class VMovil_Evento_Gasto extends Activity /*implements OnClickListener *
     {
         Calendar cal = new GregorianCalendar();
         Date date = cal.getTime();
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
         return df.format(date);
     }
 }
