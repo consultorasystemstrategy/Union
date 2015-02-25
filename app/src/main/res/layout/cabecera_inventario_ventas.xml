@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal">
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:id="@+id/VRC_TXproducto"
+                android:textStyle="bold"
+                android:textColor="@color/Personalizado4" />
+
+            <TextView
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Ini/Fin"
+                android:id="@+id/VRC_TXinicialFin"
+                android:textStyle="bold|italic"
+                android:textColor="@color/Personalizado4" />
+
+            <TextView
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Venta"
+                android:id="@+id/VRC_TXventa"
+                android:textStyle="bold|italic"
+                android:textColor="@color/Personalizado4" />
+
+            <TextView
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Dev"
+                android:id="@+id/VRC_TXdevol"
+                android:textStyle="bold|italic"
+                android:textColor="@color/Personalizado4" />
+
+            <TextView
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Can"
+                android:id="@+id/VRC_TXcanjes"
+                android:textStyle="bold|italic"
+                android:textColor="@color/Personalizado4" />
+        </TableRow>
+
+    </TableLayout>
+
+</LinearLayout>

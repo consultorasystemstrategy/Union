@@ -117,7 +117,7 @@ public class VMovil_Online_Pumovil extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.sincronizar_options, menu);
+        getMenuInflater().inflate(R.menu.menu_ir_offline, menu);
         return true;
     }
 
@@ -128,13 +128,6 @@ public class VMovil_Online_Pumovil extends Activity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         switch (id){
-
-            case R.id.buttonImport:
-                new ImportMain(mContext).execute();
-                break;
-            case R.id.buttonExportar:
-                new ExportMain(mContext).execute();
-                break;
             case R.id.buttonRedireccionarPrincipal:
                 Intent intent = new Intent(mContext, Login.class);
                 finish();

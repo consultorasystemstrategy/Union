@@ -99,7 +99,7 @@
         </activity>
         <activity
             android:name=".Vistas.VMovil_Online_Pumovil"
-            android:label="Sincronizar"
+            android:label="P. Unión"
             android:screenOrientation="portrait" >
 
             <intent-filter>

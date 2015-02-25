@@ -172,9 +172,9 @@ public class Login extends Activity implements OnClickListener{
         int id = item.getItemId();
         switch (id){
 
-            case R.id.buttonNewDay:
+            /*case R.id.buttonNewDay:
                 dbAdapter_agente.deleteAllAgentes();
-                break;
+                break;*/
             default:
                 //ON ITEM SELECTED DEFAULT
                 break;
