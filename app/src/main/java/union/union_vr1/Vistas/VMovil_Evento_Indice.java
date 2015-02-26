@@ -57,7 +57,6 @@ import union.union_vr1.Utils.MyApplication;
 public class VMovil_Evento_Indice extends Activity implements View.OnClickListener {
 
     private DbAdapter_Temp_Session session;
-    private Cursor cursor;
     private DbAdapter_Comprob_Cobro cCobro;
     private DbAdaptert_Evento_Establec dbHelper;
     private DbAdapter_Comprob_Venta_Detalle dbHelper2;
@@ -68,11 +67,7 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
     private DbAdapter_Stock_Agente dbHelper6;
     private DbAdapter_Precio dbHelper7;
     private DbAdapter_Histo_Comprob_Anterior dbHelper8;
-    private TextView titulo;
-    private String titulox;
-    private Button estado;
-    private String estadox;
-    private String valIdEstab;
+
     private Button mClient, mInfgas, mResume, mCarinv, mTrainv, mCobroTotal,  mNumeroEstablecimientos;
     private TextView mNombreRuta, mFecha;
     private VMovil_Evento_Indice mainActivity;
@@ -88,60 +83,6 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         session = new DbAdapter_Temp_Session(this);
         session.open();
 
-
-        /*
-        ArrayList<Bar> points = new ArrayList<Bar>();
-        Bar d = new Bar();
-        d.setColor(Color.parseColor("#049DBF"));
-        d.setName("Rentabilidad");
-        d.setValue(50);
-
-        Bar d2 = new Bar();
-        d2.setColor(Color.parseColor("#009D84"));
-        d2.setName("Devolución");
-        d2.setValue(40);
-
-        Bar d3 = new Bar();
-        d3.setColor(Color.parseColor("#FED94E"));
-        d3.setName("Costos de Distribución");
-        d3.setValue(60);
-
-
-        points.add(d);
-        points.add(d2);
-        points.add(d3);
-
-        BarGraph barGraph = (BarGraph)findViewById(R.id.graph);
-        barGraph.setBars(points);
-        barGraph.setUnit("%");
-
-        */
-
-        /*
-        if (!((MyApplication)getApplication()).isExport()||!((MyApplication)getApplication()).isImportado()){
-
-            if (conectadoWifi()||conectadoRedMovil()) {
-                new AlertDialog.Builder(mainActivity)
-                        .setTitle("Hemos detectado una Conexión a Internet")
-                        .setMessage("" +
-                                "¿Desea exportar los datos?")
-                        .setNegativeButton(android.R.string.no,null)
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                new ExportMain(mainActivity).execute();
-                                new ImportMain(mainActivity).execute();
-                            }
-                        }).create().show();
-
-                ((MyApplication)getApplication()).setExport(true);
-                ((MyApplication)getApplication()).setImportado(true);
-            }
-        }
-
-
-        ((MyApplication) this.getApplication()).setDisplayedHistorialComprobanteAnterior(false);
-
-        */
 
         boolean export = false;
         boolean importado = false;
@@ -187,10 +128,7 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
                             }
                         }).create().show();
 
-                /*
-                ((MyApplication)getApplication()).setExport(true);
-                ((MyApplication)getApplication()).setImportado(true);
-                */
+
                 session.deleteVariable(7);
                 session.deleteVariable(8);
                 session.createTempSession(7,1);
@@ -200,12 +138,7 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         }
 
 
-        //((MyApplication) this.getApplication()).setDisplayedHistorialComprobanteAnterior(false);
 
-        /*
-        session.deleteVariable(6);
-        session.createTempSession(6,0);
-*/
 
         dbHelper1 = new DbAdapter_Comprob_Venta(this);
         dbHelper1.open();
@@ -231,45 +164,19 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         dbAdapter_ruta_distribucion = new DbAdapter_Ruta_Distribucion(this);
         dbAdapter_ruta_distribucion.open();
 
-        //((MyApplication) this.getApplication()).setCuotasEstablecidas(false);
+
 
         session.deleteVariable(5);
         session.createTempSession(5,0);
 
 
 
-        //Agregando datos de prueba  cada vez que se inicia esta vista
 
-        /*
-        dbHelper.deleteAllEstablecs();
-        dbHelper.insertSomeEstablecs();
-
-
-        dbHelper1.deleteAllComprobVenta();
-        dbHelper1.insertSomeComprobVenta();
-        dbHelper2.deleteAllComprobVentaDetalle();
-        dbHelper3.deleteAllAgentes();
-        dbHelper3.insertSomeAgentes();
-
-        dbHelper4.insertSomeComprobCobros();
-        dbHelper4.deleteAllComprobCobros();
-        dbHelper4.insertSomeComprobCobros();
-
-        //dbHelper5.deleteAllHistoVentaDetalle();
-        //dbHelper5.insertSomeHistoVentaDetalle();
-        dbHelper6.deleteAllStockAgente();
-        dbHelper6.insertSomeStockAgente();
-        dbHelper7.deleteAllPrecio();
-        dbHelper7.insertSomePrecio();
-        dbHelper8.deleteAllHistoComprobAnterior();
-        dbHelper8.insertSomeHistoComprobAnterior();
-
-        */
         mClient = (Button) findViewById(R.id.VEI_BTNclient);
         mInfgas = (Button) findViewById(R.id.VEI_BTNinfgas);
         mResume = (Button) findViewById(R.id.VEI_BTNresume);
         mNombreRuta = (TextView) findViewById(R.id.textViewNombreRuta);
-        mNumeroEstablecimientos  = (Button) findViewById(R.id.buttonNumeroEstablecimiento);
+        mNumeroEstablecimientos  = (Button) findViewById(R.id.buttonNumeroEstablecimientos);
         mFecha = (TextView) findViewById(R.id.textViewFecha);
 
 
@@ -289,16 +196,14 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         mNumeroEstablecimientos.setText(""+numeroEstablecimientoxRuta);
         mFecha.setText(""+getDateFull().substring(0, 1).toUpperCase() + getDateFull().substring(1));
 
-        //mCarinv = (Button) findViewById(R.id.VEI_BTNcarinv);
-        //mTrainv = (Button) findViewById(R.id.VEI_BTNtrainv);
         mCobroTotal = (Button) findViewById(R.id.VEI_BTNcobrarTodo);
         mClient.setOnClickListener(this);
         mInfgas.setOnClickListener(this);
         mResume.setOnClickListener(this);
-        //mCarinv.setOnClickListener(this);
-        //mTrainv.setOnClickListener(this);
+
         mCobroTotal.setOnClickListener(this);
         cCobro = new DbAdapter_Comprob_Cobro(this);
+        mNumeroEstablecimientos.setOnClickListener(this);
         cCobro.open();
         AsignarColor(mCobroTotal);
 
@@ -418,18 +323,14 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
                 Intent ir = new Intent(this, VMovil_Resumen_Caja.class);
                 startActivity(ir);
                 break;
-           /* case R.id.VEI_BTNcarinv:
-                Intent is = new Intent(this, DbManager_Evento_Establec_GET.class);
-                startActivity(is);
-                break;
-            case R.id.VEI_BTNtrainv:
-                Intent ip = new Intent(this, DbManager_Evento_Establec_POST.class);
-                startActivity(ip);
-                break;*/
+
             case R.id.VEI_BTNcobrarTodo:
                 Intent cT = new Intent(this, VMovil_Cobros_Totales.class);
                 startActivity(cT);
-
+                break;
+            case R.id.buttonNumeroEstablecimientos:
+                Intent ine = new Intent(this, VMovil_Menu_Establec.class);
+                startActivity(ine);
                 break;
             default:
                 break;

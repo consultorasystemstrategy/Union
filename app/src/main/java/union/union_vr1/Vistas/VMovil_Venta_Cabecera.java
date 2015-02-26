@@ -210,9 +210,6 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
         dbHelper_Evento_Establecimiento.open();
 
 
-        //idEstablecimiento=((MyApplication)this.getApplication()).getIdEstablecimiento();
-        //id_agente_venta= ((MyApplication) this.getApplication()).getIdAgente();
-
         idEstablecimiento = session.fetchVarible(2);
 
         id_agente_venta = session.fetchVarible(1);
@@ -263,7 +260,6 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
         buttonAgregar.setOnClickListener(this);
         listView = (ListView) findViewById(R.id.VC_listView);
 
-        //isEstablecidasCuotas = ((MyApplication)this.getApplication()).isCuotasEstablecidas();
         switch (session.fetchVarible(5)){
             case 0:
                 isEstablecidasCuotas = false;
@@ -293,7 +289,6 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
 
         }
 
-        //boolean isDisplayed = ((MyApplication)this.getApplication()).isDisplayedHistorialComprobanteAnterior();
         boolean isDisplayed= false;
         switch (session.fetchVarible(6)){
             case 0:

@@ -94,18 +94,4 @@ public class DbAdapter_Resumen_Caja {
         return mCursor;
     }
 
-
-
-    public void insertSomeResumenCaja(){
-/*
-        createResumenCaja("Boletas Emitidas",0,0.0f,0.0f,0.0f,"");
-        createResumenCaja("Facturas Emitidas",0,0.0f,0.0f,0.0f);
-        createResumenCaja("Notas de Credito Emitidas",0,0.0f,0.0f,0.0f);
-        createResumenCaja("Facturas Cobradas",0,0.0f,0.0f,0.0f);
-        createResumenCaja("Boletas Cobradas",0,0.0f,0.0f,0.0f);
-        createResumenCaja("Boletas Anuladas",0,0.0f,0.0f,0.0f);
-        createResumenCaja("Facturas Anuladas",0,0.0f,0.0f,0.0f);*/
-
-    }
-
 }

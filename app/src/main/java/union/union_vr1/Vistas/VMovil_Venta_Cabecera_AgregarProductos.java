@@ -104,16 +104,7 @@ public class VMovil_Venta_Cabecera_AgregarProductos extends Activity implements 
         buttonAgregarProductos.setOnClickListener(this);
         buttonScan.setOnClickListener(this);
 
-/*
-        if (((MyApplication)this.getApplication()).getIdEstablecimiento()==0){
 
-            Cursor cursorTempScanner = dbAdapter_temp_barcode_scanner.fetchAll();
-            idEstablecimiento = cursorTempScanner.getInt(cursorTempScanner.getColumnIndexOrThrow(dbAdapter_temp_barcode_scanner.temp_id_establecimiento));
-        }else{
-            idEstablecimiento = ((MyApplication)this.getApplication()).getIdEstablecimiento();
-        }
-
-*/
 
         Cursor cursorTempScanner = dbAdapter_temp_barcode_scanner.fetchAll();
         cursorTempScanner.moveToFirst();

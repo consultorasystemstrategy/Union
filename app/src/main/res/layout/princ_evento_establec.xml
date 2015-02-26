@@ -282,39 +282,6 @@
                     </LinearLayout>
             </LinearLayout>
 
-                <!--
-                <LinearLayout
-                        android:orientation="horizontal"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/linearLayout"
-                        android:layout_marginTop="32dp">
-
-                        <Button
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Atendido"
-                            android:id="@+id/VEE_BTNEstadoAtendido"
-                            android:layout_centerHorizontal="true"
-                            android:layout_weight="1" />
-
-                        <Button
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:text="No atendido"
-                            android:id="@+id/VEE_BTNEstadoNoAtendido"
-                            android:layout_weight="1"
-                            android:textStyle="bold" />
-
-                        <Button
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Pendiente"
-                            android:id="@+id/VEE_BTNEstadoPendiente"
-                            android:layout_weight="1"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-                    -->
 
 
             </LinearLayout>

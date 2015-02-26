@@ -122,14 +122,6 @@ public class VMovil_Resumen_Caja extends TabActivity {
 
         dbHelperRC = new DbAdapter_Resumen_Caja(this);
         dbHelperRC.open();
-        /*
-        dbHelperRC.deleteAllResumenCaja();
-        dbHelperRC.insertSomeResumenCaja();
-
-
-        dbHelper.deleteAllStockAgente();
-        dbHelper.insertSomeStockAgente();
-*/
 
         TabSpec spec = tabHost.newTabSpec("Tab1");
         spec.setContent(R.id.VRC_THingresos);

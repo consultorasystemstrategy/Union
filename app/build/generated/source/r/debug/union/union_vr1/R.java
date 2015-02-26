@@ -253,7 +253,7 @@ public final class R {
         public static final int button4=0x7f0b00c6;
         public static final int buttonExportar=0x7f0b011a;
         public static final int buttonImport=0x7f0b0119;
-        public static final int buttonNumeroEstablecimiento=0x7f0b00c2;
+        public static final int buttonNumeroEstablecimientos=0x7f0b00c2;
         public static final int buttonRedireccionarPrincipal=0x7f0b0113;
         public static final int buttonSincronizar=0x7f0b0008;
         public static final int button_mostrar_guias=0x7f0b000f;

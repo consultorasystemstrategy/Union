@@ -82,61 +82,23 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
         mManten = (Button) findViewById(R.id.VEE_BTNmanten);
         estadoAtencion = (ImageButton) findViewById(R.id.imageButtonEstadoAtencion);
 
-        /*mReport = (Button) findViewById(R.id.VEE_BTNreport);
-        mEstadoAtendido = (Button) findViewById(R.id.VEE_BTNEstadoAtendido);
-        mEstadoNoAtendido = (Button) findViewById(R.id.VEE_BTNEstadoNoAtendido);
-        mEstadoPendiente = (Button) findViewById(R.id.VEE_BTNEstadoPendiente);*/
 
         mCobros.setOnClickListener(this);
         mCanDev.setOnClickListener(this);
         mVentas.setOnClickListener(this);
         mManten.setOnClickListener(this);
         estadoAtencion.setOnClickListener(this);
-        //mReport.setOnClickListener(this);
-        /*
-        mEstadoAtendido.setOnClickListener(this);
-        mEstadoNoAtendido.setOnClickListener(this);
-        mEstadoPendiente.setOnClickListener(this);
-*/
         session.deleteVariable(6);
         session.createTempSession(6,0);
 
         idLiquidacion = session.fetchVarible(3);
 
 
-        Bundle bundle = getIntent().getExtras();
-
-
-        /*
-        valIdEstab = bundle.getString("idEstab");
-        idAgente = bundle.getInt("idAgente");
-        */
-
 
         valIdEstab = ""+session.fetchVarible(2);
         idAgente  = session.fetchVarible(1);
 
 
-
-
-
-       // valIdEstab="1";
-       // idAgente=1;
-        //titulos(valIdEstab);
-
-
-
-        //titulo = (TextView) findViewById(R.id.VEE_TVWtitulo);
-
-
-
-
-
-
-
-        //titulo.setText(titulox);
-
-        //.-------------------------------------
         dbHelper44 = new DbAdapter_Comprob_Cobro(this);
         dbHelper44.open();
         int idEstab = Integer.parseInt(valIdEstab);
@@ -290,40 +252,6 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
 
         return formatteDate;
     }
-//-------------------------------------------------------------------------------------------------------------------------
-
-
-
-    /*
-    public void titulos(String ids) {
-        cursor = dbHelper.fetchEstablecsById(ids);
-        if (cursor.moveToFirst()) {
-            do {
-                titulox =
-                        "Cliente : " + cursor.getString(3) +
-                                "\nNombre  : " + cursor.getString(4) +
-                                "\nOrden   : " + cursor.getString(5);
-                if (cursor.getInt(6) == 1) {
-                    estadox = "POR ATENDER";
-                    valEstado = 1;
-                }
-                if (cursor.getInt(6) == 2) {
-                    estadox = "ATENDIDO";
-                    valEstado = 2;
-                }
-                if (cursor.getInt(6) == 3) {
-                    estadox = "NO ATENDIDO";
-                    valEstado = 3;
-                }
-                if (cursor.getInt(6) == 4) {
-                    estadox = "PENDIENTE";
-                    valEstado = 4;
-                }
-
-            } while (cursor.moveToNext());
-        }
-    }
-    */
 
     private void eleccion(final String idEstabl) {
         //Intent i = new Intent(this, VMovil_Evento_Establec.class);
@@ -381,15 +309,7 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
                 idd.putExtra("idEstabX", valIdEstab);
                 startActivity(idd);
                 break;
-            /*
-            case R.id.VEE_BTNreport:
-                Intent is = new Intent(this, VMovil_Canc_Histo.class);
-                is.putExtra("idEstabX", valIdEstab);
-                startActivity(is);
-                //Toast.makeText(getApplicationContext(),
-                //        "1", Toast.LENGTH_SHORT).show();
-                break;
-                */
+
             case R.id.imageButtonEstadoAtencion:
                 new AlertDialog.Builder(this)
                         .setTitle("Estado Atención")
@@ -419,24 +339,7 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
                             }
                         }).create().show();
                 break;
-            /*
-            case R.id.VEE_BTNEstadoAtendido:
 
-                dbHelper.updateEstadoEstablecs(valIdEstab, 2);
-                Intent intent = new Intent(this, VMovil_Menu_Establec.class);
-                startActivity(intent);
-                break;
-            case R.id.VEE_BTNEstadoNoAtendido:
-                eleccion(valIdEstab);
-                break;
-            case R.id.VEE_BTNEstadoPendiente:
-
-                dbHelper.updateEstadoEstablecs(valIdEstab, 4);
-                //titulos(valIdEstab);
-                Intent intent2 = new Intent(this, VMovil_Menu_Establec.class);
-                startActivity(intent2);
-                break;
-                */
             default:
                 break;
         }

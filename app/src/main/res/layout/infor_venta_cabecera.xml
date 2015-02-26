@@ -11,16 +11,6 @@
         android:layout_height="wrap_content"
         android:id="@+id/VC_LayoutParent">
 
-        <!--
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Cod."
-            android:id="@+id/VC_cod"
-            android:layout_weight="1"
-            android:textSize="8dp"
-            android:textStyle="bold|italic" />
--->
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
@@ -28,25 +18,6 @@
             android:id="@+id/VC_producto"
             android:layout_weight="1"
             android:gravity="left|center_vertical|center" />
-<!--
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="P/A"
-            android:id="@+id/VC_p_a"
-            android:textSize="8dp"
-            android:textStyle="bold|italic"
-            android:layout_weight="1" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Dev."
-            android:id="@+id/VC_dev"
-            android:layout_weight="1"
-            android:textSize="8dp"
-            android:textStyle="bold|italic" />
--->
         <EditText
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"

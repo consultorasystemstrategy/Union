@@ -29,16 +29,6 @@ public class VMovil_Canc_Histo extends Activity {
     private DbAdapter_Histo_Venta_Detalle dbHelper;
     private SimpleCursorAdapter dataAdapter;
     //private int cant_ope;
-    public final String[] items01 = {"1"};
-    public final String[] items02 = {"1", "2"};
-    public final String[] items03 = {"1", "2", "3"};
-    public final String[] items04 = {"1", "2", "3", "4"};
-    public final String[] items05 = {"1", "2", "3", "4", "5"};
-    public final String[] items06 = {"1", "2", "3", "4", "5", "6"};
-    public final String[] items07 = {"1", "2", "3", "4", "5", "6", "7"};
-    public final String[] items08 = {"1", "2", "3", "4", "5", "6", "7", "8"};
-    public final String[] items09 = {"1", "2", "3", "4", "5", "6", "7", "8", "9"};
-    public final String[] items10 = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};
     public String[] items = new String[20];
     public int tope;
     public int cate;

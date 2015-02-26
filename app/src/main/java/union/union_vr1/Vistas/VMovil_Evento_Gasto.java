@@ -47,27 +47,7 @@ public class VMovil_Evento_Gasto extends Activity /*implements OnClickListener *
     private String[] TipoGasto = new String[20];
     private View header;
 
-    /*
-    private Cursor cursor, cursorx, cursory;
-    private SimpleCursorAdapter dataAdapter;
-    private Spinner spinner;
-    private DbAdapter_Informe_Gastos dbHelper;
-    private DbAdapter_Tipo_Gasto dbHelperx;
-    private DbAdapter_Agente dbHelpery;
-    private Button mRecalcuz, mActualiz, mCancelar;
-    private EditText mSPNgasto;
-    private double valbaimp, valimpue, valtotal;
-    private String estabX, idcomX, tipdoX, detcoX, totalX;
-    private double valCredito;
 
-    private int pase = 0;
-    private String TipoDocS;
-    private double valtotalp;
-    private String fechaCobro;
-    private String[] TipGasto = new String[20];
-    private int valIdCredito = 0;
-    private int idAgente;
-    */
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -79,14 +59,6 @@ public class VMovil_Evento_Gasto extends Activity /*implements OnClickListener *
         dbHelperInformeGasto.open();
         dbHelperTipoGasto = new DbAdapter_Tipo_Gasto(this);
         dbHelperTipoGasto.open();
-
-        /*
-        dbHelperTipoGasto.deleteAllTipoGastos();
-        dbHelperInformeGasto.deleteAllInformeGastos();
-        dbHelperTipoGasto.insertSomeTipoGastos();
-        dbHelperInformeGasto.insertSomeInformeGastos();
-
-        */
 
 
         spinnerTipoGasto = (Spinner) findViewById(R.id.spinner_VEG_tipoGasto);
@@ -357,10 +329,7 @@ public class VMovil_Evento_Gasto extends Activity /*implements OnClickListener *
 
         displayListViewVEG();
         Toast.makeText(getApplicationContext(), "Registro insertado satisfactoriamente con id : " + idRegistroGastoInsertado, Toast.LENGTH_SHORT).show();
-
-        //Toast.makeText(getApplicationContext(),
-        //        "idTipoGAsto : " + positionTipoGasto + ", idProcedenciaGasto : " + positionProcedenciaGasto + ", idTipoDocumento"+positionTipoDocumento + ", total : "+total+ ", referencia : " +referencia+", nomobreDocumento : "+nombreDocumento, Toast.LENGTH_SHORT).show();
-    }
+}
 
     private enum TipoDocumento {
         factura, ficha, boleta;
@@ -377,7 +346,7 @@ public class VMovil_Evento_Gasto extends Activity /*implements OnClickListener *
     private void displayListViewVEG() {
 
 
-        Cursor cursor = dbHelperInformeGasto.fetchAllInformeGastos();
+        Cursor cursor = dbHelperInformeGasto.fetchAllInformeGastos(getDatePhone());
         cursor.moveToFirst();
 
         // The desired columns to be bound
@@ -417,7 +386,7 @@ public class VMovil_Evento_Gasto extends Activity /*implements OnClickListener *
     {
         Calendar cal = new GregorianCalendar();
         Date date = cal.getTime();
-        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         return df.format(date);
     }
 }

@@ -316,7 +316,9 @@ public class ExportMain extends AsyncTask<String, String, String> {
                             cursorComprobanteVentaDetalle.getInt(cursorComprobanteVentaDetalle.getColumnIndexOrThrow(dbAdapter_comprob_venta_detalle.CD_valor_unidad))
                             );
 
-                    Log.d("SUCCESFULL EXPORT", ""+isSuccesfulExport(jsonObjectSuccesfull));
+                    Log.d("SUCCESFULL EXPORT CVD", ""+isSuccesfulExport(jsonObjectSuccesfull));
+                    Log.d("EXPORT CVD MESSAGE ", ""+jsonObjectSuccesfull.toString());
+
                     if (isSuccesfulExport(jsonObjectSuccesfull)){
                         listIdComprobanteVentaDetalle.add("" + cursorComprobanteVentaDetalle.getInt(cursorComprobanteVentaDetalle.getColumnIndexOrThrow(dbAdapter_comprob_venta_detalle.CD_comp_detalle)));
                     }
@@ -370,7 +372,9 @@ public class ExportMain extends AsyncTask<String, String, String> {
                             cursorInformeGastos.getInt(cursorInformeGastos.getColumnIndexOrThrow(dbAdapter_informe_gastos.GA_id_proced_gasto))
                             );
 
-                    Log.d("SUCCESFULL EXPORT", ""+isSuccesfulExport(jsonObjectSuccesfull));
+                    Log.d("SUCCESFULL EXPORT GASTOS ", ""+isSuccesfulExport(jsonObjectSuccesfull));
+                    Log.d("SUCCESFULL EXPORT GASTOS", ""+jsonObjectSuccesfull.toString());
+
                     if (isSuccesfulExport(jsonObjectSuccesfull)){
                         listIdInfomeGastos.add("" + cursorInformeGastos.getInt(cursorInformeGastos.getColumnIndexOrThrow(dbAdapter_informe_gastos.GA_id_gasto)));
                     }
@@ -517,6 +521,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
 
         }else {
             Log.d("EXPORT HVD", "TODOS EL HISTORIAL DE VENTA DETALLE CREADO HA SIDO EXPORTADO");
+
         }
 
 

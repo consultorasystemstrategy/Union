@@ -54,12 +54,7 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity {
         dbHelper_Stock.open();
         dbHelper_CanDev = new DbAdapter_Canjes_Devoluciones(getApplication());
         dbHelper_CanDev.open();
-        //------------------------------------------------------
-        //DbAdaptert_Evento_Establec evenEsta = new DbAdaptert_Evento_Establec(this);
-        //evenEsta.open();
-        //evenEsta.deleteAllEstablecs();
-        //evenEsta.insertSomeEstablecs();
-        //--------------------------------------------------------
+
 
         Bundle idE = getIntent().getExtras();
         establec = idE.getString("idEstabX");

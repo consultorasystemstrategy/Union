@@ -26,7 +26,7 @@ import java.util.Map;
  * Created by Usuario on 19/01/2015.
  */
 public class StockAgenteRestApi {
-    private final String urlString = "http://192.168.0.112/Restfull/StockAgente.ashx";
+    private final String urlString = "http://192.168.0.158/RestFull/StockAgente.ashx";
 
     private static String convertStreamToUTF8String(InputStream stream) throws IOException {
         String result = "";

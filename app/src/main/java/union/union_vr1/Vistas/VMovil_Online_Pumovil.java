@@ -37,60 +37,9 @@ public class VMovil_Online_Pumovil extends Activity {
 
         mContext = this;
 
-        //((MyApplication)getApplication()).setMainActivity(this);
 
         showWebPU();
-/*
-        DbAdapter_Stock_Agente dbHelper_Stock;
-        DbAdapter_Histo_Venta_Detalle dbHelper_Hi_De;
-        dbHelper_Stock = new DbAdapter_Stock_Agente(this);
-        dbHelper_Stock.open();
-        dbHelper_Stock.deleteAllStockAgente();
-        dbHelper_Stock.insertSomeStockAgente();
-        //--------------------------------------------------------
-        dbHelper_Hi_De = new DbAdapter_Histo_Venta_Detalle(this);
-        dbHelper_Hi_De.open();
-        dbHelper_Hi_De.deleteAllHistoVentaDetalle();
-        dbHelper_Hi_De.insertSomeHistoVentaDetalle();
 
-        DbAdapter_Precio adapprecio = new DbAdapter_Precio(this);
-        adapprecio.open();
-        adapprecio.deleteAllPrecio();
-        adapprecio.insertSomePrecio();
-*/
-        //showWebPU();
-
-        /*
-        final Button button = (Button) findViewById(R.id.buttonImport);
-        final Button buttonExport = (Button) findViewById(R.id.buttonExportar);
-        final Button buttonTemp = (Button) findViewById(R.id.buttonTemp);
-
-        button.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-
-                FragmentManager manager = getFragmentManager();
-                DialogSincronizarOffLine dialogConfirm = new DialogSincronizarOffLine();
-                dialogConfirm.show(manager, "DialogSincronizarOffLine");
-
-
-                new ImportMain(mContext).execute();
-            }
-        });
-        buttonExport.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new ExportMain(mContext).execute();
-            }
-        });
-        buttonTemp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(mContext, VMovil_Evento_Indice.class);
-                finish();
-                startActivity(intent);
-            }
-        });
-*/
     }
 
     public void showWebPU(){

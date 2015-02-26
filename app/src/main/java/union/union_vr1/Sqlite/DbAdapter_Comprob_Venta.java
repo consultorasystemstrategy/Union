@@ -328,15 +328,4 @@ public class DbAdapter_Comprob_Venta {
         return mCursor;
     }
 
-/*
-    public void insertSomeComprobVenta() {
-
-        createComprobVenta( 1, 1, 1, 1, "0001", "1A", 1, 10, 0, 10, "14/01/2015", "08:10:00", 1, 0, 1);
-        createComprobVenta( 2, 1, 1, 1, "0002", "2A", 2, 20, 0, 20, "14/01/2015", "08:10:00", 0, 0, 1);
-        createComprobVenta( 3, 1, 1, 1, "0003", "3A", 3, 30, 0, 30, "14/01/2015", "08:10:00", 1, 0, 1);
-        createComprobVenta( 4, 2, 2, 1, "0004", "4A", 4, 10, 0, 40, "14/01/2015", "08:10:00", 1, 0, 1);
-        createComprobVenta( 5, 2, 2, 1, "0005", "5A", 5, 10, 0, 50, "14/01/2015", "08:10:00", 0, 0, 1);
-
-    }*/
-
 }

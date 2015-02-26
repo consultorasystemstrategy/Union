@@ -137,7 +137,7 @@ public class DbAdapter_Informe_Gastos {
         return mCursor;
     }
 
-    public Cursor fetchAllInformeGastos() {
+    public Cursor fetchAllInformeGastos(String fecha) {
 
         /*Cursor mCursor = mDb.query(SQLITE_TABLE_Informe_Gastos, new String[] {GA_id_gasto,GA_id_tipo_gasto,
                         GA_nom_tipo_gasto, GA_subtotal, GA_igv, GA_total, GA_fecha, GA_referencia},
@@ -145,6 +145,7 @@ public class DbAdapter_Informe_Gastos {
         */
         Cursor mCursor = mDb.rawQuery("SELECT m_informe_gastos._id, m_tipo_gasto.tg_te_nom_tipo_gasto,m_informe_gastos.ga_re_total, m_informe_gastos.ga_re_subtotal, m_informe_gastos.ga_re_igv,m_informe_gastos.ga_referencia FROM m_informe_gastos, m_tipo_gasto " +
                 "WHERE m_informe_gastos.ga_in_id_tipo_gasto = m_tipo_gasto.tg_in_id_tgasto " +
+                "AND ga_te_fecha LIKE '%"+fecha+"%' " +
                 " ORDER BY m_informe_gastos._id DESC ",null);
 
         if (mCursor != null) {
@@ -154,10 +155,7 @@ public class DbAdapter_Informe_Gastos {
     }
     public Cursor resumenInformeGastos(String fecha) {
 
-        /*Cursor mCursor = mDb.query(SQLITE_TABLE_Informe_Gastos, new String[] {GA_id_gasto,GA_id_tipo_gasto,
-                        GA_nom_tipo_gasto, GA_subtotal, GA_igv, GA_total, GA_fecha, GA_referencia},
-                null, null, null, null, GA_id_gasto+" DESC");
-        */
+
         Cursor mCursor = mDb.rawQuery("SELECT ig._id, tg_te_nom_tipo_gasto, \n" +
                 "\tROUND(SUM(CASE WHEN ga_in_id_proced_gasto = '2'  THEN ga_re_total END),1) AS RUTA,\n" +
                 "\tROUND(SUM(CASE WHEN ga_in_id_proced_gasto = '1' THEN  ga_re_total END),1) AS PLANTA \n" +
@@ -196,10 +194,4 @@ public class DbAdapter_Informe_Gastos {
 
         Log.d("REGISTROS ACTUALIZADO ", ""+cantidadRegistros);
     }
-/*
-    public void insertSomeInformeGastos() {
-        createInformeGastos(1, 1, 1, "COMBUSTIBLE", 10.5, 1.0, 11.5, "2014-11-12", "08:10:00", 1,"A001",  1);
-        createInformeGastos(2, 2, 2, "COMIDA", 20.5, 2.0, 22.5, "2014-11-12", "08:10:00", 1,"A002", 1);
-    }
-*/
 }

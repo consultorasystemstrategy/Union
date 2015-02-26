@@ -230,15 +230,4 @@ public class DbAdapter_Comprob_Venta_Detalle {
         return mCursor;
     }
 
-
-    public void insertSomeComprobVentaDetalle() {
-
-        createComprobVentaDetalle( 1, 1, "PAN", 1, 2.0, 2.0, 1, "0/0", "0", 10);
-        createComprobVentaDetalle( 2, 2, "AGUA", 1, 1.0, 1.0, 2, "0/0", "0", 20);
-        createComprobVentaDetalle( 3, 1, "PAN", 1, 2.0, 2.0, 3, "0/0", "0", 30);
-        createComprobVentaDetalle( 4, 2, "AGUA", 1, 1.0, 1.0, 4, "0/0", "0", 40);
-        createComprobVentaDetalle( 5, 2, "AGUA", 1, 1.0, 1.0, 5, "0/0", "0", 50);
-
-    }
-
 }

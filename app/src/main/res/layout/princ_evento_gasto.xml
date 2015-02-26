@@ -82,47 +82,6 @@
                     android:layout_marginLeft="32dp"
                     android:layout_marginRight="32dp" />
 
-                <!--
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Tipo de Gasto"
-                    android:id="@+id/VEG_textViewIdTipoGasto"
-                    android:singleLine="false"
-                    android:layout_alignParentLeft="true"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/VEG_textViewTotal"
-                    android:layout_below="@+id/spinner_VEG_tipoGasto"
-                    android:layout_alignParentLeft="true"
-                    android:text="Procedencia de Gasto" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Tipo de Documento"
-                    android:id="@+id/VEG_textViewSubtotal"
-                    android:layout_below="@+id/spinner_VEG_procedenciaGasto"
-                    android:layout_alignParentLeft="true"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Importe "
-                    android:id="@+id/textView4"
-                    android:layout_below="@+id/spinner_VEG_tipoDocumento"
-                    android:layout_alignParentLeft="true"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Referencia"
-                    android:id="@+id/VEG_textViewIgv"
-                    android:layout_below="@+id/editText_VEG_total"
-                    android:layout_alignParentLeft="true" />
-                    -->
 
             </LinearLayout>
 

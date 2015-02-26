@@ -10,12 +10,7 @@
     android:orientation="vertical"
     android:background="@color/Blanco">
 
-    <!--
-    <Button
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="Sincronizar"
-        android:id="@+id/button2" />-->
+
 
     <ScrollView
         android:layout_width="fill_parent"
