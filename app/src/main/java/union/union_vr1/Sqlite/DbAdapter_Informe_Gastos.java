@@ -24,13 +24,10 @@ public class DbAdapter_Informe_Gastos {
     public static final String GA_estado = "ga_int_estado";
     public static final String GA_referencia = "ga_referencia";
     public static final String GA_id_agente = "ga_in_id_agente";
-
     public static final String TAG = "Informe_Gastos";
     private DbHelper mDbHelper;
     private SQLiteDatabase mDb;
 
-    //private static final int DATABASE_VERSION = 1;
-    //private static final String DATABASE_NAME = "ProdUnion.sqlite";
     private static final String SQLITE_TABLE_Informe_Gastos = "m_informe_gastos";
     private final Context mCtx;
 

@@ -38,8 +38,6 @@ public class CursorAdapter_Facturas_Canjes_Dev extends CursorAdapter {
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
-
-
         TextView textViewTitulo = (TextView) view.findViewById(R.id.textViewListaTitulo);
         TextView textViewSubtitulo = (TextView) view.findViewById(R.id.textViewListaSubtitulo);
         TextView textViewComment = (TextView) view.findViewById(R.id.textViewListaComment);

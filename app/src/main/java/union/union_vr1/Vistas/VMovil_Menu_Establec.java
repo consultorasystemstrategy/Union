@@ -103,7 +103,33 @@ public class VMovil_Menu_Establec extends Activity {
 
         Cursor cursor = dbHelper.listarEstablecimientos(idLiquidacion);
 
+        /*
+        // The desired columns to be bound
+        String[] columns = new String[] {
+                DbAdaptert_Evento_Establec.EE_id_establec,
+                DbAdaptert_Evento_Establec.EE_nom_establec,
+                DbAdaptert_Evento_Establec.EE_nom_cliente,
+                DbAdaptert_Evento_Establec.EE_doc_cliente
+        };
 
+        // the XML defined views which the data will be bound to
+        int[] to = new int[] {
+                R.id.VME_codigo,
+                R.id.VME_establec,
+                R.id.VME_nombre,
+                R.id.VME_docum,
+        };
+
+        // create the adapter using the cursor pointing to the desired data
+        //as well as the layout information
+        dataAdapter = new SimpleCursorAdapter(
+                this, R.layout.infor_menu_establec,
+                cursor,
+                columns,
+                to,
+                0);
+
+*/
         cursorAdapterEstablecimientoColor = new CursorAdapterEstablecimientoColor(this, cursor);
 
 
@@ -111,6 +137,21 @@ public class VMovil_Menu_Establec extends Activity {
         listView.setAdapter(cursorAdapterEstablecimientoColor);
 
 
+        // Assign adapter to ListView
+
+        //bindView();
+        //View v = listView.getSelectedView();
+        //v.setBackgroundColor(Color.BLUE);
+        //listView.findViewById(0).setBackgroundColor(Color.BLUE);
+        //v0.setBackgroundColor(Color.BLUE);
+        //View v1 = listView.findViewById(0);
+        //v1.setBackgroundColor(Color.GREEN);
+        //View v2 = listView.findViewById(0);
+        //v2.setBackgroundColor(Color.RED);
+        //View v3 = listView.findViewById(0);
+        //v3.setBackgroundColor(Color.YELLOW);
+        //View v4 = listView.getSelectedView();
+        //v4.setBackgroundColor(Color.BLUE);
 
         for (int i = 0; i < listView.getCount(); i++) {
             final View row = listView.getAdapter().getView(i, null, null);
@@ -132,13 +173,24 @@ public class VMovil_Menu_Establec extends Activity {
 
                 int id_agente = cursor.getInt(cursor.getColumnIndexOrThrow(DbAdaptert_Evento_Establec.EE_id_agente));
 
-
+                //if(idEstEst == 1){
+                //    view.setBackgroundColor(Color.BLUE);
+                //}
+                //if(idEstEst == 2){
+                //    view.setBackgroundColor(Color.GREEN);
+                //}
+                //if(idEstEst == 3){
+                //    view.setBackgroundColor(Color.RED);
+                //}
+                //if(idEstEst == 4){
+                //    view.setBackgroundColor(Color.YELLOW);
+                //}
 
 
                 Toast.makeText(getApplicationContext(),
                         idEstablec + "Aqui po" + id_agente, Toast.LENGTH_SHORT).show();
                 eleccion(idEstablec, id_agente);
-
+                //listView.setBackgroundColor(Color.GREEN);
 
             }
         });

@@ -43,14 +43,9 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
     private Cursor cursor;
     private DbAdaptert_Evento_Establec dbHelper;
     private DbAdapter_Comprob_Cobro dbHelper44;
-    private TextView titulo;
-    private String titulox;
-    private Button estado;
-    private String estadox;
-    private int valEstado;
     private String valIdEstab;
     private int idAgente;
-    private Button mCobros, mCanDev, mVentas, mManten, mReport, mEstadoAtendido, mEstadoNoAtendido, mEstadoPendiente;
+    private Button mCobros, mCanDev, mVentas, mManten;
     private ImageButton estadoAtencion;
     private VMovil_Evento_Establec mainActivity;
     private int idLiquidacion;

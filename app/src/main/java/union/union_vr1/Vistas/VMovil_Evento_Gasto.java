@@ -346,7 +346,7 @@ public class VMovil_Evento_Gasto extends Activity /*implements OnClickListener *
     private void displayListViewVEG() {
 
 
-        Cursor cursor = dbHelperInformeGasto.fetchAllInformeGastos(getDatePhone());
+        Cursor cursor = dbHelperInformeGasto.fetchAllInformeGastos(getDayPhone());
         cursor.moveToFirst();
 
         // The desired columns to be bound
@@ -386,7 +386,18 @@ public class VMovil_Evento_Gasto extends Activity /*implements OnClickListener *
     {
         Calendar cal = new GregorianCalendar();
         Date date = cal.getTime();
-        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         return df.format(date);
     }
+
+    public String getDayPhone()
+    {
+        Calendar cal = new GregorianCalendar();
+        Date date = cal.getTime();
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        return df.format(date);
+    }
+
+
+
 }

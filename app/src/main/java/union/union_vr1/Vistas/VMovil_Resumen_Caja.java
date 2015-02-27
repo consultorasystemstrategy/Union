@@ -298,7 +298,7 @@ public class VMovil_Resumen_Caja extends TabActivity {
 
 
 
-        Cursor cursorGastos =dbAdapter_informe_gastos.resumenInformeGastos(getDatePhone());
+        Cursor cursorGastos =dbAdapter_informe_gastos.resumenInformeGastos(getDayPhone());
 
         String[] de = {
                 "tg_te_nom_tipo_gasto",
@@ -360,6 +360,13 @@ public class VMovil_Resumen_Caja extends TabActivity {
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         String formatteDate = df.format(date);
         return formatteDate;
+    }
+    public String getDayPhone()
+    {
+        Calendar cal = new GregorianCalendar();
+        Date date = cal.getTime();
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        return df.format(date);
     }
 }
 
