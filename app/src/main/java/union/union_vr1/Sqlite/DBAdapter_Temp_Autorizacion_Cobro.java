@@ -236,4 +236,5 @@ public class DBAdapter_Temp_Autorizacion_Cobro {
         return pago;
     }
 
+
 }

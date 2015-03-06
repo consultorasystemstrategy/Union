@@ -43,7 +43,6 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter{
         return view;*/
         return cursorInflater.inflate(R.layout.establecimiento_lista, viewGroup, false);
 
-
     }
 
     @Override
@@ -68,8 +67,6 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter{
 
             DecimalFormat df= new DecimalFormat("#0.00");
 
-
-
             nombreEstablecimiento.setText(numeroOrden + ". " +nombre_establecimiento);
             nombreEstablecimiento.setSingleLine(false);
             nombreCliente.setText(nombre_cliente);
@@ -89,7 +86,6 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter{
                 case 4:
                     linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.amarillo));
                     break;
-
             }
         }
     }

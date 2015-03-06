@@ -45,8 +45,6 @@ public class CursorAdapterFacturas_Canjes_Dev extends CursorAdapter{
 
         if (cursor.getCount()>0){
 
-
-
             String producto = cursor.getString(9);
             String cantidad = cursor.getString(25);
             Double precio = cursor.getDouble(27);
@@ -58,7 +56,6 @@ public class CursorAdapterFacturas_Canjes_Dev extends CursorAdapter{
                     "\nP.U: "+precio+"" +
                     "\nTot: "+precio*cursor.getInt(25)+"" +
                     "\nRef: "+idProducto+"";
-
 
             textViewTitulo.setText(producto);
             textViewSubtitulo.setText("Cantidad : "+ cantidad + ", Precio Unitario : S/. "+ precio);

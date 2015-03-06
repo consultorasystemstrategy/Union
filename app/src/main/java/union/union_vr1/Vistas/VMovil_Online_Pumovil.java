@@ -3,7 +3,9 @@ package union.union_vr1.Vistas;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.FragmentManager;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,25 +31,27 @@ public class VMovil_Online_Pumovil extends Activity {
 
     private WebView view;
     private VMovil_Online_Pumovil mContext;
+    ProgressDialog prgDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.princ_web_view);
-
         mContext = this;
-
-
-        showWebPU();
-
+        new AsyncTaskCargarPagina().execute();
     }
 
-    public void showWebPU(){
+    @Override
+    protected void onPause() {
+        super.onPause();
+        dismissProgressDialog();
+    }
+
+    public void showWebPU() {
         view = (WebView) this.findViewById(R.id.webView);
         view.getSettings().setJavaScriptEnabled(true);
         view.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
         view.loadUrl("http://192.168.0.158:8080/SysMovilProductosUnion");
-
         /*Asignamos a la vista web el cliente (navegador)
         que hemos creado como clase privada (ver más abajo
         y que extiende del que trae Android por defecto.
@@ -76,7 +80,7 @@ public class VMovil_Online_Pumovil extends Activity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        switch (id){
+        switch (id) {
             case R.id.buttonRedireccionarPrincipal:
                 Intent intent = new Intent(mContext, Login.class);
                 finish();
@@ -105,6 +109,62 @@ public class VMovil_Online_Pumovil extends Activity {
             new AlertDialog.Builder(view.getContext()).setMessage(message).setCancelable(true).show();
             result.confirm();
             return true;
+        }
+    }
+
+    class AsyncTaskCargarPagina extends AsyncTask<String, String, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    view = (WebView) mContext.findViewById(R.id.webView);
+                    view.getSettings().setJavaScriptEnabled(true);
+                    view.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
+                    view.loadUrl("http://192.168.0.158:8080/SysMovilProductosUnion");
+
+                    /*Asignamos a la vista web el cliente (navegador)
+                    que hemos creado como clase privada (ver más abajo
+        y que extiende del que trae Android por defecto.
+        Esta clase maneja el navegador:*/
+                    view.setWebViewClient(new MiWebViewClient());
+
+        /*Asignamos a la vista web la clase MiWebViewClient
+        que hemos creado como clase privada (ver más abajo)
+        y que extiende del que trae Android por defecto.
+        Esta clase permite controlar los eventos que se producen
+        en el navegador:*/
+                    view.setWebChromeClient(new MiWebCromeClient());
+                }
+            });
+
+            return null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            createProgressDialog();
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            dismissProgressDialog();
+        }
+    }
+
+    public void createProgressDialog() {
+        prgDialog = new ProgressDialog(this);
+        prgDialog.setMessage("Cargando...");
+        prgDialog.show();
+
+    }
+
+    private void dismissProgressDialog() {
+        if (prgDialog != null && prgDialog.isShowing()) {
+            prgDialog.dismiss();
         }
     }
 
