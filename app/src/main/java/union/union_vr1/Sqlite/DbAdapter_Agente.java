@@ -242,7 +242,7 @@ public class DbAdapter_Agente {
         Cursor mCursor = null;
         mCursor = mDb.query(true, SQLITE_TABLE_Agente, new String[] {AG_id_agente,
                         AG_id_agente_venta, AG_nombre_agente, AG_nombre_ruta, AG_nro_bodegas, AG_serie_boleta, AG_serie_factura, AG_serie_rrpp, AG_fecha},
-                AG_id_agente_venta + " = " + idAgente, null,
+                AG_id_agente_venta + " = '" + idAgente+"' AND "+AG_liquidacion + " = '" + idLiquidacion + "'", null,
                 null, null, null, null);
         if (mCursor != null) {
             mCursor.moveToFirst();
@@ -280,7 +280,7 @@ public class DbAdapter_Agente {
         Cursor mCursor = null;
         mCursor = mDb.query(true, SQLITE_TABLE_Agente, new String[] {AG_id_agente,
                         AG_id_agente_venta, AG_nombre_agente, AG_nombre_ruta, AG_nro_bodegas, AG_serie_boleta, AG_serie_factura, AG_serie_rrpp, AG_fecha},
-                AG_id_agente_venta + " = " + idAgente, null,
+                AG_id_agente_venta + " = '" + idAgente+"' AND "+AG_liquidacion + " = '" + idLiquidacion + "'", null,
                 null, null, null, null);
         if (mCursor != null) {
             mCursor.moveToFirst();

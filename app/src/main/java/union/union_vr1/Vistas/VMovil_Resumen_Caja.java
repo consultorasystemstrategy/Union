@@ -149,7 +149,7 @@ public class VMovil_Resumen_Caja extends TabActivity {
         ListView listView = (ListView) findViewById(R.id.VRC_listarResumenVentas);
         listView.addHeaderView(getLayoutInflater().inflate(R.layout.cabecera_inventario_ventas,null));
 
-        Cursor cursor = dbHelper.fetchAllStockAgenteVentas();
+        Cursor cursor = dbHelper.fetchAllStockAgenteVentas(idLiquidacion);
         String[] columns = new String[]{
                 DbAdapter_Stock_Agente.ST_nombre,
                 DbAdapter_Stock_Agente.ST_inicial,
@@ -182,7 +182,7 @@ public class VMovil_Resumen_Caja extends TabActivity {
 
         listView.addHeaderView(getLayoutInflater().inflate(R.layout.cabecera_inventario_apt,null));
 
-        Cursor cursor = dbHelper.fetchAllStockAgenteVentas();
+        Cursor cursor = dbHelper.fetchAllStockAgenteVentas(idLiquidacion);
         String[] columns = new String[]{
                 DbAdapter_Stock_Agente.ST_nombre,
                 DbAdapter_Stock_Agente.ST_final,

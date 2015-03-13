@@ -22,7 +22,7 @@ import union.union_vr1.Sqlite.DbAdapter_Stock_Agente;
  * Created by CCIE on 16/12/2014.
  */
 public class DbManager_Stock_Agente_GET{
-
+/*
     private DbAdapter_Stock_Agente manager;
     JSONParser jsonParser = new JSONParser();
     private static String url_agente = "http://192.168.0.158:8083/produnion/lis_stock_agente.php";
@@ -102,5 +102,5 @@ public class DbManager_Stock_Agente_GET{
             e.printStackTrace();
         }
         return null;
-    }
+    }*/
 }

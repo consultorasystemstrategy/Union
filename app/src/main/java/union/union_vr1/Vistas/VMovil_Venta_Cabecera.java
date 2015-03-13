@@ -12,6 +12,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
@@ -38,6 +39,7 @@ import java.util.GregorianCalendar;
 
 import union.union_vr1.AsyncTask.ExportMain;
 import union.union_vr1.AsyncTask.SolicitarCredito;
+import union.union_vr1.InputFilterMinMax;
 import union.union_vr1.R;
 import union.union_vr1.RestApi.StockAgenteRestApi;
 import union.union_vr1.Sqlite.Constants;
@@ -433,11 +435,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
 
-                int numeroViews =  parent.getCount();
-                numeroViews--;
 
-
-                if (parent.getPositionForView(view) != 1 && parent.getPositionForView(view) != numeroViews ) {
 
                     Log.d("POSITION SELECTED", parent.getPositionForView(view)+" - " + parent.getCount());
                     Log.d("POSITION ", position +" - " + parent.getCount());
@@ -448,9 +446,6 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
                     Cursor cursor = (Cursor) parent.getItemAtPosition(position);
                     final long id_tem_detalle = cursor.getLong(cursor.getColumnIndex(DBAdapter_Temp_Venta.temp_venta_detalle));
                     myEditDialog(id_tem_detalle).show();
-
-                }
-
 
             }
         });
@@ -617,9 +612,9 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
         builder.setPositiveButton("OK", new Dialog.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 String texto = null;
-                if (savedText.getText().toString().trim().equals("")){
+                if (savedText.getText().toString().trim().equals("")) {
                     texto = "1";
-                }else{
+                } else {
                     texto = savedText.getText().toString().trim();
                 }
 
@@ -702,14 +697,17 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
                     erp_stringTipoDocumento="FV";
                     serie = dbHelperAgente.getSerieFacturaByIdAgente(id_agente_venta,idLiquidacion );
                     codigo_erp = erp_stringTipoDocumento+serie;
+                    Log.d("CODIGO ERP ", codigo_erp);
                     break;
                 case boleta:
                     i_tipoDocumento = 2;
                     erp_stringTipoDocumento="BV";
                     serie = dbHelperAgente.getSerieBoletaByIdAgente(id_agente_venta, idLiquidacion);
                     codigo_erp = erp_stringTipoDocumento+serie;
+                    Log.d("CODIGO ERP ", codigo_erp);
                     break;
                 case ficha:
+                    Log.d("CODIGO ERP ", codigo_erp);
                     break;
             }
 
@@ -791,7 +789,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
             monto_total += importe;
 
             comprobVentaDetalle = dbHelper_Comprob_Venta_Detalle.createComprobVentaDetalle(id_comprobante, id_producto, nombre_producto, cantidad, importe,0, precio_unitario, promedio_anterior, devuelto, valorUnidad);
-            dbHelper_Stock_Agente.updateStockAgenteCantidad(id_producto,-(cantidad*valorUnidad));
+            dbHelper_Stock_Agente.updateStockAgenteCantidad(id_producto,-(cantidad*valorUnidad), idLiquidacion);
 
             if(nombre_producto.length()>=25){
                 nombre_producto=nombre_producto.substring(0,25);
@@ -816,8 +814,8 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
         DecimalFormat df = new DecimalFormat("#.00");
 
         textoImpresion += String.format("%-37s","SUB TOTAL:")+ "S/ "+ df.format(base_imponible)+"\n";
-        textoImpresion += String.format("%-37s","IGV:")+  "S/ "+ df.format(base_imponible)+"\n";
-        textoImpresion += String.format("%-37s","TOTAL:")+  "S/ "+ df.format(base_imponible)+"\n";
+        textoImpresion += String.format("%-37s","IGV:")+  "S/ "+ df.format(igv)+"\n";
+        textoImpresion += String.format("%-37s","TOTAL:")+  "S/ "+ df.format(monto_total)+"\n";
 
         textoImpresionContenidoLeft+=String.format("%-34s","SUB TOTAL:")+"\n";
         textoImpresionContenidoLeft+=String.format("%-34s","IGV:")+"\n";
@@ -825,8 +823,8 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
 
         textoImpresionContenidoRight+= "S/ " +
                 ""+ df.format(base_imponible)+"\n";
-        textoImpresionContenidoRight+= "S/ "+ df.format(base_imponible)+"\n";
-        textoImpresionContenidoRight+= "S/ "+ df.format(base_imponible)+"\n";
+        textoImpresionContenidoRight+= "S/ "+ df.format(igv)+"\n";
+        textoImpresionContenidoRight+= "S/ "+ df.format(monto_total)+"\n";
 
 
         if (i_formaPago==2){
@@ -955,15 +953,15 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
         }
         textViewNombreEstablecimiento.setText(nombreEstablecimiento);
 
-        listView.addHeaderView(headerNombreEstablecimiento);
-        listView.addHeaderView(header);
+        listView.addHeaderView(headerNombreEstablecimiento,null,false);
+        listView.addHeaderView(header,null, false);
         //AQUÍ TIENE QUE ESTAR EL CÓDIGO QUE MUESTRE EL MONTO TOTAL DE LA VENTA
 
         Cursor cursorTemp = simpleCursorAdapter.getCursor();
         int surtidoVenta = cursorTemp.getCount();
         totalFooter = 0.0;
 
-        Cursor cursorStock = dbHelper_Stock_Agente.fetchAllStockAgente();
+        Cursor cursorStock = dbHelper_Stock_Agente.fetchAllStockAgenteByDay(idLiquidacion);
         int surtidoStock = cursorStock.getCount();
 
 
@@ -1013,7 +1011,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
         }
 
 
-        listView.addFooterView(footer);
+        listView.addFooterView(footer, null, false);
         //ASIGNO EL ADAPTER AL LISTVIEW
         listView.setAdapter(simpleCursorAdapter);
     }

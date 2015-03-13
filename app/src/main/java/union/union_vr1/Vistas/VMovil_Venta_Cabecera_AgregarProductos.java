@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,11 +30,13 @@ import java.text.DecimalFormat;
 
 import union.union_vr1.BarcodeScanner.IntentIntegrator;
 import union.union_vr1.BarcodeScanner.IntentResult;
+import union.union_vr1.InputFilterMinMax;
 import union.union_vr1.R;
 import union.union_vr1.Sqlite.DBAdapter_Temp_Venta;
 import union.union_vr1.Sqlite.DbAdapter_Precio;
 import union.union_vr1.Sqlite.DbAdapter_Stock_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Barcode_Scanner;
+import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 import union.union_vr1.Utils.MyApplication;
 
@@ -64,6 +67,9 @@ public class VMovil_Venta_Cabecera_AgregarProductos extends Activity implements 
     private String barcodeScan;
     private String formatScan;
     private DbAdapter_Temp_Barcode_Scanner dbAdapter_temp_barcode_scanner;
+    private DbAdapter_Temp_Session session;
+
+    private int liquidacion;
 
     @Override
     public void onBackPressed() {
@@ -74,7 +80,8 @@ public class VMovil_Venta_Cabecera_AgregarProductos extends Activity implements 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vmovil__venta__cabecera__agregar_productos);
-
+        session =  new DbAdapter_Temp_Session(this);
+        session.open();
 
         mContext = this;
         this.mainActivity = this;
@@ -93,7 +100,7 @@ public class VMovil_Venta_Cabecera_AgregarProductos extends Activity implements 
         dbHelper_Temp_Venta = new DBAdapter_Temp_Venta(this);
         dbHelper_Temp_Venta.open();
 
-
+        liquidacion = session.fetchVarible(3);
 
 
         buttonAgregarProductos = (Button) findViewById(R.id.VCAP_buttonAgregar);
@@ -159,7 +166,7 @@ public class VMovil_Venta_Cabecera_AgregarProductos extends Activity implements 
 
 
 
-        mCursor = dbHelper_Stock_Agente.fetchStockAgenteByIdEstablecimiento(id_categoria_establecimiento);
+        mCursor = dbHelper_Stock_Agente.fetchStockAgenteByIdEstablecimiento(id_categoria_establecimiento, liquidacion);
 
 
         String[] columnasStock = new String[]{
@@ -204,7 +211,7 @@ public class VMovil_Venta_Cabecera_AgregarProductos extends Activity implements 
            adapterProductos.setFilterQueryProvider(new FilterQueryProvider() {
                @Override
                public Cursor runQuery(CharSequence charSequence) {
-                   return dbHelper_Stock_Agente.fetchStockAgenteByIdEstablecimientoandName(id_categoria_establecimiento, charSequence.toString());
+                   return dbHelper_Stock_Agente.fetchStockAgenteByIdEstablecimientoandName(id_categoria_establecimiento, charSequence.toString(), liquidacion);
 
                }
            });
@@ -256,6 +263,17 @@ public class VMovil_Venta_Cabecera_AgregarProductos extends Activity implements 
         final TextView precio = ((TextView) layout.findViewById(R.id.VCPA_textViewPrecio));
 
         Cursor mCursorPrecioUnitarioGeneral = dbHelper_Precio.fetchAllPrecioByIdProductoAndCategoeria(id_producto,id_categoria_establecimiento);
+
+
+        Cursor mCursorStock = dbHelper_Stock_Agente.fetchByIdProducto(id_producto,liquidacion);
+        int maximoValor = 1;
+        if (mCursorStock.getCount()>0){
+            maximoValor = mCursorStock.getInt(mCursorStock.getColumnIndexOrThrow(dbHelper_Stock_Agente.ST_disponible));
+        }
+
+        savedText.setFilters(new InputFilter[]{new InputFilterMinMax(0,maximoValor)});
+
+
         if (mCursorPrecioUnitarioGeneral.getCount()>0) {
             double precio_unitario = mCursorPrecioUnitarioGeneral.getDouble(mCursorPrecioUnitarioGeneral.getColumnIndexOrThrow(DbAdapter_Precio.PR_precio_unit));
             precio.setText("Precio : S/. "+ df.format(precio_unitario));
@@ -361,7 +379,7 @@ public class VMovil_Venta_Cabecera_AgregarProductos extends Activity implements 
 
             if (barcodeScan.length()>0){
 
-                mCursorScannerProducto = dbHelper_Precio.getProductoByCodigo(id_categoria_establecimiento, barcodeScan);
+                mCursorScannerProducto = dbHelper_Precio.getProductoByCodigo(id_categoria_establecimiento, barcodeScan, liquidacion);
 
                 if (mCursorScannerProducto.getCount()>0){
                     scannerDialog().show();

@@ -18,7 +18,7 @@ import union.union_vr1.Sqlite.DbAdapter_Tipo_Gasto;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 import union.union_vr1.Sqlite.DbAdapter_Stock_Agente;
 public class MyAndroidAppActivity extends Activity {
-
+/*
     private Spinner spinner1, spinner2, spinner3;
     private Button btnSubmit;
     //private DbAdapter_Tipo_Gasto dbAdapterTipoGasto ;
@@ -163,5 +163,5 @@ public class MyAndroidAppActivity extends Activity {
             }
 
         });
-    }
+    }*/
 }

@@ -14,6 +14,7 @@ public class DbAdapter_Comprob_Venta_Detalle {
     //ESTOS CAMPOS NOS OBTIENE EL PROCEDIMIENTO
     public static final String CD_comp_detalle = "_id";
     public static final String CD_id_comprob = "cd_in_id_comprob";
+
     //FALTA EL COMPROBANTE DE VENTA DETALLE ID
     public static final String CD_id_producto = "cd_in_id_producto";
     public static final String CD_nom_producto = "cd_te_nom_producto";
@@ -26,6 +27,9 @@ public class DbAdapter_Comprob_Venta_Detalle {
     //este campo es redundante[lo mismo que precio unitario (preguntar)]
     public static final String CD_valor_unidad = "cd_in_valor_unidad";
     public static final String estado_sincronizacion = "estado_sincronizacion";
+
+    //PARA FINES DE EXPORTACIÓN
+    public static final String CD_id_comprob_real = "cd_in_id_comprob_real";
 
     public static final String TAG = "Comprob_Venta_Detalle";
     private DbHelper mDbHelper;
@@ -49,6 +53,7 @@ public class DbAdapter_Comprob_Venta_Detalle {
                     +CD_prom_anterior+" text,"
                     +CD_devuelto+" text,"
                     +CD_valor_unidad+" integer, "
+                    +CD_id_comprob_real+" integer, "
                     +estado_sincronizacion+" integer);";
 
     public static final String DELETE_TABLE_COMPROB_VENTA_DETALLE = "DROP TABLE IF EXISTS " + SQLITE_TABLE_Comprob_Venta_Detalle;
@@ -90,12 +95,12 @@ public class DbAdapter_Comprob_Venta_Detalle {
         return mDb.insert(SQLITE_TABLE_Comprob_Venta_Detalle, null, initialValues);
     }
 
-    public void updateComprobVentaDetalle1(String idorig, String iddest, String vals){
+    public int updateComprobVentaDetalleReal(int idComprobante, int idReal){
         ContentValues initialValues = new ContentValues();
-        initialValues.put(CD_id_comprob,iddest);
+        initialValues.put(CD_id_comprob_real, idReal);
 
-        mDb.update(SQLITE_TABLE_Comprob_Venta_Detalle, initialValues,
-                CD_id_comprob+"=?",new String[]{idorig});
+        return mDb.update(SQLITE_TABLE_Comprob_Venta_Detalle, initialValues,
+                CD_id_comprob+"=?",new String[]{""+idComprobante});
     }
 
     public void changeEstadoToExport(String[] idComprobanteDetalle, int estadoSincronizacion){
@@ -195,7 +200,7 @@ public class DbAdapter_Comprob_Venta_Detalle {
     public Cursor fetchAllComprobVentaDetalle0A() {
 
         Cursor mCursor = mDb.query(SQLITE_TABLE_Comprob_Venta_Detalle, new String[] {CD_comp_detalle,
-                        CD_id_comprob, CD_id_producto, CD_nom_producto, CD_cantidad, CD_precio_unit, CD_importe},
+                        CD_id_comprob, CD_id_producto, CD_nom_producto, CD_cantidad, CD_precio_unit, CD_importe, CD_id_comprob_real},
                 CD_id_comprob + " = 0", null, null, null, null);
 
         if (mCursor != null) {
@@ -208,7 +213,7 @@ public class DbAdapter_Comprob_Venta_Detalle {
 
         Cursor mCursor = mDb.query(SQLITE_TABLE_Comprob_Venta_Detalle, new String[] {CD_comp_detalle,
                         CD_id_comprob, CD_id_producto, CD_costo_venta, CD_nom_producto, CD_cantidad,
-                        CD_precio_unit, CD_importe, CD_prom_anterior, CD_devuelto},
+                        CD_precio_unit, CD_importe, CD_prom_anterior, CD_devuelto, CD_id_comprob_real},
                 CD_id_comprob + " = " + id, null, null, null, null);
 
         if (mCursor != null) {
@@ -221,7 +226,7 @@ public class DbAdapter_Comprob_Venta_Detalle {
 
         Cursor mCursor = mDb.query(SQLITE_TABLE_Comprob_Venta_Detalle, new String[] {CD_comp_detalle,
                         CD_id_comprob, CD_id_producto, CD_costo_venta, CD_nom_producto, CD_cantidad,
-                        CD_precio_unit, CD_importe, CD_prom_anterior, CD_devuelto, CD_valor_unidad},
+                        CD_precio_unit, CD_importe, CD_prom_anterior, CD_devuelto, CD_valor_unidad, CD_id_comprob_real},
                 Constants._SINCRONIZAR + " = " + Constants._CREADO + " OR " + Constants._SINCRONIZAR + " = " + Constants._ACTUALIZADO, null, null, null, null);
 
         if (mCursor != null) {

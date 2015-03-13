@@ -66,7 +66,7 @@ public class VMovil_Venta_Comprob extends Activity {
     private DBAdapter_Temp_Autorizacion_Cobro dbAutorizaciones;
     private int idComprobante;
     private int idAgente;
-
+    private int liquidacion;
 
     TabHost tH;
 
@@ -102,6 +102,7 @@ public class VMovil_Venta_Comprob extends Activity {
 
         //idAgente=((MyApplication) this.getApplication()).getIdAgente();
         idAgente = session.fetchVarible(1);
+        liquidacion = session.fetchVarible(3);
 
         tH = (TabHost) findViewById(R.id.tabMante);
         tH.setup();
@@ -512,7 +513,7 @@ private void back(){
                         id_producto = cursorComprobanteVentaDetalle.getInt(cursorComprobanteVentaDetalle.getColumnIndex(DbAdapter_Comprob_Venta_Detalle.CD_id_producto));
                         cantidad = cursorComprobanteVentaDetalle.getInt(cursorComprobanteVentaDetalle.getColumnIndex(DbAdapter_Comprob_Venta_Detalle.CD_cantidad));
 
-                        dbHelper_Stock_Agente.updateStockAgenteCantidad(id_producto, cantidad);
+                        dbHelper_Stock_Agente.updateStockAgenteCantidad(id_producto, cantidad, liquidacion);
 
                     } while (cursorComprobanteVentaDetalle.moveToNext());
                 } else {

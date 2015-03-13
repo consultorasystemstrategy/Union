@@ -224,9 +224,8 @@ public class DbAdapter_Comprob_Venta {
     public void updateComprobanteMontos(long id, Double total, Double igv, Double base_imponible){
         ContentValues initialValues = new ContentValues();
         initialValues.put(CV_total,total);
-        initialValues.put(CV_total,igv);
-        initialValues.put(CV_total,base_imponible);
-
+        initialValues.put(CV_igv,igv);
+        initialValues.put(CV_base_imp,base_imponible);
 
 
         mDb.update(SQLITE_TABLE_Comprob_Venta, initialValues,

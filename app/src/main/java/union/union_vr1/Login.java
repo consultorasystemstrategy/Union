@@ -311,6 +311,8 @@ public class Login extends Activity implements OnClickListener{
             StockAgenteRestApi api = new StockAgenteRestApi();
             ArrayList<Agente> agenteLista = null;
             JSONObject jsonObjAgente = null;
+
+            publishProgress(""+10);
             try {
                 Log.d("LOGIN DATOS , ", ""+user.getText().toString()+" - " + pass.getText().toString() + " - "+getDatePhone());
                 jsonObjAgente = api.GetAgenteVenta(user.getText().toString(),pass.getText().toString(), getDatePhone());

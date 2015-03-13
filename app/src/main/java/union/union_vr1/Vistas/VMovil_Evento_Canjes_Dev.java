@@ -30,6 +30,7 @@ import union.union_vr1.Sqlite.CursorAdapterFacturas_dev;
 import union.union_vr1.Sqlite.DbAdapter_Canjes_Devoluciones;
 import union.union_vr1.Sqlite.DbAdapter_Histo_Venta_Detalle;
 import union.union_vr1.Sqlite.DbAdapter_Stock_Agente;
+import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 
 public class VMovil_Evento_Canjes_Dev extends TabActivity {
@@ -43,6 +44,8 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity {
     private Button btn_mostrar_guias;
     private Context ctx;
     private TabHost tabHost;
+    private int liquidacion;
+    private DbAdapter_Temp_Session session;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +57,11 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity {
         dbHelper_Stock.open();
         dbHelper_CanDev = new DbAdapter_Canjes_Devoluciones(getApplication());
         dbHelper_CanDev.open();
+        session = new DbAdapter_Temp_Session(this);
+        session.open();
 
+
+        liquidacion = session.fetchVarible(3);
 
         Bundle idE = getIntent().getExtras();
         establec = idE.getString("idEstabX");
@@ -85,7 +92,7 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity {
 
     private void autoComplete() {
 
-        Cursor cr = dbHelper_Stock.listarProductosAndStock();
+        Cursor cr = dbHelper_Stock.listarProductosAndStock(liquidacion);
         cr.moveToFirst();
 
 
@@ -135,7 +142,7 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity {
         adapter.setFilterQueryProvider(new FilterQueryProvider() {
             @Override
             public Cursor runQuery(CharSequence charSequence) {
-                Cursor cr = dbHelper_Stock.listarbyIdProductoAndStock(charSequence.toString());
+                Cursor cr = dbHelper_Stock.listarbyIdProductoAndStock(charSequence.toString(), liquidacion);
                 return cr;
             }
         });

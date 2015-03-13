@@ -210,13 +210,13 @@ public class ImportMain extends AsyncTask<String, String, String> {
                 Log.d("Stock Agente"+i, "Nombre : "+stockAgentes.get(i).getNombre());
                 Log.d("Stock Agente"+i, "CÓDIGO DE BARRAS : "+stockAgentes.get(i).getCodigoBarras());
 
-                boolean existe = dbAdapter_stock_agente.existsStockAgenteByIdProd(""+stockAgentes.get(i).getIdProducto());
+                boolean existe = dbAdapter_stock_agente.existsStockAgenteByIdProd(stockAgentes.get(i).getIdProducto(),idLiquidacion);
                 Log.d("EXISTE ", ""+existe);
                 if (existe){
-                    dbAdapter_stock_agente.updateStockAgentes(stockAgentes.get(i),1);
+                    dbAdapter_stock_agente.updateStockAgentes(stockAgentes.get(i),idAgente,idLiquidacion);
                 }else {
                     //NO EXISTE ENTONCES CREEMOS UNO NUEVO
-                    dbAdapter_stock_agente.createStockAgentes(stockAgentes.get(i), 1, Constants._IMPORTADO);
+                    dbAdapter_stock_agente.createStockAgentes(stockAgentes.get(i), idAgente, Constants._IMPORTADO,idLiquidacion);
                 }
             }
 
