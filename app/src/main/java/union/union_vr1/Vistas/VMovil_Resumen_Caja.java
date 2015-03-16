@@ -1,12 +1,15 @@
 package union.union_vr1.Vistas;
 
 
+import android.app.Activity;
 import android.app.TabActivity;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Typeface;
 import android.os.Bundle;
 
 import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TabHost;
@@ -74,12 +77,15 @@ public class VMovil_Resumen_Caja extends TabActivity {
     Double pagadoTotal = 0.0;
     Double cobradoTotal = 0.0;
 
+    private Activity activity;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.princ_resumen_caja);
+
+        activity = this;
 
         session = new DbAdapter_Temp_Session(this);
         session.open();
@@ -352,6 +358,23 @@ public class VMovil_Resumen_Caja extends TabActivity {
 
         listView.setAdapter(dataAdapterRC);
         listView.addFooterView(viewResumenGastos);
+
+
+        final View viewCerrarCaja = getLayoutInflater().inflate(R.layout.layout_cerrar_caja, null);
+        Button button = (Button)viewCerrarCaja.findViewById(R.id.buttonCerrarCaja);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                session.deleteVariable(9);
+                session.createTempSession(9, 0);
+                Intent intent = new Intent(activity, VMovil_Online_Pumovil.class);
+                finish();
+                startActivity(intent);
+
+            }
+        });
+        listView.addFooterView(viewCerrarCaja,null,true);
 
     }
     private String getDatePhone() {
