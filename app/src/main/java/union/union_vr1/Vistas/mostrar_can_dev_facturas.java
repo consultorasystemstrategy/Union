@@ -33,6 +33,7 @@ import union.union_vr1.Sqlite.CursorAdapterFacturas_Canjes_Dev;
 import union.union_vr1.Sqlite.CursorAdapter_Facturas_Canjes_Dev;
 import union.union_vr1.Sqlite.DbAdapter_Canjes_Devoluciones;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
+import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 import union.union_vr1.VMovil_BluetoothImprimir;
 
 public class mostrar_can_dev_facturas extends TabActivity {
@@ -40,8 +41,7 @@ public class mostrar_can_dev_facturas extends TabActivity {
     private int idAgente;
     private TabHost tabHost;
     private DbAdapter_Canjes_Devoluciones dbHelper_CanDev;
-
-
+    DbAdapter_Temp_Session session ;
     private TextView textViewFooterText;
     private TextView textViewFooterTotal;
     private TextView textViewHeader;
@@ -55,6 +55,9 @@ public class mostrar_can_dev_facturas extends TabActivity {
 
         dbHelper_CanDev = new DbAdapter_Canjes_Devoluciones(getApplication());
         dbHelper_CanDev.open();
+
+        session = new DbAdapter_Temp_Session(this);
+        session.open();
 
         Bundle bl = getIntent().getExtras();
         idEstablec = bl.getString("idEstablec");
@@ -226,6 +229,7 @@ public class mostrar_can_dev_facturas extends TabActivity {
     }
 
     public void dialog_save(final String op, final int operacion) {
+        final int liquidacion = session.fetchVarible(3);
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setTitle("Seguro de Guardar");
         AlertDialog.Builder builder = alertDialogBuilder
@@ -244,7 +248,7 @@ public class mostrar_can_dev_facturas extends TabActivity {
                             }
                         }
                         if (operacion == 1) {
-                            boolean estado = dbHelper_CanDev.guardarCambios(operacion, idEstablec,idGuia);
+                            boolean estado = dbHelper_CanDev.guardarCambios(operacion, idEstablec,idGuia,liquidacion);
                             if (estado) {
                                 Toast.makeText(getApplicationContext(),""+idGuia,Toast.LENGTH_SHORT).show();
                                 exito();
@@ -267,6 +271,7 @@ public class mostrar_can_dev_facturas extends TabActivity {
     }
 
     public void dialog_cancel(final String op, final int tipo, final String columna) {
+        final int liquidacion = session.fetchVarible(3);
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setTitle("Seguro de Borrar Los Cambios");
         AlertDialog.Builder builder = alertDialogBuilder
@@ -275,7 +280,7 @@ public class mostrar_can_dev_facturas extends TabActivity {
                 .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         if (tipo == 1) {
-                            boolean estado = dbHelper_CanDev.cancelarCambios(tipo, idEstablec, columna);
+                            boolean estado = dbHelper_CanDev.cancelarCambios(tipo, idEstablec, columna,liquidacion);
                             if (estado) {
 
                                 exito();
@@ -284,7 +289,7 @@ public class mostrar_can_dev_facturas extends TabActivity {
                             }
                         }
                         if (tipo == 2) {
-                            boolean estado = dbHelper_CanDev.cancelarCambios_dev(tipo, idEstablec, columna);
+                            boolean estado = dbHelper_CanDev.cancelarCambios_dev(tipo, idEstablec, columna,liquidacion);
                             if (estado) {
                                 exito();
                             } else {

@@ -10,6 +10,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -96,6 +97,7 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity {
         cr.moveToFirst();
 
 
+
         String[] columnasStock = new String[]{
                 cr.getColumnName(1),
                 cr.getColumnName(2)
@@ -143,6 +145,7 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity {
             @Override
             public Cursor runQuery(CharSequence charSequence) {
                 Cursor cr = dbHelper_Stock.listarbyIdProductoAndStock(charSequence.toString(), liquidacion);
+
                 return cr;
             }
         });
@@ -163,6 +166,7 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity {
                 faCanjeDev.putExtra("idEstablec", establec);
                 faCanjeDev.putExtra("idProducto", idProducto);
                 faCanjeDev.putExtra("nomProducto", nom);
+                Log.e("idProducto",""+idProducto+"-"+nom);
                 startActivity(faCanjeDev);
                 finish();
             }
@@ -211,7 +215,7 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity {
 
     }
     private void select (final String idOperacion,String Operacion, final String idHistoVenta, final String idProducto, final String idHistoDetalle, final int cantProductos ){
-
+        final int liquidacion = session.fetchVarible(3);
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
             alertDialogBuilder.setTitle("Anular "+Operacion+" ");
             AlertDialog.Builder builder = alertDialogBuilder
@@ -220,8 +224,8 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity {
                     .setPositiveButton("Quitar", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             boolean estado =false;
-                            if (idOperacion.equals("1")) {//cannje
-                                estado =  dbHelper_CanDev.cancelarCabiosByIdCanjes(idProducto,cantProductos,idHistoVenta,idHistoDetalle);
+                            if (idOperacion.equals("1")) {//cannjeggggg
+                                estado =  dbHelper_CanDev.cancelarCabiosByIdCanjes(idProducto,cantProductos,idHistoVenta,idHistoDetalle,liquidacion);
                                 if(estado){
                                     Toast.makeText(getApplicationContext(),"Quitado de la Lista",Toast.LENGTH_SHORT).show();
                                     regresar();
@@ -230,7 +234,7 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity {
                                 }
                             }
                             if(idOperacion.equals("2")){//devoluciones
-                                estado =  dbHelper_CanDev.cancelarCabiosByIdDevoluciones(idProducto,cantProductos,idHistoVenta,idHistoDetalle);
+                                estado =  dbHelper_CanDev.cancelarCabiosByIdDevoluciones(idProducto,cantProductos,idHistoVenta,idHistoDetalle,liquidacion);
                                 if(estado){
                                     Toast.makeText(getApplicationContext(),"Quitado de la Lista",Toast.LENGTH_SHORT).show();
                                     regresar();
