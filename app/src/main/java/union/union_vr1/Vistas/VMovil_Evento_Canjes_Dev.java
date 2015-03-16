@@ -224,7 +224,7 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity {
                     .setPositiveButton("Quitar", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             boolean estado =false;
-                            if (idOperacion.equals("1")) {//cannje
+                            if (idOperacion.equals("1")) {//cannjeggggg
                                 estado =  dbHelper_CanDev.cancelarCabiosByIdCanjes(idProducto,cantProductos,idHistoVenta,idHistoDetalle,liquidacion);
                                 if(estado){
                                     Toast.makeText(getApplicationContext(),"Quitado de la Lista",Toast.LENGTH_SHORT).show();
