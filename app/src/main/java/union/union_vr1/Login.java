@@ -275,11 +275,13 @@ public class Login extends Activity implements OnClickListener{
                 session.deleteVariable(3);
                 session.deleteVariable(4);
                 session.deleteVariable(6);
+                session.deleteVariable(9);
 
                 session.createTempSession(1,cursorAgenteCajaActual.getInt(cursorAgenteCajaActual.getColumnIndexOrThrow(dbAdapter_agente.AG_id_agente_venta)));
                 session.createTempSession(3,cursorAgenteCajaActual.getInt(cursorAgenteCajaActual.getColumnIndexOrThrow(dbAdapter_agente.AG_liquidacion)));
                 session.createTempSession(4,cursorAgenteCajaActual.getInt(cursorAgenteCajaActual.getColumnIndexOrThrow(dbAdapter_agente.AG_id_usuario)));
                 session.createTempSession(6,0);
+                session.createTempSession(9,1);
 
 
                 Toast.makeText(getApplicationContext(), "Login correcto", Toast.LENGTH_SHORT).show();
@@ -343,11 +345,13 @@ public class Login extends Activity implements OnClickListener{
                     session.deleteVariable(3);
                     session.deleteVariable(4);
                     session.deleteVariable(6);
+                    session.deleteVariable(9);
 
                     session.createTempSession(1,agenteLista.get(i).getIdAgenteVenta());
                     session.createTempSession(3,agenteLista.get(i).getLiquidacion());
                     session.createTempSession(4,agenteLista.get(i).getIdUsuario());
                     session.createTempSession(6,0);
+                    session.createTempSession(9,1);
 
 
                     agenteLista.get(i).getIdAgenteVenta();
@@ -407,12 +411,12 @@ public class Login extends Activity implements OnClickListener{
             prgDialog.setProgress(Integer.parseInt(values[0]));
         }
     }
-
+/*
 	class AttemptLogin extends AsyncTask<String, String, String> {
 
 		 /**
          * Before starting background thread Show Progress Dialog
-         * */
+
 		boolean failure = false;
 		
         @Override
@@ -484,9 +488,9 @@ public class Login extends Activity implements OnClickListener{
             return null;
 			
 		}
-		/**
+		**
          * After completing background task Dismiss the progress dialog
-         * **/
+         * *
         protected void onPostExecute(String file_url) {
             // dismiss the dialog once product deleted
             pDialog.dismiss();
@@ -497,6 +501,7 @@ public class Login extends Activity implements OnClickListener{
         }
 		
 	}
+    */
 
     public void createProgressDialog(){
         prgDialog = new ProgressDialog(this);

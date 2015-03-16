@@ -128,15 +128,19 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
 
         if (cursor.getCount()==0){
 
-            if (listView.getHeaderViewsCount()<1){
-            View headerSinDatos= getLayoutInflater().inflate(R.layout.header_datos_vacios,null);
-            listView.addHeaderView(headerSinDatos,null, false);
+            if (listView.getFooterViewsCount()<1) {
+                View headerSinDatos = getLayoutInflater().inflate(R.layout.header_datos_vacios, null);
+                listView.addFooterView(headerSinDatos, null, false);
+                mActualiz.setEnabled(false);
+                //mActualiz.setClickable(false);
             }
 
         }else if(cursor.getCount()<0){
-            if (listView.getHeaderViewsCount()<1){
+            if (listView.getFooterViewsCount()<1){
                 View headerSinDatos= getLayoutInflater().inflate(R.layout.header_datos_vacios,null);
-                listView.addHeaderView(headerSinDatos,null, false);
+                listView.addFooterView(headerSinDatos,null, false);
+
+                mActualiz.setEnabled(false);
             }
         }
         listView.setAdapter(adapterCobros);
@@ -234,7 +238,7 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
 //<
                         //displayListViewVCC();
                         mSPNcredit.setText("0.0");
-                        Back();
+                        displayListViewVCC();
 
                     }
 

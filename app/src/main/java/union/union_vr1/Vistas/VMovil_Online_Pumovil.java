@@ -3,8 +3,10 @@ package union.union_vr1.Vistas;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,8 +18,15 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
 import union.union_vr1.Login;
 import union.union_vr1.R;
+import union.union_vr1.Sqlite.DbAdapter_Agente;
+import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 
 public class VMovil_Online_Pumovil extends Activity {
 
@@ -27,11 +36,45 @@ public class VMovil_Online_Pumovil extends Activity {
     private WebView webView;
     private Activity activity;
 
+
+
+    private DbAdapter_Agente dbAdapter_agente;
+    private boolean succesLogin;
+    private DbAdapter_Temp_Session session;
+    private int idAgente;
+    private int idLiquidacion;
+    private int isCajaOpened;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.princ_web_view);
         activity = this;
+
+        session = new DbAdapter_Temp_Session(this);
+        session.open();
+
+
+
+        isCajaOpened = session.fetchVarible(9);
+        Log.d("IS CAJA OPENED", ""+isCajaOpened);
+
+        if (isCajaOpened==0){
+            //LA CAJA NO ESTÁ ABIERTA
+            displayURL();
+        }else if (isCajaOpened==1){
+            //LA CAJA ESTÁ ABIERTA
+            redireccionarPrincipal();
+        }else{
+            redireccionarPrincipal();
+        }
+    }
+
+
+
+    public void displayURL(){
+
+
 
         progressBar = (ProgressBar)findViewById(R.id.progressBar);
         webView = (WebView)findViewById(R.id.webView);
@@ -77,6 +120,68 @@ public class VMovil_Online_Pumovil extends Activity {
         webView.loadUrl(url);
     }
 
+    public void redireccionarPrincipal(){
+        dbAdapter_agente = new DbAdapter_Agente(this);
+        dbAdapter_agente.open();
+
+
+        idAgente = session.fetchVarible(1);
+        idLiquidacion = session.fetchVarible(3);
+
+
+        succesLogin = false;
+
+        Cursor cursorAgenteCajaActual = dbAdapter_agente.fetchAgentesByIds(idAgente,idLiquidacion);
+        cursorAgenteCajaActual.moveToFirst();
+        String fechaCaja = null;
+        if (cursorAgenteCajaActual.getCount()>0) {
+            succesLogin=true;
+            fechaCaja = cursorAgenteCajaActual.getString(cursorAgenteCajaActual.getColumnIndexOrThrow(dbAdapter_agente.AG_fecha));
+
+            if (getDatePhone().equals(fechaCaja)){
+                succesLogin=true;
+            }else{
+                //LA CAAJA ESTÁ ABIERTA PERO NO CON LA FECHA ACTUAL
+                Toast.makeText(getApplicationContext(), "Debe Abrir Caja", Toast.LENGTH_LONG).show();
+                succesLogin=false;
+            }
+        }
+
+
+        if(cursorAgenteCajaActual.getCount()==0){
+            succesLogin=false;
+        }
+
+        if (succesLogin){
+                /*
+                ((MyApplication) loginClass.getApplication()).setIdAgente(mCursorAgente.getInt(mCursorAgente.getColumnIndexOrThrow(dbAdapter_agente.AG_id_agente_venta)));
+                ((MyApplication) loginClass.getApplication()).setIdLiquidacion(mCursorAgente.getInt(mCursorAgente.getColumnIndexOrThrow(dbAdapter_agente.AG_liquidacion)));
+                ((MyApplication) loginClass.getApplication()).setIdUsuario(mCursorAgente.getInt(mCursorAgente.getColumnIndexOrThrow(dbAdapter_agente.AG_id_usuario)));
+                ((MyApplication) loginClass.getApplication()).setDisplayedHistorialComprobanteAnterior(false);
+
+*/
+
+            session.deleteVariable(1);
+            session.deleteVariable(3);
+            session.deleteVariable(4);
+            session.deleteVariable(6);
+
+            session.createTempSession(1,cursorAgenteCajaActual.getInt(cursorAgenteCajaActual.getColumnIndexOrThrow(dbAdapter_agente.AG_id_agente_venta)));
+            session.createTempSession(3,cursorAgenteCajaActual.getInt(cursorAgenteCajaActual.getColumnIndexOrThrow(dbAdapter_agente.AG_liquidacion)));
+            session.createTempSession(4,cursorAgenteCajaActual.getInt(cursorAgenteCajaActual.getColumnIndexOrThrow(dbAdapter_agente.AG_id_usuario)));
+            session.createTempSession(6,0);
+
+            Intent i = new Intent(activity, VMovil_Evento_Indice.class);
+            finish();
+            startActivity(i);
+        }else{
+            //LA CAJA ESTÁ ABIERTA PERO NO CON LA FECHA ACTUAL, ENTONCES TIENE QUE ABRIR CAJA
+            displayURL();
+        }
+
+
+    }
+
     public boolean onKeyDown(int keyCode, KeyEvent event)
     {
         if ((keyCode == KeyEvent.KEYCODE_BACK) && webView.canGoBack())
@@ -113,8 +218,15 @@ public class VMovil_Online_Pumovil extends Activity {
             default:
                 //ON ITEM SELECTED DEFAULT
                 break;
-
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private String getDatePhone() {
+        Calendar cal = new GregorianCalendar();
+        Date date = cal.getTime();
+        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        String formatteDate = df.format(date);
+        return formatteDate;
     }
 }

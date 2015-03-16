@@ -48,12 +48,6 @@ public class VMovil_Cobros_Totales extends Activity {
         cCobro.open();
         listCobros = (ListView) findViewById(R.id.listaCobrosTotales);
 
-
-        headerSinDatos= getLayoutInflater().inflate(R.layout.header_datos_vacios,null);
-        headerSinDatos.setVisibility(View.GONE);
-        listCobros.addHeaderView(headerSinDatos,null, false);
-
-
         listarCobrosTotales();
     }
 
@@ -62,14 +56,16 @@ public class VMovil_Cobros_Totales extends Activity {
         Cursor cursor = cCobro.listarComprobantesToCobros();
 
 
-
         CursorAdapterCobrosTotales cACobros = new CursorAdapterCobrosTotales(this, cursor);
 
 
         if (cursor.getCount()==0){
-            headerSinDatos.setVisibility(View.VISIBLE);
+            headerSinDatos= getLayoutInflater().inflate(R.layout.header_datos_vacios,null);
+            listCobros.addFooterView(headerSinDatos,null, false);
         }else if(cursor.getCount()<0){
-            headerSinDatos.setVisibility(View.VISIBLE);
+            listCobros.removeAllViews();
+            headerSinDatos= getLayoutInflater().inflate(R.layout.header_datos_vacios,null);
+            listCobros.addFooterView(headerSinDatos,null, false);
         }
         listCobros.setAdapter(cACobros);
         listCobros.setOnItemClickListener(new AdapterView.OnItemClickListener() {

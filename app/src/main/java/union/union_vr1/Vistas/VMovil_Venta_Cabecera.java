@@ -162,6 +162,8 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
                         //((MyApplication)mContext.getApplicationContext()).setDisplayedHistorialComprobanteAnterior(false);
                         session.deleteVariable(6);
                         session.createTempSession(6,0);
+                        session.deleteVariable(5);
+                        session.createTempSession(5,0);
 
                         finish();
                         Intent intent = new Intent(mContext,VMovil_Evento_Establec.class);
@@ -304,8 +306,6 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
                 break;
         }
 
-
-        displayHistorialComprobanteAnterior();
         if (isDisplayed) {
             //NO SE MUESTRA EL HISTORIAL DEL COMPROBANTE ANTERIOR COMO SUGERENCIA DE VENTA AL USUARIO
         }else{
@@ -549,7 +549,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
                 new SolicitarCredito(mainActivity).execute(""+id_agente_venta,""+idEstablecimiento,""+cantidadCredito,""+diasCredito);
 
                 Toast.makeText(mContext.getApplicationContext(), "Crédito solicitado esperar...",Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(mContext, VMovil_Online_Pumovil.class);
+                Intent intent = new Intent(mContext, VMovil_Evento_Indice.class);
                 finish();
                 startActivity(intent);
             }
