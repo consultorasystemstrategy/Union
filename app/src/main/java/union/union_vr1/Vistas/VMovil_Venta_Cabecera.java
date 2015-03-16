@@ -826,6 +826,8 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
         textoImpresionContenidoRight+= "S/ "+ df.format(igv)+"\n";
         textoImpresionContenidoRight+= "S/ "+ df.format(monto_total)+"\n";
 
+        dbHelper_Evento_Establecimiento.updateEstadoEstablecs(""+idEstablecimiento,2);
+
 
         if (i_formaPago==2){
             for (cursorTempComprobCobros.moveToFirst(); !cursorTempComprobCobros.isAfterLast();cursorTempComprobCobros.moveToNext()){

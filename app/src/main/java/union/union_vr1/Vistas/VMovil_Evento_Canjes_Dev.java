@@ -237,7 +237,6 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity {
                                 }else{
                                     Toast.makeText(getApplicationContext(),"Ocurrio un Error",Toast.LENGTH_SHORT).show();
                                 }
-
                             }
 
                         }

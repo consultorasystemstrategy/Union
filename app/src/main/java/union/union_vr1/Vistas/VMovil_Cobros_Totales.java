@@ -36,6 +36,8 @@ public class VMovil_Cobros_Totales extends Activity {
     DbAdapter_Comprob_Cobro cCobro;
     private SimpleCursorAdapter dataAdapter;
     private VMovil_Cobros_Totales mainActivity;
+    ListView listCobros;
+    View headerSinDatos;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -44,6 +46,14 @@ public class VMovil_Cobros_Totales extends Activity {
         setContentView(R.layout.activity_vmovil__cobros__totales);
         cCobro = new DbAdapter_Comprob_Cobro(this);
         cCobro.open();
+        listCobros = (ListView) findViewById(R.id.listaCobrosTotales);
+
+
+        headerSinDatos= getLayoutInflater().inflate(R.layout.header_datos_vacios,null);
+        headerSinDatos.setVisibility(View.GONE);
+        listCobros.addHeaderView(headerSinDatos,null, false);
+
+
         listarCobrosTotales();
     }
 
@@ -55,18 +65,11 @@ public class VMovil_Cobros_Totales extends Activity {
 
         CursorAdapterCobrosTotales cACobros = new CursorAdapterCobrosTotales(this, cursor);
 
-        final ListView listCobros = (ListView) findViewById(R.id.listaCobrosTotales);
-
 
         if (cursor.getCount()==0){
-
-            View headerSinDatos= getLayoutInflater().inflate(R.layout.header_datos_vacios,null);
-            listCobros.addHeaderView(headerSinDatos,null, false);
+            headerSinDatos.setVisibility(View.VISIBLE);
         }else if(cursor.getCount()<0){
-
-            View headerSinDatos= getLayoutInflater().inflate(R.layout.header_datos_vacios,null);
-            listCobros.addHeaderView(headerSinDatos,null, false);
-
+            headerSinDatos.setVisibility(View.VISIBLE);
         }
         listCobros.setAdapter(cACobros);
         listCobros.setOnItemClickListener(new AdapterView.OnItemClickListener() {
