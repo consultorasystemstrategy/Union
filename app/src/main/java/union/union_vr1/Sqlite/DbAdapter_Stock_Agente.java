@@ -419,7 +419,7 @@ public class DbAdapter_Stock_Agente {
                 "FROM m_stock_agente SA\n" +
                 "INNER JOIN m_precio P\n" +
                 "ON  SA.st_in_id_producto = P.pr_in_id_producto \n " +
-                "WHERE SA.liquidacion = ? ", new String[]{""+liquidacion});
+                "WHERE SA.liquidacion = ? and SA.st_in_disponible > 0 ", new String[]{""+liquidacion});
         return cr;
     }
 

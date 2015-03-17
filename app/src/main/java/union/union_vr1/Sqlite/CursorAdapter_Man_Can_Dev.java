@@ -54,6 +54,10 @@ public class CursorAdapter_Man_Can_Dev extends CursorAdapter {
 
             String idDetalle= cursor.getString(1);
             String tipo_Op = cursor.getString(5);
+            String cantidad = cursor.getString(17);
+            if(cantidad==null){
+                cantidad = cursor.getString(25);
+            }
             if(tipo_Op ==null){
                 tipo_Op="Devolucion";
             }else
@@ -92,7 +96,7 @@ public class CursorAdapter_Man_Can_Dev extends CursorAdapter {
 
             DecimalFormat df= new DecimalFormat("#0.00");
             textViewTitulo.setText(nomProducto);
-            textViewSubtitulo.setText(tipo_Op + ",  "+ categoria_op);
+            textViewSubtitulo.setText(tipo_Op + ",  "+ categoria_op+", Cantidad: "+cantidad);
             textViewComment.setText(fecha);
             textViewMonto.setText("S/. "+df.format(importe));
 
