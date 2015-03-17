@@ -278,6 +278,7 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
             case R.id.VEE_BTNcobros:
                 Intent i = new Intent(this, VMovil_Cobro_Credito.class);
                 i.putExtra("idEstabX", valIdEstab);
+                finish();
                 startActivity(i);
                 //Toast.makeText(getApplicationContext(),
                 //        "1", Toast.LENGTH_SHORT).show();

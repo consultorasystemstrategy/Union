@@ -161,7 +161,7 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity {
                 Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
                 String nom = cursor.getString(1);
                 idProducto = cursor.getInt(0);
-                String valorUnidad = cursor.getString(2);
+                String valorUnidad = cursor.getString(3);
                 autoComple.setText(nom);
                 Intent faCanjeDev = new Intent(getApplicationContext(), VMovil_Facturas_Canjes_Dev.class);
                 faCanjeDev.putExtra("idAgente", idAgente);

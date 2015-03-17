@@ -68,7 +68,7 @@ public class VMovil_Evento_Gasto extends Activity /*implements OnClickListener *
         listViewInformeGasto = (ListView) findViewById(R.id.VEG_listViewInformeGasto);
 
         header = getLayoutInflater().inflate(R.layout.infor_gasto_cabecera,null);
-        listViewInformeGasto.addHeaderView(header);
+        listViewInformeGasto.addHeaderView(header,null,false);
 
         editTextTotal = (EditText) findViewById(R.id.editText_VEG_total);
         editTextReferencia = (EditText) findViewById(R.id.editText_VEG_referencia);
@@ -380,6 +380,17 @@ public class VMovil_Evento_Gasto extends Activity /*implements OnClickListener *
 
         // Assign adapter to ListView
         listViewInformeGasto.setAdapter(dataAdapter);
+        listViewInformeGasto.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     public String getDatePhone()

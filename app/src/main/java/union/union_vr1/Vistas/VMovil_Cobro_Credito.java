@@ -78,6 +78,8 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
     private Context mContext;
 
 
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -268,6 +270,14 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent returnAc = new Intent(mContext, VMovil_Evento_Establec.class);
+        returnAc.putExtra("idEstab", estabX);
+        finish();
+        startActivity(returnAc);
+    }
 
     private void autorizacion(Cursor cursor, int p) {
         //Variables Operacion
@@ -394,7 +404,7 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
                 displayListViewVCC();
                 break;
             case R.id.VCCR_BTNcancelar:
-                finish();
+                Back();
                 break;
             default:
                 break;
