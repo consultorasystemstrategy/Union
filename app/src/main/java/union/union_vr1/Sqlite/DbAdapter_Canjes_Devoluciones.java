@@ -278,7 +278,7 @@ public class DbAdapter_Canjes_Devoluciones {
     }
 
     public Cursor listarCanjesDev(int idEstablec) {
-        Cursor cr = mDb.rawQuery("select * from m_histo_venta_detalle where  hd_in_id_establec=" + idEstablec + " and hg_te_fecha_ope='" + getDatePhone() + "';", null);
+        Cursor cr = mDb.rawQuery("select * from m_histo_venta_detalle where  hd_in_id_establec=" + idEstablec + " and hg_te_fecha_ope='" + getDatePhone() + "' or hd_in_cantidad_ope_dev !='0';", null);
         return cr;
     }
     public String guardarCabecera(int idAgente){
