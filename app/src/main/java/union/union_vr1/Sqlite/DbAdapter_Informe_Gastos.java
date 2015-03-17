@@ -96,6 +96,46 @@ public class DbAdapter_Informe_Gastos {
         return doneDelete > 0;
 
     }
+    public boolean deleteGastoById(int id_gasto) {
+
+        int doneDelete = 0;
+        doneDelete = mDb.delete(SQLITE_TABLE_Informe_Gastos, GA_id_gasto +" = ?" , new String[]{""+id_gasto});
+        Log.w(TAG, Integer.toString(doneDelete));
+        return doneDelete > 0;
+
+    }
+
+    public Cursor fetchGastosById(int id_gasto){
+
+        Cursor cursor = mDb.query(
+                SQLITE_TABLE_Informe_Gastos,
+                new String[] {GA_id_gasto,
+                        GA_nom_tipo_gasto, GA_subtotal, GA_igv, GA_total,GA_id_tipo_doc},
+                GA_id_gasto + "=?",
+                new String[]{""+id_gasto},
+                null,
+                null,
+                null
+        );
+        if (cursor.getCount()>0){
+            cursor.moveToFirst();
+        }
+        return cursor;
+    }
+
+    public int updateGastosById(int id, double total,double sub_total, double igv){
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(GA_total, total);
+        contentValues.put(GA_subtotal, sub_total);
+        contentValues.put(GA_igv, igv);
+
+        return  mDb.update(SQLITE_TABLE_Informe_Gastos,
+                contentValues,
+                GA_id_gasto + "=?",
+                new String[]{""+id}
+                );
+    }
+
 
     public Cursor fetchInformeGastosByName(String inputText) throws SQLException {
         Log.w(TAG, inputText);

@@ -267,18 +267,20 @@ public class DbAdapter_Stock_Agente {
                 ST_id_producto + " = '" + id_producto + "' AND " + ST_liquidacion + " = '" + liquidacion + "' ", null, null, null, null, null);
 
         int cantidadFinal = 0;
-
+        int cantidadVentas = 0;
         if (mCursor != null) {
             mCursor.moveToFirst();
             cantidadFinal = mCursor.getInt(mCursor.getColumnIndex(ST_final));
+            cantidadVentas = mCursor.getInt(mCursor.getColumnIndex(ST_ventas));
         }
         int sumado = cantidadFinal + cantidadAnulada;
         int restado = cantidadFinal - cantidadAnulada;
+        int ventas = cantidadVentas-cantidadAnulada;
 
         ContentValues initialValues = new ContentValues();
         initialValues.put(ST_final, sumado);
         initialValues.put(ST_disponible, sumado);
-        initialValues.put(ST_ventas, restado);
+        initialValues.put(ST_ventas, ventas);
         initialValues.put(ST_fisico, sumado);
         mDb.update(SQLITE_TABLE_Stock_Agente, initialValues,
                 ST_id_producto + "=? AND " + ST_liquidacion + " = ? ", new String[]{"" + id_producto, "" + liquidacion});

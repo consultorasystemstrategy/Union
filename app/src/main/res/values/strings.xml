@@ -113,6 +113,7 @@
         <item>Editar</item>
         <item>Eliminar</item>
     </string-array>
+
     <string-array name="estadoAtencion">
         <item>Atendido</item>
         <item>No atendido</item>

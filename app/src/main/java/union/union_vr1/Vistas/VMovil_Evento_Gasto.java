@@ -1,6 +1,9 @@
 package union.union_vr1.Vistas;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -8,6 +11,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -27,7 +31,9 @@ import java.util.List;
 import union.union_vr1.CustomOnItemSelectedListener;
 import union.union_vr1.R;
 import union.union_vr1.Sqlite.Constants;
+import union.union_vr1.Sqlite.DBAdapter_Temp_Venta;
 import union.union_vr1.Sqlite.DbAdapter_Informe_Gastos;
+import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 import union.union_vr1.Sqlite.DbAdapter_Tipo_Gasto;
 
 public class VMovil_Evento_Gasto extends Activity /*implements OnClickListener */ {
@@ -46,14 +52,24 @@ public class VMovil_Evento_Gasto extends Activity /*implements OnClickListener *
     private SimpleCursorAdapter dataAdapter;
     private String[] TipoGasto = new String[20];
     private View header;
+    private Activity activity;
 
-
+    private EditText editText;
+    int agente = 1;
+    int tipoDocumento = 1;
+    private DbAdapter_Temp_Session session;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //Creando la UI
         setContentView(R.layout.princ_evento_gasto);
+
+        activity = this;
+        session = new DbAdapter_Temp_Session(this);
+        session.open();
+
+        agente = session.fetchVarible(1);
 
         dbHelperInformeGasto = new DbAdapter_Informe_Gastos(this);
         dbHelperInformeGasto.open();
@@ -304,7 +320,6 @@ public class VMovil_Evento_Gasto extends Activity /*implements OnClickListener *
         Double igv = 0.0;
         Double subtotal = 0.0;
         int estado = 0;
-        int agente = 1;
 
         long idRegistroGastoInsertado = 0;
         switch (tipoDocumento) {
@@ -312,17 +327,17 @@ public class VMovil_Evento_Gasto extends Activity /*implements OnClickListener *
                 igv = IGV * total / 100;
                 subtotal = total - igv;
                 positionTipoDocumento = 1;
-                idRegistroGastoInsertado = dbHelperInformeGasto.createInformeGastos(positionTipoGasto, positionProcedenciaGasto, positionTipoDocumento, null, subtotal, igv, total, getDatePhone(), null, estado, referencia, agente, Constants._CREADO);
+                idRegistroGastoInsertado = dbHelperInformeGasto.createInformeGastos(positionTipoGasto, positionProcedenciaGasto, positionTipoDocumento, tipoGasto, subtotal, igv, total, getDatePhone(), null, estado, referencia, agente, Constants._CREADO);
                 Log.d("TIPO DOCUMENTO", "FACTURA");
                 break;
             case boleta:
                 positionTipoDocumento = 2;
-                idRegistroGastoInsertado = dbHelperInformeGasto.createInformeGastos(positionTipoGasto, positionProcedenciaGasto, positionTipoDocumento, null, subtotal, igv, total, getDatePhone(), null, estado, referencia, agente, Constants._CREADO);
+                idRegistroGastoInsertado = dbHelperInformeGasto.createInformeGastos(positionTipoGasto, positionProcedenciaGasto, positionTipoDocumento, tipoGasto, subtotal, igv, total, getDatePhone(), null, estado, referencia, agente, Constants._CREADO);
                 Log.d("TIPO DOCUMENTO", "BOLETA");
                 break;
             case ficha:
                 positionTipoDocumento = 4;
-                idRegistroGastoInsertado = dbHelperInformeGasto.createInformeGastos(positionTipoGasto, positionProcedenciaGasto, positionTipoDocumento, null, subtotal, igv, total, getDatePhone(), null, estado, referencia, agente, Constants._CREADO);
+                idRegistroGastoInsertado = dbHelperInformeGasto.createInformeGastos(positionTipoGasto, positionProcedenciaGasto, positionTipoDocumento, tipoGasto, subtotal, igv, total, getDatePhone(), null, estado, referencia, agente, Constants._CREADO);
                 Log.d("TIPO DOCUMENTO", "FICHA");
                 break;
         }
@@ -380,17 +395,145 @@ public class VMovil_Evento_Gasto extends Activity /*implements OnClickListener *
 
         // Assign adapter to ListView
         listViewInformeGasto.setAdapter(dataAdapter);
-        listViewInformeGasto.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        listViewInformeGasto.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //Aquí obtengo el cursor posicionado en la fila que ha seleccionado/clickeado
 
-            }
+                Cursor cursor = (Cursor) parent.getItemAtPosition(position);
+                final long id_gasto = cursor.getLong(cursor.getColumnIndex(DbAdapter_Informe_Gastos.GA_id_gasto));
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+                new AlertDialog.Builder(activity)
+                        .setTitle("Seleccionar una acción")
+                        .setItems(R.array.acciones, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                switch (i) {
+                                    case 0:
+                                        myEditDialog((int) id_gasto).show();
+                                        break;
+                                    case 1:
+                                        new AlertDialog.Builder(activity)
+                                                .setTitle("Eliminar")
+                                                .setMessage("¿Está seguro que desea eliminar este gasto?")
+                                                .setNegativeButton(android.R.string.no, null)
+                                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int id) {
+                                                        // FIRE ZE MISSILES!
+                                                        boolean succesful = dbHelperInformeGasto.deleteGastoById((int) id_gasto);
+                                                        if (succesful) {
+                                                            Toast.makeText(getApplicationContext(),"Gasto eliminado.", Toast.LENGTH_LONG).show();
+                                                                displayListViewVEG();
+                                                        } else {
+                                                            Toast.makeText(getApplicationContext(), "No se pudo eliminar, intente nuevamente.", Toast.LENGTH_LONG).show();
+                                                        }
+                                                    }
+                                                }).create().show();
+                                        break;
 
+                                }
+                            }
+                        }).create().show();
             }
         });
+    }
+    private Dialog myEditDialog(final int id_gasto) {
+        final View layout = View.inflate(this, R.layout.editar_gastos, null);
+        editText = ((EditText) layout.findViewById(R.id.editTextCosto));
+        final TextView nombreGasto = ((TextView) layout.findViewById(R.id.textViewNombreGasto));
+
+
+
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                Log.d("BEFORE TEXT CHANGE", "ON");
+                if (editText.getText().toString().trim() != "") {
+                    editText.setError(null);
+                }
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                Log.d("ON TEXT CHANGE", "ON");
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                Log.d("AFTER TEXT CHANGE", "ON");
+                if (editText.getText().toString().trim().equals("")) {
+                    editText.setError("Es Requerido");
+                } else {
+                    editText.setError(null);
+                }
+            }
+        });
+
+        Cursor cursorGasto = dbHelperInformeGasto.fetchGastosById(id_gasto);
+
+        cursorGasto.moveToFirst();
+        String nombre = "Nombre de Gasto";
+        if (cursorGasto.getCount()>0){
+            nombre = cursorGasto.getString(cursorGasto.getColumnIndexOrThrow(dbHelperInformeGasto.GA_nom_tipo_gasto));
+            tipoDocumento = cursorGasto.getInt(cursorGasto.getColumnIndexOrThrow(dbHelperInformeGasto.GA_id_tipo_doc));
+            nombreGasto.setText(""+nombre);
+        }
+
+
+
+
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Cambiar Costo");
+        builder.setPositiveButton("OK", new Dialog.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                String texto = null;
+                if (editText.getText().toString().trim().equals("")) {
+                    texto = "10";
+                } else {
+                    texto = editText.getText().toString().trim();
+                }
+
+                Double costo = Double.valueOf(texto);
+                Double subtotal = 0.0;
+                Double igv = 0.0;
+                switch (tipoDocumento){
+                    case 1:
+                        //CASO FACTURA
+                        igv = IGV*costo/100;
+                        subtotal = costo-igv;
+                        dbHelperInformeGasto.updateGastosById(id_gasto,costo,subtotal,igv);
+                        break;
+                    case 2:
+                        //CASO BOLETA
+                        dbHelperInformeGasto.updateGastosById(id_gasto,costo,subtotal,igv);
+                        break;
+                    case 4:
+                        dbHelperInformeGasto.updateGastosById(id_gasto,costo,subtotal,igv);
+                        //CASO FICHA
+                        break;
+                    default:
+
+                        break;
+                }
+                displayListViewVEG();
+            }
+        });
+
+        builder.setView(layout);
+
+        final AlertDialog alertDialog = builder.create();
+        editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                }
+            }
+        });
+
+        return alertDialog;
     }
 
     public String getDatePhone()
@@ -408,7 +551,4 @@ public class VMovil_Evento_Gasto extends Activity /*implements OnClickListener *
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         return df.format(date);
     }
-
-
-
 }
