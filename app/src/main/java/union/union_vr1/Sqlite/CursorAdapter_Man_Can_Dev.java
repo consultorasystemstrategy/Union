@@ -54,13 +54,20 @@ public class CursorAdapter_Man_Can_Dev extends CursorAdapter {
 
             String idDetalle= cursor.getString(1);
             String tipo_Op = cursor.getString(5);
+            if(tipo_Op ==null){
+                tipo_Op="Devolucion";
+            }else
             if(tipo_Op.equals("1")){
                 tipo_Op="Canje";
             }
-            else{
+            else {
                 tipo_Op="Devolucion";
             }
             String categoria_op=cursor.getString(15);
+            if(categoria_op==null){
+                categoria_op=cursor.getString(26);
+
+            }
             if(categoria_op.equals("1")){
                 categoria_op="Bueno";
             }
@@ -76,23 +83,26 @@ public class CursorAdapter_Man_Can_Dev extends CursorAdapter {
             String nomProducto = cursor.getString(9);
             String fecha = cursor.getString(19);
             Double importe = cursor.getDouble(18);
+            if(importe==0.0){
+                importe = cursor.getDouble(27);
+            }
 
-            String textoAdpater = "Producto: "+nomProducto+"," +
-                    "\nOperacion: "+tipo_Op+"," +
-                    "\nCategoria: "+categoria_op+"," +
-                    "\nImporte: "+importe+"," +
-                    "\nFecha: "+fecha+"";
+
 
 
             DecimalFormat df= new DecimalFormat("#0.00");
-
             textViewTitulo.setText(nomProducto);
             textViewSubtitulo.setText(tipo_Op + ",  "+ categoria_op);
             textViewComment.setText(fecha);
             textViewMonto.setText("S/. "+df.format(importe));
 
             linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.Dark1));
-            imageView.setImageDrawable(context.getApplicationContext().getResources().getDrawable(R.drawable.ic_action_refresh));
+
+            if(tipo_Op.equals("Devolucion")){
+                imageView.setImageDrawable(context.getApplicationContext().getResources().getDrawable(R.drawable.ic_action_undo));
+            }else{
+                imageView.setImageDrawable(context.getApplicationContext().getResources().getDrawable(R.drawable.ic_action_refresh));
+            }
 
         }
     }
