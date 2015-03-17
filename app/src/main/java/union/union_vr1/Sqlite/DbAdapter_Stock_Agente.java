@@ -431,7 +431,7 @@ public class DbAdapter_Stock_Agente {
 
     //SON LOS DE KELVIN PREGUNTARLE PARA QUÉ LOS USA
     public Cursor listarbyIdProductoAndStock  (String nombre, int liquidacion)  throws SQLException{
-        Cursor cr = mDb.rawQuery("SELECT DISTINCT(SA.st_in_id_producto) AS _id, SA.st_te_nombre, SA.st_in_disponible\n" +
+        Cursor cr = mDb.rawQuery("SELECT DISTINCT(SA.st_in_id_producto) AS _id, SA.st_te_nombre, SA.st_in_disponible ,P.pr_in_valor_unidad as valorUnidad\n" +
                 "FROM m_stock_agente SA\n" +
                 "INNER JOIN m_precio P\n" +
                 "ON  SA.st_in_id_producto = P.pr_in_id_producto\n" +

@@ -45,6 +45,7 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
     private String nomEstablecimiento;
     private int cantidadV;
     private int devueltoV;
+    private String valorUnidad;
     private Context ctx = this;
     DbAdapter_Temp_Session dbAdapter_temp_session;
 
@@ -69,6 +70,7 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
         idEstablec = bd.getString("idEstablec");
         idAgente = bd.getInt("idAgente");
         nomProducto = bd.getString("nomProducto");
+        valorUnidad = bd.getString("valorUnidad");
         Cursor cr = dbHelperCanjes_Dev.nom_establecimiento(idEstablec);
         cr.moveToFirst();
         nomEstablecimiento = cr.getString(1);
@@ -768,7 +770,7 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
         if (tipo_op.equals("Canje")) {
             idTipo_Op = 1;
             Log.d("MasParametros","["+idEstablec+"-"+idProducto+"-"+idTipo_Op+"-"+compro+"-"+nomEstablecimiento+"-"+idCat_tipo+"-"+cantidad2+"-"+importe*cantidad2+"-"+lote+"-"+idAgente);
-            boolean estado = dbHelperCanjes_Dev.insertarCanjes(idEstablec, idProducto, idTipo_Op, compro, nomEstablecimiento, nomProducto, idCat_tipo, cantidad2, importe*cantidad2, lote, idAgente,liquidacion);
+            boolean estado = dbHelperCanjes_Dev.insertarCanjes(idEstablec, idProducto, idTipo_Op, compro, nomEstablecimiento, nomProducto, idCat_tipo, cantidad2, importe*cantidad2, lote, idAgente,liquidacion,valorUnidad);
             if (estado) {
                 confirmar();
             } else {
@@ -777,7 +779,7 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
         }
         if (tipo_op.equals("Devolucion")) {
             idTipo_Op = 2;
-            boolean estado = dbHelperCanjes_Dev.insertar_Dev(idEstablec, idProducto, idTipo_Op, compro, nomEstablecimiento, nomProducto, idCat_tipo, cantidad2, importe*cantidad2, lote, idAgente,liquidacion);
+            boolean estado = dbHelperCanjes_Dev.insertar_Dev(idEstablec, idProducto, idTipo_Op, compro, nomEstablecimiento, nomProducto, idCat_tipo, cantidad2, importe*cantidad2, lote, idAgente,liquidacion,valorUnidad);
             if (estado) {
                 confirmar();
             } else {

@@ -100,7 +100,8 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity {
 
         String[] columnasStock = new String[]{
                 cr.getColumnName(1),
-                cr.getColumnName(2)
+                cr.getColumnName(2),
+
 
         };
 
@@ -160,12 +161,14 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity {
                 Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
                 String nom = cursor.getString(1);
                 idProducto = cursor.getInt(0);
+                String valorUnidad = cursor.getString(2);
                 autoComple.setText(nom);
                 Intent faCanjeDev = new Intent(getApplicationContext(), VMovil_Facturas_Canjes_Dev.class);
                 faCanjeDev.putExtra("idAgente", idAgente);
                 faCanjeDev.putExtra("idEstablec", establec);
                 faCanjeDev.putExtra("idProducto", idProducto);
                 faCanjeDev.putExtra("nomProducto", nom);
+                faCanjeDev.putExtra("valorUnidad", valorUnidad);
                 Log.e("idProducto",""+idProducto+"-"+nom);
                 startActivity(faCanjeDev);
                 finish();
@@ -225,6 +228,7 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity {
                         public void onClick(DialogInterface dialog, int id) {
                             boolean estado =false;
                             if (idOperacion.equals("1")) {//cannjeggggg
+                                Log.e("Hola K ASE",""+idProducto+"-"+cantProductos+"-"+idHistoVenta+"-"+idHistoDetalle+"-"+liquidacion);
                                 estado =  dbHelper_CanDev.cancelarCabiosByIdCanjes(idProducto,cantProductos,idHistoVenta,idHistoDetalle,liquidacion);
                                 if(estado){
                                     Toast.makeText(getApplicationContext(),"Quitado de la Lista",Toast.LENGTH_SHORT).show();
