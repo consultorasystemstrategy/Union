@@ -125,45 +125,7 @@ public class VMovil_Venta_Cabecera_AgregarProductos extends Activity implements 
         cursorEstablecimiento.moveToFirst();
         id_categoria_establecimiento = cursorEstablecimiento.getInt(cursorEstablecimiento.getColumnIndex(DbAdaptert_Evento_Establec.EE_id_cat_est));
 
-
-
-        Cursor cursorTempVentaDetalleByProcedencia = dbHelper_Temp_Venta.fetchAllTempVentaDetalleByProcedencia(procedencia);
-
-        // The desired columns to be bound
-        String[] columns = new String[]{
-                DBAdapter_Temp_Venta.temp_nom_producto,
-                DBAdapter_Temp_Venta.temp_cantidad,
-                DBAdapter_Temp_Venta.temp_precio_unit,
-                DBAdapter_Temp_Venta.temp_importe,
-
-        };
-
-        // the XML defined views which the data will be bound to
-        int[] to = new int[]{
-                R.id.VC_producto,
-                R.id.VC_promedio,
-                R.id.VC_pu,
-                R.id.VC_total
-
-        };
-
-
-        // create the adapter using the cursor pointing to the desired data
-        //as well as the layout information
-        SimpleCursorAdapter simpleCursorAdapter = new SimpleCursorAdapter(
-                this, R.layout.infor_venta_cabecera,
-                cursorTempVentaDetalleByProcedencia,
-                columns,
-                to,
-                0);
-
-
-        listView = (ListView) findViewById(R.id.VCAP_listViewProductosAgregados);
-        header = getLayoutInflater().inflate(R.layout.infor_venta_cabecera,null);
-        listView.addHeaderView(header);
-        // Assign adapter to ListView
-        listView.setAdapter(simpleCursorAdapter);
-
+        mostrarProductosTemporales();
 
 
         mCursor = dbHelper_Stock_Agente.fetchStockAgenteByIdEstablecimiento(id_categoria_establecimiento, liquidacion);
@@ -246,12 +208,58 @@ public class VMovil_Venta_Cabecera_AgregarProductos extends Activity implements 
                 disponible = cursor.getInt(cursor.getColumnIndex(DbAdapter_Stock_Agente.ST_disponible));
 
 
-                myTextDialog().show();
+                if (disponible>0){
+                    myTextDialog().show();
+                }else{
+                    Toast.makeText(mainActivity, "No hay Stock", Toast.LENGTH_SHORT).show();
+                }
+
 
             }
         });
 
 
+    }
+
+    public void mostrarProductosTemporales(){
+        Cursor cursorTempVentaDetalleByProcedencia = dbHelper_Temp_Venta.fetchAllTempVentaDetalleByProcedencia(procedencia);
+
+        // The desired columns to be bound
+        String[] columns = new String[]{
+                DBAdapter_Temp_Venta.temp_nom_producto,
+                DBAdapter_Temp_Venta.temp_cantidad,
+                DBAdapter_Temp_Venta.temp_precio_unit,
+                DBAdapter_Temp_Venta.temp_importe,
+
+        };
+
+        // the XML defined views which the data will be bound to
+        int[] to = new int[]{
+                R.id.VC_producto,
+                R.id.VC_promedio,
+                R.id.VC_pu,
+                R.id.VC_total
+
+        };
+
+
+        // create the adapter using the cursor pointing to the desired data
+        //as well as the layout information
+        SimpleCursorAdapter simpleCursorAdapter = new SimpleCursorAdapter(
+                this, R.layout.infor_venta_cabecera,
+                cursorTempVentaDetalleByProcedencia,
+                columns,
+                to,
+                0);
+
+
+        listView = (ListView) findViewById(R.id.VCAP_listViewProductosAgregados);
+        if (listView.getHeaderViewsCount()<1){
+            header = getLayoutInflater().inflate(R.layout.infor_venta_cabecera,null);
+            listView.addHeaderView(header);
+        }
+        // Assign adapter to ListView
+        listView.setAdapter(simpleCursorAdapter);
     }
 
     private Dialog myTextDialog() {
@@ -285,8 +293,10 @@ public class VMovil_Venta_Cabecera_AgregarProductos extends Activity implements 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Cantidad");
+        final int finalMaximoValor = maximoValor;
         builder.setPositiveButton("OK", new Dialog.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
+
                 String texto = savedText.getText().toString().trim();
                 if(texto.equals("")){
                     texto = "1";
@@ -318,9 +328,7 @@ public class VMovil_Venta_Cabecera_AgregarProductos extends Activity implements 
                 //En una tabla "Temp_Venta" Nos sirve para agregar datos del historial de ventas anteriores y sugerir al usuario, estos son datos temporales
                 long id = dbHelper_Temp_Venta.createTempVentaDetalle(1,id_producto,nombre,cantidad,total_importe, precio_unitario, promedio_anterior, devuelto, procedencia, 1);
 
-                Intent intent = new Intent(mContext, VMovil_Venta_Cabecera_AgregarProductos.class);
-                finish();
-                startActivity(intent);
+               mostrarProductosTemporales();
             }
         });
         builder.setView(layout);

@@ -489,11 +489,12 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
                                                             boolean succesful = dbHelper_temp_venta.deleteTempVentaDetalleById(id_tem_detalle);
                                                             if (succesful) {
                                                                 Toast.makeText(getApplicationContext(), "Producto eliminado de la venta actual correctamente", Toast.LENGTH_LONG).show();
-                                                                finish();
+                                                                /*finish();
                                                                 Intent intent = new Intent(mContext, VMovil_Venta_Cabecera.class);
-                                                                startActivity(intent);
+                                                                startActivity(intent);*/
+                                                                mostrarProductosParaVender();
                                                             } else {
-                                                                Toast.makeText(getApplicationContext(), "No se pudo eliminar intente nuevamente", Toast.LENGTH_LONG).show();
+                                                                Toast.makeText(getApplicationContext(), "No se pudo eliminar, intente nuevamente", Toast.LENGTH_LONG).show();
                                                             }
                                                         }
                                                     }).create().show();
@@ -621,9 +622,10 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
                 int cantidad = Integer.parseInt(texto);
 
                 dbHelper_temp_venta.updateTempVentaDetalleCantidad(id_temp_venta_detalle, cantidad, cantidad * precio_unitario);
-                Intent intent = new Intent(mContext, VMovil_Venta_Cabecera.class);
+                /*Intent intent = new Intent(mContext, VMovil_Venta_Cabecera.class);
                 finish();
-                startActivity(intent);
+                startActivity(intent);*/
+                mostrarProductosParaVender();
             }
         });
 
@@ -942,78 +944,84 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
                 columns,
                 to,
                 0);
-        header = getLayoutInflater().inflate(R.layout.infor_venta_cabecera,null);
-        headerNombreEstablecimiento = getLayoutInflater().inflate(R.layout.header_venta,null);
-        TextView textViewNombreEstablecimiento = (TextView) headerNombreEstablecimiento.findViewById(R.id.headerEstablecimientoNombre);
+
+        if (listView.getHeaderViewsCount()<2){
+            header = getLayoutInflater().inflate(R.layout.infor_venta_cabecera,null);
+            headerNombreEstablecimiento = getLayoutInflater().inflate(R.layout.header_venta,null);
+            TextView textViewNombreEstablecimiento = (TextView) headerNombreEstablecimiento.findViewById(R.id.headerEstablecimientoNombre);
 
 
-        Cursor cursorEstablecimiento = dbHelper_Evento_Establecimiento.fetchEstablecsById(""+idEstablecimiento);
-        cursorEstablecimiento.moveToFirst();
-        String nombreEstablecimiento = "";
-        if (cursorEstablecimiento.getCount()>0) {
-            nombreEstablecimiento = cursorEstablecimiento.getString(cursorEstablecimiento.getColumnIndexOrThrow(dbHelper_Evento_Establecimiento.EE_nom_establec));
+            Cursor cursorEstablecimiento = dbHelper_Evento_Establecimiento.fetchEstablecsById(""+idEstablecimiento);
+            cursorEstablecimiento.moveToFirst();
+            String nombreEstablecimiento = "";
+            if (cursorEstablecimiento.getCount()>0) {
+                nombreEstablecimiento = cursorEstablecimiento.getString(cursorEstablecimiento.getColumnIndexOrThrow(dbHelper_Evento_Establecimiento.EE_nom_establec));
+            }
+            textViewNombreEstablecimiento.setText(nombreEstablecimiento);
+
+            listView.addHeaderView(headerNombreEstablecimiento,null,false);
+            listView.addHeaderView(header,null, false);
         }
-        textViewNombreEstablecimiento.setText(nombreEstablecimiento);
 
-        listView.addHeaderView(headerNombreEstablecimiento,null,false);
-        listView.addHeaderView(header,null, false);
         //AQUÍ TIENE QUE ESTAR EL CÓDIGO QUE MUESTRE EL MONTO TOTAL DE LA VENTA
 
-        Cursor cursorTemp = simpleCursorAdapter.getCursor();
-        int surtidoVenta = cursorTemp.getCount();
-        totalFooter = 0.0;
+        if (listView.getFooterViewsCount()<1){
+            Cursor cursorTemp = simpleCursorAdapter.getCursor();
+            int surtidoVenta = cursorTemp.getCount();
+            totalFooter = 0.0;
 
-        Cursor cursorStock = dbHelper_Stock_Agente.fetchAllStockAgenteByDay(idLiquidacion);
-        int surtidoStock = cursorStock.getCount();
+            Cursor cursorStock = dbHelper_Stock_Agente.fetchAllStockAgenteByDay(idLiquidacion);
+            int surtidoStock = cursorStock.getCount();
 
 
-        for (cursorTemp.moveToFirst(); !cursorTemp.isAfterLast();cursorTemp.moveToNext()){
+            for (cursorTemp.moveToFirst(); !cursorTemp.isAfterLast();cursorTemp.moveToNext()){
 
-            Double importe = cursorTemp.getDouble(cursorTemp.getColumnIndex(DBAdapter_Temp_Venta.temp_importe));
-            totalFooter += importe;
+                Double importe = cursorTemp.getDouble(cursorTemp.getColumnIndex(DBAdapter_Temp_Venta.temp_importe));
+                totalFooter += importe;
+            }
+
+            base_imponibleFooter = totalFooter /1.18;
+            igvFooter = base_imponibleFooter*0.18;
+
+            footer = getLayoutInflater().inflate(R.layout.footer_venta_cabecera,null);
+
+            textViewFooterText = (TextView)footer.findViewById(R.id.VCAP_textViewFooterText);
+            textViewFooterTotal = (TextView)footer.findViewById(R.id.VCAP_textViewFooterTotal);
+
+            textViewFooterSurtidoStock = (TextView)footer.findViewById(R.id.VCAP_textViewSurtidoStock);
+            textViewFooterSurtidoVenta = (TextView)footer.findViewById(R.id.VCAP_textViewSurtiDoVenta);
+
+
+            //DATOS DE PRUEBA LOS OBTENDRÈ CUANDO JOSMAR ME PASE ESTOS DATOS
+            int surtidoStockAnterior = 10;
+            int surtidoVentaAnterior = 1;
+
+            int porcentajeSurtidoAnterior = surtidoVentaAnterior*100/surtidoStockAnterior;
+
+            int porcentajeSurtido = surtidoVenta*100/surtidoStock;
+
+            textViewFooterSurtidoStock.setText(""+
+                    "Surtido Stock : " + surtidoStock + "\n" + "Porcentaje de Surtido de Venta: " +  + porcentajeSurtido +"%");
+            textViewFooterSurtidoVenta.setText(""+
+                    "Surtido Venta : " + surtidoVenta );
+
+            if (porcentajeSurtido==porcentajeSurtidoAnterior){
+                //IGUAL LO PINTAMOS DE AMARILLO
+                textViewFooterSurtidoVenta.setTextColor(this.getResources().getColor(R.color.amarillo));
+                textViewFooterSurtidoStock.setTextColor(this.getResources().getColor(R.color.amarillo));
+            }else if(porcentajeSurtido>porcentajeSurtidoAnterior){
+                //PINTAMOS DE VERDE
+                textViewFooterSurtidoVenta.setTextColor(this.getResources().getColor(R.color.verde));
+                textViewFooterSurtidoStock.setTextColor(this.getResources().getColor(R.color.verde));
+            }else if (porcentajeSurtido<porcentajeSurtidoAnterior){
+                //PINTAMOS DE ROJO
+                textViewFooterSurtidoVenta.setTextColor(this.getResources().getColor(R.color.rojo));
+                textViewFooterSurtidoStock.setTextColor(this.getResources().getColor(R.color.rojo));
+            }
+
+
+            listView.addFooterView(footer, null, false);
         }
-
-        base_imponibleFooter = totalFooter /1.18;
-        igvFooter = base_imponibleFooter*0.18;
-
-        footer = getLayoutInflater().inflate(R.layout.footer_venta_cabecera,null);
-
-        textViewFooterText = (TextView)footer.findViewById(R.id.VCAP_textViewFooterText);
-        textViewFooterTotal = (TextView)footer.findViewById(R.id.VCAP_textViewFooterTotal);
-
-        textViewFooterSurtidoStock = (TextView)footer.findViewById(R.id.VCAP_textViewSurtidoStock);
-        textViewFooterSurtidoVenta = (TextView)footer.findViewById(R.id.VCAP_textViewSurtiDoVenta);
-
-
-        //DATOS DE PRUEBA LOS OBTENDRÈ CUANDO JOSMAR ME PASE ESTOS DATOS
-        int surtidoStockAnterior = 10;
-        int surtidoVentaAnterior = 1;
-
-        int porcentajeSurtidoAnterior = surtidoVentaAnterior*100/surtidoStockAnterior;
-
-        int porcentajeSurtido = surtidoVenta*100/surtidoStock;
-
-        textViewFooterSurtidoStock.setText(""+
-                "Surtido Stock : " + surtidoStock + "\n" + "Porcentaje de Surtido de Venta: " +  + porcentajeSurtido +"%");
-        textViewFooterSurtidoVenta.setText(""+
-                "Surtido Venta : " + surtidoVenta );
-
-        if (porcentajeSurtido==porcentajeSurtidoAnterior){
-            //IGUAL LO PINTAMOS DE AMARILLO
-            textViewFooterSurtidoVenta.setTextColor(this.getResources().getColor(R.color.amarillo));
-            textViewFooterSurtidoStock.setTextColor(this.getResources().getColor(R.color.amarillo));
-        }else if(porcentajeSurtido>porcentajeSurtidoAnterior){
-            //PINTAMOS DE VERDE
-            textViewFooterSurtidoVenta.setTextColor(this.getResources().getColor(R.color.verde));
-            textViewFooterSurtidoStock.setTextColor(this.getResources().getColor(R.color.verde));
-        }else if (porcentajeSurtido<porcentajeSurtidoAnterior){
-            //PINTAMOS DE ROJO
-            textViewFooterSurtidoVenta.setTextColor(this.getResources().getColor(R.color.rojo));
-            textViewFooterSurtidoStock.setTextColor(this.getResources().getColor(R.color.rojo));
-        }
-
-
-        listView.addFooterView(footer, null, false);
         //ASIGNO EL ADAPTER AL LISTVIEW
         listView.setAdapter(simpleCursorAdapter);
     }
