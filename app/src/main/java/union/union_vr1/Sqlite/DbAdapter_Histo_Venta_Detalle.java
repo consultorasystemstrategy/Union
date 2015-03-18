@@ -263,12 +263,13 @@ public class DbAdapter_Histo_Venta_Detalle {
                 HD_id_hventadet+"=? AND "+HD_importe_ope+"=?",new String[]{idorig, vals});
     }
 
-    public int updateHistoVentaDetalle(String _id, int idGuia){
+    public int updateHistoVentaDetalle(String _id, String idGuia){
         ContentValues initialValues = new ContentValues();
         initialValues.put(HD_Guia,idGuia);
+        initialValues.put(Constants._SINCRONIZAR,Constants._ACTUALIZADO);
 
         return mDb.update(SQLITE_TABLE_Histo_Venta_Detalle, initialValues,
-                HD_Guia+"=?",new String[]{""+_id});
+                HD_Guia+" LIKE '%"+_id+"%'",null);
     }
 
 
@@ -334,7 +335,7 @@ public class DbAdapter_Histo_Venta_Detalle {
         mCursor = mDb.query(true, SQLITE_TABLE_Histo_Venta_Detalle, new String[] {HD_id_hventadet,
                         HD_id_detalle, HD_id_comprob, HD_id_establec,HD_id_agente, HD_id_producto, HD_id_tipoper,
                         HD_orden, HD_comprobante, HD_nom_producto, HD_cantidad, HD_importe, HD_fecha,
-                        HD_categoria_ope, HD_forma_ope, HD_cantidad_ope, HD_importe_ope, HD_fecha_ope, HD_estado, HD_lote},
+                        HD_categoria_ope, HD_categoria_ope_dev, HD_forma_ope, HD_cantidad_ope, HD_cantidad_ope_dev, HD_importe_ope,HD_importe_ope_dev, HD_fecha_ope_dev, HD_hora_ope_dev , HD_fecha_ope, HD_estado, HD_lote, HD_valor_unidad, HD_Guia},
                 Constants._SINCRONIZAR + " = " + Constants._ACTUALIZADO, null,
                 null, null, null, null);
         if (mCursor != null) {

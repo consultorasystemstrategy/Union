@@ -10,6 +10,7 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:name=".Utils.MyApplication"
@@ -155,6 +156,8 @@
             android:name=".Prueba"
             android:label="@string/title_activity_prueba" >
         </activity>
+        <service android:name=".Alarm.ServiceNotifyResumen" android:enabled="true"></service>
+        <receiver android:name=".Alarm.ReceiverAlarmFinishedDay"></receiver>
     </application>
 
 </manifest>

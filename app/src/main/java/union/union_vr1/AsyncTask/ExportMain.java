@@ -450,7 +450,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
                     if (isSuccesfulExport(jsonObject)){
                         listIdHVCreated.add(""+cursorHistoVentaCreated.getInt(cursorHistoVentaCreated.getColumnIndexOrThrow(dbAdapter_histo_venta.HV_id)));
 
-                        int nrGuiasActualizados = dbAdapter_histo_venta_detalle.updateHistoVentaDetalle(cursorHistoVentaCreated.getString(cursorHistoVentaCreated.getColumnIndexOrThrow(dbAdapter_histo_venta.HV_id_histo)),idGuia);
+                        int nrGuiasActualizados = dbAdapter_histo_venta_detalle.updateHistoVentaDetalle(cursorHistoVentaCreated.getString(cursorHistoVentaCreated.getColumnIndexOrThrow(dbAdapter_histo_venta.HV_id_histo)),""+idGuia);
                         Log.d("GUIA NUMERO ACTUALIZADOS", ""+nrGuiasActualizados);
                     }
 
@@ -474,6 +474,8 @@ public class ExportMain extends AsyncTask<String, String, String> {
             Log.d("EXPORT HVD", "TODOS EL HISTORIAL DE VENTA CREADO HA SIDO EXPORTADO");
         }
 
+        cursorHistoVentaDetalleCreated = dbAdapter_histo_venta_detalle.filterExportUpdated();
+
 
         if (cursorHistoVentaDetalleCreated.getCount()>0){
 
@@ -485,7 +487,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
                         cursorHistoVentaDetalleCreated.getInt(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_cantidad_ope))+"-"+
                         1+"-"+
                         cursorHistoVentaDetalleCreated.getInt(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_agente))+"-"+
-                        cursorHistoVentaDetalleCreated.getInt(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_Guia))+
+                        "GUIA REMISIÓN ID : "+cursorHistoVentaDetalleCreated.getString(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_Guia))+"-"+
                         cursorHistoVentaDetalleCreated.getString(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_comprobante))+"-"+
                         cursorHistoVentaDetalleCreated.getString(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_lote))+"-"+
                         idLiquidacion+"-"+

@@ -1,16 +1,20 @@
 package union.union_vr1.Vistas;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.LightingColorFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,6 +37,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 
 
+import union.union_vr1.Alarm.ReceiverAlarmFinishedDay;
 import union.union_vr1.AsyncTask.ExportMain;
 import union.union_vr1.AsyncTask.ImportMain;
 import union.union_vr1.Charts.Bar;
@@ -73,6 +78,7 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
     private VMovil_Evento_Indice mainActivity;
     private DbAdapter_Ruta_Distribucion dbAdapter_ruta_distribucion;
     private int idLiquidacion;
+    private PendingIntent pendingIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,6 +118,7 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         }
 
 
+        setAlarm();
 
         if (!export||!importado){
 
@@ -379,6 +386,36 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
             }
         }
         return false;
+    }
+
+    public void setAlarm(){
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        if(!prefs.getBoolean("firstTime", false)) {
+            // run your one time code
+            Log.d("CODE EXECUTE ONE TIME","SÍ PRIMERA VEZ");
+
+
+            Intent myIntent = new Intent(VMovil_Evento_Indice.this, ReceiverAlarmFinishedDay.class);
+            pendingIntent = PendingIntent.getBroadcast(VMovil_Evento_Indice.this, 0, myIntent, 0);
+
+
+            Calendar calendar = Calendar.getInstance();
+            //ALARMA ESTABLECIDA A LAS 5 DE LA TARDE
+            calendar.set(Calendar.HOUR_OF_DAY, 16);
+            calendar.set(Calendar.MINUTE, 45);
+            calendar.set(Calendar.SECOND, 00);
+            AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 24*60*60*1000 , pendingIntent);  //SE REPETIRÁ CADA 24 HORAS
+
+
+            Log.d("ALARMA ESTABLECIDA", "OK"+calendar.getTime());
+
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putBoolean("firstTime", true);
+            editor.commit();
+        }else{
+            Log.d("CODE NO SE EJECUTÓ","NO ES LA PRIMERA VEZ");
+        }
     }
 
 }
