@@ -79,6 +79,8 @@ public class VMovil_Resumen_Caja extends TabActivity {
 
     private Activity activity;
 
+    DecimalFormat df = new DecimalFormat("#.0");
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -269,10 +271,10 @@ public class VMovil_Resumen_Caja extends TabActivity {
         }
 
         textViewTotalCobrado.setText("Total");
-        textViewTotalN.setText("" + nTotal);
-        textViewTotalEmitido.setText("S/" + emitidoTotal);
-        textViewTotalPagado.setText("S/" + pagadoTotal);
-        textViewTotalCobrado.setText("S/" + cobradoTotal);
+        textViewTotalN.setText("" + df.format(nTotal));
+        textViewTotalEmitido.setText("S/" + df.format(emitidoTotal));
+        textViewTotalPagado.setText("S/" + df.format(pagadoTotal));
+        textViewTotalCobrado.setText("S/" + df.format(cobradoTotal));
 
 
         ListView listView = (ListView) findViewById(R.id.VRC_listarResumenCaja);
@@ -339,10 +341,10 @@ public class VMovil_Resumen_Caja extends TabActivity {
         textViewResumenGastoNombre.setText("Total");
         textViewResumenGastoNombre.setTypeface(null, Typeface.BOLD);
 
-        textViewResumenGastosTotalPlanta.setText("S/. " + totalPlanta);
+        textViewResumenGastosTotalPlanta.setText("S/. " + df.format(totalPlanta));
         textViewResumenGastosTotalPlanta.setTypeface(null, Typeface.BOLD);
 
-        textViewResumenGastosTotalRuta.setText("S/. " + totalRuta);
+        textViewResumenGastosTotalRuta.setText("S/. " + df.format(totalRuta));
         textViewResumenGastosTotalRuta.setTypeface(null, Typeface.BOLD);
 
         //listViewResumenGastos.addFooterView(viewlayoutFooterGastos);
@@ -351,8 +353,8 @@ public class VMovil_Resumen_Caja extends TabActivity {
         Double gastosTotales = totalRuta;
         Double aRendir = ingresosTotales-gastosTotales;
         DecimalFormat df = new DecimalFormat("#.0");
-        textViewResumenIngresos.setText("S/. "+ingresosTotales);
-        textViewResumenGastos.setText("S/. "+gastosTotales);
+        textViewResumenIngresos.setText("S/. "+df.format(ingresosTotales));
+        textViewResumenGastos.setText("S/. "+df.format(gastosTotales));
         textViewResumenARendir.setText("S/. "+df.format(aRendir));
 
 

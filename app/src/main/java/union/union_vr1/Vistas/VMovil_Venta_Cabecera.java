@@ -889,7 +889,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
 
         int indice_promedio_anterior = cursor.getColumnIndex("pa");
         int indice_devuelto  = cursor.getColumnIndex("devuelto");
-        int valor_unidad = cursor.getColumnIndex("valorUnidad");
+        int indice_valor_unidad = cursor.getColumnIndex("valorUnidad");
 
         //t indice_valor_unidad = cursor.getColumnIndex("");
         //int indice_costo_venta = cursor.getColumnIndex("");
@@ -908,6 +908,8 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
 
             String promedio_anterior = cursor.getString(indice_promedio_anterior);
             String devuelto = cursor.getString(indice_devuelto);
+            int valor_unidad = cursor.getInt(indice_valor_unidad);
+
             int procedencia = 0;
 
             //En una tabla "Temp_Venta" Nos sirve para agregar datos del historial de ventas anteriores y sugerir al usuario, estos son datos temporales

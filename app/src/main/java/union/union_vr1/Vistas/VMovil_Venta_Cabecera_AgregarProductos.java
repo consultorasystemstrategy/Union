@@ -211,8 +211,17 @@ public class VMovil_Venta_Cabecera_AgregarProductos extends Activity implements 
                 valor_unidad = cursor.getInt(cursor.getColumnIndex(DbAdapter_Precio.PR_valor_unidad));
 
 
+
                 if (disponible>0){
-                    myTextDialog().show();
+
+                    Cursor mCursorPrecioUnitarioGeneral = dbHelper_Precio.fetchAllPrecioByIdProductoAndCategoeria(id_producto,id_categoria_establecimiento);
+
+                    if (mCursorPrecioUnitarioGeneral.getCount()>1){
+                        myTextDialogValorUnidad().show();
+                        //Toast.makeText(getApplicationContext(), "Hay "+mCursorPrecioUnitarioGeneral.getCount() + " valores unidades para este producto", Toast.LENGTH_SHORT).show();
+                    }else{
+                        myTextDialog().show();
+                    }
                 }else{
                     Toast.makeText(mainActivity, "No hay Stock", Toast.LENGTH_SHORT).show();
                 }
@@ -275,6 +284,10 @@ public class VMovil_Venta_Cabecera_AgregarProductos extends Activity implements 
 
         Cursor mCursorPrecioUnitarioGeneral = dbHelper_Precio.fetchAllPrecioByIdProductoAndCategoeria(id_producto,id_categoria_establecimiento);
 
+       if (mCursorPrecioUnitarioGeneral.getCount()>1){
+           Toast.makeText(getApplicationContext(), "Hay "+mCursorPrecioUnitarioGeneral.getCount() + " valores unidades para este producto", Toast.LENGTH_SHORT).show();
+       }
+
 
         Cursor mCursorStock = dbHelper_Stock_Agente.fetchByIdProducto(id_producto,liquidacion);
         int maximoValor = 1;
@@ -332,6 +345,119 @@ public class VMovil_Venta_Cabecera_AgregarProductos extends Activity implements 
                 long id = dbHelper_Temp_Venta.createTempVentaDetalle(1,id_producto,nombre,cantidad,total_importe, precio_unitario, promedio_anterior, devuelto, procedencia, valor_unidad);
 
                mostrarProductosTemporales();
+            }
+        });
+        builder.setView(layout);
+
+        final AlertDialog alertDialog = builder.create();
+        savedText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                }
+            }
+        });
+        return alertDialog;
+    }
+
+    private Dialog myTextDialogValorUnidad() {
+        final View layout = View.inflate(this, R.layout.dialog_cantidad_productos_valor_unidad, null);
+
+        DecimalFormat df = new DecimalFormat("#.00");
+        final EditText savedText = ((EditText) layout.findViewById(R.id.VCAP_editTextCantidad));
+        final TextView nombreProducto = ((TextView) layout.findViewById(R.id.VCPA_textView2NombreProducto));
+        final TextView precio = ((TextView) layout.findViewById(R.id.VCPA_textViewPrecio));
+        final TextView valorUnidad = (TextView) layout.findViewById(R.id.VCPA_textViewValorUnidad);
+
+        final double[] precio_unitario = {0.0};
+
+        final Cursor mCursorPrecioUnitarioGeneral = dbHelper_Precio.fetchAllPrecioByIdProductoAndCategoeria(id_producto,id_categoria_establecimiento);
+        mCursorPrecioUnitarioGeneral.moveToFirst();
+
+        if (mCursorPrecioUnitarioGeneral.getCount()>0) {
+            precio_unitario[0] = mCursorPrecioUnitarioGeneral.getDouble(mCursorPrecioUnitarioGeneral.getColumnIndexOrThrow(DbAdapter_Precio.PR_precio_unit));
+            valor_unidad = mCursorPrecioUnitarioGeneral.getInt(mCursorPrecioUnitarioGeneral.getColumnIndexOrThrow(DbAdapter_Precio.PR_valor_unidad));
+            precio.setText("Precio : S/. "+ df.format(precio_unitario[0]));
+            valorUnidad.setText("Unidad : "+valor_unidad);
+        }else{
+            precio.setText("Precio : S/. No encontrado");
+        }
+        nombreProducto.setText(nombre);
+
+
+        valorUnidad.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int position = mCursorPrecioUnitarioGeneral.getPosition();
+                //Toast.makeText(getApplicationContext(), "Position del cursor Valor Unidad "+position, Toast.LENGTH_SHORT).show();
+
+                if (mCursorPrecioUnitarioGeneral.isLast()){
+                    mCursorPrecioUnitarioGeneral.moveToFirst();
+                }else{
+                    mCursorPrecioUnitarioGeneral.moveToNext();
+                }
+                precio_unitario[0] = mCursorPrecioUnitarioGeneral.getDouble(mCursorPrecioUnitarioGeneral.getColumnIndexOrThrow(DbAdapter_Precio.PR_precio_unit));
+                valor_unidad = mCursorPrecioUnitarioGeneral.getInt(mCursorPrecioUnitarioGeneral.getColumnIndexOrThrow(DbAdapter_Precio.PR_valor_unidad));
+                DecimalFormat df = new DecimalFormat("#.00");
+                precio.setText("Precio : S/. "+ df.format(precio_unitario[0]));
+                valorUnidad.setText("Unidad : "+valor_unidad);
+
+
+            }
+        });
+
+
+        Cursor mCursorStock = dbHelper_Stock_Agente.fetchByIdProducto(id_producto,liquidacion);
+        int maximoValor = 1;
+        if (mCursorStock.getCount()>0){
+            maximoValor = mCursorStock.getInt(mCursorStock.getColumnIndexOrThrow(dbHelper_Stock_Agente.ST_disponible));
+        }
+
+        savedText.setFilters(new InputFilter[]{new InputFilterMinMax(0,maximoValor)});
+
+
+
+
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Cantidad");
+        final int finalMaximoValor = maximoValor;
+        builder.setPositiveButton("OK", new Dialog.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+
+                String texto = savedText.getText().toString().trim();
+                if(texto.equals("")){
+                    texto = "1";
+                }
+
+                cantidad = Integer.parseInt(texto);
+
+                //Toast.makeText(getApplicationContext(),"Cantidad : "+cantidad + " id_producto : "+ id_producto + "Precio Unitario : " +precio_unitario[0] + "Valor Unidad : "+ valor_unidad,Toast.LENGTH_LONG).show();
+
+                Cursor mCursorPrecioUnitario = dbHelper_Precio.fetchAllPrecioByIdProductoAndCantidadAndValorUnidad(id_producto,cantidad, id_categoria_establecimiento,valor_unidad);
+
+                if (mCursorPrecioUnitario.getCount()!=0){
+                    precio_unitario[0] = mCursorPrecioUnitario.getDouble(mCursorPrecioUnitario.getColumnIndex(DbAdapter_Precio.PR_precio_unit));
+                }else{
+                    /*
+                    Cursor mCursorPrecioUnitarioGeneral = dbHelper_Precio.fetchAllPrecioByIdProductoAndCategoeria(id_producto,id_categoria_establecimiento);
+                    mCursorPrecioUnitarioGeneral.moveToFirst();
+                    if (mCursorPrecioUnitarioGeneral.getCount()>0) {
+                        precio_unitario = mCursorPrecioUnitarioGeneral.getDouble(mCursorPrecioUnitarioGeneral.getColumnIndexOrThrow(DbAdapter_Precio.PR_precio_unit));
+                    }else{
+                        Toast.makeText(getApplicationContext(), "No se encontró un precio para esta cantidad de productos, agregar el precio a la base de datos", Toast.LENGTH_LONG).show();;
+                    }*/
+                }
+
+                double total_importe = precio_unitario[0]*cantidad;
+                String promedio_anterior = null;
+                String devuelto = null;
+
+                //En una tabla "Temp_Venta" Nos sirve para agregar datos del historial de ventas anteriores y sugerir al usuario, estos son datos temporales
+                long id = dbHelper_Temp_Venta.createTempVentaDetalle(1,id_producto,nombre,cantidad,total_importe, precio_unitario[0], promedio_anterior, devuelto, procedencia, valor_unidad);
+
+                mostrarProductosTemporales();
             }
         });
         builder.setView(layout);

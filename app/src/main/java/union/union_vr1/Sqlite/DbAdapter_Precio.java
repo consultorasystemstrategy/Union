@@ -136,12 +136,12 @@ public class  DbAdapter_Precio {
                 });
     }
 
-    public boolean existePrecio(int idProducto, int catEstablec, Double precioUnitario) {
+    public boolean existePrecio(int idProducto, int catEstablec, int valorUnidad) {
 
         boolean exists = false;
         Cursor mCursor = mDb.query(SQLITE_TABLE_Precio, new String[] {PR_id_precio,
                         PR_id_producto, PR_id_cat_est, PR_costo_venta, PR_precio_unit},
-                PR_id_producto + " = " + idProducto + " AND " + PR_id_cat_est + " = " + catEstablec + " AND " + PR_precio_unit+ " = " + precioUnitario ,
+                PR_id_producto + " = " + idProducto + " AND " + PR_id_cat_est + " = " + catEstablec + " AND " + PR_valor_unidad+ " = " + valorUnidad ,
                 null, null, null, null, null);
 
         if (mCursor != null) {
@@ -188,7 +188,7 @@ public class  DbAdapter_Precio {
     public Cursor fetchAllPrecioByIdProductoAndCategoeria(int idProducto, int idCategoriaEstablecimiento) {
 
         Cursor mCursor = mDb.query(SQLITE_TABLE_Precio, new String[] {PR_id_precio,
-                        PR_id_producto, PR_id_cat_est, PR_costo_venta, PR_precio_unit},
+                        PR_id_producto, PR_id_cat_est, PR_costo_venta, PR_precio_unit, PR_valor_unidad},
                 PR_id_producto + " = " + idProducto + " AND " + PR_id_cat_est + " = " + idCategoriaEstablecimiento,
                 null, null, null, null, null);
 
@@ -200,6 +200,19 @@ public class  DbAdapter_Precio {
 
 
 
+
+    public Cursor fetchAllPrecioByIdProductoAndCantidadAndValorUnidad(int id_producto, int cantidad, int idCategoriaEstablecimiento, int valor_unidad) {
+
+        Cursor mCursor = mDb.query(SQLITE_TABLE_Precio, new String[] {PR_id_precio,
+                        PR_id_producto, PR_id_cat_est, PR_costo_venta, PR_precio_unit},
+                PR_id_producto + " = " + id_producto+ " AND " + PR_desde + " <= " + cantidad+ " AND " + PR_hasta + " >= " + cantidad + " AND " + PR_id_cat_est + " = " + idCategoriaEstablecimiento + " AND "+PR_valor_unidad + " = " +valor_unidad,
+                null, null, null, null, null);
+
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+    }
 
     public Cursor fetchAllPrecioByIdProductoAndCantidad(int id_producto, int cantidad, int idCategoriaEstablecimiento) {
 

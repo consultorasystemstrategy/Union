@@ -237,7 +237,7 @@ public class ImportMain extends AsyncTask<String, String, String> {
             for (int i = 0; i < precios.size() ; i++) {
                 Log.d("PRECIO CATEGORÌA : " + i, "Nombre producto : " + precios.get(i).getNombreProducto());
 
-                boolean existe = dbAdapter_precio.existePrecio(precios.get(i).getIdProducto(), precios.get(i).getIdCategoriaEstablecimiento(), precios.get(i).getPrecioUnitario());
+                boolean existe = dbAdapter_precio.existePrecio(precios.get(i).getIdProducto(), precios.get(i).getIdCategoriaEstablecimiento(), precios.get(i).getValorUnidad());
                 Log.d("EXISTE ", ""+existe);
                 if (existe){
                     dbAdapter_precio.updatePrecios(precios.get(i), idAgente);

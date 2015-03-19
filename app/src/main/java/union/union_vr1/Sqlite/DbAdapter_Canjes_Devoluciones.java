@@ -27,7 +27,6 @@ public class DbAdapter_Canjes_Devoluciones {
     private final Context mCtx;
     private SQLiteDatabase mDb;
     private DbAdapter_Histo_Venta dbHistoVenta ;
-
     public DbAdapter_Canjes_Devoluciones(Context ctx) {
         this.mCtx = ctx;
     }
@@ -39,6 +38,7 @@ public class DbAdapter_Canjes_Devoluciones {
         mDb = mDbHelper.getWritableDatabase();
         return this;
     }
+
     public boolean cancelarCabiosByIdDevoluciones(String idProducto, int canProducto,String idHistoVenta,String idDetalle, int liquidacion) {
         boolean estado = false;
 
