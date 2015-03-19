@@ -159,7 +159,7 @@ public class DbAdapter_Stock_Agente {
         initialValues.put(Constants._SINCRONIZAR, Constants._ACTUALIZADO);
 
         mDb.update(SQLITE_TABLE_Stock_Agente, initialValues,
-                ST_id_producto + "=? AND " + ST_id_producto + " = ? ", new String[]{"" + stockAgente.getIdProducto(), "" + liquidacion});
+                ST_id_producto + "=? AND " + ST_liquidacion + " = ? ", new String[]{"" + stockAgente.getIdProducto(), "" + liquidacion});
     }
 
 

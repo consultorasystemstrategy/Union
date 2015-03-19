@@ -71,6 +71,7 @@ public class ServiceNotifyResumen extends Service {
 
         DecimalFormat df = new DecimalFormat("#.00");
         createNotification(df.format(aRendir));
+        stopSelf();
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -100,7 +101,6 @@ public class ServiceNotifyResumen extends Service {
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         // hide the notification after its selected
         noti.flags |= Notification.FLAG_AUTO_CANCEL;
-
         notificationManager.notify(0, noti);
 
     }
