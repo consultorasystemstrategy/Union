@@ -451,7 +451,9 @@ public class ExportMain extends AsyncTask<String, String, String> {
                         listIdHVCreated.add(""+cursorHistoVentaCreated.getInt(cursorHistoVentaCreated.getColumnIndexOrThrow(dbAdapter_histo_venta.HV_id)));
 
                         int nrGuiasActualizados = dbAdapter_histo_venta_detalle.updateHistoVentaDetalle(cursorHistoVentaCreated.getString(cursorHistoVentaCreated.getColumnIndexOrThrow(dbAdapter_histo_venta.HV_id_histo)),""+idGuia);
-                        Log.d("GUIA NUMERO ACTUALIZADOS", ""+nrGuiasActualizados);
+                        int nroGuiasActualizados  = dbAdapter_histo_venta.updateHistoVenta(cursorHistoVentaCreated.getString(cursorHistoVentaCreated.getColumnIndexOrThrow(dbAdapter_histo_venta.HV_id_histo)),""+idGuia);
+                        Log.d("GUIA DETALLLE NUMERO ACTUALIZADOS", ""+nrGuiasActualizados);
+                        Log.d("GUIA CABECERA NUMERO ACTUALIZADOS", ""+nroGuiasActualizados);
                     }
 
                 } catch (Exception e) {
@@ -474,7 +476,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
             Log.d("EXPORT HVD", "TODOS EL HISTORIAL DE VENTA CREADO HA SIDO EXPORTADO");
         }
 
-        cursorHistoVentaDetalleCreated = dbAdapter_histo_venta_detalle.filterExportUpdated();
+        cursorHistoVentaDetalleCreated = dbAdapter_histo_venta_detalle.filterExport();
 
 
         if (cursorHistoVentaDetalleCreated.getCount()>0){

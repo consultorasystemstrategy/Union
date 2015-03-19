@@ -67,6 +67,14 @@ public class DbAdapter_Histo_Venta {
 
         return mDb.insert(SQLITE_TABLE_Histo_Venta, null, initialValues);
     }
+
+    public int updateHistoVenta(String _id, String idGuia){
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(HV_id_histo,idGuia);
+
+        return mDb.update(SQLITE_TABLE_Histo_Venta, initialValues,
+                HV_id_histo+" LIKE '%"+_id+"%'",null);
+    }
     public Cursor filterExport() {
         Cursor mCursor = null;
         mCursor = mDb.query(true, SQLITE_TABLE_Histo_Venta, new String[] {HV_id,
