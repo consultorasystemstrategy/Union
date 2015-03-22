@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -209,9 +210,12 @@ public class mostrar_can_dev_facturas extends TabActivity {
                     "Base imponible :\n" +
                     "IGV :");
 
+            Double base = precio.getDouble(1);
+            Double igv = precio.getDouble(2);
+
             textViewFooterTotal.setText(" S/. "+precio.getString(0)+"\n" +
-                    "S/. "+precio.getString(1)+ "\n" +
-                    "S/. "+precio.getString(2));
+                    "S/. "+df.format(base)+ "\n" +
+                    "S/. "+df.format(igv));
 
         }
 
@@ -418,10 +422,8 @@ public class mostrar_can_dev_facturas extends TabActivity {
         inflater.inflate(R.menu.mostrar_can_dev_facturas, menu);
         return true;
     }
-    private String text(){
-        Cursor cabecera = dbHelper_CanDev.obtener_cabecera(idEstablec);
-        cabecera.moveToFirst();
-        String textoImpresion = ".\n"
+    private String cabecera(){
+       String textoImpresionCabecera  = ".\n"
                 +"    UNIVERSIDAD PERUANA UNION   \n"
                 +"     Cent.aplc. Prod. Union     \n"
                 +"   C. Central Km 19 Villa Union \n"
@@ -431,22 +433,47 @@ public class mostrar_can_dev_facturas extends TabActivity {
                 +"         RUC: 20138122256       \n"
                 +"--------------------------------\n"
                 +"        NOTA DE CREDITO         \n"
-                +"--------------------------------\n"
-                +"Descripcion                     \n"
-                +"                                \n"
+                +"--------------------------------\n";
+        return textoImpresionCabecera;
+    }
+    private String detalle(){
+        Cursor cabecera = dbHelper_CanDev.obtener_cabecera(idEstablec);
+        cabecera.moveToFirst();
+        String textoImpresion = "\n"
                 +"Nota de Credito Nro: "+cabecera.getString(7)+"\n"
                 +"Fecha: "+getDatePhone()+"       \n"
                 +"Cliente: "+cabecera.getString(6)+"\n";
-        Cursor cr = dbHelper_CanDev.obtener_facturas_dev(2,idEstablec);
-        ArrayList<String> texto = new ArrayList<String>();
-        cr.moveToFirst();
-        for(int g =0;g<cr.getCount();g++){
+        return textoImpresion;
+    }
+    private String text(){
 
-            texto.add(""+cr.getString(17)+" "+cr.getString(9)+" "+cr.getDouble(18)*cr.getInt(17)+"\n"
-                    +"-----------------------------------\n");
+        Cursor cr = dbHelper_CanDev.obtener_facturas_dev2(2,idEstablec);
+        String texto = "";
+
+        while(cr.moveToNext()){
+            Log.e("Errores", "" + "" + cr.getString(25) + " " + cr.getString(9) + "\n");
+            texto=texto+("" + cr.getString(25) + " " + cr.getString(9) + "\n");
+
         }
 
-        return textoImpresion+texto.toString().replace("[","").replace("]","").replace(",","");
+        return texto;
+    }
+    private String rigth(){
+
+        DecimalFormat df= new DecimalFormat("#0.00");
+
+        Cursor cr = dbHelper_CanDev.obtener_facturas_dev2(2,idEstablec);
+
+        String texto = "";
+
+        while(cr.moveToNext()){
+            Double total=cr.getDouble(27);
+           // Log.e("Errores", "" + "" + cr.getString(25) + " " + cr.getString(9) + "\n");
+            texto=texto+("" +df.format(total)+ "\n");
+
+        }
+
+        return texto;
     }
 
 
@@ -460,8 +487,13 @@ public class mostrar_can_dev_facturas extends TabActivity {
             case R.id.printCanjesDev:
                 if(idTab==1){
                 Intent  i = new Intent(getApplicationContext(),VMovil_BluetoothImprimir.class);
-                i.putExtra("textoImpresion",text());
-                startActivity(i);
+                    i.putExtra("textoImpresion",cabecera());
+                    i.putExtra("textoImpresionCabecera", cabecera());
+                    i.putExtra("textoVentaImpresion", detalle());
+                    i.putExtra("textoImpresionContenidoLeft", text());
+                    i.putExtra("textoImpresionContenidoRight", rigth());
+
+                    startActivity(i);
                     finish();
                 }else{
                     Toast.makeText(getApplicationContext(),"Usted no Puede Imprimir Canjes",Toast.LENGTH_SHORT).show();

@@ -769,7 +769,7 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
         //Evaluando tipo de Operacion:
         if (tipo_op.equals("Canje")) {
             idTipo_Op = 1;
-            Log.d("MasParametros","["+idEstablec+"-"+idProducto+"-"+idTipo_Op+"-"+compro+"-"+nomEstablecimiento+"-"+idCat_tipo+"-"+cantidad2+"-"+importe*cantidad2+"-"+lote+"-"+idAgente);
+            Log.d("MasParametros","["+idEstablec+"-"+idProducto+"-"+idTipo_Op+"-"+compro+"-"+nomEstablecimiento+"-"+idCat_tipo+"-"+cantidad2+"-"+importe*cantidad2+"-"+lote+"-"+idAgente+importe);
             boolean estado = dbHelperCanjes_Dev.insertarCanjes(idEstablec, idProducto, idTipo_Op, compro, nomEstablecimiento, nomProducto, idCat_tipo, cantidad2, importe*cantidad2, lote, idAgente,liquidacion,valorUnidad);
             if (estado) {
                 confirmar();

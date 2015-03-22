@@ -208,7 +208,7 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity {
                 String idProducto = cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Histo_Venta_Detalle.HD_id_producto));
                 String idHistoDetalle = cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Histo_Venta_Detalle.HD_id_detalle));
                 int cantProductos = cr.getInt(cr.getColumnIndexOrThrow(DbAdapter_Histo_Venta_Detalle.HD_cantidad_ope));
-
+                //Toast.makeText(getBaseContext(),"Id Detallle"+idHistoDetalle+"-idElimna"+idHistoVenta,Toast.LENGTH_SHORT).show();
                 select("1","Canje",idHistoVenta,idProducto,idHistoDetalle,cantProductos);
                 return false;
             }
@@ -283,6 +283,7 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity {
                 String idProducto = cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Histo_Venta_Detalle.HD_id_producto));
                 String idHistoDetalle = cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Histo_Venta_Detalle.HD_id_detalle));
                 int cantProductos = cr.getInt(cr.getColumnIndexOrThrow(DbAdapter_Histo_Venta_Detalle.HD_cantidad_ope));
+
                 select("2", "Devolucion",idHistoVenta,idProducto,idHistoDetalle,cantProductos);
                 return false;
             }

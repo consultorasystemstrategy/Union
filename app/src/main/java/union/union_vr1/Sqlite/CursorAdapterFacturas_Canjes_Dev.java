@@ -46,21 +46,22 @@ public class CursorAdapterFacturas_Canjes_Dev extends CursorAdapter{
         if (cursor.getCount()>0){
 
             String producto = cursor.getString(9);
-            String cantidad = cursor.getString(25);
+            Double cantidad = cursor.getDouble(25);
             Double precio = cursor.getDouble(27);
             String idProducto = cursor.getString(4);
+            Double precioUnidad = precio/cantidad;
 
             DecimalFormat df= new DecimalFormat("#0.00");
             String textAdapter = "Producto: "+producto+"" +
                     "\nCantidad: "+cantidad+"" +
                     "\nP.U: "+precio+"" +
-                    "\nTot: "+precio*cursor.getInt(25)+"" +
+                    "\nTot: "+precio+"" +
                     "\nRef: "+idProducto+"";
 
             textViewTitulo.setText(producto);
-            textViewSubtitulo.setText("Cantidad : "+ cantidad + ", Precio Unitario : S/. "+ precio);
+            textViewSubtitulo.setText("Cantidad : "+ cantidad + ", Precio Unitario : S/. "+ df.format(precioUnidad));
             textViewComment.setText("Referencia "+ idProducto);
-            textViewMonto.setText("S/. "+df.format(precio*cursor.getInt(25)));
+            textViewMonto.setText("S/. "+df.format(precio));
 
             linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.Dark1));
             imageView.setImageDrawable(context.getApplicationContext().getResources().getDrawable(R.drawable.ic_action_undo));
