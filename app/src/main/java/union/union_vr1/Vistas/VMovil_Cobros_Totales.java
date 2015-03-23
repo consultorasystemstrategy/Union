@@ -18,6 +18,7 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -77,9 +78,9 @@ public class VMovil_Cobros_Totales extends Activity {
                     String establec = cr2.getString(cr2.getColumnIndexOrThrow("ee_te_nom_establec"));
                     String cliente = cr2.getString(cr2.getColumnIndexOrThrow("ee_te_nom_cliente"));
                     String idCCobro = cr2.getString(0);
-                    int monto = cr2.getInt(cr2.getColumnIndexOrThrow("cc_re_monto_a_pagar"));
+                    Double monto = cr2.getDouble(cr2.getColumnIndexOrThrow("cc_re_monto_a_pagar"));
                     //System.out.println("here"+establec+"-"+idCCobro+"-"+monto+"-"+cliente);
-                    view.setBackgroundColor(0xffcccccc);
+                    //view.setBackgroundColor(0xffcccccc);
                     Dialog(establec, monto, idCCobro, cliente);
 
 
@@ -89,7 +90,7 @@ public class VMovil_Cobros_Totales extends Activity {
 
     }
 
-    public void Dialog(String establec, final int deuda, final String idCCobro, String cliente) {
+    public void Dialog(String establec, final Double deuda, final String idCCobro, String cliente) {
 
         cCobro = new DbAdapter_Comprob_Cobro(this);
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
@@ -97,8 +98,10 @@ public class VMovil_Cobros_Totales extends Activity {
 
         alertDialogBuilder.setTitle("Cobro de Credito");
 
+        DecimalFormat df = new DecimalFormat("#.00");
+
         AlertDialog.Builder builder = alertDialogBuilder
-                .setMessage("Pago de Deuda para el Establecimiento: " + establec + " con Dueño: " + cliente + " : Deuda: " + deuda + " ")
+                .setMessage("Pago de Deuda para el Establecimiento: " + establec + ", con Dueño: " + cliente + " :. Deuda: " + df.format(deuda) + " ")
                 .setCancelable(false)
                 .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {

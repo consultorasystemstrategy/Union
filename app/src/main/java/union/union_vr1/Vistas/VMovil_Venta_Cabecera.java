@@ -595,7 +595,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
             }
         });
 
-        Cursor mCursorTempVenta = dbHelper_temp_venta.fetchAllTempVentaDetalleByID(id_temp_venta_detalle);
+       Cursor mCursorTempVenta = dbHelper_temp_venta.fetchAllTempVentaDetalleByID(id_temp_venta_detalle);
 
         String nombre = mCursorTempVenta.getString(mCursorTempVenta.getColumnIndex(DBAdapter_Temp_Venta.temp_nom_producto));
         String devueltoText = mCursorTempVenta.getString(mCursorTempVenta.getColumnIndex(DBAdapter_Temp_Venta.temp_devuelto));
@@ -604,7 +604,8 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
         final Double precio_unitario = mCursorTempVenta.getDouble(mCursorTempVenta.getColumnIndex(DBAdapter_Temp_Venta.temp_precio_unit));
 
         nombreProducto.setText(nombre);
-        precio.setText("Precio : S/. "+precio_unitario);
+        DecimalFormat df = new DecimalFormat("#.0");
+        precio.setText("Precio : S/. "+df.format(precio_unitario));
         devuelto.setText("Devueltos : "+devueltoText);
         promedioAnterior.setText("Promedio Anterior : " +promedioAnteriorText);
 

@@ -12,6 +12,7 @@ import android.widget.CursorAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -66,13 +67,14 @@ public class CursorAdapterCobrosTotales extends CursorAdapter {
             String nomcliente = cursor.getString(2);
             String localCobro = cursor.getString(5);
             String fechpro = cursor.getString(3);
-            String repagar = cursor.getString(4);
+            Double repagar = cursor.getDouble(4);
 
             textViewNombreEstablecimiento.setText(localCobro);
             textViewFecha.setText(fechpro);
             textViewDocumento.setText("Documento "+factotales);
 
-            textViewDeuda.setText("S/. " + repagar);
+            DecimalFormat dfd = new DecimalFormat("#.00");
+            textViewDeuda.setText("S/. " + dfd.format(repagar));
 
             SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
             String fecha_Programada = fechpro;
