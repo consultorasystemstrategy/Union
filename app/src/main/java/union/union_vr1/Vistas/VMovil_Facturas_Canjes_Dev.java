@@ -83,20 +83,20 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
         int liquidacion = dbAdapter_temp_session.fetchVarible(3);
         TextView stockView = (TextView) findViewById(R.id.stock_can_dev);
 
-        Cursor cr = dbHelperCanjes_Dev.obtenerStock(producto,liquidacion);
+        Cursor cr = dbHelperCanjes_Dev.obtenerStock(producto, liquidacion);
         if (cr.moveToFirst()) {
             stock = cr.getInt(cr.getColumnIndex("disponible"));
 
-            if(stock<0){
-                stock=0;
+            if (stock < 0) {
+                stock = 0;
                 stockView.setText("Stock Disponible: " + stock);
-            }else{
+            } else {
 
                 stockView.setText("Stock Disponible: " + stock);
             }
 
         } else {
-            Log.e("idProducto",idProducto+"-"+stock+cr.getCount()+idAgente+"-"+liquidacion);
+            Log.e("idProducto", idProducto + "-" + stock + cr.getCount() + idAgente + "-" + liquidacion);
             stockView.setText("No Cuenta con Stock de este Producto");
         }
 
@@ -108,7 +108,7 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
         Cursor cr = dbHelperCanjes_Dev.listaFacturasByProducto(producto, idAgente, idEstablec);
 
         if (cr.moveToFirst()) {
-            if ( cr.getString(10)==null || cr.getString(10).equals("")  ) {
+            if (cr.getString(10) == null || cr.getString(10).equals("")) {
 
                 String[] noEncontrado = {"Producto No encontrado:", "Detalle: " + nomProducto + "", "¿Ingresar Comprobante de Venta?", "Yes", "No"};
                 ArrayAdapter adapter = new ArrayAdapter(getApplicationContext(), android.R.layout.simple_dropdown_item_1line, noEncontrado);
@@ -137,26 +137,28 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
                 vieFooter.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if(stock==0){
-                            Toast.makeText(getApplicationContext(),"Tiene Stock 0",Toast.LENGTH_SHORT).show();
+                        if (stock == 0) {
+                            Toast.makeText(getApplicationContext(), "Tiene Stock 0", Toast.LENGTH_SHORT).show();
                             mostrar_alertdialog_spinners_dev(nomProducto);
-                        }else{
-                        mostrar_alertdialog_spinners(nomProducto);
+                        } else {
+                            mostrar_alertdialog_spinners(nomProducto);
                         }
                     }
                 });
-                CursorAdapter_Facturas_Canjes_Dev cFac_Can_Dev = new CursorAdapter_Facturas_Canjes_Dev(getApplicationContext(), cr);
+                Cursor cr2 = dbHelperCanjes_Dev.listaFacturasByProducto2(producto, idAgente, idEstablec);
+                CursorAdapter_Facturas_Canjes_Dev cFac_Can_Dev = new CursorAdapter_Facturas_Canjes_Dev(getApplicationContext(), cr2);
                 listaFacturas.setAdapter(cFac_Can_Dev);
                 listaFacturas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                         Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
-                        if(stock==0){
+                        if (stock == 0) {
                             mostrar_alertdialog_spinners_regitrados_dev(cursor);
-                            Toast.makeText(getApplicationContext(),"Tiene Stock 0",Toast.LENGTH_SHORT).show();
-                        }else{
-                        mostrar_alertdialog_spinners_regitrados(cursor);
-                    }}
+                            Toast.makeText(getApplicationContext(), "Tiene Stock 0", Toast.LENGTH_SHORT).show();
+                        } else {
+                            mostrar_alertdialog_spinners_regitrados(cursor);
+                        }
+                    }
                 });
             }
 
@@ -192,7 +194,7 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
     private void mostrar_alertdialog_spinners_regitrados_dev(Cursor cursor) {
 
         cantidadV = cursor.getInt(10);
-        devueltoV = cursor.getInt(17)+cursor.getInt(25);
+        devueltoV = cursor.getInt(17) + cursor.getInt(25);
         final int dev = cursor.getInt(25);
         final int can = cursor.getInt(17);
 
@@ -235,15 +237,15 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
                 int r = cantidadV - devueltoV;
 
 
-                if (charSequence.length() !=0) {
+                if (charSequence.length() != 0) {
                     String nro = charSequence.toString();
                     int charSec = Integer.parseInt(nro);
-                    if (charSec>r) {
+                    if (charSec > r) {
 
                         cantidadText.setText("");
                         Toast.makeText(getApplicationContext(), "Cantidad tiene que ser Menor o Igual: " + r + "", Toast.LENGTH_SHORT).show();
                     }
-                    if(charSec==0){
+                    if (charSec == 0) {
                         cantidadText.setText("");
                         Toast.makeText(getApplicationContext(), "La Cantidad no puede ser 0", Toast.LENGTH_SHORT).show();
                     }
@@ -277,7 +279,7 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
 
                         } else {
 
-                            actualizar_can_dev(tipo_op, categoria_op, cantidad, importe, idDetalle,dev,can);
+                            actualizar_can_dev(tipo_op, categoria_op, cantidad, importe, idDetalle, dev, can);
                         }
                     }
                 })
@@ -308,10 +310,11 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
         spinnerCategoria.setAdapter(cateArray);
 
     }
+
     private void mostrar_alertdialog_spinners_regitrados(Cursor cursor) {
 
         cantidadV = cursor.getInt(10);
-        devueltoV = cursor.getInt(17)+cursor.getInt(25);
+        devueltoV = cursor.getInt(17) + cursor.getInt(25);
         final int dev = cursor.getInt(25);
         final int can = cursor.getInt(17);
 
@@ -354,19 +357,19 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
                 int r = cantidadV - devueltoV;
 
 
-                if (charSequence.length() !=0) {
+                if (charSequence.length() != 0) {
                     String nro = charSequence.toString();
                     int charSec = Integer.parseInt(nro);
-                    if (charSec>r) {
+                    if (charSec > r) {
 
                         cantidadText.setText("");
                         Toast.makeText(getApplicationContext(), "Cantidad tiene que ser Menor o Igual: " + r + "", Toast.LENGTH_SHORT).show();
                     }
-                    if(charSec==0){
+                    if (charSec == 0) {
                         cantidadText.setText("");
                         Toast.makeText(getApplicationContext(), "La Cantidad no puede ser 0", Toast.LENGTH_SHORT).show();
                     }
-                    if (charSec>stock){
+                    if (charSec > stock) {
                         cantidadText.setText("");
                         Toast.makeText(getApplicationContext(), "No puede Pasar el Stock", Toast.LENGTH_SHORT).show();
                     }
@@ -399,7 +402,7 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
 
                         } else {
 
-                            actualizar_can_dev(tipo_op, categoria_op, cantidad, importe, idDetalle,dev,can);
+                            actualizar_can_dev(tipo_op, categoria_op, cantidad, importe, idDetalle, dev, can);
                         }
                     }
                 })
@@ -432,7 +435,7 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
     }
 
     //Actualizar Datos Histo_venta_Detalle
-    private void actualizar_can_dev(String tipo_op, String categoria_op, String cantidad, String importe, String idDetalle,int devuelto, int canjeado) {
+    private void actualizar_can_dev(String tipo_op, String categoria_op, String cantidad, String importe, String idDetalle, int devuelto, int canjeado) {
         int liquidacion = dbAdapter_temp_session.fetchVarible(3);
         if (categoria_op.equals("Bueno")) {
             categoria_op = "1";
@@ -448,7 +451,7 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
         }
         if (tipo_op.equals("Canje")) {
             tipo_op = "1";
-            boolean estado = dbHelperCanjes_Dev.update_Canj(tipo_op, categoria_op, cantidad, importe, idDetalle,canjeado,idProducto,ctx,liquidacion);
+            boolean estado = dbHelperCanjes_Dev.update_Canj(tipo_op, categoria_op, cantidad, importe, idDetalle, canjeado, idProducto, ctx, liquidacion);
             if (estado) {
                 confirmar();
 
@@ -459,7 +462,7 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
         }
         if (tipo_op.equals("Devolucion")) {
             tipo_op = "2";
-            boolean estado = dbHelperCanjes_Dev.update_dev(tipo_op, categoria_op, cantidad, importe, idDetalle,devuelto,idProducto,ctx,liquidacion);
+            boolean estado = dbHelperCanjes_Dev.update_dev(tipo_op, categoria_op, cantidad, importe, idDetalle, devuelto, idProducto, ctx, liquidacion);
             if (estado) {
                 confirmar();
 
@@ -537,7 +540,6 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
                 }
             }
         });
-
 
 
         builder.setView(layout_spinners);
@@ -762,15 +764,15 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
             idCat_tipo = 4;
         }
         //Obteniendo el nombre del establecimiento, categoria.
-       Log.d("Parametros",""+idProducto+"-"+idCategoriaEstablec+"-"+idEstablec);
-        String precio = dbHelperCanjes_Dev.obtenerPrecio(idProducto, idCategoriaEstablec, ctx,idEstablec);
+        Log.d("Parametros", "" + idProducto + "-" + idCategoriaEstablec + "-" + idEstablec);
+        String precio = dbHelperCanjes_Dev.obtenerPrecio(idProducto, idCategoriaEstablec, ctx, idEstablec);
         double importe = Double.parseDouble(precio);
 
         //Evaluando tipo de Operacion:
         if (tipo_op.equals("Canje")) {
             idTipo_Op = 1;
-            Log.d("MasParametros","["+idEstablec+"-"+idProducto+"-"+idTipo_Op+"-"+compro+"-"+nomEstablecimiento+"-"+idCat_tipo+"-"+cantidad2+"-"+importe*cantidad2+"-"+lote+"-"+idAgente+importe);
-            boolean estado = dbHelperCanjes_Dev.insertarCanjes(idEstablec, idProducto, idTipo_Op, compro, nomEstablecimiento, nomProducto, idCat_tipo, cantidad2, importe*cantidad2, lote, idAgente,liquidacion,valorUnidad);
+            Log.d("MasParametros", "[" + idEstablec + "-" + idProducto + "-" + idTipo_Op + "-" + compro + "-" + nomEstablecimiento + "-" + idCat_tipo + "-" + cantidad2 + "-" + importe * cantidad2 + "-" + lote + "-" + idAgente + importe);
+            boolean estado = dbHelperCanjes_Dev.insertarCanjes(idEstablec, idProducto, idTipo_Op, compro, nomEstablecimiento, nomProducto, idCat_tipo, cantidad2, importe * cantidad2, lote, idAgente, liquidacion, valorUnidad);
             if (estado) {
                 confirmar();
             } else {
@@ -779,7 +781,7 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
         }
         if (tipo_op.equals("Devolucion")) {
             idTipo_Op = 2;
-            boolean estado = dbHelperCanjes_Dev.insertar_Dev(idEstablec, idProducto, idTipo_Op, compro, nomEstablecimiento, nomProducto, idCat_tipo, cantidad2, importe*cantidad2, lote, idAgente,liquidacion,valorUnidad);
+            boolean estado = dbHelperCanjes_Dev.insertar_Dev(idEstablec, idProducto, idTipo_Op, compro, nomEstablecimiento, nomProducto, idCat_tipo, cantidad2, importe * cantidad2, lote, idAgente, liquidacion, valorUnidad);
             if (estado) {
                 confirmar();
             } else {

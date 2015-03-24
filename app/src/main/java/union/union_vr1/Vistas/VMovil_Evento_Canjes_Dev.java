@@ -67,7 +67,7 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity {
         Bundle idE = getIntent().getExtras();
         establec = idE.getString("idEstabX");
         idAgente = idE.getInt("idAgente");
-        Toast.makeText(getApplicationContext(), "" + establec + idAgente, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "" + establec +"-"+ idAgente, Toast.LENGTH_SHORT).show();
         autoComple = (AutoCompleteTextView) findViewById(R.id.autocomplete);
         autoComplete();
         //
@@ -145,6 +145,7 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity {
         adapter.setFilterQueryProvider(new FilterQueryProvider() {
             @Override
             public Cursor runQuery(CharSequence charSequence) {
+                Log.e("Error stock lista"," "+liquidacion);
                 Cursor cr = dbHelper_Stock.listarbyIdProductoAndStock(charSequence.toString(), liquidacion);
 
                 return cr;
@@ -180,6 +181,7 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity {
 
     private void listar_Facturas_can() {
         Cursor cr = dbHelper_CanDev.obtener_facturas_can(establec);
+       Toast.makeText(getApplicationContext(),"-"+cr.getCount(),Toast.LENGTH_SHORT).show();
         final ListView lista_facturas = (ListView) findViewById(R.id.guias_can_dev);
 
             CursorAdapterFacturas adapter = new CursorAdapterFacturas(getApplicationContext(), cr);
@@ -203,12 +205,14 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Cursor cr = (Cursor)adapterView.getItemAtPosition(i);
-                cr.moveToPosition(i);
+//                cr.moveToPosition(i);
                 String idHistoVenta = cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Histo_Venta_Detalle.HD_id_hventadet));
                 String idProducto = cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Histo_Venta_Detalle.HD_id_producto));
                 String idHistoDetalle = cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Histo_Venta_Detalle.HD_id_detalle));
                 int cantProductos = cr.getInt(cr.getColumnIndexOrThrow(DbAdapter_Histo_Venta_Detalle.HD_cantidad_ope));
-                //Toast.makeText(getBaseContext(),"Id Detallle"+idHistoDetalle+"-idElimna"+idHistoVenta,Toast.LENGTH_SHORT).show();
+                String datos = cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Histo_Venta_Detalle.HD_nom_producto));
+                Log.e("datos",""+datos);
+                Toast.makeText(getApplicationContext(),"ID"+idHistoVenta,Toast.LENGTH_LONG).show();
                 select("1","Canje",idHistoVenta,idProducto,idHistoDetalle,cantProductos);
                 return false;
             }
@@ -228,16 +232,17 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity {
                         public void onClick(DialogInterface dialog, int id) {
                             boolean estado =false;
                             if (idOperacion.equals("1")) {//cannjeggggg
-                                Log.e("Hola K ASE",""+idProducto+"-"+cantProductos+"-"+idHistoVenta+"-"+idHistoDetalle+"-"+liquidacion);
+                                Log.e("Hola K ASE",""+idProducto+"-"+cantProductos+"-"+idHistoDetalle+"-"+idHistoVenta+"-"+liquidacion);
                                 estado =  dbHelper_CanDev.cancelarCabiosByIdCanjes(idProducto,cantProductos,idHistoVenta,idHistoDetalle,liquidacion);
                                 if(estado){
                                     Toast.makeText(getApplicationContext(),"Quitado de la Lista",Toast.LENGTH_SHORT).show();
-                                    regresar();
+                                   regresar();
                                 }else{
                                     Toast.makeText(getApplicationContext(),"Ocurrio un Error",Toast.LENGTH_SHORT).show();
                                 }
                             }
                             if(idOperacion.equals("2")){//devoluciones
+                                Log.e("Hola K ASE",""+idProducto+"-"+cantProductos+"-"+idHistoVenta+"-"+idHistoDetalle+"-"+liquidacion);
                                 estado =  dbHelper_CanDev.cancelarCabiosByIdDevoluciones(idProducto,cantProductos,idHistoVenta,idHistoDetalle,liquidacion);
                                 if(estado){
                                     Toast.makeText(getApplicationContext(),"Quitado de la Lista",Toast.LENGTH_SHORT).show();
@@ -283,7 +288,6 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity {
                 String idProducto = cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Histo_Venta_Detalle.HD_id_producto));
                 String idHistoDetalle = cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Histo_Venta_Detalle.HD_id_detalle));
                 int cantProductos = cr.getInt(cr.getColumnIndexOrThrow(DbAdapter_Histo_Venta_Detalle.HD_cantidad_ope));
-
                 select("2", "Devolucion",idHistoVenta,idProducto,idHistoDetalle,cantProductos);
                 return false;
             }
