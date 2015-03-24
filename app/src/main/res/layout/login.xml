@@ -1,28 +1,36 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffff">
+    android:background="#ffffff"
+    android:orientation="vertical"
+    android:gravity="center">
 
-    <Button
-        android:id="@+id/salir"
+
+    <ImageView
+        android:id="@+id/imageView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/login"
-        android:layout_alignParentBottom="true"
-        android:layout_alignRight="@+id/login"
-        android:layout_marginBottom="25dp"
-        android:text="Salir" />
+        android:src="@drawable/logo" />
 
-    <Button
-        android:id="@+id/login"
+    <TextView
+        android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/salir"
-        android:layout_alignLeft="@+id/password"
-        android:layout_alignRight="@+id/password"
-        android:text="Ingresar"
-        android:background="@drawable/border_bottom_dark" />
+        android:text="Usuario" />
+
+    <EditText
+        android:id="@+id/username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:text="orlando" />
+
+    <TextView
+        android:id="@+id/TextView01"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Contraseña"/>
 
     <EditText
         android:id="@+id/password"
@@ -30,46 +38,19 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPassword"
-        android:layout_below="@+id/TextView01"
-        android:layout_centerHorizontal="true"
         android:text="123">
 
         <requestFocus />
     </EditText>
 
-    <ImageView
-        android:id="@+id/imageView1"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/activity_vertical_margin"
-        android:src="@drawable/logo"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_above="@+id/textView1"
-        android:layout_alignParentLeft="true" />
-
-    <TextView
-        android:id="@+id/TextView01"
+    <Button
+        android:id="@+id/login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Contraseña"
-        android:layout_below="@+id/username"
-        android:layout_alignLeft="@+id/password" />
+        android:text="Ingresar"
+        android:background="@drawable/border_bottom_dark"
+        android:layout_marginTop="16dp"
+        android:paddingLeft="72dp"
+        android:paddingRight="72dp" />
 
-    <EditText
-        android:id="@+id/username"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:layout_below="@+id/textView1"
-        android:layout_alignLeft="@+id/password"
-        android:text="orlando" />
-
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Usuario"
-        android:layout_centerVertical="true"
-        android:layout_alignLeft="@+id/username" />
-
-</RelativeLayout>
+</LinearLayout>

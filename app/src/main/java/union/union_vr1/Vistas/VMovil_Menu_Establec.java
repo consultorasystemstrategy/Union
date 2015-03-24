@@ -87,13 +87,13 @@ public class VMovil_Menu_Establec extends Activity {
     private void eleccion(String idEstabl, int idAgente) {
         Intent i = new Intent(this, VMovil_Evento_Establec.class);
 
-        dbAdapter_temp_barcode_scanner.deleteAll();
+        //dbAdapter_temp_barcode_scanner.deleteAll();
         //((MyApplication) this.getApplication()).setIdEstablecimiento(Integer.parseInt(idEstabl));
         session.deleteVariable(2);
         session.createTempSession(2,Integer.parseInt(idEstabl));
-        dbAdapter_temp_barcode_scanner.createTempScanner(Integer.parseInt(idEstabl));
-        session.deleteVariable(2);
-        session.createTempSession(2, Integer.parseInt(idEstabl));
+        //dbAdapter_temp_barcode_scanner.createTempScanner(Integer.parseInt(idEstabl));
+        //session.deleteVariable(2);
+        //session.createTempSession(2, Integer.parseInt(idEstabl));
 
         finish();
         startActivity(i);

@@ -115,9 +115,7 @@ public class VMovil_Venta_Cabecera_AgregarProductos extends Activity implements 
 
 
 
-        Cursor cursorTempScanner = dbAdapter_temp_barcode_scanner.fetchAll();
-        cursorTempScanner.moveToFirst();
-        idEstablecimiento = cursorTempScanner.getInt(cursorTempScanner.getColumnIndexOrThrow(dbAdapter_temp_barcode_scanner.temp_id_establecimiento));
+        idEstablecimiento = session.fetchVarible(2);
 
 
         Log.d("VARIABLE GLOBAL ID ESTABLECIMIENTO ",""+idEstablecimiento);

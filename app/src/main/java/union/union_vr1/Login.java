@@ -143,11 +143,11 @@ public class Login extends Activity implements OnClickListener{
 
 		//setup buttons
 		mSubmit = (Button)findViewById(R.id.login);
-        mSalirs = (Button)findViewById(R.id.salir);
+        //mSalirs = (Button)findViewById(R.id.salir);
 		
 		//register listeners
 		mSubmit.setOnClickListener(this);
-        mSalirs.setOnClickListener(this);
+        //mSalirs.setOnClickListener(this);
         //estaConectado();
         //if(isOnline()){
         //    user.setText("exito");
@@ -298,9 +298,9 @@ public class Login extends Activity implements OnClickListener{
 
 			//new AttemptLogin().execute();
 			break;
-		case R.id.salir:
+		/*case R.id.salir:
             finish();
-			break;
+			break;*/
 		default:
 			break;
 		}

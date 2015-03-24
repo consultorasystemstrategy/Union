@@ -3,9 +3,11 @@ package union.union_vr1.Vistas;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
@@ -15,18 +17,20 @@ import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FilterQueryProvider;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -59,9 +63,10 @@ import union.union_vr1.Sqlite.DbAdapter_Temp_Comprob_Cobro;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 import union.union_vr1.Utils.MyApplication;
+import union.union_vr1.Utils.SoftKeyboard;
 import union.union_vr1.VMovil_BluetoothImprimir;
 
-public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
+public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
 
 
     private DbAdapter_Temp_Session session;
@@ -77,30 +82,50 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
     private DbAdaptert_Evento_Establec dbHelper_Evento_Establecimiento;
     private EditText savedText;
 
+    //VARIABLES AGREGAR PRODUCTOS
+    private AutoCompleteTextView autoCompleteTextView;
+    private Cursor mCursorStockAgente ;
+    private int id_categoria_establecimiento;
+    private SimpleCursorAdapter adapterProductos;
+
+    private DbAdapter_Precio dbHelper_Precio;
+
+
+    private int cantidad;
+    private int procedencia = 1;
+    private int disponible = 1;
+    private String nombre = null;
+    private  int id_producto = 0;
+    private int valor_unidad = 1;
+
+    //fin variables agregar productos
+
+
 
     private String textoVentaImpresion = "";
 
     private String textoImpresionCabecera = "\n"
-            + "    UNIVERSIDAD PERUANA UNION   \n"
-            + "     Cent.aplc. Prod. Union     \n"
-            + "   C. Central Km 19 Villa Union \n"
-            + " Lurigancho-Chosica Fax: 6186311\n"
-            + "      Telf: 6186309-6186310     \n"
-            + " Casilla 3564, Lima 1, LIMA PERU\n"
-            + "         RUC: 20138122256       ";
+            +"    UNIVERSIDAD PERUANA UNION   \n"
+            +"     Cent.aplc. Prod. Union     \n"
+            +"   C. Central Km 19 Villa Union \n"
+            +" Lurigancho-Chosica Fax: 6186311\n"
+            +"      Telf: 6186309-6186310     \n"
+            +" Casilla 3564, Lima 1, LIMA PERU\n"
+            +"         RUC: 20138122256       ";
+
 
 
     private String textoImpresionContenidoLeft = "";
     private String textoImpresionContenidoRight = "";
-    private String textoImpresion = ".\n"
-            + "    UNIVERSIDAD PERUANA UNION   \n"
-            + "     Cent.aplc. Prod. Union     \n"
-            + "   C. Central Km 19 Villa Union \n"
-            + " Lurigancho-Chosica Fax: 6186311\n"
-            + "      Telf: 6186309-6186310     \n"
-            + " Casilla 3564, Lima 1, LIMA PERU\n"
-            + "         RUC: 20138122256       \n"
-            + "--------------------------------\n";
+    private String textoImpresion  = ".\n"
+            +"    UNIVERSIDAD PERUANA UNION   \n"
+            +"     Cent.aplc. Prod. Union     \n"
+            +"   C. Central Km 19 Villa Union \n"
+            +" Lurigancho-Chosica Fax: 6186311\n"
+            +"      Telf: 6186309-6186310     \n"
+            +" Casilla 3564, Lima 1, LIMA PERU\n"
+            +"         RUC: 20138122256       \n"
+            +"--------------------------------\n";
 
     private int idEstablecimiento;
     int id_agente_venta;
@@ -121,6 +146,9 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
     private View footer;
     private VMovil_Venta_Cabecera mainActivity;
 
+
+
+
     private Context mContext;
 
     private Double totalFooter;
@@ -137,17 +165,23 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
     final int estado_cobro = 1;// 1 NO ESTÁ COBRADO //JAJA ESTÁ AL REVÉS
     final int id_forma_cobro = 1;
     final String lugar_registro = "movil";
-    String diasCredito = null;
+    String diasCredito= null;
 
     private boolean isEstablecidasCuotas;
 
     private ExportMain exportMain;
 
+    //KEYBOARD SOFT
+    RelativeLayout mainLayout;
+    InputMethodManager im;
+    SoftKeyboard softKeyboard;
     @Override
     protected void onDestroy() {
         exportMain.dismissProgressDialog();
         Log.d("ON DESTROY", "DISMISS PROGRESS DIALOG");
         super.onDestroy();
+
+        //softKeyboard.unRegisterSoftKeyboardCallback();
     }
 
     @Override
@@ -163,12 +197,12 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
                         dbHelper_temp_venta.deleteAllTempVentaDetalle();
                         //((MyApplication)mContext.getApplicationContext()).setDisplayedHistorialComprobanteAnterior(false);
                         session.deleteVariable(6);
-                        session.createTempSession(6, 0);
+                        session.createTempSession(6,0);
                         session.deleteVariable(5);
-                        session.createTempSession(5, 0);
+                        session.createTempSession(5,0);
 
                         finish();
-                        Intent intent = new Intent(mContext, VMovil_Evento_Establec.class);
+                        Intent intent = new Intent(mContext,VMovil_Evento_Establec.class);
                         startActivity(intent);
                     }
                 }).create().show();
@@ -197,10 +231,13 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
         dbHelper_Comprob_Venta = new DbAdapter_Comprob_Venta(this);
         dbHelper_Comprob_Venta.open();
 
+        dbHelper_Precio = new DbAdapter_Precio(this);
+        dbHelper_Precio.open();
+
         dbHelperAgente = new DbAdapter_Agente(this);
         dbHelperAgente.open();
 
-        dbHelper_Comprob_Venta_Detalle = new DbAdapter_Comprob_Venta_Detalle(this);
+        dbHelper_Comprob_Venta_Detalle  = new DbAdapter_Comprob_Venta_Detalle(this);
         dbHelper_Comprob_Venta_Detalle.open();
 
         dbHelper_Comprob_Cobros = new DbAdapter_Comprob_Cobro(this);
@@ -224,34 +261,68 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
 
         setContentView(R.layout.princ_venta_cabecera);
 
+/*
+        mainLayout = (RelativeLayout) findViewById(R.layout.princ_venta_cabecera); // You must use the layout root
+        im = (InputMethodManager) getSystemService(Service.INPUT_METHOD_SERVICE);
 
-        final Cursor cursorEstablecimiento = dbHelper_Evento_Establecimiento.fetchEstablecsById("" + idEstablecimiento);
+/*
+Instantiate and pass a callback
+*/
+
+/*
+        softKeyboard = new SoftKeyboard(mainLayout, im);
+        softKeyboard.setSoftKeyboardCallback(new SoftKeyboard.SoftKeyboardChanged()
+        {
+
+            @Override
+            public void onSoftKeyboardHide()
+            {
+                // Code here
+                Toast.makeText(mainActivity,"KEYBOARD HIDE",Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onSoftKeyboardShow()
+            {
+                // Code here
+                Toast.makeText(mainActivity,"KEYBOARD SHOW",Toast.LENGTH_LONG).show();
+            }
+        });
+*/
+
+        final Cursor cursorEstablecimiento = dbHelper_Evento_Establecimiento.fetchEstablecsById(""+idEstablecimiento);
         cursorEstablecimiento.moveToFirst();
+        id_categoria_establecimiento = cursorEstablecimiento.getInt(cursorEstablecimiento.getColumnIndex(DbAdaptert_Evento_Establec.EE_id_cat_est));
 
         int idTipoDocCliente = 0;
-        if (cursorEstablecimiento.getCount() > 0) {
+        if (cursorEstablecimiento.getCount()>0) {
             idTipoDocCliente = cursorEstablecimiento.getInt(cursorEstablecimiento.getColumnIndexOrThrow(DbAdaptert_Evento_Establec.EE_id_tipo_doc_cliente));
         }
-        if (idTipoDocCliente == 1) {
+        if (idTipoDocCliente==1){
             spinnerTipoDocumento = (Spinner) findViewById(R.id.VC_spinnerTipoDocumento);
-            ArrayAdapter<CharSequence> adapterTipoDocumento = ArrayAdapter.createFromResource(this, R.array.tipoDocumentoBoleta, android.R.layout.simple_spinner_item);
+            ArrayAdapter<CharSequence> adapterTipoDocumento = ArrayAdapter.createFromResource(this,R.array.tipoDocumentoBoleta,android.R.layout.simple_spinner_item);
             adapterTipoDocumento.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spinnerTipoDocumento.setAdapter(adapterTipoDocumento);
-        } else if (idTipoDocCliente == 2) {
+        }else if (idTipoDocCliente==2){
             spinnerTipoDocumento = (Spinner) findViewById(R.id.VC_spinnerTipoDocumento);
-            ArrayAdapter<CharSequence> adapterTipoDocumento = ArrayAdapter.createFromResource(this, R.array.tipoDocumentoFactura, android.R.layout.simple_spinner_item);
+            ArrayAdapter<CharSequence> adapterTipoDocumento = ArrayAdapter.createFromResource(this,R.array.tipoDocumentoFactura,android.R.layout.simple_spinner_item);
             adapterTipoDocumento.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spinnerTipoDocumento.setAdapter(adapterTipoDocumento);
-        } else {
+        }else{
             spinnerTipoDocumento = (Spinner) findViewById(R.id.VC_spinnerTipoDocumento);
-            ArrayAdapter<CharSequence> adapterTipoDocumento = ArrayAdapter.createFromResource(this, R.array.tipoDocumento, android.R.layout.simple_spinner_item);
+            ArrayAdapter<CharSequence> adapterTipoDocumento = ArrayAdapter.createFromResource(this,R.array.tipoDocumento,android.R.layout.simple_spinner_item);
             adapterTipoDocumento.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spinnerTipoDocumento.setAdapter(adapterTipoDocumento);
         }
+
+
+
+
+
 
 
         spinnerFormaPago = (Spinner) findViewById(R.id.VC_spinnerFormaPago);
-        final ArrayAdapter<CharSequence> adapterFormaPago = ArrayAdapter.createFromResource(this, R.array.forma_pago, android.R.layout.simple_spinner_item);
+        final ArrayAdapter<CharSequence> adapterFormaPago = ArrayAdapter.createFromResource(this,R.array.forma_pago,android.R.layout.simple_spinner_item);
         adapterFormaPago.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerFormaPago.setAdapter(adapterFormaPago);
 
@@ -261,7 +332,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
         buttonAgregar.setOnClickListener(this);
         listView = (ListView) findViewById(R.id.VC_listView);
 
-        switch (session.fetchVarible(5)) {
+        switch (session.fetchVarible(5)){
             case 0:
                 isEstablecidasCuotas = false;
                 break;
@@ -274,7 +345,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
         }
 
 
-        if (isEstablecidasCuotas) {
+        if(isEstablecidasCuotas){
 
             buttonAgregar.setClickable(false);
             spinnerFormaPago.setClickable(false);
@@ -285,13 +356,13 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
             listView.setClickable(false);
 
 
-            ArrayAdapter<CharSequence> adapterFormaPagoCredito = ArrayAdapter.createFromResource(this, R.array.forma_pago_credito, android.R.layout.simple_spinner_item);
+            ArrayAdapter<CharSequence> adapterFormaPagoCredito = ArrayAdapter.createFromResource(this,R.array.forma_pago_credito,android.R.layout.simple_spinner_item);
             spinnerFormaPago.setAdapter(adapterFormaPagoCredito);
 
         }
 
-        boolean isDisplayed = false;
-        switch (session.fetchVarible(6)) {
+        boolean isDisplayed= false;
+        switch (session.fetchVarible(6)){
             case 0:
                 isDisplayed = false;
                 break;
@@ -305,7 +376,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
 
         if (isDisplayed) {
             //NO SE MUESTRA EL HISTORIAL DEL COMPROBANTE ANTERIOR COMO SUGERENCIA DE VENTA AL USUARIO
-        } else {
+        }else{
             displayHistorialComprobanteAnterior();
         }
         mostrarProductosParaVender();
@@ -316,40 +387,40 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
                 String formaDePago = adapterView.getItemAtPosition(i).toString();
                 FormaPago formaPago = FormaPago.valueOf(formaDePago);
 
-                switch (formaPago) {
+                switch (formaPago){
                     case Contado:
 
                         break;
                     case Credito:
 
-                        if (isEstablecidasCuotas) {
+                        if (isEstablecidasCuotas){
 
-                        } else {
+                        }
+                        else {
 
-                            Cursor cursorEstablecimientoCredito = dbHelper_Evento_Establecimiento.fetchEstablecsById("" + idEstablecimiento);
-                            ;
+                            Cursor cursorEstablecimientoCredito = dbHelper_Evento_Establecimiento.fetchEstablecsById(""+idEstablecimiento);;
                             cursorEstablecimiento.moveToFirst();
                             int montoCredito = -1;
                             montoCredito = cursorEstablecimientoCredito.getInt(cursorEstablecimientoCredito.getColumnIndexOrThrow(dbHelper_Evento_Establecimiento.EE_monto_credito));
-                            switch (montoCredito) {
+                            switch (montoCredito){
                                 case -1:
 
                                     break;
                                 case 0:
 
-                                    if (conectadoWifi() || conectadoRedMovil()) {
+                                    if (conectadoWifi()||conectadoRedMovil()) {
                                         new AlertDialog.Builder(mContext)
                                                 .setTitle("Ops, No cuenta con crédito")
                                                 .setMessage("" +
                                                         "¿Desea solicitar crédito?")
-                                                .setNegativeButton(android.R.string.no, null)
+                                                .setNegativeButton(android.R.string.no,null)
                                                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                                     public void onClick(DialogInterface dialog, int id) {
                                                         dialogSolicitarCredito().show();
                                                     }
                                                 }).create().show();
 
-                                    } else {
+                                    }else{
                                         Toast.makeText(mContext, "Sin crédito y sin conexión", Toast.LENGTH_SHORT).show();
                                     }
 
@@ -395,26 +466,26 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
                 TipoDocumento tipoDocumento1 = TipoDocumento.valueOf(tipoDocumento);
                 DecimalFormat df = new DecimalFormat("#.00");
 
-                switch (tipoDocumento1) {
+                switch (tipoDocumento1){
                     case factura:
                         textViewFooterText.setText("Total :\n" +
                                 "Base imponible :\n" +
                                 "IGV :");
 
-                        textViewFooterTotal.setText(" S/. " + df.format(totalFooter) + "\n" +
-                                "S/. " + df.format(base_imponibleFooter) + "\n" +
-                                "S/. " + df.format(igvFooter));
+                        textViewFooterTotal.setText(" S/. "+df.format(totalFooter)+"\n" +
+                                "S/. "+df.format(base_imponibleFooter)+ "\n" +
+                                "S/. "+df.format(igvFooter));
 
                         break;
                     case boleta:
 
                         textViewFooterText.setText("Total :");
-                        textViewFooterTotal.setText("S/. " + df.format(totalFooter));
+                        textViewFooterTotal.setText("S/. "+df.format(totalFooter));
 
                         break;
                     case ficha:
                         textViewFooterText.setText("Total :");
-                        textViewFooterTotal.setText("S/. " + df.format(totalFooter));
+                        textViewFooterTotal.setText("S/. "+df.format(totalFooter));
                         break;
                 }
 
@@ -427,13 +498,101 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
         });
 
 
+        //AUTOCOMPLETE BUSCAR PRODUCTOS
+        autoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.VCAP_AutoCompleteProductos);
+        mCursorStockAgente = dbHelper_Stock_Agente.fetchStockAgenteByIdEstablecimiento(id_categoria_establecimiento, idLiquidacion);
+
+        String[] columnasStock = new String[]{
+                DbAdapter_Stock_Agente.ST_nombre,
+                DbAdapter_Stock_Agente.ST_disponible,
+
+        };
+
+        // the XML defined views which the data will be bound to
+        int[] toStock = new int[]{
+                R.id.VCAP_producto,
+                R.id.VCPA_stock,
+
+        };
+        adapterProductos = new SimpleCursorAdapter(this,
+                R.layout.infor_venta_cabecera_productos,
+                mCursorStockAgente,
+                columnasStock,
+                toStock,
+                0);
+
+
+        autoCompleteTextView.setAdapter(adapterProductos);
+
+        autoCompleteTextView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+
+                adapterProductos.getFilter().filter(charSequence.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+            }
+        });
+
+        adapterProductos.setFilterQueryProvider(new FilterQueryProvider() {
+            @Override
+            public Cursor runQuery(CharSequence charSequence) {
+                return dbHelper_Stock_Agente.fetchStockAgenteByIdEstablecimientoandName(id_categoria_establecimiento, charSequence.toString(), idLiquidacion);
+
+            }
+        });
+
+        autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                //Aquí obtengo el cursor posicionado en la fila que ha seleccionado/clickeado
+                Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
+
+                autoCompleteTextView.setText("");
+                //El item seleccionado tenía sólo 2 columnas visibles, pero en el cursos se encuentran todas las columnas
+                //Aquí podemos obtener las otras columnas para los que querramos hacer con ellas
+                nombre = cursor.getString(cursor.getColumnIndex(DbAdapter_Stock_Agente.ST_nombre));
+                id_producto = cursor.getInt(cursor.getColumnIndex(DbAdapter_Stock_Agente.ST_id_producto));
+                disponible = cursor.getInt(cursor.getColumnIndex(DbAdapter_Stock_Agente.ST_disponible));
+                valor_unidad = cursor.getInt(cursor.getColumnIndex(DbAdapter_Precio.PR_valor_unidad));
+
+
+
+                if (disponible>0){
+
+                    Cursor mCursorPrecioUnitarioGeneral = dbHelper_Precio.fetchAllPrecioByIdProductoAndCategoeria(id_producto,id_categoria_establecimiento);
+
+                    if (mCursorPrecioUnitarioGeneral.getCount()>1){
+                        myTextDialogValorUnidad().show();
+                        //Toast.makeText(getApplicationContext(), "Hay "+mCursorPrecioUnitarioGeneral.getCount() + " valores unidades para este producto", Toast.LENGTH_SHORT).show();
+                    }else{
+                        myTextDialog().show();
+                    }
+                }else{
+                    Toast.makeText(mainActivity, "No hay Stock", Toast.LENGTH_SHORT).show();
+                }
+
+
+            }
+        });
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
 
-                Log.d("POSITION SELECTED", parent.getPositionForView(view) + " - " + parent.getCount());
-                Log.d("POSITION ", position + " - " + parent.getCount());
+
+
+                Log.d("POSITION SELECTED", parent.getPositionForView(view)+" - " + parent.getCount());
+                Log.d("POSITION ", position +" - " + parent.getCount());
 
 
                 //Aquí obtengo el cursor posicionado en la fila que ha seleccionado/clickeado
@@ -450,12 +609,13 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
 
 
-                int numeroViews = adapterView.getCount();
+
+                int numeroViews =  adapterView.getCount();
                 numeroViews--;
                 if (adapterView.getPositionForView(view) != 1 && adapterView.getPositionForView(view) != numeroViews) {
 
-                    Log.d("POSITION SELECTED", adapterView.getPositionForView(view) + " - " + adapterView.getCount());
-                    Log.d("POSITION ", i + " - " + adapterView.getCount());
+                    Log.d("POSITION SELECTED", adapterView.getPositionForView(view)+" - " + adapterView.getCount());
+                    Log.d("POSITION ", i +" - " + adapterView.getCount());
 
 
                     //Aquí obtengo el cursor posicionado en la fila que ha seleccionado/clickeado
@@ -505,17 +665,17 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
 
 
     }
-
     private Dialog dialogSolicitarCredito() {
 
         final View layout = View.inflate(this, R.layout.dialog_solicitar_credito, null);
+
 
 
         final EditText editTextCantidadCredito = ((EditText) layout.findViewById(R.id.VCSC_editText_CantidadCredito));
         spinnerDiasCredito = ((Spinner) layout.findViewById(R.id.VCSC_spinner_DiasCredito));
 
 
-        final ArrayAdapter<CharSequence> adapterDiasCredito = ArrayAdapter.createFromResource(this, R.array.dias_credito, android.R.layout.simple_spinner_item);
+        final ArrayAdapter<CharSequence> adapterDiasCredito = ArrayAdapter.createFromResource(this,R.array.dias_credito,android.R.layout.simple_spinner_item);
         adapterDiasCredito.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerDiasCredito.setAdapter(adapterDiasCredito);
 
@@ -541,9 +701,9 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
                 String cantidad = editTextCantidadCredito.getText().toString().trim();
                 int cantidadCredito = Integer.parseInt(cantidad);
 
-                new SolicitarCredito(mainActivity).execute("" + id_agente_venta, "" + idEstablecimiento, "" + cantidadCredito, "" + diasCredito);
+                new SolicitarCredito(mainActivity).execute(""+id_agente_venta,""+idEstablecimiento,""+cantidadCredito,""+diasCredito);
 
-                Toast.makeText(mContext.getApplicationContext(), "Crédito solicitado esperar...", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext.getApplicationContext(), "Crédito solicitado esperar...",Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(mContext, VMovil_Evento_Indice.class);
                 finish();
                 startActivity(intent);
@@ -552,7 +712,6 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
         builder.setView(layout);
         return builder.create();
     }
-
     private Dialog myEditDialog(final long id_temp_venta_detalle) {
         final View layout = View.inflate(this, R.layout.dialog_editar_productos, null);
 
@@ -561,6 +720,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
         final TextView precio = ((TextView) layout.findViewById(R.id.VCEP_textViewPrecio));
         final TextView devuelto = ((TextView) layout.findViewById(R.id.VCEP_textViewDevuelto));
         final TextView promedioAnterior = ((TextView) layout.findViewById(R.id.VCEP_textViewPromedioAnterior));
+
 
 
         savedText.addTextChangedListener(new TextWatcher() {
@@ -599,9 +759,9 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
 
         nombreProducto.setText(nombre);
         DecimalFormat df = new DecimalFormat("#.0");
-        precio.setText("Precio : S/. " + df.format(precio_unitario));
-        devuelto.setText("Devueltos : " + devueltoText);
-        promedioAnterior.setText("Promedio Anterior : " + promedioAnteriorText);
+        precio.setText("Precio : S/. "+df.format(precio_unitario));
+        devuelto.setText("Devueltos : "+devueltoText);
+        promedioAnterior.setText("Promedio Anterior : " +promedioAnteriorText);
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Cantidad");
@@ -638,16 +798,15 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
 
         return alertDialog;
     }
-
-    private enum FormaPago {
+    private enum FormaPago{
         Contado, Credito
     }
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
+        switch (view.getId()){
             case R.id.VC_buttonAgregarProductos:
-                Intent intent = new Intent(this, VMovil_Venta_Cabecera_AgregarProductos.class);
+                Intent intent  = new Intent(this, VMovil_Venta_Cabecera_AgregarProductos.class);
                 finish();
                 startActivity(intent);
                 break;
@@ -655,7 +814,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
                 //((MyApplication)this.getApplication()).setDisplayedHistorialComprobanteAnterior(false);
 
                 session.deleteVariable(6);
-                session.createTempSession(6, 0);
+                session.createTempSession(6,0);
 
                 vender();
                 break;
@@ -666,7 +825,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
 
     }
 
-    public void vender() {
+    public void vender(){
 
         //Obtener los datos de las ventas
 
@@ -682,26 +841,26 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
         int i_tipoDocumento = 0;
         int i_formaPago = 0;
         int estado_comprobante = 1;
-        Double monto_total = 0.0;
-        Double igv = 0.0;
+        Double monto_total  = 0.0;
+        Double igv  = 0.0;
         Double base_imponible = 0.0;
-        String erp_stringTipoDocumento = null;
+        String erp_stringTipoDocumento  = null;
         String serie = null;
         String codigo_erp = null;
 
-        switch (tipoDocumento1) {
+        switch (tipoDocumento1){
             case factura:
                 i_tipoDocumento = 1;
-                erp_stringTipoDocumento = "FV";
-                serie = dbHelperAgente.getSerieFacturaByIdAgente(id_agente_venta, idLiquidacion);
-                codigo_erp = erp_stringTipoDocumento + serie;
+                erp_stringTipoDocumento="FV";
+                serie = dbHelperAgente.getSerieFacturaByIdAgente(id_agente_venta,idLiquidacion );
+                codigo_erp = erp_stringTipoDocumento+serie;
                 Log.d("CODIGO ERP ", codigo_erp);
                 break;
             case boleta:
                 i_tipoDocumento = 2;
-                erp_stringTipoDocumento = "BV";
+                erp_stringTipoDocumento="BV";
                 serie = dbHelperAgente.getSerieBoletaByIdAgente(id_agente_venta, idLiquidacion);
-                codigo_erp = erp_stringTipoDocumento + serie;
+                codigo_erp = erp_stringTipoDocumento+serie;
                 Log.d("CODIGO ERP ", codigo_erp);
                 break;
             case ficha:
@@ -711,8 +870,8 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
 
         Cursor cursorTempComprobCobros = dbHelper_Temp_Comprob_Cobros.fetchAllComprobCobros();
 
-        Log.d("FORMA DE PAGO ", "" + i_formaPago);
-        switch (formaPago1) {
+        Log.d("FORMA DE PAGO ", ""+i_formaPago);
+        switch (formaPago1){
             case Contado:
                 i_formaPago = 1;
                 break;
@@ -721,7 +880,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
 
                 //((MyApplication)this.getApplication()).setCuotasEstablecidas(false)
                 session.deleteVariable(5);
-                session.createTempSession(5, 0);
+                session.createTempSession(5,0);
                 break;
 
         }
@@ -730,37 +889,37 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
         String datosConcatenados = "idEestableciminto : " + idEstablecimiento + "\n" +
                 "idAgente : " + id_agente_venta + "\n" +
                 "Forma de pago : " + formaPago + "\n" +
-                "Tipo Documento : " + tipoDocumento + "\n" + "---------------------------";
+                "Tipo Documento : " + tipoDocumento+ "\n" + "---------------------------";
 
         Cursor cursorAgente = dbHelperAgente.fetchAgentesByIds(id_agente_venta, idLiquidacion);
         cursorAgente.moveToFirst();
         String nombreAgenteVenta = cursorAgente.getString(cursorAgente.getColumnIndexOrThrow(dbHelperAgente.AG_nombre_agente));
 
-        Cursor cursorEstablecimiento = dbHelper_Evento_Establecimiento.fetchEstablecsById("" + idEstablecimiento);
+        Cursor cursorEstablecimiento = dbHelper_Evento_Establecimiento.fetchEstablecsById(""+idEstablecimiento);
         cursorEstablecimiento.moveToFirst();
         String nombreCliente = cursorEstablecimiento.getString(cursorEstablecimiento.getColumnIndexOrThrow(dbHelper_Evento_Establecimiento.EE_nom_cliente));
         String documentoCliente = cursorEstablecimiento.getString(cursorEstablecimiento.getColumnIndexOrThrow(dbHelper_Evento_Establecimiento.EE_doc_cliente));
-        textoImpresion += "Código ERP:  " + codigo_erp + "\n";
-        textoImpresion += "Fecha: " + getDatePhone() + "\n";
-        textoImpresion += "Vendedor: " + nombreAgenteVenta + "\n";
-        textoImpresion += "Cliente: " + nombreCliente + "\n";
-        textoImpresion += "DNI: " + documentoCliente + "\n";
+        textoImpresion+= "Código ERP:  "+codigo_erp+"\n";
+        textoImpresion+= "Fecha: "+ getDatePhone()+"\n";
+        textoImpresion+= "Vendedor: "+ nombreAgenteVenta+"\n";
+        textoImpresion+= "Cliente: "+ nombreCliente+"\n";
+        textoImpresion+= "DNI: "+ documentoCliente+"\n";
         //textoImpresion+= "Direccion: Alameda Nro 2039 - Chosica\n";
-        textoImpresion += "-----------------------------------------------\n";
-        textoImpresion += "Cant.             Producto              Importe\n";
-        textoImpresion += "-----------------------------------------------\n";
+        textoImpresion+= "-----------------------------------------------\n";
+        textoImpresion+= "Cant.             Producto              Importe\n";
+        textoImpresion+= "-----------------------------------------------\n";
 
 
-        textoVentaImpresion += "Código ERP:  " + codigo_erp + "\n";
-        textoVentaImpresion += "Fecha: " + getDatePhone() + "\n";
-        textoVentaImpresion += "Vendedor: " + nombreAgenteVenta + "\n";
-        textoVentaImpresion += "Cliente: " + nombreCliente + "\n";
-        textoVentaImpresion += "DNI: " + documentoCliente;
+        textoVentaImpresion+= "Código ERP:  "+codigo_erp+"\n";
+        textoVentaImpresion+= "Fecha: "+ getDatePhone()+"\n";
+        textoVentaImpresion+= "Vendedor: "+ nombreAgenteVenta+"\n";
+        textoVentaImpresion+= "Cliente: "+ nombreCliente+"\n";
+        textoVentaImpresion+= "DNI: "+ documentoCliente;
         //textoVentaImpresion+= "Direccion: Alameda Nro 2039 - Chosica\n";
 
-        long id = dbHelper_Comprob_Venta.createComprobVenta(idEstablecimiento, i_tipoDocumento, i_formaPago, tipoVenta, codigo_erp, serie, numero_documento, base_imponible, igv, monto_total, getDatePhone(), null, estado_comprobante, estado_conexion, id_agente_venta, Constants._CREADO, idLiquidacion);
+        long id = dbHelper_Comprob_Venta.createComprobVenta(idEstablecimiento,i_tipoDocumento,i_formaPago,tipoVenta,codigo_erp,serie,numero_documento,base_imponible,igv,monto_total,getDatePhone(),null,estado_comprobante, estado_conexion,id_agente_venta, Constants._CREADO, idLiquidacion);
 
-        Log.d("Export id CV IGUALES", "" + id);
+        Log.d("Export id CV IGUALES",""+id);
 
 
         int id_comprobante = (int) id;
@@ -769,8 +928,9 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
         Cursor cursorTemp = simpleCursorAdapter.getCursor();
 
 
+
         long comprobVentaDetalle = 0;
-        for (cursorTemp.moveToFirst(); !cursorTemp.isAfterLast(); cursorTemp.moveToNext()) {
+        for (cursorTemp.moveToFirst(); !cursorTemp.isAfterLast();cursorTemp.moveToNext()){
 
             int _id = cursorTemp.getInt(cursorTemp.getColumnIndex(DBAdapter_Temp_Venta.temp_venta_detalle));
             int id_producto = cursorTemp.getInt(cursorTemp.getColumnIndex(DBAdapter_Temp_Venta.temp_id_producto));
@@ -785,56 +945,56 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
 
             monto_total += importe;
 
-            comprobVentaDetalle = dbHelper_Comprob_Venta_Detalle.createComprobVentaDetalle(id_comprobante, id_producto, nombre_producto, cantidad, importe, 0, precio_unitario, promedio_anterior, devuelto, valorUnidad);
-            dbHelper_Stock_Agente.updateStockAgenteCantidad(id_producto, -(cantidad * valorUnidad), idLiquidacion);
+            comprobVentaDetalle = dbHelper_Comprob_Venta_Detalle.createComprobVentaDetalle(id_comprobante, id_producto, nombre_producto, cantidad, importe,0, precio_unitario, promedio_anterior, devuelto, valorUnidad);
+            dbHelper_Stock_Agente.updateStockAgenteCantidad(id_producto,-(cantidad*valorUnidad), idLiquidacion);
 
-            if (nombre_producto.length() >= 25) {
-                nombre_producto = nombre_producto.substring(0, 25);
-                nombre_producto += "...";
+            if(nombre_producto.length()>=25){
+                nombre_producto=nombre_producto.substring(0,25);
+                nombre_producto+="...";
             }
 
             DecimalFormat df = new DecimalFormat("#.00");
-            textoImpresion += String.format("%-6s", cantidad) + String.format("%-34s", nombre_producto) + String.format("%-5s", df.format(importe)) + "\n";
-            textoImpresionContenidoLeft += String.format("%-6s", cantidad) + String.format("%-31s", nombre_producto) + "\n";
-            textoImpresionContenidoRight += String.format("%-5s", df.format(importe)) + "\n";
+            textoImpresion+=String.format("%-6s",cantidad) + String.format("%-34s",nombre_producto) +String.format("%-5s",df.format(importe)) + "\n";
+            textoImpresionContenidoLeft +=String.format("%-6s",cantidad) + String.format("%-31s",nombre_producto)+ "\n";
+            textoImpresionContenidoRight+= String.format("%-5s",df.format(importe)) + "\n";
 
-            datosConcatenados += "Producto  " + nombre_producto + "Vendido satisfactoriamente con id : " + comprobVentaDetalle;
+            datosConcatenados+="Producto  "+ nombre_producto + "Vendido satisfactoriamente con id : "+ comprobVentaDetalle;
         }
 
-        base_imponible = monto_total / 1.18;
-        igv = base_imponible * 0.18;
-        dbHelper_Comprob_Venta.updateComprobanteMontos(id, monto_total, igv, base_imponible);
-        datosConcatenados += "total de gasto : " + monto_total;
-        datosConcatenados += "base impornible: " + base_imponible;
-        datosConcatenados += "igv : " + igv;
+        base_imponible = monto_total /1.18;
+        igv = base_imponible*0.18;
+        dbHelper_Comprob_Venta.updateComprobanteMontos(id,monto_total,igv, base_imponible);
+        datosConcatenados+="total de gasto : " + monto_total;
+        datosConcatenados+="base impornible: " + base_imponible;
+        datosConcatenados+="igv : " + igv;
 
         DecimalFormat df = new DecimalFormat("#.00");
 
-        textoImpresion += String.format("%-37s", "SUB TOTAL:") + "S/ " + df.format(base_imponible) + "\n";
-        textoImpresion += String.format("%-37s", "IGV:") + "S/ " + df.format(igv) + "\n";
-        textoImpresion += String.format("%-37s", "TOTAL:") + "S/ " + df.format(monto_total) + "\n";
+        textoImpresion += String.format("%-37s","SUB TOTAL:")+ "S/ "+ df.format(base_imponible)+"\n";
+        textoImpresion += String.format("%-37s","IGV:")+  "S/ "+ df.format(igv)+"\n";
+        textoImpresion += String.format("%-37s","TOTAL:")+  "S/ "+ df.format(monto_total)+"\n";
 
-        textoImpresionContenidoLeft += String.format("%-34s", "SUB TOTAL:") + "\n";
-        textoImpresionContenidoLeft += String.format("%-34s", "IGV:") + "\n";
-        textoImpresionContenidoLeft += String.format("%-34s", "TOTAL:") + "\n";
+        textoImpresionContenidoLeft+=String.format("%-34s","SUB TOTAL:")+"\n";
+        textoImpresionContenidoLeft+=String.format("%-34s","IGV:")+"\n";
+        textoImpresionContenidoLeft+=String.format("%-34s","TOTAL:")+"\n";
 
-        textoImpresionContenidoRight += "S/ " +
-                "" + df.format(base_imponible) + "\n";
-        textoImpresionContenidoRight += "S/ " + df.format(igv) + "\n";
-        textoImpresionContenidoRight += "S/ " + df.format(monto_total) + "\n";
+        textoImpresionContenidoRight+= "S/ " +
+                ""+ df.format(base_imponible)+"\n";
+        textoImpresionContenidoRight+= "S/ "+ df.format(igv)+"\n";
+        textoImpresionContenidoRight+= "S/ "+ df.format(monto_total)+"\n";
 
-        dbHelper_Evento_Establecimiento.updateEstadoEstablecs("" + idEstablecimiento, 2);
+        dbHelper_Evento_Establecimiento.updateEstadoEstablecs(""+idEstablecimiento,2);
 
 
-        if (i_formaPago == 2) {
-            for (cursorTempComprobCobros.moveToFirst(); !cursorTempComprobCobros.isAfterLast(); cursorTempComprobCobros.moveToNext()) {
+        if (i_formaPago==2){
+            for (cursorTempComprobCobros.moveToFirst(); !cursorTempComprobCobros.isAfterLast();cursorTempComprobCobros.moveToNext()){
                 String fecha_programada = cursorTempComprobCobros.getString(cursorTempComprobCobros.getColumnIndex(DbAdapter_Temp_Comprob_Cobro.temp_fecha_programada));
                 Double monto_a_pagar = cursorTempComprobCobros.getDouble(cursorTempComprobCobros.getColumnIndex(DbAdapter_Temp_Comprob_Cobro.temp_monto_a_pagar));
 
                 Log.d("RECORRE EL CURSOR TEMP COMPROB COBROS", "YES");
 
-                long registroInsertado = dbHelper_Comprob_Cobros.createComprobCobros(idEstablecimiento, Integer.parseInt(id + ""), id_plan_pago, id_plan_pago_detalle, tipoDocumento.toUpperCase(), codigo_erp, fecha_programada, monto_a_pagar, fecha_cobro, hora_cobro, monto_cobrado, estado_cobro, id_agente_venta, id_forma_cobro, lugar_registro, idLiquidacion);
-                Log.d("CC INSERTADO SATISFACTORIAMENTE ", "ID : " + registroInsertado);
+                long registroInsertado = dbHelper_Comprob_Cobros.createComprobCobros(idEstablecimiento,Integer.parseInt(id+""),id_plan_pago,id_plan_pago_detalle,tipoDocumento.toUpperCase(),codigo_erp,fecha_programada,monto_a_pagar, fecha_cobro, hora_cobro,monto_cobrado,estado_cobro,id_agente_venta,id_forma_cobro, lugar_registro, idLiquidacion);
+                Log.d("CC INSERTADO SATISFACTORIAMENTE ", "ID : "+ registroInsertado);
             }
         }
 
@@ -842,37 +1002,37 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
         dbHelper_temp_venta.deleteAllTempVentaDetalle();
         dbHelper_Temp_Comprob_Cobros.deleteAllComprobCobros();
 
-        if (conectadoWifi() || conectadoRedMovil()) {
+        if (conectadoWifi()||conectadoRedMovil()){
             exportMain.execute();
         }
 
 
-        Intent intent = new Intent(this, VMovil_BluetoothImprimir.class);
-        intent.putExtra("textoImpresion", textoImpresion);
+        Intent intent= new Intent(this, VMovil_BluetoothImprimir.class);
+        intent.putExtra("textoImpresion",textoImpresion);
         intent.putExtra("textoImpresionCabecera", textoImpresionCabecera);
         intent.putExtra("textoVentaImpresion", textoVentaImpresion);
         intent.putExtra("textoImpresionContenidoLeft", textoImpresionContenidoLeft);
         intent.putExtra("textoImpresionContenidoRight", textoImpresionContenidoRight);
         finish();
-        Toast.makeText(getApplicationContext(), "Venta Satisfactoria", Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(),"Venta Satisfactoria",Toast.LENGTH_LONG).show();
         startActivity(intent);
 
 
+
+
     }
 
-    public enum TipoDocumento {
+    public enum TipoDocumento{
         factura, boleta, ficha
     }
-
     private void displayHistorialComprobanteAnterior() {
 
 
-        Log.d("DISPLAY ID ESTABLECIMIENTO ", "" + idEstablecimiento);
-        ;
+        Log.d("DISPLAY ID ESTABLECIMIENTO ", ""+idEstablecimiento);;
 
         //((MyApplication)this.getApplication()).setDisplayedHistorialComprobanteAnterior(true);
         session.deleteVariable(6);
-        session.createTempSession(6, 1);
+        session.createTempSession(6,1);
         Cursor cursor = dbHelper_Histo_comprob_anterior.fetchAllHistoComprobAnteriorByIdEstRawQuery(idEstablecimiento);
         //OBTENGO LAS PJOSICIONES DE LAS COLUMNAS DEL CURSOR
         int indice_id = cursor.getColumnIndex("_id");
@@ -883,7 +1043,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
         int indice_importe = cursor.getColumnIndex("total");
 
         int indice_promedio_anterior = cursor.getColumnIndex("pa");
-        int indice_devuelto = cursor.getColumnIndex("devuelto");
+        int indice_devuelto  = cursor.getColumnIndex("devuelto");
         int indice_valor_unidad = cursor.getColumnIndex("valorUnidad");
 
         //t indice_valor_unidad = cursor.getColumnIndex("");
@@ -891,13 +1051,13 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
 
         cursor.moveToFirst();
 
-        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+        for (cursor.moveToFirst(); !cursor.isAfterLast();cursor.moveToNext()){
 
             int _id = cursor.getInt(indice_id);
             int id_producto = cursor.getInt(indice_id_producto);
             String nombre_producto = cursor.getString(indice_nombre_producto);
             int cantidad = cursor.getInt(indice_cantidad);
-            Log.d("CANTIDAD HCA - VC", "" + cantidad);
+            Log.d("CANTIDAD HCA - VC", ""+cantidad);
             Double precio_unitario = cursor.getDouble(indice_precio_unitario);
             Double importe = cursor.getDouble(indice_importe);
 
@@ -908,14 +1068,22 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
             int procedencia = 0;
 
             //En una tabla "Temp_Venta" Nos sirve para agregar datos del historial de ventas anteriores y sugerir al usuario, estos son datos temporales
-            long id = dbHelper_temp_venta.createTempVentaDetalle(1, id_producto, nombre_producto, cantidad, importe, precio_unitario, promedio_anterior, devuelto, procedencia, valor_unidad);
+            long id = dbHelper_temp_venta.createTempVentaDetalle(1,id_producto,nombre_producto,cantidad,importe, precio_unitario, promedio_anterior, devuelto, procedencia, valor_unidad);
 
 
         }
 
     }
+    public void mostrarProductosParaVender(){
 
-    public void mostrarProductosParaVender() {
+        Log.d("FOOTER","VIEW COUNT "+listView.getFooterViewsCount());
+        if (listView.getFooterViewsCount()<1){
+
+        }else{
+            listView.removeFooterView(footer);
+
+        }
+
         Cursor cursorTempVentaDetalle = dbHelper_temp_venta.fetchAllTempVentaDetalle();
         // The desired columns to be bound
         String[] columns = new String[]{
@@ -944,101 +1112,318 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
                 to,
                 0);
 
-        if (listView.getHeaderViewsCount() < 2) {
-            header = getLayoutInflater().inflate(R.layout.infor_venta_cabecera, null);
-            headerNombreEstablecimiento = getLayoutInflater().inflate(R.layout.header_venta, null);
+        if (listView.getHeaderViewsCount()<2){
+            header = getLayoutInflater().inflate(R.layout.infor_venta_cabecera,null);
+            headerNombreEstablecimiento = getLayoutInflater().inflate(R.layout.header_venta,null);
             TextView textViewNombreEstablecimiento = (TextView) headerNombreEstablecimiento.findViewById(R.id.headerEstablecimientoNombre);
 
 
-            Cursor cursorEstablecimiento = dbHelper_Evento_Establecimiento.fetchEstablecsById("" + idEstablecimiento);
+            Cursor cursorEstablecimiento = dbHelper_Evento_Establecimiento.fetchEstablecsById(""+idEstablecimiento);
             cursorEstablecimiento.moveToFirst();
             String nombreEstablecimiento = "";
-            if (cursorEstablecimiento.getCount() > 0) {
+            if (cursorEstablecimiento.getCount()>0) {
                 nombreEstablecimiento = cursorEstablecimiento.getString(cursorEstablecimiento.getColumnIndexOrThrow(dbHelper_Evento_Establecimiento.EE_nom_establec));
             }
             textViewNombreEstablecimiento.setText(nombreEstablecimiento);
 
-            listView.addHeaderView(headerNombreEstablecimiento, null, false);
-            listView.addHeaderView(header, null, false);
+            listView.addHeaderView(headerNombreEstablecimiento,null,false);
+            listView.addHeaderView(header,null, false);
         }
 
         //AQUÍ TIENE QUE ESTAR EL CÓDIGO QUE MUESTRE EL MONTO TOTAL DE LA VENTA
 
-        if (listView.getFooterViewsCount() < 1) {
-            Cursor cursorTemp = simpleCursorAdapter.getCursor();
-            int surtidoVenta = cursorTemp.getCount();
-            totalFooter = 0.0;
+        Cursor cursorTemp = simpleCursorAdapter.getCursor();
+        int surtidoVenta = cursorTemp.getCount();
+        totalFooter = 0.0;
 
-            Cursor cursorStock = dbHelper_Stock_Agente.fetchAllStockAgenteByDay(idLiquidacion);
-            int surtidoStock = cursorStock.getCount();
-
-
-            for (cursorTemp.moveToFirst(); !cursorTemp.isAfterLast(); cursorTemp.moveToNext()) {
-
-                Double importe = cursorTemp.getDouble(cursorTemp.getColumnIndex(DBAdapter_Temp_Venta.temp_importe));
-                totalFooter += importe;
-            }
-
-            base_imponibleFooter = totalFooter / 1.18;
-            igvFooter = base_imponibleFooter * 0.18;
-
-            footer = getLayoutInflater().inflate(R.layout.footer_venta_cabecera, null);
-
-            textViewFooterText = (TextView) footer.findViewById(R.id.VCAP_textViewFooterText);
-            textViewFooterTotal = (TextView) footer.findViewById(R.id.VCAP_textViewFooterTotal);
-
-            textViewFooterSurtidoStock = (TextView) footer.findViewById(R.id.VCAP_textViewSurtidoStock);
-            textViewFooterSurtidoVenta = (TextView) footer.findViewById(R.id.VCAP_textViewSurtiDoVenta);
+        Cursor cursorStock = dbHelper_Stock_Agente.fetchAllStockAgenteByDay(idLiquidacion);
+        int surtidoStock = cursorStock.getCount();
 
 
-            //DATOS DE PRUEBA LOS OBTENDRÈ CUANDO JOSMAR ME PASE ESTOS DATOS
-            int surtidoStockAnterior = 10;
-            int surtidoVentaAnterior = 1;
+        for (cursorTemp.moveToFirst(); !cursorTemp.isAfterLast();cursorTemp.moveToNext()){
 
-            int porcentajeSurtidoAnterior = surtidoVentaAnterior * 100 / surtidoStockAnterior;
-
-            int porcentajeSurtido = surtidoVenta * 100 / surtidoStock;
-
-            textViewFooterSurtidoStock.setText("" +
-                    "Surtido Stock : " + surtidoStock + "\n" + "Porcentaje de Surtido de Venta: " + +porcentajeSurtido + "%");
-            textViewFooterSurtidoVenta.setText("" +
-                    "Surtido Venta : " + surtidoVenta);
-
-            if (porcentajeSurtido == porcentajeSurtidoAnterior) {
-                //IGUAL LO PINTAMOS DE AMARILLO
-                textViewFooterSurtidoVenta.setTextColor(this.getResources().getColor(R.color.amarillo));
-                textViewFooterSurtidoStock.setTextColor(this.getResources().getColor(R.color.amarillo));
-            } else if (porcentajeSurtido > porcentajeSurtidoAnterior) {
-                //PINTAMOS DE VERDE
-                textViewFooterSurtidoVenta.setTextColor(this.getResources().getColor(R.color.verde));
-                textViewFooterSurtidoStock.setTextColor(this.getResources().getColor(R.color.verde));
-            } else if (porcentajeSurtido < porcentajeSurtidoAnterior) {
-                //PINTAMOS DE ROJO
-                textViewFooterSurtidoVenta.setTextColor(this.getResources().getColor(R.color.rojo));
-                textViewFooterSurtidoStock.setTextColor(this.getResources().getColor(R.color.rojo));
-            }
-
-
-            listView.addFooterView(footer, null, false);
+            Double importe = cursorTemp.getDouble(cursorTemp.getColumnIndex(DBAdapter_Temp_Venta.temp_importe));
+            totalFooter += importe;
         }
+
+        base_imponibleFooter = totalFooter /1.18;
+        igvFooter = base_imponibleFooter*0.18;
+
+        footer = getLayoutInflater().inflate(R.layout.footer_venta_cabecera,null);
+
+        textViewFooterText = (TextView)footer.findViewById(R.id.VCAP_textViewFooterText);
+        textViewFooterTotal = (TextView)footer.findViewById(R.id.VCAP_textViewFooterTotal);
+
+        textViewFooterSurtidoStock = (TextView)footer.findViewById(R.id.VCAP_textViewSurtidoStock);
+        textViewFooterSurtidoVenta = (TextView)footer.findViewById(R.id.VCAP_textViewSurtiDoVenta);
+
+        textViewFooterText.setText("Total :\n" +
+                "Base imponible :\n" +
+                "IGV :");
+
+        DecimalFormat df = new DecimalFormat("#.00");
+        textViewFooterTotal.setText(" S/. "+df.format(totalFooter)+"\n" +
+                "S/. "+df.format(base_imponibleFooter)+ "\n" +
+                "S/. "+df.format(igvFooter));
+
+
+        //DATOS DE PRUEBA LOS OBTENDRÈ CUANDO JOSMAR ME PASE ESTOS DATOS
+        int surtidoStockAnterior = 10;
+        int surtidoVentaAnterior = 1;
+
+        int porcentajeSurtidoAnterior = surtidoVentaAnterior*100/surtidoStockAnterior;
+
+        int porcentajeSurtido = surtidoVenta*100/surtidoStock;
+
+        textViewFooterSurtidoStock.setText(""+
+                "Surtido Stock : " + surtidoStock + "\n" + "Porcentaje de Surtido de Venta: " +  + porcentajeSurtido +"%");
+        textViewFooterSurtidoVenta.setText(""+
+                "Surtido Venta : " + surtidoVenta );
+
+        if (porcentajeSurtido==porcentajeSurtidoAnterior){
+            //IGUAL LO PINTAMOS DE AMARILLO
+            textViewFooterSurtidoVenta.setTextColor(this.getResources().getColor(R.color.amarillo));
+            textViewFooterSurtidoStock.setTextColor(this.getResources().getColor(R.color.amarillo));
+        }else if(porcentajeSurtido>porcentajeSurtidoAnterior){
+            //PINTAMOS DE VERDE
+            textViewFooterSurtidoVenta.setTextColor(this.getResources().getColor(R.color.verde));
+            textViewFooterSurtidoStock.setTextColor(this.getResources().getColor(R.color.verde));
+        }else if (porcentajeSurtido<porcentajeSurtidoAnterior){
+            //PINTAMOS DE ROJO
+            textViewFooterSurtidoVenta.setTextColor(this.getResources().getColor(R.color.rojo));
+            textViewFooterSurtidoStock.setTextColor(this.getResources().getColor(R.color.rojo));
+        }
+
+
+
+        if (listView.getFooterViewsCount()<1){
+            listView.addFooterView(footer, null, false);
+        }else{
+            listView.addFooterView(footer);
+        }
+
         //ASIGNO EL ADAPTER AL LISTVIEW
         listView.setAdapter(simpleCursorAdapter);
     }
 
+//INICIO MÉTODO AGREGAR PRODUCTOS
 
-    public String getDatePhone() {
+    private Dialog myTextDialog() {
+        final View layout = View.inflate(this, R.layout.dialog_cantidad_productos, null);
+
+        DecimalFormat df = new DecimalFormat("#.00");
+        final EditText savedText = ((EditText) layout.findViewById(R.id.VCAP_editTextCantidad));
+        final TextView nombreProducto = ((TextView) layout.findViewById(R.id.VCPA_textView2NombreProducto));
+        final TextView precio = ((TextView) layout.findViewById(R.id.VCPA_textViewPrecio));
+
+        Cursor mCursorPrecioUnitarioGeneral = dbHelper_Precio.fetchAllPrecioByIdProductoAndCategoeria(id_producto,id_categoria_establecimiento);
+
+        if (mCursorPrecioUnitarioGeneral.getCount()>1){
+            Toast.makeText(getApplicationContext(), "Hay "+mCursorPrecioUnitarioGeneral.getCount() + " valores unidades para este producto", Toast.LENGTH_SHORT).show();
+        }
+
+
+        Cursor mCursorStock = dbHelper_Stock_Agente.fetchByIdProducto(id_producto,idLiquidacion);
+        int maximoValor = 1;
+        if (mCursorStock.getCount()>0){
+            maximoValor = mCursorStock.getInt(mCursorStock.getColumnIndexOrThrow(dbHelper_Stock_Agente.ST_disponible));
+        }
+
+        savedText.setFilters(new InputFilter[]{new InputFilterMinMax(0,maximoValor)});
+
+
+        if (mCursorPrecioUnitarioGeneral.getCount()>0) {
+            double precio_unitario = mCursorPrecioUnitarioGeneral.getDouble(mCursorPrecioUnitarioGeneral.getColumnIndexOrThrow(DbAdapter_Precio.PR_precio_unit));
+            precio.setText("Precio : S/. "+ df.format(precio_unitario));
+        }else{
+            precio.setText("Precio : S/. No encontrado");
+        }
+        nombreProducto.setText(nombre);
+
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Cantidad");
+        final int finalMaximoValor = maximoValor;
+        builder.setPositiveButton("OK", new Dialog.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+
+                String texto = savedText.getText().toString().trim();
+                if(texto.equals("")){
+                    texto = "1";
+                }
+
+                cantidad = Integer.parseInt(texto);
+
+                Toast.makeText(getApplicationContext(),"Cantidad : "+cantidad + " id_producto : "+ id_producto,Toast.LENGTH_LONG).show();
+
+                Cursor mCursorPrecioUnitario = dbHelper_Precio.fetchAllPrecioByIdProductoAndCantidad(id_producto,cantidad, id_categoria_establecimiento);
+
+                double precio_unitario = 10.0;
+                if (mCursorPrecioUnitario.getCount()!=0){
+                    precio_unitario = mCursorPrecioUnitario.getDouble(mCursorPrecioUnitario.getColumnIndex(DbAdapter_Precio.PR_precio_unit));
+                }else{
+                    Cursor mCursorPrecioUnitarioGeneral = dbHelper_Precio.fetchAllPrecioByIdProductoAndCategoeria(id_producto,id_categoria_establecimiento);
+                    mCursorPrecioUnitarioGeneral.moveToFirst();
+                    if (mCursorPrecioUnitarioGeneral.getCount()>0) {
+                        precio_unitario = mCursorPrecioUnitarioGeneral.getDouble(mCursorPrecioUnitarioGeneral.getColumnIndexOrThrow(DbAdapter_Precio.PR_precio_unit));
+                    }else{
+                        Toast.makeText(getApplicationContext(), "No se encontró un precio para esta cantidad de productos, agregar el precio a la base de datos", Toast.LENGTH_LONG).show();;
+                    }
+                }
+
+                double total_importe = precio_unitario*cantidad;
+                String promedio_anterior = null;
+                String devuelto = null;
+
+                //En una tabla "Temp_Venta" Nos sirve para agregar datos del historial de ventas anteriores y sugerir al usuario, estos son datos temporales
+                long id = dbHelper_temp_venta.createTempVentaDetalle(1,id_producto,nombre,cantidad,total_importe, precio_unitario, promedio_anterior, devuelto, procedencia, valor_unidad);
+
+                mostrarProductosParaVender();
+            }
+        });
+        builder.setView(layout);
+
+        final AlertDialog alertDialog = builder.create();
+        savedText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                }
+            }
+        });
+        return alertDialog;
+    }
+    private Dialog myTextDialogValorUnidad() {
+        final View layout = View.inflate(this, R.layout.dialog_cantidad_productos_valor_unidad, null);
+
+        DecimalFormat df = new DecimalFormat("#.00");
+        final EditText savedText = ((EditText) layout.findViewById(R.id.VCAP_editTextCantidad));
+        final TextView nombreProducto = ((TextView) layout.findViewById(R.id.VCPA_textView2NombreProducto));
+        final TextView precio = ((TextView) layout.findViewById(R.id.VCPA_textViewPrecio));
+        final TextView valorUnidad = (TextView) layout.findViewById(R.id.VCPA_textViewValorUnidad);
+
+        final double[] precio_unitario = {0.0};
+
+        final Cursor mCursorPrecioUnitarioGeneral = dbHelper_Precio.fetchAllPrecioByIdProductoAndCategoeria(id_producto,id_categoria_establecimiento);
+        mCursorPrecioUnitarioGeneral.moveToFirst();
+
+        if (mCursorPrecioUnitarioGeneral.getCount()>0) {
+            precio_unitario[0] = mCursorPrecioUnitarioGeneral.getDouble(mCursorPrecioUnitarioGeneral.getColumnIndexOrThrow(DbAdapter_Precio.PR_precio_unit));
+            valor_unidad = mCursorPrecioUnitarioGeneral.getInt(mCursorPrecioUnitarioGeneral.getColumnIndexOrThrow(DbAdapter_Precio.PR_valor_unidad));
+            precio.setText("Precio : S/. "+ df.format(precio_unitario[0]));
+            valorUnidad.setText("Unidad : "+valor_unidad);
+        }else{
+            precio.setText("Precio : S/. No encontrado");
+        }
+        nombreProducto.setText(nombre);
+
+
+        valorUnidad.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int position = mCursorPrecioUnitarioGeneral.getPosition();
+                //Toast.makeText(getApplicationContext(), "Position del cursor Valor Unidad "+position, Toast.LENGTH_SHORT).show();
+
+                if (mCursorPrecioUnitarioGeneral.isLast()){
+                    mCursorPrecioUnitarioGeneral.moveToFirst();
+                }else{
+                    mCursorPrecioUnitarioGeneral.moveToNext();
+                }
+                precio_unitario[0] = mCursorPrecioUnitarioGeneral.getDouble(mCursorPrecioUnitarioGeneral.getColumnIndexOrThrow(DbAdapter_Precio.PR_precio_unit));
+                valor_unidad = mCursorPrecioUnitarioGeneral.getInt(mCursorPrecioUnitarioGeneral.getColumnIndexOrThrow(DbAdapter_Precio.PR_valor_unidad));
+                DecimalFormat df = new DecimalFormat("#.00");
+                precio.setText("Precio : S/. "+ df.format(precio_unitario[0]));
+                valorUnidad.setText("Unidad : "+valor_unidad);
+
+
+            }
+        });
+
+
+        Cursor mCursorStock = dbHelper_Stock_Agente.fetchByIdProducto(id_producto,idLiquidacion);
+        int maximoValor = 1;
+        if (mCursorStock.getCount()>0){
+            maximoValor = mCursorStock.getInt(mCursorStock.getColumnIndexOrThrow(dbHelper_Stock_Agente.ST_disponible));
+        }
+
+        savedText.setFilters(new InputFilter[]{new InputFilterMinMax(0,maximoValor)});
+
+
+
+
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Cantidad");
+        final int finalMaximoValor = maximoValor;
+        builder.setPositiveButton("OK", new Dialog.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+
+                String texto = savedText.getText().toString().trim();
+                if(texto.equals("")){
+                    texto = "1";
+                }
+
+                cantidad = Integer.parseInt(texto);
+
+                //Toast.makeText(getApplicationContext(),"Cantidad : "+cantidad + " id_producto : "+ id_producto + "Precio Unitario : " +precio_unitario[0] + "Valor Unidad : "+ valor_unidad,Toast.LENGTH_LONG).show();
+
+                Cursor mCursorPrecioUnitario = dbHelper_Precio.fetchAllPrecioByIdProductoAndCantidadAndValorUnidad(id_producto,cantidad, id_categoria_establecimiento,valor_unidad);
+
+                if (mCursorPrecioUnitario.getCount()!=0){
+                    precio_unitario[0] = mCursorPrecioUnitario.getDouble(mCursorPrecioUnitario.getColumnIndex(DbAdapter_Precio.PR_precio_unit));
+                }else{
+                    /*
+                    Cursor mCursorPrecioUnitarioGeneral = dbHelper_Precio.fetchAllPrecioByIdProductoAndCategoeria(id_producto,id_categoria_establecimiento);
+                    mCursorPrecioUnitarioGeneral.moveToFirst();
+                    if (mCursorPrecioUnitarioGeneral.getCount()>0) {
+                        precio_unitario = mCursorPrecioUnitarioGeneral.getDouble(mCursorPrecioUnitarioGeneral.getColumnIndexOrThrow(DbAdapter_Precio.PR_precio_unit));
+                    }else{
+                        Toast.makeText(getApplicationContext(), "No se encontró un precio para esta cantidad de productos, agregar el precio a la base de datos", Toast.LENGTH_LONG).show();;
+                    }*/
+                }
+
+                double total_importe = precio_unitario[0]*cantidad;
+                String promedio_anterior = null;
+                String devuelto = null;
+
+                //En una tabla "Temp_Venta" Nos sirve para agregar datos del historial de ventas anteriores y sugerir al usuario, estos son datos temporales
+                long id = dbHelper_temp_venta.createTempVentaDetalle(1,id_producto,nombre,cantidad,total_importe, precio_unitario[0], promedio_anterior, devuelto, procedencia, valor_unidad);
+
+                mostrarProductosParaVender();
+            }
+        });
+        builder.setView(layout);
+
+        final AlertDialog alertDialog = builder.create();
+        savedText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                }
+            }
+        });
+        return alertDialog;
+    }
+
+
+
+    public String getDatePhone()
+    {
         Calendar cal = new GregorianCalendar();
         Date date = cal.getTime();
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         return df.format(date);
     }
 
-    double formatDecimal(double d) {
+    double formatDecimal(double d)
+    {
         DecimalFormat df = new DecimalFormat("#,00");
         return Double.valueOf(df.format(d));
     }
 
-    protected Boolean conectadoWifi() {
+    protected Boolean conectadoWifi(){
         ConnectivityManager connectivity = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivity != null) {
             NetworkInfo info = connectivity.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
@@ -1051,7 +1436,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
         return false;
     }
 
-    protected Boolean conectadoRedMovil() {
+    protected Boolean conectadoRedMovil(){
         ConnectivityManager connectivity = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivity != null) {
             NetworkInfo info = connectivity.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
@@ -1063,24 +1448,8 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener {
         }
         return false;
     }
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.vmovil__venta__cabecera__agregar_productos, menu);
-        return true;
-    }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch (item.getItemId()) {
-            case R.id.addMenuProduct:
-                Intent intent = new Intent(this, VMovil_Venta_Cabecera_AgregarProductos.class);
-                finish();
-                startActivity(intent);
-                break;
-        }
-        return true;
-    }
+
+
 }
 
