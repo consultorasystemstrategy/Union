@@ -40,6 +40,8 @@ import java.util.HashMap;
 import union.union_vr1.Alarm.ReceiverAlarmFinishedDay;
 import union.union_vr1.AsyncTask.ExportMain;
 import union.union_vr1.AsyncTask.ImportMain;
+import union.union_vr1.BarcodeScanner.IntentIntegrator;
+import union.union_vr1.BarcodeScanner.IntentResult;
 import union.union_vr1.Charts.Bar;
 import union.union_vr1.Charts.BarGraph;
 import union.union_vr1.MySQL.DbManager_Evento_Establec_GET;
@@ -251,7 +253,7 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.sincronizar_options, menu);
+        getMenuInflater().inflate(R.menu.menu_principal, menu);
         return true;
     }
 
@@ -263,16 +265,15 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         int id = item.getItemId();
         switch (id){
 
+            case R.id.addMenuProduct:
+                IntentIntegrator intentIntegrator = new IntentIntegrator(mainActivity);
+                intentIntegrator.initiateScan();
+                break;
             case R.id.buttonImport:
                 new ImportMain(mainActivity).execute();
                 break;
             case R.id.buttonExportar:
                 new ExportMain(mainActivity).execute();
-                break;
-            case R.id.buttonRedireccionarPrincipal:
-                Intent intent = new Intent(mainActivity, VMovil_Evento_Indice.class);
-                finish();
-                startActivity(intent);
                 break;
             default:
                 //ON ITEM SELECTED DEFAULT
@@ -280,6 +281,61 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
 
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
+        if (scanResult != null) {
+            // handle scan result}
+            String barcodeScan = scanResult.getContents();
+            String formatScan = scanResult.getFormatName();
+
+
+            Toast toast = Toast.makeText(getApplicationContext(),
+                   "CODIGO DE BARRAS: " +  barcodeScan  , Toast.LENGTH_SHORT);
+            toast.show();
+            /*textViewContent.setText("CODEBAR CONTEN : "+contents);
+            textViewFormat.setText("FORMAT : "+format);*/
+
+
+
+            if (barcodeScan.length()>0){
+
+                Cursor cursorEstablecimiento = dbHelper.fetchEstablecsByBarcode(barcodeScan, idLiquidacion);
+
+                if (cursorEstablecimiento.getCount()>0){
+                    cursorEstablecimiento.moveToFirst();
+                    Toast.makeText(getApplicationContext(),"ESTABLECIMIENTO SCANEADO: "+cursorEstablecimiento.getString(cursorEstablecimiento.getColumnIndexOrThrow(dbHelper.EE_nom_establec)),Toast.LENGTH_LONG).show();
+                }else {
+                    Toast.makeText(getApplicationContext(), "No encontrado", Toast.LENGTH_SHORT).show();
+                }
+            }else{
+                Toast.makeText(getApplicationContext(), "¡No ha escaneado!", Toast.LENGTH_SHORT).show();
+            }
+
+            /*
+            if (barcodeScan.length()>0){
+
+                mCursorScannerProducto = dbHelper_Precio.getProductoByCodigo(id_categoria_establecimiento, barcodeScan, idLiquidacion);
+
+                if (mCursorScannerProducto.getCount()>0){
+                    scannerDialog().show();
+                }else {
+                    Toast.makeText(getApplicationContext(), "Producto con código de barras : "+ barcodeScan + "no disponible en el Stock Actual y/o Categoría establecimiento", Toast.LENGTH_SHORT).show();;
+                }
+            }else{
+                Toast.makeText(getApplicationContext(), "No ha Scaneado ningún producto", Toast.LENGTH_SHORT).show();;
+            }
+*/
+
+
+        }
+        // else continue with any other code you need in the method
+        else{
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    "No scan data received!", Toast.LENGTH_SHORT);
+            toast.show();
+        }
     }
 
     private void AsignarColor(Button btn) {

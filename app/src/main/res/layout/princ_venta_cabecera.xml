@@ -1,79 +1,87 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-
     tools:context="union.union_vr1.Vistas.VMovil_Venta_CabeceraX"
-    android:id="@+id/softKeyboardMain">
+    android:gravity="center"
+    android:paddingLeft="8dp">
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="1">
+            android:layout_height="fill_parent">
 
-            <AutoCompleteTextView
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+
+                <AutoCompleteTextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/VCAP_AutoCompleteProductos"
+                    android:hint="Buscar productos"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    />
+                <ListView
+                    android:layout_width="wrap_content"
+                    android:layout_height="320dp"
+                    android:id="@+id/VC_listView"
+                    android:minHeight="320dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/VCAP_AutoCompleteProductos"
-                android:hint="Buscar productos"/>
-            <ListView
-                android:layout_width="wrap_content"
+                android:id="@+id/layoutSpinner"
+                android:paddingRight="8dp">
+
+                <Spinner
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/VC_spinnerTipoDocumento"
+                    android:layout_weight="1"
+                    android:minHeight="48dp" />
+
+                <Spinner
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/VC_spinnerFormaPago"
+                    android:layout_weight="1"
+                    android:minHeight="48dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/VC_listView" />
+                android:id="@+id/layoutButton"
+                android:minHeight="64dp"
+                android:paddingRight="8dp">
+
+                <Button
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Agregar Productos"
+                    android:id="@+id/VC_buttonAgregarProductos"
+                    android:layout_weight="1"
+                    android:background="@color/Dark3" />
+
+                <Button
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Vender"
+                    android:id="@+id/VC_buttonVender"
+                    android:layout_weight="1"
+                    android:background="@color/PersonalizadoSteve4" />
+            </LinearLayout>
         </LinearLayout>
+    </ScrollView>
 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="4">
-
-            <Spinner
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:id="@+id/VC_spinnerTipoDocumento"
-                android:layout_weight="1"/>
-
-            <Spinner
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:id="@+id/VC_spinnerFormaPago"
-                android:layout_weight="1" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="4">
-
-            <Button
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:text="Agregar Productos"
-                android:id="@+id/VC_buttonAgregarProductos"
-                android:layout_weight="1"
-                android:background="@color/Dark3" />
-
-            <Button
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:text="Vender"
-                android:id="@+id/VC_buttonVender"
-                android:layout_weight="1"
-                android:background="@color/PersonalizadoSteve4" />
-        </LinearLayout>
-    </LinearLayout>
-
-</RelativeLayout>
+</LinearLayout>

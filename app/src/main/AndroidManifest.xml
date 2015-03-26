@@ -35,8 +35,7 @@
         <activity
             android:name=".Vistas.VMovil_Venta_Cabecera"
             android:label="Venta de Productos"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize">
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".Vistas.VMovil_Evento_Establec"

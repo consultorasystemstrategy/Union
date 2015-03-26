@@ -10,6 +10,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.FilterQueryProvider;
@@ -56,6 +57,7 @@ public class VMovil_Menu_Establec extends Activity {
         idLiquidacion = session.fetchVarible(3);
 
 
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         dbAdapter_agente = new DbAdapter_Agente(this);
         dbAdapter_agente.open();
         dbHelper = new DbAdaptert_Evento_Establec(this);

@@ -17,8 +17,13 @@ import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Adapter;
@@ -46,6 +51,8 @@ import java.util.GregorianCalendar;
 
 import union.union_vr1.AsyncTask.ExportMain;
 import union.union_vr1.AsyncTask.SolicitarCredito;
+import union.union_vr1.BarcodeScanner.IntentIntegrator;
+import union.union_vr1.BarcodeScanner.IntentResult;
 import union.union_vr1.InputFilterMinMax;
 import union.union_vr1.R;
 import union.union_vr1.RestApi.StockAgenteRestApi;
@@ -62,6 +69,7 @@ import union.union_vr1.Sqlite.DbAdapter_Stock_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Comprob_Cobro;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
+import union.union_vr1.Utils.Keyboard;
 import union.union_vr1.Utils.MyApplication;
 import union.union_vr1.Utils.SoftKeyboard;
 import union.union_vr1.VMovil_BluetoothImprimir;
@@ -97,6 +105,11 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
     private String nombre = null;
     private  int id_producto = 0;
     private int valor_unidad = 1;
+
+
+    private Cursor mCursorScannerProducto;
+    private String barcodeScan;
+    private String formatScan;
 
     //fin variables agregar productos
 
@@ -144,7 +157,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
     private View header;
     private View headerNombreEstablecimiento;
     private View footer;
-    private VMovil_Venta_Cabecera mainActivity;
+    private Activity mainActivity;
 
 
 
@@ -175,6 +188,9 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
     RelativeLayout mainLayout;
     InputMethodManager im;
     SoftKeyboard softKeyboard;
+
+    LinearLayout layoutSpinner;
+    LinearLayout layoutButton;
     @Override
     protected void onDestroy() {
         exportMain.dismissProgressDialog();
@@ -212,8 +228,62 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.princ_venta_cabecera);
 
+//        Keyboard autoCompleteKeyboardLayout = new Keyboard(this, null);
+
+        //ViewGroup viewGroup = (ViewGroup) autoCompleteKeyboardLayout.getRootView();
+        //layoutSpinner = (LinearLayout) findViewById(R.id.layoutSpinner);
+        //layoutButton = (LinearLayout) findViewById(R.id.layoutButton);
+
+
+
+
+
+        //mainLayout = (RelativeLayout) findViewById(R.id.softKeyboardMain); // You must use the layout root
+        //im = (InputMethodManager) getSystemService(Service.INPUT_METHOD_SERVICE);
+
+/*
+Instantiate and pass a callback
+*/
+
+
+        setContentView(R.layout.princ_venta_cabecera);
+        //setContentView(viewGroup);
+
+/*
+        softKeyboard = new SoftKeyboard(viewGroup, im, layoutButton, layoutSpinner);
+        softKeyboard.setSoftKeyboardCallback(new SoftKeyboard.SoftKeyboardChanged()
+        {
+
+            @Override
+            public void onSoftKeyboardHide()
+            {
+                // Code here
+                Log.d("KEYBOARD","HIDE");
+                mainActivity.runOnUiThread(new Runnable() {
+                public void run() {
+                    mainActivity.findViewById(R.id.layoutButton).setVisibility(View.VISIBLE);
+                    mainActivity.findViewById(R.id.layoutSpinner).setVisibility(View.VISIBLE);
+                }
+            });
+            }
+
+            @Override
+            public void onSoftKeyboardShow()
+            {
+                // Code here
+                Log.d("KEYBOARD","SHOW");
+                mainActivity.runOnUiThread(new Runnable() {
+                    public void run() {
+                        mainActivity.findViewById(R.id.layoutButton).setVisibility(View.GONE);
+                        mainActivity.findViewById(R.id.layoutSpinner).setVisibility(View.GONE);
+                    }
+                });
+            }
+        });
+
+*/
+        autoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.VCAP_AutoCompleteProductos);
 
         session = new DbAdapter_Temp_Session(this);
         session.open();
@@ -259,36 +329,9 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
         idLiquidacion = session.fetchVarible(3);
 
 
-        setContentView(R.layout.princ_venta_cabecera);
 
-/*
-        mainLayout = (RelativeLayout) findViewById(R.layout.princ_venta_cabecera); // You must use the layout root
-        im = (InputMethodManager) getSystemService(Service.INPUT_METHOD_SERVICE);
 
-/*
-Instantiate and pass a callback
-*/
-
-/*
-        softKeyboard = new SoftKeyboard(mainLayout, im);
-        softKeyboard.setSoftKeyboardCallback(new SoftKeyboard.SoftKeyboardChanged()
-        {
-
-            @Override
-            public void onSoftKeyboardHide()
-            {
-                // Code here
-                Toast.makeText(mainActivity,"KEYBOARD HIDE",Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void onSoftKeyboardShow()
-            {
-                // Code here
-                Toast.makeText(mainActivity,"KEYBOARD SHOW",Toast.LENGTH_LONG).show();
-            }
-        });
-*/
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         final Cursor cursorEstablecimiento = dbHelper_Evento_Establecimiento.fetchEstablecsById(""+idEstablecimiento);
         cursorEstablecimiento.moveToFirst();
@@ -499,9 +542,18 @@ Instantiate and pass a callback
 
 
         //AUTOCOMPLETE BUSCAR PRODUCTOS
-        autoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.VCAP_AutoCompleteProductos);
         mCursorStockAgente = dbHelper_Stock_Agente.fetchStockAgenteByIdEstablecimiento(id_categoria_establecimiento, idLiquidacion);
 
+        autoCompleteTextView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (hasFocus){
+                    Log.d("TIENE FOCO","TIENE EL PUTO FOCO");
+                }else{
+                    hide_keyboard(mainActivity);
+                }
+            }
+        });
         String[] columnasStock = new String[]{
                 DbAdapter_Stock_Agente.ST_nombre,
                 DbAdapter_Stock_Agente.ST_disponible,
@@ -549,10 +601,14 @@ Instantiate and pass a callback
             }
         });
 
+
+
         autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
+                hide_keyboard(mainActivity);
+                //mainActivity.getCurrentFocus().clearFocus();
                 //Aquí obtengo el cursor posicionado en la fila que ha seleccionado/clickeado
                 Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
 
@@ -584,6 +640,27 @@ Instantiate and pass a callback
             }
         });
 
+        listView.setOnTouchListener(new ListView.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                int action = event.getAction();
+                switch (action) {
+                    case MotionEvent.ACTION_DOWN:
+                        // Disallow ScrollView to intercept touch events.
+                        v.getParent().getParent().getParent().requestDisallowInterceptTouchEvent(true);
+                        break;
+
+                    case MotionEvent.ACTION_UP:
+                        // Allow ScrollView to intercept touch events.
+                        v.getParent().getParent().getParent().requestDisallowInterceptTouchEvent(false);
+                        break;
+                }
+
+                // Handle ListView touch events.
+                v.onTouchEvent(event);
+                return true;
+            }
+        });
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -665,6 +742,129 @@ Instantiate and pass a callback
 
 
     }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.princ_venta_principal, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.addMenuProduct:
+                IntentIntegrator intentIntegrator = new IntentIntegrator(mainActivity);
+                intentIntegrator.initiateScan();
+                break;
+        }
+        return true;
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
+        if (scanResult != null) {
+            // handle scan result}
+            barcodeScan = scanResult.getContents();
+            formatScan = scanResult.getFormatName();
+
+            /*textViewContent.setText("CODEBAR CONTEN : "+contents);
+            textViewFormat.setText("FORMAT : "+format);*/
+
+            if (barcodeScan.length()>0){
+
+                mCursorScannerProducto = dbHelper_Precio.getProductoByCodigo(id_categoria_establecimiento, barcodeScan, idLiquidacion);
+
+                if (mCursorScannerProducto.getCount()>0){
+                    scannerDialog().show();
+                }else {
+                    Toast.makeText(getApplicationContext(), "Producto con código de barras : "+ barcodeScan + "no disponible en el Stock Actual y/o Categoría establecimiento", Toast.LENGTH_SHORT).show();;
+                }
+            }else{
+                Toast.makeText(getApplicationContext(), "No ha Scaneado ningún producto", Toast.LENGTH_SHORT).show();;
+            }
+
+
+
+        }
+        // else continue with any other code you need in the method
+        else{
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    "No scan data received!", Toast.LENGTH_SHORT);
+            toast.show();
+        }
+    }
+
+    private Dialog scannerDialog() {
+
+        int idProducto = -1;
+        String nombreP = null;
+        final View layout = View.inflate(this, R.layout.dialog_cantidad_productos, null);
+
+        DecimalFormat df = new DecimalFormat("#.00");
+        final EditText savedText = ((EditText) layout.findViewById(R.id.VCAP_editTextCantidad));
+        final TextView nombreProducto = ((TextView) layout.findViewById(R.id.VCPA_textView2NombreProducto));
+        final TextView precio = ((TextView) layout.findViewById(R.id.VCPA_textViewPrecio));
+
+        mCursorScannerProducto.moveToFirst();
+        if (mCursorScannerProducto.getCount()>0) {
+            double precio_unitario = mCursorScannerProducto.getDouble(mCursorScannerProducto.getColumnIndexOrThrow(DbAdapter_Precio.PR_precio_unit));
+            nombreP =  mCursorScannerProducto.getString(mCursorScannerProducto.getColumnIndexOrThrow(DbAdapter_Precio.PR_nombreProducto));
+            idProducto = mCursorScannerProducto.getInt(mCursorScannerProducto.getColumnIndexOrThrow(DbAdapter_Precio.PR_id_producto));
+            precio.setText("Precio : S/. "+ df.format(precio_unitario));
+            nombreProducto.setText("Nombre : S/. " + nombreP);
+        }else{
+            precio.setText("Producto Scaneado no disponible en el Stock Actual");
+
+        }
+
+
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Cantidad");
+        final int finalIdProducto = idProducto;
+        final String finalNombreP = nombreP;
+        builder.setPositiveButton("OK", new Dialog.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                String texto = savedText.getText().toString().trim();
+                if(texto.equals("")){
+                    texto = "1";
+                }
+
+                cantidad = Integer.parseInt(texto);
+
+                Toast.makeText(getApplicationContext(),"Cantidad : "+cantidad + " id_producto : "+ id_producto,Toast.LENGTH_LONG).show();
+
+                Cursor mCursorPrecioUnitario = dbHelper_Precio.fetchAllPrecioByIdProductoAndCantidad(finalIdProducto,cantidad, id_categoria_establecimiento);
+
+                double precio_unitario = 10.0;
+                if (mCursorPrecioUnitario.getCount()!=0){
+                    precio_unitario = mCursorPrecioUnitario.getDouble(mCursorPrecioUnitario.getColumnIndex(DbAdapter_Precio.PR_precio_unit));
+                }else{
+                    Cursor mCursorPrecioUnitarioGeneral = dbHelper_Precio.fetchAllPrecioByIdProductoAndCategoeria(finalIdProducto,id_categoria_establecimiento);
+                    mCursorPrecioUnitarioGeneral.moveToFirst();
+                    if (mCursorPrecioUnitarioGeneral.getCount()>0) {
+                        precio_unitario = mCursorPrecioUnitarioGeneral.getDouble(mCursorPrecioUnitarioGeneral.getColumnIndexOrThrow(DbAdapter_Precio.PR_precio_unit));
+                    }else{
+                        Toast.makeText(getApplicationContext(), "No se encontró un precio para esta cantidad de productos, agregar el precio a la base de datos", Toast.LENGTH_LONG).show();;
+                    }
+                }
+
+                double total_importe = precio_unitario*cantidad;
+                String promedio_anterior = null;
+                String devuelto = null;
+
+                //En una tabla "Temp_Venta" Nos sirve para agregar datos del historial de ventas anteriores y sugerir al usuario, estos son datos temporales
+                long id = dbHelper_temp_venta.createTempVentaDetalle(1,finalIdProducto, finalNombreP,cantidad,total_importe, precio_unitario, promedio_anterior, devuelto, procedencia, 1);
+
+                Intent intent = new Intent(mContext, VMovil_Venta_Cabecera_AgregarProductos.class);
+                finish();
+                startActivity(intent);
+            }
+        });
+        builder.setView(layout);
+        return builder.create();
+    }
     private Dialog dialogSolicitarCredito() {
 
         final View layout = View.inflate(this, R.layout.dialog_solicitar_credito, null);
@@ -713,6 +913,7 @@ Instantiate and pass a callback
         return builder.create();
     }
     private Dialog myEditDialog(final long id_temp_venta_detalle) {
+
         final View layout = View.inflate(this, R.layout.dialog_editar_productos, null);
 
         savedText = ((EditText) layout.findViewById(R.id.VCEP_editTextCantidad));
@@ -780,6 +981,8 @@ Instantiate and pass a callback
                 /*Intent intent = new Intent(mContext, VMovil_Venta_Cabecera.class);
                 finish();
                 startActivity(intent);*/
+
+
                 mostrarProductosParaVender();
             }
         });
@@ -791,7 +994,11 @@ Instantiate and pass a callback
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
+                    Log.d("FOCUS","ALERT YES");
                     alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                }else{
+                    Log.d("FOCUS","ALERT FALSE");
+                    alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
                 }
             }
         });
@@ -1074,7 +1281,28 @@ Instantiate and pass a callback
         }
 
     }
+    public static void hide_keyboard(Activity activity) {
+        Log.d("HIDE KEYBOARD","INICIO");
+        InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        //Find the currently focused view, so we can grab the correct window token from it.
+        View view = activity.getCurrentFocus();
+        Log.d("KEYBOARD",""+view.getTag()+"-"+view.getId());
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        if(view == null) {
+            view = new View(activity);
+        }
+         boolean isHide= inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        Log.d("HIDE SOFT INPUT",""+isHide);
+    }
     public void mostrarProductosParaVender(){
+
+        Log.d("AUTOCOMPLETE KEYBOARD",""+autoCompleteTextView.getTag()+"-"+autoCompleteTextView.getId());
+
+        //autoCompleteTextView.clearFocus();
+        //autoCompleteTextView.clearFocus();
+        //buttonVender.requestFocus();
+        //hide_keyboard(mainActivity);
+
 
         Log.d("FOOTER","VIEW COUNT "+listView.getFooterViewsCount());
         if (listView.getFooterViewsCount()<1){
@@ -1277,7 +1505,8 @@ Instantiate and pass a callback
 
                 //En una tabla "Temp_Venta" Nos sirve para agregar datos del historial de ventas anteriores y sugerir al usuario, estos son datos temporales
                 long id = dbHelper_temp_venta.createTempVentaDetalle(1,id_producto,nombre,cantidad,total_importe, precio_unitario, promedio_anterior, devuelto, procedencia, valor_unidad);
-
+                //softKeyboard.closeSoftKeyboard();
+                getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
                 mostrarProductosParaVender();
             }
         });
@@ -1288,8 +1517,13 @@ Instantiate and pass a callback
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
+                    Log.d("FOCUS","ALERT YES");
                     alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                }else{
+                    Log.d("FOCUS","ALERT FALSE");
+                    alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
                 }
+
             }
         });
         return alertDialog;
@@ -1358,7 +1592,6 @@ Instantiate and pass a callback
         final int finalMaximoValor = maximoValor;
         builder.setPositiveButton("OK", new Dialog.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-
                 String texto = savedText.getText().toString().trim();
                 if(texto.equals("")){
                     texto = "1";
@@ -1389,6 +1622,8 @@ Instantiate and pass a callback
 
                 //En una tabla "Temp_Venta" Nos sirve para agregar datos del historial de ventas anteriores y sugerir al usuario, estos son datos temporales
                 long id = dbHelper_temp_venta.createTempVentaDetalle(1,id_producto,nombre,cantidad,total_importe, precio_unitario[0], promedio_anterior, devuelto, procedencia, valor_unidad);
+                //softKeyboard.closeSoftKeyboard();
+
 
                 mostrarProductosParaVender();
             }
@@ -1400,7 +1635,11 @@ Instantiate and pass a callback
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
+                    Log.d("FOCUS","ALERT YES");
                     alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                }else{
+                    Log.d("FOCUS","ALERT FALSE");
+                    alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
                 }
             }
         });
@@ -1449,7 +1688,9 @@ Instantiate and pass a callback
         return false;
     }
 
-
-
+    @Override
+    public View getCurrentFocus() {
+        return super.getCurrentFocus();
+    }
 }
 

@@ -10,11 +10,13 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 
 public class SoftKeyboard implements View.OnFocusChangeListener
 {
@@ -30,10 +32,16 @@ public class SoftKeyboard implements View.OnFocusChangeListener
 
     private View tempView; // reference to a focused EditText
 
-    public SoftKeyboard(ViewGroup layout, InputMethodManager im)
+    LinearLayout layoutSpinner;
+    LinearLayout layoutButton;
+
+    public SoftKeyboard(ViewGroup layout, InputMethodManager im, LinearLayout layoutSpinner, LinearLayout layoutButton)
     {
+        this.layoutSpinner = layoutSpinner;
+        this.layoutButton = layoutButton;
+
         this.layout = layout;
-        //keyboardHideByDefault();
+        keyboardHideByDefault();
         initEditTexts(layout);
         this.im = im;
         this.coords = new int[2];

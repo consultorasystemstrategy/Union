@@ -26,6 +26,7 @@ public class DbAdaptert_Evento_Establec {
     public static final String EE_id_agente = "ee_in_id_agente";
     public static final String EE_id_liquidacion = "ee_in_id_liquidacion";
     public static final String estado_sincronizacion = "estado_sincronizacion";
+    public static final String EE_codigo_barras = "ee_in_codigo_barras";
 
     //FALTA OBTENER ESTE CAMPO
     public static final String EE_monto_credito = "ee_re_monto_credito";
@@ -55,6 +56,7 @@ public class DbAdaptert_Evento_Establec {
                     +EE_id_tipo_doc_cliente+" integer,"
                     +EE_id_estado_atencion+" integer,"
                     +EE_nom_establec+" text,"
+                    +EE_codigo_barras+" text,"
                     +EE_nom_cliente+" text,"
                     +EE_doc_cliente         +" text,"
                     +EE_orden+" integer,"
@@ -131,6 +133,8 @@ public class DbAdaptert_Evento_Establec {
         initialValues.put(EE_id_estado_no_atencion,establecimiento.getIdEstadoNoAtencion());
         initialValues.put(EE_id_agente,id_agente);
         initialValues.put(EE_id_liquidacion,id_liquidacion);
+        initialValues.put(EE_codigo_barras,establecimiento.getCodigoBarras());
+
 
         return mDb.insert(SQLITE_TABLE_Evento_Establec, null, initialValues);
     }
@@ -152,6 +156,7 @@ public class DbAdaptert_Evento_Establec {
         initialValues.put(EE_id_estado_no_atencion,establecimiento.getIdEstadoNoAtencion());
         initialValues.put(EE_id_agente,id_agente);
         initialValues.put(EE_id_liquidacion,id_liquidacion);
+        initialValues.put(EE_codigo_barras,establecimiento.getCodigoBarras());
 
         mDb.update(SQLITE_TABLE_Evento_Establec, initialValues,
                 EE_id_establec+"=?",new String[]{""+establecimiento.getIdEstablecimiento()});
@@ -291,6 +296,21 @@ public class DbAdaptert_Evento_Establec {
                         EE_surtido_venta_ant, EE_monto_credito, EE_dias_credito, EE_id_estado_no_atencion,
                         EE_id_agente},
                 EE_id_establec + " = " + inputText, null,
+                null, null, null, null);
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+
+    }
+    public Cursor fetchEstablecsByBarcode(String barcode, int liquidacion) throws SQLException {
+        Cursor mCursor = null;
+        mCursor = mDb.query(true, SQLITE_TABLE_Evento_Establec, new String[] {EE_id_evt_establec,
+                        EE_id_establec, EE_id_cat_est, EE_id_tipo_doc_cliente, EE_id_estado_atencion,
+                        EE_nom_establec, EE_nom_cliente, EE_doc_cliente, EE_orden, EE_surtido_stock_ant,
+                        EE_surtido_venta_ant, EE_monto_credito, EE_dias_credito, EE_id_estado_no_atencion,
+                        EE_id_agente,EE_codigo_barras},
+                EE_codigo_barras + " LIKE '%" + barcode+"%' AND "+EE_id_liquidacion + " = " +liquidacion, null,
                 null, null, null, null);
         if (mCursor != null) {
             mCursor.moveToFirst();

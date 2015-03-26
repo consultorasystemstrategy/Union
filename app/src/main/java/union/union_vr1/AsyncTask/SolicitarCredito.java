@@ -1,5 +1,6 @@
 package union.union_vr1.AsyncTask;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.Cursor;
@@ -55,13 +56,13 @@ public class SolicitarCredito extends AsyncTask<String, String, String> {
 
     private DbAdapter_Temp_Session session;
 
-    private VMovil_Venta_Cabecera mainActivity;
+    private Activity mainActivity;
     private ProgressDialog progressDialog;
     private DbAdaptert_Evento_Establec dbAdaptert_evento_establec;
     JSONObject jsonObject = null;
 
 
-    public SolicitarCredito(VMovil_Venta_Cabecera mainActivity) {
+    public SolicitarCredito(Activity mainActivity) {
         this.mainActivity = mainActivity;
         dbAdaptert_evento_establec = new DbAdaptert_Evento_Establec(mainActivity);
         dbAdaptert_evento_establec.open();

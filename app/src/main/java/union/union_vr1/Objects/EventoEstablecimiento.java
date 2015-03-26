@@ -21,8 +21,9 @@ public class EventoEstablecimiento {
     private String estadoNoAtencionComentario;
     private int idAgente;
     private int estadoSincronizacion;
+    private String codigoBarras;
 
-    public EventoEstablecimiento(int idEstablecimiento, int idCategoriaEstablecimiento, int tipoDocCliente, int estadoAtencion, String nombreEstablecimiento, String nombreCliente, String docCliente, int orden, int surtidoStockAnterior, int surtidoVentaAnterior, Double montoCredito, int diasCredito, int idEstadoNoAtencion, String estadoNoAtencionComentario, int idAgente, int estadoSincronizacion) {
+    public EventoEstablecimiento(int idEstablecimiento, int idCategoriaEstablecimiento, int tipoDocCliente, int estadoAtencion, String nombreEstablecimiento, String nombreCliente, String docCliente, int orden, int surtidoStockAnterior, int surtidoVentaAnterior, Double montoCredito, int diasCredito, int idEstadoNoAtencion, String estadoNoAtencionComentario, int idAgente, int estadoSincronizacion, String codigoBarras) {
         this.idEstablecimiento = idEstablecimiento;
         this.idCategoriaEstablecimiento = idCategoriaEstablecimiento;
         this.tipoDocCliente = tipoDocCliente;
@@ -39,8 +40,17 @@ public class EventoEstablecimiento {
         this.estadoNoAtencionComentario = estadoNoAtencionComentario;
         this.idAgente = idAgente;
         this.estadoSincronizacion = estadoSincronizacion;
+        this.codigoBarras = codigoBarras;
     }
 
+
+    public String getCodigoBarras() {
+        return codigoBarras;
+    }
+
+    public void setCodigoBarras(String codigoBarras) {
+        this.codigoBarras = codigoBarras;
+    }
     public int getIdEstablecimiento() {
         return idEstablecimiento;
     }
