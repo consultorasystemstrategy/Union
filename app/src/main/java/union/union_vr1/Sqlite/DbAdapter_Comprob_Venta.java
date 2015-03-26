@@ -279,7 +279,7 @@ public class DbAdapter_Comprob_Venta {
         return mCursor;
     }
 
-    public Cursor fetchAllComprobVenta(int idEstablecimiento) {
+    public Cursor fetchAllComprobVenta(int idEstablecimiento, int liquidacion) {
 
         Cursor mCursor = mDb.query(SQLITE_TABLE_Comprob_Venta, new String[] {CV_id_comprob,
 
@@ -287,7 +287,7 @@ public class DbAdapter_Comprob_Venta {
                         CV_codigo_erp, CV_serie, CV_num_doc, CV_base_imp, CV_igv, CV_total,
                         CV_fecha_doc, CV_hora_doc, CV_estado_comp, CV_estado_conexion, CV_id_agente
                 },
-                CV_id_establec + " = ?", new String[]{""+idEstablecimiento}, null, null, null);
+                CV_id_establec + " = ? AND "+CV_liquidacion + " = ?", new String[]{""+idEstablecimiento, ""+liquidacion}, null, null, null);
 
         if (mCursor != null) {
             mCursor.moveToFirst();
@@ -325,6 +325,14 @@ public class DbAdapter_Comprob_Venta {
             mCursor.moveToFirst();
         }
         return mCursor;
+    }
+
+    public Cursor getTotalVentaByIdEstablecimientoAndLiquidacion(int idEstablecimiento, int liquidacion){
+        Cursor cr = mDb.rawQuery("SELECT SUM(cv_re_total) AS total\n" +
+                "FROM m_comprob_venta\n" +
+                "WHERE cv_in_id_establec = ? \n" +
+                "AND id_liquidacion  = ? ; ", new String[]{""+idEstablecimiento,""+liquidacion});
+        return cr;
     }
 
 }

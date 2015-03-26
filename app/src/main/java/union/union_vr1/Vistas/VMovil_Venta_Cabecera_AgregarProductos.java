@@ -1,5 +1,6 @@
 package union.union_vr1.Vistas;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -7,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -78,6 +80,7 @@ public class VMovil_Venta_Cabecera_AgregarProductos extends Activity implements 
         Toast.makeText(getApplicationContext(), "Usted Tiene que agregar los productos", Toast.LENGTH_SHORT).show();
     }
 
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -231,6 +234,7 @@ public class VMovil_Venta_Cabecera_AgregarProductos extends Activity implements 
 
     }
 
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void mostrarProductosTemporales(){
         Cursor cursorTempVentaDetalleByProcedencia = dbHelper_Temp_Venta.fetchAllTempVentaDetalleByProcedencia(procedencia);
 
@@ -507,7 +511,7 @@ public class VMovil_Venta_Cabecera_AgregarProductos extends Activity implements 
             /*textViewContent.setText("CODEBAR CONTEN : "+contents);
             textViewFormat.setText("FORMAT : "+format);*/
 
-            if (barcodeScan.length()>0){
+            if (barcodeScan!=null){
 
                 mCursorScannerProducto = dbHelper_Precio.getProductoByCodigo(id_categoria_establecimiento, barcodeScan, liquidacion);
 

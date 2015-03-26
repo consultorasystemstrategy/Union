@@ -771,7 +771,7 @@ Instantiate and pass a callback
             /*textViewContent.setText("CODEBAR CONTEN : "+contents);
             textViewFormat.setText("FORMAT : "+format);*/
 
-            if (barcodeScan.length()>0){
+            if (barcodeScan!=null){
 
                 mCursorScannerProducto = dbHelper_Precio.getProductoByCodigo(id_categoria_establecimiento, barcodeScan, idLiquidacion);
 

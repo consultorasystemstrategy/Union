@@ -110,7 +110,6 @@ public class VMovil_Venta_Comprob extends Activity {
 
         idEstablec =session.fetchVarible(2);
 
-
         //Item1
         TabHost.TabSpec spec = tH.newTabSpec("1");
         spec.setContent(R.id.comprob);
@@ -426,7 +425,7 @@ private void back(){
 
     private void displayListView() {
 
-        Cursor cursor = dbHelper.fetchAllComprobVenta(idEstablec);
+        Cursor cursor = dbHelper.fetchAllComprobVenta(idEstablec, liquidacion);
         cursorAdapterComprobanteVenta = new CursorAdapterComprobanteVenta(this, cursor);
 
 
