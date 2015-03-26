@@ -278,8 +278,22 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
                             Toast.makeText(getApplicationContext(), "Por favor Ingrese Todos los Campos", Toast.LENGTH_SHORT).show();
 
                         } else {
+                            int posicion = spinnerTipoOp.getSelectedItemPosition();
+                            if(posicion==0){
 
-                            actualizar_can_dev(tipo_op, categoria_op, cantidad, importe, idDetalle, dev, can);
+                                if(stock>0){
+                                    actualizar_can_dev(tipo_op, categoria_op, cantidad, importe, idDetalle, dev, can);
+                                }else{
+                                    Toast.makeText(getApplicationContext(),"No Tiene Stock Suficiente",Toast.LENGTH_SHORT).show();
+                                }
+
+
+
+                            }if(posicion==1){
+                                actualizar_can_dev(tipo_op, categoria_op, cantidad, importe, idDetalle, dev, can);
+
+                            }
+
                         }
                     }
                 })
@@ -401,8 +415,20 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
                             Toast.makeText(getApplicationContext(), "Por favor Ingrese Todos los Campos", Toast.LENGTH_SHORT).show();
 
                         } else {
+                            int posicion = spinnerTipoOp.getSelectedItemPosition();
+                            if(posicion==0){
+                                if(stock>0){
+                                    actualizar_can_dev(tipo_op, categoria_op, cantidad, importe, idDetalle, dev, can);
+                                }else{
+                                    Toast.makeText(getApplicationContext(),"No tiene Stock Sufiente",Toast.LENGTH_LONG).show();
+                                }
 
-                            actualizar_can_dev(tipo_op, categoria_op, cantidad, importe, idDetalle, dev, can);
+                            }if(posicion==1){
+                                actualizar_can_dev(tipo_op, categoria_op, cantidad, importe, idDetalle, dev, can);
+                            }
+
+
+
                         }
                     }
                 })
@@ -565,7 +591,19 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
                             Toast.makeText(getApplicationContext(), "Por favor Ingrese Todos los Campos", Toast.LENGTH_SHORT).show();
 
                         } else {
-                            registrarNuevo_Comprobante(compro, lote, cantidad, tipo_op, categoria_op);
+                            int position = spinnerTipoOp.getSelectedItemPosition();
+                            Log.e("Posicion",""+position);
+                            if(position==0){
+                                if(stock>0){
+                                    registrarNuevo_Comprobante(compro, lote, cantidad, tipo_op, categoria_op);
+                                }else{
+                                    Toast.makeText(getApplicationContext(),"No Tiene Stock Suficiente",Toast.LENGTH_LONG).show();
+                                }
+                            }
+                            if(position==1){
+                                registrarNuevo_Comprobante(compro, lote, cantidad, tipo_op, categoria_op);
+                            }
+
                         }
                     }
                 })
@@ -612,6 +650,8 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
         final EditText cantidadText = (EditText) layout_spinners.findViewById(R.id.cantidad_can_dev);
         final Spinner spinnerTipoOp = (Spinner) layout_spinners.findViewById(R.id.can_dev_tipo_op);
         final Spinner spinnerCategoria = (Spinner) layout_spinners.findViewById(R.id.can_dev_categoria);
+
+
 
         nroCompro.addTextChangedListener(new TextWatcher() {
             @Override
@@ -712,7 +752,20 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
                             Toast.makeText(getApplicationContext(), "Por favor Ingrese Todos los Campos", Toast.LENGTH_SHORT).show();
 
                         } else {
-                            registrarNuevo_Comprobante(compro, lote, cantidad, tipo_op, categoria_op);
+                            int position = spinnerTipoOp.getSelectedItemPosition();
+                            Log.e("posicion",": "+position);
+                            if(position==0){
+                                if(stock>0){
+                                    registrarNuevo_Comprobante(compro, lote, cantidad, tipo_op, categoria_op);
+                                }else{
+                                    Toast.makeText(getApplicationContext(),"Usted no tiene Stock para realizar el Canje",Toast.LENGTH_LONG).show();
+                                }
+
+                            }if(position==1){
+
+                                registrarNuevo_Comprobante(compro, lote, cantidad, tipo_op, categoria_op);
+                            }
+
                         }
                     }
                 })
