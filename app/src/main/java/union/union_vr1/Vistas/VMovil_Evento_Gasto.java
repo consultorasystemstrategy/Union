@@ -87,6 +87,10 @@ public class VMovil_Evento_Gasto extends Activity implements View.OnClickListene
     TextView textViewSlideNombreRuta;
     Button buttonSlideNroEstablecimiento;
 
+    TextView textViewIngresosTotales;
+    TextView textViewGastos;
+
+
     int slideIdAgente = 0;
     int slideIdLiquidacion = 0;
 
@@ -210,14 +214,14 @@ public class VMovil_Evento_Gasto extends Activity implements View.OnClickListene
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
                 int positionTipoGasto = spinnerTipoGasto.getSelectedItemPosition();
-                positionTipoGasto++;
+                String tipoGasto = spinnerTipoGasto.getItemAtPosition(spinnerTipoGasto.getSelectedItemPosition()).toString();
 
 
                 String procedenciaSeleccionada = (String) adapterView.getItemAtPosition(i);
                 ProcedenciaGasto procedenciaGasto = ProcedenciaGasto.valueOf(procedenciaSeleccionada);
 
 
-                if (positionTipoGasto == 1) {
+                if (tipoGasto.equals("Combustible")) {
                     switch (procedenciaGasto) {
                         case planta:
                             addItemsTipoDocumento_CombustiblePlanta();
@@ -675,7 +679,8 @@ public class VMovil_Evento_Gasto extends Activity implements View.OnClickListene
         textviewSlideResumen = (TextView)findViewById(R.id.slide_textViewResumen);
         textviewSlideARendir = (TextView)findViewById(R.id.slide_textViewARendir);
 
-
+        textViewIngresosTotales = (TextView) findViewById(R.id.textView_IngresosTotales);
+        textViewGastos = (TextView) findViewById(R.id.textView_Gastos);
 
 
 
@@ -755,6 +760,9 @@ public class VMovil_Evento_Gasto extends Activity implements View.OnClickListene
         textViewSlideNombreRuta.setText(""+slideNombreRuta);
         buttonSlideNroEstablecimiento.setText(""+slideNumeroEstablecimientoxRuta);
         textviewSlideARendir.setText("Efectivo a Rendir S/. " + df.format(slide_aRendir));
+
+        textViewIngresosTotales.setText(""+df.format(slide_ingresosTotales));
+        textViewGastos.setText(""+df.format(slide_gastosTotales));
 
     }
 

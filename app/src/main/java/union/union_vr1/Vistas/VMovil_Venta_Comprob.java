@@ -821,9 +821,7 @@ private void back(){
                 startActivity(iv1);
                 break;
             case R.id.slideVentas_textViewMantenimiento:
-                Intent im1 = new Intent(this, VMovil_Venta_Comprob.class);
-                im1.putExtra("idEstabX", ""+slideIdEstablecimiento);
-                startActivity(im1);
+                menu.toggle();
                 break;
             case R.id.slideVentas_textviewCanjesDevoluciones:
                 Intent idh1 = new Intent(this, VMovil_Evento_Canjes_Dev.class);

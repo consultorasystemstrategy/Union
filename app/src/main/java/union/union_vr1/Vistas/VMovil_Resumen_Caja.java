@@ -104,6 +104,10 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
     TextView textViewSlideNombreRuta;
     Button buttonSlideNroEstablecimiento;
 
+    TextView textViewIngresosTotales;
+    TextView textViewGastos;
+
+
     int slideIdAgente = 0;
     int slideIdLiquidacion = 0;
 
@@ -519,7 +523,8 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
         textviewSlideResumen = (TextView)findViewById(R.id.slide_textViewResumen);
         textviewSlideARendir = (TextView)findViewById(R.id.slide_textViewARendir);
 
-
+        textViewIngresosTotales = (TextView) findViewById(R.id.textView_IngresosTotales);
+        textViewGastos = (TextView) findViewById(R.id.textView_Gastos);
 
 
 
@@ -599,6 +604,9 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
         textViewSlideNombreRuta.setText(""+slideNombreRuta);
         buttonSlideNroEstablecimiento.setText(""+slideNumeroEstablecimientoxRuta);
         textviewSlideARendir.setText("Efectivo a Rendir S/. " + df.format(slide_aRendir));
+
+        textViewIngresosTotales.setText(""+df.format(slide_ingresosTotales));
+        textViewGastos.setText(""+df.format(slide_gastosTotales));
 
     }
 

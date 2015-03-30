@@ -1132,11 +1132,23 @@ Instantiate and pass a callback
                 break;
             //SLIDING MENU VENTAS
             case R.id.slideVentas_buttonVentaCosto:
+                dbHelper_temp_venta.deleteAllTempVentaDetalle();
+                //((MyApplication)mContext.getApplicationContext()).setDisplayedHistorialComprobanteAnterior(false);
+                session.deleteVariable(6);
+                session.createTempSession(6,0);
+                session.deleteVariable(5);
+                session.createTempSession(5,0);
                 Intent ivc1 = new Intent(this, VMovil_Venta_Comprob.class);
                 ivc1.putExtra("idEstabX", ""+slideIdEstablecimiento);
                 startActivity(ivc1);
                 break;
             case R.id.slideVentas_buttonDeudas:
+                dbHelper_temp_venta.deleteAllTempVentaDetalle();
+                //((MyApplication)mContext.getApplicationContext()).setDisplayedHistorialComprobanteAnterior(false);
+                session.deleteVariable(6);
+                session.createTempSession(6,0);
+                session.deleteVariable(5);
+                session.createTempSession(5,0);
                 Intent id1 = new Intent(this, VMovil_Cobro_Credito.class);
                 id1.putExtra("idEstabX", ""+slideIdEstablecimiento);
                 finish();
@@ -1146,14 +1158,28 @@ Instantiate and pass a callback
                 menu.toggle();
                 break;
             case R.id.slideVentas_textViewMantenimiento:
+                dbHelper_temp_venta.deleteAllTempVentaDetalle();
+                //((MyApplication)mContext.getApplicationContext()).setDisplayedHistorialComprobanteAnterior(false);
+                session.deleteVariable(6);
+                session.createTempSession(6,0);
+                session.deleteVariable(5);
+                session.createTempSession(5,0);
                 Intent im1 = new Intent(this, VMovil_Venta_Comprob.class);
                 im1.putExtra("idEstabX", ""+slideIdEstablecimiento);
+                finish();
                 startActivity(im1);
                 break;
             case R.id.slideVentas_textviewCanjesDevoluciones:
+                dbHelper_temp_venta.deleteAllTempVentaDetalle();
+                //((MyApplication)mContext.getApplicationContext()).setDisplayedHistorialComprobanteAnterior(false);
+                session.deleteVariable(6);
+                session.createTempSession(6,0);
+                session.deleteVariable(5);
+                session.createTempSession(5,0);
                 Intent idh1 = new Intent(this, VMovil_Evento_Canjes_Dev.class);
                 idh1.putExtra("idEstabX", ""+slideIdEstablecimiento);
                 idh1.putExtra("idAgente", ""+slideIdAgente);
+                finish();
                 startActivity(idh1);
                 break;
             case R.id.slideVentas_textViewCliente:
