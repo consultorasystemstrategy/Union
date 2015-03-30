@@ -245,19 +245,19 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
                     Date dSistema = df.parse(fech());
 
                     if (dSqlite.equals(dSistema)) {
-                        Toast.makeText(getApplicationContext(), "Hay Deudas por Cobrar ", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getApplicationContext(), "Hay Deudas por Cobrar ", Toast.LENGTH_SHORT).show();
                         //mCobros.getBackground().setColorFilter(new LightingColorFilter(0xffff0000, 0xffff0000));
                         mCobros.setBackground(getApplicationContext().getResources().getDrawable(R.drawable.border_red));
 
                     }
                     if (dSqlite.before(dSistema)) {
-                        Toast.makeText(getApplicationContext(), "Hay Deudas por Cobrar", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getApplicationContext(), "Hay Deudas por Cobrar", Toast.LENGTH_SHORT).show();
                         //mCobros.getBackground().setColorFilter(new LightingColorFilter(0xffff0000, 0xffff0000));
                         mCobros.setBackground(getApplicationContext().getResources().getDrawable(R.drawable.border_red));
 
                     }
                     if (dSqlite.after(dSistema)) {
-                        Toast.makeText(getApplicationContext(), "Fechas Proximas", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getApplicationContext(), "Fechas Proximas", Toast.LENGTH_SHORT).show();
                         //mCobros.getBackground().setColorFilter(new LightingColorFilter(0xffffff00, 0xffffff00));
                         mCobros.setBackground(getApplicationContext().getResources().getDrawable(R.drawable.border_yellow));
 
@@ -272,7 +272,7 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
 
         }
         if (cursor.getCount() <= 0) {
-            Toast.makeText(getApplicationContext(), "No hay Deudas Por Cobrar", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getApplicationContext(), "No hay Deudas Por Cobrar", Toast.LENGTH_SHORT).show();
             mCobros.setBackground(getApplicationContext().getResources().getDrawable(R.drawable.border_right_green));
 
         }
@@ -285,6 +285,11 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        changeDataSlideMenu();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -416,7 +421,67 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
                             }
                         }).create().show();
                 break;
+            //SLIDING MENU
+            case R.id.slide_textviewPrincipal:
+                Intent ip1 = new Intent(this, VMovil_Evento_Indice.class);
+                finish();
+                startActivity(ip1);
+                break;
+            case R.id.slide_textViewClientes:
+                Intent ic1 = new Intent(this, VMovil_Menu_Establec.class);
+                finish();
+                startActivity(ic1);
+                break;
+            case R.id.slide_textViewCobranza:
+                Intent cT1 = new Intent(this, VMovil_Cobros_Totales.class);
+                finish();
+                startActivity(cT1);
+                break;
+            case R.id.slide_TextViewGastos:
+                Intent ig1 = new Intent(this, VMovil_Evento_Gasto.class);
+                finish();
+                startActivity(ig1);
+                break;
+            case R.id.slide_textViewResumen:
+                Intent ir1 = new Intent(this, VMovil_Resumen_Caja.class);
+                finish();
+                startActivity(ir1);
+                break;
+            case R.id.slide_textViewARendir:
 
+                break;
+            //SLIDING MENU VENTAS
+            case R.id.slideVentas_buttonVentaCosto:
+                Intent ivc1 = new Intent(this, VMovil_Venta_Comprob.class);
+                ivc1.putExtra("idEstabX", valIdEstab);
+                startActivity(ivc1);
+                break;
+            case R.id.slideVentas_buttonDeudas:
+                Intent id1 = new Intent(this, VMovil_Cobro_Credito.class);
+                id1.putExtra("idEstabX", valIdEstab);
+                finish();
+                startActivity(id1);
+                break;
+            case R.id.slideVentas_textViewVenta:
+                Intent iv1 = new Intent(this, VMovil_Venta_Cabecera.class);
+                finish();
+                iv1.putExtra("idEstabX", valIdEstab);
+                startActivity(iv1);
+                break;
+            case R.id.slideVentas_textViewMantenimiento:
+                Intent im1 = new Intent(this, VMovil_Venta_Comprob.class);
+                im1.putExtra("idEstabX", valIdEstab);
+                startActivity(im1);
+                break;
+            case R.id.slideVentas_textviewCanjesDevoluciones:
+                Intent idh1 = new Intent(this, VMovil_Evento_Canjes_Dev.class);
+                idh1.putExtra("idEstabX", valIdEstab);
+                idh1.putExtra("idAgente", idAgente);
+                finish();
+                startActivity(idh1);
+                break;
+            case R.id.slideVentas_textViewCliente:
+                menu.toggle();
             default:
                 break;
         }
@@ -473,6 +538,7 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
         textViewSlideVenta.setOnClickListener(this);
         textViewSlideMantenimiento.setOnClickListener(this);
         textViewSlideCanjesDevoluciones.setOnClickListener(this);
+        textViewSlideNombreEstablecimiento.setOnClickListener(this);
 
         slideIdAgente = session.fetchVarible(1);
         slideIdLiquidacion  = session.fetchVarible(3);

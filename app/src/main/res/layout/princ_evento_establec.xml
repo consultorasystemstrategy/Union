@@ -31,8 +31,7 @@
                     android:layout_marginLeft="12dp"
                     android:layout_marginTop="12dp"
                     android:layout_marginRight="12dp"
-                    android:id="@+id/linearLayoutCabecera"
-                    >
+                    android:id="@+id/linearLayoutCabecera">
 
                     <LinearLayout
                         android:orientation="horizontal"

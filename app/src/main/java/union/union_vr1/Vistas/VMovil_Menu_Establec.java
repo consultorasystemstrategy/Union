@@ -158,7 +158,6 @@ public class VMovil_Menu_Establec extends Activity implements View.OnClickListen
         //session.deleteVariable(2);
         //session.createTempSession(2, Integer.parseInt(idEstabl));
 
-        finish();
         startActivity(i);
     }
 
@@ -250,8 +249,8 @@ public class VMovil_Menu_Establec extends Activity implements View.OnClickListen
                 //}
 
 
-                Toast.makeText(getApplicationContext(),
-                        idEstablec + "Aqui po" + id_agente, Toast.LENGTH_SHORT).show();
+                /*Toast.makeText(getApplicationContext(),
+                        idEstablec + "Aqui po" + id_agente, Toast.LENGTH_SHORT).show();*/
                 eleccion(idEstablec, id_agente);
                 //listView.setBackgroundColor(Color.GREEN);
 
@@ -435,17 +434,17 @@ public class VMovil_Menu_Establec extends Activity implements View.OnClickListen
                 break;
             case R.id.slide_textViewCobranza:
                 Intent cT1 = new Intent(this, VMovil_Cobros_Totales.class);
-                finish();
+                //finish();
                 startActivity(cT1);
                 break;
             case R.id.slide_TextViewGastos:
                 Intent ig1 = new Intent(this, VMovil_Evento_Gasto.class);
-                finish();
+                //finish();
                 startActivity(ig1);
                 break;
             case R.id.slide_textViewResumen:
                 Intent ir1 = new Intent(this, VMovil_Resumen_Caja.class);
-                finish();
+                //finish();
                 startActivity(ir1);
                 break;
             case R.id.slide_textViewARendir:

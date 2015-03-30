@@ -23,18 +23,28 @@ import android.widget.FilterQueryProvider;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TabHost;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
+
+import java.text.DecimalFormat;
 
 import union.union_vr1.R;
 import union.union_vr1.Sqlite.CursorAdapterFacturas;
 import union.union_vr1.Sqlite.CursorAdapterFacturas_dev;
+import union.union_vr1.Sqlite.DbAdapter_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Canjes_Devoluciones;
+import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta;
 import union.union_vr1.Sqlite.DbAdapter_Histo_Venta_Detalle;
+import union.union_vr1.Sqlite.DbAdapter_Informe_Gastos;
 import union.union_vr1.Sqlite.DbAdapter_Stock_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
+import union.union_vr1.Sqlite.DbGastos_Ingresos;
+import union.union_vr1.Utils.Utils;
 
-public class VMovil_Evento_Canjes_Dev extends TabActivity {
+public class VMovil_Evento_Canjes_Dev extends TabActivity implements View.OnClickListener{
     private String establec;
     private AutoCompleteTextView autoComple;
     private SimpleCursorAdapter adapter;
@@ -47,6 +57,60 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity {
     private TabHost tabHost;
     private int liquidacion;
     private DbAdapter_Temp_Session session;
+
+    //SLIDING MENU VENTAS
+    private DbGastos_Ingresos dbGastosIngresos;
+    private DbAdapter_Informe_Gastos dbAdapter_informe_gastos;
+    private DbAdapter_Agente dbHelperAgente;
+
+
+
+    SlidingMenu menu;
+    View layoutSlideMenu;
+    TextView textViewSlidePrincipal;
+    TextView textViewSlideCliente;
+    TextView textviewSlideCobranzas;
+    TextView textviewSlideGastos;
+    TextView textviewSlideResumen;
+    TextView textviewSlideARendir;
+    TextView textViewSlideNombreAgente;
+    TextView textViewSlideNombreRuta;
+
+
+    Button buttonSlideNroEstablecimiento;
+
+    int slideIdAgente = 0;
+    int slideIdLiquidacion = 0;
+
+
+
+    String slideNombreRuta = "";
+    int slideNumeroEstablecimientoxRuta = 0;
+    String slideNombreAgente = "";
+
+    Double slide_emitidoTotal = 0.0;
+    Double slide_pagadoTotal = 0.0;
+    Double slide_cobradoTotal = 0.0;
+
+    Double slide_totalRuta =0.0;
+    Double slide_totalPlanta = 0.0;
+    Double slide_ingresosTotales = 0.0;
+    Double slide_gastosTotales = 0.0;
+    Double slide_aRendir = 0.0;
+
+    //SLIDE VENTAS
+    TextView textViewSlideNombreEstablecimiento;
+    Button buttonSlideVentaDeHoy;
+    Button buttonSlideDeudaHoy;
+    TextView textViewSlideVenta;
+    TextView textViewSlideCobro;
+    TextView textViewSlideMantenimiento;
+    TextView textViewSlideCanjesDevoluciones;
+
+    int slideIdEstablecimiento;
+
+    private DbAdaptert_Evento_Establec dbAdaptert_evento_establec;
+    private DbAdapter_Comprob_Venta dbAdapter_comprob_venta;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +149,27 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity {
         listar_Facturas_dev();
         tabHost.addTab(spec2);
 
+
+        //SLIDING MENU
+        dbGastosIngresos = new DbGastos_Ingresos(this);
+        dbGastosIngresos.open();
+
+        dbAdapter_informe_gastos = new DbAdapter_Informe_Gastos(this);
+        dbAdapter_informe_gastos.open();
+
+        dbHelperAgente = new DbAdapter_Agente(this);
+        dbHelperAgente.open();
+
+        //VENTAS
+        dbAdaptert_evento_establec = new DbAdaptert_Evento_Establec(this);
+        dbAdaptert_evento_establec.open();
+
+        dbAdapter_comprob_venta = new DbAdapter_Comprob_Venta(this);
+        dbAdapter_comprob_venta.open();
+
+
+        //SLIDING MENU
+        showSlideMenu(this);
 
         //
 
@@ -342,6 +427,229 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity {
 
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+
+    //SLIDING MENU
+    public void showSlideMenu(Activity activity){
+        layoutSlideMenu = View.inflate(activity, R.layout.slide_menu_ventas, null);
+        // configure the SlidingMenu
+        menu =  new SlidingMenu(activity);
+        menu.setMode(SlidingMenu.LEFT);
+        menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+        menu.setShadowWidthRes(R.dimen.space_slide);
+        menu.setShadowDrawable(R.drawable.shadow);
+        menu.setBehindOffsetRes(R.dimen.space_slide);
+        menu.setFadeDegree(0.35f);
+        menu.attachToActivity(activity, SlidingMenu.SLIDING_CONTENT);
+        menu.setMenu(layoutSlideMenu);
+
+        textViewSlideNombreAgente = (TextView)findViewById(R.id.slide_textViewNombreAgente);
+        textViewSlideNombreRuta = (TextView)findViewById(R.id.slide_textViewNombreRuta);
+        buttonSlideNroEstablecimiento = (Button) findViewById(R.id.slide_buttonNroEstablecimiento);
+
+        textViewSlidePrincipal = (TextView)findViewById(R.id.slide_textviewPrincipal);
+        textViewSlideCliente = (TextView)findViewById(R.id.slide_textViewClientes);
+        textviewSlideCobranzas = (TextView)findViewById(R.id.slide_textViewCobranza);
+        textviewSlideGastos = (TextView)findViewById(R.id.slide_TextViewGastos);
+        textviewSlideResumen = (TextView)findViewById(R.id.slide_textViewResumen);
+        textviewSlideARendir = (TextView)findViewById(R.id.slide_textViewARendir);
+
+
+        textViewSlideNombreEstablecimiento = (TextView)findViewById(R.id.slideVentas_textViewCliente);
+        buttonSlideVentaDeHoy  = (Button)findViewById(R.id.slideVentas_buttonVentaCosto);
+        buttonSlideDeudaHoy = (Button)findViewById(R.id.slideVentas_buttonDeudas);
+        textViewSlideVenta = (TextView)findViewById(R.id.slideVentas_textViewVenta);
+        //COBRAR
+        textViewSlideMantenimiento = (TextView)findViewById(R.id.slideVentas_textViewMantenimiento);
+        textViewSlideCanjesDevoluciones  = (TextView)findViewById(R.id.slideVentas_textviewCanjesDevoluciones);
+
+
+
+
+
+        textViewSlidePrincipal.setOnClickListener(this);
+        textViewSlideCliente.setOnClickListener(this);
+        textviewSlideCobranzas.setOnClickListener(this);
+        textviewSlideGastos.setOnClickListener(this);
+        textviewSlideResumen.setOnClickListener(this);
+        textviewSlideARendir.setOnClickListener(this);
+
+        //VENTAS
+        buttonSlideDeudaHoy.setOnClickListener(this);
+        buttonSlideVentaDeHoy.setOnClickListener(this);
+        textViewSlideVenta.setOnClickListener(this);
+        textViewSlideMantenimiento.setOnClickListener(this);
+        textViewSlideCanjesDevoluciones.setOnClickListener(this);
+        textViewSlideNombreEstablecimiento.setOnClickListener(this);
+
+        slideIdAgente = session.fetchVarible(1);
+        slideIdLiquidacion  = session.fetchVarible(3);
+        slideIdEstablecimiento = session.fetchVarible(2);
+
+
+        changeDataSlideMenu();
+
+
+    }
+
+    //SLIDING MENU
+    public void changeDataSlideMenu(){
+
+        //INICIALIZAMOS OTRA VEZ LAS VARIABLES
+        slide_emitidoTotal = 0.0;
+        slide_pagadoTotal = 0.0;
+        slide_cobradoTotal = 0.0;
+        slide_totalRuta = 0.0;
+        slide_totalPlanta = 0.0;
+        slide_ingresosTotales = 0.0;
+        slide_gastosTotales = 0.0;
+        slide_aRendir = 0.0;
+
+        // AGENTE, RUTA Y ESTABLECIMIENTOS
+        Cursor cursorAgente = dbHelperAgente.fetchAgentesByIds(slideIdAgente, slideIdLiquidacion);
+        cursorAgente.moveToFirst();
+
+        if (cursorAgente.getCount()>0){
+            slideNombreRuta = cursorAgente.getString(cursorAgente.getColumnIndexOrThrow(dbHelperAgente.AG_nombre_ruta));
+            slideNumeroEstablecimientoxRuta = cursorAgente.getInt(cursorAgente.getColumnIndexOrThrow(dbHelperAgente.AG_nro_bodegas));
+            slideNombreAgente = cursorAgente.getString(cursorAgente.getColumnIndexOrThrow(dbHelperAgente.AG_nombre_agente));
+        }
+
+        //INGRESOS
+        Cursor cursorResumen = dbGastosIngresos.listarIngresosGastos(slideIdLiquidacion);
+        cursorResumen.moveToFirst();
+        for (cursorResumen.moveToFirst(); !cursorResumen.isAfterLast(); cursorResumen.moveToNext()) {
+            //int n = cursorResumen.getInt(cursorResumen.getColumnIndexOrThrow("n"));
+            Double emitido = cursorResumen.getDouble(cursorResumen.getColumnIndexOrThrow("emitidas"));
+            Double pagado = cursorResumen.getDouble(cursorResumen.getColumnIndexOrThrow("pagado"));
+            Double cobrado = cursorResumen.getDouble(cursorResumen.getColumnIndexOrThrow("cobrado"));
+            //nTotal += n;
+            slide_emitidoTotal += emitido;
+            slide_pagadoTotal += pagado;
+            slide_cobradoTotal += cobrado;
+        }
+        //GASTOS
+        Utils utils = new Utils();
+        Cursor cursorTotalGastos =dbAdapter_informe_gastos.resumenInformeGastos(utils.getDayPhone());
+
+        for (cursorTotalGastos.moveToFirst(); !cursorTotalGastos.isAfterLast(); cursorTotalGastos.moveToNext()){
+            Double rutaGasto = cursorTotalGastos.getDouble(cursorTotalGastos.getColumnIndexOrThrow("RUTA"));
+            Double plantaGasto = cursorTotalGastos.getDouble(cursorTotalGastos.getColumnIndexOrThrow("PLANTA"));
+
+            slide_totalRuta += rutaGasto;
+            slide_totalPlanta += plantaGasto;
+        }
+
+        slide_ingresosTotales = slide_cobradoTotal + slide_pagadoTotal;
+        slide_gastosTotales = slide_totalRuta;
+        slide_aRendir = slide_ingresosTotales-slide_gastosTotales;
+
+
+
+        //MOSTRAMOS EN EL SLIDE LOS DATOS OBTENIDOS
+        DecimalFormat df = new DecimalFormat("#.00");
+        textViewSlideNombreAgente.setText(""+slideNombreAgente);
+        textViewSlideNombreRuta.setText(""+slideNombreRuta);
+        buttonSlideNroEstablecimiento.setText(""+slideNumeroEstablecimientoxRuta);
+        textviewSlideARendir.setText("Efectivo a Rendir S/. " + df.format(slide_aRendir));
+
+
+        //DATA VENTAS
+        Cursor cursorEstablecimiento = dbAdaptert_evento_establec.listarEstablecimientosByID(slideIdEstablecimiento, slideIdLiquidacion);
+
+        cursorEstablecimiento.moveToFirst();
+
+        if (cursorEstablecimiento.getCount()>0){
+
+            String nombre_establecimiento = cursorEstablecimiento.getString(cursorEstablecimiento.getColumnIndex(dbAdaptert_evento_establec.EE_nom_establec));
+            String nombre_cliente = cursorEstablecimiento.getString(cursorEstablecimiento.getColumnIndex(dbAdaptert_evento_establec.EE_nom_cliente));
+            int id_estado_atencion = Integer.parseInt(cursorEstablecimiento.getString(cursorEstablecimiento.getColumnIndex(dbAdaptert_evento_establec.EE_id_estado_atencion)));
+            double deudaTotal = cursorEstablecimiento.getDouble(cursorEstablecimiento.getColumnIndexOrThrow("cc_re_monto_a_pagar")) ;
+
+
+            textViewSlideNombreEstablecimiento.setText(""+nombre_establecimiento);
+            buttonSlideDeudaHoy.setText(""+df.format(deudaTotal));
+        }
+
+        Cursor cursorVentasTotales = dbAdapter_comprob_venta.getTotalVentaByIdEstablecimientoAndLiquidacion(slideIdEstablecimiento, slideIdLiquidacion);
+        cursorVentasTotales.moveToFirst();
+        if (cursorVentasTotales.getCount()>0){
+            Double total = cursorVentasTotales.getDouble(cursorVentasTotales.getColumnIndexOrThrow("total"));
+            buttonSlideVentaDeHoy.setText(""+df.format(total));
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        changeDataSlideMenu();
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+
+            //SLIDING MENU
+            case R.id.slide_textviewPrincipal:
+                Intent ip1 = new Intent(this, VMovil_Evento_Indice.class);
+                finish();
+                startActivity(ip1);
+                break;
+            case R.id.slide_textViewClientes:
+                Intent ic1 = new Intent(this, VMovil_Menu_Establec.class);
+                finish();
+                startActivity(ic1);
+                break;
+            case R.id.slide_textViewCobranza:
+                Intent cT1 = new Intent(this, VMovil_Cobros_Totales.class);
+                finish();
+                startActivity(cT1);
+                break;
+            case R.id.slide_TextViewGastos:
+                Intent ig1 = new Intent(this, VMovil_Evento_Gasto.class);
+                finish();
+                startActivity(ig1);
+                break;
+            case R.id.slide_textViewResumen:
+                Intent ir1 = new Intent(this, VMovil_Resumen_Caja.class);
+                finish();
+                startActivity(ir1);
+                break;
+            case R.id.slide_textViewARendir:
+
+                break;
+            //SLIDING MENU VENTAS
+            case R.id.slideVentas_buttonVentaCosto:
+                Intent ivc1 = new Intent(this, VMovil_Venta_Comprob.class);
+                ivc1.putExtra("idEstabX", ""+slideIdEstablecimiento);
+                startActivity(ivc1);
+                break;
+            case R.id.slideVentas_buttonDeudas:
+                Intent id1 = new Intent(this, VMovil_Cobro_Credito.class);
+                id1.putExtra("idEstabX", ""+slideIdEstablecimiento);
+                finish();
+                startActivity(id1);
+                break;
+            case R.id.slideVentas_textViewVenta:
+                Intent iv1 = new Intent(this, VMovil_Venta_Cabecera.class);
+                finish();
+                iv1.putExtra("idEstabX", ""+slideIdEstablecimiento);
+                startActivity(iv1);
+                break;
+            case R.id.slideVentas_textViewMantenimiento:
+                Intent im1 = new Intent(this, VMovil_Venta_Comprob.class);
+                im1.putExtra("idEstabX", ""+slideIdEstablecimiento);
+                startActivity(im1);
+                break;
+            case R.id.slideVentas_textviewCanjesDevoluciones:
+                menu.toggle();
+                break;
+            case R.id.slideVentas_textViewCliente:
+                menu.toggle();
+            default:
+                break;
+        }
     }
 }
 
