@@ -524,7 +524,7 @@ Instantiate and pass a callback
                         }
                         else {
 
-                            Cursor cursorEstablecimientoCredito = dbHelper_Evento_Establecimiento.fetchEstablecsById(""+idEstablecimiento);;
+                            Cursor cursorEstablecimientoCredito = dbHelper_Evento_Establecimiento.fetchEstablecsById(""+idEstablecimiento);
                             cursorEstablecimiento.moveToFirst();
                             int montoCredito = -1;
                             montoCredito = cursorEstablecimientoCredito.getInt(cursorEstablecimientoCredito.getColumnIndexOrThrow(dbHelper_Evento_Establecimiento.EE_monto_credito));
@@ -539,7 +539,13 @@ Instantiate and pass a callback
                                                 .setTitle("Ops, No cuenta con crédito")
                                                 .setMessage("" +
                                                         "¿Desea solicitar crédito?")
-                                                .setNegativeButton(android.R.string.no,null)
+                                                .setNegativeButton(android.R.string.no,new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                                                        spinnerFormaPago.setAdapter(adapterFormaPago);
+                                                    }
+                                                })
                                                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                                     public void onClick(DialogInterface dialog, int id) {
                                                         dialogSolicitarCredito().show();
