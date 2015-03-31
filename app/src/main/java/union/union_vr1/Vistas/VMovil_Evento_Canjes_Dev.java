@@ -132,7 +132,7 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity implements View.OnClic
         Bundle idE = getIntent().getExtras();
         establec = idE.getString("idEstabX");
         idAgente = idE.getInt("idAgente");
-        Toast.makeText(getApplicationContext(), "" + establec +"-"+ idAgente, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getApplicationContext(), "" + establec +"-"+ idAgente, Toast.LENGTH_SHORT).show();
         autoComple = (AutoCompleteTextView) findViewById(R.id.autocomplete);
         autoComplete();
         //
@@ -267,7 +267,7 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity implements View.OnClic
 
     private void listar_Facturas_can() {
         Cursor cr = dbHelper_CanDev.obtener_facturas_can(establec);
-       Toast.makeText(getApplicationContext(),"-"+cr.getCount(),Toast.LENGTH_SHORT).show();
+       //Toast.makeText(getApplicationContext(),"-"+cr.getCount(),Toast.LENGTH_SHORT).show();
         final ListView lista_facturas = (ListView) findViewById(R.id.guias_can_dev);
 
             CursorAdapterFacturas adapter = new CursorAdapterFacturas(getApplicationContext(), cr);

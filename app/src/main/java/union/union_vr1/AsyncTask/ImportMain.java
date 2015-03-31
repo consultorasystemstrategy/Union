@@ -430,7 +430,7 @@ public class ImportMain extends AsyncTask<String, String, String> {
                 DbAdapter_Stock_Agente.ST_id_producto
         };
 
-/*
+
 
         //TIPO GASTO
         Cursor cursor = dbAdapter_tipo_gasto.fetchAllTipoGastos();
@@ -439,18 +439,18 @@ public class ImportMain extends AsyncTask<String, String, String> {
                 DbAdapter_Tipo_Gasto.TG_nom_tipo_gasto
         };
 
-        */
 
-/*
+
+
         Cursor cursor = dbAdapter_precio.fetchAllPrecio();
 
         String from[] = {
                 DbAdapter_Precio.PR_nombreProducto
         };
 
-*/
 
-        /*
+
+
         //EVENTO ESTABLECIMIENTO
 
         Cursor cursor = dbAdaptert_evento_establec.fetchAllEstablecs();
@@ -458,15 +458,15 @@ public class ImportMain extends AsyncTask<String, String, String> {
         String from[] = {
                 DbAdaptert_Evento_Establec.EE_nom_establec
         };
-*/
-        Cursor cursor = dbAdapter_comprob_cobro.fetchAllComprobCobros();
+
+        /*Cursor cursor = dbAdapter_comprob_cobro.fetchAllComprobCobros();
 
         String from[] = {
                 DbAdapter_Comprob_Cobro.CC_fecha_programada
         };
 
 
-/*
+
 
         Cursor cursor = dbAdapter_histo_venta_detalle.fetchAllHistoVentaDetalle();
 
@@ -474,7 +474,7 @@ public class ImportMain extends AsyncTask<String, String, String> {
                 DbAdapter_Histo_Venta_Detalle.HD_id_detalle
         };
 
-*/
+
 
         int to[] = {
                 R.id.textView_detalles
@@ -487,10 +487,10 @@ public class ImportMain extends AsyncTask<String, String, String> {
                 to,
                 0
         );
-
+*/
         //listView.setAdapter(simpleCursorAdapter);
 
-        Intent intent = new Intent(mainActivity, VMovil_Evento_Indice.class);
+        Intent intent = new Intent(mainActivity, mainActivity.getClass());
         mainActivity.finish();
         mainActivity.startActivity(intent);
     }

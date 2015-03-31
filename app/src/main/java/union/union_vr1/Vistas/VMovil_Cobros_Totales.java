@@ -104,8 +104,6 @@ public class VMovil_Cobros_Totales extends Activity implements View.OnClickListe
         cCobro.open();
         listCobros = (ListView) findViewById(R.id.listaCobrosTotales);
 
-        listarCobrosTotales();
-
         //SLIDING MENU
         dbGastosIngresos = new DbGastos_Ingresos(this);
         dbGastosIngresos.open();
@@ -118,9 +116,14 @@ public class VMovil_Cobros_Totales extends Activity implements View.OnClickListe
 
         //SLIDING MENU
         showSlideMenu(mainActivity);
+
+        listarCobrosTotales();
     }
 
     public void listarCobrosTotales() {
+
+        //CHANGE DATA SLIDE MENU
+        changeDataSlideMenu();
 
         Cursor cursor = cCobro.listarComprobantesToCobros();
 

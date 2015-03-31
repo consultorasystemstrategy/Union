@@ -205,7 +205,7 @@ public class DbGastos_Ingresos {
         mCursor = mDb.rawQuery("SELECT 1 as _id, 'Facturas Emitidas' AS comprobante,\n" +
                 "\tCOUNT(*) AS n,\n" +
                 "\tROUND(SUM(cv_re_total),1) AS emitidas, \n" +
-                "\t(SELECT ROUND(SUM(cv_re_total),1) FROM m_comprob_venta WHERE cv_in_id_tipo_doc = '1' AND cv_in_id_forma_pago = '1' AND id_liquidacion = '"+liquidacion+"') AS pagado,\n" +
+                "\t(SELECT ROUND(SUM(cv_re_total),1) FROM m_comprob_venta WHERE cv_in_id_tipo_doc = '1' AND cv_in_id_forma_pago = '1' AND id_liquidacion = '"+liquidacion+"' AND cv_in_estado_comp = '1') AS pagado,\n" +
                 "\t0 AS cobrado \n" +
                 "FROM m_comprob_venta\n" +
                 "WHERE cv_in_id_tipo_doc = '1'\n" +
@@ -214,7 +214,7 @@ public class DbGastos_Ingresos {
                 "SELECT 2 as _id, 'Boletas Emitidas' AS comprobante,\n" +
                 "\tCOUNT(*) AS n,\n" +
                 "\tROUND(SUM(cv_re_total),1) AS emitidas, \n" +
-                "\t(SELECT ROUND(SUM(cv_re_total),1) FROM m_comprob_venta WHERE cv_in_id_tipo_doc = '2' AND cv_in_id_forma_pago = '1' AND id_liquidacion = '"+liquidacion+"') AS pagado,\n" +
+                "\t(SELECT ROUND(SUM(cv_re_total),1) FROM m_comprob_venta WHERE cv_in_id_tipo_doc = '2' AND cv_in_id_forma_pago = '1' AND id_liquidacion = '"+liquidacion+"' AND cv_in_estado_comp = '1') AS pagado,\n" +
                 "\t0 AS cobrado \n" +
                 "FROM m_comprob_venta\n" +
                 "WHERE cv_in_id_tipo_doc = '2'\n" +

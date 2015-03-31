@@ -994,7 +994,7 @@ Instantiate and pass a callback
                 new SolicitarCredito(mainActivity).execute(""+id_agente_venta,""+idEstablecimiento,""+cantidadCredito,""+diasCredito);
 
                 Toast.makeText(mContext.getApplicationContext(), "Crédito solicitado esperar...",Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(mContext, VMovil_Evento_Indice.class);
+                Intent intent = new Intent(mContext, VMovil_Evento_Establec.class);
                 finish();
                 startActivity(intent);
             }

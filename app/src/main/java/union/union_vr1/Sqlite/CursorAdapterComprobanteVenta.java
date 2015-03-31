@@ -108,7 +108,7 @@ public class CursorAdapterComprobanteVenta extends CursorAdapter {
 
             DecimalFormat df= new DecimalFormat("#0.00");
 
-            textViewTitulo.setText("Documento " + numero_documento +  " Id " + _id );
+            textViewTitulo.setText("ERP: " + codigo_erp +  " ID: " + _id );
             textViewSubtitulo.setText(formaPago);
             textViewComment.setText(nombreEstado);
             textViewMonto.setText("S/. "+ df.format(total));

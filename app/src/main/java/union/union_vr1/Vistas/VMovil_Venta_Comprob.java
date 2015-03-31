@@ -530,7 +530,7 @@ private void back(){
                 switch (estado) {
                     case 0:
                         Toast.makeText(getApplicationContext(),
-                                "El comprobante ya se encuentra anulado", Toast.LENGTH_SHORT).show();
+                                "El comprobante se encuentra anulado", Toast.LENGTH_SHORT).show();
                         break;
                     case 1:
                         dialogCambiarEstado(idComprobante);
@@ -563,7 +563,7 @@ private void back(){
 
         cursorAdapterComprobanteVenta.setFilterQueryProvider(new FilterQueryProvider() {
             public Cursor runQuery(CharSequence constraint) {
-                return dbHelper.fetchComprobVentaByName(constraint.toString());
+                return dbHelper.fetchAllComprobVentaByName(idEstablec, liquidacion,constraint.toString());
             }
         });
 

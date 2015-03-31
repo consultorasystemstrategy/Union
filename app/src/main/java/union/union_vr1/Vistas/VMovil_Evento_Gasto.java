@@ -186,7 +186,7 @@ public class VMovil_Evento_Gasto extends Activity implements View.OnClickListene
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 String tipoGasto = adapterView.getItemAtPosition(i).toString();
-                Toast.makeText(getApplicationContext(), tipoGasto, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), tipoGasto, Toast.LENGTH_SHORT).show();
 
                 if (tipoGasto.equals("Combustible")) {
                     String itemProcedenciaGasto = (String) spinnerProcedenciaGasto.getSelectedItem();
@@ -242,9 +242,10 @@ public class VMovil_Evento_Gasto extends Activity implements View.OnClickListene
 
             }
         });
-        displayListViewVEG();
         //SLIDING MENU
         showSlideMenu(activity);
+
+        displayListViewVEG();
     }
 
     @Override
@@ -444,7 +445,7 @@ public class VMovil_Evento_Gasto extends Activity implements View.OnClickListene
         }
 
         displayListViewVEG();
-        Toast.makeText(getApplicationContext(), "Registro insertado satisfactoriamente con id : " + idRegistroGastoInsertado, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "Gasto Agregado", Toast.LENGTH_SHORT).show();
 }
 
     private enum TipoDocumento {
@@ -461,6 +462,9 @@ public class VMovil_Evento_Gasto extends Activity implements View.OnClickListene
 
     private void displayListViewVEG() {
 
+
+        //CHANGE DATA SLIDE MENU
+        changeDataSlideMenu();
 
         Cursor cursor = dbHelperInformeGasto.fetchAllInformeGastos(getDayPhone());
         cursor.moveToFirst();
@@ -496,7 +500,7 @@ public class VMovil_Evento_Gasto extends Activity implements View.OnClickListene
 
         // Assign adapter to ListView
         listViewInformeGasto.setAdapter(dataAdapter);
-        listViewInformeGasto.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            listViewInformeGasto.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //Aquí obtengo el cursor posicionado en la fila que ha seleccionado/clickeado
