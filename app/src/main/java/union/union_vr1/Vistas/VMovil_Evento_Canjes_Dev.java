@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -125,7 +126,7 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity implements View.OnClic
         session = new DbAdapter_Temp_Session(this);
         session.open();
 
-
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         liquidacion = session.fetchVarible(3);
 
         Bundle idE = getIntent().getExtras();

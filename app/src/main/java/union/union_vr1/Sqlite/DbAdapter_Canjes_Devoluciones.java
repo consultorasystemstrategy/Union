@@ -59,6 +59,10 @@ public class DbAdapter_Canjes_Devoluciones {
                     mDb.execSQL("update m_histo_venta_detalle set hd_in_id_tipoper='',hd_in_categoria_ope='',hd_in_cantidad_ope='',hd_re_importe_ope='',hg_te_fecha_ope='',hd_te_hora_ope='',hd_in_cantidad_ope_dev='',hd_in_categoria_ope_dev='',hd_re_importe_ope_dev='',hg_te_fecha_ope_dev='',hd_te_hora_ope_dev='' where hd_in_id_detalle='" + idDetalle + "';");
 
                 }
+                mDb.execSQL("update m_stock_agente set " + DbAdapter_Stock_Agente.ST_devoluciones + "='"+cantidadDev+"' where st_in_id_producto='" + idProducto + "' and liquidacion='"+liquidacion+"' ");
+                mDb.execSQL("update m_histo_venta_detalle set hd_in_id_tipoper='',hd_in_categoria_ope='',hd_in_cantidad_ope='',hd_re_importe_ope='',hg_te_fecha_ope='',hd_te_hora_ope='',hd_in_cantidad_ope_dev='',hd_in_categoria_ope_dev='',hd_re_importe_ope_dev='',hg_te_fecha_ope_dev='',hd_te_hora_ope_dev='' where hd_in_id_detalle='" + idDetalle + "';");
+
+
 
             estado = true;
 

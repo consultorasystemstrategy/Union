@@ -383,8 +383,7 @@ public class VMovil_Cobros_Totales extends Activity implements View.OnClickListe
     public void onClick(View v) {
         // TODO Auto-generated method stub
         switch (v.getId()) {
-
-            //SLIDING MENU
+            //SLIDING MENU0
             case R.id.slide_textviewPrincipal:
                 Intent ip1 = new Intent(this, VMovil_Evento_Indice.class);
                 finish();

@@ -62,7 +62,7 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
     private SimpleCursorAdapter dataAdapter;
     final Context context = this;
     private DbAdapter_Comprob_Cobro dbHelper;
-    private Button mActualiz, mCancelar;
+    private Button mActualiz;//, mCancelar;
     private TextView mSPNcredit;
     private double valbaimp, valimpue, valtotal;
     private String estabX;
@@ -166,8 +166,8 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
         mActualiz = (Button) findViewById(R.id.VCCR_BTNactualiz);
         mActualiz.setOnClickListener(this);
 
-        mCancelar = (Button) findViewById(R.id.VCCR_BTNcancelar);
-        mCancelar.setOnClickListener(this);
+        //mCancelar = (Button) findViewById(R.id.VCCR_BTNcancelar);
+        //mCancelar.setOnClickListener(this);
         InputMethodManager imm = (InputMethodManager) getSystemService(
                 Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(mSPNcredit.getWindowToken(), 0);
@@ -485,9 +485,11 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
                 //dbHelper.updateComprobCobrosCan(String.valueOf(valIdCredito),getDatePhone(),getTimePhone(),Double.parseDouble(mSPNcredit.getText().toString()));
                 displayListViewVCC();
                 break;
-            case R.id.VCCR_BTNcancelar:
+            /*case R.id.VCCR_BTNcancelar:
                 Back();
-                break;//SLIDING MENU
+                break;
+                */
+                //SLIDING MENU
             case R.id.slide_textviewPrincipal:
                 Intent ip1 = new Intent(this, VMovil_Evento_Indice.class);
                 finish();
