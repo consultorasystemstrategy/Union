@@ -52,26 +52,21 @@ public class CursorAdapter_Man_Can_Dev extends CursorAdapter {
         if (cursor.getCount()>0) {
 
 
-            String idDetalle= cursor.getString(1);
-            String tipo_Op = cursor.getString(5);
-            String cantidad = cursor.getString(17);
+            String idDetalle= cursor.getString(cursor.getColumnIndexOrThrow("hd_in_id_detalle"));
+            String tipo_Op = cursor.getString(cursor.getColumnIndexOrThrow("hd_in_id_tipoper"));
+            String cantidad = cursor.getString(cursor.getColumnIndexOrThrow("hd_in_cantidad_ope"));
             if(cantidad==null){
-                cantidad = cursor.getString(25);
+                cantidad = cursor.getString(cursor.getColumnIndexOrThrow("hd_in_cantidad_ope_dev"));
             }
-            if(tipo_Op ==null){
-                tipo_Op="Devolucion";
-            }else
+
             if(tipo_Op.equals("1")){
                 tipo_Op="Canje";
             }
             else {
                 tipo_Op="Devolucion";
             }
-            String categoria_op=cursor.getString(15);
-            if(categoria_op==null){
-                categoria_op=cursor.getString(26);
+            String categoria_op=cursor.getString(cursor.getColumnIndexOrThrow("hd_in_categoria_ope"));
 
-            }
             if(categoria_op.equals("1")){
                 categoria_op="Bueno";
             }
@@ -84,15 +79,12 @@ public class CursorAdapter_Man_Can_Dev extends CursorAdapter {
             if(categoria_op.equals("4")){
                 categoria_op="Vencido-Malo";
             }
-            String nomProducto = cursor.getString(9);
-            String fecha = cursor.getString(19);
-            Double importe = cursor.getDouble(18);
+            String nomProducto = cursor.getString(cursor.getColumnIndexOrThrow("hd_te_nom_producto"));
+            String fecha = cursor.getString(cursor.getColumnIndexOrThrow("hg_te_fecha_ope"));
+            Double importe = cursor.getDouble(cursor.getColumnIndexOrThrow("hd_re_importe_ope"));
             if(importe==0.0){
-                importe = cursor.getDouble(27);
+                importe = cursor.getDouble(cursor.getColumnIndexOrThrow("hd_re_importe_ope_dev"));
             }
-
-
-
 
             DecimalFormat df= new DecimalFormat("#0.00");
             textViewTitulo.setText(nomProducto);
