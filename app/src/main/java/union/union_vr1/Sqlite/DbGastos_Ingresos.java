@@ -223,18 +223,18 @@ public class DbGastos_Ingresos {
                 "UNION \n" +
                 "\n" +
                 "SELECT \t 3 as _id, 'Facturas Cobradas' AS comprobante,\n" +
-                "\t(SELECT COUNT(DISTINCT(cc_in_id_comprob)) FROM m_comprob_cobro WHERE UPPER(cc_te_desc_tipo_doc) like '%FACTURA%' AND  cc_in_estado_cobro='0' AND '"+getDatePhone()+"') AS n,\n" +
+                "\t(SELECT COUNT(DISTINCT(cc_in_id_comprob)) FROM m_comprob_cobro WHERE UPPER(cc_te_desc_tipo_doc) like '%FACTURA%' AND  cc_in_estado_cobro='0' AND cc_te_fecha_cobro like '%"+getDatePhone()+"%') AS n,\n" +
                 "\t0 AS emitidas,\n" +
                 "\t0 AS pagado,\n" +
-                "\t(SELECT ROUND(SUM(cc_re_monto_cobrado),1) FROM m_comprob_cobro WHERE UPPER(cc_te_desc_tipo_doc) like '%FACTURA%' AND cc_in_estado_cobro='0' AND '"+getDatePhone()+"') AS cobrado\n" +
+                "\t(SELECT ROUND(SUM(cc_re_monto_cobrado),1) FROM m_comprob_cobro WHERE UPPER(cc_te_desc_tipo_doc) like '%FACTURA%' AND cc_in_estado_cobro='0' AND cc_te_fecha_cobro like '%"+getDatePhone()+"%') AS cobrado\n" +
                 "\n" +
                 "UNION \n" +
                 "\n" +
                 "SELECT \t 4 as _id, 'Boletas Cobradas' AS comprobante,\n" +
-                "\t(SELECT COUNT(DISTINCT(cc_in_id_comprob)) FROM m_comprob_cobro WHERE UPPER(cc_te_desc_tipo_doc) like '%BOLETA%' AND  cc_in_estado_cobro='0' AND '"+getDatePhone()+"') AS n,\n" +
+                "\t(SELECT COUNT(DISTINCT(cc_in_id_comprob)) FROM m_comprob_cobro WHERE UPPER(cc_te_desc_tipo_doc) like '%BOLETA%' AND  cc_in_estado_cobro='0' AND cc_te_fecha_cobro like '%"+getDatePhone()+"%') AS n,\n" +
                 "\t0 AS emitidas,\n" +
                 "\t0 AS pagado,\n" +
-                "\t(SELECT ROUND(SUM(cc_re_monto_cobrado),1) FROM m_comprob_cobro WHERE UPPER(cc_te_desc_tipo_doc) like '%BOLETA%'  AND cc_in_estado_cobro='0' AND '"+getDatePhone()+"') AS cobrado",null);
+                "\t(SELECT ROUND(SUM(cc_re_monto_cobrado),1) FROM m_comprob_cobro WHERE UPPER(cc_te_desc_tipo_doc) like '%BOLETA%'  AND cc_in_estado_cobro='0' AND cc_te_fecha_cobro like '%"+getDatePhone()+"%') AS cobrado",null);
 
         if (mCursor!=null){
             mCursor.moveToFirst();
