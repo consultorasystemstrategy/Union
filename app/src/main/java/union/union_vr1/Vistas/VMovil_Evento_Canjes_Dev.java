@@ -278,11 +278,10 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity implements View.OnClic
                 @Override
                 public void onClick(View view) {
 
-                    Intent i = new Intent(getApplicationContext(), mostrar_can_dev_facturas.class);
-                    i.putExtra("idEstablec", establec);
-                    i.putExtra("idAgente", idAgente);
-                    startActivity(i);
-                   finish();
+                    Intent mostrar = new Intent(getApplicationContext(),mostrar_can_dev_facturas.class);
+                    mostrar.putExtra("idEstablec",establec);
+                    mostrar.putExtra("idAgente",idAgente);
+                    startActivity(mostrar);
 
 
                 }
@@ -362,7 +361,10 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity implements View.OnClic
             btn_mostrar_guias.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    back();
+                    Intent mostrar = new Intent(getApplicationContext(),mostrar_can_dev_facturas.class);
+                    mostrar.putExtra("idEstablec",establec);
+                    mostrar.putExtra("idAgente",idAgente);
+                    startActivity(mostrar);
                 }
             });
         lista_facturas.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -381,11 +383,11 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity implements View.OnClic
 
     }
     public void back(){
-        Intent i = new Intent(getApplicationContext(), mostrar_can_dev_facturas.class);
-        i.putExtra("idEstablec", establec);
-        i.putExtra("idAgente", idAgente);
-        this.startActivity(i);
-        finish();
+        //Intent i = new Intent(getApplicationContext(), VMovil_Menu_Establec.class);
+       // i.putExtra("idEstablec", establec);
+      // i.putExtra("idAgente", idAgente);
+      //  this.startActivity(i);
+       // finish();
     }
 
 
@@ -409,11 +411,11 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity implements View.OnClic
     }
 
     private void regresar(){
-        Intent i = new Intent(ctx, VMovil_Evento_Establec.class);
-        i.putExtra("idEstab", establec);
-        i.putExtra("idAgente", idAgente);
-        this.startActivity(i);
-        finish();
+      //  Intent i = new Intent(ctx, VMovil_Evento_Establec.class);
+      //  i.putExtra("idEstab", establec);
+      //  i.putExtra("idAgente", idAgente);
+       // this.startActivity(i);
+       // finish();
     }
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -422,7 +424,10 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity implements View.OnClic
         switch (keyCode) {
             case KeyEvent.KEYCODE_BACK:
 
-                regresar();
+                Intent mostrar = new Intent(getApplicationContext(),mostrar_can_dev_facturas.class);
+                mostrar.putExtra("idEstablec",establec);
+                mostrar.putExtra("idAgente",idAgente);
+                startActivity(mostrar);
 
                 return true;
 

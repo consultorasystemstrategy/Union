@@ -395,9 +395,9 @@ public class mostrar_can_dev_facturas extends TabActivity {
                 .setCancelable(false)
                 .setPositiveButton("Regresar", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        Intent in = new Intent(getApplicationContext(), VMovil_Evento_Canjes_Dev.class);
-                        in.putExtra("idEstabX", idEstablec);
-                        in.putExtra("idAgente", idAgente);
+                        Intent in = new Intent(getApplicationContext(), VMovil_Menu_Establec.class);
+                      //  in.putExtra("idEstabX", idEstablec);
+                       // in.putExtra("idAgente", idAgente);
                         startActivity(in);
                         finish();
                     }
@@ -494,7 +494,7 @@ public class mostrar_can_dev_facturas extends TabActivity {
                     i.putExtra("textoImpresionContenidoRight", rigth());
 
                     startActivity(i);
-                    finish();
+
                 }else{
                     Toast.makeText(getApplicationContext(),"Usted no Puede Imprimir Canjes",Toast.LENGTH_SHORT).show();
 

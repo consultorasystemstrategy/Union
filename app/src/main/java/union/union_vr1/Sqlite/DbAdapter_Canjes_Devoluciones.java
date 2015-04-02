@@ -276,7 +276,9 @@ public class DbAdapter_Canjes_Devoluciones {
     }
 
     public Cursor obtener_igv_dev(int id, String idEstablec) {
-        Cursor cr = mDb.rawQuery("select sum(hd_in_cantidad_ope_dev*hd_re_importe_ope_dev )  as total,sum(hd_re_importe_ope_dev*hd_in_cantidad_ope_dev)/1.18 as subtotal,sum(hd_re_importe_ope_dev*hd_in_cantidad_ope_dev)-sum(hd_re_importe_ope_dev*hd_in_cantidad_ope_dev)/1.18  as igv from  m_histo_venta_detalle where   hg_te_fecha_ope_dev='" + getDatePhone() + "' and hd_te_hora_ope_dev ='pendiente' and hd_in_id_establec='" + idEstablec + "'", null);
+        //Cursor cr = mDb.rawQuery("select sum(hd_in_cantidad_ope_dev*hd_re_importe_ope_dev )  as total,sum(hd_re_importe_ope_dev*hd_in_cantidad_ope_dev)/1.18 as subtotal,sum(hd_re_importe_ope_dev*hd_in_cantidad_ope_dev)-sum(hd_re_importe_ope_dev*hd_in_cantidad_ope_dev)/1.18  as igv from  m_histo_venta_detalle where   hg_te_fecha_ope_dev='" + getDatePhone() + "' and hd_te_hora_ope_dev ='pendiente' and hd_in_id_establec='" + idEstablec + "'", null);
+
+        Cursor cr = mDb.rawQuery("select sum(hd_re_importe_ope_dev)  as total,sum(hd_re_importe_ope_dev)/1.18 as subtotal,sum(hd_re_importe_ope_dev)-sum(hd_re_importe_ope_dev)/1.18  as igv from  m_histo_venta_detalle where   hg_te_fecha_ope_dev='" + getDatePhone() + "' and hd_te_hora_ope_dev ='pendiente' and hd_in_id_establec='" + idEstablec + "'", null);
         return cr;
     }
 
