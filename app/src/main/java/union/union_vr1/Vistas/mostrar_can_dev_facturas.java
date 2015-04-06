@@ -388,7 +388,7 @@ public class mostrar_can_dev_facturas extends TabActivity {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                 this);
 
-        alertDialogBuilder.setTitle("¿Regresar?");
+        alertDialogBuilder.setTitle("Debe guardar");
 
         AlertDialog.Builder builder = alertDialogBuilder
                 .setMessage("Debe guardar los Canjes/Devoluciones.")
@@ -403,14 +403,13 @@ public class mostrar_can_dev_facturas extends TabActivity {
                     }
 
                 })
-                .setNegativeButton("Quedarme", new DialogInterface.OnClickListener() {
+                .setNegativeButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                     }
                 });
 
         AlertDialog alertDialog = alertDialogBuilder.create();
-
         alertDialog.show();
 
     }
