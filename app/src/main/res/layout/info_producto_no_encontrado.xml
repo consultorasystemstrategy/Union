@@ -17,7 +17,7 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_weight="3"
-            android:background="@color/Personalizado4"
+            android:background="@color/PersonalizadoSteve2"
             android:id="@+id/linearLayoutLista">
 
             <ImageView
@@ -30,7 +30,7 @@
                 android:baselineAlignBottom="false" />
         </LinearLayout>
 
-        <RelativeLayout
+        <LinearLayout
             android:orientation="vertical"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
@@ -39,34 +39,41 @@
 
             <TextView
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="Producto no Encontrado"
+                android:layout_height="fill_parent"
+                android:text="No encontrado"
                 android:id="@+id/textViewListaTitulo"
-                android:layout_weight="0.25"
-                android:gravity="bottom"
                 android:textSize="16dp"
                 android:textStyle="normal|bold"
                 android:textColor="@color/Dark1"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentLeft="true" />
+                android:layout_weight="1"
+                android:gravity="center" />
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Regresar"
-                android:id="@+id/btn_regresar"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentLeft="true" />
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1">
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Agregar"
-                android:id="@+id/btn_agregar"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentRight="true" />
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Regresar"
+                    android:id="@+id/btn_regresar"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_weight="1"
+                    android:background="@color/Dark4" />
 
-        </RelativeLayout>
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Agregar"
+                    android:id="@+id/btn_agregar"
+                    android:layout_weight="1"
+                    android:background="@color/Dark1" />
+            </LinearLayout>
+
+        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>

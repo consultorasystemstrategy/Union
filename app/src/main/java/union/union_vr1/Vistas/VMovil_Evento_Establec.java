@@ -75,7 +75,6 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
     TextView textViewSlideNombreAgente;
     TextView textViewSlideNombreRuta;
 
-
     Button buttonSlideNroEstablecimiento;
 
     int slideIdAgente = 0;

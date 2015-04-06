@@ -43,8 +43,8 @@
         <item>Boleta</item>
     </string-array>
     <string-array name="tipo_devolucion">
-        <item>Devolucion</item>
         <item>Canje</item>
+        <item>Devolucion</item>
     </string-array>
     <string-array name="tipo_venta">
         <item>Normal</item>
@@ -58,9 +58,9 @@
     </string-array>
     <string-array name="cate_devolucion">
         <item>Bueno</item>
-        <item>Vencimiento - Malo</item>
         <item>Malogrado</item>
         <item>Reclamo</item>
+        <item>Vencido-Malo</item>
     </string-array>
     <string-array name="forma_pago">
         <item>Contado</item>

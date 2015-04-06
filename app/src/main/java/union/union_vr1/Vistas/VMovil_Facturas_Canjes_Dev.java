@@ -17,6 +17,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -119,7 +120,6 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
 
 
                 ArrayAdapter adapter = new ArrayAdapter(getApplicationContext(), android.R.layout.simple_dropdown_item_1line, noEncontrado);
-                listaFacturas.setAdapter(adapter);
                 View noE =   View.inflate(this, R.layout.info_producto_no_encontrado, null);
                 final Button btnRegresar = (Button) noE.findViewById(R.id.btn_regresar);
                 btnRegresar.setOnClickListener(new View.OnClickListener() {
@@ -142,11 +142,13 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
                     }
                 });
                 listaFacturas.addHeaderView(noE);
+                listaFacturas.setAdapter(adapter);
 
             } else {
-                TextView vieFooter = (TextView) getLayoutInflater().inflate(R.layout.agregar_otro, null);
+                LinearLayout linearLayout = (LinearLayout) getLayoutInflater().inflate(R.layout.agregar_otro, null);
+                TextView vieFooter = (TextView)  linearLayout.findViewById(R.id.textViewNoEncontrado);
                 //vieFooter.setText("Agregar Otro");
-                listaFacturas.addFooterView(vieFooter);
+                listaFacturas.addFooterView(linearLayout);
                 vieFooter.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -181,7 +183,6 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
 
 
             ArrayAdapter adapter = new ArrayAdapter(getApplicationContext(), android.R.layout.simple_dropdown_item_1line, noEncontrado);
-            listaFacturas.setAdapter(adapter);
             View noE =   View.inflate(this, R.layout.info_producto_no_encontrado, null);
             final Button btnRegresar = (Button) noE.findViewById(R.id.btn_regresar);
             btnRegresar.setOnClickListener(new View.OnClickListener() {
@@ -204,6 +205,7 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
                 }
             });
             listaFacturas.addHeaderView(noE);
+            listaFacturas.setAdapter(adapter);
 
         }
 
@@ -229,13 +231,9 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
         final String importe = datos[3];
         //-----------------------------------------
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        TextView title = new TextView(this);
-        title.setText("Canje/Devolucion: " + nomProducto + "");
+        builder.setTitle("" + nomProducto + "");
 
-        builder.setCustomTitle(title);
-
-        LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View layout_spinners = inflater.inflate(prompts_canjes, null);
+        final View layout_spinners = View.inflate(this, R.layout.prompts_canjes, null);
         final EditText cantidadText = (EditText) layout_spinners.findViewById(R.id.cantidad_can_dev_registrado);
         final Spinner spinnerTipoOp = (Spinner) layout_spinners.findViewById(R.id.can_dev_tipo_op_registrado);
         final Spinner spinnerCategoria = (Spinner) layout_spinners.findViewById(R.id.can_dev_categoria_registrado);
@@ -250,7 +248,7 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
             public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
                 if (cantidadText.getText().toString().trim() != "") {
                     cantidadText.setError(null);
-                    cantidadText.setTextColor(Color.parseColor("#FE9A2E"));
+                    cantidadText.setTextColor(getApplicationContext().getResources().getColor(R.color.Dark1));
                 }
             }
 
@@ -281,14 +279,14 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
                     cantidadText.setError("Es Requerido");
                 } else {
                     cantidadText.setError(null);
-                    cantidadText.setTextColor(Color.parseColor("#FE9A2E"));
+                    cantidadText.setTextColor(getApplicationContext().getResources().getColor(R.color.Dark1));
                 }
             }
         });
 
         builder.setView(layout_spinners);
-        builder.setCancelable(false);
-        builder.setPositiveButton("Guardar",
+        builder.setCancelable(true);
+        builder.setPositiveButton("OK",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
@@ -318,32 +316,24 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
 
                         }
                     }
-                })
-                .setNegativeButton("Cancelar",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        });
+                });
         builder.show();
 
 
-        ArrayList<String> tipo_oper = new ArrayList<String>();
+        //Creamos el adaptador, ARRAY EN XML CANJE O DEVOLUCIÓN
+        ArrayAdapter<CharSequence> adapterTipoOperacion = ArrayAdapter.createFromResource(this, R.array.tipo_devolucion, android.R.layout.simple_spinner_item);
+        //Añadimos el layout para el TIPO DE OPERACIÓN //CANJE  O DEVOLUCIÓN
+        adapterTipoOperacion.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        //Le indicamos al spinner el adaptador a usar
+        spinnerTipoOp.setAdapter(adapterTipoOperacion);
 
-        tipo_oper.add("Devolucion");
+        //Creamos el adaptador, ARRAY EN XML BUENO, MALO, VENCIMIENTO MALO, ETC
+        ArrayAdapter<CharSequence> adapterCategoria = ArrayAdapter.createFromResource(this, R.array.cate_devolucion, android.R.layout.simple_spinner_item);
+        //Añadimos el layout para el TIPO DE OPERACIÓN //CANJE  O DEVOLUCIÓN
+        adapterCategoria.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        //Le indicamos al spinner el adaptador a usar
+        spinnerCategoria.setAdapter(adapterCategoria);
 
-        ArrayAdapter<String> opArray = new ArrayAdapter<String>(this, spinner_layout, tipo_oper);
-        opArray.setDropDownViewResource(simple_spinner_item); // The drop down view
-        spinnerTipoOp.setAdapter(opArray);
-        ArrayList<String> item_categorias = new ArrayList<String>();
-        item_categorias.add("Bueno");
-        item_categorias.add("Malogrado");
-        item_categorias.add("Reclamo");
-        item_categorias.add("Vencido-Malo");
-
-        ArrayAdapter<String> cateArray = new ArrayAdapter<String>(this, spinner_layout, item_categorias);
-        cateArray.setDropDownViewResource(simple_spinner_item); // The drop down view
-        spinnerCategoria.setAdapter(cateArray);
 
     }
 
@@ -363,13 +353,10 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
         final String importe = datos[3];
         //-----------------------------------------
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        TextView title = new TextView(this);
-        title.setText("Canje/Devolucion: " + nomProducto + "");
 
-        builder.setCustomTitle(title);
+        builder.setTitle("" + nomProducto + "");
 
-        LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View layout_spinners = inflater.inflate(prompts_canjes, null);
+        final View layout_spinners = View.inflate(this, R.layout.prompts_canjes, null);
         final EditText cantidadText = (EditText) layout_spinners.findViewById(R.id.cantidad_can_dev_registrado);
         final Spinner spinnerTipoOp = (Spinner) layout_spinners.findViewById(R.id.can_dev_tipo_op_registrado);
         final Spinner spinnerCategoria = (Spinner) layout_spinners.findViewById(R.id.can_dev_categoria_registrado);
@@ -384,7 +371,7 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
             public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
                 if (cantidadText.getText().toString().trim() != "") {
                     cantidadText.setError(null);
-                    cantidadText.setTextColor(Color.parseColor("#FE9A2E"));
+                    cantidadText.setTextColor(getApplicationContext().getResources().getColor(R.color.Dark1));
                 }
             }
 
@@ -418,14 +405,14 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
                     cantidadText.setError("Es Requerido");
                 } else {
                     cantidadText.setError(null);
-                    cantidadText.setTextColor(Color.parseColor("#FE9A2E"));
+                    cantidadText.setTextColor(getApplicationContext().getResources().getColor(R.color.Dark1));
                 }
             }
         });
 
         builder.setView(layout_spinners);
-        builder.setCancelable(false);
-        builder.setPositiveButton("Guardar",
+        builder.setCancelable(true);
+        builder.setPositiveButton("OK",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
@@ -453,32 +440,26 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
 
                         }
                     }
-                })
-                .setNegativeButton("Cancelar",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        });
+                });
         builder.show();
 
 
-        ArrayList<String> tipo_oper = new ArrayList<String>();
-        tipo_oper.add("Canje");
-        tipo_oper.add("Devolucion");
 
-        ArrayAdapter<String> opArray = new ArrayAdapter<String>(this, spinner_layout, tipo_oper);
-        opArray.setDropDownViewResource(simple_spinner_item); // The drop down view
-        spinnerTipoOp.setAdapter(opArray);
-        ArrayList<String> item_categorias = new ArrayList<String>();
-        item_categorias.add("Bueno");
-        item_categorias.add("Malogrado");
-        item_categorias.add("Reclamo");
-        item_categorias.add("Vencido-Malo");
+        //Creamos el adaptador, ARRAY EN XML CANJE O DEVOLUCIÓN
+        ArrayAdapter<CharSequence> adapterTipoOperacion = ArrayAdapter.createFromResource(this, R.array.tipo_devolucion, android.R.layout.simple_spinner_item);
+        //Añadimos el layout para el TIPO DE OPERACIÓN //CANJE  O DEVOLUCIÓN
+        adapterTipoOperacion.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        //Le indicamos al spinner el adaptador a usar
+        spinnerTipoOp.setAdapter(adapterTipoOperacion);
 
-        ArrayAdapter<String> cateArray = new ArrayAdapter<String>(this, spinner_layout, item_categorias);
-        cateArray.setDropDownViewResource(simple_spinner_item); // The drop down view
-        spinnerCategoria.setAdapter(cateArray);
+            //Creamos el adaptador, ARRAY EN XML BUENO, MALO, VENCIMIENTO MALO, ETC
+        ArrayAdapter<CharSequence> adapterCategoria = ArrayAdapter.createFromResource(this, R.array.cate_devolucion, android.R.layout.simple_spinner_item);
+        //Añadimos el layout para el TIPO DE OPERACIÓN //CANJE  O DEVOLUCIÓN
+        adapterCategoria.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        //Le indicamos al spinner el adaptador a usar
+        spinnerCategoria.setAdapter(adapterCategoria);
+
+
 
     }
 
@@ -525,13 +506,9 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
     private void mostrar_alertdialog_spinners_dev(String producto) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        TextView title = new TextView(this);
-        title.setText("Canje/Devolucion: " + producto + "");
+        builder.setTitle("" + nomProducto + "");
+        final View layout_spinners = View.inflate(this, R.layout.prompts, null);
 
-        builder.setCustomTitle(title);
-
-        LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View layout_spinners = inflater.inflate(prompts, null);
         final EditText nroCompro = (EditText) layout_spinners.findViewById(R.id.comprob_clave_dev_can);
         final EditText nroLote = (EditText) layout_spinners.findViewById(R.id.lote_can_dev);
         final EditText cantidadText = (EditText) layout_spinners.findViewById(R.id.cantidad_can_dev);
@@ -543,7 +520,7 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
             public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
                 if (nroCompro.getText().toString().trim() != "") {
                     nroCompro.setError(null);
-                    nroCompro.setTextColor(Color.parseColor("#FE9A2E"));
+                    nroCompro.setTextColor(getApplicationContext().getResources().getColor(R.color.Dark1));
                 }
             }
 
@@ -559,7 +536,7 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
                     nroCompro.setError("Es Requerido");
                 } else {
                     nroCompro.setError(null);
-                    nroCompro.setTextColor(Color.parseColor("#FE9A2E"));
+                    nroCompro.setTextColor(getApplicationContext().getResources().getColor(R.color.Dark1));
                 }
             }
         });
@@ -569,7 +546,7 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
             public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
                 if (nroLote.getText().toString().trim() != "") {
                     nroLote.setError(null);
-                    nroLote.setTextColor(Color.parseColor("#FE9A2E"));
+                    nroLote.setTextColor(getApplicationContext().getResources().getColor(R.color.Dark1));
                 }
             }
 
@@ -584,14 +561,14 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
                     nroLote.setError("Es Requerido");
                 } else {
                     nroLote.setError(null);
-                    nroLote.setTextColor(Color.parseColor("#FE9A2E"));
+                    nroLote.setTextColor(getApplicationContext().getResources().getColor(R.color.Dark1));
                 }
             }
         });
 
 
         builder.setView(layout_spinners);
-        builder.setCancelable(false);
+        builder.setCancelable(true);
         builder.setPositiveButton("Guardar",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
@@ -628,45 +605,32 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
 
                         }
                     }
-                })
-                .setNegativeButton("Cancelar",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        });
+                });
         builder.show();
 
 
-        ArrayList<String> tipo_oper = new ArrayList<String>();
-        tipo_oper.add("Devolucion");
+        //Creamos el adaptador, ARRAY EN XML CANJE O DEVOLUCIÓN
+        ArrayAdapter<CharSequence> adapterTipoOperacion = ArrayAdapter.createFromResource(this, R.array.tipo_devolucion, android.R.layout.simple_spinner_item);
+        //Añadimos el layout para el TIPO DE OPERACIÓN //CANJE  O DEVOLUCIÓN
+        adapterTipoOperacion.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        //Le indicamos al spinner el adaptador a usar
+        spinnerTipoOp.setAdapter(adapterTipoOperacion);
 
-        ArrayAdapter<String> opArray = new ArrayAdapter<String>(this, spinner_layout, tipo_oper);
-        opArray.setDropDownViewResource(simple_spinner_item); // The drop down view
-        spinnerTipoOp.setAdapter(opArray);
-        //spinnerTipoOp.setBackgroundColor(0xffffffff);
-        ArrayList<String> item_categorias = new ArrayList<String>();
-        item_categorias.add("Bueno");
-        item_categorias.add("Malogrado");
-        item_categorias.add("Reclamo");
-        item_categorias.add("Vencido-Malo");
-
-        ArrayAdapter<String> cateArray = new ArrayAdapter<String>(this, spinner_layout, item_categorias);
-        cateArray.setDropDownViewResource(simple_spinner_item); // The drop down view
-        spinnerCategoria.setAdapter(cateArray);
+        //Creamos el adaptador, ARRAY EN XML BUENO, MALO, VENCIMIENTO MALO, ETC
+        ArrayAdapter<CharSequence> adapterCategoria = ArrayAdapter.createFromResource(this, R.array.cate_devolucion, android.R.layout.simple_spinner_item);
+        //Añadimos el layout para el TIPO DE OPERACIÓN //CANJE  O DEVOLUCIÓN
+        adapterCategoria.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        //Le indicamos al spinner el adaptador a usar
+        spinnerCategoria.setAdapter(adapterCategoria);
 
     }
 
     private void mostrar_alertdialog_spinners(String producto) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        TextView title = new TextView(this);
-        title.setText("Canje/Devolucion: " + producto + "");
+        builder.setTitle("" + nomProducto + "");
+        final View layout_spinners = View.inflate(this, R.layout.prompts, null);
 
-        builder.setCustomTitle(title);
-
-        LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View layout_spinners = inflater.inflate(prompts, null);
         final EditText nroCompro = (EditText) layout_spinners.findViewById(R.id.comprob_clave_dev_can);
         final EditText nroLote = (EditText) layout_spinners.findViewById(R.id.lote_can_dev);
         final EditText cantidadText = (EditText) layout_spinners.findViewById(R.id.cantidad_can_dev);
@@ -680,7 +644,7 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
             public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
                 if (nroCompro.getText().toString().trim() != "") {
                     nroCompro.setError(null);
-                    nroCompro.setTextColor(Color.parseColor("#FE9A2E"));
+                    nroCompro.setTextColor(getApplicationContext().getResources().getColor(R.color.Dark1));
                 }
             }
 
@@ -696,7 +660,7 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
                     nroCompro.setError("Es Requerido");
                 } else {
                     nroCompro.setError(null);
-                    nroCompro.setTextColor(Color.parseColor("#FE9A2E"));
+                    nroCompro.setTextColor(getApplicationContext().getResources().getColor(R.color.Dark1));
                 }
             }
         });
@@ -706,7 +670,7 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
             public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
                 if (nroLote.getText().toString().trim() != "") {
                     nroLote.setError(null);
-                    nroLote.setTextColor(Color.parseColor("#FE9A2E"));
+                    nroLote.setTextColor(getApplicationContext().getResources().getColor(R.color.Dark1));
                 }
             }
 
@@ -721,7 +685,7 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
                     nroLote.setError("Es Requerido");
                 } else {
                     nroLote.setError(null);
-                    nroLote.setTextColor(Color.parseColor("#FE9A2E"));
+                    nroLote.setTextColor(getApplicationContext().getResources().getColor(R.color.Dark1));
                 }
             }
         });
@@ -731,7 +695,7 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
             public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
                 if (cantidadText.getText().toString().trim() != "") {
                     cantidadText.setError(null);
-                    cantidadText.setTextColor(Color.parseColor("#FE9A2E"));
+                    cantidadText.setTextColor(getApplicationContext().getResources().getColor(R.color.Dark1));
                 }
             }
 
@@ -746,14 +710,14 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
                     cantidadText.setError("Es Requerido");
                 } else {
                     cantidadText.setError(null);
-                    cantidadText.setTextColor(Color.parseColor("#FE9A2E"));
+                    cantidadText.setTextColor(getApplicationContext().getResources().getColor(R.color.Dark1));
                 }
             }
         });
 
         builder.setView(layout_spinners);
-        builder.setCancelable(false);
-        builder.setPositiveButton("Guardar",
+        builder.setCancelable(true);
+        builder.setPositiveButton("OK",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         String compro = nroCompro.getText().toString();
@@ -790,33 +754,25 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
 
                         }
                     }
-                })
-                .setNegativeButton("Cancelar",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        });
+                });
         builder.show();
 
 
-        ArrayList<String> tipo_oper = new ArrayList<String>();
-        tipo_oper.add("Canje");
-        tipo_oper.add("Devolucion");
 
-        ArrayAdapter<String> opArray = new ArrayAdapter<String>(this, spinner_layout, tipo_oper);
-        opArray.setDropDownViewResource(simple_spinner_item); // The drop down view
-        spinnerTipoOp.setAdapter(opArray);
-        //spinnerTipoOp.setBackgroundColor(0xffffffff);
-        ArrayList<String> item_categorias = new ArrayList<String>();
-        item_categorias.add("Bueno");
-        item_categorias.add("Malogrado");
-        item_categorias.add("Reclamo");
-        item_categorias.add("Vencido-Malo");
+        //Creamos el adaptador, ARRAY EN XML CANJE O DEVOLUCIÓN
+        ArrayAdapter<CharSequence> adapterTipoOperacion = ArrayAdapter.createFromResource(this, R.array.tipo_devolucion, android.R.layout.simple_spinner_item);
+        //Añadimos el layout para el TIPO DE OPERACIÓN //CANJE  O DEVOLUCIÓN
+        adapterTipoOperacion.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        //Le indicamos al spinner el adaptador a usar
+        spinnerTipoOp.setAdapter(adapterTipoOperacion);
 
-        ArrayAdapter<String> cateArray = new ArrayAdapter<String>(this, spinner_layout, item_categorias);
-        cateArray.setDropDownViewResource(simple_spinner_item); // The drop down view
-        spinnerCategoria.setAdapter(cateArray);
+        //Creamos el adaptador, ARRAY EN XML BUENO, MALO, VENCIMIENTO MALO, ETC
+        ArrayAdapter<CharSequence> adapterCategoria = ArrayAdapter.createFromResource(this, R.array.cate_devolucion, android.R.layout.simple_spinner_item);
+        //Añadimos el layout para el TIPO DE OPERACIÓN //CANJE  O DEVOLUCIÓN
+        adapterCategoria.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        //Le indicamos al spinner el adaptador a usar
+        spinnerCategoria.setAdapter(adapterCategoria);
+
 
     }
 

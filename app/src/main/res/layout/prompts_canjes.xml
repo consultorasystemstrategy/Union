@@ -3,7 +3,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/Dark5">
+    android:background="@color/Blanco">
 
     <TextView
         android:layout_width="wrap_content"
@@ -11,7 +11,11 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Ingrese Cantidad"
         android:id="@+id/textView3"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        android:textColor="@color/Dark1"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:textStyle="italic" />
 
     <EditText
         android:layout_width="match_parent"
@@ -21,14 +25,26 @@
         android:id="@+id/cantidad_can_dev_registrado"
         android:layout_gravity="center_horizontal" />
 
-    <Spinner
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/can_dev_tipo_op_registrado" />
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
 
-    <Spinner
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/can_dev_categoria_registrado" />
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/can_dev_categoria_registrado"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:layout_weight="1" />
+
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/can_dev_tipo_op_registrado"
+            android:layout_weight="1"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp" />
+    </LinearLayout>
 
 </LinearLayout>

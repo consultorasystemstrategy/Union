@@ -1100,7 +1100,6 @@ Instantiate and pass a callback
                 diasCredito = spinnerDiasCredito.getSelectedItem().toString();
 
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
@@ -1119,8 +1118,8 @@ Instantiate and pass a callback
 
                 Toast.makeText(mContext.getApplicationContext(), "Crédito solicitado esperar...",Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(mContext, VMovil_Evento_Establec.class);
-                finish();
                 startActivity(intent);
+                finish();
             }
         });
         builder.setView(layout);
@@ -1135,8 +1134,6 @@ Instantiate and pass a callback
         final TextView precio = ((TextView) layout.findViewById(R.id.VCEP_textViewPrecio));
         final TextView devuelto = ((TextView) layout.findViewById(R.id.VCEP_textViewDevuelto));
         final TextView promedioAnterior = ((TextView) layout.findViewById(R.id.VCEP_textViewPromedioAnterior));
-
-
 
         savedText.addTextChangedListener(new TextWatcher() {
             @Override
