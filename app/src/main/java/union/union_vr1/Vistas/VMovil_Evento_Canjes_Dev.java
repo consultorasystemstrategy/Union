@@ -392,23 +392,7 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity implements View.OnClic
 
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.vmovil__facturas__canjes__dev, menu);
-        return true;
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.retrocederActivity:
-             regresar();
-                break;
-        }
-        return true;
-    }
 
     private void regresar(){
       //  Intent i = new Intent(ctx, VMovil_Evento_Establec.class);
@@ -428,7 +412,7 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity implements View.OnClic
                 mostrar.putExtra("idEstablec",establec);
                 mostrar.putExtra("idAgente",idAgente);
                 startActivity(mostrar);
-
+                finish();
                 return true;
 
         }

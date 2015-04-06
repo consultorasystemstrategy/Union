@@ -12,8 +12,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -29,7 +27,6 @@ import union.union_vr1.R;
 import union.union_vr1.Sqlite.CursorAdapter_Facturas_Canjes_Dev;
 import union.union_vr1.Sqlite.DbAdapter_Canjes_Devoluciones;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
-import union.union_vr1.Utils.MyApplication;
 
 import static union.union_vr1.R.layout.*;
 
@@ -120,8 +117,9 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
                             Intent back = new Intent(getApplicationContext(), VMovil_Evento_Canjes_Dev.class);
                             back.putExtra("idEstabX", idEstablec);
                             back.putExtra("idAgente", idAgente);
-                            startActivity(back);
                             finish();
+                            startActivity(back);
+
                         }
                         if (i == 3) {
                             mostrar_alertdialog_spinners(nomProducto);

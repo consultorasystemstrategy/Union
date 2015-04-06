@@ -120,7 +120,7 @@ public class DbAdapter_Canjes_Devoluciones {
         return cr;
     }
     public Cursor listaFacturasByProducto2(int idProducto, int idAgente, String idEstablec) {
-        Cursor cr = mDb.rawQuery("select * from m_histo_venta_detalle where hd_in_id_producto=" + idProducto + " and hd_in_id_agente=" + idAgente + " and hd_in_id_establec='" + idEstablec + "' and hd_in_estado=1 and hd_in_id_detalle !=''", null);
+        Cursor cr = mDb.rawQuery("select * from m_histo_venta_detalle where hd_in_id_producto=" + idProducto + " and hd_in_id_agente=" + idAgente + " and hd_in_id_establec='" + idEstablec + "' and hd_in_estado=1 and hd_in_id_detalle !='' group by hd_in_id_producto", null);
         if (cr != null) {
             cr.moveToFirst();
         } else {
@@ -302,12 +302,8 @@ public class DbAdapter_Canjes_Devoluciones {
         return cr;
     }
     public Cursor obtener_facturas_dev2(int tipo, String idEstablec) {
-        Cursor cr = mDb.rawQuery("select * from  m_histo_venta_detalle where hd_in_id_establec='" + idEstablec + "' and  hg_te_fecha_ope_dev='" + getDatePhone() + "' and hd_te_hora_ope_dev ='pendiente'", null);
-        if (cr != null) {
-            cr.moveToFirst();
-        } else {
-            cr = null;
-        }
+        Cursor cr = mDb.rawQuery("select _id,hd_in_cantidad_ope_dev,hd_te_nom_producto,hd_re_importe_ope_dev from  m_histo_venta_detalle where hd_in_id_establec='" + idEstablec + "' and  hg_te_fecha_ope_dev='" + getDatePhone() + "' and hd_te_hora_ope_dev ='pendiente'", null);
+        //String qu = "select _id,hd_cantidad_ope as hd_in_cantidad_ope_dev,hd_te_nom_producto,hd_re_importe_ope  from  m_histo_venta_detalle where  hd_in_id_tipoper='" + tipo + "' and hd_in_id_establec='" + idEstablec + "' and  hg_te_fecha_ope='" + getDatePhone() + "' and hd_te_hora_ope ='pendiente'";
         return cr;
     }
 
