@@ -9,7 +9,9 @@
         android:orientation="horizontal"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/VC_LayoutParent">
+        android:id="@+id/VC_LayoutParent"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp">
 
         <TextView
             android:layout_width="fill_parent"
@@ -18,15 +20,14 @@
             android:id="@+id/VC_producto"
             android:layout_weight="4"
             android:gravity="left|center_vertical|center" />
-        <EditText
+        <TextView
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:inputType="number"
             android:ems="10"
             android:id="@+id/VC_promedio"
-            android:gravity="left|center_vertical"
             android:layout_weight="6"
-            android:editable="true" />
+            android:gravity="center"
+            android:textStyle="bold" />
 
         <TextView
             android:layout_width="fill_parent"
