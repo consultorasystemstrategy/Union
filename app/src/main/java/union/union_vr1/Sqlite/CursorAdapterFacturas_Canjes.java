@@ -65,7 +65,7 @@ public class CursorAdapterFacturas_Canjes extends CursorAdapter{
                     "\nTot: "+df.format(precio*cursor.getInt(17))+"" +
                     "\nRef: "+idProducto+"";
             textViewTitulo.setText(producto);
-            textViewSubtitulo.setText("Cantidad : "+ cantidad + ", Precio Unitario : S/. "+ precio);
+            textViewSubtitulo.setText("Cantidad : "+ cantidad + ", Precio Unitario : S/. "+ df.format(precio));
             textViewComment.setText("Referencia "+ idProducto);
             textViewMonto.setText("S/. "+df.format(precio*cursor.getInt(17)));
 

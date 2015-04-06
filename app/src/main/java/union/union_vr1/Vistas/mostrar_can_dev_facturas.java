@@ -391,7 +391,7 @@ public class mostrar_can_dev_facturas extends TabActivity {
         alertDialogBuilder.setTitle("¿Regresar?");
 
         AlertDialog.Builder builder = alertDialogBuilder
-                .setMessage("Ten en Cuenta que tienes que Realizar alguna Operacion")
+                .setMessage("Debe guardar los Canjes/Devoluciones.")
                 .setCancelable(false)
                 .setPositiveButton("Regresar", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
@@ -449,10 +449,11 @@ public class mostrar_can_dev_facturas extends TabActivity {
 
         Cursor cr = dbHelper_CanDev.obtener_facturas_dev2(2,idEstablec);
         String texto = "";
+        Log.e("errores","0");
 
         while(cr.moveToNext()){
-            Log.e("Errores", "" + "" + cr.getString(25) + " " + cr.getString(9) + "\n");
-            texto=texto+("" + cr.getString(25) + " " + cr.getString(9) + "\n");
+            Log.e("Errores", "" + "" + cr.getString(cr.getColumnIndexOrThrow("hd_in_cantidad_ope_dev")) + " " + cr.getString(cr.getColumnIndexOrThrow("hd_te_nom_producto")) + "\n");
+            texto=texto+("" + cr.getString(cr.getColumnIndexOrThrow("hd_in_cantidad_ope_dev")) + " " + cr.getString(cr.getColumnIndexOrThrow("hd_te_nom_producto")) + "\n");
 
         }
 
@@ -467,7 +468,7 @@ public class mostrar_can_dev_facturas extends TabActivity {
         String texto = "";
 
         while(cr.moveToNext()){
-            Double total=cr.getDouble(27);
+            Double total=cr.getDouble(cr.getColumnIndexOrThrow("hd_re_importe_ope_dev"));
            // Log.e("Errores", "" + "" + cr.getString(25) + " " + cr.getString(9) + "\n");
             texto=texto+("" +df.format(total)+ "\n");
 
@@ -494,6 +495,7 @@ public class mostrar_can_dev_facturas extends TabActivity {
                     i.putExtra("textoImpresionContenidoRight", rigth());
 
                     startActivity(i);
+                    finish();
 
                 }else{
                     Toast.makeText(getApplicationContext(),"Usted no Puede Imprimir Canjes",Toast.LENGTH_SHORT).show();
