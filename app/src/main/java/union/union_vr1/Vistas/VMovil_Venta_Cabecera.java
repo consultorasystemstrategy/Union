@@ -808,7 +808,7 @@ Instantiate and pass a callback
                                                             // FIRE ZE MISSILES!
                                                             boolean succesful = dbHelper_temp_venta.deleteTempVentaDetalleById(id_tem_detalle);
                                                             if (succesful) {
-                                                                Toast.makeText(getApplicationContext(), "Producto eliminado de la venta actual correctamente", Toast.LENGTH_LONG).show();
+                                                                Toast.makeText(getApplicationContext(), "Eliminado", Toast.LENGTH_LONG).show();
                                                                 /*finish();
                                                                 Intent intent = new Intent(mContext, VMovil_Venta_Cabecera.class);
                                                                 startActivity(intent);*/
@@ -864,9 +864,17 @@ Instantiate and pass a callback
             if (barcodeScan!=null){
 
                 mCursorScannerProducto = dbHelper_Precio.getProductoByCodigo(id_categoria_establecimiento, barcodeScan, idLiquidacion);
+                mCursorScannerProducto.moveToFirst();
 
                 if (mCursorScannerProducto.getCount()>0){
-                    scannerDialog().show();
+                    id_producto  = mCursorScannerProducto.getInt(mCursorScannerProducto.getColumnIndexOrThrow(DbAdapter_Precio.PR_id_producto));
+                    Cursor mCursorPrecioUnitarioGeneral = dbHelper_Precio.fetchAllPrecioByIdProductoAndCategoeria(id_producto,id_categoria_establecimiento);
+                    if (mCursorPrecioUnitarioGeneral.getCount()>1){
+                        scannerDialogValorUnidad().show();
+                    }else{
+                        scannerDialog().show();
+                    }
+
                 }else {
                     Toast.makeText(getApplicationContext(), "Producto con código de barras : "+ barcodeScan + "no disponible en el Stock Actual y/o Categoría establecimiento", Toast.LENGTH_SHORT).show();;
                 }
@@ -947,13 +955,129 @@ Instantiate and pass a callback
                 //En una tabla "Temp_Venta" Nos sirve para agregar datos del historial de ventas anteriores y sugerir al usuario, estos son datos temporales
                 long id = dbHelper_temp_venta.createTempVentaDetalle(1,finalIdProducto, finalNombreP,cantidad,total_importe, precio_unitario, promedio_anterior, devuelto, procedencia, 1);
 
-                Intent intent = new Intent(mContext, VMovil_Venta_Cabecera_AgregarProductos.class);
-                finish();
-                startActivity(intent);
+                mostrarProductosParaVender();
             }
         });
         builder.setView(layout);
         return builder.create();
+    }
+    private Dialog scannerDialogValorUnidad(){
+            final View layout = View.inflate(this, R.layout.dialog_cantidad_productos_valor_unidad, null);
+
+            DecimalFormat df = new DecimalFormat("#.00");
+            final EditText savedText = ((EditText) layout.findViewById(R.id.VCAP_editTextCantidad));
+            final TextView nombreProducto = ((TextView) layout.findViewById(R.id.VCPA_textView2NombreProducto));
+            final TextView precio = ((TextView) layout.findViewById(R.id.VCPA_textViewPrecio));
+            final TextView valorUnidad = (TextView) layout.findViewById(R.id.VCPA_textViewValorUnidad);
+
+            final double[] precio_unitario = {0.0};
+
+            final Cursor mCursorPrecioUnitarioGeneral = dbHelper_Precio.fetchAllPrecioByIdProductoAndCategoeria(id_producto,id_categoria_establecimiento);
+            mCursorPrecioUnitarioGeneral.moveToFirst();
+
+            if (mCursorPrecioUnitarioGeneral.getCount()>0) {
+                precio_unitario[0] = mCursorPrecioUnitarioGeneral.getDouble(mCursorPrecioUnitarioGeneral.getColumnIndexOrThrow(DbAdapter_Precio.PR_precio_unit));
+                valor_unidad = mCursorPrecioUnitarioGeneral.getInt(mCursorPrecioUnitarioGeneral.getColumnIndexOrThrow(DbAdapter_Precio.PR_valor_unidad));
+                nombre = mCursorPrecioUnitarioGeneral.getString(mCursorPrecioUnitarioGeneral.getColumnIndexOrThrow(DbAdapter_Precio.PR_nombreProducto));
+                precio.setText("Precio : S/. "+ df.format(precio_unitario[0]));
+                valorUnidad.setText("Unidad : "+valor_unidad);
+            }else{
+                precio.setText("Precio : S/. No encontrado");
+            }
+            nombreProducto.setText(nombre);
+
+
+            valorUnidad.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = mCursorPrecioUnitarioGeneral.getPosition();
+                    //Toast.makeText(getApplicationContext(), "Position del cursor Valor Unidad "+position, Toast.LENGTH_SHORT).show();
+
+                    if (mCursorPrecioUnitarioGeneral.isLast()){
+                        mCursorPrecioUnitarioGeneral.moveToFirst();
+                    }else{
+                        mCursorPrecioUnitarioGeneral.moveToNext();
+                    }
+                    precio_unitario[0] = mCursorPrecioUnitarioGeneral.getDouble(mCursorPrecioUnitarioGeneral.getColumnIndexOrThrow(DbAdapter_Precio.PR_precio_unit));
+                    valor_unidad = mCursorPrecioUnitarioGeneral.getInt(mCursorPrecioUnitarioGeneral.getColumnIndexOrThrow(DbAdapter_Precio.PR_valor_unidad));
+                    DecimalFormat df = new DecimalFormat("#.00");
+                    precio.setText("Precio : S/. "+ df.format(precio_unitario[0]));
+                    valorUnidad.setText("Unidad : "+valor_unidad);
+
+
+                }
+            });
+
+
+            Cursor mCursorStock = dbHelper_Stock_Agente.fetchByIdProducto(id_producto,idLiquidacion);
+            int maximoValor = 1;
+            if (mCursorStock.getCount()>0){
+                maximoValor = mCursorStock.getInt(mCursorStock.getColumnIndexOrThrow(dbHelper_Stock_Agente.ST_disponible));
+            }
+
+            savedText.setFilters(new InputFilter[]{new InputFilterMinMax(0,maximoValor)});
+
+
+
+
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Cantidad");
+            final int finalMaximoValor = maximoValor;
+            builder.setPositiveButton("OK", new Dialog.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    String texto = savedText.getText().toString().trim();
+                    if(texto.equals("")){
+                        texto = "1";
+                    }
+
+                    cantidad = Integer.parseInt(texto);
+
+                    //Toast.makeText(getApplicationContext(),"Cantidad : "+cantidad + " id_producto : "+ id_producto + "Precio Unitario : " +precio_unitario[0] + "Valor Unidad : "+ valor_unidad,Toast.LENGTH_LONG).show();
+
+                    Cursor mCursorPrecioUnitario = dbHelper_Precio.fetchAllPrecioByIdProductoAndCantidadAndValorUnidad(id_producto,cantidad, id_categoria_establecimiento,valor_unidad);
+
+                    if (mCursorPrecioUnitario.getCount()!=0){
+                        precio_unitario[0] = mCursorPrecioUnitario.getDouble(mCursorPrecioUnitario.getColumnIndex(DbAdapter_Precio.PR_precio_unit));
+                    }else{
+                    /*
+                    Cursor mCursorPrecioUnitarioGeneral = dbHelper_Precio.fetchAllPrecioByIdProductoAndCategoeria(id_producto,id_categoria_establecimiento);
+                    mCursorPrecioUnitarioGeneral.moveToFirst();
+                    if (mCursorPrecioUnitarioGeneral.getCount()>0) {
+                        precio_unitario = mCursorPrecioUnitarioGeneral.getDouble(mCursorPrecioUnitarioGeneral.getColumnIndexOrThrow(DbAdapter_Precio.PR_precio_unit));
+                    }else{
+                        Toast.makeText(getApplicationContext(), "No se encontró un precio para esta cantidad de productos, agregar el precio a la base de datos", Toast.LENGTH_LONG).show();;
+                    }*/
+                    }
+
+                    double total_importe = precio_unitario[0]*cantidad;
+                    String promedio_anterior = null;
+                    String devuelto = null;
+
+                    //En una tabla "Temp_Venta" Nos sirve para agregar datos del historial de ventas anteriores y sugerir al usuario, estos son datos temporales
+                    long id = dbHelper_temp_venta.createTempVentaDetalle(1,id_producto,nombre,cantidad,total_importe, precio_unitario[0], promedio_anterior, devuelto, procedencia, valor_unidad);
+                    //softKeyboard.closeSoftKeyboard();
+
+
+                    mostrarProductosParaVender();
+                }
+            });
+            builder.setView(layout);
+
+            final AlertDialog alertDialog = builder.create();
+            savedText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    if (hasFocus) {
+                        Log.d("FOCUS","ALERT YES");
+                        alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                    }else{
+                        Log.d("FOCUS","ALERT FALSE");
+                        alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+                    }
+                }
+            });
+            return alertDialog;
     }
     private Dialog dialogSolicitarCredito() {
 

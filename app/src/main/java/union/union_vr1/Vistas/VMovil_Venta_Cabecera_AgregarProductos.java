@@ -81,17 +81,17 @@ public class VMovil_Venta_Cabecera_AgregarProductos extends Activity implements 
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_vmovil__venta__cabecera__agregar_productos);
-        session =  new DbAdapter_Temp_Session(this);
-        session.open();
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_vmovil__venta__cabecera__agregar_productos);
+            session =  new DbAdapter_Temp_Session(this);
+            session.open();
 
-        mContext = this;
-        this.mainActivity = this;
-        dbHelper_Stock_Agente = new DbAdapter_Stock_Agente(this);
-        dbHelper_Stock_Agente.open();
+            mContext = this;
+            this.mainActivity = this;
+            dbHelper_Stock_Agente = new DbAdapter_Stock_Agente(this);
+            dbHelper_Stock_Agente.open();
 
         dbAdapter_temp_barcode_scanner = new DbAdapter_Temp_Barcode_Scanner(this);
         dbAdapter_temp_barcode_scanner.open();

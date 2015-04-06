@@ -7,7 +7,7 @@
     android:paddingLeft="8dp">
 
     <ScrollView
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content">
 
         <LinearLayout
@@ -18,7 +18,8 @@
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginRight="8dp">
 
                 <AutoCompleteTextView
                     android:layout_width="fill_parent"
@@ -29,7 +30,7 @@
                     android:paddingBottom="8dp"
                     />
                 <ListView
-                    android:layout_width="wrap_content"
+                    android:layout_width="fill_parent"
                     android:layout_height="320dp"
                     android:id="@+id/VC_listView"
                     android:minHeight="320dp" />
@@ -40,7 +41,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/layoutSpinner"
-                android:paddingRight="8dp">
+                android:layout_marginRight="8dp">
 
                 <Spinner
                     android:layout_width="fill_parent"
@@ -63,7 +64,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/layoutButton"
                 android:minHeight="64dp"
-                android:paddingRight="8dp">
+                android:layout_marginRight="8dp">
 
                 <!--
                 <Button

@@ -499,6 +499,13 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
                 if (cursorEstablecimiento.getCount()>0){
                     cursorEstablecimiento.moveToFirst();
                     Toast.makeText(getApplicationContext(),"ESTABLECIMIENTO SCANEADO: "+cursorEstablecimiento.getString(cursorEstablecimiento.getColumnIndexOrThrow(dbHelper.EE_nom_establec)),Toast.LENGTH_LONG).show();
+                    int idEstablecimiento = cursorEstablecimiento.getInt(cursorEstablecimiento.getColumnIndexOrThrow(dbHelper.EE_id_establec));
+
+                    session.deleteVariable(2);
+                    session.createTempSession(2,idEstablecimiento);
+
+                    Intent intent1 = new Intent(mainActivity, VMovil_Evento_Establec.class);
+                    startActivity(intent1);
                 }else {
                     Toast.makeText(getApplicationContext(), "No encontrado", Toast.LENGTH_SHORT).show();
                 }
@@ -555,7 +562,7 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         }
         if (cursor.getCount() <= 0) {
             //verde
-            Toast.makeText(getApplicationContext(), "No hay Deudas Por Cobrar", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getApplicationContext(), "No hay Deudas Por Cobrar", Toast.LENGTH_SHORT).show();
             btn.setBackground(getApplicationContext().getResources().getDrawable(R.drawable.border_right_green));
         }
 

@@ -26,7 +26,7 @@
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="Ini/Fin"
+                android:text="Inicio"
                 android:id="@+id/VRC_TXinicialFin"
                 android:textStyle="bold|italic"
                 android:textColor="@color/Personalizado4" />
