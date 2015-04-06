@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -25,12 +26,14 @@ import java.util.ArrayList;
 
 import union.union_vr1.R;
 import union.union_vr1.Sqlite.CursorAdapter_Facturas_Canjes_Dev;
+import union.union_vr1.Sqlite.CursorAdapter_No_Encontrado;
 import union.union_vr1.Sqlite.DbAdapter_Canjes_Devoluciones;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 
 import static union.union_vr1.R.layout.*;
 
 public class VMovil_Facturas_Canjes_Dev extends Activity {
+    View layoutNoEncontrado;
     private int idProducto;
     private DbAdapter_Canjes_Devoluciones dbHelperCanjes_Dev;
     private ListView listaFacturas;
@@ -104,29 +107,41 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
     private void listarFacturas_Productos(int producto, final int idAgente, final String idEstablec, final String nomProducto) {
         Cursor cr = dbHelperCanjes_Dev.listaFacturasByProducto(producto, idAgente, idEstablec);
 
+
+        layoutNoEncontrado= View.inflate(this, R.layout.info_producto_no_encontrado, null);
         if (cr.moveToFirst()) {
             if (cr.getString(10) == null || cr.getString(10).equals("")) {
 
-                String[] noEncontrado = {"Producto No encontrado:", "Detalle: " + nomProducto + "", "¿Ingresar Comprobante de Venta?", "Yes", "No"};
+
+
+                ArrayList<String> noEncontrado = new ArrayList<String>();
+                noEncontrado.add("");
+
+
                 ArrayAdapter adapter = new ArrayAdapter(getApplicationContext(), android.R.layout.simple_dropdown_item_1line, noEncontrado);
                 listaFacturas.setAdapter(adapter);
-                listaFacturas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                View noE =   View.inflate(this, R.layout.info_producto_no_encontrado, null);
+                final Button btnRegresar = (Button) noE.findViewById(R.id.btn_regresar);
+                btnRegresar.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                        if (i == 4) {
-                            Intent back = new Intent(getApplicationContext(), VMovil_Evento_Canjes_Dev.class);
-                            back.putExtra("idEstabX", idEstablec);
-                            back.putExtra("idAgente", idAgente);
-                            finish();
-                            startActivity(back);
+                    public void onClick(View view) {
 
-                        }
-                        if (i == 3) {
-                            mostrar_alertdialog_spinners(nomProducto);
-                        }
-
+                        Intent back = new Intent(getApplicationContext(), VMovil_Evento_Canjes_Dev.class);
+                        back.putExtra("idEstabX", idEstablec);
+                        back.putExtra("idAgente", idAgente);
+                        startActivity(back);
+                        finish();
                     }
                 });
+                final Button btnAgregar = (Button) noE.findViewById(R.id.btn_agregar);
+                btnAgregar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        mostrar_alertdialog_spinners(nomProducto);
+                    }
+                });
+                listaFacturas.addHeaderView(noE);
 
             } else {
                 TextView vieFooter = (TextView) getLayoutInflater().inflate(R.layout.agregar_otro, null);
@@ -161,26 +176,35 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
             }
 
         } else {
+            ArrayList<String> noEncontrado = new ArrayList<String>();
+            noEncontrado.add("");
 
-            String[] noEncontrado = {"Producto No encontrado:", "Detalle: " + nomProducto + "", "¿Ingresar Comprobante de Venta?", "Yes", "No"};
+
             ArrayAdapter adapter = new ArrayAdapter(getApplicationContext(), android.R.layout.simple_dropdown_item_1line, noEncontrado);
             listaFacturas.setAdapter(adapter);
-            listaFacturas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            View noE =   View.inflate(this, R.layout.info_producto_no_encontrado, null);
+            final Button btnRegresar = (Button) noE.findViewById(R.id.btn_regresar);
+            btnRegresar.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    if (i == 4) {
-                        Intent back = new Intent(getApplicationContext(), VMovil_Evento_Canjes_Dev.class);
-                        back.putExtra("idEstabX", idEstablec);
-                        back.putExtra("idAgente", idAgente);
-                        startActivity(back);
-                        finish();
-                    }
-                    if (i == 3) {
-                        mostrar_alertdialog_spinners(nomProducto);
-                    }
+                public void onClick(View view) {
 
+                    Intent back = new Intent(getApplicationContext(), VMovil_Evento_Canjes_Dev.class);
+                    back.putExtra("idEstabX", idEstablec);
+                    back.putExtra("idAgente", idAgente);
+                    startActivity(back);
+                    finish();
                 }
             });
+            final Button btnAgregar = (Button) noE.findViewById(R.id.btn_agregar);
+            btnAgregar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    mostrar_alertdialog_spinners(nomProducto);
+                }
+            });
+            listaFacturas.addHeaderView(noE);
+
         }
 
 
