@@ -172,8 +172,16 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
                             mostrar_alertdialog_spinners_regitrados_dev(cursor);
                             Toast.makeText(getApplicationContext(), "Tiene Stock 0", Toast.LENGTH_SHORT).show();
                         } else {
-                            int canjes = cursor.getInt(cursor.getColumnIndexOrThrow("hd_in_cantidad_ope"));
-                            int devoluciones = cursor.getInt(cursor.getColumnIndexOrThrow("hd_in_cantidad_ope_dev"));
+                            int canjes = 0;
+                            if(cursor.getString(cursor.getColumnIndexOrThrow("hd_in_cantidad_ope"))!=null){
+                               canjes = cursor.getInt(cursor.getColumnIndexOrThrow("hd_in_cantidad_ope"));
+                            }
+
+                            int devoluciones = 0;
+
+                            if(cursor.getString(cursor.getColumnIndexOrThrow("hd_in_cantidad_ope_dev"))!=null){
+                              devoluciones = cursor.getInt(cursor.getColumnIndexOrThrow("hd_in_cantidad_ope_dev"));
+                            }
                             int sumacandev  = canjes+devoluciones;
                             int total = cursor.getInt(cursor.getColumnIndexOrThrow("hd_in_cantidad"));
                             if(total-sumacandev==0) {
@@ -231,7 +239,6 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
         devueltoV = cursor.getInt(17) + cursor.getInt(25);
         final int dev = cursor.getInt(25);
         final int can = cursor.getInt(17);
-
         String cantidad = cursor.getString(10);
         final String idDetalle = cursor.getString(1);
         String comprobante = cursor.getString(7);
@@ -515,16 +522,19 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
     //Cuando no se encuentran los registros
     private void mostrar_alertdialog_spinners_dev(String producto) {
 
+
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("" + nomProducto + "");
         final View layout_spinners = View.inflate(this, R.layout.prompts, null);
-
+        final EditText vUnidad = (EditText) layout_spinners.findViewById(R.id.EditUnidadValor);
         final EditText nroCompro = (EditText) layout_spinners.findViewById(R.id.comprob_clave_dev_can);
         final EditText nroLote = (EditText) layout_spinners.findViewById(R.id.lote_can_dev);
         final EditText cantidadText = (EditText) layout_spinners.findViewById(R.id.cantidad_can_dev);
         final Spinner spinnerTipoOp = (Spinner) layout_spinners.findViewById(R.id.can_dev_tipo_op);
         final Spinner spinnerCategoria = (Spinner) layout_spinners.findViewById(R.id.can_dev_categoria);
-
+        vUnidad.setText("HolaMundo");
+        Log.e("errorValor Unidad",valorUnidad);
         nroCompro.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
@@ -601,7 +611,7 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
 
                         } else {
                             int position = spinnerTipoOp.getSelectedItemPosition();
-                            Log.e("Posicion",""+position);
+                           // Log.e("Posicion",""+position);
                             if(position==0){
                                 if(stock>0){
                                     registrarNuevo_Comprobante(compro, lote, cantidad, tipo_op, categoria_op);
@@ -640,13 +650,13 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("" + nomProducto + "");
         final View layout_spinners = View.inflate(this, R.layout.prompts, null);
-
+        final EditText vUnidad = (EditText) layout_spinners.findViewById(R.id.EditUnidadValor);
         final EditText nroCompro = (EditText) layout_spinners.findViewById(R.id.comprob_clave_dev_can);
         final EditText nroLote = (EditText) layout_spinners.findViewById(R.id.lote_can_dev);
         final EditText cantidadText = (EditText) layout_spinners.findViewById(R.id.cantidad_can_dev);
         final Spinner spinnerTipoOp = (Spinner) layout_spinners.findViewById(R.id.can_dev_tipo_op);
         final Spinner spinnerCategoria = (Spinner) layout_spinners.findViewById(R.id.can_dev_categoria);
-
+        vUnidad.setText(valorUnidad);
 
 
         nroCompro.addTextChangedListener(new TextWatcher() {
@@ -812,7 +822,7 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
         //Evaluando tipo de Operacion:
         if (tipo_op.equals("Canje")) {
             idTipo_Op = 1;
-            Log.d("MasParametros", "[" + idEstablec + "-" + idProducto + "-" + idTipo_Op + "-" + compro + "-" + nomEstablecimiento + "-" + idCat_tipo + "-" + cantidad2 + "-" + importe * cantidad2 + "-" + lote + "-" + idAgente + importe);
+           // Log.d("MasParametros", "[" + idEstablec + "-" + idProducto + "-" + idTipo_Op + "-" + compro + "-" + nomEstablecimiento + "-" + idCat_tipo + "-" + cantidad2 + "-" + importe * cantidad2 + "-" + lote + "-" + idAgente + importe);
             boolean estado = dbHelperCanjes_Dev.insertarCanjes(idEstablec, idProducto, idTipo_Op, compro, nomEstablecimiento, nomProducto, idCat_tipo, cantidad2, importe * cantidad2, lote, idAgente, liquidacion, valorUnidad);
             if (estado) {
                 confirmar();
