@@ -297,8 +297,9 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity implements View.OnClic
                 int cantProductos = cr.getInt(cr.getColumnIndexOrThrow(DbAdapter_Histo_Venta_Detalle.HD_cantidad_ope));
                 String datos = cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Histo_Venta_Detalle.HD_nom_producto));
                 Log.e("datos",""+datos);
-                Toast.makeText(getApplicationContext(),"ID"+idHistoVenta,Toast.LENGTH_LONG).show();
+               // Toast.makeText(getApplicationContext(),"ID"+idHistoVenta,Toast.LENGTH_LONG).show();
                 select("1","Canje",idHistoVenta,idProducto,idHistoDetalle,cantProductos);
+
                 return false;
             }
         });
@@ -395,11 +396,8 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity implements View.OnClic
 
 
     private void regresar(){
-      //  Intent i = new Intent(ctx, VMovil_Evento_Establec.class);
-      //  i.putExtra("idEstab", establec);
-      //  i.putExtra("idAgente", idAgente);
-       // this.startActivity(i);
-       // finish();
+        listar_Facturas_dev();
+        listar_Facturas_can();
     }
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {

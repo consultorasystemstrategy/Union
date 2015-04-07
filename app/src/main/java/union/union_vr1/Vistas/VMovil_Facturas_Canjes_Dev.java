@@ -152,6 +152,7 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
                 vieFooter.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+
                         if (stock == 0) {
                             Toast.makeText(getApplicationContext(), "Tiene Stock 0", Toast.LENGTH_SHORT).show();
                             mostrar_alertdialog_spinners_dev(nomProducto);
@@ -171,7 +172,16 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
                             mostrar_alertdialog_spinners_regitrados_dev(cursor);
                             Toast.makeText(getApplicationContext(), "Tiene Stock 0", Toast.LENGTH_SHORT).show();
                         } else {
-                            mostrar_alertdialog_spinners_regitrados(cursor);
+                            int canjes = cursor.getInt(cursor.getColumnIndexOrThrow("hd_in_cantidad_ope"));
+                            int devoluciones = cursor.getInt(cursor.getColumnIndexOrThrow("hd_in_cantidad_ope_dev"));
+                            int sumacandev  = canjes+devoluciones;
+                            int total = cursor.getInt(cursor.getColumnIndexOrThrow("hd_in_cantidad"));
+                            if(total-sumacandev==0) {
+                                Toast.makeText(getApplicationContext(),"Ya no puede realizar mas operaciones",Toast.LENGTH_SHORT).show();
+                            }else{
+                                mostrar_alertdialog_spinners_regitrados(cursor);
+                            }
+
                         }
                     }
                 });

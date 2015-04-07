@@ -245,7 +245,7 @@ public class mostrar_can_dev_facturas extends TabActivity {
                         if (operacion == 2) {
                             boolean estado = dbHelper_CanDev.guardarCambios_dev(idGuia, idEstablec);
                             if (estado) {
-                                Toast.makeText(getApplicationContext(),""+idGuia,Toast.LENGTH_SHORT).show();
+                               // Toast.makeText(getApplicationContext(),""+idGuia,Toast.LENGTH_SHORT).show();
                                 exito();
                             } else {
                                 Toast.makeText(getApplicationContext(), "Ocurrio un Error", Toast.LENGTH_SHORT).show();
@@ -254,7 +254,7 @@ public class mostrar_can_dev_facturas extends TabActivity {
                         if (operacion == 1) {
                             boolean estado = dbHelper_CanDev.guardarCambios(operacion, idEstablec,idGuia,liquidacion);
                             if (estado) {
-                                Toast.makeText(getApplicationContext(),""+idGuia,Toast.LENGTH_SHORT).show();
+                               // Toast.makeText(getApplicationContext(),""+idGuia,Toast.LENGTH_SHORT).show();
                                 exito();
                             } else {
                                 Toast.makeText(getApplicationContext(), "Ocurrio un Error", Toast.LENGTH_SHORT).show();

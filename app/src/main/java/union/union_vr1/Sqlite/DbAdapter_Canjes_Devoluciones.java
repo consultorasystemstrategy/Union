@@ -245,7 +245,7 @@ public class DbAdapter_Canjes_Devoluciones {
     }
 
     public Cursor obtener_facturas_can(String idEstablec) {
-        Cursor cr = mDb.rawQuery("select * from m_histo_venta_detalle where hd_in_id_establec='" + idEstablec + "'  and hd_te_hora_ope='pendiente' and hd_in_id_tipoper='1' and  hg_te_fecha_ope='" + getDatePhone() + "';", null);
+        Cursor cr = mDb.rawQuery("select * from m_histo_venta_detalle where hd_in_id_establec='" + idEstablec + "'  and hd_te_hora_ope='pendiente' and hd_in_id_tipoper='1' and  hg_te_fecha_ope='" + getDatePhone() + "' group by hd_in_id_producto;", null);
         if (cr != null) {
            cr.moveToFirst();
         } else {
@@ -255,7 +255,7 @@ public class DbAdapter_Canjes_Devoluciones {
     }
 
     public Cursor obtener_facturas_dev(String idEstablec) {
-        Cursor cr = mDb.rawQuery("select * from m_histo_venta_detalle where hd_in_id_establec='" + idEstablec + "'  and hd_te_hora_ope_dev='pendiente' and  hg_te_fecha_ope_dev='" + getDatePhone() + "';", null);
+        Cursor cr = mDb.rawQuery("select * from m_histo_venta_detalle where hd_in_id_establec='" + idEstablec + "'  and hd_te_hora_ope_dev='pendiente' and  hg_te_fecha_ope_dev='" + getDatePhone() + "' group by hd_in_id_producto;", null);
         if (cr != null) {
             cr.moveToFirst();
         } else {
