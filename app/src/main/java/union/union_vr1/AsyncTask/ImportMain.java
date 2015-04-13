@@ -382,9 +382,9 @@ public class ImportMain extends AsyncTask<String, String, String> {
 
 
 
-                    Log.d("IMPORT RUTA SEMANAL DATOS", diaSemana + " - " + nombre + " - " + numeroEstablecimiento + " - "+ idAgente);
+                    Log.d("IMPORT RUTA ", diaSemana + " - " + nombre + " - " + numeroEstablecimiento + " - "+ idAgente);
                     long idRutaInsertada = dbAdapter_ruta_distribucion.createRutaDistribucion(id, idRuta, nombre, diaSemana, numeroEstablecimiento, idAgente);
-                    Log.d("IMPORT ID RUTA INSERTADA", ""+ idRutaInsertada);
+                    Log.d("IMPORT ID RUTA ins", ""+ idRutaInsertada);
 
                 }
 

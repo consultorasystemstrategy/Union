@@ -82,6 +82,7 @@ import union.union_vr1.VMovil_BluetoothImprimir;
 public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
 
 
+
     private DbAdapter_Temp_Session session;
 
     private DbAdapter_Histo_Comprob_Anterior dbHelper_Histo_comprob_anterior;
@@ -251,6 +252,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
     private DbAdaptert_Evento_Establec dbAdaptert_evento_establec;
     private DbAdapter_Comprob_Venta dbAdapter_comprob_venta;
 
+
     @Override
     protected void onDestroy() {
         exportMain.dismissProgressDialog();
@@ -278,12 +280,12 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
                        dbHelper_temp_venta.deleteAllTempVentaDetalle();
                        //((MyApplication)mContext.getApplicationContext()).setDisplayedHistorialComprobanteAnterior(false);
                        session.deleteVariable(6);
-                       session.createTempSession(6,0);
+                       session.createTempSession(6, 0);
                        session.deleteVariable(5);
-                       session.createTempSession(5,0);
+                       session.createTempSession(5, 0);
 
                        finish();
-                       Intent intent = new Intent(main,clase);
+                       Intent intent = new Intent(main, clase);
                        startActivity(intent);
                    }
                }).create();
@@ -1841,9 +1843,8 @@ Instantiate and pass a callback
         valorUnidad.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int position = mCursorPrecioUnitarioGeneral.getPosition();
+                //int position = mCursorPrecioUnitarioGeneral.getPosition();
                 //Toast.makeText(getApplicationContext(), "Position del cursor Valor Unidad "+position, Toast.LENGTH_SHORT).show();
-
                 if (mCursorPrecioUnitarioGeneral.isLast()){
                     mCursorPrecioUnitarioGeneral.moveToFirst();
                 }else{
