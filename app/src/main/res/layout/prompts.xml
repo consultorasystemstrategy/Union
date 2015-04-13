@@ -3,7 +3,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/Blanco">
+    android:background="@color/Blanco"
+    android:weightSum="1">
 
     <LinearLayout
         android:orientation="horizontal"
@@ -11,11 +12,37 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp">
 
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Unidad Valor"
+                android:id="@+id/textViewUnidadValor"
+                android:layout_gravity="left|center_horizontal"
+                android:textColor="@color/Dark1"
+                android:textSize="12sp"
+                android:layout_marginLeft="8dp"/>
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/EditUnidadValor"
+                android:editable="false"
+                android:layout_gravity="center_horizontal" />
+
+            </LinearLayout>
+
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1">
+
 
             <TextView
                 android:layout_width="wrap_content"
@@ -26,7 +53,7 @@
                 android:layout_gravity="left|center_horizontal"
                 android:textColor="@color/Dark1"
                 android:textSize="12sp"
-                android:layout_marginLeft="8dp" />
+                android:layout_marginLeft="8dp"/>
 
             <EditText
                 android:layout_width="match_parent"
