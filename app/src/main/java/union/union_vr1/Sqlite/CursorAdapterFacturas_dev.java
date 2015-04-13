@@ -48,11 +48,11 @@ public class CursorAdapterFacturas_dev extends CursorAdapter {
         if (cursor.getCount()>0){
 
 
-            String producto = cursor.getString(9);
-            String cantidad = cursor.getString(25);
-            String precio = cursor.getString(27);
+            String producto = cursor.getString(cursor.getColumnIndexOrThrow("hd_te_nom_producto"));
+            String cantidad = cursor.getString(cursor.getColumnIndexOrThrow("hd_in_cantidad_ope_dev"));
+            String precio = cursor.getString(cursor.getColumnIndexOrThrow("hd_re_importe_ope_dev"));
             String acc = "2";
-            String mot = cursor.getString(26);
+            String mot = cursor.getString(cursor.getColumnIndexOrThrow("hd_in_categoria_ope_dev"));
 
             if (acc.equals("1")) {
                 acc = "Canje";

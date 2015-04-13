@@ -1,17 +1,14 @@
 package union.union_vr1.Vistas;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -22,12 +19,9 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.util.ArrayList;
-
 import union.union_vr1.R;
 import union.union_vr1.Sqlite.CursorAdapter_Facturas_Canjes_Dev;
-import union.union_vr1.Sqlite.CursorAdapter_No_Encontrado;
 import union.union_vr1.Sqlite.DbAdapter_Canjes_Devoluciones;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 
@@ -155,7 +149,7 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
 
                         if (stock == 0) {
                             Toast.makeText(getApplicationContext(), "Tiene Stock 0", Toast.LENGTH_SHORT).show();
-                            mostrar_alertdialog_spinners_dev(nomProducto);
+                            //mostrar_alertdialog_spinners_dev(nomProducto);
                         } else {
                             mostrar_alertdialog_spinners(nomProducto);
                         }
@@ -520,7 +514,7 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
     }
 
     //Cuando no se encuentran los registros
-    private void mostrar_alertdialog_spinners_dev(String producto) {
+   /* private void mostrar_alertdialog_spinners_dev(String producto) {
 
 
 
@@ -643,10 +637,10 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
         //Le indicamos al spinner el adaptador a usar
         spinnerCategoria.setAdapter(adapterCategoria);
 
-    }
+    }*/
 
     private void mostrar_alertdialog_spinners(String producto) {
-
+        int liquidacion = dbAdapter_temp_session.fetchVarible(3);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("" + nomProducto + "");
         final View layout_spinners = View.inflate(this, R.layout.prompts, null);
@@ -656,7 +650,31 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
         final EditText cantidadText = (EditText) layout_spinners.findViewById(R.id.cantidad_can_dev);
         final Spinner spinnerTipoOp = (Spinner) layout_spinners.findViewById(R.id.can_dev_tipo_op);
         final Spinner spinnerCategoria = (Spinner) layout_spinners.findViewById(R.id.can_dev_categoria);
-        vUnidad.setText(valorUnidad);
+        final Cursor cursor = dbHelperCanjes_Dev.getUnidadMedida(idProducto+"",liquidacion);
+        final String[] precioValor = new String[1];
+        if(cursor.getCount()==1){
+            cursor.moveToFirst();
+            valorUnidad=cursor.getString(cursor.getColumnIndexOrThrow("valorUnidad"));
+            vUnidad.setText(cursor.getString(cursor.getColumnIndexOrThrow("valorUnidad")));
+            precioValor[0] =cursor.getString(cursor.getColumnIndexOrThrow("pr_re_precio_unit"));
+        }else{
+        cursor.moveToFirst();
+        vUnidad.setText(cursor.getString(cursor.getColumnIndexOrThrow("valorUnidad")));
+        vUnidad.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (cursor.isLast()){
+                    cursor.moveToFirst();
+                }else{
+                    cursor.moveToNext();
+                }
+                precioValor[0] = cursor.getString(cursor.getColumnIndexOrThrow("pr_re_precio_unit"));
+                valorUnidad=cursor.getString(cursor.getColumnIndexOrThrow("valorUnidad"));
+                vUnidad.setText(cursor.getInt(cursor.getColumnIndexOrThrow("valorUnidad")) + "");
+
+            }
+        });
+        }
 
 
         nroCompro.addTextChangedListener(new TextWatcher() {
@@ -762,14 +780,15 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
                             Log.e("posicion",": "+position);
                             if(position==0){
                                 if(stock>0){
-                                    registrarNuevo_Comprobante(compro, lote, cantidad, tipo_op, categoria_op);
+
+                                    registrarNuevo_Comprobante(compro, lote, cantidad+"", tipo_op, categoria_op,precioValor[0]);
                                 }else{
                                     Toast.makeText(getApplicationContext(),"Usted no tiene Stock para realizar el Canje",Toast.LENGTH_LONG).show();
                                 }
 
                             }if(position==1){
 
-                                registrarNuevo_Comprobante(compro, lote, cantidad, tipo_op, categoria_op);
+                                registrarNuevo_Comprobante(compro, lote, cantidad+"", tipo_op, categoria_op,precioValor[0]);
                             }
 
                         }
@@ -796,7 +815,7 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
 
     }
 
-    private void registrarNuevo_Comprobante(String compro, String lote, String cantidad, String tipo_op, String catego_op) {
+    private void registrarNuevo_Comprobante(String compro, String lote, String cantidad, String tipo_op, String catego_op,String precioUnitario) {
         int liquidacion = dbAdapter_temp_session.fetchVarible(3);
         int cantidad2 = Integer.parseInt(cantidad);
         int idTipo_Op = 0;
@@ -816,8 +835,15 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
         }
         //Obteniendo el nombre del establecimiento, categoria.
         Log.d("Parametros", "" + idProducto + "-" + idCategoriaEstablec + "-" + idEstablec);
-        String precio = dbHelperCanjes_Dev.obtenerPrecio(idProducto, idCategoriaEstablec, ctx, idEstablec);
-        double importe = Double.parseDouble(precio);
+        double importe =0.0;
+        if(precioUnitario==null || precioUnitario==""){
+            String precio = dbHelperCanjes_Dev.obtenerPrecio(idProducto, idCategoriaEstablec, ctx, idEstablec);
+            importe = Double.parseDouble(precio);
+        }else{
+            importe = Double.parseDouble(precioUnitario);
+        }
+       //String precio = dbHelperCanjes_Dev.obtenerPrecio(idProducto, idCategoriaEstablec, ctx, idEstablec);
+      //  double importe = Double.parseDouble(precioUnitario.toString());
 
         //Evaluando tipo de Operacion:
         if (tipo_op.equals("Canje")) {
