@@ -42,6 +42,7 @@ public class DbAdapter_Histo_Venta_Detalle {
     public static final String HD_importe_ope_dev = "hd_re_importe_ope_dev";
     public static final String HD_fecha_ope_dev = "hg_te_fecha_ope_dev";
     public static final String HD_hora_ope_dev = "hd_te_hora_ope_dev";
+    public static final String HD_orden_can_dev = "hd_orden_can_dev";
     public static final String estado_sincronizacion = "estado_sincronizacion";
 
     public static final String TAG = "Histo_Venta_Detalle";
@@ -84,8 +85,9 @@ public class DbAdapter_Histo_Venta_Detalle {
                     +HD_categoria_ope_dev+" integer,"
                     +HD_importe_ope_dev+" real,"
                     +HD_fecha_ope_dev+" text,"
-                    +HD_hora_ope_dev+" text, " +
-                    estado_sincronizacion+" integer);";
+                    +HD_hora_ope_dev+" text, "
+                    +estado_sincronizacion+" integer,"
+                    +HD_orden_can_dev +" integer);";
 
     public static final String DELETE_TABLE_HISTO_VENTA_DETALLE = "DROP TABLE IF EXISTS " + SQLITE_TABLE_Histo_Venta_Detalle;
 

@@ -295,10 +295,11 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity implements View.OnClic
                 String idProducto = cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Histo_Venta_Detalle.HD_id_producto));
                 String idHistoDetalle = cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Histo_Venta_Detalle.HD_id_detalle));
                 int cantProductos = cr.getInt(cr.getColumnIndexOrThrow(DbAdapter_Histo_Venta_Detalle.HD_cantidad_ope));
+                int nrOrden = cr.getInt(cr.getColumnIndexOrThrow(DbAdapter_Histo_Venta_Detalle.HD_orden_can_dev));
                 String datos = cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Histo_Venta_Detalle.HD_nom_producto));
                 Log.e("datos",""+datos);
                // Toast.makeText(getApplicationContext(),"ID"+idHistoVenta,Toast.LENGTH_LONG).show();
-                select("1","Canje",idHistoVenta,idProducto,idHistoDetalle,cantProductos);
+                select("1","Canje",idHistoVenta,idProducto,idHistoDetalle,cantProductos,nrOrden);
 
                 return false;
             }
@@ -307,7 +308,7 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity implements View.OnClic
 
 
     }
-    private void select (final String idOperacion,String Operacion, final String idHistoVenta, final String idProducto, final String idHistoDetalle, final int cantProductos ){
+    private void select (final String idOperacion,String Operacion, final String idHistoVenta, final String idProducto, final String idHistoDetalle, final int cantProductos, final int nrOrden ){
         final int liquidacion = session.fetchVarible(3);
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
             alertDialogBuilder.setTitle("Anular "+Operacion+" ");
@@ -319,7 +320,7 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity implements View.OnClic
                             boolean estado =false;
                             if (idOperacion.equals("1")) {//cannjeggggg
                                 Log.e("Hola K ASE",""+idProducto+"-"+cantProductos+"-"+idHistoDetalle+"-"+idHistoVenta+"-"+liquidacion);
-                                estado =  dbHelper_CanDev.cancelarCabiosByIdCanjes(idProducto,cantProductos,idHistoVenta,idHistoDetalle,liquidacion);
+                                estado =  dbHelper_CanDev.cancelarCabiosByIdCanjes(idProducto,cantProductos,idHistoVenta,idHistoDetalle,liquidacion,nrOrden);
                                 if(estado){
                                     Toast.makeText(getApplicationContext(),"Quitado de la Lista",Toast.LENGTH_SHORT).show();
                                    regresar();
@@ -329,7 +330,7 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity implements View.OnClic
                             }
                             if(idOperacion.equals("2")){//devoluciones
                                 Log.e("Hola K ASE",""+idProducto+"-"+cantProductos+"-"+idHistoVenta+"-"+idHistoDetalle+"-"+liquidacion);
-                                estado =  dbHelper_CanDev.cancelarCabiosByIdDevoluciones(idProducto,cantProductos,idHistoVenta,idHistoDetalle,liquidacion);
+                                estado =  dbHelper_CanDev.cancelarCabiosByIdDevoluciones(idProducto,cantProductos,idHistoVenta,idHistoDetalle,liquidacion,nrOrden);
                                 if(estado){
                                     Toast.makeText(getApplicationContext(),"Quitado de la Lista",Toast.LENGTH_SHORT).show();
                                     regresar();
@@ -354,7 +355,6 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity implements View.OnClic
     private void listar_Facturas_dev() {
         Cursor cr = dbHelper_CanDev.obtener_facturas_dev(establec);
         final ListView lista_facturas = (ListView) findViewById(R.id.guias_can_2);
-
             CursorAdapterFacturas_dev adapter = new CursorAdapterFacturas_dev(getApplicationContext(), cr);
             lista_facturas.setAdapter(adapter);
             btn_mostrar_guias = (Button) findViewById(R.id.button_mostrar_guias);
@@ -377,7 +377,8 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity implements View.OnClic
                 String idProducto = cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Histo_Venta_Detalle.HD_id_producto));
                 String idHistoDetalle = cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Histo_Venta_Detalle.HD_id_detalle));
                 int cantProductos = cr.getInt(cr.getColumnIndexOrThrow(DbAdapter_Histo_Venta_Detalle.HD_cantidad_ope));
-                select("2", "Devolucion",idHistoVenta,idProducto,idHistoDetalle,cantProductos);
+                int nrOrden = cr.getInt(cr.getColumnIndexOrThrow(DbAdapter_Histo_Venta_Detalle.HD_cantidad_ope));
+                select("2", "Devolucion",idHistoVenta,idProducto,idHistoDetalle,cantProductos,nrOrden);
                 return false;
             }
         });

@@ -39,6 +39,7 @@ public class DbAdapter_Stock_Agente {
     public static final String ST_fisico = "st_in_fisico";
     public static final String estado_sincronizacion = "estado_sincronizacion";
     public static final String ST_liquidacion = "liquidacion";
+    public static final String ST_orden_can_dev = "st_in_orden";
 
 
     public static final String TAG = "Stock_Agente";
@@ -67,8 +68,9 @@ public class DbAdapter_Stock_Agente {
                     + ST_malos + " integer,"
                     + ST_fisico + " integer,"
                     + ST_id_agente + " integer, "
-                    + ST_liquidacion + " integer, " +
-                    estado_sincronizacion + " integer);";
+                    + ST_liquidacion + " integer, "
+                    +estado_sincronizacion + " integer,"
+                    +ST_orden_can_dev+" integer ) ;";
 
 
     public static final String DELETE_TABLE_STOCK_AGENTE = "DROP TABLE IF EXISTS " + SQLITE_TABLE_Stock_Agente;
@@ -300,7 +302,7 @@ public class DbAdapter_Stock_Agente {
             mCursor = mDb.rawQuery("SELECT * FROM " + SQLITE_TABLE_Stock_Agente + " INNER JOIN " +
                     DbAdapter_Precio.SQLITE_TABLE_Precio + " ON " + SQLITE_TABLE_Stock_Agente + "." +
                     ST_id_producto + " = " + DbAdapter_Precio.SQLITE_TABLE_Precio + "." +
-                    DbAdapter_Precio.PR_id_producto + " WHERE " + DbAdapter_Precio.PR_id_cat_est + " = 1", null, null);
+                    DbAdapter_Precio.PR_id_producto + " WHERE " + DbAdapter_Precio.PR_id_cat_est + " = 1", null);
 
         } else {
             mCursor = mDb.rawQuery("SELECT * FROM " + SQLITE_TABLE_Stock_Agente + " INNER JOIN " +
