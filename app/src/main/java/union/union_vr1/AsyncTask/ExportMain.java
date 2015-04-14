@@ -46,6 +46,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
     private int idUsuario;
     private int idAgente;
 
+
     
     //DEFINO LAS VARIABLES A MIS MANEJADORES DE LAS TABLAS
     private DbAdapter_Informe_Gastos dbAdapter_informe_gastos;

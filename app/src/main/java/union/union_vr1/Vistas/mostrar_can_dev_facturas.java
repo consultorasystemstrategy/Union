@@ -35,6 +35,7 @@ import union.union_vr1.Sqlite.CursorAdapter_Facturas_Canjes_Dev;
 import union.union_vr1.Sqlite.DbAdapter_Canjes_Devoluciones;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
+import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 import union.union_vr1.VMovil_BluetoothImprimir;
 
 public class mostrar_can_dev_facturas extends TabActivity {
@@ -127,8 +128,8 @@ public class mostrar_can_dev_facturas extends TabActivity {
         Cursor cabecera = dbHelper_CanDev.obtener_cabecera(idEstablec);
 
         if (cabecera.moveToFirst()) {
-            String cliente = cabecera.getString(6);
-            String documento = cabecera.getString(7);
+            String cliente = cabecera.getString(cabecera.getColumnIndexOrThrow(DbAdaptert_Evento_Establec.EE_nom_cliente));
+            String documento = cabecera.getString(cabecera.getColumnIndexOrThrow(DbAdaptert_Evento_Establec.EE_doc_cliente));
             String texto = "Fecha de Emision: " + getDatePhone() + "," +
                     "\nCliente: " + cliente + "," +
                     "\nDocumento: " + documento + "";
@@ -141,33 +142,66 @@ public class mostrar_can_dev_facturas extends TabActivity {
         ListView lista_facturas = (ListView) findViewById(R.id.listViewCanjes);
         Cursor precio = dbHelper_CanDev.obtener_igv(1, idEstablec);
         String textFooter = "";
+
+
+        /*
         if (precio.moveToFirst()) {
 
             DecimalFormat df = new DecimalFormat("#.00");
 
             textViewFooterText.setText("Total :\n" +
                     "Base imponible :\n" +
-                    "IGV :");
+                    "IGV :");.
 
             textViewFooterTotal.setText(" S/. "+precio.getString(0)+"\n" +
                     "S/. "+precio.getString(1)+ "\n" +
                     "S/. "+precio.getString(2));
 
         }
-
-        lista_facturas.addFooterView(footer);
+        */
+        CursorAdapterFacturas_Canjes adapter_facturas = null;
         if (cr.moveToFirst()) {
 
 
             textViewHeader.setText(textoView);
             lista_facturas.addHeaderView(header);
-            CursorAdapterFacturas_Canjes adapter_facturas = new CursorAdapterFacturas_Canjes(getApplicationContext(), cr);
+            adapter_facturas = new CursorAdapterFacturas_Canjes(getApplicationContext(), cr);
             lista_facturas.setAdapter(adapter_facturas);
 
         } else {
 
         }
 
+        Double totalFooter = 0.0;
+        Double base_imponibleFooter = 0.0;
+        Double igvFooter = 0.0;
+        if (adapter_facturas!=null) {
+            Cursor cursorTemp = adapter_facturas.getCursor();
+
+            for (cursorTemp.moveToFirst(); !cursorTemp.isAfterLast(); cursorTemp.moveToNext()) {
+
+                Double importe = cursorTemp.getDouble(18);
+                totalFooter += importe;
+            }
+            base_imponibleFooter = totalFooter / 1.18;
+            igvFooter = base_imponibleFooter * 0.18;
+        }
+            if (precio.moveToFirst()) {
+
+                DecimalFormat df = new DecimalFormat("#.00");
+
+                textViewFooterText.setText("Total :\n" +
+                        "Base imponible :\n" +
+                        "IGV :");
+
+                textViewFooterTotal.setText(" S/. " + df.format(totalFooter) + "\n" +
+                        "S/. " + df.format(base_imponibleFooter) + "\n" +
+                        "S/. " + df.format(igvFooter));
+
+            }
+
+
+        lista_facturas.addFooterView(footer);
 
     }
 
@@ -187,8 +221,8 @@ public class mostrar_can_dev_facturas extends TabActivity {
         String textoAdpater = "";
         if (cabecera.moveToFirst()) {
             //obtener datos del cliente
-            String cliente = cabecera.getString(6);
-            String documento = cabecera.getString(7);
+            String cliente = cabecera.getString(cabecera.getColumnIndexOrThrow(DbAdaptert_Evento_Establec.EE_nom_cliente));
+            String documento = cabecera.getString(cabecera.getColumnIndexOrThrow(DbAdaptert_Evento_Establec.EE_doc_cliente));
             textoAdpater = "Fecha de Emision: " + getDatePhone() + "," +
                     "\nCliente: " + cliente + "," +
                     "\nDocumento: " + documento + "";
