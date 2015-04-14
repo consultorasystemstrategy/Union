@@ -242,7 +242,7 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
         final String importe = datos[3];
         //-----------------------------------------
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("" + nomProducto + "");
+        builder.setTitle("Canjes/Devoluciones \n" + nomProducto + "");
 
         final View layout_spinners = View.inflate(this, R.layout.prompts_canjes, null);
         final EditText cantidadText = (EditText) layout_spinners.findViewById(R.id.cantidad_can_dev_registrado);
@@ -252,7 +252,6 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
             cantidadText.setText(cantidad);
             cantidadText.setEnabled(false);
         }
-
 
         cantidadText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -365,7 +364,7 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
         //-----------------------------------------
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-        builder.setTitle("" + nomProducto + "");
+        builder.setTitle("Canjes/Devoluciones \n" + nomProducto + "");
 
         final View layout_spinners = View.inflate(this, R.layout.prompts_canjes, null);
         final EditText cantidadText = (EditText) layout_spinners.findViewById(R.id.cantidad_can_dev_registrado);
@@ -519,7 +518,7 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("" + nomProducto + "");
+        builder.setTitle("Canjes/Devoluciones \n" + nomProducto + "");
         final View layout_spinners = View.inflate(this, R.layout.prompts, null);
         final EditText vUnidad = (EditText) layout_spinners.findViewById(R.id.EditUnidadValor);
         final EditText nroCompro = (EditText) layout_spinners.findViewById(R.id.comprob_clave_dev_can);
@@ -642,7 +641,7 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
     private void mostrar_alertdialog_spinners(String producto) {
         int liquidacion = dbAdapter_temp_session.fetchVarible(3);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("" + nomProducto + "");
+        builder.setTitle("Canjes/Devoluciones \n" + nomProducto + "");
         final View layout_spinners = View.inflate(this, R.layout.prompts, null);
         final EditText vUnidad = (EditText) layout_spinners.findViewById(R.id.EditUnidadValor);
         final EditText nroCompro = (EditText) layout_spinners.findViewById(R.id.comprob_clave_dev_can);

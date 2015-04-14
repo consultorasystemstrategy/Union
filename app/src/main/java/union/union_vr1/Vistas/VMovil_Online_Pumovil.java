@@ -56,6 +56,7 @@ public class VMovil_Online_Pumovil extends Activity {
 
 
 
+
         isCajaOpened = session.fetchVarible(9);
         Log.d("IS CAJA OPENED", ""+isCajaOpened);
 
