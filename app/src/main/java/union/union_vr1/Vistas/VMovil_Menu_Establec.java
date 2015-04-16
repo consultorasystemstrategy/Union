@@ -357,6 +357,7 @@ public class VMovil_Menu_Establec extends Activity implements View.OnClickListen
         super.onResume();
         //SLIDING MENU
         changeDataSlideMenu();
+        displayListView();
     }
 
 

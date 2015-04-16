@@ -344,7 +344,8 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
         dialogo.setTitle("ESTADO");
         dialogo.setItems(items, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
-                dbHelper.updateEstadoNoAtendido(idEstabl, 3, item, items[item]);
+                int idmotivoNoAtencion = ++item;
+                dbHelper.updateEstadoNoAtendido(idEstabl, 3, idmotivoNoAtencion, items[item]);
                 Intent intent2 = new Intent(getApplicationContext(), VMovil_Menu_Establec.class);
                 finish();
                 startActivity(intent2);

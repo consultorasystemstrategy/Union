@@ -38,7 +38,7 @@ public class ServiceNotifyResumen extends Service {
     private Double totalRuta = 0.0;
     private Double totalPlanta = 0.0;
     private Double aRendir = 0.0;
-
+    
     private NotificationManager mManager;
     @Override
     public IBinder onBind(Intent intent) {

@@ -933,7 +933,7 @@ Instantiate and pass a callback
 
                 cantidad = Integer.parseInt(texto);
 
-                Toast.makeText(getApplicationContext(),"Cantidad : "+cantidad + " id_producto : "+ id_producto,Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(),"Cantidad : "+cantidad + " id_producto : "+ id_producto,Toast.LENGTH_LONG).show();
 
                 Cursor mCursorPrecioUnitario = dbHelper_Precio.fetchAllPrecioByIdProductoAndCantidad(finalIdProducto,cantidad, id_categoria_establecimiento);
 
@@ -1488,7 +1488,7 @@ Instantiate and pass a callback
                 Log.d("RECORRE EL CURSOR TEMP COMPROB COBROS", "YES");
 
                 long registroInsertado = dbHelper_Comprob_Cobros.createComprobCobros(idEstablecimiento,Integer.parseInt(id+""),id_plan_pago,id_plan_pago_detalle,tipoDocumento.toUpperCase(),codigo_erp,fecha_programada,monto_a_pagar, fecha_cobro, hora_cobro,monto_cobrado,estado_cobro,id_agente_venta,id_forma_cobro, lugar_registro, idLiquidacion);
-                Log.d("CC INSERTADO SATISFACTORIAMENTE ", "ID : "+ registroInsertado);
+                    Log.d("CC INSERTADO SATISFACTORIAMENTE ", "ID : "+ registroInsertado);
             }
         }
 
@@ -1688,6 +1688,9 @@ Instantiate and pass a callback
 
         int porcentajeSurtidoAnterior = surtidoVentaAnterior*100/surtidoStockAnterior;
 
+        if (surtidoStock==0){
+            surtidoStock++;
+        }
         int porcentajeSurtido = surtidoVenta*100/surtidoStock;
 
         textViewFooterSurtidoStock.setText(""+
@@ -1769,7 +1772,7 @@ Instantiate and pass a callback
 
                 cantidad = Integer.parseInt(texto);
 
-                Toast.makeText(getApplicationContext(),"Cantidad : "+cantidad + " id_producto : "+ id_producto,Toast.LENGTH_LONG).show();
+               //(getApplicationContext(),"Cantidad : "+cantidad + " id_producto : "+ id_producto,Toast.LENGTH_LONG).show();
 
                 Cursor mCursorPrecioUnitario = dbHelper_Precio.fetchAllPrecioByIdProductoAndCantidad(id_producto,cantidad, id_categoria_establecimiento);
 

@@ -708,7 +708,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
                 Log.d("ID EXPORTADOS ", "" + idsEstablecimientoUpdated[i]);
             }
 
-            if (listIdInfomeGastos.size()>0){
+            if (listIdEstablecimientoUpdated.size()>0){
                 dbAdaptert_evento_establec.changeEstadoToExport(idsEstablecimientoUpdated, Constants._EXPORTADO);
             }
 
