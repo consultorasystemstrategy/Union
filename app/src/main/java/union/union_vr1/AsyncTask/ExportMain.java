@@ -109,7 +109,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
         Cursor cursorEventoEstablecimiento = dbAdaptert_evento_establec.filterExportUpdated();
 
         Cursor cursorHistoVentaCreated = dbAdapter_histo_venta.filterExport();
-        Cursor cursorHistoVentaDetalleCreated = dbAdapter_histo_venta_detalle.filterExport();
+        Cursor cursorHistoVentaDetalleCreated = dbAdapter_histo_venta_detalle.filterExport(idLiquidacion);
         Cursor cursorAutorizacionCobro = dbAdapter_temp_autorizacion_cobro.filterExport();
 
         idAgente = session.fetchVarible(1);
@@ -477,7 +477,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
             Log.d("EXPORT HVD", "TODOS EL HISTORIAL DE VENTA CREADO HA SIDO EXPORTADO");
         }
 
-        cursorHistoVentaDetalleCreated = dbAdapter_histo_venta_detalle.filterExport();
+        cursorHistoVentaDetalleCreated = dbAdapter_histo_venta_detalle.filterExport(idLiquidacion);
 
 
         if (cursorHistoVentaDetalleCreated.getCount()>0){

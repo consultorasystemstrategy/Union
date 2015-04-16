@@ -17,6 +17,7 @@ public class DbAdapter_Histo_Venta {
     public static final String HV_subtotal= "hv_in_subtotal";
     public static final String HV_fecha= "hv_in_fecha";
     public static final String estado_sincronizacion = "estado_sincronizacion";
+    public static final String HV_id_establecimiento= "hv_id_establecimiento";
 
     public static final String TAG = "Histo_Venta";
     private DbHelper mDbHelper;
@@ -34,7 +35,8 @@ public class DbAdapter_Histo_Venta {
                     +HV_id_agente+" integer,"
                     +HV_subtotal+" real,"
                     +HV_fecha+" text ,"
-                    +estado_sincronizacion+" integer);";
+                    +estado_sincronizacion+" integer,"
+                    +HV_id_establecimiento+" integer );";
 
     public static final String DELETE_TABLE_HISTO_VENTA = "DROP TABLE IF EXISTS " + SQLITE_TABLE_Histo_Venta;
 
@@ -55,13 +57,14 @@ public class DbAdapter_Histo_Venta {
     }
 
     public long createHistoVenta(
-            String id_histo, int id_agente, double subtotal,String fecha,int estado){
+            String id_histo, int id_agente, double subtotal,String fecha,int estado,String establecimiento){
 
         ContentValues initialValues = new ContentValues();
         initialValues.put(HV_id_histo,id_histo);
         initialValues.put(HV_id_agente,id_agente);
         initialValues.put(HV_subtotal,subtotal);
         initialValues.put(HV_fecha,fecha);
+        initialValues.put(HV_id_establecimiento,establecimiento);
         initialValues.put(estado_sincronizacion,estado);
 
 

@@ -87,12 +87,12 @@ public class mostrar_can_dev_facturas extends TabActivity {
             public void onClick(View view) {
                 int idTab = tabHost.getCurrentTab();
                 if (idTab == 0) {
-                    dialog_save("Canjes", 1);
+                    dialog_save("Canjes", 1,idEstablec);
 
 
                 }
                 if (idTab == 1) {
-                    dialog_save("Devoluciones", 2);
+                    dialog_save("Devoluciones", 2,idEstablec);
                 }
 
             }
@@ -266,7 +266,7 @@ public class mostrar_can_dev_facturas extends TabActivity {
 
     }
 
-    public void dialog_save(final String op, final int operacion) {
+    public void dialog_save(final String op, final int operacion, final String establecimiento) {
         final int liquidacion = session.fetchVarible(3);
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setTitle("Seguro de Guardar");
@@ -275,9 +275,9 @@ public class mostrar_can_dev_facturas extends TabActivity {
                 .setCancelable(false)
                 .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        String idGuia = dbHelper_CanDev.guardarCabecera(idAgente);
+                        String idGuia = dbHelper_CanDev.guardarCabecera(idAgente,establecimiento);
                         if (operacion == 2) {
-                            boolean estado = dbHelper_CanDev.guardarCambios_dev(idGuia, idEstablec);
+                            boolean estado = dbHelper_CanDev.guardarCambios_dev(idGuia, idEstablec,liquidacion);
                             if (estado) {
                                // Toast.makeText(getApplicationContext(),""+idGuia,Toast.LENGTH_SHORT).show();
                                 exito();
