@@ -282,6 +282,7 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity implements View.OnClic
                     mostrar.putExtra("idEstablec",establec);
                     mostrar.putExtra("idAgente",idAgente);
                     startActivity(mostrar);
+                    finish();
 
 
                 }
@@ -366,6 +367,7 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity implements View.OnClic
                     mostrar.putExtra("idEstablec",establec);
                     mostrar.putExtra("idAgente",idAgente);
                     startActivity(mostrar);
+                    finish();
                 }
             });
         lista_facturas.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {

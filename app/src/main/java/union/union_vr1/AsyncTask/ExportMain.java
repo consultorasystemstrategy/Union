@@ -107,7 +107,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
         Cursor cursorComprobanteCobro = dbAdapter_comprob_cobro.filterExport();
         Cursor cursorInsertarCaja  = dbAdapter_comprob_cobro.filterExportUpdatedAndEstadoCobro();
         Cursor cursorEventoEstablecimiento = dbAdaptert_evento_establec.filterExportUpdated();
-
+//histo venta
         Cursor cursorHistoVentaCreated = dbAdapter_histo_venta.filterExport();
         Cursor cursorHistoVentaDetalleCreated = dbAdapter_histo_venta_detalle.filterExport(idLiquidacion);
         Cursor cursorAutorizacionCobro = dbAdapter_temp_autorizacion_cobro.filterExport();
@@ -478,31 +478,31 @@ public class ExportMain extends AsyncTask<String, String, String> {
         }
 
         cursorHistoVentaDetalleCreated = dbAdapter_histo_venta_detalle.filterExport(idLiquidacion);
-
+        Log.d("CANTIDAD A EXPORTAR", ""+cursorHistoVentaDetalleCreated.getCount());
 
         if (cursorHistoVentaDetalleCreated.getCount()>0){
 
             for (cursorHistoVentaDetalleCreated.moveToFirst(); !cursorHistoVentaDetalleCreated.isAfterLast(); cursorHistoVentaDetalleCreated.moveToNext()){
                 JSONObject jsonObject = null;
-                Log.d("DATOS EXPORT HVD", ""+cursorHistoVentaDetalleCreated.getInt(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_producto))+"-"+
-                        cursorHistoVentaDetalleCreated.getInt(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_categoria_ope))+"-"+
-                        cursorHistoVentaDetalleCreated.getInt(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_tipoper))+"-"+
-                        cursorHistoVentaDetalleCreated.getInt(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_cantidad_ope))+"-"+
+                Log.d("DATOS EXPORT HVD", ""+cursorHistoVentaDetalleCreated.getInt(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_producto))+"*"+
+                        cursorHistoVentaDetalleCreated.getInt(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_categoria_ope))+"*"+
+                        cursorHistoVentaDetalleCreated.getInt(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_tipoper))+"*"+
+                        cursorHistoVentaDetalleCreated.getInt(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_cantidad_ope))+"*"+
                         1+"-"+
-                        cursorHistoVentaDetalleCreated.getInt(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_agente))+"-"+
-                        "GUIA REMISIÓN ID : "+cursorHistoVentaDetalleCreated.getString(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_Guia))+"-"+
-                        cursorHistoVentaDetalleCreated.getString(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_comprobante))+"-"+
-                        cursorHistoVentaDetalleCreated.getString(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_lote))+"-"+
+                        cursorHistoVentaDetalleCreated.getInt(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_agente))+"*"+
+                        "GUIA REMISIÓN ID : "+cursorHistoVentaDetalleCreated.getString(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_Guia))+"*"+
+                        cursorHistoVentaDetalleCreated.getString(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_comprobante))+"*"+
+                        cursorHistoVentaDetalleCreated.getString(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_lote))+"*"+
                         idLiquidacion+"-"+
-                        cursorHistoVentaDetalleCreated.getDouble(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_importe_ope))+"-"+
-                        cursorHistoVentaDetalleCreated.getInt(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_comprob))+"-"+
-                        cursorHistoVentaDetalleCreated.getInt(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_forma_ope))+"-"+
-                        cursorHistoVentaDetalleCreated.getInt(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_valor_unidad))+"-"+
-                        cursorHistoVentaDetalleCreated.getInt(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_establec))+"-"+
-                        cursorHistoVentaDetalleCreated.getInt(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_cantidad_ope_dev))+"-"+
-                        cursorHistoVentaDetalleCreated.getInt(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_categoria_ope_dev))+"-"+
-                        cursorHistoVentaDetalleCreated.getDouble(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_importe_ope_dev))+"-"+
-                        cursorHistoVentaDetalleCreated.getString(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_fecha_ope_dev))+"-"+
+                        cursorHistoVentaDetalleCreated.getDouble(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_importe_ope))+"*"+
+                        cursorHistoVentaDetalleCreated.getInt(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_comprob))+"*"+
+                        cursorHistoVentaDetalleCreated.getInt(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_forma_ope))+"<- FORMA ID"+
+                        cursorHistoVentaDetalleCreated.getInt(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_valor_unidad))+"*"+
+                        cursorHistoVentaDetalleCreated.getInt(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_establec))+"*"+
+                        cursorHistoVentaDetalleCreated.getInt(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_cantidad_ope_dev))+"*"+
+                        cursorHistoVentaDetalleCreated.getInt(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_categoria_ope_dev))+"*"+
+                        cursorHistoVentaDetalleCreated.getDouble(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_importe_ope_dev))+"*"+
+                        cursorHistoVentaDetalleCreated.getString(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_fecha_ope_dev))+"*"+
                         cursorHistoVentaDetalleCreated.getString(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_hora_ope_dev)));
                 try {
                     jsonObject = api.CreateDevoluciones(
@@ -513,8 +513,10 @@ public class ExportMain extends AsyncTask<String, String, String> {
                             1,
                             cursorHistoVentaDetalleCreated.getInt(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_agente)),
                             cursorHistoVentaDetalleCreated.getInt(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_Guia)),
-                            cursorHistoVentaDetalleCreated.getString(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_comprobante)),
-                            cursorHistoVentaDetalleCreated.getString(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_lote)),
+
+                           cursorHistoVentaDetalleCreated.getString(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_comprobante)),
+                           "12",
+                            //cursorHistoVentaDetalleCreated.getString(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_lote)),
                             idLiquidacion,
                             cursorHistoVentaDetalleCreated.getDouble(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_importe_ope)),
                             cursorHistoVentaDetalleCreated.getInt(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_comprob)),
@@ -538,6 +540,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
                     e.printStackTrace();
                 }
             }
+            //ERRORES POR SOLUCIONAR
 
             String[] idHVDCreated = new String[listIdHVDCreated.size()];
             listIdHVDCreated.toArray(idHVDCreated);

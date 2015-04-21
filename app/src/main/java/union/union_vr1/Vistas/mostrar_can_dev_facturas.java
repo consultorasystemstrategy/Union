@@ -87,12 +87,12 @@ public class mostrar_can_dev_facturas extends TabActivity {
             public void onClick(View view) {
                 int idTab = tabHost.getCurrentTab();
                 if (idTab == 0) {
-                    dialog_save("Canjes", 1,idEstablec);
+                    dialog_save("Canjes",2,idEstablec);
 
 
                 }
                 if (idTab == 1) {
-                    dialog_save("Devoluciones", 2,idEstablec);
+                    dialog_save("Devoluciones",1,idEstablec);
                 }
 
             }
@@ -102,11 +102,11 @@ public class mostrar_can_dev_facturas extends TabActivity {
             public void onClick(View view) {
                 int idTab = tabHost.getCurrentTab();
                 if (idTab == 0) {
-                    dialog_cancel("Canjes", 1, "st_in_canjes");
+                    dialog_cancel("Canjes", 2 , "st_in_canjes");
 
                 }
                 if (idTab == 1) {
-                    dialog_cancel("Devoluciones", 2, "st_in_devoluciones");
+                    dialog_cancel("Devoluciones", 1 , "st_in_devoluciones");
                 }
             }
         });
@@ -138,9 +138,9 @@ public class mostrar_can_dev_facturas extends TabActivity {
         } else {
         }
 
-        Cursor cr = dbHelper_CanDev.obtener_facturas_canjes(1, idEstablec);
+        Cursor cr = dbHelper_CanDev.obtener_facturas_canjes(2, idEstablec);
         ListView lista_facturas = (ListView) findViewById(R.id.listViewCanjes);
-        Cursor precio = dbHelper_CanDev.obtener_igv(1, idEstablec);
+        Cursor precio = dbHelper_CanDev.obtener_igv(2, idEstablec);
         String textFooter = "";
 
 
@@ -276,7 +276,7 @@ public class mostrar_can_dev_facturas extends TabActivity {
                 .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         String idGuia = dbHelper_CanDev.guardarCabecera(idAgente,establecimiento);
-                        if (operacion == 2) {
+                        if (operacion == 1) {
                             boolean estado = dbHelper_CanDev.guardarCambios_dev(idGuia, idEstablec,liquidacion);
                             if (estado) {
                                // Toast.makeText(getApplicationContext(),""+idGuia,Toast.LENGTH_SHORT).show();
@@ -285,7 +285,7 @@ public class mostrar_can_dev_facturas extends TabActivity {
                                 Toast.makeText(getApplicationContext(), "Ocurrio un Error", Toast.LENGTH_SHORT).show();
                             }
                         }
-                        if (operacion == 1) {
+                        if (operacion == 2) {
                             boolean estado = dbHelper_CanDev.guardarCambios(operacion, idEstablec,idGuia,liquidacion);
                             if (estado) {
                                // Toast.makeText(getApplicationContext(),""+idGuia,Toast.LENGTH_SHORT).show();
@@ -430,14 +430,14 @@ public class mostrar_can_dev_facturas extends TabActivity {
                 .setPositiveButton("Regresar", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         Intent in = new Intent(getApplicationContext(), VMovil_Menu_Establec.class);
-                      //  in.putExtra("idEstabX", idEstablec);
+                       // in.putExtra("idEstabX", idEstablec);
                        // in.putExtra("idAgente", idAgente);
                         startActivity(in);
                         finish();
                     }
 
                 })
-                .setNegativeButton("OK", new DialogInterface.OnClickListener() {
+                .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                     }
@@ -480,7 +480,7 @@ public class mostrar_can_dev_facturas extends TabActivity {
     }
     private String text(){
 
-        Cursor cr = dbHelper_CanDev.obtener_facturas_dev2(2,idEstablec);
+        Cursor cr = dbHelper_CanDev.obtener_facturas_dev2(1,idEstablec);
         String texto = "";
         Log.e("errores","0");
 
@@ -496,7 +496,7 @@ public class mostrar_can_dev_facturas extends TabActivity {
 
         DecimalFormat df= new DecimalFormat("#0.00");
 
-        Cursor cr = dbHelper_CanDev.obtener_facturas_dev2(2,idEstablec);
+        Cursor cr = dbHelper_CanDev.obtener_facturas_dev2(1,idEstablec);
 
         String texto = "";
 

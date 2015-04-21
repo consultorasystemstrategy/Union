@@ -10,6 +10,7 @@ import android.os.Bundle;
 
 import android.view.View;
 import android.widget.Button;
+import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TabHost;
@@ -26,6 +27,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import union.union_vr1.R;
+import union.union_vr1.Sqlite.CursorResumenComprobantes;
 import union.union_vr1.Sqlite.DbAdapter_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Informe_Gastos;
 import union.union_vr1.Sqlite.DbAdapter_Resumen_Caja;
@@ -317,7 +319,11 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
                 columns,
                 to,
                 0);
+
+        //CursorAdapter cursorAdapter = new CursorResumenComprobantes(mainActivity,cursor,true);
+
         Cursor cursorResumen = dataAdapterRC.getCursor();
+        //Cursor cursorResumen = cursorAdapter.getCursor();
         cursorResumen.moveToFirst();
 
 
@@ -334,13 +340,14 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
         }
 
         textViewTotalCobrado.setText("Total");
-        textViewTotalN.setText("" + df.format(nTotal));
+        textViewTotalN.setText("" + nTotal);
         textViewTotalEmitido.setText("S/" + df.format(emitidoTotal));
         textViewTotalPagado.setText("S/" + df.format(pagadoTotal));
         textViewTotalCobrado.setText("S/" + df.format(cobradoTotal));
 
 
         ListView listView = (ListView) findViewById(R.id.VRC_listarResumenCaja);
+        //RESUMEN CABECERA
         viewResumen = getLayoutInflater().inflate(R.layout.resumen,null);
 
         textViewResumenIngresos = (TextView) viewResumen.findViewById(R.id.resumenIngresosTotales);
@@ -348,9 +355,14 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
         textViewResumenARendir = (TextView) viewResumen.findViewById(R.id.resumenEfectivoARendir);
 
         listView.addHeaderView(viewResumen);
+
+
         listView.addHeaderView(getLayoutInflater().inflate(R.layout.resumen_informe_ingresos_cabecera,null));
 
+        listView.setAdapter(dataAdapterRC);
+        //listView.setAdapter(cursorAdapter);
         listView.addFooterView(viewResumenTotal);
+
 
         viewResumenGastos = getLayoutInflater().inflate(R.layout.resumen_gastos, null);
 
@@ -423,7 +435,6 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
         textViewResumenARendir.setText("S/. "+df.format(aRendir));
 
 
-        listView.setAdapter(dataAdapterRC);
         listView.addFooterView(viewResumenGastos);
 
 
@@ -432,13 +443,11 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 session.deleteVariable(9);
                 session.createTempSession(9, 0);
                 Intent intent = new Intent(activity, VMovil_Online_Pumovil.class);
                 finish();
                 startActivity(intent);
-
             }
         });
         listView.addFooterView(viewCerrarCaja,null,true);

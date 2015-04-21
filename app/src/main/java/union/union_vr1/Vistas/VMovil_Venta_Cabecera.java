@@ -433,7 +433,7 @@ Instantiate and pass a callback
             spinnerTipoDocumento.setAdapter(adapterTipoDocumento);
         }else if (idTipoDocCliente==2){
             spinnerTipoDocumento = (Spinner) findViewById(R.id.VC_spinnerTipoDocumento);
-            ArrayAdapter<CharSequence> adapterTipoDocumento = ArrayAdapter.createFromResource(this,R.array.tipoDocumentoFactura,android.R.layout.simple_spinner_item);
+            ArrayAdapter<CharSequence> adapterTipoDocumento = ArrayAdapter.createFromResource(this,R.array.tipoDocumentoFacturaBoleta,android.R.layout.simple_spinner_item);
             adapterTipoDocumento.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spinnerTipoDocumento.setAdapter(adapterTipoDocumento);
         }else{
