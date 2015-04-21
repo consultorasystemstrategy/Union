@@ -1341,6 +1341,7 @@ Instantiate and pass a callback
         String erp_stringTipoDocumento  = null;
         String serie = null;
         String codigo_erp = null;
+        String numeroDocumentoImpresion =null;
 
         switch (tipoDocumento1){
             case factura:
@@ -1368,6 +1369,7 @@ Instantiate and pass a callback
                 break;
         }
 
+        numeroDocumentoImpresion = serie + "-" +agregarCeros((String.valueOf(numero_documento)),7);
         Cursor cursorTempComprobCobros = dbHelper_Temp_Comprob_Cobros.fetchAllComprobCobros();
 
         Log.d("FORMA DE PAGO ", ""+i_formaPago);
@@ -1394,12 +1396,12 @@ Instantiate and pass a callback
         Cursor cursorAgente = dbHelperAgente.fetchAgentesByIds(id_agente_venta, idLiquidacion);
         cursorAgente.moveToFirst();
         String nombreAgenteVenta = cursorAgente.getString(cursorAgente.getColumnIndexOrThrow(dbHelperAgente.AG_nombre_agente));
-
         Cursor cursorEstablecimiento = dbHelper_Evento_Establecimiento.fetchEstablecsById(""+idEstablecimiento);
         cursorEstablecimiento.moveToFirst();
         String nombreCliente = cursorEstablecimiento.getString(cursorEstablecimiento.getColumnIndexOrThrow(dbHelper_Evento_Establecimiento.EE_nom_cliente));
         String documentoCliente = cursorEstablecimiento.getString(cursorEstablecimiento.getColumnIndexOrThrow(dbHelper_Evento_Establecimiento.EE_doc_cliente));
-        textoImpresion+= "Código ERP:  "+codigo_erp+"\n";
+        textoImpresion+= "N° Doc: "+numeroDocumentoImpresion+"\n";
+//        textoImpresion+= "Código ERP:  "+codigo_erp+"\n";
         textoImpresion+= "Fecha: "+ getDatePhone()+"\n";
         textoImpresion+= "Vendedor: "+ nombreAgenteVenta+"\n";
         textoImpresion+= "Cliente: "+ nombreCliente+"\n";
@@ -1410,7 +1412,8 @@ Instantiate and pass a callback
         textoImpresion+= "-----------------------------------------------\n";
 
 
-        textoVentaImpresion+= "Código ERP:  "+codigo_erp+"\n";
+        textoVentaImpresion+= "N° Doc: "+numeroDocumentoImpresion+"\n";
+//        textoVentaImpresion+= "Código ERP:  "+codigo_erp+"\n";
         textoVentaImpresion+= "Fecha: "+ getDatePhone()+"\n";
         textoVentaImpresion+= "Vendedor: "+ nombreAgenteVenta+"\n";
         textoVentaImpresion+= "Cliente: "+ nombreCliente+"\n";
@@ -2143,6 +2146,21 @@ Instantiate and pass a callback
     protected void onResume() {
         super.onResume();
         changeDataSlideMenu();
+    }
+    private static String agregarCeros(String string, int largo)
+    {
+        String ceros = "";
+        int cantidad = largo - string.length();
+        if (cantidad >= 1)
+        {
+            for(int i=0;i<cantidad;i++)
+            {
+                ceros += "0";
+            }
+            return (ceros + string);
+        }
+        else
+            return string;
     }
 
 

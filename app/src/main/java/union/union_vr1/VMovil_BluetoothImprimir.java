@@ -77,13 +77,11 @@ public class VMovil_BluetoothImprimir extends Activity{
         textViewImprimirContenidoRight = (TextView) findViewById(R.id.textViewImprimirContenidoRight);
         textViewVentaCabecera = (TextView) findViewById(R.id.textViewVentaCabecera);
 
-
         textoImpresion = getIntent().getExtras().getString("textoImpresion");
         textoImpresionCabecera = getIntent().getExtras().getString("textoImpresionCabecera");
         textoImpresionContenidoLeft = getIntent().getExtras().getString("textoImpresionContenidoLeft");
         textoImpresionContenidoRight = getIntent().getExtras().getString("textoImpresionContenidoRight");
         textoVentaImpresion = getIntent().getExtras().getString("textoVentaImpresion");
-
 
         textViewImprimirCabecera.setText(textoImpresionCabecera);
         textViewVentaCabecera.setText(textoVentaImpresion);
