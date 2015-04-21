@@ -489,8 +489,8 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
             categoria_op = "4";
         }
         if (tipo_op.equals("Canje")) {
-            tipo_op = "1";
-            boolean estado = dbHelperCanjes_Dev.update_Canj(tipo_op, categoria_op, cantidad, importe, idDetalle, canjeado, idProducto, ctx, liquidacion);
+            tipo_op = "2";
+            boolean estado = dbHelperCanjes_Dev.update_Canj(tipo_op, categoria_op, cantidad, importe, idDetalle, canjeado, idProducto, ctx, liquidacion,valorUnidad);
             if (estado) {
                 confirmar();
 
@@ -500,8 +500,8 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
             }
         }
         if (tipo_op.equals("Devolucion")) {
-            tipo_op = "2";
-            boolean estado = dbHelperCanjes_Dev.update_dev(tipo_op, categoria_op, cantidad, importe, idDetalle, devuelto, idProducto, ctx, liquidacion);
+            tipo_op = "1";
+            boolean estado = dbHelperCanjes_Dev.update_dev(tipo_op, categoria_op, cantidad, importe, idDetalle, devuelto, idProducto, ctx, liquidacion,valorUnidad);
             if (estado) {
                 confirmar();
 
@@ -846,7 +846,7 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
 
         //Evaluando tipo de Operacion:
         if (tipo_op.equals("Canje")) {
-            idTipo_Op = 1;
+            idTipo_Op = 2;
            // Log.d("MasParametros", "[" + idEstablec + "-" + idProducto + "-" + idTipo_Op + "-" + compro + "-" + nomEstablecimiento + "-" + idCat_tipo + "-" + cantidad2 + "-" + importe * cantidad2 + "-" + lote + "-" + idAgente + importe);
             boolean estado = dbHelperCanjes_Dev.insertarCanjes(idEstablec, idProducto, idTipo_Op, compro, nomEstablecimiento, nomProducto, idCat_tipo, cantidad2, importe * cantidad2, lote, idAgente, liquidacion, valorUnidad);
             if (estado) {
@@ -856,7 +856,7 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
             }
         }
         if (tipo_op.equals("Devolucion")) {
-            idTipo_Op = 2;
+            idTipo_Op = 1;
             boolean estado = dbHelperCanjes_Dev.insertar_Dev(idEstablec, idProducto, idTipo_Op, compro, nomEstablecimiento, nomProducto, idCat_tipo, cantidad2, importe * cantidad2, lote, idAgente, liquidacion, valorUnidad);
             if (estado) {
                 confirmar();
