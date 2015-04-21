@@ -54,7 +54,6 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter{
         LinearLayout linearLayoutColor = (LinearLayout) view.findViewById(R.id.linearLayoutEstablecimientoColor);
         TextView orden = (TextView) view.findViewById(R.id.textViewEstablecimientoOrden);
 
-
         if (cursor.getCount()>0){
 
             String id_establecimiento = cursor.getString(cursor.getColumnIndex(dbHelper.EE_id_establec));
@@ -88,5 +87,6 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter{
                     break;
             }
         }
+
     }
 }

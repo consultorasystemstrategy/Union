@@ -202,7 +202,9 @@ public class DbGastos_Ingresos {
     public Cursor listarIngresosGastos(int liquidacion){
         Cursor mCursor = null;
 
-        mCursor = mDb.rawQuery("SELECT 1 as _id, 'Facturas Emitidas' AS comprobante,\n" +
+        mCursor = mDb.rawQuery("SELECT * FROM (\n" +
+
+                "SELECT 1 as _id, 'Facturas Emitidas' AS comprobante,\n" +
                 "\tCOUNT(*) AS n,\n" +
                 "\tROUND(SUM(cv_re_total),1) AS emitidas, \n" +
                 "\t(SELECT ROUND(SUM(cv_re_total),1) FROM m_comprob_venta WHERE cv_in_id_tipo_doc = '1' AND cv_in_id_forma_pago = '1' AND id_liquidacion = '"+liquidacion+"' AND cv_in_estado_comp = '1') AS pagado,\n" +
@@ -210,6 +212,7 @@ public class DbGastos_Ingresos {
                 "FROM m_comprob_venta\n" +
                 "WHERE cv_in_id_tipo_doc = '1'\n" +
                 "AND id_liquidacion  = '"+liquidacion+"'\n" +
+                "AND cv_in_estado_comp = 1\n " +
                 "UNION\n" +
                 "SELECT 2 as _id, 'Boletas Emitidas' AS comprobante,\n" +
                 "\tCOUNT(*) AS n,\n" +
@@ -219,7 +222,7 @@ public class DbGastos_Ingresos {
                 "FROM m_comprob_venta\n" +
                 "WHERE cv_in_id_tipo_doc = '2'\n" +
                 "AND id_liquidacion  = '"+liquidacion+"'\n" +
-                "\n" +
+                "AND cv_in_estado_comp = 1 \n" +
                 "UNION \n" +
                 "\n" +
                 "SELECT \t 3 as _id, 'Facturas Cobradas' AS comprobante,\n" +
@@ -234,7 +237,33 @@ public class DbGastos_Ingresos {
                 "\t(SELECT COUNT(DISTINCT(cc_in_id_comprob)) FROM m_comprob_cobro WHERE UPPER(cc_te_desc_tipo_doc) like '%BOLETA%' AND  cc_in_estado_cobro='0' AND cc_te_fecha_cobro like '%"+getDatePhone()+"%') AS n,\n" +
                 "\t0 AS emitidas,\n" +
                 "\t0 AS pagado,\n" +
-                "\t(SELECT ROUND(SUM(cc_re_monto_cobrado),1) FROM m_comprob_cobro WHERE UPPER(cc_te_desc_tipo_doc) like '%BOLETA%'  AND cc_in_estado_cobro='0' AND cc_te_fecha_cobro like '%"+getDatePhone()+"%') AS cobrado",null);
+                "\t(SELECT ROUND(SUM(cc_re_monto_cobrado),1) FROM m_comprob_cobro WHERE UPPER(cc_te_desc_tipo_doc) like '%BOLETA%'  AND cc_in_estado_cobro='0' AND cc_te_fecha_cobro like '%"+getDatePhone()+"%') AS cobrado" +
+                "\n" +
+                " UNION " +
+                "\n" +
+                "SELECT 5 as _id, 'Facturas Anuladas' AS comprobante,\n" +
+                "                COUNT(*) AS n,\n" +
+                "                ROUND(SUM(cv_re_total),1) AS emitidas,\n" +
+                "                0 AS pagado,\n" +
+                "                0 AS cobrado \n" +
+                "                FROM m_comprob_venta\n" +
+                "                WHERE cv_in_id_tipo_doc = '1'\n" +
+                "                AND id_liquidacion  = '"+liquidacion+"'\n" +
+                "\tAND cv_in_estado_comp = 0\n" +
+                "\n" +
+                "UNION\n" +
+                "SELECT 6 as _id, 'Boletas Anuladas' AS comprobante,\n" +
+                "                COUNT(*) AS n,\n" +
+                "                ROUND(SUM(cv_re_total),1) AS emitidas, \n" +
+                "                0 AS pagado,\n" +
+                "                0 AS cobrado \n" +
+                "                FROM m_comprob_venta\n" +
+                "                WHERE cv_in_id_tipo_doc = '2'\n" +
+                "                AND id_liquidacion  = '"+liquidacion+"'\n" +
+                "\t AND cv_in_estado_comp = 0" +
+                "" +
+                ") AS U\n" +
+                "WHERE U.n != 0;\n",null);
 
         if (mCursor!=null){
             mCursor.moveToFirst();

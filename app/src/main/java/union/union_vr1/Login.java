@@ -347,12 +347,21 @@ public class Login extends Activity implements OnClickListener{
                     session.deleteVariable(4);
                     session.deleteVariable(6);
                     session.deleteVariable(9);
+                    session.deleteVariable(10);
+                    session.deleteVariable(11);
+
 
                     session.createTempSession(1,agenteLista.get(i).getIdAgenteVenta());
                     session.createTempSession(3,agenteLista.get(i).getLiquidacion());
                     session.createTempSession(4,agenteLista.get(i).getIdUsuario());
                     session.createTempSession(6,0);
                     session.createTempSession(9,1);
+                    int correlativoFactura = agenteLista.get(i).getCorrelativoFactura()+1;
+                    int correlativoBoleta = agenteLista.get(i).getCorrelativoBoleta()+1;
+                    session.createTempSession(10,correlativoFactura);
+                    session.createTempSession(11,correlativoBoleta);
+
+
 
 
                     agenteLista.get(i).getIdAgenteVenta();

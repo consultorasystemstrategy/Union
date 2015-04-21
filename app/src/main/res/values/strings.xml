@@ -87,6 +87,11 @@
     <string-array name="tipoDocumentoFactura">
         <item>factura</item>
     </string-array>
+    <string-array name="tipoDocumentoFacturaBoleta">
+        <item>factura</item>
+        <item>boleta</item>
+    </string-array>
+
     <string-array name="tipoDocumentoBoleta">
         <item>boleta</item>
     </string-array>

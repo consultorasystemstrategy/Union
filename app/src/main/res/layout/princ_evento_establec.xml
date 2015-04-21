@@ -172,8 +172,9 @@
                                 android:text="Últimas Ventas"
                                 android:id="@+id/textView"
                                 android:layout_weight="1"
-                                android:textStyle="bold"
-                                android:typeface="monospace" />
+                                android:gravity="bottom"
+                                android:textSize="16dp"
+                                android:textStyle="normal|bold" />
 
                             <Button
                                 android:layout_width="wrap_content"
@@ -215,8 +216,9 @@
                                 android:layout_height="wrap_content"
                                 android:text="Cobros Cercanos"
                                 android:layout_weight="1"
-                                android:textStyle="bold"
-                                android:typeface="monospace" />
+                                android:gravity="bottom"
+                                android:textSize="16dp"
+                                android:textStyle="normal|bold" />
 
                             <Button
                                 android:layout_width="wrap_content"
@@ -257,8 +259,9 @@
                                 android:layout_height="wrap_content"
                                 android:text="Créditos Solicitados"
                                 android:layout_weight="1"
-                                android:textStyle="bold"
-                                android:typeface="monospace" />
+                                android:gravity="bottom"
+                                android:textSize="16dp"
+                                android:textStyle="normal|bold" />
 
                             <Button
                                 android:layout_width="wrap_content"

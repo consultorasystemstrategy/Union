@@ -433,7 +433,7 @@ Instantiate and pass a callback
             spinnerTipoDocumento.setAdapter(adapterTipoDocumento);
         }else if (idTipoDocCliente==2){
             spinnerTipoDocumento = (Spinner) findViewById(R.id.VC_spinnerTipoDocumento);
-            ArrayAdapter<CharSequence> adapterTipoDocumento = ArrayAdapter.createFromResource(this,R.array.tipoDocumentoFactura,android.R.layout.simple_spinner_item);
+            ArrayAdapter<CharSequence> adapterTipoDocumento = ArrayAdapter.createFromResource(this,R.array.tipoDocumentoFacturaBoleta,android.R.layout.simple_spinner_item);
             adapterTipoDocumento.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spinnerTipoDocumento.setAdapter(adapterTipoDocumento);
         }else{
@@ -1348,13 +1348,19 @@ Instantiate and pass a callback
                 erp_stringTipoDocumento="FV";
                 serie = dbHelperAgente.getSerieFacturaByIdAgente(id_agente_venta,idLiquidacion );
                 codigo_erp = erp_stringTipoDocumento+serie;
+                numero_documento = session.fetchVarible(10);
                 Log.d("CODIGO ERP ", codigo_erp);
+                session.deleteVariable(10);
+                session.createTempSession(10,numero_documento+1);
                 break;
             case boleta:
                 i_tipoDocumento = 2;
                 erp_stringTipoDocumento="BV";
                 serie = dbHelperAgente.getSerieBoletaByIdAgente(id_agente_venta, idLiquidacion);
                 codigo_erp = erp_stringTipoDocumento+serie;
+                numero_documento = session.fetchVarible(11);
+                session.deleteVariable(11);
+                session.createTempSession(11,numero_documento+1);
                 Log.d("CODIGO ERP ", codigo_erp);
                 break;
             case ficha:

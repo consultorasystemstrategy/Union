@@ -155,7 +155,7 @@ public class DbAdapter_Canjes_Devoluciones {
 
             }
             Log.e("NUMERODEORDEN", "" + nrOrden);
-            mDb.execSQL("insert into m_histo_venta_detalle values (null,'', '', '" + idEstablec + "','" + idProducto + "','" + idtipoOpe + "','','" + comprobante + "', '" + nomEstablec + "', '" + nomProducto + "', '','', '', '', '" + valorUnidad + "', '" + idCategoria + "','2','" + cantidad + "','" + importe + "','" + getDatePhone() + "','pendiente','" + lote + "','','1','" + idAgente + "',0,0,0.0,'','','" + Constants._CREADO + "','" + nrOrden + "');");
+            mDb.execSQL("insert into m_histo_venta_detalle values (null,'', '', '" + idEstablec + "','" + idProducto + "','" + idtipoOpe + "','','" + comprobante + "', '" + nomEstablec + "', '" + nomProducto + "', '','', '', '', '" + valorUnidad + "', '" + idCategoria + "','2','" + cantidad + "','" + importe + "','" + getDatePhone() + "','pendiente','" + lote + "','','1','" + idAgente + "',0,0,0.0,'','','" + Constants._CREADO + "','" + nrOrden + "', '"+liquidacion+"');");
 
             Cursor cr = mDb.rawQuery("select * from m_stock_agente where st_in_id_producto='" + idProducto + "' and liquidacion='" + liquidacion + "'", null);
             cr.moveToFirst();
