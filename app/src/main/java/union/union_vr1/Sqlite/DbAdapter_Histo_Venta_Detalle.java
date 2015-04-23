@@ -7,6 +7,11 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
 import union.union_vr1.Conexion.DbHelper;
 import union.union_vr1.Objects.HistorialVentaDetalles;
 
@@ -320,6 +325,13 @@ public class DbAdapter_Histo_Venta_Detalle {
         return mCursor;
 
     }
+    private String getDatePhone() {
+        Calendar cal = new GregorianCalendar();
+        Date date = cal.getTime();
+        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        String formatteDate = df.format(date);
+        return formatteDate;
+    }
 
     public Cursor filterExport(int liquidacion) {
         Cursor mCursor = null;
@@ -328,6 +340,7 @@ public class DbAdapter_Histo_Venta_Detalle {
                         HD_orden, HD_comprobante, HD_nom_producto, HD_cantidad, HD_importe, HD_fecha,
                         HD_categoria_ope, HD_categoria_ope_dev, HD_forma_ope, HD_cantidad_ope, HD_cantidad_ope_dev, HD_importe_ope,HD_importe_ope_dev, HD_fecha_ope_dev, HD_hora_ope_dev , HD_fecha_ope, HD_estado, HD_lote, HD_valor_unidad, HD_Guia},
                 HD_id_liquidacion + " = "+liquidacion + " AND (" +Constants._SINCRONIZAR + " = " + Constants._CREADO + " OR " + Constants._SINCRONIZAR + " = " + Constants._ACTUALIZADO + ")", null,
+              // "("+ HD_fecha_ope + " = "+getDatePhone() + " AND " + Constants._SINCRONIZAR + " = " + Constants._ACTUALIZADO + "", null,
                 null, null, null, null);
         if (mCursor != null) {
             mCursor.moveToFirst();
@@ -381,9 +394,10 @@ public class DbAdapter_Histo_Venta_Detalle {
         Log.d("SIGNOS INTERROGACIÓN", signosInterrogacion);
         int cantidadRegistros = mDb.update(SQLITE_TABLE_Histo_Venta_Detalle, initialValues,
                 HD_id_hventadet+"= "+ signosInterrogacion,idsInformeGasto);
+        Cursor cursor = mDb.rawQuery("select * from "+SQLITE_TABLE_Histo_Venta_Detalle+" where "+Constants._SINCRONIZAR+"='"+Constants._ACTUALIZADO+"'",null);
 
 
-        Log.d("REGISTROS ACTUALIZADO ", ""+cantidadRegistros);
+        Log.d("REGISTROS ACTUALIZADO 1", cursor.getCount()+ ":"+cantidadRegistros);
     }
 
     public Cursor fetchAllHistoVentaDetalle0() {

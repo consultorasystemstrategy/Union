@@ -65,7 +65,6 @@ public class mostrar_can_dev_facturas extends TabActivity {
         idEstablec = bl.getString("idEstablec");
         idAgente = bl.getInt("idAgente");
 
-
         Button btn_guardar = (Button) findViewById(R.id.btn_fac_guardar);
         Button btn_cancelar = (Button) findViewById(R.id.btn_fac_cancel);
 
@@ -143,25 +142,8 @@ public class mostrar_can_dev_facturas extends TabActivity {
         Cursor precio = dbHelper_CanDev.obtener_igv(2, idEstablec);
         String textFooter = "";
 
-
-        /*
-        if (precio.moveToFirst()) {
-
-            DecimalFormat df = new DecimalFormat("#.00");
-
-            textViewFooterText.setText("Total :\n" +
-                    "Base imponible :\n" +
-                    "IGV :");.
-
-            textViewFooterTotal.setText(" S/. "+precio.getString(0)+"\n" +
-                    "S/. "+precio.getString(1)+ "\n" +
-                    "S/. "+precio.getString(2));
-
-        }
-        */
         CursorAdapterFacturas_Canjes adapter_facturas = null;
         if (cr.moveToFirst()) {
-
 
             textViewHeader.setText(textoView);
             lista_facturas.addHeaderView(header);
@@ -473,9 +455,9 @@ public class mostrar_can_dev_facturas extends TabActivity {
         Cursor cabecera = dbHelper_CanDev.obtener_cabecera(idEstablec);
         cabecera.moveToFirst();
         String textoImpresion = "\n"
-                +"Nota de Credito Nro: "+cabecera.getString(7)+"\n"
+               // +"Nota de Credito Nro: "+cabecera.getString(7)+"\n"
                 +"Fecha: "+getDatePhone()+"       \n"
-                +"Cliente: "+cabecera.getString(6)+"\n";
+                +"Cliente: "+cabecera.getString(7)+"\n";
         return textoImpresion;
     }
     private String text(){

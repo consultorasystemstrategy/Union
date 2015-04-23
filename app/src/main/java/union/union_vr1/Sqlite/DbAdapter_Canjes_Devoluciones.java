@@ -406,11 +406,11 @@ public class DbAdapter_Canjes_Devoluciones {
 
         try {
 
-            Cursor c = mDb.rawQuery("select * from  m_histo_venta_detalle where  hd_in_id_tipoper='" + tipo + "'  and  hg_te_fecha_ope='" + getDatePhone() + "' and hd_in_id_establec='" + idEstablec + "' and hd_te_hora_ope='pendiente';", null);
-
+            Cursor c = mDb.rawQuery("select * from  m_histo_venta_detalle where  hd_in_id_tipoper='" + tipo + "'  and  hg_te_fecha_ope='" + getDatePhone() + "' and hd_in_id_establec='" + idEstablec + "' and hd_te_hora_ope='pendiente' ;", null);
+            Log.d("CANTIDAD DE CANJES",""+c.getCount());
             while (c.moveToNext()) {
-                Log.e("CANTIDAD DE CANJES",""+c.getCount());
-                mDb.execSQL("update m_histo_venta_detalle set hd_te_hora_ope='" + getTimePhone() + "',estado_sincronizacion='" + Constants._ACTUALIZADO + "'," + DbAdapter_Histo_Venta_Detalle.HD_Guia + "='" + idGuia + "',hd_id_liquidacion='" + liquidacion + "' where  hd_in_id_detalle='" + c.getString(1) + "';");
+                Log.d("IDCANJES1",""+c.getString(1));
+                mDb.execSQL("update m_histo_venta_detalle set hd_te_hora_ope='" + getTimePhone() + "',estado_sincronizacion='" + Constants._ACTUALIZADO + "'," + DbAdapter_Histo_Venta_Detalle.HD_Guia + "='" + idGuia + "',hd_id_liquidacion='" + liquidacion + "',hg_te_fecha_ope_dev='',hd_te_hora_ope_dev=''  where  _id='" + c.getString(0) + "';");
             }
             Cursor stock = mDb.rawQuery("select distinct(ag._id),ag.st_in_id_producto,ag.st_te_nombre,ag. st_te_codigo,ag.st_te_codigo_barras,ag.st_in_inicial,ag.st_in_final,ag.st_in_disponible,ag.st_in_ventas,ag.st_in_canjes,ag.st_in_devoluciones,\n" +
                     "ag.st_in_buenos,ag.st_in_malos,ag.st_in_fisico,ag.st_in_id_agente from m_stock_agente ag,m_histo_venta_detalle mv where ag.st_in_id_producto=mv.hd_in_id_producto and mv.hd_te_hora_ope_dev='pendiente' and ag.liquidacion='" + liquidacion + "'", null);
@@ -444,8 +444,9 @@ public class DbAdapter_Canjes_Devoluciones {
             double Total = 0.0;
             double subTotal = 0.0;
             while (c.moveToNext()) {
+                Log.d("IDCANJES",""+c.getString(0));
                 Total = Total + (c.getDouble(27) * c.getInt(25));
-                mDb.execSQL("update m_histo_venta_detalle set hd_te_hora_ope_dev='" + getTimePhone() + "'," + DbAdapter_Histo_Venta_Detalle.HD_Guia + "='" + idGuia + "',hd_id_liquidacion='" + liquidacion + "',"+Constants._SINCRONIZAR+"='"+Constants._ACTUALIZADO+"' where  hd_in_id_detalle='" + c.getString(1) + "'");
+                mDb.execSQL("update m_histo_venta_detalle set hd_te_hora_ope_dev='" + getTimePhone() + "'," + DbAdapter_Histo_Venta_Detalle.HD_Guia + "='" + idGuia + "',hd_id_liquidacion='" + liquidacion + "',"+Constants._SINCRONIZAR+"='"+Constants._ACTUALIZADO+"' where  _id='" + c.getString(0) + "'");
             }
             subTotal = subTotal / 1.18;
             Log.d("IDGUIA", consultarId(idGuia));
