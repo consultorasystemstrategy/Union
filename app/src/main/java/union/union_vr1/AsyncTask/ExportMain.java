@@ -453,7 +453,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
 
                     if (isSuccesfulExport(jsonObject)){
                         listIdHVCreated.add(""+cursorHistoVentaCreated.getInt(cursorHistoVentaCreated.getColumnIndexOrThrow(dbAdapter_histo_venta.HV_id)));
-
+                        int nrGuiasGuia = dbAdapter_histo_venta_detalle.updateHistoVentaDetalle(cursorHistoVentaCreated.getString(cursorHistoVentaCreated.getColumnIndexOrThrow(DbAdapter_Histo_Venta_Detalle.HD_Guia)),""+idGuia);
                         int nrGuiasActualizados = dbAdapter_histo_venta_detalle.updateHistoVentaDetalle(cursorHistoVentaCreated.getString(cursorHistoVentaCreated.getColumnIndexOrThrow(dbAdapter_histo_venta.HV_id_histo)),""+idGuia);
                         int nroGuiasActualizados  = dbAdapter_histo_venta.updateHistoVenta(cursorHistoVentaCreated.getString(cursorHistoVentaCreated.getColumnIndexOrThrow(dbAdapter_histo_venta.HV_id_histo)),""+idGuia);
                         Log.d("G Det REG UP", ""+nrGuiasActualizados);
