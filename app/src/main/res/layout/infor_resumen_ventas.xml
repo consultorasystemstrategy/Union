@@ -15,31 +15,43 @@
 
             <TextView
                 android:layout_width="110dp"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="prod"
-                android:id="@+id/VRC_TXproducto" />
+                android:id="@+id/VRC_TXproducto"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
+                android:gravity="center_vertical" />
 
             <TextView
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="ini-fin"
-                android:id="@+id/VRC_TXinicialFin" />
+                android:id="@+id/VRC_TXinicialFin"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
+                android:gravity="center_vertical" />
 
             <TextView
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="venta"
-                android:id="@+id/VRC_TXventa" />
+                android:id="@+id/VRC_TXventa"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
+                android:gravity="center_vertical" />
 
             <TextView
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="dev"
-                android:id="@+id/VRC_TXdevol" />
+                android:id="@+id/VRC_TXdevol"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
+                android:gravity="center_vertical" />
 
             <TextView
                 android:layout_width="50dp"
@@ -47,7 +59,9 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="can"
                 android:id="@+id/VRC_TXcanjes"
-                />
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
+                android:gravity="center_vertical" />
         </TableRow>
 
     </TableLayout>

@@ -711,21 +711,27 @@ Instantiate and pass a callback
                 disponible = cursor.getInt(cursor.getColumnIndex(DbAdapter_Stock_Agente.ST_disponible));
                 valor_unidad = cursor.getInt(cursor.getColumnIndex(DbAdapter_Precio.PR_valor_unidad));
 
+                Cursor cursorExistProductoTemp = dbHelper_temp_venta.fetchTempVentaByIDProducto(id_producto);
+                if (cursorExistProductoTemp.getCount()>0){
+                    Toast.makeText(mainActivity,"YA EXISTE",Toast.LENGTH_SHORT).show();
 
-
-                if (disponible>0){
-
-                    Cursor mCursorPrecioUnitarioGeneral = dbHelper_Precio.fetchAllPrecioByIdProductoAndCategoeria(id_producto,id_categoria_establecimiento);
-
-                    if (mCursorPrecioUnitarioGeneral.getCount()>1){
-                        myTextDialogValorUnidad().show();
-                        //Toast.makeText(getApplicationContext(), "Hay "+mCursorPrecioUnitarioGeneral.getCount() + " valores unidades para este producto", Toast.LENGTH_SHORT).show();
-                    }else{
-                        myTextDialog().show();
-                    }
                 }else{
-                    Toast.makeText(mainActivity, "No hay Stock", Toast.LENGTH_SHORT).show();
+                    if (disponible>0){
+
+                        Cursor mCursorPrecioUnitarioGeneral = dbHelper_Precio.fetchAllPrecioByIdProductoAndCategoeria(id_producto,id_categoria_establecimiento);
+
+                        if (mCursorPrecioUnitarioGeneral.getCount()>1){
+                            myTextDialogValorUnidad().show();
+                            //Toast.makeText(getApplicationContext(), "Hay "+mCursorPrecioUnitarioGeneral.getCount() + " valores unidades para este producto", Toast.LENGTH_SHORT).show();
+                        }else{
+                            myTextDialog().show();
+                        }
+                    }else{
+                        Toast.makeText(mainActivity, "No hay Stock", Toast.LENGTH_SHORT).show();
+                    }
                 }
+
+
 
 
             }
@@ -761,10 +767,7 @@ Instantiate and pass a callback
 
                 Log.d("POSITION SELECTED", parent.getPositionForView(view)+" - " + parent.getCount());
                 Log.d("POSITION ", position +" - " + parent.getCount());
-
-
                 //Aquí obtengo el cursor posicionado en la fila que ha seleccionado/clickeado
-
                 Cursor cursor = (Cursor) parent.getItemAtPosition(position);
                 final long id_tem_detalle = cursor.getLong(cursor.getColumnIndex(DBAdapter_Temp_Venta.temp_venta_detalle));
                 myEditDialog(id_tem_detalle).show();
@@ -1017,7 +1020,7 @@ Instantiate and pass a callback
                 maximoValor = mCursorStock.getInt(mCursorStock.getColumnIndexOrThrow(dbHelper_Stock_Agente.ST_disponible));
             }
 
-            savedText.setFilters(new InputFilter[]{new InputFilterMinMax(0,maximoValor)});
+            savedText.setFilters(new InputFilter[]{new InputFilterMinMax(1,maximoValor)});
 
 
 
@@ -1452,13 +1455,13 @@ Instantiate and pass a callback
             dbHelper_Stock_Agente.updateStockAgenteCantidad(id_producto,-(cantidad*valorUnidad), idLiquidacion);
 
             if(nombre_producto.length()>=25){
-                nombre_producto=nombre_producto.substring(0,25);
+                nombre_producto=nombre_producto.substring(0,22);
                 nombre_producto+="...";
             }
 
             DecimalFormat df = new DecimalFormat("#.00");
             textoImpresion+=String.format("%-6s",cantidad) + String.format("%-34s",nombre_producto) +String.format("%-5s",df.format(importe)) + "\n";
-            textoImpresionContenidoLeft +=String.format("%-6s",cantidad) + String.format("%-31s",nombre_producto)+ "\n";
+            textoImpresionContenidoLeft +=String.format("%-6s",cantidad) + String.format("%-28s",nombre_producto)+ "\n";
             textoImpresionContenidoRight+= String.format("%-5s",df.format(importe)) + "\n";
 
             datosConcatenados+="Producto  "+ nombre_producto + "Vendido satisfactoriamente con id : "+ comprobVentaDetalle;
@@ -1477,14 +1480,14 @@ Instantiate and pass a callback
         textoImpresion += String.format("%-37s","IGV:")+  "S/ "+ df.format(igv)+"\n";
         textoImpresion += String.format("%-37s","TOTAL:")+  "S/ "+ df.format(monto_total)+"\n";
 
-        textoImpresionContenidoLeft+=String.format("%-34s","SUB TOTAL:")+"\n";
-        textoImpresionContenidoLeft+=String.format("%-34s","IGV:")+"\n";
-        textoImpresionContenidoLeft+=String.format("%-34s","TOTAL:")+"\n";
+        textoImpresionContenidoLeft+="SUB TOTAL:\n";
+        textoImpresionContenidoLeft+="IGV:\n";
+        textoImpresionContenidoLeft+="TOTAL:\n";
 
-        textoImpresionContenidoRight+= "S/ " +
+        textoImpresionContenidoRight+= "S/" +
                 ""+ df.format(base_imponible)+"\n";
-        textoImpresionContenidoRight+= "S/ "+ df.format(igv)+"\n";
-        textoImpresionContenidoRight+= "S/ "+ df.format(monto_total)+"\n";
+            textoImpresionContenidoRight+= "S/"+ df.format(igv)+"\n";
+        textoImpresionContenidoRight+= "S/"+ df.format(monto_total)+"\n";
 
         dbHelper_Evento_Establecimiento.updateEstadoEstablecs(""+idEstablecimiento,2);
 
@@ -1494,10 +1497,10 @@ Instantiate and pass a callback
                 String fecha_programada = cursorTempComprobCobros.getString(cursorTempComprobCobros.getColumnIndex(DbAdapter_Temp_Comprob_Cobro.temp_fecha_programada));
                 Double monto_a_pagar = cursorTempComprobCobros.getDouble(cursorTempComprobCobros.getColumnIndex(DbAdapter_Temp_Comprob_Cobro.temp_monto_a_pagar));
 
-                Log.d("RECORRE EL CURSOR TEMP COMPROB COBROS", "YES");
+                //Log.d("RECORRE EL CURSOR TEMP COMPROB COBROS", "YES");
 
                 long registroInsertado = dbHelper_Comprob_Cobros.createComprobCobros(idEstablecimiento,Integer.parseInt(id+""),id_plan_pago,id_plan_pago_detalle,tipoDocumento.toUpperCase(),codigo_erp,fecha_programada,monto_a_pagar, fecha_cobro, hora_cobro,monto_cobrado,estado_cobro,id_agente_venta,id_forma_cobro, lugar_registro, idLiquidacion);
-                    Log.d("CC INSERTADO SATISFACTORIAMENTE ", "ID : "+ registroInsertado);
+                  //  Log.d("CC INSERTADO SATISFACTORIAMENTE ", "ID : "+ registroInsertado);
             }
         }
 
@@ -1531,7 +1534,7 @@ Instantiate and pass a callback
     private void displayHistorialComprobanteAnterior() {
 
 
-        Log.d("DISPLAY ID ESTABLECIMIENTO ", ""+idEstablecimiento);;
+        //Log.d("DISPLAY ID ESTABLECIMIENTO ", ""+idEstablecimiento);;
 
         //((MyApplication)this.getApplication()).setDisplayedHistorialComprobanteAnterior(true);
         session.deleteVariable(6);
@@ -1756,7 +1759,7 @@ Instantiate and pass a callback
             maximoValor = mCursorStock.getInt(mCursorStock.getColumnIndexOrThrow(dbHelper_Stock_Agente.ST_disponible));
         }
 
-        savedText.setFilters(new InputFilter[]{new InputFilterMinMax(0,maximoValor)});
+        savedText.setFilters(new InputFilter[]{new InputFilterMinMax(1,maximoValor)});
 
 
         if (mCursorPrecioUnitarioGeneral.getCount()>0) {
@@ -1879,7 +1882,7 @@ Instantiate and pass a callback
             maximoValor = mCursorStock.getInt(mCursorStock.getColumnIndexOrThrow(dbHelper_Stock_Agente.ST_disponible));
         }
 
-        savedText.setFilters(new InputFilter[]{new InputFilterMinMax(0,maximoValor)});
+        savedText.setFilters(new InputFilter[]{new InputFilterMinMax(1,maximoValor)});
 
 
 

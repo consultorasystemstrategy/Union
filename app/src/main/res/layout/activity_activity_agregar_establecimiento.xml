@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent" android:layout_height="fill_parent"
+    android:orientation="vertical">
+
+    <TextView android:layout_width="fill_parent"
+        android:layout_height="wrap_content" android:padding="10dp"
+        android:text="Agente: Manuel Casabona" android:textSize="20sp"
+        android:id="@+id/textViewNombreRuta"
+        android:textStyle="bold|italic"/>
+
+    <EditText android:id="@+id/VMAE_buscar" android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:ems="10"
+        android:hint="@string/VME_busqueda"
+        android:textSize="16sp"
+        android:layout_marginBottom="4dp"
+        android:layout_marginTop="4dp">
+        <requestFocus />
+    </EditText>
+
+    <ListView android:id="@+id/VMAE_listar" android:layout_width="fill_parent"
+        android:layout_height="fill_parent" />
+
+</LinearLayout>

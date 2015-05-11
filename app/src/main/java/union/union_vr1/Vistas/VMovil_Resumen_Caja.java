@@ -240,7 +240,6 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
                 0);
 
         listView.setAdapter(dataAdapter);
-
     }
 
     @Override

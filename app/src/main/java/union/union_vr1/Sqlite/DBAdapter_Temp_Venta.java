@@ -164,5 +164,15 @@ public class DBAdapter_Temp_Venta {
         return mCursor;
     }
 
+    public Cursor fetchTempVentaByIDProducto(int id) {
 
+        Cursor mCursor = mDb.query(SQLITE_TABLE_Temp_Venta_Detalle, new String[] {temp_venta_detalle,
+                temp_id_comprob,temp_id_producto, temp_nom_producto, temp_cantidad, temp_precio_unit,temp_precio_unit, temp_importe,
+                temp_prom_anterior, temp_devuelto},temp_id_producto + " = ?", new String[]{""+id}, null, null, null);
+
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+    }
 }

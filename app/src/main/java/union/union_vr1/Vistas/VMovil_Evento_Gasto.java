@@ -220,7 +220,6 @@ public class VMovil_Evento_Gasto extends Activity implements View.OnClickListene
                 String procedenciaSeleccionada = (String) adapterView.getItemAtPosition(i);
                 ProcedenciaGasto procedenciaGasto = ProcedenciaGasto.valueOf(procedenciaSeleccionada);
 
-
                 if (tipoGasto.equals("Combustible")) {
                     switch (procedenciaGasto) {
                         case planta:
@@ -443,6 +442,11 @@ public class VMovil_Evento_Gasto extends Activity implements View.OnClickListene
                 Log.d("TIPO DOCUMENTO", "FICHA");
                 break;
         }
+
+
+        editTextTotal.setText("");
+        editTextTotal.setError(null);
+        editTextReferencia.setText("Referencia");
 
         displayListViewVEG();
         Toast.makeText(getApplicationContext(), "Gasto Agregado", Toast.LENGTH_SHORT).show();

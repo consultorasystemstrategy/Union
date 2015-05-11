@@ -10,31 +10,47 @@
 
         <TextView
             android:layout_width="110dp"
-            android:layout_height="40dp"
+            android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="prod."
-            android:id="@+id/VRC_TXproducto" />
+            android:id="@+id/VRC_TXproducto"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_vertical" />
 
         <TextView
             android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="fin."
-            android:id="@+id/VRC_TXfinal" />
+            android:id="@+id/VRC_TXfinal"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_vertical" />
 
         <TextView
             android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="dispon."
-            android:id="@+id/VRC_TXdisponible" />
+            android:id="@+id/VRC_TXdisponible"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_vertical" />
 
         <TextView
             android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="buen."
-            android:id="@+id/VRC_TXbuenos" />
+            android:id="@+id/VRC_TXbuenos"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_vertical" />
 
         <TextView
             android:layout_width="50dp"
@@ -42,7 +58,10 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="mal."
             android:id="@+id/VRC_TXmalos"
-            />
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_vertical" />
     </TableRow>
 
 

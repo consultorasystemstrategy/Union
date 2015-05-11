@@ -38,6 +38,7 @@ import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 import union.union_vr1.Sqlite.DbGastos_Ingresos;
 import union.union_vr1.Utils.MyApplication;
 import union.union_vr1.Utils.Utils;
+import union.union_vr1.activity_agregar_establecimiento;
 
 public class VMovil_Menu_Establec extends Activity implements View.OnClickListener{
 
@@ -51,6 +52,7 @@ public class VMovil_Menu_Establec extends Activity implements View.OnClickListen
     private TextView textViewNombreRuta;
     private int idLiquidacion;
     private Activity mainActivity;
+    private Button buttonAgregarEstablecimiento;
 
 
     //SLIDING MENU
@@ -143,6 +145,8 @@ public class VMovil_Menu_Establec extends Activity implements View.OnClickListen
 
         }
         textViewNombreRuta.setText("Ruta : "+nombreRuta);
+        buttonAgregarEstablecimiento = (Button) findViewById(R.id.buttonAddEstablecimientos);
+        buttonAgregarEstablecimiento.setOnClickListener(this);
 
         //Generate ListView from SQLite Database
         displayListView();
@@ -432,6 +436,11 @@ public class VMovil_Menu_Establec extends Activity implements View.OnClickListen
     public void onClick(View v) {
         // TODO Auto-generated method stub
         switch (v.getId()) {
+
+            case R.id.buttonAddEstablecimientos:
+                Intent iae = new Intent(this, activity_agregar_establecimiento.class);
+                startActivity(iae);
+                break;
 
             //SLIDING MENU
             case R.id.slide_textviewPrincipal:

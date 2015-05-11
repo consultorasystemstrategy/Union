@@ -37,21 +37,12 @@ import union.union_vr1.Vistas.VMovil_Online_Pumovil;
  */
 public class ExportMain extends AsyncTask<String, String, String> {
 
-
-
     private DbAdapter_Temp_Session session;
-
-
     private Activity mainActivity;
     private ProgressDialog progressDialog;
-
-
     private int idLiquidacion;
     private int idUsuario;
     private int idAgente;
-
-
-    
     //DEFINO LAS VARIABLES A MIS MANEJADORES DE LAS TABLAS
     private DbAdapter_Informe_Gastos dbAdapter_informe_gastos;
     private DbAdapter_Comprob_Venta dbAdapter_comprob_venta;
@@ -236,6 +227,12 @@ public class ExportMain extends AsyncTask<String, String, String> {
                             int registrosActualizados = dbAdapter_comprob_venta_detalle.updateComprobVentaDetalleReal(cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_comprob)), idComprobanteVentaRetornado);
                             Log.d("CV REGISTROS UP", "" + registrosActualizados);
 
+                            //EXPORTO Y SI ES CV AL CRÉDITO ACTUALIZO EL ID CREADO POR ANDROID AL ID CREADO EN SQL SERVER
+                            int registrosUpdtCV = dbAdapter_comprob_venta.updateComprobanteIDReal(cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_comprob)), idComprobanteVentaRetornado);
+
+                            Log.d("n# IDS cv -><-","" +cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_comprob))+"to"+idComprobanteVentaRetornado + "#s UPD-->"+registrosUpdtCV);
+
+
                             int idPlan = getidPlanPagoRetornado(jsonObjectSuccesfull);
                             Log.d("ID PLAN PAGO RETORNADO", ""+idPlan);
 
@@ -262,6 +259,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
 
                                 if (isSuccesfulExport(jsonObjectSuccesfull)){
                                     listIdComprobanteCobro.add(""+cursorPlanPago.getInt(cursorPlanPago.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_id_cob_historial)));
+
                                 }
                                 Log.d("EXPORT JSON PPD S", jsonObjectSuccess.toString());
                             }
@@ -279,6 +277,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
                         }
 
                     }
+
 
                     Log.d("JSON INT RETURN ", jsonObjectSuccesfull.toString());
 

@@ -150,12 +150,13 @@ public class DbAdapter_Stock_Agente {
         initialValues.put(ST_inicial, stockAgente.getStockInicial());
         initialValues.put(ST_final, stockAgente.getStockFinal());
         initialValues.put(ST_disponible, stockAgente.getDisponible());
-        initialValues.put(ST_ventas, stockAgente.getVentas());
+        /*initialValues.put(ST_ventas, stockAgente.getVentas());
         initialValues.put(ST_canjes, stockAgente.getCanjes());
         initialValues.put(ST_devoluciones, stockAgente.getDevoluciones());
         initialValues.put(ST_buenos, stockAgente.getBuenos());
         initialValues.put(ST_malos, stockAgente.getMalos());
         initialValues.put(ST_fisico, stockAgente.getFisico());
+        */
         initialValues.put(ST_id_agente, idAgente);
         initialValues.put(ST_liquidacion, liquidacion);
         initialValues.put(Constants._SINCRONIZAR, Constants._ACTUALIZADO);
@@ -242,7 +243,7 @@ public class DbAdapter_Stock_Agente {
                     "INNER JOIN m_precio P\n" +
                     "ON SA.st_in_id_producto = P.pr_in_id_producto\n" +
                     "WHERE P.pr_in_id_cat_estt = ? " +
-                    "AND SA.st_te_nombre LIKE '%"+nameProducto+"%' " +
+                    "AND SA.st_te_nombre LIKE '%"+nameProducto+"%' OR SA.st_te_codigo LIKE '%"+nameProducto+"%' " +
                     "AND SA.liquidacion = ? " +
                     "GROUP BY st_in_id_producto" +
                     "", new String[]{"" + idCategorìaEstablecimiento, "" + liquidacion});
@@ -456,7 +457,7 @@ public class DbAdapter_Stock_Agente {
 
         Cursor mCursor = mDb.query(SQLITE_TABLE_Stock_Agente, new String[] {ST_id_stock_agente,
                         ST_codigo,ST_nombre,ST_inicial,ST_final,ST_ventas,ST_devoluciones,ST_canjes,ST_buenos,ST_malos,ST_disponible},
-                ST_liquidacion + " = ?", new String[]{""+liquidacion}, null, null, null);
+                ST_liquidacion + " = ?", new String[]{""+liquidacion}, null, null, ST_nombre + " ASC");
 
         if (mCursor != null) {
             mCursor.moveToFirst();

@@ -433,12 +433,12 @@ public class DbAdaptert_Evento_Establec {
         return mCursor;
     }
 
-    public Cursor listarEstablecimientosPorNombre(String nombreEstablecimiento, int idLiquidacion){
+    public Cursor listarEstablecimientosPorNombre(String nombreCliente, int idLiquidacion){
         Cursor mCursor = mDb.rawQuery("SELECT ee.*,  SUM(cc.cc_re_monto_a_pagar) as cc_re_monto_a_pagar\n" +
                 "FROM m_evento_establec ee\n" +
                 "LEFT OUTER JOIN m_comprob_cobro cc\n" +
                 "ON ee.ee_in_id_establec = cc.cc_in_id_establec \n" +
-                "WHERE ee_te_nom_establec LIKE '%"+nombreEstablecimiento+"%'   \n" +
+                "WHERE ee_te_nom_cliente LIKE '%"+nombreCliente+"%'   \n" +
                 "AND ee_in_id_liquidacion = '"+idLiquidacion+"' AND cc_in_estado_cobro = 1\n" +
                 "GROUP BY  ee.ee_in_id_establec\n" +
                 "UNION\n" +
@@ -446,14 +446,14 @@ public class DbAdaptert_Evento_Establec {
                 "FROM m_evento_establec ee\n" +
                 "LEFT OUTER JOIN m_comprob_cobro cc\n" +
                 "ON ee.ee_in_id_establec = cc.cc_in_id_establec \n" +
-                "WHERE ee_te_nom_establec LIKE '%"+nombreEstablecimiento+"%'   \n" +
+                "WHERE ee_te_nom_cliente LIKE '%"+nombreCliente+"%'   \n" +
                 "AND ee_in_id_liquidacion = '"+idLiquidacion+"' AND cc_in_estado_cobro IS NULL\n" +
                 "GROUP BY  ee.ee_in_id_establec\n" +
                 "UNION\n" +
                 "select ee.*,sum(0) as  cc_re_monto_a_pagar\n" +
                 "from m_comprob_cobro cc,m_evento_establec ee \n" +
                 "where ee.ee_in_id_establec = cc.cc_in_id_establec \n" +
-                "AND ee_te_nom_establec LIKE '%"+nombreEstablecimiento+"%'   \n" +
+                "AND ee_te_nom_cliente LIKE '%"+nombreCliente+"%'   \n" +
                 "AND ee_in_id_liquidacion = '"+idLiquidacion+"'\n" +
                 "GROUP BY  ee.ee_in_id_establec \n" +
                 "having sum(cc.cc_in_estado_cobro)=0 " +

@@ -280,7 +280,6 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         cCobro = new DbAdapter_Comprob_Cobro(this);
         mNumeroEstablecimientos.setOnClickListener(this);
         cCobro.open();
-        AsignarColor(mCobroTotal);
 
 
         Log.d("ID AGENTE ", ""+idAgente);
@@ -317,6 +316,7 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
 
         //SLIDING MENU
         showSlideMenu(mainActivity);
+        AsignarColor(mCobroTotal);
     }
 
 
@@ -540,7 +540,7 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
 
     private void AsignarColor(Button btn) {
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-        Cursor cursor = cCobro.listarComprobantesToCobros();
+        Cursor cursor = cCobro.listarComprobantesToCobros(slideIdAgente);
         if (cursor.moveToFirst()) {
             String fecha_Programada = cursor.getString(cursor.getColumnIndexOrThrow("cc_te_fecha_programada"));
             try {

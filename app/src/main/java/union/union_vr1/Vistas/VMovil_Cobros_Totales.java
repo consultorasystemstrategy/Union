@@ -125,7 +125,7 @@ public class VMovil_Cobros_Totales extends Activity implements View.OnClickListe
         //CHANGE DATA SLIDE MENU
         changeDataSlideMenu();
 
-        Cursor cursor = cCobro.listarComprobantesToCobros();
+        Cursor cursor = cCobro.listarComprobantesToCobros(slideIdAgente);
 
 
         CursorAdapterCobrosTotales cACobros = new CursorAdapterCobrosTotales(this, cursor);
@@ -181,6 +181,13 @@ public class VMovil_Cobros_Totales extends Activity implements View.OnClickListe
                         int estado = cCobro.updateComprobCobrosCan2(idCCobro, getDatePhone(), getTimePhone(), deuda, "0");
 
                         if (estado == 1) {
+
+                            /*
+                            if (conectadoWifi()||conectadoRedMovil()){
+                                exportMain.execute();
+                            }
+                            */
+
                             listarCobrosTotales();
 
                             Toast.makeText(getApplicationContext(), "Actualizado", Toast.LENGTH_SHORT).show();

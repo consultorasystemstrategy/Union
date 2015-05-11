@@ -20,6 +20,7 @@
     <string name="VCH_titulo">Lista Canc. Historico!</string>
     <string name="VCH_busqueda">Buscar Canc. Historico…</string>
     <string name="VCPP">Nùmero de Cuotas</string>
+    <string name="VCPPD">Número de Documento</string>
 
     <string-array name="country_arrays">
         <item>Malaysia</item>
@@ -141,6 +142,7 @@
     <string name="fechakel">10-02-2015</string>
     <string name="title_activity_prueba">Prueba</string>
     <string name="cabecera_productos_union"></string>
-
-
+    <string name="title_activity_activity_agregar_establecimiento">
+        activity_agregar_establecimiento
+    </string>
 </resources>

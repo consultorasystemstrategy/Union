@@ -198,6 +198,15 @@ public class DbAdapter_Comprob_Venta {
                 CV_id_comprob+"=?",new String[]{""+id});
     }
 
+    public int updateComprobanteIDReal(int id, int idReal){
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(CV_id_comprob, idReal);
+
+        return mDb.update(SQLITE_TABLE_Comprob_Venta, initialValues,
+                CV_id_comprob+"=?",new String[]{""+id});
+
+    }
+
     public void changeEstadoToExport(String[] idComprobante, int estadoSincronizacion){
         ContentValues initialValues = new ContentValues();
         initialValues.put(Constants._SINCRONIZAR,estadoSincronizacion);
