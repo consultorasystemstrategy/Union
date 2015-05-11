@@ -439,7 +439,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
                             0,
                             1,
                             cursorHistoVentaCreated.getInt(cursorHistoVentaCreated.getColumnIndexOrThrow(dbAdapter_histo_venta.HV_id_agente)),
-                            4,
+                            2,
                             cursorHistoVentaCreated.getInt(cursorHistoVentaCreated.getColumnIndexOrThrow(dbAdapter_histo_venta.HV_subtotal)),
                             cursorHistoVentaCreated.getString(cursorHistoVentaCreated.getColumnIndexOrThrow(dbAdapter_histo_venta.HV_id_histo))
                             );

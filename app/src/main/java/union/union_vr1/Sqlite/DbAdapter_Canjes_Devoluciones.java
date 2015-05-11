@@ -450,7 +450,6 @@ public class DbAdapter_Canjes_Devoluciones {
             }
             subTotal = subTotal / 1.18;
             Log.d("IDGUIA", consultarId(idGuia));
-           // mDb.execSQL("update m_histo_venta set hv_in_subtotal ='" + subTotal + "', estado_sincronizacion=" + Constants._CREADO + " where _id='" + consultarId(idGuia) + "' ;");
 
 
             estado = true;
