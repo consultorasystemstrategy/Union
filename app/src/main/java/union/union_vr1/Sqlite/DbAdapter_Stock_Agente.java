@@ -446,7 +446,7 @@ public class DbAdapter_Stock_Agente {
                 "FROM m_stock_agente SA\n" +
                 "INNER JOIN m_precio P\n" +
                 "ON  SA.st_in_id_producto = P.pr_in_id_producto\n" +
-                "WHERE SA.st_te_nombre LIKE '%"+nombre+"%' AND " +
+                "WHERE (SA.st_te_nombre LIKE '%"+nombre+"%' OR SA.st_te_codigo LIKE '%"+nombre+"%') AND " +
                 "SA.liquidacion = '" +liquidacion+"' group by SA.st_in_id_producto ;",null);
         return cr;
     }

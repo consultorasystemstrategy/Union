@@ -693,6 +693,8 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
 
             @Override
             public void afterTextChanged(Editable editable) {
+
+
                 if (nroCompro.getText().toString().trim().equals("")) {
                     nroCompro.setError("Es Requerido");
                 } else {
@@ -738,7 +740,19 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+                if (charSequence.length() != 0) {
+                    String nro = charSequence.toString();
+                    int charSec = Integer.parseInt(nro);
 
+                    if (charSec == 0) {
+                        cantidadText.setText("");
+                        Toast.makeText(getApplicationContext(), "La Cantidad no puede ser 0", Toast.LENGTH_SHORT).show();
+                    }
+                    if (charSec > stock) {
+                        cantidadText.setText("");
+                        Toast.makeText(getApplicationContext(), "No puede Pasar el Stock", Toast.LENGTH_SHORT).show();
+                    }
+                }
             }
 
             @Override
@@ -762,7 +776,7 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
                         String cantidad = cantidadText.getText().toString();
                         String tipo_op = spinnerTipoOp.getSelectedItem().toString();
                         String categoria_op = spinnerCategoria.getSelectedItem().toString();
-                        if (compro.trim().equals("") || lote.trim().equals("") || cantidad.trim().equals("")) {
+                        if (compro.trim().equals("") || lote.trim().equals("") || cantidad.trim().equals("") || cantidad=="0") {
                             if (compro.trim().equals("")) {
                                 nroCompro.setError("Es Requerido");
                             }

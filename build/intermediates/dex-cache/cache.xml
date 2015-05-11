@@ -2,39 +2,39 @@
 <items version="2" >
 
     <item
-        jar="D:\ProductosUnion\app\build\intermediates\exploded-aar\ProductosUnion\SlidingMenu\unspecified\classes.jar"
-        jumboMode="false"
-        revision="20.0.0"
-        sha1="b7ee3e653c2db3ebf1bf5e9c664babe8d3ee3e8c">
-        <dex dex="D:\ProductosUnion\app\build\intermediates\pre-dexed\release\classes-80f4534d531e078b4f1a05d75f9e7e1866277247.jar" />
-    </item>
-    <item
-        jar="C:\Users\Usuario\Documents\Android sdk\sdk\extras\android\m2repository\com\android\support\support-annotations\20.0.0\support-annotations-20.0.0.jar"
-        jumboMode="false"
-        revision="20.0.0"
-        sha1="9d9013e9ff35fc3756411e62873c363c70c638fa">
-        <dex dex="D:\ProductosUnion\app\build\intermediates\pre-dexed\release\support-annotations-20.0.0-f4bd96101da5f3701e9b51ac50bbcdc23c685128.jar" />
-    </item>
-    <item
-        jar="D:\ProductosUnion\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\20.0.0\classes.jar"
+        jar="C:\Users\Kelvin\AndroidStudioProjects\Union\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\20.0.0\classes.jar"
         jumboMode="false"
         revision="20.0.0"
         sha1="f21927d22fe31889ecce94dd697a2e75b137e0ef">
-        <dex dex="D:\ProductosUnion\app\build\intermediates\pre-dexed\release\classes-37d3e81bfdc4e8d78a463e3b73759d7d2d3b23be.jar" />
+        <dex dex="C:\Users\Kelvin\AndroidStudioProjects\Union\app\build\intermediates\pre-dexed\release\classes-ff15a9424ce9d7087b5a387eb768466fab2e2d15.jar" />
     </item>
     <item
-        jar="D:\ProductosUnion\app\build\intermediates\exploded-aar\com.android.support\support-v4\20.0.0\libs\internal_impl-20.0.0.jar"
-        jumboMode="false"
-        revision="20.0.0"
-        sha1="e40b3078e3fbd353c9f44da8df25a8fc0078209d">
-        <dex dex="D:\ProductosUnion\app\build\intermediates\pre-dexed\release\internal_impl-20.0.0-ee5e0536ae4f32a08d9e567f5486833a417d3345.jar" />
-    </item>
-    <item
-        jar="D:\ProductosUnion\app\build\intermediates\exploded-aar\com.android.support\support-v4\20.0.0\classes.jar"
+        jar="C:\Users\Kelvin\AndroidStudioProjects\Union\app\build\intermediates\exploded-aar\com.android.support\support-v4\20.0.0\classes.jar"
         jumboMode="false"
         revision="20.0.0"
         sha1="8694693636ab36910c8100ce527c258ff3ebece0">
-        <dex dex="D:\ProductosUnion\app\build\intermediates\pre-dexed\release\classes-b896d11649409279b6dd58ea5d314558ba599bde.jar" />
+        <dex dex="C:\Users\Kelvin\AndroidStudioProjects\Union\app\build\intermediates\pre-dexed\release\classes-62d02fc8b0a869fad76ab63ca713a687702205e1.jar" />
+    </item>
+    <item
+        jar="C:\Users\Kelvin\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\20.0.0\support-annotations-20.0.0.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="9d9013e9ff35fc3756411e62873c363c70c638fa">
+        <dex dex="C:\Users\Kelvin\AndroidStudioProjects\Union\app\build\intermediates\pre-dexed\release\support-annotations-20.0.0-27c39329d8e04f35bea8670986ac04ae59bbe5c1.jar" />
+    </item>
+    <item
+        jar="C:\Users\Kelvin\AndroidStudioProjects\Union\app\build\intermediates\exploded-aar\com.android.support\support-v4\20.0.0\libs\internal_impl-20.0.0.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="e40b3078e3fbd353c9f44da8df25a8fc0078209d">
+        <dex dex="C:\Users\Kelvin\AndroidStudioProjects\Union\app\build\intermediates\pre-dexed\release\internal_impl-20.0.0-7196a36fb548269dd384d780eabd70976b6849f0.jar" />
+    </item>
+    <item
+        jar="C:\Users\Kelvin\AndroidStudioProjects\Union\app\build\intermediates\exploded-aar\Union\SlidingMenu\unspecified\classes.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="c7c01a9d536b38e980acc2232bd0ec78764adf9e">
+        <dex dex="C:\Users\Kelvin\AndroidStudioProjects\Union\app\build\intermediates\pre-dexed\release\classes-cfc167d506c9595805266c8df060bf73a732f8f4.jar" />
     </item>
 
 </items>
