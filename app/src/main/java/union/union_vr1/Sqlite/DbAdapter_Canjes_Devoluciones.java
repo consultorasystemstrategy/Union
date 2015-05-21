@@ -379,7 +379,7 @@ public class DbAdapter_Canjes_Devoluciones {
         Cursor cursor = mDb.rawQuery("select _id,hv_in_id_histo from m_histo_venta where hv_in_fecha='" + getDatePhone() + "' and hv_id_establecimiento='" + establecimiento + "';", null);
         //cursor.moveToFirst();
         if (cursor.moveToFirst()) {
-            mDb.execSQL("update m_histo_venta set estado_sincronizacion='" + Constants._EXPORTADO + "' where _id='" + cursor.getString(0) + "'");
+            mDb.execSQL("update m_histo_venta set estado_sincronizacion='" + Constants._ACTUALIZADO + "' where _id='" + cursor.getString(0) + "'");
             idCabecera = cursor.getString(1);
             Log.d("idCabecera", idCabecera);
         } else {
@@ -389,6 +389,8 @@ public class DbAdapter_Canjes_Devoluciones {
             idCabecera = cr.getString(1);
             Log.d("idCabecera2", idCabecera);
         }
+        Cursor cursor2 = mDb.rawQuery("select _id,hv_in_id_histo from m_histo_venta where hv_in_fecha='" + getDatePhone() + "' and hv_id_establecimiento='" + establecimiento + "' and "+Constants._SINCRONIZAR+"='"+Constants._CREADO+"';", null);
+        Log.e("CANTIDADVERDADERA", ""+cursor2.getCount());
 
 
         return idCabecera;

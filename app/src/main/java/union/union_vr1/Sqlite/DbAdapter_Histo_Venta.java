@@ -87,6 +87,8 @@ public class DbAdapter_Histo_Venta {
         if (mCursor != null) {
             mCursor.moveToFirst();
         }
+        Log.e("NUMERODECABECERAS",""+mCursor.getCount());
+
         return mCursor;
     }
 

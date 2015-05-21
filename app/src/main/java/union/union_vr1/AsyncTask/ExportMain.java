@@ -104,6 +104,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
         Cursor cursorEventoEstablecimiento = dbAdaptert_evento_establec.filterExportUpdated();
 //histo venta
         Cursor cursorHistoVentaCreated = dbAdapter_histo_venta.filterExport();
+
         Cursor cursorHistoVentaDetalleCreated = dbAdapter_histo_venta_detalle.filterExport(idLiquidacion);
         Cursor cursorAutorizacionCobro = dbAdapter_temp_autorizacion_cobro.filterExport();
 
@@ -510,6 +511,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
                         cursorHistoVentaDetalleCreated.getString(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_fecha_ope_dev))+"*"+
                         cursorHistoVentaDetalleCreated.getString(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_hora_ope_dev)));
                 try {
+                    //
                     jsonObject = api.CreateDevoluciones(
                             cursorHistoVentaDetalleCreated.getInt(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_producto)),
                             cursorHistoVentaDetalleCreated.getInt(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_categoria_ope)),
@@ -540,6 +542,8 @@ public class ExportMain extends AsyncTask<String, String, String> {
                     if (isSuccesfulExport(jsonObject)){
                         listIdHVDCreated.add(""+cursorHistoVentaDetalleCreated.getInt(cursorHistoVentaDetalleCreated.getColumnIndexOrThrow(dbAdapter_histo_venta_detalle.HD_id_hventadet)));
                     }
+
+                    //
 
                 } catch (Exception e) {
                     e.printStackTrace();
