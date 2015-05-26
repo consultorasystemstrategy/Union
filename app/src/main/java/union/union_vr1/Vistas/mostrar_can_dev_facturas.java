@@ -213,9 +213,9 @@ public class mostrar_can_dev_facturas extends TabActivity {
         } else {
         }
 
-        Cursor cr = dbHelper_CanDev.obtener_facturas_dev(2, idEstablec);
+        Cursor cr = dbHelper_CanDev.obtener_facturas_dev(1, idEstablec);
         ListView lista_facturas = (ListView) findViewById(R.id.listViewDevoluciones);
-        Cursor precio = dbHelper_CanDev.obtener_igv_dev(2, idEstablec);
+        Cursor precio = dbHelper_CanDev.obtener_igv_dev(1, idEstablec);
         String textFooter = "";
         if (precio.moveToFirst()) {
 
@@ -267,7 +267,7 @@ public class mostrar_can_dev_facturas extends TabActivity {
                             }
                         }
                         if (operacion == 2) {
-                            boolean estado = dbHelper_CanDev.guardarCambios(operacion, idEstablec,idGuia,liquidacion);
+                            boolean estado = dbHelper_CanDev.guardarCambios(2, idEstablec,idGuia,liquidacion);
                             if (estado) {
                                // Toast.makeText(getApplicationContext(),""+idGuia,Toast.LENGTH_SHORT).show();
                                 exito();
@@ -298,7 +298,8 @@ public class mostrar_can_dev_facturas extends TabActivity {
                 .setCancelable(false)
                 .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        if (tipo == 1) {
+                        if (op.equals("Canjes")) {
+                            //3
                             boolean estado = dbHelper_CanDev.cancelarCambios(tipo, idEstablec, columna,liquidacion);
                             if (estado) {
 
@@ -307,7 +308,9 @@ public class mostrar_can_dev_facturas extends TabActivity {
                                 Toast.makeText(getApplicationContext(), "Ocurrio un Error", Toast.LENGTH_SHORT).show();
                             }
                         }
-                        if (tipo == 2) {
+                        if (op.equals("Devoluciones")) {
+
+                            //2
                             boolean estado = dbHelper_CanDev.cancelarCambios_dev(tipo, idEstablec, columna,liquidacion);
                             if (estado) {
                                 exito();

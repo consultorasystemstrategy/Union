@@ -287,7 +287,7 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity implements View.OnClic
 
                 }
             });
-        lista_facturas.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        /*lista_facturas.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Cursor cr = (Cursor)adapterView.getItemAtPosition(i);
@@ -300,11 +300,11 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity implements View.OnClic
                 String datos = cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Histo_Venta_Detalle.HD_nom_producto));
                 Log.e("datos",""+datos);
                // Toast.makeText(getApplicationContext(),"ID"+idHistoVenta,Toast.LENGTH_LONG).show();
-                select("1","Canje",idHistoVenta,idProducto,idHistoDetalle,cantProductos,nrOrden);
+                select("2","Canje",idHistoVenta,idProducto,idHistoDetalle,cantProductos,nrOrden);
 
                 return false;
             }
-        });
+        });*/
 
 
 
@@ -319,7 +319,7 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity implements View.OnClic
                     .setPositiveButton("Quitar", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             boolean estado =false;
-                            if (idOperacion.equals("1")) {//cannjeggggg
+                            if (idOperacion.equals("2")) {//cannjeggggg
                                 Log.e("Hola K ASE",""+idProducto+"-"+cantProductos+"-"+idHistoDetalle+"-"+idHistoVenta+"-"+liquidacion);
                                 estado =  dbHelper_CanDev.cancelarCabiosByIdCanjes(idProducto,cantProductos,idHistoVenta,idHistoDetalle,liquidacion,nrOrden);
                                 if(estado){
@@ -370,7 +370,7 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity implements View.OnClic
                     finish();
                 }
             });
-        lista_facturas.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        /*lista_facturas.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Cursor cr = (Cursor)adapterView.getItemAtPosition(i);
@@ -383,7 +383,7 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity implements View.OnClic
                 select("2", "Devolucion",idHistoVenta,idProducto,idHistoDetalle,cantProductos,nrOrden);
                 return false;
             }
-        });
+        });*/
 
     }
     public void back(){

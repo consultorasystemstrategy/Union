@@ -302,6 +302,7 @@ public class DbAdapter_Canjes_Devoluciones {
     }
 
     public Cursor obtener_facturas_can(String idEstablec) {
+        //canje =2
         Cursor cr = mDb.rawQuery("select * from m_histo_venta_detalle where hd_in_id_establec='" + idEstablec + "'  and hd_te_hora_ope='pendiente' and hd_in_id_tipoper='2' and  hg_te_fecha_ope='" + getDatePhone() + "' group by hd_orden_can_dev;", null);
         if (cr != null) {
             cr.moveToFirst();
@@ -340,7 +341,7 @@ public class DbAdapter_Canjes_Devoluciones {
     }
 
     public Cursor obtener_facturas_canjes(int tipo, String idEstablec) {
-        Cursor cr = mDb.rawQuery("select * from  m_histo_venta_detalle where  hd_in_id_tipoper='" + tipo + "' and hd_in_id_establec='" + idEstablec + "' and  hg_te_fecha_ope='" + getDatePhone() + "' and hd_te_hora_ope ='pendiente' order by hd_orden_can_dev", null);
+        Cursor cr = mDb.rawQuery("select * from m_histo_venta_detalle where hd_in_id_establec='"+idEstablec+"'  and hd_te_hora_ope='pendiente' and hd_in_id_tipoper='"+tipo+"' and  hg_te_fecha_ope='"+getDatePhone()+"' group by hd_orden_can_dev;", null);
         if (cr != null) {
             cr.moveToFirst();
         } else {

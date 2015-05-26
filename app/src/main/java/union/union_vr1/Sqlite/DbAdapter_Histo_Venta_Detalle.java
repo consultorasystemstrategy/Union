@@ -322,6 +322,19 @@ public class DbAdapter_Histo_Venta_Detalle {
         return estado;
 
     }
+    public Cursor obtener(int liquidacion) {
+      Cursor cr = mDb.rawQuery("select \n" +
+                "sum(\n" +
+                "(SELECT sum((hd_re_importe_ope) *(hd_in_cantidad_ope)) as devoluciones FROM m_histo_venta_detalle where hd_in_id_tipoper=1 and estado_sincronizacion=4 and hd_id_liquidacion='"+liquidacion+"')+\n" +
+                "(SELECT sum((hd_re_importe_ope_dev)*(hd_in_cantidad_ope_dev)) as devoluciones FROM m_histo_venta_detalle  where hd_id_liquidacion='"+liquidacion+"')\n" +
+                ") as Devoluciones ,\n" +
+                "(SELECT sum((hd_re_importe_ope) *(hd_in_cantidad_ope)) as canjes FROM m_histo_venta_detalle where hd_in_id_tipoper=2 and estado_sincronizacion=4 and hd_id_liquidacion='"+liquidacion+"') as Canjes",null);
+
+        if (cr != null) {
+            cr.moveToFirst();
+        }
+        return cr;
+    }
 
 
     public boolean deleteAllHistoVentaDetalle() {
@@ -377,29 +390,21 @@ public class DbAdapter_Histo_Venta_Detalle {
 
     public Cursor filterExport(int liquidacion) {
         Cursor mCursor = null;
-        Cursor pruebacursor = mDb.rawQuery(
-                "select ( "+HD_id_hventadet+") as "+HD_id_hventadet+"," +
-                        ""+HD_id_detalle+", "+HD_id_comprob+","+ HD_id_establec+","+ HD_id_agente+", "+HD_id_producto+", "+HD_id_tipoper+"," +
-                        ""+HD_orden+", "+HD_comprobante+","+ HD_nom_producto+","+ HD_cantidad+","+ HD_importe+","+ HD_fecha+"," +
-                        ""+HD_categoria_ope+","+ HD_categoria_ope_dev+","+ HD_forma_ope+","+ HD_cantidad_ope+","+ HD_cantidad_ope_dev+","+ HD_importe_ope+","+ HD_importe_ope_dev+","+ HD_fecha_ope_dev+","+ HD_hora_ope_dev+","+ HD_fecha_ope+", "+HD_estado+","+ HD_lote+","+ HD_valor_unidad+","+ HD_Guia+"" +
-                        " from "+SQLITE_TABLE_Histo_Venta_Detalle+" where "+ HD_id_liquidacion + " = " + liquidacion + " AND (" + Constants._SINCRONIZAR + " = " + Constants._CREADO + " OR " + Constants._SINCRONIZAR + " = " + Constants._ACTUALIZADO+") and "+Constants._SINCRONIZAR+" !="+Constants._ACTUALIZADO+" group by "+HD_id_hventadet+"",null);
-        Log.e("CUENTA1",""+pruebacursor.getCount());
 
-        Cursor pruebacursor2 = mDb.rawQuery(
-                "select distinct("+HD_hora_ope_dev+") , "+HD_id_hventadet+"," +
-                        ""+HD_id_detalle+", "+HD_id_comprob+","+ HD_id_establec+","+ HD_id_agente+", "+HD_id_producto+", "+HD_id_tipoper+"," +
-                        ""+HD_orden+", "+HD_comprobante+","+ HD_nom_producto+","+ HD_cantidad+","+ HD_importe+","+ HD_fecha+"," +
-                        ""+HD_categoria_ope+","+ HD_categoria_ope_dev+","+ HD_forma_ope+","+ HD_cantidad_ope+","+ HD_cantidad_ope_dev+","+ HD_importe_ope+","+ HD_importe_ope_dev+","+ HD_fecha_ope_dev+","+ HD_hora_ope_dev+","+ HD_fecha_ope+", "+HD_estado+","+ HD_lote+","+ HD_valor_unidad+","+ HD_Guia+"" +
-                        " from "+SQLITE_TABLE_Histo_Venta_Detalle+" where "+ HD_id_liquidacion + " = " + liquidacion + " AND (" + Constants._SINCRONIZAR + " = " + Constants._CREADO + " OR " + Constants._SINCRONIZAR + " = " + Constants._ACTUALIZADO+") ",null);
-        Log.e("CUENTA2",""+pruebacursor2.getCount());
 
-        mCursor = mDb.query(true, SQLITE_TABLE_Histo_Venta_Detalle, new String[]{HD_id_hventadet,
+       /* mCursor = mDb.query(true, SQLITE_TABLE_Histo_Venta_Detalle, new String[]{HD_id_hventadet,
                         HD_id_detalle, HD_id_comprob, HD_id_establec, HD_id_agente, HD_id_producto, HD_id_tipoper,
                         HD_orden, HD_comprobante, HD_nom_producto, HD_cantidad, HD_importe, HD_fecha,
                         HD_categoria_ope, HD_categoria_ope_dev, HD_forma_ope, HD_cantidad_ope, HD_cantidad_ope_dev, HD_importe_ope, HD_importe_ope_dev, HD_fecha_ope_dev, HD_hora_ope_dev, HD_fecha_ope, HD_estado, HD_lote, HD_valor_unidad, HD_Guia},
                 HD_id_liquidacion + " = " + liquidacion + " AND (" + Constants._SINCRONIZAR + " = " + Constants._CREADO + " OR " + Constants._SINCRONIZAR + " = " + Constants._ACTUALIZADO + ")", null,
                 // "("+ HD_fecha_ope + " = "+getDatePhone() + " AND " + Constants._SINCRONIZAR + " = " + Constants._ACTUALIZADO + "", null,
                 null, null, null, null);
+                */
+        mCursor=mDb.rawQuery("select  *  from m_histo_venta_detalle where \n" +
+                "(estado_sincronizacion='2' or  estado_sincronizacion='3' ) and hd_in_id_detalle='' and hd_id_liquidacion='"+liquidacion+"'\n" +
+                "union \n" +
+                "select  *  from m_histo_venta_detalle where \n" +
+                " (estado_sincronizacion='2' or  estado_sincronizacion='3' )  and hd_id_liquidacion='"+liquidacion+"' and hd_in_id_detalle !='' group by hd_in_id_detalle",null);
         if (mCursor != null) {
             mCursor.moveToFirst();
         }

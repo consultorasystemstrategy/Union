@@ -860,6 +860,7 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
 
         //Evaluando tipo de Operacion:
         if (tipo_op.equals("Canje")) {
+            //2
             idTipo_Op = 2;
            // Log.d("MasParametros", "[" + idEstablec + "-" + idProducto + "-" + idTipo_Op + "-" + compro + "-" + nomEstablecimiento + "-" + idCat_tipo + "-" + cantidad2 + "-" + importe * cantidad2 + "-" + lote + "-" + idAgente + importe);
             boolean estado = dbHelperCanjes_Dev.insertarCanjes(idEstablec, idProducto, idTipo_Op, compro, nomEstablecimiento, nomProducto, idCat_tipo, cantidad2, importe * cantidad2, lote, idAgente, liquidacion, valorUnidad);
@@ -870,6 +871,7 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
             }
         }
         if (tipo_op.equals("Devolucion")) {
+            //1
             idTipo_Op = 1;
             boolean estado = dbHelperCanjes_Dev.insertar_Dev(idEstablec, idProducto, idTipo_Op, compro, nomEstablecimiento, nomProducto, idCat_tipo, cantidad2, importe * cantidad2, lote, idAgente, liquidacion, valorUnidad);
             if (estado) {
