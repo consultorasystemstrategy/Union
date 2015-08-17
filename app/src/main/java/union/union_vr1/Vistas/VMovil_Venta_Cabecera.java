@@ -98,12 +98,11 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
 
     //VARIABLES AGREGAR PRODUCTOS
     private AutoCompleteTextView autoCompleteTextView;
-    private Cursor mCursorStockAgente ;
+    private Cursor mCursorStockAgente;
     private int id_categoria_establecimiento;
     private SimpleCursorAdapter adapterProductos;
 
     private DbAdapter_Precio dbHelper_Precio;
-
 
     private int cantidad;
     private int procedencia = 1;
@@ -116,11 +115,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
     private Cursor mCursorScannerProducto;
     private String barcodeScan;
     private String formatScan;
-
     //fin variables agregar productos
-
-
-
     private String textoVentaImpresion = "";
 
     private String textoImpresionCabecera = "\n"
@@ -144,7 +139,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
             +"      Telf: 6186309-6186310     \n"
             +" Casilla 3564, Lima 1, LIMA PERU\n"
             +"         RUC: 20138122256       \n"
-            +"--------------------------------\n";
+                +"--------------------------------\n";
 
     private int idEstablecimiento;
     int id_agente_venta;
@@ -237,7 +232,6 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
     Double slide_ingresosTotales = 0.0;
     Double slide_gastosTotales = 0.0;
     Double slide_aRendir = 0.0;
-
     //SLIDE VENTAS
     TextView textViewSlideNombreEstablecimiento;
     Button buttonSlideVentaDeHoy;
@@ -347,7 +341,6 @@ Instantiate and pass a callback
                 });
             }
         });
-
 */
 
         //SLIDING MENU
@@ -670,18 +663,65 @@ Instantiate and pass a callback
         autoCompleteTextView.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-
+                Log.d("BEFORE TEXTCHANGED",""+charSequence.toString()+","+i+","+i2+","+i3);
             }
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
 
-                adapterProductos.getFilter().filter(charSequence.toString());
+                Log.d("ON TEXTCHANGED",""+charSequence.toString()+","+i+","+i2+","+i3);
+                if (i==0 && i2==0 && i3>=10){
+                    Log.d("ON TEXTCHANGED", "HA ESCANEADO UN PRODUCTO");
+                    Cursor cursor = dbHelper_Stock_Agente.fetchStockAgenteByIdEstablecimientoandName(id_categoria_establecimiento, charSequence.toString(), idLiquidacion);
+
+
+                    autoCompleteTextView.setText("");
+
+                    //Log.d("TEXTCHANGED COUNT CURSOR",""+cursor.getCount());
+                    if (cursor.getCount()>=1) {
+                        cursor.moveToFirst();
+                        //El item seleccionado tenía sólo 2 columnas visibles, pero en el cursos se encuentran todas las columnas
+                        //Aquí podemos obtener las otras columnas para los que querramos hacer con ellas
+                        nombre = cursor.getString(cursor.getColumnIndex(DbAdapter_Stock_Agente.ST_nombre));
+                        id_producto = cursor.getInt(cursor.getColumnIndex(DbAdapter_Stock_Agente.ST_id_producto));
+                        disponible = cursor.getInt(cursor.getColumnIndex(DbAdapter_Stock_Agente.ST_disponible));
+                        valor_unidad = cursor.getInt(cursor.getColumnIndex(DbAdapter_Precio.PR_valor_unidad));
+
+                        Cursor cursorExistProductoTemp = dbHelper_temp_venta.fetchTempVentaByIDProducto(id_producto);
+                        if (cursorExistProductoTemp.getCount()>0){
+                            Toast.makeText(mainActivity,"YA EXISTE",Toast.LENGTH_SHORT).show();
+
+                        }else{
+                            if (disponible>0){
+
+                                Cursor mCursorPrecioUnitarioGeneral = dbHelper_Precio.fetchAllPrecioByIdProductoAndCategoeria(id_producto,id_categoria_establecimiento);
+
+                                if (mCursorPrecioUnitarioGeneral.getCount()>1){
+                                    myTextDialogValorUnidad().show();
+                                    //Toast.makeText(getApplicationContext(), "Hay "+mCursorPrecioUnitarioGeneral.getCount() + " valores unidades para este producto", Toast.LENGTH_SHORT).show();
+                                }else{
+                                    myTextDialog().show();
+                                }
+                            }else{
+                                Toast.makeText(mainActivity, "No hay Stock", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }else{
+                        Toast.makeText(mainActivity, "No encontrado en almacén", Toast.LENGTH_SHORT).show();
+                    }
+
+
+                }else{
+                    adapterProductos.getFilter().filter(charSequence.toString());
+                }
             }
 
             @Override
             public void afterTextChanged(Editable editable) {
+                Log.d("AFTER TEXTCHANGED",""+editable.toString());
             }
+
+
         });
 
         adapterProductos.setFilterQueryProvider(new FilterQueryProvider() {
@@ -737,7 +777,7 @@ Instantiate and pass a callback
             }
         });
 
-        listView.setOnTouchListener(new ListView.OnTouchListener() {
+        /*listView.setOnTouchListener(new ListView.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 int action = event.getAction();
@@ -757,23 +797,10 @@ Instantiate and pass a callback
                 v.onTouchEvent(event);
                 return true;
             }
-        });
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        });*/
 
 
 
-
-                Log.d("POSITION SELECTED", parent.getPositionForView(view)+" - " + parent.getCount());
-                Log.d("POSITION ", position +" - " + parent.getCount());
-                //Aquí obtengo el cursor posicionado en la fila que ha seleccionado/clickeado
-                Cursor cursor = (Cursor) parent.getItemAtPosition(position);
-                final long id_tem_detalle = cursor.getLong(cursor.getColumnIndex(DBAdapter_Temp_Venta.temp_venta_detalle));
-                myEditDialog(id_tem_detalle).show();
-
-            }
-        });
 
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
@@ -830,10 +857,24 @@ Instantiate and pass a callback
                             }).create().show();
 
                 }
-                return false;
+                return true;
             }
         });
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                Log.d("POSITION SELECTED", parent.getPositionForView(view)+" - " + parent.getCount());
+                Log.d("POSITION ", position +" - " + parent.getCount());
+                //Aquí obtengo el cursor posicionado en la fila que ha seleccionado/clickeado
+                Cursor cursor = (Cursor) parent.getItemAtPosition(position);
+                final long id_tem_detalle = cursor.getLong(cursor.getColumnIndex(DBAdapter_Temp_Venta.temp_venta_detalle));
+                myEditDialog(id_tem_detalle).show();
+
+            }
+        });
         //SLIDING MENU
         showSlideMenu(this);
     }
@@ -958,7 +999,7 @@ Instantiate and pass a callback
                 String devuelto = null;
 
                 //En una tabla "Temp_Venta" Nos sirve para agregar datos del historial de ventas anteriores y sugerir al usuario, estos son datos temporales
-                long id = dbHelper_temp_venta.createTempVentaDetalle(1,finalIdProducto, finalNombreP,cantidad,total_importe, precio_unitario, promedio_anterior, devuelto, procedencia, 1);
+                long id = dbHelper_temp_venta.createTempVentaDetalle(1,finalIdProducto, finalNombreP,cantidad,round(total_importe,2), round(precio_unitario,2), promedio_anterior, devuelto, procedencia, 1);
 
                 mostrarProductosParaVender();
             }
@@ -1060,7 +1101,7 @@ Instantiate and pass a callback
                     String devuelto = null;
 
                     //En una tabla "Temp_Venta" Nos sirve para agregar datos del historial de ventas anteriores y sugerir al usuario, estos son datos temporales
-                    long id = dbHelper_temp_venta.createTempVentaDetalle(1,id_producto,nombre,cantidad,total_importe, precio_unitario[0], promedio_anterior, devuelto, procedencia, valor_unidad);
+                    long id = dbHelper_temp_venta.createTempVentaDetalle(1,id_producto,nombre,cantidad,round(total_importe,2), round(precio_unitario[0],2), promedio_anterior, devuelto, procedencia, valor_unidad);
                     //softKeyboard.closeSoftKeyboard();
 
 
@@ -1403,16 +1444,25 @@ Instantiate and pass a callback
         cursorEstablecimiento.moveToFirst();
         String nombreCliente = cursorEstablecimiento.getString(cursorEstablecimiento.getColumnIndexOrThrow(dbHelper_Evento_Establecimiento.EE_nom_cliente));
         String documentoCliente = cursorEstablecimiento.getString(cursorEstablecimiento.getColumnIndexOrThrow(dbHelper_Evento_Establecimiento.EE_doc_cliente));
-        textoImpresion+= "N° Doc: "+numeroDocumentoImpresion+"\n";
+        textoImpresion+= "N. Doc: "+numeroDocumentoImpresion+"\n";
 //        textoImpresion+= "Código ERP:  "+codigo_erp+"\n";
         textoImpresion+= "Fecha: "+ getDatePhone()+"\n";
         textoImpresion+= "Vendedor: "+ nombreAgenteVenta+"\n";
         textoImpresion+= "Cliente: "+ nombreCliente+"\n";
         textoImpresion+= "DNI: "+ documentoCliente+"\n";
         //textoImpresion+= "Direccion: Alameda Nro 2039 - Chosica\n";
-        textoImpresion+= "-----------------------------------------------\n";
-        textoImpresion+= "Cant.             Producto              Importe\n";
-        textoImpresion+= "-----------------------------------------------\n";
+        //3 PULGADAS - STAR MICRONICS
+        //textoImpresion+= "-----------------------------------------------\n";
+        //esto será si es con impresora SEWOO de ...
+        textoImpresion+= "-----------------------------------------------".substring(0,32)+"\n";
+        //3 PULGADAS - STAR MICRONICS
+        //textoImpresion+= "Cant.             Producto              Importe\n";
+        //esto será si es con impresora SEWOO de ...
+        textoImpresion+=String.format("%-6s","Cant") + String.format("%-19s","Producto")+ String.format("%-7s","Importe")+"\n";
+        //3 PULGADAS - STAR MICRONICS
+        //textoImpresion+= "-----------------------------------------------\n";
+        //esto será si es con impresora SEWOO de ...
+        textoImpresion+= "-----------------------------------------------".substring(0,32)+"\n";
 
 
         textoVentaImpresion+= "N° Doc: "+numeroDocumentoImpresion+"\n";
@@ -1454,13 +1504,20 @@ Instantiate and pass a callback
             comprobVentaDetalle = dbHelper_Comprob_Venta_Detalle.createComprobVentaDetalle(id_comprobante, id_producto, nombre_producto, cantidad, importe,0, precio_unitario, promedio_anterior, devuelto, valorUnidad);
             dbHelper_Stock_Agente.updateStockAgenteCantidad(id_producto,-(cantidad*valorUnidad), idLiquidacion);
 
-            if(nombre_producto.length()>=25){
+            //3pg, STAR MICRONICS
+            /*if(nombre_producto.length()>=25){
                 nombre_producto=nombre_producto.substring(0,22);
                 nombre_producto+="...";
+            }*/
+            //sewoo
+            if(nombre_producto.length()>=20){
+                nombre_producto=nombre_producto.substring(0,18);
+                nombre_producto+="..";
             }
-
             DecimalFormat df = new DecimalFormat("#.00");
-            textoImpresion+=String.format("%-6s",cantidad) + String.format("%-34s",nombre_producto) +String.format("%-5s",df.format(importe)) + "\n";
+            //star micronics, 3pg
+            //textoImpresion+=String.format("%-6s",cantidad) + String.format("%-34s",nombre_producto) +String.format("%-5s",df.format(importe)) + "\n";
+            textoImpresion+=String.format("%-4s",cantidad) + String.format("%-21s",nombre_producto) +String.format("%1$7s"  ,df.format(importe)) + "\n";
             textoImpresionContenidoLeft +=String.format("%-6s",cantidad) + String.format("%-28s",nombre_producto)+ "\n";
             textoImpresionContenidoRight+= String.format("%-5s",df.format(importe)) + "\n";
 
@@ -1476,9 +1533,14 @@ Instantiate and pass a callback
 
         DecimalFormat df = new DecimalFormat("#.00");
 
-        textoImpresion += String.format("%-37s","SUB TOTAL:")+ "S/ "+ df.format(base_imponible)+"\n";
+        //3PG, STAR MICRONICS
+        /*textoImpresion += String.format("%-37s","SUB TOTAL:")+ "S/ "+ df.format(base_imponible)+"\n";
         textoImpresion += String.format("%-37s","IGV:")+  "S/ "+ df.format(igv)+"\n";
         textoImpresion += String.format("%-37s","TOTAL:")+  "S/ "+ df.format(monto_total)+"\n";
+*/
+        textoImpresion += "\n"+String.format("%-25s","SUB TOTAL:")+ String.format("%1$7s",df.format(base_imponible))+"\n";
+        textoImpresion += String.format("%-25s","IGV:")+  String.format("%1$7s",df.format(igv))+"\n";
+        textoImpresion += String.format("%-25s","TOTAL:")+  String.format("%1$7s",df.format(monto_total))+"\n";
 
         textoImpresionContenidoLeft+="SUB TOTAL:\n";
         textoImpresionContenidoLeft+="IGV:\n";
@@ -1574,7 +1636,7 @@ Instantiate and pass a callback
             int procedencia = 0;
 
             //En una tabla "Temp_Venta" Nos sirve para agregar datos del historial de ventas anteriores y sugerir al usuario, estos son datos temporales
-            long id = dbHelper_temp_venta.createTempVentaDetalle(1,id_producto,nombre_producto,cantidad,importe, precio_unitario, promedio_anterior, devuelto, procedencia, valor_unidad);
+            long id = dbHelper_temp_venta.createTempVentaDetalle(1,id_producto,nombre_producto,cantidad,round(importe,2), round(precio_unitario,2), promedio_anterior, devuelto, procedencia, valor_unidad);
 
 
         }
@@ -1745,6 +1807,8 @@ Instantiate and pass a callback
         final EditText savedText = ((EditText) layout.findViewById(R.id.VCAP_editTextCantidad));
         final TextView nombreProducto = ((TextView) layout.findViewById(R.id.VCPA_textView2NombreProducto));
         final TextView precio = ((TextView) layout.findViewById(R.id.VCPA_textViewPrecio));
+        //final TextView disponible = ((TextView) layout.findViewById(R.id.VCPA_textViewDisponible));
+
 
         Cursor mCursorPrecioUnitarioGeneral = dbHelper_Precio.fetchAllPrecioByIdProductoAndCategoeria(id_producto,id_categoria_establecimiento);
 
@@ -1759,6 +1823,7 @@ Instantiate and pass a callback
             maximoValor = mCursorStock.getInt(mCursorStock.getColumnIndexOrThrow(dbHelper_Stock_Agente.ST_disponible));
         }
 
+        ///disponible.setText(""+maximoValor);
         savedText.setFilters(new InputFilter[]{new InputFilterMinMax(1,maximoValor)});
 
 
@@ -1772,7 +1837,7 @@ Instantiate and pass a callback
 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Cantidad");
+        builder.setTitle("Stock "+"("+maximoValor+")");
         final int finalMaximoValor = maximoValor;
         builder.setPositiveButton("OK", new Dialog.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
@@ -1805,8 +1870,10 @@ Instantiate and pass a callback
                 String promedio_anterior = null;
                 String devuelto = null;
 
+                DecimalFormat df = new DecimalFormat("#.00");
                 //En una tabla "Temp_Venta" Nos sirve para agregar datos del historial de ventas anteriores y sugerir al usuario, estos son datos temporales
-                long id = dbHelper_temp_venta.createTempVentaDetalle(1,id_producto,nombre,cantidad,total_importe, precio_unitario, promedio_anterior, devuelto, procedencia, valor_unidad);
+
+                long id = dbHelper_temp_venta.createTempVentaDetalle(1,id_producto,nombre,cantidad,round(total_importe,2), round(precio_unitario,2), promedio_anterior, devuelto, procedencia, valor_unidad);
                 //softKeyboard.closeSoftKeyboard();
                 getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
                 mostrarProductosParaVender();
@@ -1838,6 +1905,7 @@ Instantiate and pass a callback
         final TextView nombreProducto = ((TextView) layout.findViewById(R.id.VCPA_textView2NombreProducto));
         final TextView precio = ((TextView) layout.findViewById(R.id.VCPA_textViewPrecio));
         final TextView valorUnidad = (TextView) layout.findViewById(R.id.VCPA_textViewValorUnidad);
+        //final TextView disponible = ((TextView) layout.findViewById(R.id.VCPA_textViewDisponible));
 
         final double[] precio_unitario = {0.0};
 
@@ -1852,7 +1920,8 @@ Instantiate and pass a callback
         }else{
             precio.setText("Precio : S/. No encontrado");
         }
-        nombreProducto.setText(nombre);
+
+
 
 
         valorUnidad.setOnClickListener(new View.OnClickListener() {
@@ -1881,15 +1950,16 @@ Instantiate and pass a callback
         if (mCursorStock.getCount()>0){
             maximoValor = mCursorStock.getInt(mCursorStock.getColumnIndexOrThrow(dbHelper_Stock_Agente.ST_disponible));
         }
-
+        //disponible.setText(""+maximoValor);
         savedText.setFilters(new InputFilter[]{new InputFilterMinMax(1,maximoValor)});
 
 
 
+        nombreProducto.setText(nombre);
 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Cantidad");
+        builder.setTitle("Stock "+"("+maximoValor+")");
         final int finalMaximoValor = maximoValor;
         builder.setPositiveButton("OK", new Dialog.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
@@ -1922,7 +1992,7 @@ Instantiate and pass a callback
                 String devuelto = null;
 
                 //En una tabla "Temp_Venta" Nos sirve para agregar datos del historial de ventas anteriores y sugerir al usuario, estos son datos temporales
-                long id = dbHelper_temp_venta.createTempVentaDetalle(1,id_producto,nombre,cantidad,total_importe, precio_unitario[0], promedio_anterior, devuelto, procedencia, valor_unidad);
+                long id = dbHelper_temp_venta.createTempVentaDetalle(1,id_producto,nombre,cantidad,round(total_importe,2), round(precio_unitario[0],2), promedio_anterior, devuelto, procedencia, valor_unidad);
                 //softKeyboard.closeSoftKeyboard();
 
 
@@ -2165,6 +2235,16 @@ Instantiate and pass a callback
         else
             return string;
     }
+
+    public static double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        long factor = (long) Math.pow(10, places);
+        value = value * factor;
+        long tmp = Math.round(value);
+        return (double) tmp / factor;
+    }
+
 
 
 }

@@ -28,6 +28,9 @@ import union.union_vr1.Vistas.VMovil_Evento_Indice;
 
 public class VMovil_BluetoothImprimir extends Activity{
 
+
+    private String nameImpresora = "Mobile Printer";
+    //private String nameImpresora = "Star Micronics";
     private Button buttonImprimir;
     private Button buttonSincronizar;
     private TextView textViewImprimirCabecera;
@@ -97,12 +100,17 @@ public class VMovil_BluetoothImprimir extends Activity{
         buttonSincronizar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                findBT();
+                boolean estado = findBT();
                 try {
                     openBT();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+
+                if(!estado){
+                    Toast.makeText(getApplicationContext(), "Revise si la impresora está encendida. Si el problema persiste pruebe reiniciar", Toast.LENGTH_LONG).show();
+                }
+
             }
         });
 
@@ -121,6 +129,7 @@ public class VMovil_BluetoothImprimir extends Activity{
                     openBT();
                 } catch (IOException e) {
                     e.printStackTrace();
+                    Toast.makeText(getApplicationContext(), "Revise si la impresora está encendida. Si el problema persiste pruebe reiniciar", Toast.LENGTH_LONG).show();
                 }
             }
             return strings[0];
@@ -143,7 +152,9 @@ public class VMovil_BluetoothImprimir extends Activity{
 
 
     // This will find a bluetooth printer device
-    public void findBT() {
+    public boolean findBT() {
+
+        boolean estado = false;
 
         try {
             mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -153,9 +164,11 @@ public class VMovil_BluetoothImprimir extends Activity{
             }
 
             if (!mBluetoothAdapter.isEnabled()) {
+                estado = true;
                 Intent enableBluetooth = new Intent(
                         BluetoothAdapter.ACTION_REQUEST_ENABLE);
                 startActivityForResult(enableBluetooth, 0);
+
             }
 
             Set<BluetoothDevice> pairedDevices = mBluetoothAdapter
@@ -164,27 +177,29 @@ public class VMovil_BluetoothImprimir extends Activity{
                 for (BluetoothDevice device : pairedDevices) {
                     Log.d("Bluetooth name : ", device.getName());
                     // MP300 is the name of the bluetooth printer device
-                    if (device.getName().equals("Star Micronics")) {
 
-                        Toast.makeText(getApplicationContext(), "Sincronizado con : "+device.getName().toString(), Toast.LENGTH_LONG).show();
+                    if (device.getName().equals(nameImpresora)) {
+
+                        estado = true;
+                        Toast.makeText(getApplicationContext(), "Sincronizado con : "+device.getName(), Toast.LENGTH_LONG).show();
                         Log.d("Bluetooth message","Bluetooth Device Found");
                         mmDevice = device;
                         device.getUuids();
                         ParcelUuid[] parcelUuids= device.getUuids();
-
-
-
-
                         Log.d("Bluetooth, UUIDS  ",parcelUuids[1].getUuid().toString());
                         break;
                     }
                 }
             }
+
+
         } catch (NullPointerException e) {
             Log.d("Bluetooth message", e.getMessage());
         } catch (Exception e) {
             Log.d("Bluetooth message", e.getMessage());
         }
+
+        return  estado;
     }
 
     // Tries to open a connection to the bluetooth printer device
@@ -197,13 +212,19 @@ public class VMovil_BluetoothImprimir extends Activity{
             mmOutputStream = mmSocket.getOutputStream();
             mmInputStream = mmSocket.getInputStream();
 
+
             beginListenForData();
 
             Log.d("Bluetooth message", "Bluetooth Opened");
         } catch (NullPointerException e) {
             e.printStackTrace();
+            Log.d("Bluetooth message O", e.getMessage());
+
         } catch (Exception e) {
             e.printStackTrace();
+            Log.d("Bluetooth message O", e.getMessage());
+
+
         }
     }
 
@@ -322,8 +343,10 @@ public class VMovil_BluetoothImprimir extends Activity{
 
 
     public static String cleanAcentos(String string) {
-        String original = "áàäéèëíìïóòöúùuñÁÀÄÉÈËÍÌÏÓÒÖÚÙÜÑçÇü·':";
-        String ascii = "aaaeeeiiiooouuunAAAEEEIIIOOOUUUNcCu   ";
+        /*String original = "áàäéèëíìïóòöúùuñÁÀÄÉÈËÍÌÏÓÒÖÚÙÜÑçÇü·':";
+        String ascii = "aaaeeeiiiooouuunAAAEEEIIIOOOUUUNcCu   ";*/
+        String original = "áàäéèëíìïóòöúùuñÁÀÄÉÈËÍÌÏÓÒÖÚÙÜÑçÇü·'";
+        String ascii = "aaaeeeiiiooouuunAAAEEEIIIOOOUUUNcCu  ";
         if (string != null) {
             //Recorro la cadena y remplazo los caracteres originales por aquellos sin acentos
             for (int i = 0; i < original.length(); i++ ) {

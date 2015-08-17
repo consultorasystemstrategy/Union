@@ -222,7 +222,7 @@ public class DbAdapter_Stock_Agente {
 
     }
 
-    public Cursor fetchStockAgenteByIdEstablecimientoandName(int idCategorìaEstablecimiento, String nameProducto, int liquidacion) throws SQLException {
+    public Cursor fetchStockAgenteByIdEstablecimientoandName(int idCategoriaEstablecimiento, String nameProducto, int liquidacion) throws SQLException {
         Cursor mCursor = null;
         if (nameProducto == null || nameProducto.length() == 0) {
 
@@ -233,7 +233,7 @@ public class DbAdapter_Stock_Agente {
                     "WHERE P.pr_in_id_cat_estt = ? " +
                     "AND SA.liquidacion = ? " +
                     "GROUP BY st_in_id_producto " +
-                    "", new String[]{"" + idCategorìaEstablecimiento, "" + liquidacion});
+                    "", new String[]{"" + idCategoriaEstablecimiento, "" + liquidacion});
 
         } else {
 
@@ -243,10 +243,10 @@ public class DbAdapter_Stock_Agente {
                     "INNER JOIN m_precio P\n" +
                     "ON SA.st_in_id_producto = P.pr_in_id_producto\n" +
                     "WHERE P.pr_in_id_cat_estt = ? " +
-                    "AND SA.st_te_nombre LIKE '%"+nameProducto+"%' OR SA.st_te_codigo LIKE '%"+nameProducto+"%' " +
+                    "AND SA.st_te_nombre LIKE '%"+nameProducto+"%' OR SA.st_te_codigo_barras LIKE '%"+nameProducto+"%' " +
                     "AND SA.liquidacion = ? " +
                     "GROUP BY st_in_id_producto" +
-                    "", new String[]{"" + idCategorìaEstablecimiento, "" + liquidacion});
+                    "", new String[]{"" + idCategoriaEstablecimiento, "" + liquidacion});
         }
 
         if (mCursor != null) {

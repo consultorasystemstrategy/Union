@@ -179,16 +179,14 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
                 new AlertDialog.Builder(mainActivity)
                         .setTitle("Hemos detectado una Conexión a Internet")
                         .setMessage("" +
-                                "¿Desea exportar los datos?")
+                                "¿Desea importar los datos?")
                         .setNegativeButton(android.R.string.no,null)
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                new ExportMain(mainActivity).execute();
+                                //new ExportMain(mainActivity).execute();
                                 new ImportMain(mainActivity).execute();
                             }
                         }).create().show();
-
-
                 session.deleteVariable(7);
                 session.deleteVariable(8);
                 session.createTempSession(7,1);
@@ -196,9 +194,6 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
 
             }
         }
-
-
-
 
         dbHelper1 = new DbAdapter_Comprob_Venta(this);
         dbHelper1.open();

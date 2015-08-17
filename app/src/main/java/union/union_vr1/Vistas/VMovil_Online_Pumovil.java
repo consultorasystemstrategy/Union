@@ -30,12 +30,15 @@ import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 
 public class VMovil_Online_Pumovil extends Activity {
 
+    //SERVIDOR LOCAL
     private static final String url = "http://192.168.0.158:8080/SysMovilProductosUnion";
+    //SERVIDOR REMOTO - PU
+//    private static final String url = "http://190.81.172.113:8080/SysMovilProductosUnion";
+
 
     private ProgressBar progressBar;
     private WebView webView;
     private Activity activity;
-
 
 
     private DbAdapter_Agente dbAdapter_agente;
