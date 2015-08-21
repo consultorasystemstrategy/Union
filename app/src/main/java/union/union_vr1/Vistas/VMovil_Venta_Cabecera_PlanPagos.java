@@ -45,6 +45,7 @@ public class VMovil_Venta_Cabecera_PlanPagos extends Activity {
     private Spinner spinnerCuotas;
     private TextView textViewMontoTotal;
     private Button butttonCalcularCuotas;
+    private Button buttonEstablecerCuotas;
 
     DecimalFormat df = new DecimalFormat("#.00");
 
@@ -77,6 +78,8 @@ public class VMovil_Venta_Cabecera_PlanPagos extends Activity {
     final int id_forma_cobro = 1;
     final String lugar_registro = "movil";
 
+    private boolean isCuotasCalculated = false;
+
     @Override
     public void onBackPressed() {
         Toast.makeText(getApplicationContext(), "No ha establecido las cuotas", Toast.LENGTH_SHORT).show();
@@ -101,7 +104,15 @@ public class VMovil_Venta_Cabecera_PlanPagos extends Activity {
         spinnerCuotas = (Spinner) findViewById(R.id.VCPP_spinnerCuotas);
         textViewMontoTotal = (TextView) findViewById(R.id.VCPP_textViewMontoTotal);
         butttonCalcularCuotas = (Button) findViewById(R.id.VCPP_buttonCalcularCuotas);
+        buttonEstablecerCuotas = (Button) findViewById(R.id.VCPP_buttonEstablecer);
         listView = (ListView) findViewById(R.id.VCPP_listViewCuotas);
+
+        if (!isCuotasCalculated){
+            buttonEstablecerCuotas.setEnabled(isCuotasCalculated);
+            buttonEstablecerCuotas.setBackgroundColor(getApplication().getResources().getColor(R.color.PersonalizadoSteve4));
+
+        }
+
 
 
         final Intent intent = getIntent();
@@ -235,6 +246,9 @@ public class VMovil_Venta_Cabecera_PlanPagos extends Activity {
                 break;
             case R.id.VCPP_buttonEstablecer:
                   ((MyApplication)this.getApplication()).setCuotasEstablecidas(true);
+                if (!isCuotasCalculated)
+                    Toast.makeText(getApplicationContext(),"Primero, debe calcular las cuotas.", Toast.LENGTH_SHORT).show();
+
 
                 session.deleteVariable(5);
                 session.createTempSession(5,1);
@@ -252,6 +266,17 @@ public class VMovil_Venta_Cabecera_PlanPagos extends Activity {
 
     public void calcular() {
 
+        isCuotasCalculated = true;
+        //ACTIVO EL BOTÓN ESTABLECER
+        buttonEstablecerCuotas.setEnabled(isCuotasCalculated);
+        buttonEstablecerCuotas.setActivated(isCuotasCalculated);
+        buttonEstablecerCuotas.setBackgroundColor(getApplication().getResources().getColor(R.color.PersonalizadoSteve2));
+
+        //DESACTIVO EL BOTÓN CALCULAR
+        butttonCalcularCuotas.setEnabled(!isCuotasCalculated);
+        butttonCalcularCuotas.setActivated(!isCuotasCalculated);
+        butttonCalcularCuotas.setBackgroundColor(getApplication().getResources().getColor(R.color.PersonalizadoSteve4));
+
         dbHelper_TempComprobCobro.deleteAllComprobCobros();
 
         int cuotas = Integer.parseInt(spinnerCuotas.getSelectedItem().toString());
@@ -261,12 +286,12 @@ public class VMovil_Venta_Cabecera_PlanPagos extends Activity {
             case 1:
                 if (dias_credito == 3) {
                     Date date = sumaDias(getDatePhone(), 3);
-                    dbHelper_TempComprobCobro.createComprobCobros(idEstablecimiento, id_comprobante, id_plan_pago, id_plan_pago_detalle, tipo_documento, doc, dateToString(date), total, fecha_cobro, hora_cobro, monto_cobrado, estado_cobro, idAgente, id_forma_cobro, lugar_registro);
-
+                    long id = dbHelper_TempComprobCobro.createComprobCobros(idEstablecimiento, id_comprobante, id_plan_pago, id_plan_pago_detalle, tipo_documento, doc, dateToString(date), total, fecha_cobro, hora_cobro, monto_cobrado, estado_cobro, idAgente, id_forma_cobro, lugar_registro);
+                    Log.d("PPC  DÍAS", cuotas+"-"+id);
                 } else {
                     Date date = sumaDias(getDatePhone(), 7);
-                    dbHelper_TempComprobCobro.createComprobCobros(idEstablecimiento, id_comprobante, id_plan_pago, id_plan_pago_detalle, tipo_documento, doc, dateToString(date), total, fecha_cobro, hora_cobro, monto_cobrado, estado_cobro, idAgente, id_forma_cobro, lugar_registro);
-
+                    long id = dbHelper_TempComprobCobro.createComprobCobros(idEstablecimiento, id_comprobante, id_plan_pago, id_plan_pago_detalle, tipo_documento, doc, dateToString(date), total, fecha_cobro, hora_cobro, monto_cobrado, estado_cobro, idAgente, id_forma_cobro, lugar_registro);
+                    Log.d("PPC  DÍAS", cuotas+"-"+id);
                 }
 
                 break;
@@ -279,7 +304,8 @@ public class VMovil_Venta_Cabecera_PlanPagos extends Activity {
                     } else if (i == 2) {
                         date = sumaDias(getDatePhone(), 14);
                     }
-                    dbHelper_TempComprobCobro.createComprobCobros(idEstablecimiento, id_comprobante, id_plan_pago, id_plan_pago_detalle, tipo_documento, doc, dateToString(date), sub_monto, fecha_cobro, hora_cobro, monto_cobrado, estado_cobro, idAgente, id_forma_cobro, lugar_registro);
+                    long id = dbHelper_TempComprobCobro.createComprobCobros(idEstablecimiento, id_comprobante, id_plan_pago, id_plan_pago_detalle, tipo_documento, doc, dateToString(date), sub_monto, fecha_cobro, hora_cobro, monto_cobrado, estado_cobro, idAgente, id_forma_cobro, lugar_registro);
+                    Log.d("PPC  DÍAS", cuotas+"-"+id);
                 }
                 break;
             case 3:
@@ -300,7 +326,8 @@ public class VMovil_Venta_Cabecera_PlanPagos extends Activity {
 
                             break;
                     }
-                    dbHelper_TempComprobCobro.createComprobCobros(idEstablecimiento, id_comprobante, id_plan_pago, id_plan_pago_detalle, tipo_documento, doc, dateToString(date3), sub_monto3, fecha_cobro, hora_cobro, monto_cobrado, estado_cobro, idAgente, id_forma_cobro, lugar_registro);
+                    long id = dbHelper_TempComprobCobro.createComprobCobros(idEstablecimiento, id_comprobante, id_plan_pago, id_plan_pago_detalle, tipo_documento, doc, dateToString(date3), sub_monto3, fecha_cobro, hora_cobro, monto_cobrado, estado_cobro, idAgente, id_forma_cobro, lugar_registro);
+                    Log.d("PPC  DÍAS", cuotas+"-"+id);
                 }
                 break;
             case 4:
@@ -325,7 +352,8 @@ public class VMovil_Venta_Cabecera_PlanPagos extends Activity {
                             date = sumaDias(getDatePhone(), 7);
                             break;
                     }
-                    dbHelper_TempComprobCobro.createComprobCobros(idEstablecimiento, id_comprobante, id_plan_pago, id_plan_pago_detalle, tipo_documento, doc, dateToString(date4), sub_monto4, fecha_cobro, hora_cobro, monto_cobrado, estado_cobro, idAgente, id_forma_cobro, lugar_registro);
+                    long id = dbHelper_TempComprobCobro.createComprobCobros(idEstablecimiento, id_comprobante, id_plan_pago, id_plan_pago_detalle, tipo_documento, doc, dateToString(date4), sub_monto4, fecha_cobro, hora_cobro, monto_cobrado, estado_cobro, idAgente, id_forma_cobro, lugar_registro);
+                    Log.d("PPC  DÍAS", cuotas+"-"+id);
                 }
 
                 break;

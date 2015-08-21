@@ -21,6 +21,8 @@ import android.widget.Toast;
 import union.union_vr1.AsyncTask.ExportMain;
 import union.union_vr1.AsyncTask.ImportMain;
 import union.union_vr1.Conexion.JSONParser;
+import union.union_vr1.FacturacionElectronica.CodigoSHA1;
+import union.union_vr1.FacturacionElectronica.DigitalSignature;
 import union.union_vr1.JSONParser.ParserAgente;
 import union.union_vr1.Objects.Agente;
 import union.union_vr1.RestApi.StockAgenteRestApi;
@@ -33,13 +35,20 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.xml.sax.SAXException;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 
 public class Login extends Activity implements OnClickListener{
 
@@ -103,7 +112,7 @@ public class Login extends Activity implements OnClickListener{
     private static final String TAG_pass_usuario = "pass_usuario";
     private int idAgente;
     private int idLiquidacion;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -113,7 +122,6 @@ public class Login extends Activity implements OnClickListener{
         mainActivity = this;
         session = new DbAdapter_Temp_Session(this);
         session.open();
-
 
 
 
@@ -530,4 +538,5 @@ public class Login extends Activity implements OnClickListener{
         String formatteDate = df.format(date);
         return formatteDate;
     }
+
 }

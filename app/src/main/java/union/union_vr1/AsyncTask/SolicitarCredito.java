@@ -154,10 +154,11 @@ public class SolicitarCredito extends AsyncTask<String, String, String> {
 
     }
 
-    private void dismissProgressDialog() {
+    public void dismissProgressDialog() {
         if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();
         }
     }
+
 
 }

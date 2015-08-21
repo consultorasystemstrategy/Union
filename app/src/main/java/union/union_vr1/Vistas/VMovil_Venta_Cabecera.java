@@ -12,6 +12,7 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -44,17 +45,26 @@ import android.widget.Toast;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 import org.json.JSONObject;
+import org.xml.sax.SAXException;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+
 import union.union_vr1.AsyncTask.ExportMain;
 import union.union_vr1.AsyncTask.SolicitarCredito;
 import union.union_vr1.BarcodeScanner.IntentIntegrator;
 import union.union_vr1.BarcodeScanner.IntentResult;
+import union.union_vr1.FacturacionElectronica.CodigoSHA1;
+import union.union_vr1.FacturacionElectronica.DigitalSignature;
 import union.union_vr1.InputFilterMinMax;
 import union.union_vr1.R;
 import union.union_vr1.RestApi.StockAgenteRestApi;
@@ -96,6 +106,17 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
     private DbAdaptert_Evento_Establec dbHelper_Evento_Establecimiento;
     private EditText savedText;
 
+
+    //FE
+    String textoSHA1 = null;
+    private Context contexto;
+    //
+    private String numeroDocumentoImpresion =null;
+    private String nombreCliente = null;
+    private String documentoCliente = null;
+    int i_tipoDocumento = 0;
+
+
     //VARIABLES AGREGAR PRODUCTOS
     private AutoCompleteTextView autoCompleteTextView;
     private Cursor mCursorStockAgente;
@@ -109,6 +130,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
     private int disponible = 1;
     private String nombre = null;
     private  int id_producto = 0;
+    private String codigo_producto = "";
     private int valor_unidad = 1;
 
 
@@ -184,6 +206,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
     private boolean isEstablecidasCuotas;
 
     private ExportMain exportMain;
+    private SolicitarCredito solicitarCredito;
 
     //KEYBOARD SOFT
     RelativeLayout mainLayout;
@@ -250,6 +273,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
     @Override
     protected void onDestroy() {
         exportMain.dismissProgressDialog();
+        solicitarCredito.dismissProgressDialog();
         Log.d("ON DESTROY", "DISMISS PROGRESS DIALOG");
         super.onDestroy();
 
@@ -294,20 +318,14 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
         //ViewGroup viewGroup = (ViewGroup) autoCompleteKeyboardLayout.getRootView();
         //layoutSpinner = (LinearLayout) findViewById(R.id.layoutSpinner);
         //layoutButton = (LinearLayout) findViewById(R.id.layoutButton);
-
-
-
-
-
         //mainLayout = (RelativeLayout) findViewById(R.id.softKeyboardMain); // You must use the layout root
         //im = (InputMethodManager) getSystemService(Service.INPUT_METHOD_SERVICE);
 
 /*
 Instantiate and pass a callback
 */
-
-
         setContentView(R.layout.princ_venta_cabecera);
+        contexto = getApplicationContext();
         //setContentView(viewGroup);
 
 /*
@@ -368,6 +386,7 @@ Instantiate and pass a callback
 
         mainActivity = this;
         exportMain = new ExportMain(mainActivity);
+        solicitarCredito = new SolicitarCredito(mainActivity);
 
         mContext = this;
         dbHelper_Histo_comprob_anterior = new DbAdapter_Histo_Comprob_Anterior(this);
@@ -684,6 +703,7 @@ Instantiate and pass a callback
                         //Aquí podemos obtener las otras columnas para los que querramos hacer con ellas
                         nombre = cursor.getString(cursor.getColumnIndex(DbAdapter_Stock_Agente.ST_nombre));
                         id_producto = cursor.getInt(cursor.getColumnIndex(DbAdapter_Stock_Agente.ST_id_producto));
+                        codigo_producto = cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Stock_Agente.ST_codigo));
                         disponible = cursor.getInt(cursor.getColumnIndex(DbAdapter_Stock_Agente.ST_disponible));
                         valor_unidad = cursor.getInt(cursor.getColumnIndex(DbAdapter_Precio.PR_valor_unidad));
 
@@ -748,6 +768,7 @@ Instantiate and pass a callback
                 //Aquí podemos obtener las otras columnas para los que querramos hacer con ellas
                 nombre = cursor.getString(cursor.getColumnIndex(DbAdapter_Stock_Agente.ST_nombre));
                 id_producto = cursor.getInt(cursor.getColumnIndex(DbAdapter_Stock_Agente.ST_id_producto));
+                codigo_producto = cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Stock_Agente.ST_codigo));
                 disponible = cursor.getInt(cursor.getColumnIndex(DbAdapter_Stock_Agente.ST_disponible));
                 valor_unidad = cursor.getInt(cursor.getColumnIndex(DbAdapter_Precio.PR_valor_unidad));
 
@@ -770,10 +791,6 @@ Instantiate and pass a callback
                         Toast.makeText(mainActivity, "No hay Stock", Toast.LENGTH_SHORT).show();
                     }
                 }
-
-
-
-
             }
         });
 
@@ -955,6 +972,7 @@ Instantiate and pass a callback
             double precio_unitario = mCursorScannerProducto.getDouble(mCursorScannerProducto.getColumnIndexOrThrow(DbAdapter_Precio.PR_precio_unit));
             nombreP =  mCursorScannerProducto.getString(mCursorScannerProducto.getColumnIndexOrThrow(DbAdapter_Precio.PR_nombreProducto));
             idProducto = mCursorScannerProducto.getInt(mCursorScannerProducto.getColumnIndexOrThrow(DbAdapter_Precio.PR_id_producto));
+
             precio.setText("Precio : S/. "+ df.format(precio_unitario));
             nombreProducto.setText("Nombre : S/. " + nombreP);
         }else{
@@ -999,7 +1017,7 @@ Instantiate and pass a callback
                 String devuelto = null;
 
                 //En una tabla "Temp_Venta" Nos sirve para agregar datos del historial de ventas anteriores y sugerir al usuario, estos son datos temporales
-                long id = dbHelper_temp_venta.createTempVentaDetalle(1,finalIdProducto, finalNombreP,cantidad,round(total_importe,2), round(precio_unitario,2), promedio_anterior, devuelto, procedencia, 1);
+                long id = dbHelper_temp_venta.createTempVentaDetalle(1,finalIdProducto, finalNombreP,cantidad,round(total_importe,2), round(precio_unitario,2), promedio_anterior, devuelto, procedencia, 1, ""+finalIdProducto);
 
                 mostrarProductosParaVender();
             }
@@ -1101,7 +1119,7 @@ Instantiate and pass a callback
                     String devuelto = null;
 
                     //En una tabla "Temp_Venta" Nos sirve para agregar datos del historial de ventas anteriores y sugerir al usuario, estos son datos temporales
-                    long id = dbHelper_temp_venta.createTempVentaDetalle(1,id_producto,nombre,cantidad,round(total_importe,2), round(precio_unitario[0],2), promedio_anterior, devuelto, procedencia, valor_unidad);
+                    long id = dbHelper_temp_venta.createTempVentaDetalle(1,id_producto,nombre,cantidad,round(total_importe,2), round(precio_unitario[0],2), promedio_anterior, devuelto, procedencia, valor_unidad, ""+id_producto);
                     //softKeyboard.closeSoftKeyboard();
 
 
@@ -1160,7 +1178,7 @@ Instantiate and pass a callback
                 String cantidad = editTextCantidadCredito.getText().toString().trim();
                 int cantidadCredito = Integer.parseInt(cantidad);
 
-                new SolicitarCredito(mainActivity).execute(""+id_agente_venta,""+idEstablecimiento,""+cantidadCredito,""+diasCredito);
+                solicitarCredito.execute(""+id_agente_venta,""+idEstablecimiento,""+cantidadCredito,""+diasCredito);
 
                 Toast.makeText(mContext.getApplicationContext(), "Crédito solicitado esperar...",Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(mContext, VMovil_Evento_Establec.class);
@@ -1180,6 +1198,8 @@ Instantiate and pass a callback
         final TextView precio = ((TextView) layout.findViewById(R.id.VCEP_textViewPrecio));
         final TextView devuelto = ((TextView) layout.findViewById(R.id.VCEP_textViewDevuelto));
         final TextView promedioAnterior = ((TextView) layout.findViewById(R.id.VCEP_textViewPromedioAnterior));
+
+
 
         savedText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -1208,6 +1228,19 @@ Instantiate and pass a callback
         });
 
         Cursor mCursorTempVenta = dbHelper_temp_venta.fetchAllTempVentaDetalleByID(id_temp_venta_detalle);
+        int id_producto_temp = -1;
+        if (mCursorTempVenta.getCount()>0){
+            id_producto_temp = mCursorTempVenta.getInt(mCursorTempVenta.getColumnIndexOrThrow(dbHelper_temp_venta.temp_id_producto));
+        }
+        Cursor mCursorStock = dbHelper_Stock_Agente.fetchByIdProducto(id_producto_temp,idLiquidacion);
+        int maximoValor = 1;
+        if (mCursorStock.getCount()>0){
+            maximoValor = mCursorStock.getInt(mCursorStock.getColumnIndexOrThrow(dbHelper_Stock_Agente.ST_disponible));
+        }
+
+        ///disponible.setText(""+maximoValor);
+        savedText.setFilters(new InputFilter[]{new InputFilterMinMax(1,maximoValor)});
+
 
         String nombre = mCursorTempVenta.getString(mCursorTempVenta.getColumnIndex(DBAdapter_Temp_Venta.temp_nom_producto));
         String devueltoText = mCursorTempVenta.getString(mCursorTempVenta.getColumnIndex(DBAdapter_Temp_Venta.temp_devuelto));
@@ -1218,8 +1251,17 @@ Instantiate and pass a callback
         nombreProducto.setText(nombre);
         DecimalFormat df = new DecimalFormat("#.0");
         precio.setText("Precio : S/. "+df.format(precio_unitario));
-        devuelto.setText("Devueltos : "+devueltoText);
-        promedioAnterior.setText("Promedio Anterior : " +promedioAnteriorText);
+        if (devueltoText==null) {
+            devuelto.setText("Devueltos : 0");
+        }else {
+            devuelto.setText("Devueltos : " + devueltoText);
+        }
+        if (promedioAnteriorText==null){
+            promedioAnterior.setText("Promedio Anterior : " +0);
+        }else{
+            promedioAnterior.setText("Promedio Anterior : " +promedioAnteriorText);
+        }
+
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Cantidad");
@@ -1376,7 +1418,7 @@ Instantiate and pass a callback
         int tipoVenta = 1;
         int numero_documento = 1;
         int estado_conexion = 0;
-        int i_tipoDocumento = 0;
+
         int i_formaPago = 0;
         int estado_comprobante = 1;
         Double monto_total  = 0.0;
@@ -1385,8 +1427,12 @@ Instantiate and pass a callback
         String erp_stringTipoDocumento  = null;
         String serie = null;
         String codigo_erp = null;
-        String numeroDocumentoImpresion =null;
+        numeroDocumentoImpresion =null;
 
+        Cursor cursorEstablecimiento = dbHelper_Evento_Establecimiento.fetchEstablecsById(""+idEstablecimiento);
+        cursorEstablecimiento.moveToFirst();
+        documentoCliente = cursorEstablecimiento.getString(cursorEstablecimiento.getColumnIndexOrThrow(dbHelper_Evento_Establecimiento.EE_doc_cliente));
+        nombreCliente = cursorEstablecimiento.getString(cursorEstablecimiento.getColumnIndexOrThrow(dbHelper_Evento_Establecimiento.EE_nom_cliente));
         switch (tipoDocumento1){
             case factura:
                 i_tipoDocumento = 1;
@@ -1415,8 +1461,8 @@ Instantiate and pass a callback
 
         numeroDocumentoImpresion = serie + "-" +agregarCeros((String.valueOf(numero_documento)),7);
         Cursor cursorTempComprobCobros = dbHelper_Temp_Comprob_Cobros.fetchAllComprobCobros();
-
-        Log.d("FORMA DE PAGO ", ""+i_formaPago);
+        cursorTempComprobCobros.moveToFirst();
+        //Log.d("FORMA DE PAGO ", ""+i_formaPago);
         switch (formaPago1){
             case Contado:
                 i_formaPago = 1;
@@ -1440,16 +1486,12 @@ Instantiate and pass a callback
         Cursor cursorAgente = dbHelperAgente.fetchAgentesByIds(id_agente_venta, idLiquidacion);
         cursorAgente.moveToFirst();
         String nombreAgenteVenta = cursorAgente.getString(cursorAgente.getColumnIndexOrThrow(dbHelperAgente.AG_nombre_agente));
-        Cursor cursorEstablecimiento = dbHelper_Evento_Establecimiento.fetchEstablecsById(""+idEstablecimiento);
-        cursorEstablecimiento.moveToFirst();
-        String nombreCliente = cursorEstablecimiento.getString(cursorEstablecimiento.getColumnIndexOrThrow(dbHelper_Evento_Establecimiento.EE_nom_cliente));
-        String documentoCliente = cursorEstablecimiento.getString(cursorEstablecimiento.getColumnIndexOrThrow(dbHelper_Evento_Establecimiento.EE_doc_cliente));
         textoImpresion+= "N. Doc: "+numeroDocumentoImpresion+"\n";
 //        textoImpresion+= "Código ERP:  "+codigo_erp+"\n";
         textoImpresion+= "Fecha: "+ getDatePhone()+"\n";
         textoImpresion+= "Vendedor: "+ nombreAgenteVenta+"\n";
         textoImpresion+= "Cliente: "+ nombreCliente+"\n";
-        textoImpresion+= "DNI: "+ documentoCliente+"\n";
+        textoImpresion+= "DNI/RUC: "+ documentoCliente+"\n";
         //textoImpresion+= "Direccion: Alameda Nro 2039 - Chosica\n";
         //3 PULGADAS - STAR MICRONICS
         //textoImpresion+= "-----------------------------------------------\n";
@@ -1465,12 +1507,13 @@ Instantiate and pass a callback
         textoImpresion+= "-----------------------------------------------".substring(0,32)+"\n";
 
 
-        textoVentaImpresion+= "N° Doc: "+numeroDocumentoImpresion+"\n";
+        textoVentaImpresion+= "N. Doc: "+numeroDocumentoImpresion+"\n";
 //        textoVentaImpresion+= "Código ERP:  "+codigo_erp+"\n";
         textoVentaImpresion+= "Fecha: "+ getDatePhone()+"\n";
         textoVentaImpresion+= "Vendedor: "+ nombreAgenteVenta+"\n";
         textoVentaImpresion+= "Cliente: "+ nombreCliente+"\n";
-        textoVentaImpresion+= "DNI: "+ documentoCliente;
+        textoVentaImpresion+= "DNI/RUC: "+ documentoCliente+"\n";
+
         //textoVentaImpresion+= "Direccion: Alameda Nro 2039 - Chosica\n";
 
         long id = dbHelper_Comprob_Venta.createComprobVenta(idEstablecimiento,i_tipoDocumento,i_formaPago,tipoVenta,codigo_erp,serie,numero_documento,base_imponible,igv,monto_total,getDatePhone(),null,estado_comprobante, estado_conexion,id_agente_venta, Constants._CREADO, idLiquidacion);
@@ -1553,16 +1596,16 @@ Instantiate and pass a callback
 
         dbHelper_Evento_Establecimiento.updateEstadoEstablecs(""+idEstablecimiento,2);
 
-
+        Log.d("FORMA DE PAGO",""+i_formaPago);
         if (i_formaPago==2){
             for (cursorTempComprobCobros.moveToFirst(); !cursorTempComprobCobros.isAfterLast();cursorTempComprobCobros.moveToNext()){
                 String fecha_programada = cursorTempComprobCobros.getString(cursorTempComprobCobros.getColumnIndex(DbAdapter_Temp_Comprob_Cobro.temp_fecha_programada));
                 Double monto_a_pagar = cursorTempComprobCobros.getDouble(cursorTempComprobCobros.getColumnIndex(DbAdapter_Temp_Comprob_Cobro.temp_monto_a_pagar));
 
-                //Log.d("RECORRE EL CURSOR TEMP COMPROB COBROS", "YES");
+                Log.d("RECORRE EL CURSOR TEMP COMPROB COBROS", "YES");
 
                 long registroInsertado = dbHelper_Comprob_Cobros.createComprobCobros(idEstablecimiento,Integer.parseInt(id+""),id_plan_pago,id_plan_pago_detalle,tipoDocumento.toUpperCase(),codigo_erp,fecha_programada,monto_a_pagar, fecha_cobro, hora_cobro,monto_cobrado,estado_cobro,id_agente_venta,id_forma_cobro, lugar_registro, idLiquidacion);
-                  //  Log.d("CC INSERTADO SATISFACTORIAMENTE ", "ID : "+ registroInsertado);
+                    Log.d("CC INSERTADO SATISFACTORIAMENTE ", "ID : "+ registroInsertado);
             }
         }
 
@@ -1570,9 +1613,10 @@ Instantiate and pass a callback
         dbHelper_temp_venta.deleteAllTempVentaDetalle();
         dbHelper_Temp_Comprob_Cobros.deleteAllComprobCobros();
 
-        if (conectadoWifi()||conectadoRedMovil()){
+        if (conectadoWifi()||conectadoRedMovil()) {
             exportMain.execute();
         }
+        //new GenerateDigitalSignature().execute();
 
 
         Intent intent= new Intent(this, VMovil_BluetoothImprimir.class);
@@ -1584,8 +1628,6 @@ Instantiate and pass a callback
         finish();
         Toast.makeText(getApplicationContext(),"Venta Satisfactoria",Toast.LENGTH_LONG).show();
         startActivity(intent);
-
-
 
 
     }
@@ -1616,6 +1658,7 @@ Instantiate and pass a callback
 
         //t indice_valor_unidad = cursor.getColumnIndex("");
         //int indice_costo_venta = cursor.getColumnIndex("");
+        //int indice_costo_venta = cursor.getColumnIndex("");
 
         cursor.moveToFirst();
 
@@ -1623,6 +1666,17 @@ Instantiate and pass a callback
 
             int _id = cursor.getInt(indice_id);
             int id_producto = cursor.getInt(indice_id_producto);
+
+            String codigoProductoHVA = "HVA - 1001";
+            int stockActualDisponible = 0;
+            Cursor cursorStockAgente = dbHelper_Stock_Agente.fetchByIdProducto(id_producto, idLiquidacion);
+            cursorStockAgente.moveToFirst();
+            if (cursorStockAgente.getCount()>0){
+                codigoProductoHVA = cursorStockAgente.getString(cursorStockAgente.getColumnIndexOrThrow(DbAdapter_Stock_Agente.ST_codigo));
+                stockActualDisponible = cursorStockAgente.getInt(cursorStockAgente.getColumnIndexOrThrow(DbAdapter_Stock_Agente.ST_disponible));
+            }
+
+
             String nombre_producto = cursor.getString(indice_nombre_producto);
             int cantidad = cursor.getInt(indice_cantidad);
             Log.d("CANTIDAD HCA - VC", ""+cantidad);
@@ -1635,9 +1689,15 @@ Instantiate and pass a callback
 
             int procedencia = 0;
 
+            long id = 1;
+            Log.d("STOCK DISPONIBLE,HCA",""+stockActualDisponible+"=="+cantidad+"*"+valor_unidad);
             //En una tabla "Temp_Venta" Nos sirve para agregar datos del historial de ventas anteriores y sugerir al usuario, estos son datos temporales
-            long id = dbHelper_temp_venta.createTempVentaDetalle(1,id_producto,nombre_producto,cantidad,round(importe,2), round(precio_unitario,2), promedio_anterior, devuelto, procedencia, valor_unidad);
-
+            if (stockActualDisponible>=cantidad*valor_unidad){
+                id = dbHelper_temp_venta.createTempVentaDetalle(1,id_producto,nombre_producto,cantidad,round(importe,2), round(precio_unitario,2), promedio_anterior, devuelto, procedencia, valor_unidad, ""+codigoProductoHVA);
+            }else if (stockActualDisponible>0)
+            {
+                id = dbHelper_temp_venta.createTempVentaDetalle(1,id_producto,nombre_producto,stockActualDisponible,round(precio_unitario*valor_unidad*stockActualDisponible,2), round(precio_unitario,2), promedio_anterior, devuelto, procedencia, valor_unidad, ""+codigoProductoHVA);
+            }
 
         }
 
@@ -1873,7 +1933,7 @@ Instantiate and pass a callback
                 DecimalFormat df = new DecimalFormat("#.00");
                 //En una tabla "Temp_Venta" Nos sirve para agregar datos del historial de ventas anteriores y sugerir al usuario, estos son datos temporales
 
-                long id = dbHelper_temp_venta.createTempVentaDetalle(1,id_producto,nombre,cantidad,round(total_importe,2), round(precio_unitario,2), promedio_anterior, devuelto, procedencia, valor_unidad);
+                long id = dbHelper_temp_venta.createTempVentaDetalle(1,id_producto,nombre,cantidad,round(total_importe,2), round(precio_unitario,2), promedio_anterior, devuelto, procedencia, valor_unidad,""+codigo_producto);
                 //softKeyboard.closeSoftKeyboard();
                 getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
                 mostrarProductosParaVender();
@@ -1992,7 +2052,7 @@ Instantiate and pass a callback
                 String devuelto = null;
 
                 //En una tabla "Temp_Venta" Nos sirve para agregar datos del historial de ventas anteriores y sugerir al usuario, estos son datos temporales
-                long id = dbHelper_temp_venta.createTempVentaDetalle(1,id_producto,nombre,cantidad,round(total_importe,2), round(precio_unitario[0],2), promedio_anterior, devuelto, procedencia, valor_unidad);
+                long id = dbHelper_temp_venta.createTempVentaDetalle(1,id_producto,nombre,cantidad,round(total_importe,2), round(precio_unitario[0],2), promedio_anterior, devuelto, procedencia, valor_unidad,""+codigo_producto);
                 //softKeyboard.closeSoftKeyboard();
 
 
@@ -2244,6 +2304,82 @@ Instantiate and pass a callback
         long tmp = Math.round(value);
         return (double) tmp / factor;
     }
+
+
+    class GenerateDigitalSignature extends AsyncTask<String, String, String> {
+
+        @Override
+        protected String doInBackground(String... strings) {
+
+            String SHA1="";
+            Log.d("GENERATE DS", ""+0);
+            final DigitalSignature handlerXML = new DigitalSignature();
+            DecimalFormat df = new DecimalFormat("#.00");
+            handlerXML.escribirXML(i_tipoDocumento, contexto, numeroDocumentoImpresion,documentoCliente, nombreCliente,df.format(base_imponibleFooter), df.format(totalFooter), df.format(igvFooter), simpleCursorAdapter.getCursor());
+
+            Log.d("GENERATE DS", ""+30);
+
+            byte[] byteReads = null;
+            try {
+                byteReads = handlerXML.leerXML(contexto);
+                Log.d("GENERATE DS", ""+60);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ParserConfigurationException e) {
+                e.printStackTrace();
+            } catch (SAXException e) {
+                e.printStackTrace();
+            }
+            try {
+
+                //String textoSHA1 = CodigoSHA1.SHA1(texto);
+                textoSHA1 = CodigoSHA1.SHA1(byteReads);
+                Log.d("GENERATE DS", ""+70);
+                String str = new String(byteReads, "iso-8859-1");
+                //textView.append(str + " a SHA-1: " + textoSHA1 + ".\n");
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+
+
+            try {
+                SHA1 = handlerXML.putSHA1toXML(getApplicationContext(),numeroDocumentoImpresion, textoSHA1);
+                Log.d("GENERATE DS", ""+100);
+                //String str = new String(SHA1Generate, "iso-8859-1");
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ParserConfigurationException e) {
+                e.printStackTrace();
+            } catch (SAXException e) {
+                e.printStackTrace();
+            } catch (TransformerException e) {
+                e.printStackTrace();
+            }
+            return SHA1;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            Log.d("GENERATE DS", "terminó correctamente");
+            Intent intent= new Intent(contexto, VMovil_BluetoothImprimir.class);
+            //Intent intent= new Intent(contexto, Files.class);
+            //textoImpresion += textoSHA1+"\n";
+            intent.putExtra("textoImpresion",textoImpresion);
+            intent.putExtra("textoImpresionCabecera", textoImpresionCabecera);
+            textoVentaImpresion+= textoSHA1+"\n";
+            intent.putExtra("textoVentaImpresion", textoVentaImpresion);
+            intent.putExtra("textoImpresionContenidoLeft", textoImpresionContenidoLeft);
+            intent.putExtra("textoImpresionContenidoRight", textoImpresionContenidoRight);
+            finish();
+            Toast.makeText(getApplicationContext(),"Venta Satisfactoria",Toast.LENGTH_LONG).show();
+            //Toast.makeText(getApplicationContext(),"SHA1 : "+s,Toast.LENGTH_LONG).show();
+            startActivity(intent);
+        }
+    }
+
 
 
 

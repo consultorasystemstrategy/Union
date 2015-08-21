@@ -243,7 +243,7 @@ public class DbAdapter_Stock_Agente {
                     "INNER JOIN m_precio P\n" +
                     "ON SA.st_in_id_producto = P.pr_in_id_producto\n" +
                     "WHERE P.pr_in_id_cat_estt = ? " +
-                    "AND SA.st_te_nombre LIKE '%"+nameProducto+"%' OR SA.st_te_codigo_barras LIKE '%"+nameProducto+"%' " +
+                    "AND SA.st_te_nombre LIKE '%"+nameProducto+"%' OR SA.st_te_codigo_barras LIKE '%"+nameProducto+"%' OR SA.st_te_codigo LIKE '%"+nameProducto+"%' \n" +
                     "AND SA.liquidacion = ? " +
                     "GROUP BY st_in_id_producto" +
                     "", new String[]{"" + idCategoriaEstablecimiento, "" + liquidacion});

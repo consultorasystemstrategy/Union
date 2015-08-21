@@ -93,19 +93,24 @@ public class ExportMain extends AsyncTask<String, String, String> {
     @Override
     protected String doInBackground(String... strings) {
         //LA CLASE QUE TIENE LOS MÉTODOS DE EXPORTACIÓN A CONSUMIR
+        publishProgress(""+1);
         StockAgenteRestApi api = new StockAgenteRestApi();
 
         //FILTRO LOS REGISTROS DE LAS TABLAS A EXPORTAR
+
         Cursor cursorInformeGastos = dbAdapter_informe_gastos.filterExport();
         Cursor cursorComprobanteVenta = dbAdapter_comprob_venta.filterExport();
+        publishProgress(""+10);
         //Cursor cursorComprobanteVentaDetalle = dbAdapter_comprob_venta_detalle.filterExport();
         Cursor cursorComprobanteCobro = dbAdapter_comprob_cobro.filterExport();
         Cursor cursorInsertarCaja  = dbAdapter_comprob_cobro.filterExportUpdatedAndEstadoCobro();
         Cursor cursorEventoEstablecimiento = dbAdaptert_evento_establec.filterExportUpdated();
+        publishProgress(""+15);
 //histo venta
         Cursor cursorHistoVentaCreated = dbAdapter_histo_venta.filterExport();
 
         Cursor cursorHistoVentaDetalleCreated = dbAdapter_histo_venta_detalle.filterExport(idLiquidacion);
+        publishProgress(""+20);
         Cursor cursorAutorizacionCobro = dbAdapter_temp_autorizacion_cobro.filterExport();
 
         idAgente = session.fetchVarible(1);
@@ -128,7 +133,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
 
         Log.d("EXPORT", "INICIANDO EXPORTACIÓN ...");
 
-        publishProgress(""+50);
+        publishProgress(""+30);
         List<String> listIdInfomeGastos = new ArrayList<String>();
         List<String> listIdComprobantes = new ArrayList<String>();
         List<String> listIdComprobanteVentaDetalle = new ArrayList<String>();
@@ -143,11 +148,13 @@ public class ExportMain extends AsyncTask<String, String, String> {
         List<String> listIdHVDCreated = new ArrayList<String>();
         List<String> listIdHVDUpdated = new ArrayList<String>();
 
+        publishProgress(""+40);
 
 
 
 
 
+        publishProgress(""+50);
         //EXPORTAR TODOS LOS REGISTROS CREADOS EN ANDROID [GUARDADOS EN SQLITE]
         if (cursorComprobanteVenta.getCount()>0) {
             for (cursorComprobanteVenta.moveToFirst(); !cursorComprobanteVenta.isAfterLast(); cursorComprobanteVenta.moveToNext()){
@@ -309,6 +316,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
             Log.d("EXPORT ", "TODOS LOS COMPROBANTES DE VENTAS ESTÁN EXPORTADOS");
         }
 
+        publishProgress(""+55);
         Cursor cursorComprobanteVentaDetalle = dbAdapter_comprob_venta_detalle.filterExport();
 
         if (cursorComprobanteVentaDetalle.getCount()>0){
@@ -366,6 +374,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
             Log.d("EXPORT ", "TODOS LOS COMPROBANTES DE VENTA DETALLE ESTÁN EXPORTADOS");
         }
 
+        publishProgress(""+60);
         if (cursorInformeGastos.getCount()>0){
             for (cursorInformeGastos.moveToFirst(); !cursorInformeGastos.isAfterLast(); cursorInformeGastos.moveToNext()){
                 JSONObject jsonObjectSuccesfull = null;
@@ -422,6 +431,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
             Log.d("EXPORT ", "TODOS LOS GASTOS ESTÁN EXPORTADOS");
         }
 
+        publishProgress(""+65);
         if (cursorHistoVentaCreated.getCount()>0){
 
             for (cursorHistoVentaCreated.moveToFirst(); !cursorHistoVentaCreated.isAfterLast(); cursorHistoVentaCreated.moveToNext()){
@@ -482,6 +492,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
         }else {
             Log.d("EXPORT HVD", "TODOS EL HISTORIAL DE VENTA CREADO HA SIDO EXPORTADO");
         }
+        publishProgress(""+70);
 
         cursorHistoVentaDetalleCreated = dbAdapter_histo_venta_detalle.filterExport(idLiquidacion);
         Log.d("CANTIDAD A EXPORTAR", ""+cursorHistoVentaDetalleCreated.getCount());
@@ -567,8 +578,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
 
         }
 
-
-
+        publishProgress(""+75);
 
         if (cursorInsertarCaja.getCount()>0){
 
@@ -630,6 +640,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
         }else{
             Log.d("EXPORT INSERTAR CAJA", "TODOS LOS REGISTROS INSERTAR CAJA DE COMPROBANTE COBRO ESTÁN EXPORTADOS");
         }
+        publishProgress(""+80);
 
         if (cursorAutorizacionCobro.getCount()>0){
 
@@ -681,6 +692,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
         }
 
 
+        publishProgress(""+90);
 
 
         //EXPORTAR TODOS LOS REGISTROS ACTUALIZADOS EN ANDROID

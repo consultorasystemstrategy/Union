@@ -145,26 +145,4 @@
     <string name="title_activity_activity_agregar_establecimiento">
         activity_agregar_establecimiento
     </string>
-    <!--FACTURACIÓN ELECTRÓNICA-->
-    <!--SECCIÓN II: INFORMACIÓN, GENERAL DE LA VENTA-->
-    <string name="UBLVersionID">2.0</string>
-    <string name="Customization">1.0</string>
-    <string name="InvoiceTypeCode">01</string>
-    <string name="DocumentCurrencyCode">PEN</string>
-    <!--SECCIÓN III - INFORMACIÓN GENERAL DE LA EMPRESA-->
-    <string name="signatureID">IDSignProductosUnion</string>
-    <string name="RUC"></string>
-    <string name="Empresa"></string>
-    <string name="ExternalReference">SignatureProductosUnion</string>
-    <string name="AdditionalAccountID">6</string>
-    <string name="StreetName">CAR. CENTRAL KM. 19</string>
-    <string name="CitySubdivisionName">VILLA UNION-NANA</string>
-    <string name="CityName">LIMA</string>
-    <string name="CountrySubentity">LIMA</string>
-    <string name="District">LURIGANCHO</string>
-    <string name="IdentificationCode">PE</string>
-    <string name="RegistrationName">Productos Unión</string>
-
-
-
-</resources>
+    </resources>

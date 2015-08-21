@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--ELABORACIÓN DOCUMENTOS ELECTRÓNICOS-->
+    <!--SECCIÓN II: INFORMACIÓN, GENERAL DE LA VENTA-->
+    <string name="UBLVersionID">2.0</string>
+    <string name="Customization">1.0</string>
+    <string name="DocumentCurrencyCode">PEN</string>
+    <string name="SignatureID">IDSignUNION</string>
+    <string name="ExternalReferenceURI">SignatureUNION</string>
+    <!--SECCIÓN III - INFORMACIÓN GENERAL DE LA EMPRESA-->
+    <string name="RUC">20138122256</string>
+    <string name="Empresa">UNIVERSIDAD PERUANA UNION</string>
+    <string name="AdditionalAccountID">6</string>
+    <string name="StreetName">CAR. CENTRAL KM. 19</string>
+    <string name="CitySubdivisionName">VILLA UNION-NANA</string>
+    <string name="CityName">LIMA</string>
+    <string name="CountrySubentity">LIMA</string>
+    <string name="District">LURIGANCHO</string>
+    <string name="IdentificationCode">PE</string>
+    <string name="RegistrationName">UNIVERSIDAD PERUANA UNION</string>
+    <string name="title_activity_files">Files</string>
+    <!--SECCIÓN IV: INFORMACIÓN DEL USUARIO-->
+    <string name="UserAdditionalAccountIdRUC">6</string>
+    <string name="UserAdditionalAccountIdDNI">1</string>
+
+
+    <!--FACTURAS-->
+    <string name="InvoiceTypeCodeFactura">01</string>
+
+    <!--BOLETAS-->
+    <string name="InvoiceTypeCodeBoleta">03</string>
+</resources>

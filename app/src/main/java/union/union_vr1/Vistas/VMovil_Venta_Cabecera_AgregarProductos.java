@@ -344,7 +344,7 @@ public class VMovil_Venta_Cabecera_AgregarProductos extends Activity implements 
                 String devuelto = null;
 
                 //En una tabla "Temp_Venta" Nos sirve para agregar datos del historial de ventas anteriores y sugerir al usuario, estos son datos temporales
-                long id = dbHelper_Temp_Venta.createTempVentaDetalle(1,id_producto,nombre,cantidad,total_importe, precio_unitario, promedio_anterior, devuelto, procedencia, valor_unidad);
+                long id = dbHelper_Temp_Venta.createTempVentaDetalle(1,id_producto,nombre,cantidad,total_importe, precio_unitario, promedio_anterior, devuelto, procedencia, valor_unidad,""+id_producto);
 
                mostrarProductosTemporales();
             }
@@ -457,7 +457,7 @@ public class VMovil_Venta_Cabecera_AgregarProductos extends Activity implements 
                 String devuelto = null;
 
                 //En una tabla "Temp_Venta" Nos sirve para agregar datos del historial de ventas anteriores y sugerir al usuario, estos son datos temporales
-                long id = dbHelper_Temp_Venta.createTempVentaDetalle(1,id_producto,nombre,cantidad,total_importe, precio_unitario[0], promedio_anterior, devuelto, procedencia, valor_unidad);
+                long id = dbHelper_Temp_Venta.createTempVentaDetalle(1,id_producto,nombre,cantidad,total_importe, precio_unitario[0], promedio_anterior, devuelto, procedencia, valor_unidad, ""+id_producto);
 
                 mostrarProductosTemporales();
             }
@@ -595,7 +595,7 @@ public class VMovil_Venta_Cabecera_AgregarProductos extends Activity implements 
                 String devuelto = null;
 
                 //En una tabla "Temp_Venta" Nos sirve para agregar datos del historial de ventas anteriores y sugerir al usuario, estos son datos temporales
-                long id = dbHelper_Temp_Venta.createTempVentaDetalle(1,finalIdProducto, finalNombreP,cantidad,total_importe, precio_unitario, promedio_anterior, devuelto, procedencia, 1);
+                long id = dbHelper_Temp_Venta.createTempVentaDetalle(1,finalIdProducto, finalNombreP,cantidad,total_importe, precio_unitario, promedio_anterior, devuelto, procedencia, 1,""+finalIdProducto);
 
                 Intent intent = new Intent(mContext, VMovil_Venta_Cabecera_AgregarProductos.class);
                 finish();

@@ -255,7 +255,8 @@ public class DbAdapter_Histo_Comprob_Anterior {
                 "INNER JOIN m_precio P\n" +
                 "ON ( HCA.hc_in_id_producto = P.pr_in_id_producto\n" +
                 "\tAND EE.ee_in_id_cat_est = P.pr_in_id_cat_estt)\n" +
-                "WHERE  HCA.hc_in_id_establec = ?";
+                "WHERE  HCA.hc_in_id_establec = ? \n" +
+                "GROUP BY(HCA.hc_in_id_producto)";
         Cursor mCursor = mDb.rawQuery(sql, new String[]{""+id});
 
         if (mCursor != null) {

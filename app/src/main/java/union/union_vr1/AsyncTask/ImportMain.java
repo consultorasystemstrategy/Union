@@ -209,6 +209,8 @@ public class ImportMain extends AsyncTask<String, String, String> {
             for (int i = 0; i < stockAgentes.size() ; i++) {
                 Log.d("Stock Agente"+i, "Nombre : "+stockAgentes.get(i).getNombre());
                 Log.d("Stock Agente"+i, "CÓDIGO DE BARRAS : "+stockAgentes.get(i).getCodigoBarras());
+                Log.d("Stock Agente"+i, "CÓDIGO DE producto : "+stockAgentes.get(i).getCodigo());
+
 
                 boolean existe = dbAdapter_stock_agente.existsStockAgenteByIdProd(stockAgentes.get(i).getIdProducto(),idLiquidacion);
                 Log.d("EXISTE ", ""+existe);
@@ -292,10 +294,10 @@ public class ImportMain extends AsyncTask<String, String, String> {
 
             publishProgress(""+90);
             for (int i = 0; i < comprobanteVentaDetalles.size() ; i++) {
-                Log.d("HISTORIAL VENTA ANTERIOR : " + i + " - "+ comprobanteVentaDetalles.get(i).getIdComprobante()+ " - " + comprobanteVentaDetalles.get(i).getIdEstablecimiento(), " NOMBRE PRODUCTO : " + comprobanteVentaDetalles.get(i).getNombreProducto());
+                Log.d("HVA HISTORIAL VENTA ANTERIOR : " + i + " - "+ comprobanteVentaDetalles.get(i).getIdComprobante()+ " - " + comprobanteVentaDetalles.get(i).getIdEstablecimiento(), " NOMBRE PRODUCTO : " + comprobanteVentaDetalles.get(i).getNombreProducto());
 
                 boolean existe = dbAdapter_histo_comprob_anterior.existeComprobanteVentaAnterior(comprobanteVentaDetalles.get(i).getIdComprobante());
-
+                Log.d("HVA ID PRODUCTO",""+comprobanteVentaDetalles.get(i).getIdProducto());
                 Log.d("EXISTE ", ""+existe);
                 if (existe){
                     dbAdapter_histo_comprob_anterior.updateHistoComprobAnterior(comprobanteVentaDetalles.get(i));
@@ -305,6 +307,34 @@ public class ImportMain extends AsyncTask<String, String, String> {
                 }
             }
 
+            boolean rutaSuccess = isSuccesfulImport(jsonObjectRutaDistribucion);
+            Log.d("RUTA ISI", ""+rutaSuccess);
+            if (rutaSuccess){
+                JSONArray jsonArray = jsonObjectRutaDistribucion.getJSONArray("Value");
+                JSONObject jsonObj=null;
+
+                dbAdapter_ruta_distribucion.delleteAllRutaByIdAgente(idAgente);
+
+                for (int i=0; i< jsonArray.length(); i++){
+                    jsonObj = jsonArray.getJSONObject(i);
+
+                    int id = jsonObj.getInt("Id");
+                    int idRuta = jsonObj.getInt("RutaID");
+                    String nombre = jsonObj.getString("Ruta");
+                    String diaSemana = jsonObj.getString("DiaSemana");
+                    int numeroEstablecimiento = jsonObj.getInt("Establecimientos");
+
+
+
+
+                    Log.d("IMPORT RUTA ", diaSemana + " - " + nombre + " - " + numeroEstablecimiento + " - "+ idAgente);
+                    long idRutaInsertada = dbAdapter_ruta_distribucion.createRutaDistribucion(id, idRuta, nombre, diaSemana, numeroEstablecimiento, idAgente);
+                    Log.d("IMPORT ID RUTA ins", ""+ idRutaInsertada);
+
+                }
+
+
+            }
             publishProgress(""+95);
             //ACTUALIZAR LOS CRÉDITOS DE LOS ESTABLECIMIENTOS
 
@@ -359,33 +389,6 @@ public class ImportMain extends AsyncTask<String, String, String> {
                         Log.d("IMPORT SOLICITUDES DATOS", idEstablecimiento + " - " + montoCredito + " - " + diasCredito);
                         dbAdaptert_evento_establec.updateEstablecsCredito(idEstablecimiento, montoCredito, diasCredito);
                     }
-                }
-
-
-            }
-
-            if (isSuccesfulImport(jsonObjectRutaDistribucion)){
-                JSONArray jsonArray = jsonObjectRutaDistribucion.getJSONArray("Value");
-                JSONObject jsonObj=null;
-
-                dbAdapter_ruta_distribucion.delleteAllRutaByIdAgente(idAgente);
-
-                for (int i=0; i< jsonArray.length(); i++){
-                    jsonObj = jsonArray.getJSONObject(i);
-
-                    int id = jsonObj.getInt("Id");
-                    int idRuta = jsonObj.getInt("RutaID");
-                    String nombre = jsonObj.getString("Ruta");
-                    String diaSemana = jsonObj.getString("DiaSemana");
-                    int numeroEstablecimiento = jsonObj.getInt("Establecimientos");
-
-
-
-
-                    Log.d("IMPORT RUTA ", diaSemana + " - " + nombre + " - " + numeroEstablecimiento + " - "+ idAgente);
-                    long idRutaInsertada = dbAdapter_ruta_distribucion.createRutaDistribucion(id, idRuta, nombre, diaSemana, numeroEstablecimiento, idAgente);
-                    Log.d("IMPORT ID RUTA ins", ""+ idRutaInsertada);
-
                 }
 
 
