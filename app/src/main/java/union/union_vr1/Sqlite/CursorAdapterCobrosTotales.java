@@ -63,15 +63,15 @@ public class CursorAdapterCobrosTotales extends CursorAdapter {
 
         if (cursor.getCount()>0){
 
-            String factotales = cursor.getString(1);
-            String nomcliente = cursor.getString(2);
-            String localCobro = cursor.getString(5);
-            String fechpro = cursor.getString(3);
-            Double repagar = cursor.getDouble(4);
+            String factotales = cursor.getString(cursor.getColumnIndexOrThrow("cc_te_doc"));
+
+            String localCobro = cursor.getString(cursor.getColumnIndexOrThrow("ee_te_nom_establec"));
+            String fechpro = cursor.getString(cursor.getColumnIndexOrThrow("cc_te_fecha_programada"));
+            Double repagar = cursor.getDouble(cursor.getColumnIndexOrThrow("cc_re_monto_a_pagar"));
 
             textViewNombreEstablecimiento.setText(localCobro);
             textViewFecha.setText(fechpro);
-            textViewDocumento.setText("Documento "+factotales);
+            textViewDocumento.setText("Documento: "+factotales);
 
             DecimalFormat dfd = new DecimalFormat("#.00");
             textViewDeuda.setText("S/. " + dfd.format(repagar));

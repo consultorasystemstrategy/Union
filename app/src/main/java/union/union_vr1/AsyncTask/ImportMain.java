@@ -354,15 +354,15 @@ public class ImportMain extends AsyncTask<String, String, String> {
 
                     JSONArray jsonArray = jsonObjectAutorizacion.getJSONArray("Value");
                     JSONObject jsonObj = null;
-
+                    Log.d("IMPORT AUTORIZACION COBROS  ", jsonArray.length()+":CANTIDAD"+isSuccesfulImport(jsonObjectAutorizacion));
                     for (int i = 0; i < jsonArray.length(); i++) {
                         jsonObj = jsonArray.getJSONObject(i);
-
+                        Log.d("CLARO PUES CAMPEON",jsonObj.getInt("SolObservacion")+"");
                         int idEstablecimiento1 = jsonObj.getInt("EstIEstablecimientoId");
                         int estadoSolicitud = jsonObj.getInt("SolIEstadoSolicitudId");
                         int idAutorizacionCobro = jsonObj.getInt("SolObservacion");
                         String fechaLimite = jsonObj.getString("CliDTFechaLimiteCredito");
-                        Log.d("HolaMundo",fechaLimite+"-"+idEstablecimiento1+"-"+idAutorizacionCobro);
+
 
                         boolean exists = dbAdapter_temp_autorizacion_cobro.existeAutorizacionCobro(idAutorizacionCobro);
 

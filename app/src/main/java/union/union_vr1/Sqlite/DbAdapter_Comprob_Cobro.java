@@ -411,6 +411,7 @@ public class DbAdapter_Comprob_Cobro {
         return mCursor;
     }
 
+    /*
     public Cursor fetchAllComprobCobrosByEst(String inputText) throws SQLException {
         Log.w(TAG, inputText);
         Cursor mCursor = null;
@@ -418,8 +419,19 @@ public class DbAdapter_Comprob_Cobro {
                         CC_id_establec, CC_id_comprob, CC_id_plan_pago, CC_id_plan_pago_detalle,
                         CC_desc_tipo_doc, CC_doc, CC_fecha_programada, CC_monto_a_pagar,
                         CC_fecha_cobro, CC_monto_cobrado, CC_estado_cobro, CC_estado_prologa, CC_id_autorizacion},
-                CC_id_establec + " = " + inputText + " and cc_in_estado_cobro ='1'  order by cc_te_fecha_programada desc", null,
+                CC_id_establec + " = " + inputText + " and cc_in_estado_cobro ='1' and cc_in_id_comprobante_cobro is not null  order by cc_te_fecha_programada desc", null,
                 null, null, null, null);
+        if (mCursor != null) {
+
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+
+    }*/
+    public Cursor fetchAllComprobCobrosByEst(String inputText) throws SQLException {
+        Log.w(TAG, inputText);
+        Cursor mCursor = null;
+        mCursor = mDb. rawQuery("SELECT me.ee_te_nom_establec,mc.* FROM m_comprob_cobro mc,m_evento_establec me where mc.cc_in_id_establec =me.ee_in_id_establec and  "+CC_id_establec + " = " + inputText + " and cc_in_estado_cobro ='1' and cc_in_id_comprobante_cobro is not null  order by cc_te_fecha_programada desc",null);
         if (mCursor != null) {
 
             mCursor.moveToFirst();
@@ -440,7 +452,8 @@ public class DbAdapter_Comprob_Cobro {
     }
 
     public Cursor listarComprobantesToCobros(int agente) {
-        Cursor mCursor = mDb.rawQuery("SELECT mc._id, mc.cc_te_doc,me.ee_te_nom_cliente,mc.cc_te_fecha_programada, mc.cc_re_monto_a_pagar,me.ee_te_nom_establec ,mc.cc_in_id_establec from m_comprob_cobro mc,m_evento_establec me where mc.cc_in_id_establec=me.ee_in_id_establec and mc.cc_in_estado_cobro='1' and "+CC_id_agente+" = '"+agente+"' order by mc.cc_te_fecha_programada asc", null);
+        //
+        Cursor mCursor = mDb.rawQuery(" SELECT me.ee_te_nom_establec,me.ee_te_nom_cliente,mc.* FROM m_comprob_cobro mc,m_evento_establec me where mc.cc_in_id_establec =me.ee_in_id_establec and  cc_in_estado_cobro ='1' and cc_in_id_comprobante_cobro is not null  order by cc_te_fecha_programada desc ", null);
         return mCursor;
     }
 
