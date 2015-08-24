@@ -198,6 +198,10 @@
             android:name=".Vistas.Files"
             android:label="@string/title_activity_files" >
         </activity>
+        <activity
+            android:name=".Vistas.AppPreferences"
+            android:label="@string/title_activity_app_preferences" >
+        </activity>
     </application>
 
 </manifest>

@@ -145,4 +145,15 @@
     <string name="title_activity_activity_agregar_establecimiento">
         activity_agregar_establecimiento
     </string>
+    <string name="title_activity_app_preferences">Preferencias</string>
+    <string-array name="listArray">
+        <item>3 pulgadas</item>
+        <item>4 pulgadas</item>
+        <item>5 pulgadas</item>
+    </string-array>
+    <string-array name="listValues">
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </string-array>
     </resources>

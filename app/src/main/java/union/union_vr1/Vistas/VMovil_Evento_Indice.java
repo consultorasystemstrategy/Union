@@ -463,6 +463,9 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
             case R.id.buttonExportar:
                 new ExportMain(mainActivity).execute();
                 break;
+            case R.id.buttonAjustes:
+                Intent intent = new Intent(mainActivity, AppPreferences.class);
+                startActivity(intent);
             default:
                 //ON ITEM SELECTED DEFAULT
                 break;

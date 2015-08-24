@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <EditTextPreference android:title="Impresora Nombre"
+        android:key="impresoraNombre"
+        android:summary="Por favor, ingrese el nombre bluetooth de la impresora">Star Micronics</EditTextPreference>
+    <CheckBoxPreference android:title="Importación automática"
+        android:defaultValue="true"
+        android:summary="Importar los datos todos los días. Al iniciar."
+        android:key="importacionAutomatica" />
+    <CheckBoxPreference android:title="Notificaciones"
+        android:defaultValue="true"
+        android:summary="Recibir notificaciones al finalizar el día. Resumen de ventas"
+        android:key="applicationNotifications" />
+    <ListPreference
+        android:title="Impresora Detalles"
+        android:summary="Selecciona el ancho de la impresora bluetooht"
+        android:key="impresoraDetalle"
+        android:defaultValue="3"
+        android:entries="@array/listArray"
+        android:entryValues="@array/listValues" />
+</PreferenceScreen>

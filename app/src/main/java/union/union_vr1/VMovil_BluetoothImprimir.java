@@ -5,10 +5,12 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ParcelUuid;
+import android.preference.PreferenceManager;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
@@ -29,7 +31,8 @@ import union.union_vr1.Vistas.VMovil_Evento_Indice;
 public class VMovil_BluetoothImprimir extends Activity{
 
 
-    private String nameImpresora = "Mobile Printer";
+    private String nameImpresora = "";
+    private String defaultNameImpresora = "Mobile Printer";
     //private String nameImpresora = "Star Micronics";
     private Button buttonImprimir;
     private Button buttonSincronizar;
@@ -72,6 +75,10 @@ public class VMovil_BluetoothImprimir extends Activity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vmovil__bluetooth_imprimir);
+
+
+        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        nameImpresora= SP.getString("impresoraNombre", defaultNameImpresora);
 
         buttonImprimir = (Button) findViewById(R.id.button);
         buttonSincronizar = (Button) findViewById(R.id.buttonSincronizar);
