@@ -7,7 +7,7 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="fill_parent"
-        android:layout_height="96dp"
+        android:layout_height="100dp"
         android:layout_marginLeft="12dp"
         android:layout_marginTop="12dp"
         android:layout_marginRight="12dp">
@@ -38,6 +38,16 @@
             android:layout_marginLeft="16dp">
 
             <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Bodega Ramon"
+                android:id="@+id/textNombreEstablec"
+                android:gravity="bottom"
+                android:textSize="16dp"
+                android:textColor="@color/Dark1"
+                android:textStyle="normal|bold" />
+
+            <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:text="24/02/2015"
@@ -51,7 +61,7 @@
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:text="Bodegas Don Ramón"
+                android:text="Documento"
                 android:id="@+id/textViewCobroDocumento"
                 android:layout_weight="1"
                 android:textSize="12dp"
@@ -60,7 +70,7 @@
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:text="Documento 30-01"
+                android:text="Estado"
                 android:id="@+id/textViewCobroEstado"
                 android:layout_weight="1"
                 android:layout_gravity="top|left"
