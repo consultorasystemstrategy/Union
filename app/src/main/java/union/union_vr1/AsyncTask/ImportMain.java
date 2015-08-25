@@ -126,7 +126,7 @@ public class ImportMain extends AsyncTask<String, String, String> {
     protected String doInBackground(String... strings) {
 
 
-        StockAgenteRestApi api = new StockAgenteRestApi();
+        StockAgenteRestApi api = new StockAgenteRestApi(mainActivity);
 
         Cursor cursor = dbAdapter_agente.fetchAgentesByIds(idAgente, idLiquidacion);
         cursor.moveToFirst();

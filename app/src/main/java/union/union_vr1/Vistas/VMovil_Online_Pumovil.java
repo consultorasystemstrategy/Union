@@ -3,9 +3,11 @@ package union.union_vr1.Vistas;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -31,10 +33,11 @@ import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 public class VMovil_Online_Pumovil extends Activity {
 
     //SERVIDOR LOCAL
-    private static final String url = "http://192.168.0.158:8080/SysMovilProductosUnion";
+    private static final String urlLocal = "http://192.168.0.158:8080/SysMovilProductosUnion";
     //SERVIDOR REMOTO - PU
-    //private static final String url = "http://190.81.172.113:8080/SysMovilProductosUnion";
-
+    private static final String urlRemoto = "http://190.81.172.113:8080/SysMovilProductosUnion";
+    //
+    private String url = "http://192.168.0.158:8080/SysMovilProductosUnion";
 
     private ProgressBar progressBar;
     private WebView webView;
@@ -49,9 +52,39 @@ public class VMovil_Online_Pumovil extends Activity {
     private int isCajaOpened;
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        int servidorTipo =  Integer.parseInt(SP.getString("servidorTipo", "1"));
+
+        if (servidorTipo==1){
+            url = urlLocal;
+        }else if(servidorTipo ==2){
+            url = urlRemoto;
+        }else{
+
+        }
+
+        displayURL();
+
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.princ_web_view);
+
+        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        int servidorTipo =  Integer.parseInt(SP.getString("servidorTipo", "1"));
+
+        if (servidorTipo==1){
+            url = urlLocal;
+        }else if(servidorTipo ==2){
+            url = urlRemoto;
+        }else{
+
+        }
+
         activity = this;
 
         session = new DbAdapter_Temp_Session(this);
@@ -73,8 +106,6 @@ public class VMovil_Online_Pumovil extends Activity {
             redireccionarPrincipal();
         }
     }
-
-
 
     public void displayURL(){
 
@@ -219,6 +250,9 @@ public class VMovil_Online_Pumovil extends Activity {
                 finish();
                 startActivity(intent);
                 break;
+            case R.id.buttonAjustes:
+                Intent intentA = new Intent(activity, AppPreferences.class);
+                startActivity(intentA);
             default:
                 //ON ITEM SELECTED DEFAULT
                 break;

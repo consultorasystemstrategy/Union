@@ -12,10 +12,18 @@
         android:summary="Recibir notificaciones al finalizar el día. Resumen de ventas"
         android:key="applicationNotifications" />
     <ListPreference
-        android:title="Impresora Detalles"
+        android:title="Impresora Ancho"
         android:summary="Selecciona el ancho de la impresora bluetooht"
-        android:key="impresoraDetalle"
+        android:key="impresoraAncho"
         android:defaultValue="3"
         android:entries="@array/listArray"
         android:entryValues="@array/listValues" />
+    <ListPreference
+        android:title="Servidor"
+        android:summary="Selecciona el tipo de servidor a probar."
+        android:key="servidorTipo"
+        android:defaultValue="1"
+        android:entries="@array/listServidorTipo"
+        android:entryValues="@array/listValuesServidorTipo" />
+
 </PreferenceScreen>

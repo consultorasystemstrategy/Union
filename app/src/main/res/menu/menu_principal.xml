@@ -15,4 +15,5 @@
         android:orderInCategory="100"/>
     <item android:id="@+id/buttonAjustes" android:title="Ajustes"
         android:orderInCategory="100" app:showAsAction="never" />
+
 </menu>

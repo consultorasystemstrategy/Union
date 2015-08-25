@@ -7,6 +7,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -14,6 +15,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
@@ -85,6 +87,7 @@ import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 import union.union_vr1.Sqlite.DbGastos_Ingresos;
 import union.union_vr1.Utils.Keyboard;
 import union.union_vr1.Utils.MyApplication;
+import union.union_vr1.Utils.NumberToLetterConverter;
 import union.union_vr1.Utils.SoftKeyboard;
 import union.union_vr1.Utils.Utils;
 import union.union_vr1.VMovil_BluetoothImprimir;
@@ -138,6 +141,10 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
     private String barcodeScan;
     private String formatScan;
     //fin variables agregar productos
+
+
+    // IMPRESORA
+    private int anchoImpresora = 3;
     private String textoVentaImpresion = "";
 
     private String textoImpresionCabecera = "\n"
@@ -153,15 +160,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
 
     private String textoImpresionContenidoLeft = "";
     private String textoImpresionContenidoRight = "";
-    private String textoImpresion  = ".\n"
-            +"    UNIVERSIDAD PERUANA UNION   \n"
-            +"     Cent.aplc. Prod. Union     \n"
-            +"   C. Central Km 19 Villa Union \n"
-            +" Lurigancho-Chosica Fax: 6186311\n"
-            +"      Telf: 6186309-6186310     \n"
-            +" Casilla 3564, Lima 1, LIMA PERU\n"
-            +"         RUC: 20138122256       \n"
-                +"--------------------------------\n";
+    private String textoImpresion  = ".\n";
 
     private int idEstablecimiento;
     int id_agente_venta;
@@ -313,6 +312,8 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
+
 //        Keyboard autoCompleteKeyboardLayout = new Keyboard(this, null);
 
         //ViewGroup viewGroup = (ViewGroup) autoCompleteKeyboardLayout.getRootView();
@@ -326,6 +327,10 @@ Instantiate and pass a callback
 */
         setContentView(R.layout.princ_venta_cabecera);
         contexto = getApplicationContext();
+
+
+        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        anchoImpresora= Integer.parseInt(SP.getString("impresoraAncho", "3"));
         //setContentView(viewGroup);
 
 /*
@@ -1486,25 +1491,61 @@ Instantiate and pass a callback
         Cursor cursorAgente = dbHelperAgente.fetchAgentesByIds(id_agente_venta, idLiquidacion);
         cursorAgente.moveToFirst();
         String nombreAgenteVenta = cursorAgente.getString(cursorAgente.getColumnIndexOrThrow(dbHelperAgente.AG_nombre_agente));
-        textoImpresion+= "N. Doc: "+numeroDocumentoImpresion+"\n";
+
+        if (anchoImpresora==2){
+            textoImpresion+="    UNIVERSIDAD PERUANA UNION   \n"
+                    +"     Cent.aplc. Prod. Union     \n"
+                    +"   C. Central Km 19 Villa Union \n"
+                    +" Lurigancho-Chosica Fax: 6186311\n"
+                    +"      Telf: 6186309-6186310     \n"
+                    +" Casilla 3564, Lima 1, LIMA PERU\n"
+                    +"         RUC: 20138122256       \n"
+                    +"--------------------------------\n";
+        }else if (anchoImpresora==3){
+            textoImpresion+=
+                     "            UNIVERSIDAD PERUANA UNION           \n"
+                    +"      CENTRO DE APLICACION PRODUCTOS UNION      \n"
+                    +"     CAR. CENTRAL KM. 19.5 VILLA UNION-NANA     \n"
+                    +"         Lurigancho-Chosica Fax: 6186311        \n"
+                    +"              Telf: 6186309-6186310             \n"
+                    +"         Casilla 3564, Lima 1, LIMA PERU        \n"
+                    +"                 RUC: 20138122256               \n\n";
+            //textoImpresion+= "------------------------------------------------------".substring(0,48);
+        }
+
+
+
+        textoImpresion+= "NUMERO  : "+numeroDocumentoImpresion+"\n";
 //        textoImpresion+= "Código ERP:  "+codigo_erp+"\n";
-        textoImpresion+= "Fecha: "+ getDatePhone()+"\n";
-        textoImpresion+= "Vendedor: "+ nombreAgenteVenta+"\n";
-        textoImpresion+= "Cliente: "+ nombreCliente+"\n";
-        textoImpresion+= "DNI/RUC: "+ documentoCliente+"\n";
+        textoImpresion+= "FECHA   : "+ getDatePhone()+"\n";
+        textoImpresion+= "CLIENTE : "+ nombreCliente+"\n";
+        textoImpresion+= "DNI/RUC : "+ documentoCliente+"\n";
         //textoImpresion+= "Direccion: Alameda Nro 2039 - Chosica\n";
         //3 PULGADAS - STAR MICRONICS
         //textoImpresion+= "-----------------------------------------------\n";
         //esto será si es con impresora SEWOO de ...
-        textoImpresion+= "-----------------------------------------------".substring(0,32)+"\n";
+        if (anchoImpresora==2){
+            textoImpresion+= "------------------------------------------------------".substring(0,32)+"\n";
+        }else if (anchoImpresora==3){
+            textoImpresion+= "------------------------------------------------------".substring(0,48)+"\n";
+        }
+
         //3 PULGADAS - STAR MICRONICS
         //textoImpresion+= "Cant.             Producto              Importe\n";
         //esto será si es con impresora SEWOO de ...
-        textoImpresion+=String.format("%-6s","Cant") + String.format("%-19s","Producto")+ String.format("%-7s","Importe")+"\n";
+        if (anchoImpresora==2){
+            textoImpresion+=String.format("%-6s","CANT") + String.format("%-19s","PRODUCTO")+ String.format("%-7s","IMPORTE")+"\n";
+        }else if (anchoImpresora==3){
+            textoImpresion+=String.format("%-6s","CANT") + String.format("%-30s","PRODUCTO")+String.format("%-5s","P.U.")+  String.format("%-7s","IMPORTE")+"\n";
+        }
         //3 PULGADAS - STAR MICRONICS
         //textoImpresion+= "-----------------------------------------------\n";
         //esto será si es con impresora SEWOO de ...
-        textoImpresion+= "-----------------------------------------------".substring(0,32)+"\n";
+        if (anchoImpresora==2){
+            textoImpresion+= "------------------------------------------------------".substring(0,32)+"\n";
+        }else if (anchoImpresora==3){
+            textoImpresion+= "------------------------------------------------------".substring(0,48)+"\n";
+        }
 
 
         textoVentaImpresion+= "N. Doc: "+numeroDocumentoImpresion+"\n";
@@ -1553,14 +1594,30 @@ Instantiate and pass a callback
                 nombre_producto+="...";
             }*/
             //sewoo
-            if(nombre_producto.length()>=20){
-                nombre_producto=nombre_producto.substring(0,18);
-                nombre_producto+="..";
+
+            if (anchoImpresora==2){
+                if(nombre_producto.length()>=20){
+                    nombre_producto=nombre_producto.substring(0,18);
+                    nombre_producto+="..";
+                }
+            }else if (anchoImpresora==3){
+                if(nombre_producto.length()>=30){
+                    nombre_producto=nombre_producto.substring(0,28);
+                    nombre_producto+="..";
+                }
             }
+
+
             DecimalFormat df = new DecimalFormat("#.00");
             //star micronics, 3pg
             //textoImpresion+=String.format("%-6s",cantidad) + String.format("%-34s",nombre_producto) +String.format("%-5s",df.format(importe)) + "\n";
-            textoImpresion+=String.format("%-4s",cantidad) + String.format("%-21s",nombre_producto) +String.format("%1$7s"  ,df.format(importe)) + "\n";
+
+            if (anchoImpresora==2){
+                textoImpresion+=String.format("%-4s",cantidad) + String.format("%-21s",nombre_producto) +String.format("%1$7s"  ,df.format(importe)) + "\n";
+            }else if (anchoImpresora==3){
+                textoImpresion+=String.format("%-4s",cantidad) + String.format("%-31s",nombre_producto)+String.format("%1$5s"  ,df.format(precio_unitario)) +String.format("%1$8s"  ,df.format(importe)) + "\n";
+            }
+
             textoImpresionContenidoLeft +=String.format("%-6s",cantidad) + String.format("%-28s",nombre_producto)+ "\n";
             textoImpresionContenidoRight+= String.format("%-5s",df.format(importe)) + "\n";
 
@@ -1581,9 +1638,25 @@ Instantiate and pass a callback
         textoImpresion += String.format("%-37s","IGV:")+  "S/ "+ df.format(igv)+"\n";
         textoImpresion += String.format("%-37s","TOTAL:")+  "S/ "+ df.format(monto_total)+"\n";
 */
-        textoImpresion += "\n"+String.format("%-25s","SUB TOTAL:")+ String.format("%1$7s",df.format(base_imponible))+"\n";
-        textoImpresion += String.format("%-25s","IGV:")+  String.format("%1$7s",df.format(igv))+"\n";
-        textoImpresion += String.format("%-25s","TOTAL:")+  String.format("%1$7s",df.format(monto_total))+"\n";
+
+        if (anchoImpresora==2){
+            textoImpresion += "\n"+String.format("%-18s","OP. GRAVADA")+String.format("%-7s","S/.")+ String.format("%1$7s",df.format(base_imponible))+"\n";
+            textoImpresion += String.format("%-18s","I.G.V.")+String.format("%-7s","S/.")+  String.format("%1$7s",df.format(igv))+"\n";
+            textoImpresion += String.format("%-18s","PRECIO VENTA")+String.format("%-7s","S/.")+  String.format("%1$7s",df.format(monto_total))+"\n";
+        }else if (anchoImpresora==3){
+            textoImpresion += "\n"+String.format("%-18s","OP. GRAVADA")+String.format("%-21s","S/.")+ String.format("%1$9s",df.format(base_imponible));
+            textoImpresion += "\n"+String.format("%-18s","OP. INAFECTA")+String.format("%-21s","S/.")+ String.format("%1$9s","0.00");
+            textoImpresion += "\n"+String.format("%-18s","OP. EXONERADA")+String.format("%-21s","S/.")+ String.format("%1$9s","0.00");
+            textoImpresion += "\n"+String.format("%-18s","OP. GRATUITA")+String.format("%-21s","S/.")+ String.format("%1$9s","0.00");
+            textoImpresion += String.format("%-18s","I.G.V.")+String.format("%-21s","S/.")+  String.format("%1$9s",df.format(igv));
+            textoImpresion += String.format("%-18s","PRECIO VENTA")+String.format("%-21s","S/.")+  String.format("%1$9s",df.format(monto_total))+"\n\n";
+            textoImpresion+= "------------------------------------------------------".substring(0,48)+"\n";
+            textoImpresion+= "Son "+NumberToLetterConverter.convertNumberToLetter(df.format(monto_total)).toLowerCase()+"\n";
+            textoImpresion+= "------------------------------------------------------".substring(0,48)+"\n";
+            textoImpresion+= "VENDEDOR : "+ nombreAgenteVenta+"\n";
+
+        }
+
 
         textoImpresionContenidoLeft+="SUB TOTAL:\n";
         textoImpresionContenidoLeft+="IGV:\n";

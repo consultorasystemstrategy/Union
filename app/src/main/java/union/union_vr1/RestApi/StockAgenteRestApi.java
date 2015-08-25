@@ -1,5 +1,8 @@
 package union.union_vr1.RestApi;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -27,9 +30,25 @@ import java.util.Map;
  */
 public class StockAgenteRestApi {
     //SERVIDOR LOCAL
-    private final String urlString = "http://192.168.0.158/RestFull/StockAgente.ashx";
+    private final String urlStringLocal = "http://192.168.0.158/RestFull/StockAgente.ashx";
     //SERVIDOR REMOTO
-    //    private final String urlString = "http://190.81.172.113/RestFull/StockAgente.ashx";
+        private final String urlStringRemoto = "http://190.81.172.113/RestFull/StockAgente.ashx";
+
+    private String urlString = "http://192.168.0.158/RestFull/StockAgente.ashx";
+
+    private Context contexto;
+    private int servidorTipo=1;
+
+    public StockAgenteRestApi(Context contexto) {
+        this.contexto = contexto;
+        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(contexto);
+        servidorTipo =  Integer.parseInt(SP.getString("servidorTipo", "1"));
+        if (servidorTipo==1){
+            urlString = urlStringLocal;
+        }else if (servidorTipo==2){
+            urlString = urlStringRemoto;
+        }
+    }
 
     private static String convertStreamToUTF8String(InputStream stream) throws IOException {
         String result = "";

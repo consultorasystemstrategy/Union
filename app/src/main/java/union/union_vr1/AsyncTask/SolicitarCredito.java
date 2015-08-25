@@ -75,7 +75,7 @@ public class SolicitarCredito extends AsyncTask<String, String, String> {
     @Override
     protected String doInBackground(String... strings) {
 
-        StockAgenteRestApi api = new StockAgenteRestApi();
+        StockAgenteRestApi api = new StockAgenteRestApi(mainActivity);
             try {
                 publishProgress(""+25);
 

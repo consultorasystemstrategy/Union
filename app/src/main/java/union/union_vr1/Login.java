@@ -318,7 +318,7 @@ public class Login extends Activity implements OnClickListener{
 
         @Override
         protected String doInBackground(String... strings) {
-            StockAgenteRestApi api = new StockAgenteRestApi();
+            StockAgenteRestApi api = new StockAgenteRestApi(mainActivity);
             ArrayList<Agente> agenteLista = null;
             JSONObject jsonObjAgente = null;
 

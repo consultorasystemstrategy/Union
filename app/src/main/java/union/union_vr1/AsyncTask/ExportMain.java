@@ -94,7 +94,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
     protected String doInBackground(String... strings) {
         //LA CLASE QUE TIENE LOS MÉTODOS DE EXPORTACIÓN A CONSUMIR
         publishProgress(""+1);
-        StockAgenteRestApi api = new StockAgenteRestApi();
+        StockAgenteRestApi api = new StockAgenteRestApi(mainActivity);
 
         //FILTRO LOS REGISTROS DE LAS TABLAS A EXPORTAR
 

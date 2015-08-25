@@ -122,9 +122,9 @@ public abstract class NumberToLetterConverter {
                     + "CÉNTIMOS");
         */
         if (centavos<10)
-            converted.append(" Y 0"+centavos+"/100");
+            converted.append("con 0"+centavos+"/100 nuevos soles");
         else if(centavos>=10)
-            converted.append(" Y "+centavos+"/100");
+            converted.append("con "+centavos+"/100 nuevos soles");
         return converted.toString();
     }
 
