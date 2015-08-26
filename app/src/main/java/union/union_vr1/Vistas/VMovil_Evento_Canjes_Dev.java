@@ -218,7 +218,40 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity implements View.OnClic
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-                adapter.getFilter().filter(charSequence.toString());
+
+                Log.d("ON TEXTCHANGED",""+charSequence.toString()+","+i+","+i2+","+i3);
+                if (i==0 && i2==0 && i3>=10){
+                    Log.d("ON TEXTCHANGED", "HA ESCANEADO UN PRODUCTO");
+
+
+                    Cursor cursor = dbHelper_Stock.listarbyIdProductoAndStock(charSequence.toString(), liquidacion);
+
+                    String nom = "";
+                    String valorUnidad = "";
+                    if (cursor.getCount()>=1) {
+                        cursor.moveToFirst();
+
+                        nom = cursor.getString(1);
+                        idProducto = cursor.getInt(0);
+                        valorUnidad = cursor.getString(3);
+                    }
+
+
+                    autoComple.setText(nom);
+                    Intent faCanjeDev = new Intent(getApplicationContext(), VMovil_Facturas_Canjes_Dev.class);
+                    faCanjeDev.putExtra("idAgente", idAgente);
+                    faCanjeDev.putExtra("idEstablec", establec);
+                    faCanjeDev.putExtra("idProducto", idProducto);
+                    faCanjeDev.putExtra("nomProducto", nom);
+                    faCanjeDev.putExtra("valorUnidad", valorUnidad);
+                    Log.e("idProducto",""+idProducto+"-"+nom);
+                    startActivity(faCanjeDev);
+                    finish();
+
+
+                }else{
+                    adapter.getFilter().filter(charSequence.toString());
+                }
 
             }
 
@@ -233,7 +266,6 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity implements View.OnClic
             public Cursor runQuery(CharSequence charSequence) {
                 Log.e("Error stock lista"," "+liquidacion);
                 Cursor cr = dbHelper_Stock.listarbyIdProductoAndStock(charSequence.toString(), liquidacion);
-
                 return cr;
             }
         });

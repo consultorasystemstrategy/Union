@@ -296,6 +296,65 @@ public class DbAdapter_Stock_Agente {
 
     }
 
+    public void updateStockAgenteDisponibleCantidad(int id_producto, int cantidadAnulada, int liquidacion) {
+        Cursor mCursor = null;
+        mCursor = mDb.query(true, SQLITE_TABLE_Stock_Agente, new String[]{ST_id_producto,
+                        ST_final, ST_disponible, ST_ventas, ST_fisico},
+                ST_id_producto + " = '" + id_producto + "' AND " + ST_liquidacion + " = '" + liquidacion + "' ", null, null, null, null, null);
+
+        int cantidadFinal = 0;
+        int cantidadVentas = 0;
+        int cantidadDisponible = 0;
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+            cantidadFinal = mCursor.getInt(mCursor.getColumnIndex(ST_final));
+            cantidadVentas = mCursor.getInt(mCursor.getColumnIndex(ST_ventas));
+            cantidadDisponible = mCursor.getInt(mCursor.getColumnIndex(ST_disponible));
+        }
+        int sumado = cantidadFinal + cantidadAnulada;
+        int disponible = cantidadDisponible + cantidadAnulada;
+        int ventas = cantidadVentas-cantidadAnulada;
+
+        ContentValues initialValues = new ContentValues();
+        //initialValues.put(ST_final, sumado);
+        initialValues.put(ST_disponible, disponible);
+        //initialValues.put(ST_ventas, ventas);
+        //initialValues.put(ST_fisico, sumado);
+        mDb.update(SQLITE_TABLE_Stock_Agente, initialValues,
+                ST_id_producto + "=? AND " + ST_liquidacion + " = ? ", new String[]{"" + id_producto, "" + liquidacion});
+
+    }
+    public void updateStockAgenteFinalCantidad(int id_producto, int cantidadAnulada, int liquidacion) {
+        Cursor mCursor = null;
+        mCursor = mDb.query(true, SQLITE_TABLE_Stock_Agente, new String[]{ST_id_producto,
+                        ST_final, ST_disponible, ST_ventas, ST_fisico},
+                ST_id_producto + " = '" + id_producto + "' AND " + ST_liquidacion + " = '" + liquidacion + "' ", null, null, null, null, null);
+
+        int cantidadFinal = 0;
+        int cantidadVentas = 0;
+        int cantidadDisponible = 0;
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+            cantidadFinal = mCursor.getInt(mCursor.getColumnIndex(ST_final));
+            cantidadVentas = mCursor.getInt(mCursor.getColumnIndex(ST_ventas));
+            cantidadDisponible = mCursor.getInt(mCursor.getColumnIndex(ST_disponible));
+        }
+        int sumado = cantidadFinal + cantidadAnulada;
+        int disponible = cantidadDisponible + cantidadAnulada;
+        int ventas = cantidadVentas-cantidadAnulada;
+
+        ContentValues initialValues = new ContentValues();
+        //initialValues.put(ST_final, sumado);
+        initialValues.put(ST_disponible, disponible);
+        //initialValues.put(ST_ventas, ventas);
+        //initialValues.put(ST_fisico, sumado);
+        mDb.update(SQLITE_TABLE_Stock_Agente, initialValues,
+                ST_id_producto + "=? AND " + ST_liquidacion + " = ? ", new String[]{"" + id_producto, "" + liquidacion});
+
+    }
+
+
+
     public Cursor fetchStockAgentePrecioByName(String inputText) throws SQLException {
         Log.w(TAG, inputText);
         Cursor mCursor = null;
@@ -446,7 +505,7 @@ public class DbAdapter_Stock_Agente {
                 "FROM m_stock_agente SA\n" +
                 "INNER JOIN m_precio P\n" +
                 "ON  SA.st_in_id_producto = P.pr_in_id_producto\n" +
-                "WHERE (SA.st_te_nombre LIKE '%"+nombre+"%' OR SA.st_te_codigo LIKE '%"+nombre+"%') AND " +
+                "WHERE (SA.st_te_nombre LIKE '%"+nombre+"%' OR SA.st_te_codigo LIKE '%"+nombre+"%' OR SA.st_te_codigo_barras LIKE '%"+nombre+"%') AND " +
                 "SA.liquidacion = '" +liquidacion+"' group by SA.st_in_id_producto ;",null);
         return cr;
     }

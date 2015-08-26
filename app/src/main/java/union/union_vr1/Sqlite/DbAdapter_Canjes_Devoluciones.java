@@ -207,7 +207,7 @@ public class DbAdapter_Canjes_Devoluciones {
 
     public Cursor obtenerStock(int idProducto, int liquidacion) {
         //  and liquidacion='"+liquidacion+"'
-        Cursor cr = mDb.rawQuery("select st_in_disponible - (st_in_canjes) as 'disponible' from m_stock_agente where st_in_id_producto='" + idProducto + "'  and liquidacion='" + liquidacion + "'", null);
+        Cursor cr = mDb.rawQuery("select st_in_disponible  as 'disponible' from m_stock_agente where st_in_id_producto='" + idProducto + "'  and liquidacion='" + liquidacion + "'", null);
         return cr;
     }
 

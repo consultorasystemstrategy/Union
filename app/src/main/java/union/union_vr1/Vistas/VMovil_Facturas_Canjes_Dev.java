@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import union.union_vr1.R;
 import union.union_vr1.Sqlite.CursorAdapter_Facturas_Canjes_Dev;
 import union.union_vr1.Sqlite.DbAdapter_Canjes_Devoluciones;
+import union.union_vr1.Sqlite.DbAdapter_Stock_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 
 import static union.union_vr1.R.layout.*;
@@ -31,6 +32,7 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
     View layoutNoEncontrado;
     private int idProducto;
     private DbAdapter_Canjes_Devoluciones dbHelperCanjes_Dev;
+    private DbAdapter_Stock_Agente dbHelperStockAgente;
     private ListView listaFacturas;
     private int stock;
     private String idEstablec;
@@ -57,6 +59,8 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
 
         dbHelperCanjes_Dev = new DbAdapter_Canjes_Devoluciones(this);
         dbHelperCanjes_Dev.open();
+        dbHelperStockAgente = new DbAdapter_Stock_Agente(this);
+        dbHelperStockAgente.open();
 
         listaFacturas = (ListView) findViewById(R.id.facturasbyid);
 
@@ -492,6 +496,7 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
             tipo_op = "2";
             boolean estado = dbHelperCanjes_Dev.update_Canj(tipo_op, categoria_op, cantidad, importe, idDetalle, canjeado, idProducto, ctx, liquidacion,valorUnidad);
             if (estado) {
+                dbHelperStockAgente.updateStockAgenteDisponibleCantidad(idProducto, -Integer.parseInt(cantidad) ,liquidacion);
                 confirmar();
 
             } else {
@@ -503,6 +508,7 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
             tipo_op = "1";
             boolean estado = dbHelperCanjes_Dev.update_dev(tipo_op, categoria_op, cantidad, importe, idDetalle, devuelto, idProducto, ctx, liquidacion,valorUnidad);
             if (estado) {
+                dbHelperStockAgente.updateStockAgenteFinalCantidad(idProducto, -Integer.parseInt(cantidad) ,liquidacion);
                 confirmar();
 
             } else {

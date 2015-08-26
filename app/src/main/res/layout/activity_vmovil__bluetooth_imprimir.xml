@@ -105,7 +105,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:text="Imprimir"
-                android:id="@+id/button"
+                android:id="@+id/buttonImprimir"
                 android:background="@drawable/border_bottom_dark" />
 
             <Button

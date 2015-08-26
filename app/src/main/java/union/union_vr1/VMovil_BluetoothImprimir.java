@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -13,6 +14,7 @@ import android.os.ParcelUuid;
 import android.preference.PreferenceManager;
 import android.text.Html;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -28,7 +30,7 @@ import java.util.UUID;
 import union.union_vr1.Vistas.VMovil_Evento_Establec;
 import union.union_vr1.Vistas.VMovil_Evento_Indice;
 
-public class VMovil_BluetoothImprimir extends Activity{
+public class VMovil_BluetoothImprimir extends Activity implements View.OnClickListener{
 
 
     private String nameImpresora = "";
@@ -63,8 +65,16 @@ public class VMovil_BluetoothImprimir extends Activity{
     int counter;
     volatile boolean stopWorker;
 
+    private Context contexto;
+
+
+    private boolean isSincronized= false;
+    private boolean estado = false;
+    private boolean isConnected = false;
+    private int countImpresion = 0;
     @Override
     public void onBackPressed() {
+        //super.onStop();
         super.onBackPressed();
         Intent intent = new Intent(this, VMovil_Evento_Establec.class);
         finish();
@@ -76,11 +86,11 @@ public class VMovil_BluetoothImprimir extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vmovil__bluetooth_imprimir);
 
-
+        contexto = this;
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         nameImpresora= SP.getString("impresoraNombre", defaultNameImpresora);
 
-        buttonImprimir = (Button) findViewById(R.id.button);
+        buttonImprimir = (Button) findViewById(R.id.buttonImprimir);
         buttonSincronizar = (Button) findViewById(R.id.buttonSincronizar);
         textViewImprimirCabecera = (TextView) findViewById(R.id.textViewImprimirCabecera);
         textViewImprimirContenidoLeft = (TextView) findViewById(R.id.textViewImprimirContenidoLeft);
@@ -98,28 +108,65 @@ public class VMovil_BluetoothImprimir extends Activity{
         textViewImprimirContenidoLeft.setText(textoImpresionContenidoLeft);
         textViewImprimirContenidoRight.setText(textoImpresionContenidoRight);
 
-        buttonImprimir.setOnClickListener(new View.OnClickListener() {
+        if (!isSincronized){
+            buttonImprimir.setEnabled(isSincronized);
+            buttonImprimir.setAlpha((float) 0.0);
+            buttonImprimir.setBackgroundColor(getApplication().getResources().getColor(R.color.PersonalizadoSteve4));
+        }
+
+        buttonImprimir.setOnClickListener(this);
+        buttonSincronizar.setOnClickListener(this);
+
+        buttonSincronizar.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View view) {
-                new AsyncTaskImprimir().execute(textoImpresion);
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                Toast.makeText(contexto, "Procesando ...", Toast.LENGTH_SHORT).show();
+                return false;
             }
         });
-        buttonSincronizar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                boolean estado = findBT();
-                try {
-                    openBT();
-                } catch (IOException e) {
-                    e.printStackTrace();
+
+    }
+
+    @Override
+    public void onClick(View view) {
+
+
+        switch (view.getId()){
+            case R.id.buttonSincronizar:
+                estado = findBT();
+                if (estado){
+                    try {
+                        isConnected = openBT();
+                    } catch (IOException e) {
+                        Log.d("STACKSTRACE PU", Log.getStackTraceString(e));
+                        //e.printStackTrace();
+                    }
+                }else{
+                    Toast.makeText(getApplicationContext(), "Hacer un emparejamiento Bluetooth.", Toast.LENGTH_LONG).show();
+                }
+                if (isConnected){
+                    buttonImprimir.setEnabled(isConnected);
+                    buttonImprimir.setBackgroundColor(contexto.getResources().getColor(R.color.PersonalizadoSteve2));
+                    buttonImprimir.setAlpha((float)1.0);
+                    buttonSincronizar.setEnabled(!isConnected);
+                    buttonSincronizar.setAlpha((float)0.0);
+                }else {
+                    Toast.makeText(getApplicationContext(), "Error : Revise si la impresora está encendida.", Toast.LENGTH_LONG).show();
                 }
 
-                if(!estado){
-                    Toast.makeText(getApplicationContext(), "Revise si la impresora está encendida. Si el problema persiste pruebe reiniciar", Toast.LENGTH_LONG).show();
+                break;
+            case R.id.buttonImprimir:
+                countImpresion++;
+                if (countImpresion<=2) {
+                    new AsyncTaskImprimir().execute(textoImpresion);
+                }else{
+                    Toast.makeText(getApplicationContext(), "Sólo puede imprimir 2 veces.", Toast.LENGTH_LONG).show();
                 }
 
-            }
-        });
+                break;
+            default:
+                break;
+        }
 
     }
 
@@ -135,7 +182,8 @@ public class VMovil_BluetoothImprimir extends Activity{
                 try {
                     openBT();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Log.d("STACKSTRACE PU", Log.getStackTraceString(e));
+                    //e.printStackTrace();
                     Toast.makeText(getApplicationContext(), "Revise si la impresora está encendida. Si el problema persiste pruebe reiniciar", Toast.LENGTH_LONG).show();
                 }
             }
@@ -152,7 +200,8 @@ public class VMovil_BluetoothImprimir extends Activity{
             try {
                 sendData(textoImpresion);
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.d("STACKSTRACE PU", Log.getStackTraceString(e));
+                //e.printStackTrace();
             }
         }
     }
@@ -188,7 +237,6 @@ public class VMovil_BluetoothImprimir extends Activity{
                     if (device.getName().equals(nameImpresora)) {
 
                         estado = true;
-                        Toast.makeText(getApplicationContext(), "Sincronizado con : "+device.getName(), Toast.LENGTH_LONG).show();
                         Log.d("Bluetooth message","Bluetooth Device Found");
                         mmDevice = device;
                         device.getUuids();
@@ -210,7 +258,8 @@ public class VMovil_BluetoothImprimir extends Activity{
     }
 
     // Tries to open a connection to the bluetooth printer device
-    public void openBT() throws IOException {
+    public boolean openBT() throws IOException {
+        boolean estado = false;
         try {
             // Standard SerialPortService ID
             UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
@@ -219,20 +268,24 @@ public class VMovil_BluetoothImprimir extends Activity{
             mmOutputStream = mmSocket.getOutputStream();
             mmInputStream = mmSocket.getInputStream();
 
+            estado = mmSocket.isConnected();
 
             beginListenForData();
 
             Log.d("Bluetooth message", "Bluetooth Opened");
         } catch (NullPointerException e) {
-            e.printStackTrace();
+            Log.d("STACKSTRACE PU", Log.getStackTraceString(e));
+            //e.printStackTrace();
             Log.d("Bluetooth message O", e.getMessage());
 
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.d("STACKSTRACE PU", Log.getStackTraceString(e));
+            //e.printStackTrace();
             Log.d("Bluetooth message O", e.getMessage());
 
 
         }
+        return  estado;
     }
 
     // After opening a connection to bluetooth printer device,
@@ -294,9 +347,11 @@ public class VMovil_BluetoothImprimir extends Activity{
 
             workerThread.start();
         } catch (NullPointerException e) {
-            e.printStackTrace();
+            Log.d("STACKSTRACE PU", Log.getStackTraceString(e));
+            //e.printStackTrace();
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.d("STACKSTRACE PU", Log.getStackTraceString(e));
+            //e.printStackTrace();
         }
     }
     public void sendData(String textoImprimir) throws IOException {
@@ -316,9 +371,11 @@ public class VMovil_BluetoothImprimir extends Activity{
             Log.d("Bluetooth message", "Data Sent");
 
         } catch (NullPointerException e) {
-            e.printStackTrace();
+            Log.d("STACKSTRACE PU", Log.getStackTraceString(e));
+            //e.printStackTrace();
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.d("STACKSTRACE PU", Log.getStackTraceString(e));
+            //e.printStackTrace();
         }
     }
 
@@ -331,9 +388,11 @@ public class VMovil_BluetoothImprimir extends Activity{
             mmSocket.close();
             Log.d("Bluetooth message","Bluetooth Closed");
         } catch (NullPointerException e) {
-            e.printStackTrace();
+            Log.d("STACKSTRACE PU", Log.getStackTraceString(e));
+            //e.printStackTrace();
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.d("STACKSTRACE PU", Log.getStackTraceString(e));
+            //e.printStackTrace();
         }
     }
 
@@ -344,7 +403,8 @@ public class VMovil_BluetoothImprimir extends Activity{
         try {
             closeBT();
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.d("STACKSTRACE PU", Log.getStackTraceString(e));
+            //e.printStackTrace();
         }
     }
 

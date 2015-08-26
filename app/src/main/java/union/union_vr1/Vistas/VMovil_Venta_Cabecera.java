@@ -572,7 +572,11 @@ Instantiate and pass a callback
                                                 }).create().show();
 
                                     }else{
-                                        Toast.makeText(mContext, "Sin crédito y sin conexión", Toast.LENGTH_SHORT).show();
+                                        Toast toast = Toast.makeText(mContext, "Sin crédito y sin conexión", Toast.LENGTH_SHORT);
+                                        toast.getView().setBackgroundColor(mainActivity.getResources().getColor(R.color.verde));
+                                        TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
+                                        v.setTextColor(mainActivity.getResources().getColor(R.color.Blanco));
+                                        toast.show();
                                     }
 
                                     break;
@@ -714,8 +718,11 @@ Instantiate and pass a callback
 
                         Cursor cursorExistProductoTemp = dbHelper_temp_venta.fetchTempVentaByIDProducto(id_producto);
                         if (cursorExistProductoTemp.getCount()>0){
-                            Toast.makeText(mainActivity,"YA EXISTE",Toast.LENGTH_SHORT).show();
-
+                            Toast toast = Toast.makeText(mainActivity,"YA EXISTE",Toast.LENGTH_SHORT);
+                            toast.getView().setBackgroundColor(mainActivity.getResources().getColor(R.color.verde));
+                            TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
+                            v.setTextColor(mainActivity.getResources().getColor(R.color.Blanco));
+                            toast.show();
                         }else{
                             if (disponible>0){
 
@@ -728,11 +735,19 @@ Instantiate and pass a callback
                                     myTextDialog().show();
                                 }
                             }else{
-                                Toast.makeText(mainActivity, "No hay Stock", Toast.LENGTH_SHORT).show();
+                                Toast toast = Toast.makeText(mainActivity, "No hay Stock", Toast.LENGTH_SHORT);
+                                toast.getView().setBackgroundColor(mainActivity.getResources().getColor(R.color.verde));
+                                TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
+                                v.setTextColor(mainActivity.getResources().getColor(R.color.Blanco));
+                                toast.show();
                             }
                         }
                     }else{
-                        Toast.makeText(mainActivity, "No encontrado en almacén", Toast.LENGTH_SHORT).show();
+                        Toast toast = Toast.makeText(mainActivity, "No encontrado en almacén", Toast.LENGTH_SHORT);
+                        toast.getView().setBackgroundColor(mainActivity.getResources().getColor(R.color.verde));
+                        TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
+                        v.setTextColor(mainActivity.getResources().getColor(R.color.Blanco));
+                        toast.show();
                     }
 
 
@@ -779,7 +794,11 @@ Instantiate and pass a callback
 
                 Cursor cursorExistProductoTemp = dbHelper_temp_venta.fetchTempVentaByIDProducto(id_producto);
                 if (cursorExistProductoTemp.getCount()>0){
-                    Toast.makeText(mainActivity,"YA EXISTE",Toast.LENGTH_SHORT).show();
+                    Toast toast = Toast.makeText(mainActivity,"YA EXISTE",Toast.LENGTH_SHORT);
+                    toast.getView().setBackgroundColor(mainActivity.getResources().getColor(R.color.verde));
+                    TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
+                    v.setTextColor(mainActivity.getResources().getColor(R.color.Blanco));
+                    toast.show();
 
                 }else{
                     if (disponible>0){
@@ -793,7 +812,11 @@ Instantiate and pass a callback
                             myTextDialog().show();
                         }
                     }else{
-                        Toast.makeText(mainActivity, "No hay Stock", Toast.LENGTH_SHORT).show();
+                        Toast toast = Toast.makeText(mainActivity, "No hay Stock", Toast.LENGTH_SHORT);
+                        toast.getView().setBackgroundColor(mainActivity.getResources().getColor(R.color.verde));
+                        TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
+                        v.setTextColor(mainActivity.getResources().getColor(R.color.Blanco));
+                        toast.show();
                     }
                 }
             }
@@ -862,13 +885,21 @@ Instantiate and pass a callback
                                                             // FIRE ZE MISSILES!
                                                             boolean succesful = dbHelper_temp_venta.deleteTempVentaDetalleById(id_tem_detalle);
                                                             if (succesful) {
-                                                                Toast.makeText(getApplicationContext(), "Eliminado", Toast.LENGTH_LONG).show();
+                                                                Toast toast = Toast.makeText(getApplicationContext(), "Eliminado", Toast.LENGTH_SHORT);
+                                                                toast.getView().setBackgroundColor(mainActivity.getResources().getColor(R.color.verde));
+                                                                TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
+                                                                v.setTextColor(mainActivity.getResources().getColor(R.color.Blanco));
+                                                                toast.show();
                                                                 /*finish();
                                                                 Intent intent = new Intent(mContext, VMovil_Venta_Cabecera.class);
                                                                 startActivity(intent);*/
                                                                 mostrarProductosParaVender();
                                                             } else {
-                                                                Toast.makeText(getApplicationContext(), "No se pudo eliminar, intente nuevamente", Toast.LENGTH_LONG).show();
+                                                                Toast toast = Toast.makeText(getApplicationContext(), "No se pudo eliminar, intente nuevamente", Toast.LENGTH_SHORT);
+                                                                toast.getView().setBackgroundColor(mainActivity.getResources().getColor(R.color.verde));
+                                                                TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
+                                                                v.setTextColor(mainActivity.getResources().getColor(R.color.Blanco));
+                                                                toast.show();
                                                             }
                                                         }
                                                     }).create().show();
@@ -944,10 +975,18 @@ Instantiate and pass a callback
                     }
 
                 }else {
-                    Toast.makeText(getApplicationContext(), "Producto con código de barras : "+ barcodeScan + "no disponible en el Stock Actual y/o Categoría establecimiento", Toast.LENGTH_SHORT).show();;
+                    Toast toast = Toast.makeText(getApplicationContext(), "Producto con código de barras : "+ barcodeScan + "no disponible en el Stock Actual y/o Categoría establecimiento", Toast.LENGTH_SHORT);
+                    toast.getView().setBackgroundColor(mainActivity.getResources().getColor(R.color.verde));
+                    TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
+                    v.setTextColor(mainActivity.getResources().getColor(R.color.Blanco));
+                    toast.show();
                 }
             }else{
-                Toast.makeText(getApplicationContext(), "No ha Scaneado ningún producto", Toast.LENGTH_SHORT).show();;
+                Toast toast = Toast.makeText(getApplicationContext(), "No ha Scaneado ningún producto", Toast.LENGTH_SHORT);
+                toast.getView().setBackgroundColor(mainActivity.getResources().getColor(R.color.verde));
+                TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
+                v.setTextColor(mainActivity.getResources().getColor(R.color.Blanco));
+                toast.show();
             }
 
 
@@ -1185,7 +1224,12 @@ Instantiate and pass a callback
 
                 solicitarCredito.execute(""+id_agente_venta,""+idEstablecimiento,""+cantidadCredito,""+diasCredito);
 
-                Toast.makeText(mContext.getApplicationContext(), "Crédito solicitado esperar...",Toast.LENGTH_SHORT).show();
+                Toast toast = Toast.makeText(mContext.getApplicationContext(), "Crédito solicitado esperar...",Toast.LENGTH_SHORT);
+                toast.getView().setBackgroundColor(mainActivity.getResources().getColor(R.color.verde));
+                TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
+                v.setTextColor(mainActivity.getResources().getColor(R.color.Blanco));
+                toast.show();
+
                 Intent intent = new Intent(mContext, VMovil_Evento_Establec.class);
                 startActivity(intent);
                 finish();
@@ -1269,7 +1313,7 @@ Instantiate and pass a callback
 
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Cantidad");
+        builder.setTitle("Stock ("+maximoValor+")");
         builder.setPositiveButton("OK", new Dialog.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 String texto = null;
@@ -1411,6 +1455,7 @@ Instantiate and pass a callback
     }
 
     public void vender(){
+
 
         //Obtener los datos de las ventas
 
@@ -1567,9 +1612,21 @@ Instantiate and pass a callback
 
         Cursor cursorTemp = simpleCursorAdapter.getCursor();
 
+        if (cursorTemp.getCount()<=0){
+            Log.d("CT VC",cursorTemp.getCount()+"");
+            Toast toast =  Toast.makeText(mainActivity,"AGREGAR PRODUCTOS A LA VENTA",Toast.LENGTH_LONG);
+            toast.getView().setBackgroundColor(mainActivity.getResources().getColor(R.color.verde));
+            TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
+            v.setTextColor(mainActivity.getResources().getColor(R.color.Blanco));
+            toast.show();
+            return;
+        }
 
 
         long comprobVentaDetalle = 0;
+
+
+
         for (cursorTemp.moveToFirst(); !cursorTemp.isAfterLast();cursorTemp.moveToNext()){
 
             int _id = cursorTemp.getInt(cursorTemp.getColumnIndex(DBAdapter_Temp_Venta.temp_venta_detalle));
@@ -1699,7 +1756,11 @@ Instantiate and pass a callback
         intent.putExtra("textoImpresionContenidoLeft", textoImpresionContenidoLeft);
         intent.putExtra("textoImpresionContenidoRight", textoImpresionContenidoRight);
         finish();
-        Toast.makeText(getApplicationContext(),"Venta Satisfactoria",Toast.LENGTH_LONG).show();
+        /*Toast toast = Toast.makeText(getApplicationContext(),"Venta Satisfactoria",Toast.LENGTH_SHORT);
+        toast.getView().setBackgroundColor(mainActivity.getResources().getColor(R.color.verde));
+        TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
+        v.setTextColor(mainActivity.getResources().getColor(R.color.Blanco));
+        toast.show();*/
         startActivity(intent);
 
 
@@ -1995,7 +2056,11 @@ Instantiate and pass a callback
                     if (mCursorPrecioUnitarioGeneral.getCount()>0) {
                         precio_unitario = mCursorPrecioUnitarioGeneral.getDouble(mCursorPrecioUnitarioGeneral.getColumnIndexOrThrow(DbAdapter_Precio.PR_precio_unit));
                     }else{
-                        Toast.makeText(getApplicationContext(), "No se encontró un precio para esta cantidad de productos, agregar el precio a la base de datos", Toast.LENGTH_LONG).show();;
+                        Toast toast = Toast.makeText(getApplicationContext(), "No se encontró un precio para esta cantidad de productos, agregar el precio a la base de datos", Toast.LENGTH_LONG);
+                        toast.getView().setBackgroundColor(mainActivity.getResources().getColor(R.color.verde));
+                        TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
+                        v.setTextColor(mainActivity.getResources().getColor(R.color.Blanco));
+                        toast.show();
                     }
                 }
 
@@ -2447,7 +2512,7 @@ Instantiate and pass a callback
             intent.putExtra("textoImpresionContenidoLeft", textoImpresionContenidoLeft);
             intent.putExtra("textoImpresionContenidoRight", textoImpresionContenidoRight);
             finish();
-            Toast.makeText(getApplicationContext(),"Venta Satisfactoria",Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(),"Venta Satisfactoria",Toast.LENGTH_SHORT).show();
             //Toast.makeText(getApplicationContext(),"SHA1 : "+s,Toast.LENGTH_LONG).show();
             startActivity(intent);
         }
