@@ -99,6 +99,7 @@ public class DbManager_Agente_GET extends Activity {
     //Aqui se inicializan las variables para el historial de cobros
     public static final String TAG_historial_cobros = "hist_cobros";
     public static final String TAG_id_establec_cobro = "id_establec";
+    public static final String TAG_id_comprobante_cobro = "cc_in_id_comprobante_cobro";
     public static final String TAG_id_comprob = "id_comprob";
     public static final String TAG_id_plan_pago = "id_plan_pago";
     public static final String TAG_id_plan_pago_detalle = "id_plan_pago_detalle";
@@ -312,7 +313,8 @@ public class DbManager_Agente_GET extends Activity {
                                 co.getInt(TAG_id_agente_cobro),
                                 co.getInt(TAG_id_forma_cobro),
                                 co.getString(TAG_lugar_registro),
-                                0
+                                0,
+                                co.getString(TAG_id_comprobante_cobro)
                         );
                     }
 

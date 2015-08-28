@@ -34,7 +34,7 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
 
 
     private String nameImpresora = "";
-    private String defaultNameImpresora = "Mobile Printer";
+    private String defaultNameImpresora = "mobile printer";
     //private String nameImpresora = "Star Micronics";
     private Button buttonImprimir;
     private Button buttonSincronizar;
@@ -117,13 +117,13 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
         buttonImprimir.setOnClickListener(this);
         buttonSincronizar.setOnClickListener(this);
 
-        buttonSincronizar.setOnTouchListener(new View.OnTouchListener() {
+        /*buttonSincronizar.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 Toast.makeText(contexto, "Procesando ...", Toast.LENGTH_SHORT).show();
                 return false;
             }
-        });
+        });*/
 
     }
 
@@ -148,8 +148,9 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
                     buttonImprimir.setEnabled(isConnected);
                     buttonImprimir.setBackgroundColor(contexto.getResources().getColor(R.color.PersonalizadoSteve2));
                     buttonImprimir.setAlpha((float)1.0);
-                    buttonSincronizar.setEnabled(!isConnected);
-                    buttonSincronizar.setAlpha((float)0.0);
+                    //buttonSincronizar.setEnabled(!isConnected);
+                    //buttonSincronizar.setAlpha((float)0.0);
+                    Toast.makeText(getApplicationContext(), "Sincronizado con : "+nameImpresora, Toast.LENGTH_LONG).show();
                 }else {
                     Toast.makeText(getApplicationContext(), "Error : Revise si la impresora está encendida.", Toast.LENGTH_LONG).show();
                 }

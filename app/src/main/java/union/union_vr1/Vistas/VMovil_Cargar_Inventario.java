@@ -1,64 +1,47 @@
 package union.union_vr1.Vistas;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Build;
+import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 import java.text.DecimalFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.GregorianCalendar;
 
-import union.union_vr1.AsyncTask.ExportMain;
-import union.union_vr1.AsyncTask.ImportMain;
+import union.union_vr1.AsyncTask.CargarInventario;
 import union.union_vr1.R;
-import union.union_vr1.Sqlite.CursorAdapterCobrosTotales;
+import union.union_vr1.Sqlite.CursorAdapter_Cargar_Inventario;
+import union.union_vr1.Sqlite.DBAdapter_Temp_Inventario;
 import union.union_vr1.Sqlite.DbAdapter_Agente;
-import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
 import union.union_vr1.Sqlite.DbAdapter_Informe_Gastos;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 import union.union_vr1.Sqlite.DbGastos_Ingresos;
 import union.union_vr1.Utils.Utils;
 
-
-public class VMovil_Cobros_Totales extends Activity implements View.OnClickListener{
-
-
-    private DbAdapter_Temp_Session session;
-    DbAdapter_Comprob_Cobro cCobro;
-    private SimpleCursorAdapter dataAdapter;
-    private VMovil_Cobros_Totales mainActivity;
-    ListView listCobros;
-    View headerSinDatos;
-
+public class VMovil_Cargar_Inventario extends Activity implements View.OnClickListener {
+    private CargarInventario cargarInventario;
     //SLIDING MENU
+    private DBAdapter_Temp_Inventario dbAdapter_temp_inventario;
     private DbGastos_Ingresos dbGastosIngresos;
     private DbAdapter_Informe_Gastos dbAdapter_informe_gastos;
     private DbAdapter_Agente dbHelperAgente;
-
-
-
+    private DbAdapter_Temp_Session session;
+    private Activity mainActivity;
     SlidingMenu menu;
     View layoutSlideMenu;
     TextView textViewSlidePrincipal;
@@ -69,10 +52,11 @@ public class VMovil_Cobros_Totales extends Activity implements View.OnClickListe
     TextView textviewSlideARendir;
     TextView textViewSlideNombreAgente;
     TextView textViewSlideNombreRuta;
+    TextView textviewSlideCInventario;
     Button buttonSlideNroEstablecimiento;
-
     TextView textViewIngresosTotales;
     TextView textViewGastos;
+
     int slideIdAgente = 0;
     int slideIdLiquidacion = 0;
 
@@ -90,190 +74,88 @@ public class VMovil_Cobros_Totales extends Activity implements View.OnClickListe
     Double slide_ingresosTotales = 0.0;
     Double slide_gastosTotales = 0.0;
     Double slide_aRendir = 0.0;
+    String nombreAgente = "";
+    int nroLiquidacion = 0;
+    //widgets
+    private TextView agente;
+    private TextView liquidacion;
+    private EditText inputNroGuia;
+    private Button btnAgregarGuia;
+    private ListView listGuias;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
-        mainActivity = this;
-        setContentView(R.layout.activity_vmovil__cobros__totales);
+        setContentView(R.layout.activity_vmovil__cargar__inventario);
 
-
+        mainActivity  = this;
+        //
+        dbAdapter_temp_inventario = new DBAdapter_Temp_Inventario(this);
+        dbAdapter_temp_inventario.open();
+        cargarInventario = new CargarInventario(mainActivity);
+        agente = (TextView)findViewById(R.id.textNombreAgente);
+        liquidacion = (TextView)findViewById(R.id.textNumeroLiquidacion);
+        inputNroGuia = (EditText)findViewById(R.id.editNroGuia);
+        btnAgregarGuia = (Button)findViewById(R.id.btnAgregarGuia);
+        listGuias = (ListView)findViewById(R.id.listviewGuias);
         session = new DbAdapter_Temp_Session(this);
         session.open();
-
-        cCobro = new DbAdapter_Comprob_Cobro(this);
-        cCobro.open();
-        listCobros = (ListView) findViewById(R.id.listaCobrosTotales);
-
-        //SLIDING MENU
+        dbHelperAgente = new DbAdapter_Agente(this);
+        dbHelperAgente.open();
         dbGastosIngresos = new DbGastos_Ingresos(this);
         dbGastosIngresos.open();
 
         dbAdapter_informe_gastos = new DbAdapter_Informe_Gastos(this);
         dbAdapter_informe_gastos.open();
-
-        dbHelperAgente = new DbAdapter_Agente(this);
-        dbHelperAgente.open();
-
+        displayWidgets();
         //SLIDING MENU
         showSlideMenu(mainActivity);
+    }
+    private void displayWidgets(){
+        //
+        Cursor cursor = dbAdapter_temp_inventario.getAllIvnetario();
+        CursorAdapter_Cargar_Inventario cursorAdapter_cargar_inventario = new CursorAdapter_Cargar_Inventario(getApplicationContext(),cursor);
+        listGuias.setAdapter(cursorAdapter_cargar_inventario);
 
-        listarCobrosTotales();
+        ///
+        nombreAgente = dbHelperAgente.getNameAgente();
+        nroLiquidacion = session.fetchVarible(3);
+        slideIdAgente = session.fetchVarible(1);
+        agente.setText(nombreAgente);
+        liquidacion.setText(nroLiquidacion+"");
+        btnAgregarGuia.setOnClickListener(this);
     }
 
-    public void listarCobrosTotales() {
+    private void iniciaCargar(){
 
-        //CHANGE DATA SLIDE MENU
-        changeDataSlideMenu();
+        final String nroGuia = inputNroGuia.getText().toString();
+        if(inputNroGuia.getText() ==null || inputNroGuia.getText().toString().equals("")){
+            Toast.makeText(getApplicationContext(),"Por favor ingresa la guia",Toast.LENGTH_SHORT).show();
+        }else{
 
-        Cursor cursor = cCobro.listarComprobantesToCobros(slideIdAgente);
+            AlertDialog.Builder dialogo1 = new AlertDialog.Builder(this);
+            dialogo1.setTitle("Importante");
+            dialogo1.setMessage("¿ Esta seguro de agregar la guia ?");
+            dialogo1.setCancelable(false);
+            dialogo1.setPositiveButton("Seguro", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialogo1, int id) {
 
+                    cargarInventario.execute(""+slideIdAgente,""+nroGuia);
+                }
+            });
+            dialogo1.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialogo1, int id) {
 
-        CursorAdapterCobrosTotales cACobros = new CursorAdapterCobrosTotales(this, cursor);
-
-
-        if (cursor.getCount()==0){
-            headerSinDatos= getLayoutInflater().inflate(R.layout.header_datos_vacios,null);
-            listCobros.addFooterView(headerSinDatos,null, false);
-        }else if(cursor.getCount()<0){
-            listCobros.removeAllViews();
-            headerSinDatos= getLayoutInflater().inflate(R.layout.header_datos_vacios,null);
-            listCobros.addFooterView(headerSinDatos,null, false);
-        }
-        listCobros.setAdapter(cACobros);
-        listCobros.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-
-                    Cursor cr2 = (Cursor) listCobros.getItemAtPosition(i);
-                    String establec = cr2.getString(cr2.getColumnIndexOrThrow("ee_te_nom_establec"));
-                    String cliente = cr2.getString(cr2.getColumnIndexOrThrow("ee_te_nom_cliente"));
-                    String idCCobro = cr2.getString(cr2.getColumnIndexOrThrow("_id"));
-                    Double monto = cr2.getDouble(cr2.getColumnIndexOrThrow("cc_re_monto_a_pagar"));
-                    //System.out.println("here"+establec+"-"+idCCobro+"-"+monto+"-"+cliente);
-                    //view.setBackgroundColor(0xffcccccc);
-                    Dialog(establec, monto, idCCobro, cliente);
-
-
-            }
-        });
-
-
-    }
-
-    public void Dialog(String establec, final Double deuda, final String idCCobro, String cliente) {
-
-        cCobro = new DbAdapter_Comprob_Cobro(this);
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-                this);
-
-        alertDialogBuilder.setTitle("Cobro de Credito");
-
-        DecimalFormat df = new DecimalFormat("#.00");
-
-        AlertDialog.Builder builder = alertDialogBuilder
-                .setMessage("Pago de Deuda para el Establecimiento: " + establec + ", con Dueño: " + cliente + " :. Deuda: " + df.format(deuda) + " ")
-                .setCancelable(false)
-                .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-
-                        cCobro.open();
-
-                        int estado = cCobro.updateComprobCobrosCan2(idCCobro, getDatePhone(), getTimePhone(), deuda, "0");
-                        Log.e("ESTADO DE COBRANZA",""+estado+"-"+idCCobro);
-                        if (estado >0) {
-
-                            /*
-                            if (conectadoWifi()||conectadoRedMovil()){
-                                exportMain.execute();
-                            }
-                            */
-
-                            listarCobrosTotales();
-
-                            Toast.makeText(getApplicationContext(), "Actualizado", Toast.LENGTH_SHORT).show();
-
-                            //Back();
-
-                        } else {
-                            Toast.makeText(getApplicationContext(), "Error Interno", Toast.LENGTH_SHORT).show();
-                        }
-
-
-                    }
-
-                })
-                .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        Toast.makeText(getApplicationContext(),
-                                "Cancelo ", Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-        AlertDialog alertDialog = alertDialogBuilder.create();
-
-        alertDialog.show();
-
-    }
-
-    public void Back() {
-        Intent i = new Intent(this, VMovil_Evento_Indice.class);
-        startActivity(i);
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.sincronizar_options, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        switch (id){
-
-            case R.id.buttonImport:
-                new ImportMain(mainActivity).execute();
-                break;
-            case R.id.buttonExportar:
-                new ExportMain(mainActivity).execute();
-                break;
-            case R.id.buttonRedireccionarPrincipal:
-                Intent intent = new Intent(mainActivity, VMovil_Evento_Indice.class);
-                finish();
-                startActivity(intent);
-                break;
-            default:
-                //ON ITEM SELECTED DEFAULT
-                break;
+                }
+            });
+            dialogo1.show();
 
         }
-        return super.onOptionsItemSelected(item);
-    }
-
-    private String getDatePhone() {
-        Calendar cal = new GregorianCalendar();
-        Date date = cal.getTime();
-        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-        String formatteDate = df.format(date);
-        return formatteDate;
-    }
-
-    private String getTimePhone() {
-        Calendar cal = new GregorianCalendar();
-        Date date = cal.getTime();
-        SimpleDateFormat df = new SimpleDateFormat("hh:mm:ss");
-        String formatteTime = df.format(date);
-        return formatteTime;
     }
 
 
+    //SLIDING MENU
     public void showSlideMenu(Activity activity){
         layoutSlideMenu = View.inflate(activity, R.layout.slide_menu, null);
         // configure the SlidingMenu
@@ -296,12 +178,11 @@ public class VMovil_Cobros_Totales extends Activity implements View.OnClickListe
         textviewSlideCobranzas = (TextView)findViewById(R.id.slide_textViewCobranza);
         textviewSlideGastos = (TextView)findViewById(R.id.slide_TextViewGastos);
         textviewSlideResumen = (TextView)findViewById(R.id.slide_textViewResumen);
+        textviewSlideCInventario = (TextView)findViewById(R.id.slide_textViewCargarInventario);
         textviewSlideARendir = (TextView)findViewById(R.id.slide_textViewARendir);
 
         textViewIngresosTotales = (TextView) findViewById(R.id.textView_IngresosTotales);
         textViewGastos = (TextView) findViewById(R.id.textView_Gastos);
-
-
 
 
         textViewSlidePrincipal.setOnClickListener(this);
@@ -309,21 +190,14 @@ public class VMovil_Cobros_Totales extends Activity implements View.OnClickListe
         textviewSlideCobranzas.setOnClickListener(this);
         textviewSlideGastos.setOnClickListener(this);
         textviewSlideResumen.setOnClickListener(this);
+        textviewSlideCInventario.setOnClickListener(this);
         textviewSlideARendir.setOnClickListener(this);
 
 
-        slideIdAgente = session.fetchVarible(1);
-        slideIdLiquidacion  = session.fetchVarible(3);
 
         changeDataSlideMenu();
 
 
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        changeDataSlideMenu();
     }
 
     //SLIDING MENU
@@ -390,40 +264,86 @@ public class VMovil_Cobros_Totales extends Activity implements View.OnClickListe
         textViewIngresosTotales.setText(""+df.format(slide_ingresosTotales));
         textViewGastos.setText(""+df.format(slide_gastosTotales));
 
+
     }
+
     @Override
     public void onClick(View v) {
         // TODO Auto-generated method stub
         switch (v.getId()) {
-            //SLIDING MENU0
+            case R.id.VEI_BTNclient:
+                Intent i = new Intent(this, VMovil_Menu_Establec.class);
+                startActivity(i);
+                break;
+            case R.id.VEI_BTNinfgas:
+                Intent ig = new Intent(this, VMovil_Evento_Gasto.class);
+                startActivity(ig);
+                break;
+            case R.id.VEI_BTNresume:
+                Intent ir = new Intent(this, VMovil_Resumen_Caja.class);
+                startActivity(ir);
+                break;
+
+            case R.id.VEI_BTNcobrarTodo:
+                Intent cT = new Intent(this, VMovil_Cobros_Totales.class);
+                startActivity(cT);
+                break;
+            case R.id.buttonNumeroEstablecimientos:
+                Intent ine = new Intent(this, VMovil_Menu_Establec.class);
+                startActivity(ine);
+                break;
+            //SLIDING MENU
             case R.id.slide_textviewPrincipal:
-                Intent ip1 = new Intent(this, VMovil_Evento_Indice.class);
-                finish();
-                startActivity(ip1);
+                Intent iP = new Intent(this, VMovil_Evento_Indice.class);
+                startActivity(iP);
                 break;
             case R.id.slide_textViewClientes:
                 Intent ic1 = new Intent(this, VMovil_Menu_Establec.class);
-                finish();
                 startActivity(ic1);
                 break;
             case R.id.slide_textViewCobranza:
-                menu.toggle();
+                Intent cT1 = new Intent(this, VMovil_Cobros_Totales.class);
+                startActivity(cT1);
                 break;
             case R.id.slide_TextViewGastos:
                 Intent ig1 = new Intent(this, VMovil_Evento_Gasto.class);
-                finish();
                 startActivity(ig1);
                 break;
             case R.id.slide_textViewResumen:
                 Intent ir1 = new Intent(this, VMovil_Resumen_Caja.class);
-                finish();
                 startActivity(ir1);
+                break;
+            case R.id.slide_textViewCargarInventario:
+                menu.toggle();
                 break;
             case R.id.slide_textViewARendir:
 
                 break;
-            default:
+            case R.id.btnAgregarGuia:
+                iniciaCargar();
                 break;
         }
+    }
+    @Override
+    protected void onDestroy() {
+        cargarInventario.dismissProgressDialog();
+        Log.d("ON DESTROY", "DISMISS PROGRESS DIALOG");
+        super.onDestroy();
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

@@ -603,7 +603,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
                             cursorInsertarCaja.getDouble(cursorInsertarCaja.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_monto_cobrado)),
                             cursorInsertarCaja.getInt(cursorInsertarCaja.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_estado_cobro)),
                             cursorInsertarCaja.getString(cursorInsertarCaja.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_fecha_cobro)),
-                            String.valueOf(cursorInsertarCaja.getInt(cursorInsertarCaja.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_id_comprobante_cobro))),
+                            String.valueOf(cursorInsertarCaja.getString(cursorInsertarCaja.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_id_comprobante_cobro))),
                             idUsuario,
                             cursorInsertarCaja.getInt(cursorInsertarCaja.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_id_comprob)),
                             cursorInsertarCaja.getInt(cursorInsertarCaja.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_id_plan_pago)),
@@ -619,6 +619,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
 
 
                 } catch (Exception e) {
+                    Log.e("ERROR AL EXPORTAR",""+e.getMessage());
                     e.printStackTrace();
                 }
 
@@ -662,7 +663,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
                             cursorAutorizacionCobro.getInt(cursorAutorizacionCobro.getColumnIndexOrThrow(dbAdapter_temp_autorizacion_cobro.temp_id_autorizacion_cobro))
                             );
                     Log.d("EXPORT AUTO COBROS", jsonObject.toString());
-                    Log.d("EXPORT AUTO COBRO S", ""+isSuccesfulExport(jsonObject));
+                    Log.d("EXPORT AUTO COBROS", ""+isSuccesfulExport(jsonObject));
 
                     if (isSuccesfulExport(jsonObject)){
                         listIdAutorizacionCobro.add(""+ cursorAutorizacionCobro.getInt(cursorAutorizacionCobro.getColumnIndexOrThrow(dbAdapter_temp_autorizacion_cobro.temp_autorizacion_cobro)));

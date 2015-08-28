@@ -2,16 +2,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="union.union_vr1.Vistas.VMovil_Online_Pumovil" >
-    <item android:title="Escanear Productos"
+    <!--<item android:title="Escanear Productos"
         android:id="@+id/addMenuProduct"
         android:icon="@drawable/ic_scan"
         android:orderInCategory="95"
-        android:showAsAction="ifRoom"/>
+        android:showAsAction="ifRoom"/>-->
     <item android:id="@+id/buttonImport"
         android:title="Importar"
         android:orderInCategory="100"/>
     <item android:id="@+id/buttonExportar"
         android:title="Exportar"
+        android:orderInCategory="100"/>
+    <item android:id="@+id/buttonImportCredito"
+        android:title="Importar Crédito"
         android:orderInCategory="100"/>
     <item android:id="@+id/buttonAjustes" android:title="Ajustes"
         android:orderInCategory="100" app:showAsAction="never" />

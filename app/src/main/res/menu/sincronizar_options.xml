@@ -9,8 +9,8 @@
         android:title="Exportar"
         android:orderInCategory="100"
         android:showAsAction="never" />
-    <item android:id="@+id/buttonRedireccionarPrincipal"
-        android:title="Ir a Offline"
-        android:orderInCategory="100"
-        android:showAsAction="never" />
+    <item android:id="@+id/buttonImportCredito"
+        android:title="Importar Crédito"
+        android:orderInCategory="100"/>
+
 </menu>

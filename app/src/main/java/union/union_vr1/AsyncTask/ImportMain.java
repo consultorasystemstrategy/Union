@@ -204,6 +204,37 @@ public class ImportMain extends AsyncTask<String, String, String> {
             historialVentaDetalleses = parserHistorialVentaDetalles.parserHistorialVentaDetalles(jsonObjectHistorialVentaDetalle);
             comprobanteVentaDetalles = parserComprobanteVentaDetalle.parserComprobanteVentaDetalle(jsonObjectHistorialComprobanteAnterior);
 
+
+
+            boolean rutaSuccess = isSuccesfulImport(jsonObjectRutaDistribucion);
+            Log.d("RUTA SUCCESS", ""+rutaSuccess);
+            if (rutaSuccess){
+                JSONArray jsonArray = jsonObjectRutaDistribucion.getJSONArray("Value");
+                JSONObject jsonObj=null;
+
+                dbAdapter_ruta_distribucion.delleteAllRutaByIdAgente(idAgente);
+
+                for (int i=0; i< jsonArray.length(); i++){
+                    jsonObj = jsonArray.getJSONObject(i);
+
+                    int id = jsonObj.getInt("Id");
+                    int idRuta = jsonObj.getInt("RutaID");
+                    String nombre = jsonObj.getString("Ruta");
+                    String diaSemana = jsonObj.getString("DiaSemana");
+                    int numeroEstablecimiento = jsonObj.getInt("Establecimientos");
+
+
+
+
+                    Log.d("IMPORT RUTA ", diaSemana + " - " + nombre + " - " + numeroEstablecimiento + " - "+ idAgente);
+                    long idRutaInsertada = dbAdapter_ruta_distribucion.createRutaDistribucion(id, idRuta, nombre, diaSemana, numeroEstablecimiento, idAgente);
+                    Log.d("IMPORT ID RUTA ins", ""+ idRutaInsertada);
+
+                }
+
+
+            }
+
             publishProgress(""+45);
             Log.d("IMPORTANDO ", "INICIANDO ...");
             for (int i = 0; i < stockAgentes.size() ; i++) {
@@ -267,7 +298,8 @@ public class ImportMain extends AsyncTask<String, String, String> {
 
             publishProgress(""+60);
             for (int i = 0; i < comprobanteCobros.size() ; i++) {
-                Log.d("HISTORIAL COBROS PENDIENTES : " + i, " Monto a pagar : " + comprobanteCobros.get(i).getMontoPagar()+"-fecha-"+comprobanteCobros.get(i).getFechaProgramada());
+                Log.d("COBROS PENDIENTES",""+ comprobanteCobros.toString());
+                Log.d("HISTORIAL COBROS PENDIENTES : " + i, " Monto a pagar : " + comprobanteCobros.get(i).getIdComprobante()+"-fecha-"+comprobanteCobros.get(i).getFechaProgramada());
                 boolean existe = dbAdapter_comprob_cobro.existeComprobCobro(comprobanteCobros.get(i).getIdComprobanteCobro());
                 Log.d("EXISTE ", ""+existe);
                 if (existe){
@@ -307,8 +339,8 @@ public class ImportMain extends AsyncTask<String, String, String> {
                 }
             }
 
-            boolean rutaSuccess = isSuccesfulImport(jsonObjectRutaDistribucion);
-            Log.d("RUTA ISI", ""+rutaSuccess);
+            /*boolean rutaSuccess = isSuccesfulImport(jsonObjectRutaDistribucion);
+            Log.d("RUTA SUCCESS", ""+rutaSuccess);
             if (rutaSuccess){
                 JSONArray jsonArray = jsonObjectRutaDistribucion.getJSONArray("Value");
                 JSONObject jsonObj=null;
@@ -334,7 +366,7 @@ public class ImportMain extends AsyncTask<String, String, String> {
                 }
 
 
-            }
+            }*/
             publishProgress(""+95);
             //ACTUALIZAR LOS CRÉDITOS DE LOS ESTABLECIMIENTOS
 

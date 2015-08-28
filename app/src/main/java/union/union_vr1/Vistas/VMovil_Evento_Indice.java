@@ -10,8 +10,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.graphics.Color;
-import android.graphics.LightingColorFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
@@ -29,28 +27,23 @@ import android.widget.Toast;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
-import org.w3c.dom.Text;
-
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
+import java.util.Timer;
 
 
 import union.union_vr1.Alarm.ReceiverAlarmFinishedDay;
 import union.union_vr1.AsyncTask.ExportMain;
+import union.union_vr1.AsyncTask.ImportCredito;
 import union.union_vr1.AsyncTask.ImportMain;
+import union.union_vr1.AsyncTask.TimerGps;
 import union.union_vr1.BarcodeScanner.IntentIntegrator;
 import union.union_vr1.BarcodeScanner.IntentResult;
-import union.union_vr1.Charts.Bar;
-import union.union_vr1.Charts.BarGraph;
-import union.union_vr1.MySQL.DbManager_Evento_Establec_GET;
-import union.union_vr1.MySQL.DbManager_Evento_Establec_POST;
 import union.union_vr1.R;
 import union.union_vr1.Sqlite.DbAdapter_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
@@ -65,12 +58,11 @@ import union.union_vr1.Sqlite.DbAdapter_Stock_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 import union.union_vr1.Sqlite.DbGastos_Ingresos;
-import union.union_vr1.Utils.MyApplication;
 import union.union_vr1.Utils.Utils;
 
 
 public class VMovil_Evento_Indice extends Activity implements View.OnClickListener {
-
+    private TimerGps timerExample;
     private DbAdapter_Temp_Session session;
     private DbAdapter_Comprob_Cobro cCobro;
     private DbAdaptert_Evento_Establec dbHelper;
@@ -84,7 +76,7 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
     private DbAdapter_Histo_Comprob_Anterior dbHelper8;
 
 
-    private Button mClient, mInfgas, mResume, mCarinv, mTrainv, mCobroTotal,  mNumeroEstablecimientos;
+    private Button mClient, mInfgas, mResume, mCarinv, mTrainv, mCobroTotal, mNumeroEstablecimientos;
     private TextView mNombreRuta, mFecha;
     private Activity mainActivity;
     private DbAdapter_Ruta_Distribucion dbAdapter_ruta_distribucion;
@@ -98,7 +90,6 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
     private DbAdapter_Agente dbHelperAgente;
 
 
-
     SlidingMenu menu;
     View layoutSlideMenu;
     TextView textViewSlidePrincipal;
@@ -109,6 +100,7 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
     TextView textviewSlideARendir;
     TextView textViewSlideNombreAgente;
     TextView textViewSlideNombreRuta;
+    TextView textviewSlideCInventario;
     Button buttonSlideNroEstablecimiento;
     TextView textViewIngresosTotales;
     TextView textViewGastos;
@@ -125,28 +117,32 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
     Double slide_pagadoTotal = 0.0;
     Double slide_cobradoTotal = 0.0;
 
-    Double slide_totalRuta =0.0;
+    Double slide_totalRuta = 0.0;
     Double slide_totalPlanta = 0.0;
     Double slide_ingresosTotales = 0.0;
     Double slide_gastosTotales = 0.0;
     Double slide_aRendir = 0.0;
-
+    private Timer timer;
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.princ_evento_indice);
-        mainActivity  = this;
+        mainActivity = this;
 
         session = new DbAdapter_Temp_Session(this);
         session.open();
 
-
+        //EMPIEZA A ENVIAR LAS COORDANDAS AL SERVIDOR
+        timer = new Timer();
+        timerExample = new TimerGps();
+        timer.scheduleAtFixedRate(timerExample, 0, 500);
+        //TERMINO
         boolean export = false;
         boolean importado = false;
 
-        switch (session.fetchVarible(7)){
+        switch (session.fetchVarible(7)) {
             case 0:
                 export = false;
                 break;
@@ -158,7 +154,7 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
                 break;
         }
 
-        switch (session.fetchVarible(8)){
+        switch (session.fetchVarible(8)) {
             case 0:
                 importado = false;
                 break;
@@ -173,14 +169,14 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
 
         setAlarm();
 
-        if (!export||!importado){
+        if (!export || !importado) {
 
-            if (conectadoWifi()||conectadoRedMovil()) {
+            if (conectadoWifi() || conectadoRedMovil()) {
                 new AlertDialog.Builder(mainActivity)
                         .setTitle("Hemos detectado una Conexión a Internet")
                         .setMessage("" +
                                 "¿Desea importar los datos?")
-                        .setNegativeButton(android.R.string.no,null)
+                        .setNegativeButton(android.R.string.no, null)
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 //new ExportMain(mainActivity).execute();
@@ -189,8 +185,8 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
                         }).create().show();
                 session.deleteVariable(7);
                 session.deleteVariable(8);
-                session.createTempSession(7,1);
-                session.createTempSession(8,1);
+                session.createTempSession(7, 1);
+                session.createTempSession(8, 1);
 
             }
         }
@@ -230,41 +226,33 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         dbAdapter_ruta_distribucion.open();
 
 
-
         session.deleteVariable(5);
-        session.createTempSession(5,0);
-
-
-
-
-
-
-
+        session.createTempSession(5, 0);
 
 
         mClient = (Button) findViewById(R.id.VEI_BTNclient);
         mInfgas = (Button) findViewById(R.id.VEI_BTNinfgas);
         mResume = (Button) findViewById(R.id.VEI_BTNresume);
         mNombreRuta = (TextView) findViewById(R.id.textViewNombreRuta);
-        mNumeroEstablecimientos  = (Button) findViewById(R.id.buttonNumeroEstablecimientos);
+        mNumeroEstablecimientos = (Button) findViewById(R.id.buttonNumeroEstablecimientos);
         mFecha = (TextView) findViewById(R.id.textViewFecha);
 
 
         int idAgente = session.fetchVarible(1);
         idLiquidacion = session.fetchVarible(3);
-        Cursor cursorAgente = dbHelper3.fetchAgentesByIds(idAgente,idLiquidacion);
+        Cursor cursorAgente = dbHelper3.fetchAgentesByIds(idAgente, idLiquidacion);
         cursorAgente.moveToFirst();
 
         String nombreRuta = "";
         int numeroEstablecimientoxRuta = 0;
-        if (cursorAgente.getCount()>0){
+        if (cursorAgente.getCount() > 0) {
             nombreRuta = cursorAgente.getString(cursorAgente.getColumnIndexOrThrow(dbHelper3.AG_nombre_ruta));
             numeroEstablecimientoxRuta = cursorAgente.getInt(cursorAgente.getColumnIndexOrThrow(dbHelper3.AG_nro_bodegas));
 
         }
         mNombreRuta.setText("" + nombreRuta);
-        mNumeroEstablecimientos.setText(""+numeroEstablecimientoxRuta);
-        mFecha.setText(""+getDateFull().substring(0, 1).toUpperCase() + getDateFull().substring(1));
+        mNumeroEstablecimientos.setText("" + numeroEstablecimientoxRuta);
+        mFecha.setText("" + getDateFull().substring(0, 1).toUpperCase() + getDateFull().substring(1));
 
         mCobroTotal = (Button) findViewById(R.id.VEI_BTNcobrarTodo);
         mClient.setOnClickListener(this);
@@ -277,7 +265,7 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         cCobro.open();
 
 
-        Log.d("ID AGENTE ", ""+idAgente);
+        Log.d("ID AGENTE ", "" + idAgente);
 
         Cursor cursorRutaSemanal = dbAdapter_ruta_distribucion.fetchRutaDistribucionByIdAgente(idAgente);
         cursorAgente.moveToFirst();
@@ -316,10 +304,10 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
 
 
     //SLIDING MENU
-    public void showSlideMenu(Activity activity){
+    public void showSlideMenu(Activity activity) {
         layoutSlideMenu = View.inflate(activity, R.layout.slide_menu, null);
         // configure the SlidingMenu
-        menu =  new SlidingMenu(activity);
+        menu = new SlidingMenu(activity);
         menu.setMode(SlidingMenu.LEFT);
         menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
         menu.setShadowWidthRes(R.dimen.space_slide);
@@ -329,23 +317,20 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         menu.attachToActivity(activity, SlidingMenu.SLIDING_CONTENT);
         menu.setMenu(layoutSlideMenu);
 
-        textViewSlideNombreAgente = (TextView)findViewById(R.id.slide_textViewNombreAgente);
-        textViewSlideNombreRuta = (TextView)findViewById(R.id.slide_textViewNombreRuta);
+        textViewSlideNombreAgente = (TextView) findViewById(R.id.slide_textViewNombreAgente);
+        textViewSlideNombreRuta = (TextView) findViewById(R.id.slide_textViewNombreRuta);
         buttonSlideNroEstablecimiento = (Button) findViewById(R.id.slide_buttonNroEstablecimiento);
 
-        textViewSlidePrincipal = (TextView)findViewById(R.id.slide_textviewPrincipal);
-        textViewSlideCliente = (TextView)findViewById(R.id.slide_textViewClientes);
-        textviewSlideCobranzas = (TextView)findViewById(R.id.slide_textViewCobranza);
-        textviewSlideGastos = (TextView)findViewById(R.id.slide_TextViewGastos);
-        textviewSlideResumen = (TextView)findViewById(R.id.slide_textViewResumen);
-        textviewSlideARendir = (TextView)findViewById(R.id.slide_textViewARendir);
+        textViewSlidePrincipal = (TextView) findViewById(R.id.slide_textviewPrincipal);
+        textViewSlideCliente = (TextView) findViewById(R.id.slide_textViewClientes);
+        textviewSlideCobranzas = (TextView) findViewById(R.id.slide_textViewCobranza);
+        textviewSlideGastos = (TextView) findViewById(R.id.slide_TextViewGastos);
+        textviewSlideResumen = (TextView) findViewById(R.id.slide_textViewResumen);
+        textviewSlideCInventario = (TextView) findViewById(R.id.slide_textViewCargarInventario);
+        textviewSlideARendir = (TextView) findViewById(R.id.slide_textViewARendir);
 
         textViewIngresosTotales = (TextView) findViewById(R.id.textView_IngresosTotales);
         textViewGastos = (TextView) findViewById(R.id.textView_Gastos);
-
-
-
-
 
 
         textViewSlidePrincipal.setOnClickListener(this);
@@ -353,11 +338,12 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         textviewSlideCobranzas.setOnClickListener(this);
         textviewSlideGastos.setOnClickListener(this);
         textviewSlideResumen.setOnClickListener(this);
+        textviewSlideCInventario.setOnClickListener(this);
         textviewSlideARendir.setOnClickListener(this);
 
 
         slideIdAgente = session.fetchVarible(1);
-        slideIdLiquidacion  = session.fetchVarible(3);
+        slideIdLiquidacion = session.fetchVarible(3);
 
         changeDataSlideMenu();
 
@@ -365,7 +351,7 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
     }
 
     //SLIDING MENU
-    public void changeDataSlideMenu(){
+    public void changeDataSlideMenu() {
 
         //INICIALIZAMOS OTRA VEZ LAS VARIABLES
         slide_emitidoTotal = 0.0;
@@ -381,7 +367,7 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         Cursor cursorAgente = dbHelperAgente.fetchAgentesByIds(slideIdAgente, slideIdLiquidacion);
         cursorAgente.moveToFirst();
 
-        if (cursorAgente.getCount()>0){
+        if (cursorAgente.getCount() > 0) {
             slideNombreRuta = cursorAgente.getString(cursorAgente.getColumnIndexOrThrow(dbHelperAgente.AG_nombre_ruta));
             slideNumeroEstablecimientoxRuta = cursorAgente.getInt(cursorAgente.getColumnIndexOrThrow(dbHelperAgente.AG_nro_bodegas));
             slideNombreAgente = cursorAgente.getString(cursorAgente.getColumnIndexOrThrow(dbHelperAgente.AG_nombre_agente));
@@ -402,9 +388,9 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         }
         //GASTOS
         Utils utils = new Utils();
-        Cursor cursorTotalGastos =dbAdapter_informe_gastos.resumenInformeGastos(utils.getDayPhone());
+        Cursor cursorTotalGastos = dbAdapter_informe_gastos.resumenInformeGastos(utils.getDayPhone());
 
-        for (cursorTotalGastos.moveToFirst(); !cursorTotalGastos.isAfterLast(); cursorTotalGastos.moveToNext()){
+        for (cursorTotalGastos.moveToFirst(); !cursorTotalGastos.isAfterLast(); cursorTotalGastos.moveToNext()) {
             Double rutaGasto = cursorTotalGastos.getDouble(cursorTotalGastos.getColumnIndexOrThrow("RUTA"));
             Double plantaGasto = cursorTotalGastos.getDouble(cursorTotalGastos.getColumnIndexOrThrow("PLANTA"));
 
@@ -414,19 +400,18 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
 
         slide_ingresosTotales = slide_cobradoTotal + slide_pagadoTotal;
         slide_gastosTotales = slide_totalRuta;
-        slide_aRendir = slide_ingresosTotales-slide_gastosTotales;
-
+        slide_aRendir = slide_ingresosTotales - slide_gastosTotales;
 
 
         //MOSTRAMOS EN EL SLIDE LOS DATOS OBTENIDOS
         DecimalFormat df = new DecimalFormat("#.00");
-        textViewSlideNombreAgente.setText(""+slideNombreAgente);
-        textViewSlideNombreRuta.setText(""+slideNombreRuta);
-        buttonSlideNroEstablecimiento.setText(""+slideNumeroEstablecimientoxRuta);
+        textViewSlideNombreAgente.setText("" + slideNombreAgente);
+        textViewSlideNombreRuta.setText("" + slideNombreRuta);
+        buttonSlideNroEstablecimiento.setText("" + slideNumeroEstablecimientoxRuta);
         textviewSlideARendir.setText("Efectivo a Rendir S/. " + df.format(slide_aRendir));
 
-        textViewIngresosTotales.setText(""+df.format(slide_ingresosTotales));
-        textViewGastos.setText(""+df.format(slide_gastosTotales));
+        textViewIngresosTotales.setText("" + df.format(slide_ingresosTotales));
+        textViewGastos.setText("" + df.format(slide_gastosTotales));
 
 
     }
@@ -451,7 +436,7 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        switch (id){
+        switch (id) {
 
             case R.id.addMenuProduct:
                 IntentIntegrator intentIntegrator = new IntentIntegrator(mainActivity);
@@ -466,6 +451,10 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
             case R.id.buttonAjustes:
                 Intent intent = new Intent(mainActivity, AppPreferences.class);
                 startActivity(intent);
+                break;
+            case R.id.buttonImportCredito:
+                new ImportCredito(mainActivity).execute();
+                break;
             default:
                 //ON ITEM SELECTED DEFAULT
                 break;
@@ -489,25 +478,24 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
             textViewFormat.setText("FORMAT : "+format);*/
 
 
-
-            if (barcodeScan!=null){
+            if (barcodeScan != null) {
 
                 Cursor cursorEstablecimiento = dbHelper.fetchEstablecsByBarcode(barcodeScan, idLiquidacion);
 
-                if (cursorEstablecimiento.getCount()>0){
+                if (cursorEstablecimiento.getCount() > 0) {
                     cursorEstablecimiento.moveToFirst();
-                    Toast.makeText(getApplicationContext(),"ESTABLECIMIENTO SCANEADO: "+cursorEstablecimiento.getString(cursorEstablecimiento.getColumnIndexOrThrow(dbHelper.EE_nom_establec)),Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "ESTABLECIMIENTO SCANEADO: " + cursorEstablecimiento.getString(cursorEstablecimiento.getColumnIndexOrThrow(dbHelper.EE_nom_establec)), Toast.LENGTH_LONG).show();
                     int idEstablecimiento = cursorEstablecimiento.getInt(cursorEstablecimiento.getColumnIndexOrThrow(dbHelper.EE_id_establec));
 
                     session.deleteVariable(2);
-                    session.createTempSession(2,idEstablecimiento);
+                    session.createTempSession(2, idEstablecimiento);
 
                     Intent intent1 = new Intent(mainActivity, VMovil_Evento_Establec.class);
                     startActivity(intent1);
-                }else {
+                } else {
                     Toast.makeText(getApplicationContext(), "No encontrado", Toast.LENGTH_SHORT).show();
                 }
-            }else{
+            } else {
                 Toast.makeText(getApplicationContext(), "¡No ha escaneado!", Toast.LENGTH_SHORT).show();
             }
 
@@ -529,7 +517,7 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
 
         }
         // else continue with any other code you need in the method
-        else{
+        else {
             Toast toast = Toast.makeText(getApplicationContext(),
                     "No scan data received!", Toast.LENGTH_SHORT);
             toast.show();
@@ -539,8 +527,10 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
     private void AsignarColor(Button btn) {
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         Cursor cursor = cCobro.listarComprobantesToCobros(slideIdAgente);
+
         if (cursor.moveToFirst()) {
             String fecha_Programada = cursor.getString(cursor.getColumnIndexOrThrow("cc_te_fecha_programada"));
+            Log.e("FECHAPARA PAGO", fecha_Programada);
             try {
                 Date dSqlite = df.parse(fecha_Programada);
                 Date dSistema = df.parse(getDatePhone());
@@ -613,6 +603,10 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
                 Intent ir1 = new Intent(this, VMovil_Resumen_Caja.class);
                 startActivity(ir1);
                 break;
+            case R.id.slide_textViewCargarInventario:
+                Intent cInventario = new Intent(this, VMovil_Cargar_Inventario.class);
+                startActivity(cInventario);
+                break;
             case R.id.slide_textViewARendir:
 
                 break;
@@ -638,8 +632,7 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
     }
 
 
-
-    protected Boolean conectadoWifi(){
+    protected Boolean conectadoWifi() {
         ConnectivityManager connectivity = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivity != null) {
             NetworkInfo info = connectivity.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
@@ -652,7 +645,7 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         return false;
     }
 
-    protected Boolean conectadoRedMovil(){
+    protected Boolean conectadoRedMovil() {
         ConnectivityManager connectivity = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivity != null) {
             NetworkInfo info = connectivity.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
@@ -665,11 +658,11 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         return false;
     }
 
-    public void setAlarm(){
+    public void setAlarm() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        if(!prefs.getBoolean("firstTime", false)) {
+        if (!prefs.getBoolean("firstTime", false)) {
             // run your one time code
-            Log.d("CODE EXECUTE ONE TIME","SÍ PRIMERA VEZ");
+            Log.d("CODE EXECUTE ONE TIME", "SÍ PRIMERA VEZ");
 
 
             Intent myIntent = new Intent(VMovil_Evento_Indice.this, ReceiverAlarmFinishedDay.class);
@@ -681,17 +674,17 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
             calendar.set(Calendar.HOUR_OF_DAY, 16);
             calendar.set(Calendar.MINUTE, 45);
             calendar.set(Calendar.SECOND, 00);
-            AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
-            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 24*60*60*1000 , pendingIntent);  //SE REPETIRÁ CADA 24 HORAS
+            AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 24 * 60 * 60 * 1000, pendingIntent);  //SE REPETIRÁ CADA 24 HORAS
 
 
-            Log.d("ALARMA ESTABLECIDA", "OK"+calendar.getTime());
+            Log.d("ALARMA ESTABLECIDA", "OK" + calendar.getTime());
 
             SharedPreferences.Editor editor = prefs.edit();
             editor.putBoolean("firstTime", true);
             editor.commit();
-        }else{
-            Log.d("CODE NO SE EJECUTÓ","NO ES LA PRIMERA VEZ");
+        } else {
+            Log.d("CODE NO SE EJECUTÓ", "NO ES LA PRIMERA VEZ");
         }
     }
 

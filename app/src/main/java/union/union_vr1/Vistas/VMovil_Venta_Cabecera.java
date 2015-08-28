@@ -53,10 +53,12 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -1688,7 +1690,8 @@ Instantiate and pass a callback
         datosConcatenados+="base impornible: " + base_imponible;
         datosConcatenados+="igv : " + igv;
 
-        DecimalFormat df = new DecimalFormat("#.00");
+        DecimalFormatSymbols simbolos = DecimalFormatSymbols.getInstance(Locale.ENGLISH);
+        DecimalFormat df = new DecimalFormat("#.00", simbolos);
 
         //3PG, STAR MICRONICS
         /*textoImpresion += String.format("%-37s","SUB TOTAL:")+ "S/ "+ df.format(base_imponible)+"\n";
@@ -1708,6 +1711,7 @@ Instantiate and pass a callback
             textoImpresion += String.format("%-18s","I.G.V.")+String.format("%-21s","S/.")+  String.format("%1$9s",df.format(igv));
             textoImpresion += String.format("%-18s","PRECIO VENTA")+String.format("%-21s","S/.")+  String.format("%1$9s",df.format(monto_total))+"\n\n";
             textoImpresion+= "------------------------------------------------------".substring(0,48)+"\n";
+
             textoImpresion+= "Son "+NumberToLetterConverter.convertNumberToLetter(df.format(monto_total)).toLowerCase()+"\n";
             textoImpresion+= "------------------------------------------------------".substring(0,48)+"\n";
             textoImpresion+= "VENDEDOR : "+ nombreAgenteVenta+"\n";
@@ -1731,11 +1735,11 @@ Instantiate and pass a callback
             for (cursorTempComprobCobros.moveToFirst(); !cursorTempComprobCobros.isAfterLast();cursorTempComprobCobros.moveToNext()){
                 String fecha_programada = cursorTempComprobCobros.getString(cursorTempComprobCobros.getColumnIndex(DbAdapter_Temp_Comprob_Cobro.temp_fecha_programada));
                 Double monto_a_pagar = cursorTempComprobCobros.getDouble(cursorTempComprobCobros.getColumnIndex(DbAdapter_Temp_Comprob_Cobro.temp_monto_a_pagar));
-
+                String idComprobanteCobro = "M:"+ dbHelper_Comprob_Cobros.getIdComrobanteCobro(idEstablecimiento+"");
                 Log.d("RECORRE EL CURSOR TEMP COMPROB COBROS", "YES");
-
-                long registroInsertado = dbHelper_Comprob_Cobros.createComprobCobros(idEstablecimiento,Integer.parseInt(id+""),id_plan_pago,id_plan_pago_detalle,tipoDocumento.toUpperCase(),codigo_erp,fecha_programada,monto_a_pagar, fecha_cobro, hora_cobro,monto_cobrado,estado_cobro,id_agente_venta,id_forma_cobro, lugar_registro, idLiquidacion);
-                    Log.d("CC INSERTADO SATISFACTORIAMENTE ", "ID : "+ registroInsertado);
+                //Crear una consulta para añadir un id al comprobante cobro.
+                long registroInsertado = dbHelper_Comprob_Cobros.createComprobCobros(idEstablecimiento,Integer.parseInt(id+""),id_plan_pago,id_plan_pago_detalle,tipoDocumento.toUpperCase(),codigo_erp,fecha_programada,monto_a_pagar, fecha_cobro, hora_cobro,monto_cobrado,estado_cobro,id_agente_venta,id_forma_cobro, lugar_registro, idLiquidacion,idComprobanteCobro);
+                    Log.d("CC INSERTADO SATISFACTORIAMENTE ", "ID : "+idComprobanteCobro+"....."+ registroInsertado+"-"+Integer.parseInt(id+""));
             }
         }
 

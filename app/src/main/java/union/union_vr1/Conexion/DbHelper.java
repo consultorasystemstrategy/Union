@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import union.union_vr1.Sqlite.DBAdapter_Temp_Autorizacion_Cobro;
+import union.union_vr1.Sqlite.DBAdapter_Temp_Inventario;
 import union.union_vr1.Sqlite.DBAdapter_Temp_Venta;
 import union.union_vr1.Sqlite.DbAdapter_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
@@ -71,6 +72,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(DbAdapter_Temp_Barcode_Scanner.CREATE_TABLE_Temp_scanner);
         db.execSQL(DbAdapter_Temp_Session.CREATE_TABLE_Temp_Session);
         db.execSQL(DbAdapter_Ruta_Distribucion.CREATE_TABLE_RUTA_DISTRIBUCION);
+        db.execSQL(DBAdapter_Temp_Inventario.CREATE_TABLE_TEMP_VENTA_Inventario);
 
 
 
@@ -99,7 +101,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(DbAdapter_Temp_Barcode_Scanner.DELETE_TABLE_Temp_scanner);
         db.execSQL(DbAdapter_Temp_Session.DELETE_TABLE_Temp_session);
         db.execSQL(DbAdapter_Ruta_Distribucion.DELETE_TABLE_RUTA_DISTRIBUCION);
-
+        db.execSQL(DBAdapter_Temp_Inventario.CREATE_TABLE_TEMP_VENTA_Inventario);
         onCreate(db);
     }
 }

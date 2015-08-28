@@ -431,9 +431,14 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
                         if (valorPago != 0.0 && valorCobrar != 0.0) {
 
                             int idAgente = session.fetchVarible(1);
+                            Log.e("DATOSENVIADOS",""+idAgente+"-"+4+"-"+ 1+"-"+ comprobanteVenta+"-"+ valorCobrar+"-"+ valorPago +"-"+Integer.parseInt(estabX) +"-"+Constants._CREADO+"-"+idComprobante+"-"+nombreEstablec);
                             long idAutorizacion = dbAutorizacionCobro.createTempAutorizacionPago(idAgente, 4, 1, comprobanteVenta, valorCobrar, valorPago, Integer.parseInt(estabX), Constants._CREADO, idComprobante,nombreEstablec);
+                            if(idAutorizacion >0){
+                                Back();
+                            }else{
+                                Toast.makeText(getApplicationContext(),"Ocurrio un error",Toast.LENGTH_SHORT).show();
+                            }
 
-                            Back();
 
                         } else {
                             Toast.makeText(getApplicationContext(), "Por favor Ingrese Todos los Campos", Toast.LENGTH_SHORT).show();

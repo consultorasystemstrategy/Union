@@ -374,6 +374,11 @@ public class DbAdapter_Agente {
         mDb.update(SQLITE_TABLE_Agente, initialValues,
                 AG_id_agente_venta+"=?",new String[]{id_agente_venta});
     }
+    public String getNameAgente(){
+        Cursor cr = mDb.rawQuery("select * from "+SQLITE_TABLE_Agente+"",null);
+        cr.moveToFirst();
+        return cr.getString(cr.getColumnIndexOrThrow(AG_nombre_agente));
+    }
 
     private String M_id_agente_venta;
     private String M_liquidacion;

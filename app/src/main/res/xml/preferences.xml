@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <EditTextPreference android:title="Username"
+        android:key="username"
+        android:defaultValue="emerson.f"
+        android:summary="Por favor, ingrese username de la aplicación.">emerson.f</EditTextPreference>
     <EditTextPreference android:title="Impresora Nombre"
         android:key="impresoraNombre"
-        android:summary="Por favor, ingrese el nombre bluetooth de la impresora">Star Micronics</EditTextPreference>
+        android:defaultValue="mobile printer"
+        android:summary="Por favor, ingrese el nombre bluetooth de la impresora">mobile printer</EditTextPreference>
     <CheckBoxPreference android:title="Importación automática"
         android:defaultValue="true"
         android:summary="Importar los datos todos los días. Al iniciar."

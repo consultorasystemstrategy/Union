@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:weightSum="1">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="80dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_weight="0.09">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/Personalizado4"
+            android:id="@+id/linearLayoutLista">
+
+            <ImageView
+                android:layout_width="58dp"
+                android:layout_height="62dp"
+                android:id="@+id/imageViewLista"
+
+                android:src="@drawable/ic_action_view_as_list"
+                android:contentDescription="Place"
+                android:layout_margin="4dp"
+                android:baselineAlignBottom="false" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:layout_marginLeft="16dp">
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Productos Unión S.A.C"
+                android:id="@+id/textViewListaTituloInventario"
+                android:layout_weight="1"
+                android:layout_gravity="bottom"
+                android:gravity="bottom"
+                android:textSize="16dp"
+                android:textStyle="normal|bold"
+                android:textColor="@color/Dark1"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_marginTop="22dp" />
+
+
+        </RelativeLayout>
+    </LinearLayout>
+
+</LinearLayout>

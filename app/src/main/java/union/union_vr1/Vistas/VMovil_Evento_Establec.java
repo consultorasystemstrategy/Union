@@ -27,6 +27,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import union.union_vr1.AsyncTask.ExportMain;
+import union.union_vr1.AsyncTask.ImportCredito;
 import union.union_vr1.AsyncTask.ImportMain;
 import union.union_vr1.R;
 import union.union_vr1.Sqlite.DbAdapter_Agente;
@@ -315,6 +316,9 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
                 Intent intent = new Intent(mainActivity, VMovil_Evento_Indice.class);
                 finish();
                 startActivity(intent);
+                break;
+            case R.id.buttonImportCredito:
+                new ImportCredito(mainActivity).execute();
                 break;
             default:
                 //ON ITEM SELECTED DEFAULT
