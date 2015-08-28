@@ -17,7 +17,7 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:paddingTop="20dp"
-            android:background="@drawable/border_bottom_personalizado_cinventario"
+            android:background="@drawable/border_bottom_personalizado_cInventario"
             android:layout_weight="4.5">
 
             <TextView
