@@ -7,6 +7,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -551,5 +552,19 @@ public class StockAgenteRestApi {
         result = new JSONObject(r);
         return result;
     }
-
+    public JSONObject InsLocalizacionAgente(int vint_AgenteId,String vstr_Latitud,String vstr_Longitud) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","RestAPI");
+        o.put("method", "InsLocalizacionAgente");
+        p.put("vint_AgenteId",mapObject(vint_AgenteId));
+        p.put("vstr_Latitud",mapObject(vstr_Latitud));
+        p.put("vstr_Longitud",mapObject(vstr_Longitud));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
 }
