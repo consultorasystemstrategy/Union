@@ -69,7 +69,8 @@ public class ParserEventoEstablecimiento {
                         null,
                         jsonObj.getInt("LiqIAgenteVentaId"),
                         Constants._IMPORTADO,
-                        jsonObj.getString("EstVCodigoBarra")
+                        jsonObj.getString("EstVCodigoBarra"),
+                        jsonObj.getString("Direccion")
                         ));
             }
 

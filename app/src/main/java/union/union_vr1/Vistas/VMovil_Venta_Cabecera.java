@@ -1728,7 +1728,7 @@ Instantiate and pass a callback
             textoImpresionContenidoRight+= "S/"+ df.format(igv)+"\n";
         textoImpresionContenidoRight+= "S/"+ df.format(monto_total)+"\n";
 
-        dbHelper_Evento_Establecimiento.updateEstadoEstablecs(""+idEstablecimiento,2);
+        dbHelper_Evento_Establecimiento.updateEstadoEstablecs(""+idEstablecimiento,2, getDatePhone());
 
         Log.d("FORMA DE PAGO",""+i_formaPago);
         if (i_formaPago==2){
@@ -1754,11 +1754,12 @@ Instantiate and pass a callback
 
 
         Intent intent= new Intent(this, VMovil_BluetoothImprimir.class);
-        intent.putExtra("textoImpresion",textoImpresion);
+        intent.putExtra("idComprobante",id_comprobante);
+        /*intent.putExtra("textoImpresion",textoImpresion);
         intent.putExtra("textoImpresionCabecera", textoImpresionCabecera);
         intent.putExtra("textoVentaImpresion", textoVentaImpresion);
         intent.putExtra("textoImpresionContenidoLeft", textoImpresionContenidoLeft);
-        intent.putExtra("textoImpresionContenidoRight", textoImpresionContenidoRight);
+        intent.putExtra("textoImpresionContenidoRight", textoImpresionContenidoRight);*/
         finish();
         /*Toast toast = Toast.makeText(getApplicationContext(),"Venta Satisfactoria",Toast.LENGTH_SHORT);
         toast.getView().setBackgroundColor(mainActivity.getResources().getColor(R.color.verde));
@@ -2225,7 +2226,7 @@ Instantiate and pass a callback
     {
         Calendar cal = new GregorianCalendar();
         Date date = cal.getTime();
-        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         return df.format(date);
     }
 

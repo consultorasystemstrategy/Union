@@ -360,4 +360,17 @@ public class DbAdapter_Comprob_Venta {
         return cr;
     }
 
+    public Cursor getVentaCabecerabyID(int idComprobante){
+        Cursor cr = mDb.rawQuery("SELECT CV.*, EE.*, A.* \n" +
+                "FROM m_comprob_venta CV \n" +
+                "INNER JOIN m_evento_establec EE \n" +
+                "ON (CV.cv_in_id_establec = EE.ee_in_id_establec) \n" +
+                "INNER JOIN m_agente A \n" +
+                "ON (CV.cv_in_id_agente = A.ag_in_id_agente_venta) \n" +
+                "WHERE CV._id = ?", new String[]{""+idComprobante});
+        return cr;
+    }
+
+
+
 }

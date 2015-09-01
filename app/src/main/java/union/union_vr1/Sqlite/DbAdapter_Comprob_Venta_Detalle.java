@@ -235,4 +235,6 @@ public class DbAdapter_Comprob_Venta_Detalle {
         return mCursor;
     }
 
+
+
 }

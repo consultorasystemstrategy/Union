@@ -22,8 +22,9 @@ public class EventoEstablecimiento {
     private int idAgente;
     private int estadoSincronizacion;
     private String codigoBarras;
+    private String direccion;
 
-    public EventoEstablecimiento(int idEstablecimiento, int idCategoriaEstablecimiento, int tipoDocCliente, int estadoAtencion, String nombreEstablecimiento, String nombreCliente, String docCliente, int orden, int surtidoStockAnterior, int surtidoVentaAnterior, Double montoCredito, int diasCredito, int idEstadoNoAtencion, String estadoNoAtencionComentario, int idAgente, int estadoSincronizacion, String codigoBarras) {
+    public EventoEstablecimiento(int idEstablecimiento, int idCategoriaEstablecimiento, int tipoDocCliente, int estadoAtencion, String nombreEstablecimiento, String nombreCliente, String docCliente, int orden, int surtidoStockAnterior, int surtidoVentaAnterior, Double montoCredito, int diasCredito, int idEstadoNoAtencion, String estadoNoAtencionComentario, int idAgente, int estadoSincronizacion, String codigoBarras, String direccion) {
         this.idEstablecimiento = idEstablecimiento;
         this.idCategoriaEstablecimiento = idCategoriaEstablecimiento;
         this.tipoDocCliente = tipoDocCliente;
@@ -41,9 +42,18 @@ public class EventoEstablecimiento {
         this.idAgente = idAgente;
         this.estadoSincronizacion = estadoSincronizacion;
         this.codigoBarras = codigoBarras;
+        this. direccion = direccion;
     }
 
 
+
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
+    }
     public String getCodigoBarras() {
         return codigoBarras;
     }

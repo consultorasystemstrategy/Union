@@ -7,6 +7,7 @@ import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -24,9 +25,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
 
+import union.union_vr1.Sqlite.DbAdapter_Agente;
+import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta;
+import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta_Detalle;
+import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
+import union.union_vr1.Utils.NumberToLetterConverter;
 import union.union_vr1.Vistas.VMovil_Evento_Establec;
 import union.union_vr1.Vistas.VMovil_Evento_Indice;
 
@@ -47,8 +56,8 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
     private String textoImpresion = "";
     private String textoImpresionCabecera = "";
     private String textoVentaImpresion = "";
-    private String textoImpresionContenidoLeft = "";
-    private String textoImpresionContenidoRight = "";
+/*    private String textoImpresionContenidoLeft = "";
+    private String textoImpresionContenidoRight = "";*/
 
 
     // android built in classes for bluetooth operations
@@ -72,6 +81,29 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
     private boolean estado = false;
     private boolean isConnected = false;
     private int countImpresion = 0;
+    private int idComprobante = 0;
+
+    private boolean enabledBluetooth = false;
+
+    private DbAdapter_Comprob_Venta dbHelperComprobanteVenta;
+    private DbAdapter_Comprob_Venta_Detalle dbHelperComprobanteVentaDetalle;
+    private int pulgadasImpresora=0;
+
+
+    //PANTALLA
+
+    private String textoEmpresa = "\n"
+            +"    UNIVERSIDAD PERUANA UNION   \n"
+            +"     Cent.aplc. Prod. Union     \n"
+            +"   C. Central Km 19 Villa Union \n"
+            +" Lurigancho-Chosica Fax: 6186311\n"
+            +"      Telf: 6186309-6186310     \n"
+            +" Casilla 3564, Lima 1, LIMA PERU\n"
+            +"         RUC: 20138122256       ";
+    private String ventaCabecera="";
+    private String textoImpresionContenidoLeft = "";
+    private String textoImpresionContenidoRight = "";
+
     @Override
     public void onBackPressed() {
         //super.onStop();
@@ -87,8 +119,17 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
         setContentView(R.layout.activity_vmovil__bluetooth_imprimir);
 
         contexto = this;
+
+
+        dbHelperComprobanteVenta = new DbAdapter_Comprob_Venta(this);
+        dbHelperComprobanteVentaDetalle = new DbAdapter_Comprob_Venta_Detalle(this);
+        dbHelperComprobanteVenta.open();
+        dbHelperComprobanteVentaDetalle.open();
+
+
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         nameImpresora= SP.getString("impresoraNombre", defaultNameImpresora);
+        pulgadasImpresora= Integer.parseInt(SP.getString("impresoraAncho", "3"));
 
         buttonImprimir = (Button) findViewById(R.id.buttonImprimir);
         buttonSincronizar = (Button) findViewById(R.id.buttonSincronizar);
@@ -97,16 +138,22 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
         textViewImprimirContenidoRight = (TextView) findViewById(R.id.textViewImprimirContenidoRight);
         textViewVentaCabecera = (TextView) findViewById(R.id.textViewVentaCabecera);
 
-        textoImpresion = getIntent().getExtras().getString("textoImpresion");
+
+        idComprobante = getIntent().getExtras().getInt("idComprobante");
+
+        textoImpresion = generarTextoImpresion(idComprobante, pulgadasImpresora);
+
+        /*textoImpresion = getIntent().getExtras().getString("textoImpresion");
         textoImpresionCabecera = getIntent().getExtras().getString("textoImpresionCabecera");
         textoImpresionContenidoLeft = getIntent().getExtras().getString("textoImpresionContenidoLeft");
         textoImpresionContenidoRight = getIntent().getExtras().getString("textoImpresionContenidoRight");
-        textoVentaImpresion = getIntent().getExtras().getString("textoVentaImpresion");
+        textoVentaImpresion = getIntent().getExtras().getString("textoVentaImpresion");*/
 
-        textViewImprimirCabecera.setText(textoImpresionCabecera);
-        textViewVentaCabecera.setText(textoVentaImpresion);
+        textViewImprimirCabecera.setText(textoEmpresa);
+        textViewVentaCabecera.setText(ventaCabecera);
         textViewImprimirContenidoLeft.setText(textoImpresionContenidoLeft);
         textViewImprimirContenidoRight.setText(textoImpresionContenidoRight);
+
 
         if (!isSincronized){
             buttonImprimir.setEnabled(isSincronized);
@@ -117,6 +164,33 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
         buttonImprimir.setOnClickListener(this);
         buttonSincronizar.setOnClickListener(this);
 
+
+        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
+        if (mBluetoothAdapter == null) {
+            Log.d("Bluetooth message","No bluetooth adapter available");
+        }
+
+        if (!mBluetoothAdapter.isEnabled()) {
+            //enabledBluetooth = true;
+         /*   Intent enableBluetooth = new Intent(
+                    BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBluetooth, 0);
+*/
+        }
+        /*mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
+        if (mBluetoothAdapter == null) {
+            Log.d("Bluetooth message","No bluetooth adapter available");
+        }
+
+        if (!mBluetoothAdapter.isEnabled()) {
+            estado = true;
+            Intent enableBluetooth = new Intent(
+                    BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBluetooth, 0);
+
+        }*/
         /*buttonSincronizar.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -124,6 +198,161 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
                 return false;
             }
         });*/
+
+
+    }
+
+   private String generarTextoImpresion(int idComprobante, int pulgadas){
+       DecimalFormatSymbols simbolos = DecimalFormatSymbols.getInstance(Locale.ENGLISH);
+       DecimalFormat df = new DecimalFormat("#.00", simbolos);
+
+
+       String texto= "";
+       String comprobante = "";
+       String fecha = "";
+       String cliente = "";
+       String dni_ruc = "";
+       String serie  ="";
+       String numDoc = "";
+       String nombreAgente = "";
+       String direccion="";
+
+       double base_imponible = 0.0;
+       double igv = 0.0;
+       double precio_venta = 0.0;
+
+       String ventaDetalle = "";
+
+       Cursor cursorVentaCabecera = dbHelperComprobanteVenta.getVentaCabecerabyID(idComprobante);
+
+       if (cursorVentaCabecera.getCount()>0){
+           cursorVentaCabecera.moveToFirst();
+
+           serie = cursorVentaCabecera.getString(cursorVentaCabecera.getColumnIndexOrThrow(DbAdapter_Comprob_Venta.CV_serie));
+           numDoc = cursorVentaCabecera.getString(cursorVentaCabecera.getColumnIndexOrThrow(DbAdapter_Comprob_Venta.CV_num_doc));
+           comprobante = serie + "-" +agregarCeros((String.valueOf(numDoc)),7);
+           fecha = cursorVentaCabecera.getString(cursorVentaCabecera.getColumnIndexOrThrow(DbAdapter_Comprob_Venta.CV_fecha_doc));
+           cliente = cursorVentaCabecera.getString(cursorVentaCabecera.getColumnIndexOrThrow(DbAdaptert_Evento_Establec.EE_nom_cliente));
+           dni_ruc = cursorVentaCabecera.getString(cursorVentaCabecera.getColumnIndexOrThrow(DbAdaptert_Evento_Establec.EE_doc_cliente));
+           nombreAgente = cursorVentaCabecera.getString(cursorVentaCabecera.getColumnIndexOrThrow(DbAdapter_Agente.AG_nombre_agente));
+           direccion = cursorVentaCabecera.getString(cursorVentaCabecera.getColumnIndexOrThrow(DbAdaptert_Evento_Establec.EE_direccion));
+
+           ventaCabecera+= "NUMERO  : "+comprobante+"\n";
+           ventaCabecera+= "FECHA   : "+ fecha+"\n";
+           ventaCabecera+= "VENDEDOR: "+ nombreAgente+"\n";
+           ventaCabecera+= "CLIENTE : "+ cliente+"\n";
+           ventaCabecera+= "DNI/RUC : "+ dni_ruc+"\n";
+           ventaCabecera+= "DIRECCION : "+ direccion+"\n";
+
+
+
+
+           Cursor cursorVentaDetalle = dbHelperComprobanteVentaDetalle.fetchAllComprobVentaDetalleByIdComp(idComprobante);
+
+           if (cursorVentaCabecera.getCount()>0){
+
+               for (cursorVentaDetalle.moveToFirst(); !cursorVentaDetalle.isAfterLast();cursorVentaDetalle.moveToNext()) {
+
+                   int cantidad = cursorVentaDetalle.getInt(cursorVentaDetalle.getColumnIndex(DbAdapter_Comprob_Venta_Detalle.CD_cantidad));
+                   String nombreProducto = cursorVentaDetalle.getString(cursorVentaDetalle.getColumnIndex(DbAdapter_Comprob_Venta_Detalle.CD_nom_producto));
+                   Double precioUnitario = cursorVentaDetalle.getDouble(cursorVentaDetalle.getColumnIndex(DbAdapter_Comprob_Venta_Detalle.CD_precio_unit));
+                   Double importe = cursorVentaDetalle.getDouble(cursorVentaDetalle.getColumnIndex(DbAdapter_Comprob_Venta_Detalle.CD_importe));
+
+                  /* texto += "CANT:"+cantidad+"\n";
+                   texto += "NOM:"+nombreProducto+"\n";
+                   texto += "PU:"+ df.format(precioUnitario)+"\n";
+                   texto += "IMP:"+df.format(importe)+"\n";
+                   texto += "-------------------\n";*/
+
+                   if (pulgadas==2){
+                       if(nombreProducto.length()>=20){
+                           nombreProducto=nombreProducto.substring(0,18);
+                           nombreProducto+="..";
+                       }
+                   }else if (pulgadas==3){
+                       if(nombreProducto.length()>=30){
+                           nombreProducto=nombreProducto.substring(0,28);
+                           nombreProducto+="..";
+                       }
+                   }
+                   ventaDetalle+=String.format("%-4s",cantidad) + String.format("%-31s",nombreProducto)+String.format("%1$5s"  ,df.format(precioUnitario)) +String.format("%1$8s"  ,df.format(importe)) + "\n";
+                   textoImpresionContenidoLeft +=String.format("%-6s",cantidad) + String.format("%-28s",nombreProducto)+ "\n";
+                   textoImpresionContenidoRight+= String.format("%-5s",df.format(importe)) + "\n";
+
+
+               }
+
+               textoImpresionContenidoLeft+="SUB TOTAL:\n";
+               textoImpresionContenidoLeft+="IGV:\n";
+               textoImpresionContenidoLeft+="TOTAL:\n";
+
+           }
+
+           //texto += "\n";
+           base_imponible = cursorVentaCabecera.getDouble(cursorVentaCabecera.getColumnIndexOrThrow(DbAdapter_Comprob_Venta.CV_base_imp));
+           igv = cursorVentaCabecera.getDouble(cursorVentaCabecera.getColumnIndexOrThrow(DbAdapter_Comprob_Venta.CV_igv));
+           precio_venta = cursorVentaCabecera.getDouble(cursorVentaCabecera.getColumnIndexOrThrow(DbAdapter_Comprob_Venta.CV_total));
+
+
+           textoImpresionContenidoRight+= "S/" +
+                   ""+ df.format(base_imponible)+"\n";
+           textoImpresionContenidoRight+= "S/"+ df.format(igv)+"\n";
+           textoImpresionContenidoRight+= "S/"+ df.format(precio_venta)+"\n";
+/*
+           texto += "B.I:"+df.format(base_imponible)+"\n";
+           texto += "IGV.:"+df.format(igv)+"\n";
+           texto += "P.V."+df.format(precio_venta)+"\n";
+           texto += "AGENTE:"+nombreAgente;*/
+       }
+
+       switch (pulgadas){
+           case 2:
+               texto+=" 2 PULGADAS, NO SOPORTADO.";
+               break;
+           case 3:
+               texto+=
+                       "            UNIVERSIDAD PERUANA UNION           \n"
+                               +"      CENTRO DE APLICACION PRODUCTOS UNION      \n"
+                               +"     CAR. CENTRAL KM. 19.5 VILLA UNION-NANA     \n"
+                               +"         Lurigancho-Chosica Fax: 6186311        \n"
+                               +"              Telf: 6186309-6186310             \n"
+                               +"         Casilla 3564, Lima 1, LIMA PERU        \n"
+                               +"                 RUC: 20138122256               \n\n";
+               texto +="NUMERO  : "+comprobante+"\n";
+               texto+= "FECHA   : "+ fecha+"\n";
+               texto+= "CLIENTE : "+ cliente+"\n";
+               texto+= "DNI/RUC : "+ dni_ruc+"\n";
+               texto+= "DIRECCIÓN : "+ direccion+"\n";
+               texto+= "------------------------------------------------------".substring(0,48)+"\n";
+               texto+=String.format("%-6s","CANT") + String.format("%-30s","PRODUCTO")+String.format("%-5s","P.U.")+  String.format("%-7s","IMPORTE")+"\n";
+               texto+= "------------------------------------------------------".substring(0,48)+"\n";
+               texto+=ventaDetalle;
+               texto += "\n"+String.format("%-18s","OP. GRAVADA")+String.format("%-21s","S/.")+ String.format("%1$9s",df.format(base_imponible));
+               texto += "\n"+String.format("%-18s","OP. INAFECTA")+String.format("%-21s","S/.")+ String.format("%1$9s","0.00");
+               texto += "\n"+String.format("%-18s","OP. EXONERADA")+String.format("%-21s","S/.")+ String.format("%1$9s","0.00");
+               texto += "\n"+String.format("%-18s","OP. GRATUITA")+String.format("%-21s","S/.")+ String.format("%1$9s","0.00");
+               texto += String.format("%-18s","I.G.V.")+String.format("%-21s","S/.")+  String.format("%1$9s",df.format(igv));
+               texto += String.format("%-18s","PRECIO VENTA")+String.format("%-21s","S/.")+  String.format("%1$9s",df.format(precio_venta))+"\n\n";
+               texto+= "------------------------------------------------------".substring(0,48)+"\n";
+               texto+= "Son "+ NumberToLetterConverter.convertNumberToLetter(df.format(precio_venta)).toLowerCase()+"\n";
+               texto+= "------------------------------------------------------".substring(0,48)+"\n";
+               texto+= "VENDEDOR : "+ nombreAgente+"\n";
+
+               break;
+           default:
+               texto+=" NO SE PUEDE RECONOCER EL NÚMERO DE PULGADAS...";
+               break;
+       }
+
+
+
+
+
+        return texto;
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
 
     }
 
@@ -133,27 +362,38 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
 
         switch (view.getId()){
             case R.id.buttonSincronizar:
-                estado = findBT();
-                if (estado){
-                    try {
-                        isConnected = openBT();
-                    } catch (IOException e) {
-                        Log.d("STACKSTRACE PU", Log.getStackTraceString(e));
-                        //e.printStackTrace();
-                    }
+
+
+                if (!mBluetoothAdapter.isEnabled()) {
+                    Intent enableBluetooth = new Intent(
+                            BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                    startActivityForResult(enableBluetooth, 0);
                 }else{
-                    Toast.makeText(getApplicationContext(), "Hacer un emparejamiento Bluetooth.", Toast.LENGTH_LONG).show();
+                    estado = findBT();
+                    if (estado) {
+                        try {
+                            isConnected = openBT();
+                        } catch (IOException e) {
+                            Log.d("STACKSTRACE PU", Log.getStackTraceString(e));
+                            //e.printStackTrace();
+                        }
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Hacer un emparejamiento Bluetooth.", Toast.LENGTH_LONG).show();
+                    }
+                    if (isConnected) {
+                        buttonImprimir.setEnabled(isConnected);
+                        buttonImprimir.setBackgroundColor(contexto.getResources().getColor(R.color.PersonalizadoSteve2));
+                        buttonImprimir.setAlpha((float) 1.0);
+                        //buttonSincronizar.setEnabled(!isConnected);
+                        //buttonSincronizar.setAlpha((float)0.0);
+                        Toast.makeText(getApplicationContext(), "Sincronizado con : " + nameImpresora, Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Error : Revise si la impresora está encendida.", Toast.LENGTH_LONG).show();
+                    }
                 }
-                if (isConnected){
-                    buttonImprimir.setEnabled(isConnected);
-                    buttonImprimir.setBackgroundColor(contexto.getResources().getColor(R.color.PersonalizadoSteve2));
-                    buttonImprimir.setAlpha((float)1.0);
-                    //buttonSincronizar.setEnabled(!isConnected);
-                    //buttonSincronizar.setAlpha((float)0.0);
-                    Toast.makeText(getApplicationContext(), "Sincronizado con : "+nameImpresora, Toast.LENGTH_LONG).show();
-                }else {
-                    Toast.makeText(getApplicationContext(), "Error : Revise si la impresora está encendida.", Toast.LENGTH_LONG).show();
-                }
+
+
+
 
                 break;
             case R.id.buttonImprimir:
@@ -221,7 +461,7 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
             }
 
             if (!mBluetoothAdapter.isEnabled()) {
-                estado = true;
+                //estado = true;
                 Intent enableBluetooth = new Intent(
                         BluetoothAdapter.ACTION_REQUEST_ENABLE);
                 startActivityForResult(enableBluetooth, 0);
@@ -422,6 +662,22 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
             }
         }
         return string;
+    }
+
+    private static String agregarCeros(String string, int largo)
+    {
+        String ceros = "";
+        int cantidad = largo - string.length();
+        if (cantidad >= 1)
+        {
+            for(int i=0;i<cantidad;i++)
+            {
+                ceros += "0";
+            }
+            return (ceros + string);
+        }
+        else
+            return string;
     }
 
 }
