@@ -339,7 +339,7 @@ public class ImportMain extends AsyncTask<String, String, String> {
                 }
             }
 
-            /*boolean rutaSuccess = isSuccesfulImport(jsonObjectRutaDistribucion);
+/*            boolean rutaSuccess = isSuccesfulImport(jsonObjectRutaDistribucion);
             Log.d("RUTA SUCCESS", ""+rutaSuccess);
             if (rutaSuccess){
                 JSONArray jsonArray = jsonObjectRutaDistribucion.getJSONArray("Value");

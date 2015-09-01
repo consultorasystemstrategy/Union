@@ -4,11 +4,13 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -112,6 +114,7 @@ public class Login extends Activity implements OnClickListener{
     private static final String TAG_pass_usuario = "pass_usuario";
     private int idAgente;
     private int idLiquidacion;
+    private String nombreUsuario="";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -148,6 +151,11 @@ public class Login extends Activity implements OnClickListener{
 		//setup input fields
 		user = (EditText)findViewById(R.id.username);
 		pass = (EditText)findViewById(R.id.password);
+
+        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        nombreUsuario= SP.getString("username", "emerson.f");
+
+        user.setText(""+nombreUsuario);
 
 		//setup buttons
 		mSubmit = (Button)findViewById(R.id.login);

@@ -57,6 +57,7 @@ import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 import union.union_vr1.Sqlite.DbGastos_Ingresos;
 import union.union_vr1.Utils.MyApplication;
 import union.union_vr1.Utils.Utils;
+import union.union_vr1.VMovil_BluetoothImprimir;
 
 import static union.union_vr1.R.layout.prompts_cobros;
 import static union.union_vr1.R.layout.prompts_cobros_fecha;
@@ -133,10 +134,13 @@ public class VMovil_Venta_Comprob extends Activity implements View.OnClickListen
     private DbAdaptert_Evento_Establec dbAdaptert_evento_establec;
     private DbAdapter_Comprob_Venta dbAdapter_comprob_venta;
 
+    private Context contexto;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        contexto = this;
         setContentView(R.layout.princ_venta_comprob);
 
         session = new DbAdapter_Temp_Session(this);
@@ -533,7 +537,7 @@ private void back(){
                                 "El comprobante se encuentra anulado", Toast.LENGTH_SHORT).show();
                         break;
                     case 1:
-                        dialogCambiarEstado(idComprobante);
+                        dialogAcciones(idComprobante);
                         break;
                     default:
 
@@ -570,43 +574,57 @@ private void back(){
     }
 
 
-    public void dialogCambiarEstado(final int idComprobante) {
+    public void dialogAcciones(final int idComprobante) {
 
-        final String[] items = {"Anular"};
+        final String[] items = {"Imprimir","Anular"};
         AlertDialog.Builder dialogo = new AlertDialog.Builder(this);
-        dialogo.setTitle("Anular comprobante");
+        dialogo.setTitle("Seleccionar una acción");
         dialogo.setItems(items, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
 
+                switch (item){
+                    case 0:
+                        Intent intent= new Intent(contexto, VMovil_BluetoothImprimir.class);
+                        intent.putExtra("idComprobante",idComprobante);
+                        finish();
+                        startActivity(intent);
+                        break;
+                    case 1:
 
-                Cursor cursorComprobanteVentaDetalle = dbHelper_Comp_Venta_Detalle.fetchAllComprobVentaDetalleByIdComp(idComprobante);
-                cursorComprobanteVentaDetalle.moveToFirst();
+                        Cursor cursorComprobanteVentaDetalle = dbHelper_Comp_Venta_Detalle.fetchAllComprobVentaDetalleByIdComp(idComprobante);
+                        cursorComprobanteVentaDetalle.moveToFirst();
 
-                int id_producto;
-                int cantidad;
-                int precioUnitario;
-                int costeVenta;
+                        int id_producto;
+                        int cantidad;
+                        int precioUnitario;
+                        int costeVenta;
 
-                cursorComprobanteVentaDetalle.moveToFirst();
-                if (cursorComprobanteVentaDetalle.getCount() > 0) {
-                    do {
-                        id_producto = cursorComprobanteVentaDetalle.getInt(cursorComprobanteVentaDetalle.getColumnIndex(DbAdapter_Comprob_Venta_Detalle.CD_id_producto));
-                        cantidad = cursorComprobanteVentaDetalle.getInt(cursorComprobanteVentaDetalle.getColumnIndex(DbAdapter_Comprob_Venta_Detalle.CD_cantidad));
+                        cursorComprobanteVentaDetalle.moveToFirst();
+                        if (cursorComprobanteVentaDetalle.getCount() > 0) {
+                            do {
+                                id_producto = cursorComprobanteVentaDetalle.getInt(cursorComprobanteVentaDetalle.getColumnIndex(DbAdapter_Comprob_Venta_Detalle.CD_id_producto));
+                                cantidad = cursorComprobanteVentaDetalle.getInt(cursorComprobanteVentaDetalle.getColumnIndex(DbAdapter_Comprob_Venta_Detalle.CD_cantidad));
 
-                        dbHelper_Stock_Agente.updateStockAgenteCantidad(id_producto, cantidad, liquidacion);
+                                dbHelper_Stock_Agente.updateStockAgenteCantidad(id_producto, cantidad, liquidacion);
 
-                    } while (cursorComprobanteVentaDetalle.moveToNext());
-                } else {
-                    Toast.makeText(getApplicationContext(), "No ha registros de este comprobante de venta : ", Toast.LENGTH_LONG).show();
+                            } while (cursorComprobanteVentaDetalle.moveToNext());
+                        } else {
+                            Toast.makeText(getApplicationContext(), "No ha registros de este comprobante de venta : ", Toast.LENGTH_LONG).show();
+                        }
+
+                        dbHelper.updateComprobante(idComprobante, 0);
+
+                        finish();
+                        Intent intent2 = new Intent(getApplicationContext(), VMovil_Venta_Comprob.class);
+                        startActivity(intent2);
+
+                        Toast.makeText(getApplicationContext(), "Comprobante Anulado ", Toast.LENGTH_LONG).show();
+                        break;
+                    default:
+                        //
+                        break;
+
                 }
-
-                dbHelper.updateComprobante(idComprobante, 0);
-
-                finish();
-                Intent intent2 = new Intent(getApplicationContext(), VMovil_Venta_Comprob.class);
-                startActivity(intent2);
-
-                Toast.makeText(getApplicationContext(), "Comprobante Anulado ", Toast.LENGTH_LONG).show();
 
             }
         });

@@ -418,7 +418,7 @@ public class StockAgenteRestApi {
         result = new JSONObject(r);
         return result;
     }
-    public JSONObject UpdateEstadoEstablecimiento(int idEstablecimiento,int idLiquidacion,int estado,int estadoNoAtencion) throws Exception {
+    public JSONObject UpdateEstadoEstablecimiento(int idEstablecimiento,int idLiquidacion,int estado,int estadoNoAtencion,String hora) throws Exception {
         JSONObject result = null;
         JSONObject o = new JSONObject();
         JSONObject p = new JSONObject();
@@ -428,6 +428,7 @@ public class StockAgenteRestApi {
         p.put("idLiquidacion",mapObject(idLiquidacion));
         p.put("estado",mapObject(estado));
         p.put("estadoNoAtencion",mapObject(estadoNoAtencion));
+        p.put("hora",mapObject(hora));
         o.put("parameters", p);
         String s = o.toString();
         String r = load(s);

@@ -349,7 +349,7 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
         dialogo.setItems(items, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
                 int idmotivoNoAtencion = ++item;
-                dbHelper.updateEstadoNoAtendido(idEstabl, 3, idmotivoNoAtencion, items[item]);
+                dbHelper.updateEstadoNoAtendido(idEstabl, 3, idmotivoNoAtencion, items[item], getDatePhone());
                 Intent intent2 = new Intent(getApplicationContext(), VMovil_Menu_Establec.class);
                 finish();
                 startActivity(intent2);
@@ -404,7 +404,7 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 switch (i) {
                                     case 0:
-                                        dbHelper.updateEstadoEstablecs(valIdEstab, 2);
+                                        dbHelper.updateEstadoEstablecs(valIdEstab, 2, getDatePhone());
                                         Intent intent = new Intent(mainActivity, VMovil_Menu_Establec.class);
                                         finish();
                                         startActivity(intent);
@@ -413,7 +413,7 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
                                         eleccion(valIdEstab);
                                         break;
                                     case 2:
-                                        dbHelper.updateEstadoEstablecs(valIdEstab, 4);
+                                        dbHelper.updateEstadoEstablecs(valIdEstab, 4, getDatePhone());
                                         Intent intent2 = new Intent(mainActivity, VMovil_Menu_Establec.class);
                                         finish();
                                         startActivity(intent2);
@@ -639,5 +639,13 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
             Double total = cursorVentasTotales.getDouble(cursorVentasTotales.getColumnIndexOrThrow("total"));
             buttonSlideVentaDeHoy.setText(""+df.format(total));
         }
+    }
+
+    public String getDatePhone()
+    {
+        Calendar cal = new GregorianCalendar();
+        Date date = cal.getTime();
+        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        return df.format(date);
     }
 }

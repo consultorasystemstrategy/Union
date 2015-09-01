@@ -30,7 +30,7 @@ import union.union_vr1.Sqlite.DbAdapter_Histo_Venta_Detalle;
  */
 public class DbHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION =  2;
+    private static final int DATABASE_VERSION =  4;
     private static final String DATABASE_NAME = "ProdUniondb.sqlite";
 
     public DbHelper(Context context) {
@@ -101,7 +101,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(DbAdapter_Temp_Barcode_Scanner.DELETE_TABLE_Temp_scanner);
         db.execSQL(DbAdapter_Temp_Session.DELETE_TABLE_Temp_session);
         db.execSQL(DbAdapter_Ruta_Distribucion.DELETE_TABLE_RUTA_DISTRIBUCION);
-        db.execSQL(DBAdapter_Temp_Inventario.CREATE_TABLE_TEMP_VENTA_Inventario);
+        db.execSQL(DBAdapter_Temp_Inventario.DELETE_TABLE_TEMP_VENTA_DETALLE);
         onCreate(db);
     }
 }

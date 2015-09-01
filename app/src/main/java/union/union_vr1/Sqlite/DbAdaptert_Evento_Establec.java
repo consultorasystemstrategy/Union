@@ -27,6 +27,9 @@ public class DbAdaptert_Evento_Establec {
     public static final String EE_id_liquidacion = "ee_in_id_liquidacion";
     public static final String estado_sincronizacion = "estado_sincronizacion";
     public static final String EE_codigo_barras = "ee_in_codigo_barras";
+    public static final String EE_direccion = "ee_in_direccion";
+    public static final String EE_time_atencion = "ee_in_time_atencion";
+
 
     //FALTA OBTENER ESTE CAMPO
     public static final String EE_monto_credito = "ee_re_monto_credito";
@@ -57,7 +60,9 @@ public class DbAdaptert_Evento_Establec {
                     +EE_id_estado_atencion+" integer,"
                     +EE_nom_establec+" text,"
                     +EE_codigo_barras+" text,"
+                    +EE_direccion+" text,"
                     +EE_nom_cliente+" text,"
+                    +EE_time_atencion+" text,"
                     +EE_doc_cliente         +" text,"
                     +EE_orden+" integer,"
                     +EE_surtido_stock_ant+" integer,"
@@ -134,6 +139,7 @@ public class DbAdaptert_Evento_Establec {
         initialValues.put(EE_id_agente,id_agente);
         initialValues.put(EE_id_liquidacion,id_liquidacion);
         initialValues.put(EE_codigo_barras,establecimiento.getCodigoBarras());
+        initialValues.put(EE_direccion,establecimiento.getDireccion());
 
 
         return mDb.insert(SQLITE_TABLE_Evento_Establec, null, initialValues);
@@ -157,6 +163,8 @@ public class DbAdaptert_Evento_Establec {
         initialValues.put(EE_id_agente,id_agente);
         initialValues.put(EE_id_liquidacion,id_liquidacion);
         initialValues.put(EE_codigo_barras,establecimiento.getCodigoBarras());
+        initialValues.put(EE_direccion,establecimiento.getDireccion());
+
 
         mDb.update(SQLITE_TABLE_Evento_Establec, initialValues,
                 EE_id_establec+"=?",new String[]{""+establecimiento.getIdEstablecimiento()});
@@ -180,19 +188,21 @@ public class DbAdaptert_Evento_Establec {
         return exists;
 
     }
-    public void updateEstadoNoAtendido(String id, int estado, int estadoNoAtendido, String comentario){
+    public void updateEstadoNoAtendido(String id, int estado, int estadoNoAtendido, String comentario, String time){
         ContentValues initialValues = new ContentValues();
         initialValues.put(EE_id_estado_atencion, estado);
         initialValues.put(EE_id_estado_no_atencion, estadoNoAtendido);
         initialValues.put(EE_estado_no_atencion_comentario, comentario);
+        initialValues.put(EE_time_atencion, time);
         initialValues.put(Constants._SINCRONIZAR, Constants._ACTUALIZADO);
 
         mDb.update(SQLITE_TABLE_Evento_Establec, initialValues,
                 EE_id_establec+"=?",new String[]{id});
     }
-    public void updateEstadoEstablecs(String id, int estado){
+    public void updateEstadoEstablecs(String id, int estado, String time){
         ContentValues initialValues = new ContentValues();
         initialValues.put(EE_id_estado_atencion,estado);
+        initialValues.put(EE_time_atencion, time);
         initialValues.put(Constants._SINCRONIZAR, Constants._ACTUALIZADO);
 
         mDb.update(SQLITE_TABLE_Evento_Establec, initialValues,
