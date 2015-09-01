@@ -17,7 +17,7 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:paddingTop="20dp"
-            android:background="@drawable/border_bottom_personalizado_cInventario"
+            android:background="@drawable/border_bottom_personalizado_cinventario"
             android:layout_weight="4.5">
 
             <TextView
@@ -36,10 +36,9 @@
                 android:text="Manuel Casabona"
                 android:id="@+id/textNombreAgente"
                 android:textStyle="normal|bold"
-                android:layout_alignBottom="@+id/textView8"
                 android:textSize="15dp"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="107dp" />
+                android:layout_alignTop="@+id/textView8"
+                android:layout_alignParentRight="true" />
 
             <TextView
                 android:layout_width="wrap_content"
