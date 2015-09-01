@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
@@ -138,8 +139,11 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         session.open();
 
         //EMPIEZA A ENVIAR LAS COORDANDAS AL SERVIDOR
-       Intent intent = new Intent(mainActivity, TimerGps.class);
-       startService(intent);
+        //Enable gps android
+        enableGps();
+        //
+        Intent intent = new Intent(mainActivity, TimerGps.class);
+        startService(intent);
         //FOR STOP SERVICE, THE CODE IS:
         // Intent intent = new Intent(getApplicationContext(),TimerGps.class);
         // stopService(intent);
@@ -176,7 +180,7 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
 
         if (!export || !importado) {
 
-            if (conectadoWifi() || conectadoRedMovil()) {
+            if ( conectadoWifi() || conectadoRedMovil() ) {
                 new AlertDialog.Builder(mainActivity)
                         .setTitle("Hemos detectado una Conexión a Internet")
                         .setMessage("" +
@@ -306,17 +310,42 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         showSlideMenu(mainActivity);
         AsignarColor(mCobroTotal);
     }
-    public int  parser(JSONObject jsonObj)
-    {
-        int idGuia = -1;
-        try {
-            Log.d("CADENA A PARSEAR ", jsonObj.toString());
-            idGuia= jsonObj.getInt("Value");
-        } catch (JSONException e) {
-            // TODO Auto-generated catch block
-            Log.d("JSONPARSER ERROR", e.getMessage());
+
+    private void enableGPSactiva() {
+
+
+            new AlertDialog.Builder(mainActivity)
+                    .setTitle("GPS")
+                    .setCancelable(false)
+                    .setMessage("Usted tiene que activar el GPS")
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // continue with delete
+                            Intent gpsOptionsIntent = new Intent(
+                                    android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            startActivity(gpsOptionsIntent);
+                        }
+                    })
+
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+
+
+
+    }
+
+    public boolean enableGps() {
+        boolean estado= false;
+        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+
+            estado = true;
+        } else {
+            estado  =false;
+            enableGPSactiva();
+
         }
-        return idGuia;
+        return estado;
     }
 
     //SLIDING MENU

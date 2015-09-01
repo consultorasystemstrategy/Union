@@ -28,7 +28,6 @@ public class LocalizacionAngente extends AsyncTask<String, String, String> {
     JSONObject jsonObject = null;
 
     public LocalizacionAngente(Context ctx) {
-
         context = ctx;
     }
 
