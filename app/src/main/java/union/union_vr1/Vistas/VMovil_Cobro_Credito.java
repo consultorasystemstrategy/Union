@@ -102,6 +102,7 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
     TextView textviewSlideARendir;
     TextView textViewSlideNombreAgente;
     TextView textViewSlideNombreRuta;
+    TextView textViewSlideCargar;
 
 
     Button buttonSlideNroEstablecimiento;
@@ -492,6 +493,10 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
                 break;
                 */
             //SLIDING MENU
+            case R.id.slide_textViewCargarInventario:
+                Intent cInventario = new Intent(this, VMovil_Cargar_Inventario.class);
+                startActivity(cInventario);
+                break;
             case R.id.slide_textviewPrincipal:
                 Intent ip1 = new Intent(this, VMovil_Evento_Indice.class);
                 finish();
@@ -595,6 +600,9 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
         textviewSlideGastos = (TextView) findViewById(R.id.slide_TextViewGastos);
         textviewSlideResumen = (TextView) findViewById(R.id.slide_textViewResumen);
         textviewSlideARendir = (TextView) findViewById(R.id.slide_textViewARendir);
+        textViewSlideCargar = (TextView)findViewById(R.id.slide_textViewCargarInventario);
+        textViewSlideCargar.setOnClickListener(this);
+
 
 
         textViewSlideNombreEstablecimiento = (TextView) findViewById(R.id.slideVentas_textViewCliente);

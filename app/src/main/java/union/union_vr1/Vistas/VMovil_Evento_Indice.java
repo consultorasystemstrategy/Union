@@ -106,6 +106,7 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
     TextView textViewSlideNombreAgente;
     TextView textViewSlideNombreRuta;
     TextView textviewSlideCInventario;
+    TextView textviewSlideConsultarInventario;
     Button buttonSlideNroEstablecimiento;
     TextView textViewIngresosTotales;
     TextView textViewGastos;
@@ -374,6 +375,9 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         textviewSlideCInventario = (TextView) findViewById(R.id.slide_textViewCargarInventario);
         textviewSlideARendir = (TextView) findViewById(R.id.slide_textViewARendir);
 
+        textviewSlideConsultarInventario = (TextView)findViewById(R.id.slide_textViewConsultarInventario);
+        textviewSlideConsultarInventario.setOnClickListener(this);
+
         textViewIngresosTotales = (TextView) findViewById(R.id.textView_IngresosTotales);
         textViewGastos = (TextView) findViewById(R.id.textView_Gastos);
 
@@ -607,6 +611,9 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
     public void onClick(View v) {
         // TODO Auto-generated method stub
         switch (v.getId()) {
+            case R.id.slide_textViewConsultarInventario:
+                startActivity(new Intent(getApplicationContext(),VMovil_Consultar_Inventario.class));
+                break;
             case R.id.VEI_BTNclient:
                 Intent i = new Intent(this, VMovil_Menu_Establec.class);
                 startActivity(i);

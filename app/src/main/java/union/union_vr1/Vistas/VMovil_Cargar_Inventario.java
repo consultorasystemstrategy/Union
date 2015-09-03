@@ -1,16 +1,13 @@
 package union.union_vr1.Vistas;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.os.Build;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -24,6 +21,7 @@ import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import java.text.DecimalFormat;
 
 import union.union_vr1.AsyncTask.CargarInventario;
+import union.union_vr1.AsyncTask.GetStockAgente;
 import union.union_vr1.R;
 import union.union_vr1.Sqlite.CursorAdapter_Cargar_Inventario;
 import union.union_vr1.Sqlite.DBAdapter_Temp_Inventario;
@@ -76,6 +74,7 @@ public class VMovil_Cargar_Inventario extends Activity implements View.OnClickLi
     Double slide_aRendir = 0.0;
     String nombreAgente = "";
     int nroLiquidacion = 0;
+    private GetStockAgente getStockAgente;
     //widgets
     private TextView agente;
     private TextView liquidacion;
@@ -91,6 +90,7 @@ public class VMovil_Cargar_Inventario extends Activity implements View.OnClickLi
 
         mainActivity  = this;
         //
+        getStockAgente = new GetStockAgente(mainActivity);
         dbAdapter_temp_inventario = new DBAdapter_Temp_Inventario(this);
         dbAdapter_temp_inventario.open();
         cargarInventario = new CargarInventario(mainActivity);
@@ -272,44 +272,54 @@ public class VMovil_Cargar_Inventario extends Activity implements View.OnClickLi
         // TODO Auto-generated method stub
         switch (v.getId()) {
             case R.id.VEI_BTNclient:
+                getStockAgente.execute();
                 Intent i = new Intent(this, VMovil_Menu_Establec.class);
                 startActivity(i);
                 break;
             case R.id.VEI_BTNinfgas:
+                getStockAgente.execute();
                 Intent ig = new Intent(this, VMovil_Evento_Gasto.class);
                 startActivity(ig);
                 break;
             case R.id.VEI_BTNresume:
+                getStockAgente.execute();
                 Intent ir = new Intent(this, VMovil_Resumen_Caja.class);
                 startActivity(ir);
                 break;
 
             case R.id.VEI_BTNcobrarTodo:
+                getStockAgente.execute();
                 Intent cT = new Intent(this, VMovil_Cobros_Totales.class);
                 startActivity(cT);
                 break;
             case R.id.buttonNumeroEstablecimientos:
+                getStockAgente.execute();
                 Intent ine = new Intent(this, VMovil_Menu_Establec.class);
                 startActivity(ine);
                 break;
             //SLIDING MENU
             case R.id.slide_textviewPrincipal:
+                getStockAgente.execute();
                 Intent iP = new Intent(this, VMovil_Evento_Indice.class);
                 startActivity(iP);
                 break;
             case R.id.slide_textViewClientes:
+                getStockAgente.execute();
                 Intent ic1 = new Intent(this, VMovil_Menu_Establec.class);
                 startActivity(ic1);
                 break;
             case R.id.slide_textViewCobranza:
+                getStockAgente.execute();
                 Intent cT1 = new Intent(this, VMovil_Cobros_Totales.class);
                 startActivity(cT1);
                 break;
             case R.id.slide_TextViewGastos:
+                getStockAgente.execute();
                 Intent ig1 = new Intent(this, VMovil_Evento_Gasto.class);
                 startActivity(ig1);
                 break;
             case R.id.slide_textViewResumen:
+                getStockAgente.execute();
                 Intent ir1 = new Intent(this, VMovil_Resumen_Caja.class);
                 startActivity(ir1);
                 break;
@@ -345,5 +355,19 @@ public class VMovil_Cargar_Inventario extends Activity implements View.OnClickLi
         }
 
         return super.onOptionsItemSelected(item);
+    }
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)  {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            getStockAgente.execute();
+            onBackPressed();
+            return true;
+        }
+
+        return super.onKeyDown(keyCode, event);
+    }
+    public void onBackPressed() {
+        startActivity(new Intent(getApplicationContext(),VMovil_Evento_Indice.class));
+        this.finish();
     }
 }

@@ -4,7 +4,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="union.union_vr1.Vistas.VMovil_Cargar_Inventario">
+    tools:context="union.union_vr1.Vistas.VMovil_Consultar_Inventario">
 
 
     <LinearLayout
@@ -34,7 +34,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Manuel Casabona"
-                android:id="@+id/textNombreAgente"
+                android:id="@+id/InventarioTextNombre"
                 android:textStyle="normal|bold"
                 android:textSize="15dp"
                 android:layout_alignTop="@+id/textView8"
@@ -57,9 +57,9 @@
                 android:text="N° 2"
                 android:textSize="15dp"
                 android:textStyle="normal|bold"
-                android:id="@+id/textNumeroLiquidacion"
+                android:id="@+id/InventarioTextSerie"
                 android:layout_alignTop="@+id/textView11"
-                android:layout_alignRight="@+id/textNombreAgente" />
+                android:layout_alignParentRight="true" />
         </RelativeLayout>
 
         <LinearLayout
@@ -76,12 +76,14 @@
                 android:paddingBottom="5dp"
                 android:layout_weight="1">
 
+
                 <EditText
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="number|text"
+                    android:inputType="date"
                     android:ems="10"
-                    android:id="@+id/editNroGuia" />
+                    android:id="@+id/textGetDate"
+                    android:layout_weight="1" />
             </LinearLayout>
 
             <LinearLayout
@@ -96,7 +98,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
                     android:text="Agregar"
-                    android:id="@+id/btnAgregarGuia" />
+                    android:id="@+id/btnConsultarIventario" />
             </LinearLayout>
         </LinearLayout>
 
