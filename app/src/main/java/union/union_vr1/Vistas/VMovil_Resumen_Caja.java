@@ -8,6 +8,8 @@ import android.database.Cursor;
 import android.graphics.Typeface;
 import android.os.Bundle;
 
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CursorAdapter;
@@ -36,6 +38,7 @@ import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 import union.union_vr1.Sqlite.DbGastos_Ingresos;
 import union.union_vr1.Utils.MyApplication;
 import union.union_vr1.Utils.Utils;
+import union.union_vr1.VMovil_BluetoothImprimir;
 
 
 public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickListener{
@@ -209,6 +212,28 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
         showSlideMenu(mainActivity);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_imprimir, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.buttonPrint:
+                Intent intent = new Intent(mainActivity, ImprimirArqueoCaja.class);
+                startActivity(intent);
+                break;
+            default:
+                //ON ITEM SELECTED DEFAULT
+                break;
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     public void displayListStockVenta() {
 
@@ -452,6 +477,7 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
         listView.addFooterView(viewCerrarCaja,null,true);
 
     }
+
     private String getDatePhone() {
         Calendar cal = new GregorianCalendar();
         Date date = cal.getTime();

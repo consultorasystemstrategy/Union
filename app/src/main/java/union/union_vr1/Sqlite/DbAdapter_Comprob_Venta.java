@@ -37,6 +37,7 @@ public class DbAdapter_Comprob_Venta {
     public static final String CV_liquidacion = "id_liquidacion";
 
     public static final String CV_estado_conexion = "cv_in_estado_conexion";
+    public static final String CV_SHA1 = "cv_sha1";
 
 
     public static final String TAG = "Comprob_Venta";
@@ -62,6 +63,7 @@ public class DbAdapter_Comprob_Venta {
                     +CV_igv+" real,"
                     +CV_total+" real,"
                     +CV_fecha_doc+" text,"
+                    +CV_SHA1+" text,"
                     +CV_hora_doc+" text,"
                     +CV_estado_comp+" integer,"
                     +CV_estado_conexion+" integer,"
@@ -158,6 +160,15 @@ public class DbAdapter_Comprob_Venta {
 
         mDb.update(SQLITE_TABLE_Comprob_Venta, initialValues,
                 CV_id_establec+"=?",new String[]{""+comprobante.getIdEstablecimiento()});
+    }
+
+    public void updateSHA1(int _id, String SHA1){
+
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(CV_SHA1,SHA1);
+
+        mDb.update(SQLITE_TABLE_Comprob_Venta, initialValues,
+                CV_id_comprob+"=?",new String[]{""+_id});
     }
 
     public boolean existeComprobVentaById(int id) {

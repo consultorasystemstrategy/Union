@@ -7,7 +7,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -562,6 +561,23 @@ public class StockAgenteRestApi {
         p.put("vint_AgenteId",mapObject(vint_AgenteId));
         p.put("vstr_Latitud",mapObject(vstr_Latitud));
         p.put("vstr_Longitud",mapObject(vstr_Longitud));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+    public JSONObject UpdateEstadoEstablecimiento2(int idEstablecimiento,int idLiquidacion,int estado,int estadoNoAtencion,String fechahora) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","RestAPI");
+        o.put("method", "UpdateEstadoEstablecimiento2");
+        p.put("idEstablecimiento",mapObject(idEstablecimiento));
+        p.put("idLiquidacion",mapObject(idLiquidacion));
+        p.put("estado",mapObject(estado));
+        p.put("estadoNoAtencion",mapObject(estadoNoAtencion));
+        p.put("fechahora",mapObject(fechahora));
         o.put("parameters", p);
         String s = o.toString();
         String r = load(s);

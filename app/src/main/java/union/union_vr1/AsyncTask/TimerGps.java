@@ -29,8 +29,6 @@ public class TimerGps extends Service {
     Context context;
     DbAdapter_Temp_Session dbAdapter_temp_session;
 
-
-
     @Override
     public IBinder onBind(Intent intent) {
         return null;
@@ -80,7 +78,9 @@ public class TimerGps extends Service {
         }
         private void sendPosition(Location location){
             int slideIdAgente = dbAdapter_temp_session.fetchVarible(1);
-            localizacionAngente.execute(""+slideIdAgente,""+location.getLatitude(),""+location.getLongitude() );
+            //localizacionAngente.execute(""+slideIdAgente,""+location.getLatitude(),""+location.getLongitude() );
+            Log.d("LATLONG",""+slideIdAgente+"-"+location.getLatitude()+"-"+location.getLongitude());
+            new LocalizacionAngente(context).execute(""+slideIdAgente,""+location.getLatitude(),""+location.getLongitude());
         }
         private boolean isNetworkAvailable() {
             ConnectivityManager connectivityManager

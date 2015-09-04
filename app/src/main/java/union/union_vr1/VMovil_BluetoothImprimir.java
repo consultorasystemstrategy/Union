@@ -204,8 +204,8 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
 
    private String generarTextoImpresion(int idComprobante, int pulgadas){
        DecimalFormatSymbols simbolos = DecimalFormatSymbols.getInstance(Locale.ENGLISH);
-       DecimalFormat df = new DecimalFormat("#.00", simbolos);
 
+       DecimalFormat df = new DecimalFormat("#.00", simbolos);
 
        String texto= "";
        String comprobante = "";
@@ -216,6 +216,7 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
        String numDoc = "";
        String nombreAgente = "";
        String direccion="";
+       String sha1="";
 
        double base_imponible = 0.0;
        double igv = 0.0;
@@ -236,6 +237,8 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
            dni_ruc = cursorVentaCabecera.getString(cursorVentaCabecera.getColumnIndexOrThrow(DbAdaptert_Evento_Establec.EE_doc_cliente));
            nombreAgente = cursorVentaCabecera.getString(cursorVentaCabecera.getColumnIndexOrThrow(DbAdapter_Agente.AG_nombre_agente));
            direccion = cursorVentaCabecera.getString(cursorVentaCabecera.getColumnIndexOrThrow(DbAdaptert_Evento_Establec.EE_direccion));
+           sha1 = cursorVentaCabecera.getString(cursorVentaCabecera.getColumnIndexOrThrow(DbAdapter_Comprob_Venta.CV_SHA1));
+
 
            ventaCabecera+= "NUMERO  : "+comprobante+"\n";
            ventaCabecera+= "FECHA   : "+ fecha+"\n";
@@ -307,7 +310,7 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
 
        switch (pulgadas){
            case 2:
-               texto+=" 2 PULGADAS, NO SOPORTADO.";
+               texto+=" 2 PULGADAS, NO SOPORTADO.\n";
                break;
            case 3:
                texto+=
@@ -323,6 +326,7 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
                texto+= "CLIENTE : "+ cliente+"\n";
                texto+= "DNI/RUC : "+ dni_ruc+"\n";
                texto+= "DIRECCIÓN : "+ direccion+"\n";
+               texto+= "SHA1  : "+ sha1+"\n";
                texto+= "------------------------------------------------------".substring(0,48)+"\n";
                texto+=String.format("%-6s","CANT") + String.format("%-30s","PRODUCTO")+String.format("%-5s","P.U.")+  String.format("%-7s","IMPORTE")+"\n";
                texto+= "------------------------------------------------------".substring(0,48)+"\n";
