@@ -69,7 +69,6 @@ public class SolicitarCredito extends AsyncTask<String, String, String> {
 
         session = new DbAdapter_Temp_Session(mainActivity);
         session.open();
-
     }
 
     @Override

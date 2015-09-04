@@ -145,6 +145,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
     //fin variables agregar productos
 
 
+    private int id_comprobante;
     // IMPRESORA
     private int anchoImpresora = 3;
     private String textoVentaImpresion = "";
@@ -269,6 +270,8 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
 
     private DbAdaptert_Evento_Establec dbAdaptert_evento_establec;
     private DbAdapter_Comprob_Venta dbAdapter_comprob_venta;
+
+    private long id;
 
 
     @Override
@@ -1608,12 +1611,12 @@ Instantiate and pass a callback
 
         //textoVentaImpresion+= "Direccion: Alameda Nro 2039 - Chosica\n";
 
-        long id = dbHelper_Comprob_Venta.createComprobVenta(idEstablecimiento,i_tipoDocumento,i_formaPago,tipoVenta,codigo_erp,serie,numero_documento,base_imponible,igv,monto_total,getDatePhone(),null,estado_comprobante, estado_conexion,id_agente_venta, Constants._CREADO, idLiquidacion);
+        id = dbHelper_Comprob_Venta.createComprobVenta(idEstablecimiento,i_tipoDocumento,i_formaPago,tipoVenta,codigo_erp,serie,numero_documento,base_imponible,igv,monto_total,getDatePhone(),null,estado_comprobante, estado_conexion,id_agente_venta, Constants._CREADO, idLiquidacion);
 
         Log.d("Export id CV IGUALES",""+id);
 
 
-        int id_comprobante = (int) id;
+        id_comprobante = (int) id;
 
 
         Cursor cursorTemp = simpleCursorAdapter.getCursor();
@@ -1754,23 +1757,13 @@ Instantiate and pass a callback
         if (conectadoWifi()||conectadoRedMovil()) {
             exportMain.execute();
         }
-        //new GenerateDigitalSignature().execute();
+        new GenerateDigitalSignature().execute();
 
 
-        Intent intent= new Intent(this, VMovil_BluetoothImprimir.class);
+        /*Intent intent= new Intent(this, VMovil_BluetoothImprimir.class);
         intent.putExtra("idComprobante",id_comprobante);
-        /*intent.putExtra("textoImpresion",textoImpresion);
-        intent.putExtra("textoImpresionCabecera", textoImpresionCabecera);
-        intent.putExtra("textoVentaImpresion", textoVentaImpresion);
-        intent.putExtra("textoImpresionContenidoLeft", textoImpresionContenidoLeft);
-        intent.putExtra("textoImpresionContenidoRight", textoImpresionContenidoRight);*/
         finish();
-        /*Toast toast = Toast.makeText(getApplicationContext(),"Venta Satisfactoria",Toast.LENGTH_SHORT);
-        toast.getView().setBackgroundColor(mainActivity.getResources().getColor(R.color.verde));
-        TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
-        v.setTextColor(mainActivity.getResources().getColor(R.color.Blanco));
-        toast.show();*/
-        startActivity(intent);
+        startActivity(intent);*/
 
 
     }
@@ -2512,17 +2505,20 @@ Instantiate and pass a callback
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             Log.d("GENERATE DS", "terminó correctamente");
+            dbHelper_Comprob_Venta.updateSHA1(id_comprobante,textoSHA1);
+
             Intent intent= new Intent(contexto, VMovil_BluetoothImprimir.class);
+            intent.putExtra("idComprobante",id_comprobante);
             //Intent intent= new Intent(contexto, Files.class);
-            //textoImpresion += textoSHA1+"\n";
+           /* //textoImpresion += textoSHA1+"\n";
             intent.putExtra("textoImpresion",textoImpresion);
             intent.putExtra("textoImpresionCabecera", textoImpresionCabecera);
             textoVentaImpresion+= textoSHA1+"\n";
             intent.putExtra("textoVentaImpresion", textoVentaImpresion);
             intent.putExtra("textoImpresionContenidoLeft", textoImpresionContenidoLeft);
-            intent.putExtra("textoImpresionContenidoRight", textoImpresionContenidoRight);
+            intent.putExtra("textoImpresionContenidoRight", textoImpresionContenidoRight);*/
             finish();
-            Toast.makeText(getApplicationContext(),"Venta Satisfactoria",Toast.LENGTH_SHORT).show();
+            /*Toast.makeText(getApplicationContext(),"Venta Satisfactoria",Toast.LENGTH_SHORT).show();*/
             //Toast.makeText(getApplicationContext(),"SHA1 : "+s,Toast.LENGTH_LONG).show();
             startActivity(intent);
         }

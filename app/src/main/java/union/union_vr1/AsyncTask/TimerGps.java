@@ -51,7 +51,8 @@ public class TimerGps extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int floga, int startId) {
-
+        int idAgente = dbAdapter_temp_session.fetchVarible(1);
+        Log.e("ESTABIEN",""+idAgente+"****");
         Log.i("Empezo el Servicio", "START");
         lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,300000,0,li);
         return Service.START_STICKY;
@@ -66,7 +67,7 @@ public class TimerGps extends Service {
 
         @Override
         public void onLocationChanged(Location location) {
-            localizacionAngente = new LocalizacionAngente(context);
+
             if (location != null){
 
                 Log.i("POSITION",""+isNetworkAvailable());
@@ -79,7 +80,9 @@ public class TimerGps extends Service {
         }
         private void sendPosition(Location location){
             int slideIdAgente = dbAdapter_temp_session.fetchVarible(1);
-            localizacionAngente.execute(""+slideIdAgente,""+location.getLatitude(),""+location.getLongitude());
+            //localizacionAngente.execute(""+slideIdAgente,""+location.getLatitude(),""+location.getLongitude() );
+            Log.d("LATLONG",""+slideIdAgente+"-"+location.getLatitude()+"-"+location.getLongitude());
+            new LocalizacionAngente(context).execute(""+slideIdAgente,""+location.getLatitude(),""+location.getLongitude());
         }
         private boolean isNetworkAvailable() {
             ConnectivityManager connectivityManager
