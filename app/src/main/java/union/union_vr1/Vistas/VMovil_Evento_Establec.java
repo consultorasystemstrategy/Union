@@ -105,6 +105,7 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
     TextView textViewSlideCobro;
     TextView textViewSlideMantenimiento;
     TextView textViewSlideCanjesDevoluciones;
+    private TextView textViewSlideCargar;
 
     int slideIdEstablecimiento;
 
@@ -374,6 +375,10 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
                 //Toast.makeText(getApplicationContext(),
                 //        "1", Toast.LENGTH_SHORT).show();
                 break;
+            case R.id.slide_textViewCargarInventario:
+                Intent cInventario = new Intent(this, VMovil_Cargar_Inventario.class);
+                startActivity(cInventario);
+                break;
             case R.id.VEE_BTNcandev:
 
                 Intent idh = new Intent(this, VMovil_Evento_Canjes_Dev.class);
@@ -515,7 +520,8 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
         textviewSlideGastos = (TextView)findViewById(R.id.slide_TextViewGastos);
         textviewSlideResumen = (TextView)findViewById(R.id.slide_textViewResumen);
         textviewSlideARendir = (TextView)findViewById(R.id.slide_textViewARendir);
-
+        textViewSlideCargar = (TextView)findViewById(R.id.slide_textViewCargarInventario);
+        textViewSlideCargar.setOnClickListener(this);
 
         textViewSlideNombreEstablecimiento = (TextView)findViewById(R.id.slideVentas_textViewCliente);
         buttonSlideVentaDeHoy  = (Button)findViewById(R.id.slideVentas_buttonVentaCosto);

@@ -29,6 +29,8 @@ public class TimerGps extends Service {
     Context context;
     DbAdapter_Temp_Session dbAdapter_temp_session;
 
+
+
     @Override
     public IBinder onBind(Intent intent) {
         return null;
@@ -52,7 +54,7 @@ public class TimerGps extends Service {
         int idAgente = dbAdapter_temp_session.fetchVarible(1);
         Log.e("ESTABIEN",""+idAgente+"****");
         Log.i("Empezo el Servicio", "START");
-        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,8000,0,li);
+        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,300000,0,li);
         return Service.START_STICKY;
     }
 

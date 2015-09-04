@@ -86,7 +86,7 @@ public class VMovil_Evento_Gasto extends Activity implements View.OnClickListene
     TextView textViewSlideNombreAgente;
     TextView textViewSlideNombreRuta;
     Button buttonSlideNroEstablecimiento;
-
+    private TextView textViewSlideCargar;
     TextView textViewIngresosTotales;
     TextView textViewGastos;
 
@@ -257,6 +257,10 @@ public class VMovil_Evento_Gasto extends Activity implements View.OnClickListene
                 Intent ip1 = new Intent(this, VMovil_Evento_Indice.class);
                 finish();
                 startActivity(ip1);
+                break;
+            case R.id.slide_textViewCargarInventario:
+                Intent cInventario = new Intent(this, VMovil_Cargar_Inventario.class);
+                startActivity(cInventario);
                 break;
             case R.id.slide_textViewClientes:
                 Intent ic1 = new Intent(this, VMovil_Menu_Establec.class);
@@ -690,7 +694,8 @@ public class VMovil_Evento_Gasto extends Activity implements View.OnClickListene
         textViewIngresosTotales = (TextView) findViewById(R.id.textView_IngresosTotales);
         textViewGastos = (TextView) findViewById(R.id.textView_Gastos);
 
-
+        textViewSlideCargar = (TextView)findViewById(R.id.slide_textViewCargarInventario);
+        textViewSlideCargar.setOnClickListener(this);
 
         textViewSlidePrincipal.setOnClickListener(this);
         textViewSlideCliente.setOnClickListener(this);

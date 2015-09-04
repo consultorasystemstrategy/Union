@@ -74,6 +74,7 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity implements View.OnClic
     TextView textviewSlideGastos;
     TextView textviewSlideResumen;
     TextView textviewSlideARendir;
+    private TextView textViewSlideCargar;
     TextView textViewSlideNombreAgente;
     TextView textViewSlideNombreRuta;
 
@@ -488,7 +489,8 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity implements View.OnClic
         textViewSlideCanjesDevoluciones  = (TextView)findViewById(R.id.slideVentas_textviewCanjesDevoluciones);
 
 
-
+        textViewSlideCargar = (TextView)findViewById(R.id.slide_textViewCargarInventario);
+        textViewSlideCargar.setOnClickListener(this);
 
 
         textViewSlidePrincipal.setOnClickListener(this);
@@ -618,6 +620,10 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity implements View.OnClic
                 Intent ip1 = new Intent(this, VMovil_Evento_Indice.class);
                 finish();
                 startActivity(ip1);
+                break;
+            case R.id.slide_textViewCargarInventario:
+                Intent cInventario = new Intent(this, VMovil_Cargar_Inventario.class);
+                startActivity(cInventario);
                 break;
             case R.id.slide_textViewClientes:
                 Intent ic1 = new Intent(this, VMovil_Menu_Establec.class);

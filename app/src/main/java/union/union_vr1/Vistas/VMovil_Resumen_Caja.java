@@ -69,7 +69,7 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
     private TextView textViewResumenGastosTotalPlanta;
     private View viewlayoutFooterGastos;
     private TextView textViewResumenGastoNombre;
-
+    private TextView textViewSlideCargar;
     private TextView textViewResumenIngresos;
     private TextView textViewResumenGastos;
     private TextView textViewResumenARendir;
@@ -500,6 +500,10 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
         switch (v.getId()) {
 
             //SLIDING MENU
+            case R.id.slide_textViewCargarInventario:
+                Intent cInventario = new Intent(this, VMovil_Cargar_Inventario.class);
+                startActivity(cInventario);
+                break;
             case R.id.slide_textviewPrincipal:
                 Intent ip1 = new Intent(this, VMovil_Evento_Indice.class);
                 finish();
@@ -560,7 +564,8 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
         textViewIngresosTotales = (TextView) findViewById(R.id.textView_IngresosTotales);
         textViewGastos = (TextView) findViewById(R.id.textView_Gastos);
 
-
+        textViewSlideCargar = (TextView)findViewById(R.id.slide_textViewCargarInventario);
+        textViewSlideCargar.setOnClickListener(this);
 
         textViewSlidePrincipal.setOnClickListener(this);
         textViewSlideCliente.setOnClickListener(this);

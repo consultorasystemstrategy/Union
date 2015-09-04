@@ -53,6 +53,7 @@ public class VMovil_Menu_Establec extends Activity implements View.OnClickListen
     private int idLiquidacion;
     private Activity mainActivity;
     private Button buttonAgregarEstablecimiento;
+    private TextView textViewSlideCargar;
 
 
     //SLIDING MENU
@@ -337,7 +338,8 @@ public class VMovil_Menu_Establec extends Activity implements View.OnClickListen
 
         textViewIngresosTotales = (TextView) findViewById(R.id.textView_IngresosTotales);
         textViewGastos = (TextView) findViewById(R.id.textView_Gastos);
-
+        textViewSlideCargar = (TextView)findViewById(R.id.slide_textViewCargarInventario);
+        textViewSlideCargar.setOnClickListener(this);
 
 
         textViewSlidePrincipal.setOnClickListener(this);
@@ -440,6 +442,10 @@ public class VMovil_Menu_Establec extends Activity implements View.OnClickListen
             case R.id.buttonAddEstablecimientos:
                 Intent iae = new Intent(this, activity_agregar_establecimiento.class);
                 startActivity(iae);
+                break;
+            case R.id.slide_textViewCargarInventario:
+                Intent cInventario = new Intent(this, VMovil_Cargar_Inventario.class);
+                startActivity(cInventario);
                 break;
 
             //SLIDING MENU

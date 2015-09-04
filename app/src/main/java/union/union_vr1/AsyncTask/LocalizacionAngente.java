@@ -28,7 +28,6 @@ public class LocalizacionAngente extends AsyncTask<String, String, String> {
     JSONObject jsonObject = null;
 
     public LocalizacionAngente(Context ctx) {
-
         context = ctx;
     }
 
@@ -66,7 +65,7 @@ public class LocalizacionAngente extends AsyncTask<String, String, String> {
     @Override
     protected void onPostExecute(String s) {
         Log.e("TERMINO", "" + s);
-        cancel(true);
+
     }
 
     @Override

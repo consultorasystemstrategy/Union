@@ -62,6 +62,7 @@ public class VMovil_Cobros_Totales extends Activity implements View.OnClickListe
     SlidingMenu menu;
     View layoutSlideMenu;
     TextView textViewSlidePrincipal;
+    private TextView textViewSlideCargar;
     TextView textViewSlideCliente;
     TextView textviewSlideCobranzas;
     TextView textviewSlideGastos;
@@ -300,7 +301,8 @@ public class VMovil_Cobros_Totales extends Activity implements View.OnClickListe
 
         textViewIngresosTotales = (TextView) findViewById(R.id.textView_IngresosTotales);
         textViewGastos = (TextView) findViewById(R.id.textView_Gastos);
-
+        textViewSlideCargar = (TextView)findViewById(R.id.slide_textViewCargarInventario);
+        textViewSlideCargar.setOnClickListener(this);
 
 
 
@@ -400,6 +402,10 @@ public class VMovil_Cobros_Totales extends Activity implements View.OnClickListe
                 Intent ip1 = new Intent(this, VMovil_Evento_Indice.class);
                 finish();
                 startActivity(ip1);
+                break;
+            case R.id.slide_textViewCargarInventario:
+                Intent cInventario = new Intent(this, VMovil_Cargar_Inventario.class);
+                startActivity(cInventario);
                 break;
             case R.id.slide_textViewClientes:
                 Intent ic1 = new Intent(this, VMovil_Menu_Establec.class);
