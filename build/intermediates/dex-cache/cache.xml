@@ -2,39 +2,39 @@
 <items version="2" >
 
     <item
-        jar="D:\S\UnionC\app\build\intermediates\exploded-aar\com.android.support\support-v4\20.0.0\classes.jar"
-        jumboMode="false"
-        revision="20.0.0"
-        sha1="8694693636ab36910c8100ce527c258ff3ebece0">
-        <dex dex="D:\S\UnionC\app\build\intermediates\pre-dexed\debug\classes-963767e11e37b1e3f9550eb47cc583005fef304b.jar" />
-    </item>
-    <item
-        jar="C:\Users\Usuario\Documents\Android sdk\sdk\extras\android\m2repository\com\android\support\support-annotations\20.0.0\support-annotations-20.0.0.jar"
-        jumboMode="false"
-        revision="20.0.0"
-        sha1="9d9013e9ff35fc3756411e62873c363c70c638fa">
-        <dex dex="D:\S\UnionC\app\build\intermediates\pre-dexed\debug\support-annotations-20.0.0-f4bd96101da5f3701e9b51ac50bbcdc23c685128.jar" />
-    </item>
-    <item
-        jar="D:\S\UnionC\app\build\intermediates\exploded-aar\com.android.support\support-v4\20.0.0\libs\internal_impl-20.0.0.jar"
-        jumboMode="false"
-        revision="20.0.0"
-        sha1="e40b3078e3fbd353c9f44da8df25a8fc0078209d">
-        <dex dex="D:\S\UnionC\app\build\intermediates\pre-dexed\debug\internal_impl-20.0.0-f8f23f44c6ca4ae28197eaead20645b5f154d142.jar" />
-    </item>
-    <item
-        jar="D:\S\UnionC\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\20.0.0\classes.jar"
+        jar="C:\Users\Kelvin\AndroidStudioProjects\Union\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\20.0.0\classes.jar"
         jumboMode="false"
         revision="20.0.0"
         sha1="f21927d22fe31889ecce94dd697a2e75b137e0ef">
-        <dex dex="D:\S\UnionC\app\build\intermediates\pre-dexed\debug\classes-cea7e2cae58b2c579d8b2cb2fac1ada9af9d59ca.jar" />
+        <dex dex="C:\Users\Kelvin\AndroidStudioProjects\Union\app\build\intermediates\pre-dexed\debug\classes-ff15a9424ce9d7087b5a387eb768466fab2e2d15.jar" />
     </item>
     <item
-        jar="D:\S\UnionC\app\build\intermediates\exploded-aar\UnionC\SlidingMenu\unspecified\classes.jar"
+        jar="C:\Users\Kelvin\AndroidStudioProjects\Union\app\build\intermediates\exploded-aar\com.android.support\support-v4\20.0.0\classes.jar"
         jumboMode="false"
         revision="20.0.0"
-        sha1="ba5798e18fc8e3928f2df9db90db3d6854607928">
-        <dex dex="D:\S\UnionC\app\build\intermediates\pre-dexed\debug\classes-323426a5465baaee14a656c995dc37485c6e3102.jar" />
+        sha1="8694693636ab36910c8100ce527c258ff3ebece0">
+        <dex dex="C:\Users\Kelvin\AndroidStudioProjects\Union\app\build\intermediates\pre-dexed\debug\classes-62d02fc8b0a869fad76ab63ca713a687702205e1.jar" />
+    </item>
+    <item
+        jar="C:\Users\Kelvin\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\20.0.0\support-annotations-20.0.0.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="9d9013e9ff35fc3756411e62873c363c70c638fa">
+        <dex dex="C:\Users\Kelvin\AndroidStudioProjects\Union\app\build\intermediates\pre-dexed\debug\support-annotations-20.0.0-27c39329d8e04f35bea8670986ac04ae59bbe5c1.jar" />
+    </item>
+    <item
+        jar="C:\Users\Kelvin\AndroidStudioProjects\Union\app\build\intermediates\exploded-aar\com.android.support\support-v4\20.0.0\libs\internal_impl-20.0.0.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="e40b3078e3fbd353c9f44da8df25a8fc0078209d">
+        <dex dex="C:\Users\Kelvin\AndroidStudioProjects\Union\app\build\intermediates\pre-dexed\debug\internal_impl-20.0.0-7196a36fb548269dd384d780eabd70976b6849f0.jar" />
+    </item>
+    <item
+        jar="C:\Users\Kelvin\AndroidStudioProjects\Union\app\build\intermediates\exploded-aar\Union\SlidingMenu\unspecified\classes.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="bbdd911a3804469374137529df9c743fa0cf35b9">
+        <dex dex="C:\Users\Kelvin\AndroidStudioProjects\Union\app\build\intermediates\pre-dexed\debug\classes-cfc167d506c9595805266c8df060bf73a732f8f4.jar" />
     </item>
 
 </items>
