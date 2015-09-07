@@ -584,4 +584,18 @@ public class StockAgenteRestApi {
         result = new JSONObject(r);
         return result;
     }
+    public JSONObject GetInventarioAnterior(int vint_AgentaVentaId,String vstr_fecha) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","RestAPI");
+        o.put("method", "GetInventarioAnterior");
+        p.put("vint_AgentaVentaId",mapObject(vint_AgentaVentaId));
+        p.put("vstr_fecha",mapObject(vstr_fecha));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
 }

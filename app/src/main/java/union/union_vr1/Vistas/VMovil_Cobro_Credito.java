@@ -320,6 +320,7 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
                         //displayListViewVCC();
                         mSPNcredit.setText("0.0");
                         displayListViewVCC();
+                        displayListViewVCC();
 
                     }
 
