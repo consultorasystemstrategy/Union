@@ -1697,7 +1697,9 @@ Instantiate and pass a callback
         datosConcatenados+="base impornible: " + base_imponible;
         datosConcatenados+="igv : " + igv;
 
-        DecimalFormatSymbols simbolos = DecimalFormatSymbols.getInstance(Locale.ENGLISH);
+
+        DecimalFormatSymbols simbolos = DecimalFormatSymbols.getInstance(Locale.getDefault());
+        simbolos.setDecimalSeparator('.');
         DecimalFormat df = new DecimalFormat("#.00", simbolos);
 
         //3PG, STAR MICRONICS
@@ -1945,6 +1947,7 @@ Instantiate and pass a callback
         textViewFooterText.setText("Total :\n" +
                 "Base imponible :\n" +
                 "IGV :");
+
 
         DecimalFormat df = new DecimalFormat("#.00");
         textViewFooterTotal.setText(" S/. "+df.format(totalFooter)+"\n" +

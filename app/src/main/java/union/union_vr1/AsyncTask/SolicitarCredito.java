@@ -84,7 +84,6 @@ public class SolicitarCredito extends AsyncTask<String, String, String> {
                 int diasCredito =Integer.parseInt(strings[3]) ;
                 Log.d("DATOS SOLICITUD CREDITO ", idAgente + " - "+idEstablecimiento + " - "+montoCredito + " - "+diasCredito);
 
-
                 jsonObject = api.CreateSolicitudAutorizacionCreditoExp(
                         idAgente,
                         "1",

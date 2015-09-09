@@ -246,6 +246,8 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
            ventaCabecera+= "CLIENTE : "+ cliente+"\n";
            ventaCabecera+= "DNI/RUC : "+ dni_ruc+"\n";
            ventaCabecera+= "DIRECCION : "+ direccion+"\n";
+           ventaCabecera+= "SHA1 : "+ sha1+"\n";
+
 
 
 
@@ -338,20 +340,14 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
                texto += String.format("%-18s","I.G.V.")+String.format("%-21s","S/.")+  String.format("%1$9s",df.format(igv));
                texto += String.format("%-18s","PRECIO VENTA")+String.format("%-21s","S/.")+  String.format("%1$9s",df.format(precio_venta))+"\n\n";
                texto+= "------------------------------------------------------".substring(0,48)+"\n";
-               texto+= "Son "+ NumberToLetterConverter.convertNumberToLetter(df.format(precio_venta)).toLowerCase()+"\n";
+               texto+= "Son "+ NumberToLetterConverter.convertNumberToLetter(df.format(precio_venta).replace(',','.')).toLowerCase()+"\n";
                texto+= "------------------------------------------------------".substring(0,48)+"\n";
                texto+= "VENDEDOR : "+ nombreAgente+"\n";
-
                break;
            default:
                texto+=" NO SE PUEDE RECONOCER EL NÚMERO DE PULGADAS...";
                break;
        }
-
-
-
-
-
         return texto;
     }
     @Override
@@ -363,10 +359,8 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
     @Override
     public void onClick(View view) {
 
-
         switch (view.getId()){
             case R.id.buttonSincronizar:
-
 
                 if (!mBluetoothAdapter.isEnabled()) {
                     Intent enableBluetooth = new Intent(

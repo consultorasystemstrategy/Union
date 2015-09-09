@@ -258,6 +258,30 @@
                     android:drawableLeft="@drawable/ic_action_view_as_list"
                     android:drawablePadding="16dp"
                     android:textSize="16dp" />
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Cargar Inventario"
+                    android:id="@+id/slide_textViewCargarInventario"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:gravity="left|center_vertical"
+                    android:textColor="@color/Blanco"
+                    android:drawableLeft="@drawable/ic_action_view_as_list"
+                    android:drawablePadding="16dp"
+                    android:textSize="16dp" />
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Consultar Inventario"
+                    android:id="@+id/slide_textViewConsultarInventario"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:gravity="left|center_vertical"
+                    android:textColor="@color/Blanco"
+                    android:drawableLeft="@drawable/ic_action_view_as_list"
+                    android:drawablePadding="16dp"
+                    android:textSize="16dp" />
             </LinearLayout>
 
             <LinearLayout
