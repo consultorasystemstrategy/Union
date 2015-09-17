@@ -195,8 +195,8 @@
         </activity>
         <activity
             android:name=".Vistas.VMovil_Consultar_Inventario"
-            android:windowSoftInputMode="stateVisible|adjustPan"
-            android:label="@string/title_activity_app_preferences" >
+            android:label="@string/title_activity_app_preferences"
+            android:windowSoftInputMode="stateVisible|adjustPan" >
         </activity>
         <activity
             android:name=".Vistas.CalendarViewInventario"
@@ -204,14 +204,18 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
-        android:name=".Vistas.VMovil_Cargar_Inventario"
-        android:label="@string/title_activity_vmovil__cargar__inventario"
-        android:screenOrientation="portrait"
-        android:windowSoftInputMode="stateVisible|adjustPan" >
-    </activity>
+            android:name=".Vistas.VMovil_Cargar_Inventario"
+            android:label="@string/title_activity_vmovil__cargar__inventario"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateVisible|adjustPan" >
+        </activity>
         <activity
             android:name=".Vistas.ImprimirArqueoCaja"
             android:label="@string/title_activity_imprimir_arqueo_caja" >
+        </activity>
+        <activity
+            android:name=".Vistas.VMovil_Crear_Establecimiento"
+            android:label="@string/title_activity_vmovil__crear__establecimiento" >
         </activity>
     </application>
 
