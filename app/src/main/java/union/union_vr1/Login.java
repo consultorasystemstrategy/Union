@@ -19,44 +19,25 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import union.union_vr1.AsyncTask.ExportMain;
-import union.union_vr1.AsyncTask.ImportMain;
 import union.union_vr1.Conexion.JSONParser;
-import union.union_vr1.FacturacionElectronica.CodigoSHA1;
-import union.union_vr1.FacturacionElectronica.DigitalSignature;
 import union.union_vr1.JSONParser.ParserAgente;
 import union.union_vr1.Objects.Agente;
 import union.union_vr1.RestApi.StockAgenteRestApi;
-import union.union_vr1.Sqlite.DbAdapter_Agente;
-import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
-import union.union_vr1.Utils.MyApplication;
-import union.union_vr1.Vistas.VMovil_Evento_Indice;
-import union.union_vr1.Vistas.VMovil_Online_Pumovil;
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONException;
+import union.union_vr1.Sqlite.DbAdapter_Agente_Login;
+import union.union_vr1.Vistas.VMovil_Abrir_Caja;
 import org.json.JSONObject;
-import org.xml.sax.SAXException;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.List;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
 
 public class Login extends Activity implements OnClickListener{
 
 
 
-    private DbAdapter_Temp_Session session;
+   // private DbAdapter_Temp_Session session;
     private Login loginClass;
     private boolean succesLogin;
     ProgressDialog prgDialog;
@@ -71,7 +52,7 @@ public class Login extends Activity implements OnClickListener{
     Activity mainActivity;
 
     private String var1 = "";
-    private DbAdapter_Agente dbAdapter_agente;
+    private DbAdapter_Agente_Login dbAdapter_agente;
 
     public void setVar1(String var1){
         this.var1=var1;
@@ -94,7 +75,7 @@ public class Login extends Activity implements OnClickListener{
    // private static final String LOGIN_URL = "http://xxx.xxx.x.x:1234/webservice/login.php";
     
     //testing on Emulator:
-    private static final String LOGIN_URL = "http://192.168.0.158:8083/produnion/login.php";
+  //  private static final String LOGIN_URL = "http://192.168.0.158:8083/produnion/login.php";
     //private static final String LOGIN_URL = "http://192.168.0.158:8081/webservice/login.php";
   //testing from a real server:78
     //private static final String LOGIN_URL = "http://www.yourdomain.com/webservice/login.php";
@@ -105,13 +86,13 @@ public class Login extends Activity implements OnClickListener{
     private static final String TAG_NOMBRE  = "name";
 
     //JSON elementos para la tabla m_agente
-    private static final String TAG_id_agente = "id_agente";
-    private static final String TAG_id_agente_venta = "id_agente_venta";
-    private static final String TAG_id_empresa = "id_empresa";
-    private static final String TAG_id_usuario = "id_usuario";
-    private static final String TAG_nombre_agente = "nombre_agente";
-    private static final String TAG_nombre_usuario = "nombre_usuario";
-    private static final String TAG_pass_usuario = "pass_usuario";
+   // private static final String TAG_id_agente = "id_agente";
+   // private static final String TAG_id_agente_venta = "id_agente_venta";
+   // private static final String TAG_id_empresa = "id_empresa";
+   // private static final String TAG_id_usuario = "id_usuario";
+   // private static final String TAG_nombre_agente = "nombre_agente";
+   // private static final String TAG_nombre_usuario = "nombre_usuario";
+  //  private static final String TAG_pass_usuario = "pass_usuario";
     private int idAgente;
     private int idLiquidacion;
     private String nombreUsuario="";
@@ -123,26 +104,26 @@ public class Login extends Activity implements OnClickListener{
 		setContentView(R.layout.login);
 
         mainActivity = this;
-        session = new DbAdapter_Temp_Session(this);
+       /* session = new DbAdapter_Temp_Session(this);
         session.open();
+*/
 
 
-
-        idAgente = session.fetchVarible(1);
-        idLiquidacion = session.fetchVarible(3);
+      //  idAgente = session.fetchVarible(1);
+      //  idLiquidacion = session.fetchVarible(3);
 
         //((MyApplication)getApplication()).setImportado(false);
         //((MyApplication)getApplication()).setExport(false);
 
 
-        session.deleteVariable(7);
-        session.createTempSession(7,0);
-        session.deleteVariable(8);
-        session.createTempSession(8,0);
+       // session.deleteVariable(7);
+       // session.createTempSession(7,0);
+       // session.deleteVariable(8);
+       // session.createTempSession(8,0);
 
         loginClass = this;
 
-        dbAdapter_agente = new DbAdapter_Agente(this);
+        dbAdapter_agente = new DbAdapter_Agente_Login(this);
         dbAdapter_agente.open();
 
 
@@ -258,7 +239,7 @@ public class Login extends Activity implements OnClickListener{
 
             succesLogin = false;
 
-            Cursor cursorAgenteCajaActual = dbAdapter_agente.fetchAgentesByIds(idAgente,idLiquidacion);
+            Cursor cursorAgenteCajaActual = dbAdapter_agente.fetchAllAgentesVentaLogin(getDatePhone());
             cursorAgenteCajaActual.moveToFirst();
             String fechaCaja = null;
             if (cursorAgenteCajaActual.getCount()>0) {
@@ -287,21 +268,21 @@ public class Login extends Activity implements OnClickListener{
 
 */
 
-                session.deleteVariable(1);
+              /*  session.deleteVariable(1);
                 session.deleteVariable(3);
                 session.deleteVariable(4);
                 session.deleteVariable(6);
-                session.deleteVariable(9);
+                session.deleteVariable(9);*/
 
-                session.createTempSession(1,cursorAgenteCajaActual.getInt(cursorAgenteCajaActual.getColumnIndexOrThrow(dbAdapter_agente.AG_id_agente_venta)));
+               /* session.createTempSession(1,cursorAgenteCajaActual.getInt(cursorAgenteCajaActual.getColumnIndexOrThrow(dbAdapter_agente.AG_id_agente_venta)));
                 session.createTempSession(3,cursorAgenteCajaActual.getInt(cursorAgenteCajaActual.getColumnIndexOrThrow(dbAdapter_agente.AG_liquidacion)));
                 session.createTempSession(4,cursorAgenteCajaActual.getInt(cursorAgenteCajaActual.getColumnIndexOrThrow(dbAdapter_agente.AG_id_usuario)));
                 session.createTempSession(6,0);
-                session.createTempSession(9,1);
+                session.createTempSession(9,1);*/
 
 
                 Toast.makeText(getApplicationContext(), "Login correcto", Toast.LENGTH_SHORT).show();
-                Intent i = new Intent(Login.this, VMovil_Evento_Indice.class);
+                Intent i = new Intent(Login.this, VMovil_Abrir_Caja.class);
                 finish();
                 startActivity(i);
             }else{
@@ -323,6 +304,8 @@ public class Login extends Activity implements OnClickListener{
 	}
 
     class LoginRest extends AsyncTask<String, String, String>{
+        private String usuario;
+        private String clave;
 
         @Override
         protected String doInBackground(String... strings) {
@@ -333,8 +316,9 @@ public class Login extends Activity implements OnClickListener{
 
             publishProgress("" + 10);
             try {
+
                 Log.d("LOGIN DATOS , ", ""+user.getText().toString()+" - " + pass.getText().toString() + " - "+getDatePhone());
-                jsonObjAgente = api.GetAgenteVenta(user.getText().toString(),pass.getText().toString(), getDatePhone());
+                jsonObjAgente = api.GetDatosAgente(user.getText().toString(),pass.getText().toString());
                 Log.d("JSON OBJECT AGENTE", ""+jsonObjAgente.toString());
             } catch (Exception e) {
                 e.printStackTrace();
@@ -342,11 +326,13 @@ public class Login extends Activity implements OnClickListener{
             ParserAgente parserAgente = new ParserAgente();
 
             publishProgress(""+25);
-            agenteLista = parserAgente.parserAgente(jsonObjAgente);
+            agenteLista = parserAgente.parserAgenteDatos(jsonObjAgente);
 
             publishProgress(""+50);
             if (agenteLista.size()>0){
                 succesLogin = true;
+                usuario = user.getText().toString();
+                clave = pass.getText().toString();
                 for (int i = 0; i < agenteLista.size() ; i++) {
                     Log.d("Agente"+i, "Nombre : "+agenteLista.get(i).getNombreAgente());
 
@@ -357,7 +343,7 @@ public class Login extends Activity implements OnClickListener{
                     ((MyApplication) loginClass.getApplication()).setDisplayedHistorialComprobanteAnterior(false);
                     ((MyApplication) loginClass.getApplication()).setIdUsuario(agenteLista.get(i).getIdUsuario());
 */
-
+/*
                     session.deleteVariable(1);
                     session.deleteVariable(3);
                     session.deleteVariable(4);
@@ -378,16 +364,16 @@ public class Login extends Activity implements OnClickListener{
                     session.createTempSession(11,correlativoBoleta);
 
 
-
+*/
 
                     agenteLista.get(i).getIdAgenteVenta();
                     boolean existe = dbAdapter_agente.existeAgentesById(agenteLista.get(i).getIdAgenteVenta());
                     Log.d("EXISTE ", ""+existe);
                     if (existe){
-                        dbAdapter_agente.updateAgente(agenteLista.get(i), getDatePhone());
+                        dbAdapter_agente.updateAgente(agenteLista.get(i), getDatePhone(),usuario,clave);
                     }else {
                         //NO EXISTE ENTONCES CREEMOS UNO NUEVO
-                        dbAdapter_agente.createAgente(agenteLista.get(i), getDatePhone());
+                        dbAdapter_agente.createAgente(agenteLista.get(i), getDatePhone(),usuario,clave);
                     }
                 }
             }
@@ -423,7 +409,7 @@ public class Login extends Activity implements OnClickListener{
             if (succesLogin){
 
                 Toast.makeText(getApplicationContext(), "Login correcto", Toast.LENGTH_SHORT).show();
-                Intent i = new Intent(Login.this, VMovil_Evento_Indice.class);
+                Intent i = new Intent(Login.this, VMovil_Abrir_Caja.class);
                 finish();
                 startActivity(i);
             }else{

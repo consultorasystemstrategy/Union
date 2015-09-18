@@ -10,6 +10,7 @@ import union.union_vr1.Sqlite.DBAdapter_Temp_Autorizacion_Cobro;
 import union.union_vr1.Sqlite.DBAdapter_Temp_Inventario;
 import union.union_vr1.Sqlite.DBAdapter_Temp_Venta;
 import union.union_vr1.Sqlite.DbAdapter_Agente;
+import union.union_vr1.Sqlite.DbAdapter_Agente_Login;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
 import union.union_vr1.Sqlite.DbAdapter_Histo_Comprob_Anterior;
 import union.union_vr1.Sqlite.DbAdapter_Resumen_Caja;
@@ -75,6 +76,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(DbAdapter_Ruta_Distribucion.CREATE_TABLE_RUTA_DISTRIBUCION);
         db.execSQL(DBAdapter_Temp_Inventario.CREATE_TABLE_TEMP_VENTA_Inventario);
         db.execSQL(DBAdapter_Consultar_Inventario_Anterior.CREATE_TABLE_TEMP_CONSULTAR_Inventario);
+        db.execSQL(DbAdapter_Agente_Login.CREATE_TABLE_AGENTE);
 
 
 
@@ -105,6 +107,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(DbAdapter_Ruta_Distribucion.DELETE_TABLE_RUTA_DISTRIBUCION);
         db.execSQL(DBAdapter_Temp_Inventario.DELETE_TABLE_TEMP_VENTA_DETALLE);
         db.execSQL(DBAdapter_Consultar_Inventario_Anterior.DELETE_TABLE_TEMP_CONSULTAR_Inventario);
+        db.execSQL(DbAdapter_Agente_Login.CREATE_TABLE_AGENTE);
         onCreate(db);
     }
 }

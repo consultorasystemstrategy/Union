@@ -380,6 +380,7 @@ public class DbAdapter_Agente {
         return cr.getString(cr.getColumnIndexOrThrow(AG_nombre_agente));
     }
 
+
     private String M_id_agente_venta;
     private String M_liquidacion;
     private String M_km_inicial;

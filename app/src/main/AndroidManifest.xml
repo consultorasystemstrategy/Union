@@ -217,6 +217,10 @@
             android:name=".Vistas.VMovil_Crear_Establecimiento"
             android:label="@string/title_activity_vmovil__crear__establecimiento" >
         </activity>
+        <activity
+            android:name=".Vistas.VMovil_Abrir_Caja"
+            android:screenOrientation="portrait">
+        </activity>
     </application>
 
 </manifest>

@@ -56,6 +56,35 @@ public class ParserAgente {
         }
         return arrayList;
     }
+    public ArrayList<Agente> parserAgenteDatos(JSONObject object)
+    {
+        ArrayList<Agente> arrayList=new ArrayList<Agente>();
+        try {
+            JSONArray jsonArray=object.getJSONArray("Value");
+            JSONObject jsonObj=null;
+            for(int i=0;i<jsonArray.length();i++)
+            {
+                jsonObj=jsonArray.getJSONObject(i);
+                arrayList.add(new Agente(
+                        jsonObj.getInt("AgenteVentaId"),
+                        jsonObj.getString("nombre"),
+                        jsonObj.getString("serieBoleta"),
+                        jsonObj.getString("serieFactura"),
+                        jsonObj.getInt("correlativoBoleta"),
+                        jsonObj.getInt("correlativoFactura"),
+                        "0",
+                        1,
+                        Constants._IMPORTADO,
+                        jsonObj.getInt("Liquidacion")
+                ));
+            }
+
+        } catch (JSONException e) {
+            // TODO Auto-generated catch block
+            Log.d("JSONParser => parseAgente", e.getMessage());
+        }
+        return arrayList;
+    }
 
 
 

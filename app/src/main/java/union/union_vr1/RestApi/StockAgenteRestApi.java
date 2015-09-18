@@ -598,4 +598,95 @@ public class StockAgenteRestApi {
         result = new JSONObject(r);
         return result;
     }
+    public JSONObject InsUpdLocalizacionPrueba(String PerVNombres,String PerVApellPaterno,String PerVApellMaterno,String PerVDocIdentidad,String PerVCelular,String PerVEmail,int PerBEstado,int PerITipoDocIdentidadId,int PerITipoPersonaId,int PerIUsuarioId,String PerVCodigoERP,int PerIEmpresaId,String CliVCodigo,String CliVDocidentidad,int CliBEstado,int CliICategoriaClienteId,int CliIDiasLimiteCredito,int CliIAgenteVentaId,int CliIUsuarioId,int CliBEstadoAtencion,double CliDOMontoCredito,int CliIModalidadCreditoId,String CliDTFechaLimiteCredito,String DirVDescripcion,int DirBEstado,int DirIDistritoId,String DirVTelefonoFijo,String DirVCelular1,String DirVCelular2,int DirIUsuarioId,int DirBEstablecimientoAsociado,int DirBDireccionFiscal,int EstIRutaId,String EstVDescripcion,int EstIOrden,int EstBEstado,int EstIUsuarioId,int EstIPorcentajeDevolucion,int EstICatEstablecimientoId,String EstVExhibidor,double EstDOMontoCompra,int EstITipEstId,String EstVCodigoBarra,String LocVLongitude,String LocVLatitude,int LocBEstado,int LocIUsuarioId,int EveeIAtencionEstablecimientoId,int EveeBILiquidacionCajaId,int EveeIMotivoNoAtendidoId,int EveeIRutaId) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","RestAPI");
+        o.put("method", "InsUpdLocalizacionPrueba");
+        p.put("PerVNombres",mapObject(PerVNombres));
+        p.put("PerVApellPaterno",mapObject(PerVApellPaterno));
+        p.put("PerVApellMaterno",mapObject(PerVApellMaterno));
+        p.put("PerVDocIdentidad",mapObject(PerVDocIdentidad));
+        p.put("PerVCelular",mapObject(PerVCelular));
+        p.put("PerVEmail",mapObject(PerVEmail));
+        p.put("PerBEstado",mapObject(PerBEstado));
+        p.put("PerITipoDocIdentidadId",mapObject(PerITipoDocIdentidadId));
+        p.put("PerITipoPersonaId",mapObject(PerITipoPersonaId));
+        p.put("PerIUsuarioId",mapObject(PerIUsuarioId));
+        p.put("PerVCodigoERP",mapObject(PerVCodigoERP));
+        p.put("PerIEmpresaId",mapObject(PerIEmpresaId));
+        p.put("CliVCodigo",mapObject(CliVCodigo));
+        p.put("CliVDocidentidad",mapObject(CliVDocidentidad));
+        p.put("CliBEstado",mapObject(CliBEstado));
+        p.put("CliICategoriaClienteId",mapObject(CliICategoriaClienteId));
+        p.put("CliIDiasLimiteCredito",mapObject(CliIDiasLimiteCredito));
+        p.put("CliIAgenteVentaId",mapObject(CliIAgenteVentaId));
+        p.put("CliIUsuarioId",mapObject(CliIUsuarioId));
+        p.put("CliBEstadoAtencion",mapObject(CliBEstadoAtencion));
+        p.put("CliDOMontoCredito",mapObject(CliDOMontoCredito));
+        p.put("CliIModalidadCreditoId",mapObject(CliIModalidadCreditoId));
+        p.put("CliDTFechaLimiteCredito",mapObject(CliDTFechaLimiteCredito));
+        p.put("DirVDescripcion",mapObject(DirVDescripcion));
+        p.put("DirBEstado",mapObject(DirBEstado));
+        p.put("DirIDistritoId",mapObject(DirIDistritoId));
+        p.put("DirVTelefonoFijo",mapObject(DirVTelefonoFijo));
+        p.put("DirVCelular1",mapObject(DirVCelular1));
+        p.put("DirVCelular2",mapObject(DirVCelular2));
+        p.put("DirIUsuarioId",mapObject(DirIUsuarioId));
+        p.put("DirBEstablecimientoAsociado",mapObject(DirBEstablecimientoAsociado));
+        p.put("DirBDireccionFiscal",mapObject(DirBDireccionFiscal));
+        p.put("EstIRutaId",mapObject(EstIRutaId));
+        p.put("EstVDescripcion",mapObject(EstVDescripcion));
+        p.put("EstIOrden",mapObject(EstIOrden));
+        p.put("EstBEstado",mapObject(EstBEstado));
+        p.put("EstIUsuarioId",mapObject(EstIUsuarioId));
+        p.put("EstIPorcentajeDevolucion",mapObject(EstIPorcentajeDevolucion));
+        p.put("EstICatEstablecimientoId",mapObject(EstICatEstablecimientoId));
+        p.put("EstVExhibidor",mapObject(EstVExhibidor));
+        p.put("EstDOMontoCompra",mapObject(EstDOMontoCompra));
+        p.put("EstITipEstId",mapObject(EstITipEstId));
+        p.put("EstVCodigoBarra",mapObject(EstVCodigoBarra));
+        p.put("LocVLongitude",mapObject(LocVLongitude));
+        p.put("LocVLatitude",mapObject(LocVLatitude));
+        p.put("LocBEstado",mapObject(LocBEstado));
+        p.put("LocIUsuarioId",mapObject(LocIUsuarioId));
+        p.put("EveeIAtencionEstablecimientoId",mapObject(EveeIAtencionEstablecimientoId));
+        p.put("EveeBILiquidacionCajaId",mapObject(EveeBILiquidacionCajaId));
+        p.put("EveeIMotivoNoAtendidoId",mapObject(EveeIMotivoNoAtendidoId));
+        p.put("EveeIRutaId",mapObject(EveeIRutaId));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+    public JSONObject GetDatosAgente(String vstr_Usuario,String vstr_pass) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","RestAPI");
+        o.put("method", "GetDatosAgente");
+        p.put("vstr_Usuario",mapObject(vstr_Usuario));
+        p.put("vstr_pass",mapObject(vstr_pass));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+    public JSONObject InsAbrirCaja(int vint_AgenteId,int vint_KilometrajeInicial) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","RestAPI");
+        o.put("method", "InsAbrirCaja");
+        p.put("vint_AgenteId",mapObject(vint_AgenteId));
+        p.put("vint_KilometrajeInicial",mapObject(vint_KilometrajeInicial));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
 }
