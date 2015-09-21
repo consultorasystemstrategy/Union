@@ -689,4 +689,22 @@ public class StockAgenteRestApi {
         result = new JSONObject(r);
         return result;
     }
+
+    public JSONObject UpdCerrarCaja(int vint_LiquidacionCajaId,double vdou_LiqDOIngresos,double vdou_LiqDOGastos,double vdou_LiqDOMontoARendir,int vint_KilometrajeFinal) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","RestAPI");
+        o.put("method", "UpdCerrarCaja");
+        p.put("vint_LiquidacionCajaId",mapObject(vint_LiquidacionCajaId));
+        p.put("vdou_LiqDOIngresos",mapObject(vdou_LiqDOIngresos));
+        p.put("vdou_LiqDOGastos",mapObject(vdou_LiqDOGastos));
+        p.put("vdou_LiqDOMontoARendir",mapObject(vdou_LiqDOMontoARendir));
+        p.put("vint_KilometrajeFinal",mapObject(vint_KilometrajeFinal));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
 }

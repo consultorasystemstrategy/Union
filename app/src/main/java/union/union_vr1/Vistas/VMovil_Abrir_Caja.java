@@ -64,7 +64,6 @@ public class VMovil_Abrir_Caja extends Activity implements View.OnClickListener 
         if(cursorLiquidacion >0){
           //  int liquidacion = cursorLiquidacion.
             cajaestaAbierto();
-
         }
         Cursor cursor = dbAdapter_agente_login.fetchAllAgentesVentaLogin(getDatePhone());
         idAgente = cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Agente_Login.AG_id_agente_venta));
@@ -132,7 +131,8 @@ public class VMovil_Abrir_Caja extends Activity implements View.OnClickListener 
             try {
                 ParserAgente parserAgente = new ParserAgente();
                 jsonObjAgenteDatos = api.GetAgenteVenta(login_usuario, login_clave, getDatePhone());
-                agenteLista = parserAgente.parserAgenteDatos(jsonObjAgenteDatos);
+                //agenteLista = parserAgente.parserAgenteDatos(jsonObjAgenteDatos);
+                agenteLista = parserAgente.parserAgente(jsonObjAgenteDatos, login_usuario, login_clave);
                 Log.d("JSON OBJECT AGENTE", "" + jsonObjAgenteDatos.toString());
                 if (agenteLista.size() > 0) {
                     succesLogin = true;
@@ -199,13 +199,22 @@ public class VMovil_Abrir_Caja extends Activity implements View.OnClickListener 
                 Log.d("LOGIN DATOS", "" + idAgente + "----" + kilometraje);
                 jsonObjAgente = api.InsAbrirCaja(idAgente, kilometraje);
                 Log.d("JSON OBJECT AbrirCaja", "" + jsonObjAgente.toString());
-                int objrturn = Integer.parseInt(jsonObjAgente.get("Value").toString());
-                if (objrturn > 1) {
-                    Toast.makeText(getApplicationContext(), "Exito : se abrio caja, espere... importando datos", Toast.LENGTH_SHORT).show();
+                int objrturn = -1;
+                objrturn = jsonObjAgente.getInt("Value");
+                Log.d("JSON RETURN INT CAJA",""+objrturn);
+                if (objrturn > 0) {
+
+                    runOnUiThread(new Runnable(){
+                        @Override
+                        public void run(){
+                            Toast.makeText(getApplicationContext(), "ABRIENDO CAJA...", Toast.LENGTH_SHORT).show();
+                        }
+                    });
                     jsonObjAgenteDatos = api.GetAgenteVenta(login_usuario, login_clave, getDatePhone());
                     ParserAgente parserAgente = new ParserAgente();
-                    agenteLista = parserAgente.parserAgenteDatos(jsonObjAgenteDatos);
-                    Log.d("JSON OBJECT AGENTE", "" + jsonObjAgente.toString());
+                    //agenteLista = parserAgente.parserAgenteDatos(jsonObjAgenteDatos);
+                    agenteLista = parserAgente.parserAgente(jsonObjAgenteDatos, login_usuario, login_clave);
+                    Log.d("JSON OBJECT AGENTE", "" + jsonObjAgenteDatos.toString());
 
                     if (agenteLista.size() > 0) {
                         succesLogin = true;
@@ -240,14 +249,24 @@ public class VMovil_Abrir_Caja extends Activity implements View.OnClickListener 
                                 dbAdapter_agente.createAgente(agenteLista.get(i), getDatePhone());
                             }
                         }
-                        Toast.makeText(getApplicationContext(),"Datos Actualizados",Toast.LENGTH_SHORT).show();
+                        runOnUiThread(new Runnable(){
+                            @Override
+                            public void run(){
+                                Toast.makeText(getApplicationContext(),"DATOS ACTUALIZADOS",Toast.LENGTH_SHORT).show();
+                            }
+                        });
                     }
 
                 } else {
                     if (conectadoRedMovil() || conectadoWifi()) {
 
                     } else {
-                        Toast.makeText(getApplicationContext(), "Necesita estar conectado a internet la primera vez", Toast.LENGTH_SHORT).show();
+                        runOnUiThread(new Runnable(){
+                            @Override
+                            public void run(){
+                                Toast.makeText(getApplicationContext(), "NO HAY CONEXIÓN A INTERNET", Toast.LENGTH_SHORT).show();
+                            }
+                        });
                     }
 
                 }
@@ -261,13 +280,18 @@ public class VMovil_Abrir_Caja extends Activity implements View.OnClickListener 
         @Override
         protected void onPostExecute(String s) {
             if (succesLogin){
-
-                Toast.makeText(getApplicationContext(), "Login correcto", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "ÉXITO", Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(getApplicationContext(), VMovil_Evento_Indice.class);
                 finish();
                 startActivity(i);
             }else{
-                Toast.makeText(getApplicationContext(), "Debe abrir Caja para hoy, o las credenciales son incorrectas", Toast.LENGTH_SHORT).show();
+                runOnUiThread(new Runnable(){
+                    @Override
+                    public void run(){
+                        Toast.makeText(getApplicationContext(), "ERROR, INTENTE DE NUEVO", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
             }
             super.onPostExecute(s);
         }

@@ -125,8 +125,6 @@ public class SolicitarCredito extends AsyncTask<String, String, String> {
 
             progressDialog.setProgress(100);
             dismissProgressDialog();
-
-
         }
 
         super.onPostExecute(s);

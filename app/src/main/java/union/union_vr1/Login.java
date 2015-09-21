@@ -326,8 +326,8 @@ public class Login extends Activity implements OnClickListener{
             ParserAgente parserAgente = new ParserAgente();
 
             publishProgress(""+25);
-            agenteLista = parserAgente.parserAgenteDatos(jsonObjAgente);
-
+            //agenteLista = parserAgente.parserAgenteDatos(jsonObjAgente);
+            agenteLista = parserAgente.parserAgente(jsonObjAgente, user.getText().toString(), pass.getText().toString());
             publishProgress(""+50);
             if (agenteLista.size()>0){
                 succesLogin = true;

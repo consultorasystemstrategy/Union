@@ -2463,9 +2463,11 @@ Instantiate and pass a callback
 
             Log.d("GENERATE DS", ""+30);
 
-            byte[] byteReads = null;
+            //byte[] byteReads = null;
+            String textoRead="";
             try {
-                byteReads = handlerXML.leerXML(contexto);
+                //byteReads = handlerXML.leerXML(contexto);
+                textoRead = handlerXML.leerXML(contexto);
                 Log.d("GENERATE DS", ""+60);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -2477,9 +2479,11 @@ Instantiate and pass a callback
             try {
 
                 //String textoSHA1 = CodigoSHA1.SHA1(texto);
-                textoSHA1 = CodigoSHA1.SHA1(byteReads);
+//                textoSHA1 = CodigoSHA1.SHA1(byteReads);
+                textoSHA1 = CodigoSHA1.SHA1(textoRead);
+
                 Log.d("GENERATE DS", ""+70);
-                String str = new String(byteReads, "iso-8859-1");
+                //String str = new String(byteReads, "iso-8859-1");
                 //textView.append(str + " a SHA-1: " + textoSHA1 + ".\n");
             } catch (NoSuchAlgorithmException e) {
                 e.printStackTrace();

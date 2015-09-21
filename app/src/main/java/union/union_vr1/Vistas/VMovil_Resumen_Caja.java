@@ -2,22 +2,34 @@ package union.union_vr1.Vistas;
 
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.TabActivity;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Typeface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CursorAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
@@ -28,6 +40,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import union.union_vr1.AsyncTask.CerrarCaja;
+import union.union_vr1.AsyncTask.SolicitarCredito;
 import union.union_vr1.R;
 import union.union_vr1.Sqlite.CursorResumenComprobantes;
 import union.union_vr1.Sqlite.DbAdapter_Agente;
@@ -131,7 +145,7 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
     Double slide_gastosTotales = 0.0;
     Double slide_aRendir = 0.0;
 
-
+    private CerrarCaja cerrarCaja;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -151,6 +165,7 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
         //SLIDING MENU
         dbGastosIngresos = new DbGastos_Ingresos(this);
         dbGastosIngresos.open();
+        cerrarCaja = new CerrarCaja(mainActivity);
 
         //dbAdapter_informe_gastos = new DbAdapter_Informe_Gastos(this);
         //dbAdapter_informe_gastos.open();
@@ -469,13 +484,64 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
             public void onClick(View v) {
                 session.deleteVariable(9);
                 session.createTempSession(9, 0);
-                Intent intent = new Intent(activity, VMovil_Online_Pumovil.class);
+                /*Intent intent = new Intent(activity, VMovil_Online_Pumovil.class);
                 finish();
-                startActivity(intent);
+                startActivity(intent);*/
+
+                if (conectadoWifi()||conectadoRedMovil()) {
+                    new AlertDialog.Builder(mainActivity)
+                            .setTitle("Cerrar caja")
+                            .setMessage("" +
+                                    "¿Está seguro que desea cerrar caja?")
+                            .setNegativeButton(android.R.string.no,new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+
+                                }
+                            })
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialogCerrarCaja().show();
+                                }
+                            }).create().show();
+
+                }else{
+                    Toast toast = Toast.makeText(mainActivity, "No se puede cerrar caja sin conexión.", Toast.LENGTH_SHORT);
+                    toast.getView().setBackgroundColor(mainActivity.getResources().getColor(R.color.verde));
+                    TextView view = (TextView) toast.getView().findViewById(android.R.id.message);
+                    view.setTextColor(mainActivity.getResources().getColor(R.color.Blanco));
+                    toast.show();
+                }
             }
         });
         listView.addFooterView(viewCerrarCaja,null,true);
 
+    }
+
+    private Dialog dialogCerrarCaja() {
+
+        final View layout = View.inflate(this, R.layout.dialog_cerrar_caja, null);
+        final EditText editTextKmFinal = ((EditText) layout.findViewById(R.id.editText_kmFinal));
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Ingrese Km Final");
+        builder.setPositiveButton("OK", new Dialog.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                String kmFinal = editTextKmFinal.getText().toString().trim();
+                int kmFinall = Integer.parseInt(kmFinal);
+
+                Toast toast = Toast.makeText(mainActivity.getApplicationContext(), "CERRANDO CAJA...",Toast.LENGTH_SHORT);
+
+                toast.getView().setBackgroundColor(mainActivity.getResources().getColor(R.color.verde));
+                TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
+                v.setTextColor(mainActivity.getResources().getColor(R.color.Blanco));
+                toast.show();
+                Log.d("CERRAR CAJA", ""+idLiquidacion+"-"+slide_ingresosTotales+"-"+slide_gastosTotales+""+slide_aRendir+"-"+kmFinall);
+                cerrarCaja.execute(""+idLiquidacion, ""+slide_ingresosTotales,""+slide_gastosTotales,""+slide_aRendir,""+kmFinall);
+            }
+        });
+        builder.setView(layout);
+        return builder.create();
     }
 
     private String getDatePhone() {
@@ -647,6 +713,32 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
         textViewIngresosTotales.setText(""+df.format(slide_ingresosTotales));
         textViewGastos.setText(""+df.format(slide_gastosTotales));
 
+    }
+
+    protected Boolean conectadoWifi(){
+        ConnectivityManager connectivity = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivity != null) {
+            NetworkInfo info = connectivity.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+            if (info != null) {
+                if (info.isConnected()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    protected Boolean conectadoRedMovil(){
+        ConnectivityManager connectivity = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivity != null) {
+            NetworkInfo info = connectivity.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+            if (info != null) {
+                if (info.isConnected()) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
 }

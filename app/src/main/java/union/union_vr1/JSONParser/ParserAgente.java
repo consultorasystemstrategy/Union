@@ -19,7 +19,7 @@ public class ParserAgente {
         super();
     }
 
-    public ArrayList<Agente> parserAgente(JSONObject object)
+    public ArrayList<Agente> parserAgente(JSONObject object, String usuario, String password)
     {
         ArrayList<Agente> arrayList=new ArrayList<Agente>();
         try {
@@ -33,8 +33,8 @@ public class ParserAgente {
                         jsonObj.getInt("idEmpresa"),
                         jsonObj.getInt("idUsuario"),
                         jsonObj.getString("nombre"),
-                        jsonObj.getString("usuario"),
-                        jsonObj.getString("clave"),
+                        usuario,
+                        password,
                         jsonObj.getInt("idLiquidacion"),
                         jsonObj.getDouble("kmInicial"),
                         jsonObj.getDouble("kmFinal"),
@@ -66,7 +66,7 @@ public class ParserAgente {
             {
                 jsonObj=jsonArray.getJSONObject(i);
                 arrayList.add(new Agente(
-                        jsonObj.getInt("AgenteVentaId"),
+                        jsonObj.getInt("idAgente"),
                         jsonObj.getString("nombre"),
                         jsonObj.getString("serieBoleta"),
                         jsonObj.getString("serieFactura"),
@@ -75,7 +75,9 @@ public class ParserAgente {
                         "0",
                         1,
                         Constants._IMPORTADO,
-                        jsonObj.getInt("Liquidacion")
+                        jsonObj.getInt("idLiquidacion"),
+                        jsonObj.getString("nombreRuta"),
+                        jsonObj.getInt("nroBodegas")
                 ));
             }
 

@@ -639,7 +639,7 @@ public class DigitalSignature {
     }
 
 
-    public byte[] leerXML(Context context) throws IOException, ParserConfigurationException, SAXException {
+    public String leerXML(Context context) throws IOException, ParserConfigurationException, SAXException {
         fis = context.openFileInput("test.xml");
         /*InputStream is = context.openFileInput("test.xml");
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -658,9 +658,12 @@ public class DigitalSignature {
         } catch (IOException ex) {
             //Logger.getLogger(genJpeg.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return bos.toString("iso-8859-1");
+ /*
+
         byte[] bytes = bos.toByteArray();
         return bytes;
-/*
+
         //DOM (Por ejemplo)
         DocumentBuilderFactory factory =
                 DocumentBuilderFactory.newInstance();

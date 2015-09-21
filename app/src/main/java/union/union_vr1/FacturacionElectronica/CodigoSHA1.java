@@ -25,8 +25,8 @@ public class CodigoSHA1 {
     public static String SHA1(String text) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         //LA CODIFIACIÓN DEL XML, DEPENDERÁ DE LA CODIFIACIÓN DEL XML. [iso-8859-1 O utf-8]
         MessageDigest md = MessageDigest.getInstance("SHA-1");
-        //md.update(text.getBytes("iso-8859-1"), 0, text.length());
-        md.update(text.getBytes("UTF-8"), 0, text.length());
+        md.update(text.getBytes("iso-8859-1"), 0, text.length());
+        //md.update(text.getBytes("UTF-8"), 0, text.length());
         byte[] sha1hash = md.digest();
         return convertToHex(sha1hash);
     }

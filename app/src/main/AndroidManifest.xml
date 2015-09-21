@@ -219,6 +219,7 @@
         </activity>
         <activity
             android:name=".Vistas.VMovil_Abrir_Caja"
+            android:label="Abrir Caja" >
             android:screenOrientation="portrait">
         </activity>
     </application>

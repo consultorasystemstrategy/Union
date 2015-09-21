@@ -564,7 +564,6 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
                                                 Charset.forName("UTF-8")
                                         );
                                         readBufferPosition = 0;
-
                                         handler.post(new Runnable() {
                                             public void run() {
                                                 Log.d("Bluetooth message",data);
@@ -575,11 +574,9 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
                                     }
                                 }
                             }
-
                         } catch (IOException ex) {
                             stopWorker = true;
                         }
-
                     }
                 }
             });

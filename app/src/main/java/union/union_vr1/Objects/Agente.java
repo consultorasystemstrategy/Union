@@ -44,7 +44,7 @@ public class Agente {
         this.correlativoRrpp = correlativoRrpp;
         this.estadoSincronizado = estadoSincronizado;
     }
-    public Agente(int idAgenteVenta, String nombreAgente,  String serieBoleta, String serieFactura, int correlativoBoleta, int correlativoFactura, String serieRrpp,  int correlativoRrpp, int estadoSincronizado,int liquidacion) {
+    public Agente(int idAgenteVenta, String nombreAgente,  String serieBoleta, String serieFactura, int correlativoBoleta, int correlativoFactura, String serieRrpp,  int correlativoRrpp, int estadoSincronizado,int liquidacion, String nombreRuta, int nroBodegas) {
         this.idAgenteVenta = idAgenteVenta;
         this.nombreAgente = nombreAgente;
         this.serieBoleta = serieBoleta;
@@ -55,6 +55,8 @@ public class Agente {
         this.correlativoRrpp = correlativoRrpp;
         this.estadoSincronizado = estadoSincronizado;
         this.liquidacion = liquidacion;
+        this.nombreRuta = nombreRuta;
+        this.nroBodegas = nroBodegas;
     }
 
     public int getIdAgenteVenta() {

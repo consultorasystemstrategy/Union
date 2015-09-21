@@ -162,5 +162,8 @@
 
     <string name="title_activity_vmovil__cargar__inventario">Cargar Inventario</string>
     <string name="title_activity_imprimir_arqueo_caja">Arqueo Caja</string>
+    <string name="title_activity_vmovil__crear__establecimiento">Nuevo establecimiento</string>
+
+
 
 </resources>
