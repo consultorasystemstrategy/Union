@@ -61,10 +61,6 @@ public class VMovil_Abrir_Caja extends Activity implements View.OnClickListener 
         int cursorLiquidacion = dbAdapter_agente_login.fetchLiquidacion(getDatePhone());
 
 
-        if(cursorLiquidacion >0){
-          //  int liquidacion = cursorLiquidacion.
-            cajaestaAbierto();
-        }
         Cursor cursor = dbAdapter_agente_login.fetchAllAgentesVentaLogin(getDatePhone());
         idAgente = cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Agente_Login.AG_id_agente_venta));
         login_usuario = cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Agente_Login.LOGIN_usuario));
@@ -73,6 +69,10 @@ public class VMovil_Abrir_Caja extends Activity implements View.OnClickListener 
         btnVerInventario = (Button) findViewById(R.id.btnVerInventario);
         btnAbrirCaja.setOnClickListener(this);
         btnVerInventario.setOnClickListener(this);
+        if(cursorLiquidacion >0){
+            //  int liquidacion = cursorLiquidacion.
+            cajaestaAbierto();
+        }
     }
     private void cajaestaAbierto(){
         new TraerDatos().execute();

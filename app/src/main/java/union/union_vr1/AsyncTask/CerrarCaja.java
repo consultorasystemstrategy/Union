@@ -29,6 +29,7 @@ public class CerrarCaja extends AsyncTask<String, String, String> {
     private int successCerrarCaja = -1;
 
 
+
     public CerrarCaja(Activity mainActivity) {
         this.mainActivity = mainActivity;
         dbAdaptert_evento_establec = new DbAdaptert_Evento_Establec(mainActivity);
@@ -100,6 +101,9 @@ public class CerrarCaja extends AsyncTask<String, String, String> {
                     Toast.makeText(mainActivity.getApplicationContext(), "CAJA CERRADA.", Toast.LENGTH_SHORT).show();
                 }
             });
+
+            session.deleteVariable(9);
+            session.createTempSession(9,0);
 
             Intent intent = new Intent(mainActivity, VMovil_Online_Pumovil.class);
             mainActivity.finish();

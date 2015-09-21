@@ -216,7 +216,7 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
        String numDoc = "";
        String nombreAgente = "";
        String direccion="";
-       String sha1="";
+       //String sha1="";
 
        double base_imponible = 0.0;
        double igv = 0.0;
@@ -237,7 +237,7 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
            dni_ruc = cursorVentaCabecera.getString(cursorVentaCabecera.getColumnIndexOrThrow(DbAdaptert_Evento_Establec.EE_doc_cliente));
            nombreAgente = cursorVentaCabecera.getString(cursorVentaCabecera.getColumnIndexOrThrow(DbAdapter_Agente.AG_nombre_agente));
            direccion = cursorVentaCabecera.getString(cursorVentaCabecera.getColumnIndexOrThrow(DbAdaptert_Evento_Establec.EE_direccion));
-           sha1 = cursorVentaCabecera.getString(cursorVentaCabecera.getColumnIndexOrThrow(DbAdapter_Comprob_Venta.CV_SHA1));
+           //sha1 = cursorVentaCabecera.getString(cursorVentaCabecera.getColumnIndexOrThrow(DbAdapter_Comprob_Venta.CV_SHA1));
 
 
            ventaCabecera+= "NUMERO  : "+comprobante+"\n";
@@ -246,7 +246,7 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
            ventaCabecera+= "CLIENTE : "+ cliente+"\n";
            ventaCabecera+= "DNI/RUC : "+ dni_ruc+"\n";
            ventaCabecera+= "DIRECCION : "+ direccion+"\n";
-           ventaCabecera+= "SHA1 : "+ sha1+"\n";
+//           ventaCabecera+= "SHA1 : "+ sha1+"\n";
 
 
 
@@ -328,7 +328,7 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
                texto+= "CLIENTE : "+ cliente+"\n";
                texto+= "DNI/RUC : "+ dni_ruc+"\n";
                texto+= "DIRECCIÓN : "+ direccion+"\n";
-               texto+= "SHA1  : "+ sha1+"\n";
+               //texto+= "SHA1  : "+ sha1+"\n";
                texto+= "------------------------------------------------------".substring(0,48)+"\n";
                texto+=String.format("%-6s","CANT") + String.format("%-30s","PRODUCTO")+String.format("%-5s","P.U.")+  String.format("%-7s","IMPORTE")+"\n";
                texto+= "------------------------------------------------------".substring(0,48)+"\n";

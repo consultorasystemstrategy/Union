@@ -1759,13 +1759,13 @@ Instantiate and pass a callback
         if (conectadoWifi()||conectadoRedMovil()) {
             exportMain.execute();
         }
-        new GenerateDigitalSignature().execute();
+        //new GenerateDigitalSignature().execute();
 
 
-        /*Intent intent= new Intent(this, VMovil_BluetoothImprimir.class);
+        Intent intent= new Intent(this, VMovil_BluetoothImprimir.class);
         intent.putExtra("idComprobante",id_comprobante);
         finish();
-        startActivity(intent);*/
+        startActivity(intent);
 
 
     }
