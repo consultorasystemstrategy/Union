@@ -378,8 +378,6 @@ public class Login extends Activity implements OnClickListener{
                 }
             }
             publishProgress(""+75);
-
-
             return null;
         }
 

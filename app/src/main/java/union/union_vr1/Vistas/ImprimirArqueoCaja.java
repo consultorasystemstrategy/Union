@@ -350,7 +350,7 @@ public class ImprimirArqueoCaja extends Activity implements View.OnClickListener
 
         texto += "\n"+"                    INGRESOS                    ".substring(0, 48) + "\n";
         texto += "\n" + "**********************************************************".substring(0, 48) + "\n";
-        texto += "\n" + String.format("%-20s", "Comprobante") + String.format("%1$4s", "n.") + String.format("%1$8s", "Em.") + String.format("%1$8s", "Pag.") + String.format("%1$8s", "Cob.") + "\n";
+        texto += "\n" + String.format("%-20s", "Comprobante") + String.format("%1$4s", "Nro") + String.format("%1$8s", "Emit.") + String.format("%1$8s", "Pag.") + String.format("%1$8s", "Cob.") + "\n";
 
 
         cursorResumen.moveToFirst();
@@ -362,6 +362,7 @@ public class ImprimirArqueoCaja extends Activity implements View.OnClickListener
             String documento = cursorResumen.getString(cursorResumen.getColumnIndexOrThrow("comprobante"));
             texto += String.format("%-20s", documento) + String.format("%1$4s", n) + String.format("%1$8s", df.format(emitido)) + String.format("%1$8s", df.format(pagado)) + String.format("%1$8s", df.format(cobrado)) + "\n";
         }
+        texto += String.format("%1$48s","----------------------------");
         texto += "\n" + String.format("%-20s", "Total") + String.format("%1$4s", nTotal) + String.format("%1$8s", df.format(emitidoTotal)) + String.format("%1$8s", df.format(pagadoTotal)) + String.format("%1$8s", df.format(cobradoTotal)) + "\n";
 
         texto += "\n" + "**********************************************************".substring(0, 48) + "\n";

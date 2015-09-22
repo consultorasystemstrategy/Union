@@ -104,7 +104,6 @@ public class CargarInventario extends AsyncTask<String, String, String> {
                         }else{
                             Mensaje = "Ocurrio un error al insertar en Android";
                         }
-
                         break;
                     case 2:
                         Mensaje = "Fecha pasada o no existe";

@@ -1721,8 +1721,8 @@ Instantiate and pass a callback
             textoImpresion += String.format("%-18s","PRECIO VENTA")+String.format("%-21s","S/.")+  String.format("%1$9s",df.format(monto_total))+"\n\n";
             textoImpresion+= "------------------------------------------------------".substring(0,48)+"\n";
 
-            textoImpresion+= "Son "+NumberToLetterConverter.convertNumberToLetter(df.format(monto_total)).toLowerCase()+"\n";
-            textoImpresion+= "------------------------------------------------------".substring(0,48)+"\n";
+/*            textoImpresion+= "Son "+NumberToLetterConverter.convertNumberToLetter(df.format(monto_total)).toLowerCase()+"\n";
+            textoImpresion+= "------------------------------------------------------".substring(0,48)+"\n";*/
             textoImpresion+= "VENDEDOR : "+ nombreAgenteVenta+"\n";
 
         }

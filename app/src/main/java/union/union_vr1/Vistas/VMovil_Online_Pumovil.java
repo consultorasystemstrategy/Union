@@ -90,10 +90,8 @@ public class VMovil_Online_Pumovil extends Activity {
         session = new DbAdapter_Temp_Session(this);
         session.open();
 
-
         isCajaOpened = session.fetchVarible(9);
         Log.d("IS CAJA OPENED", ""+isCajaOpened);
-
         if (isCajaOpened==0){
             //LA CAJA NO ESTÁ ABIERTA
             displayURL();
@@ -106,23 +104,18 @@ public class VMovil_Online_Pumovil extends Activity {
     }
 
     public void displayURL(){
-
-
-
         progressBar = (ProgressBar)findViewById(R.id.progressBar);
         webView = (WebView)findViewById(R.id.webView);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setBuiltInZoomControls(true);
         webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
 
-
-        webView.setWebChromeClient(new WebChromeClient() {
+            webView.setWebChromeClient(new WebChromeClient() {
             public void onProgressChanged(WebView view, int progress) {
                 // Activities and WebViews measure progress with different scales.
                 // The progress meter will automatically disappear when we reach 100%
                 activity.setProgress(progress * 100);
             }
-
             @Override
             public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
                 //return super.onJsAlert(view, url, message, result);

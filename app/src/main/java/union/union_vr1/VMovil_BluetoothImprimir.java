@@ -327,21 +327,23 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
                texto+= "FECHA   : "+ fecha+"\n";
                texto+= "CLIENTE : "+ cliente+"\n";
                texto+= "DNI/RUC : "+ dni_ruc+"\n";
-               texto+= "DIRECCIÓN : "+ direccion+"\n";
+               texto+= "DIRECCIÓN : "+ direccion+"\n\n";
                //texto+= "SHA1  : "+ sha1+"\n";
                texto+= "------------------------------------------------------".substring(0,48)+"\n";
                texto+=String.format("%-6s","CANT") + String.format("%-30s","PRODUCTO")+String.format("%-5s","P.U.")+  String.format("%-7s","IMPORTE")+"\n";
                texto+= "------------------------------------------------------".substring(0,48)+"\n";
                texto+=ventaDetalle;
+               texto+= "------------------------------------------------------".substring(0,48)+"\n";
                texto += "\n"+String.format("%-18s","OP. GRAVADA")+String.format("%-21s","S/.")+ String.format("%1$9s",df.format(base_imponible));
                texto += "\n"+String.format("%-18s","OP. INAFECTA")+String.format("%-21s","S/.")+ String.format("%1$9s","0.00");
                texto += "\n"+String.format("%-18s","OP. EXONERADA")+String.format("%-21s","S/.")+ String.format("%1$9s","0.00");
                texto += "\n"+String.format("%-18s","OP. GRATUITA")+String.format("%-21s","S/.")+ String.format("%1$9s","0.00");
                texto += String.format("%-18s","I.G.V.")+String.format("%-21s","S/.")+  String.format("%1$9s",df.format(igv));
+               texto += String.format("%1$48s","---------");
                texto += String.format("%-18s","PRECIO VENTA")+String.format("%-21s","S/.")+  String.format("%1$9s",df.format(precio_venta))+"\n\n";
                texto+= "------------------------------------------------------".substring(0,48)+"\n";
-               texto+= "Son "+ NumberToLetterConverter.convertNumberToLetter(df.format(precio_venta).replace(',','.')).toLowerCase()+"\n";
-               texto+= "------------------------------------------------------".substring(0,48)+"\n";
+/*               texto+= "Son "+ NumberToLetterConverter.convertNumberToLetter(df.format(precio_venta).replace(',','.')).toLowerCase()+"\n";
+               texto+= "------------------------------------------------------".substring(0,48)+"\n";*/
                texto+= "VENDEDOR : "+ nombreAgente+"\n";
                break;
            default:
