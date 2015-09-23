@@ -118,6 +118,7 @@ public class ImportMain extends AsyncTask<String, String, String> {
 //        idAgente = ((MyApplication)mainActivity.getApplication()).getIdAgente();
             idAgente = session.fetchVarible(1);
             idLiquidacion = session.fetchVarible(3);
+        Log.d("DATOS SESSION"," AGENTE: "+idAgente+" LIQUIDACION: "+idLiquidacion);
 
         //listView = (ListView) mainActivity.findViewById(R.id.listView);
     }
@@ -369,7 +370,7 @@ public class ImportMain extends AsyncTask<String, String, String> {
             }*/
             publishProgress(""+95);
             //ACTUALIZAR LOS CRÉDITOS DE LOS ESTABLECIMIENTOS
-
+/*
             Cursor cursorEstablecimiento = dbAdaptert_evento_establec.fetchAllEstablecs();
 
             for (cursorEstablecimiento.moveToFirst(); !cursorEstablecimiento.isAfterLast(); cursorEstablecimiento.moveToNext()){
@@ -425,6 +426,8 @@ public class ImportMain extends AsyncTask<String, String, String> {
 
 
             }
+
+            */
 
 
             publishProgress(""+99);

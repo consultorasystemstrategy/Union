@@ -368,7 +368,7 @@ public class Login extends Activity implements OnClickListener{
 
                     agenteLista.get(i).getIdAgenteVenta();
                     boolean existe = dbAdapter_agente.existeAgentesById(agenteLista.get(i).getIdAgenteVenta());
-                    Log.d("EXISTE ", ""+existe);
+                    Log.d("EXISTE ", ""+existe+"LIQUIDACION : "+agenteLista.get(i).getIdAgenteVenta());
                     if (existe){
                         dbAdapter_agente.updateAgente(agenteLista.get(i), getDatePhone(),usuario,clave);
                     }else {

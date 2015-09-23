@@ -19,7 +19,7 @@ import union.union_vr1.Objects.ComprobanteVentaDetalle;
 public class DBAdapter_Temp_Autorizacion_Cobro {
 
     public static final String temp_autorizacion_cobro = "_id";
-
+    public static final String temp_id_android = "temp_id_android";
     public static final String temp_id_agente = "temp_id_Agente";
     public static final String temp_id_autorizacion_cobro = "temp_id_autorizacion_cobro";
     public static final String temp_id_motivo_solicitud = "temp_id_Motivo_Solicitud";
@@ -42,6 +42,7 @@ public class DBAdapter_Temp_Autorizacion_Cobro {
     public static final String CREATE_TABLE_TEMP_Autorizacion_Cobro =
             "create table " + SQLITE_TABLE_Temp_Autorizacion_Cobro + "("
                     + temp_autorizacion_cobro + " integer primary key autoincrement,"
+                    + temp_id_android + " integer ,"
                     + temp_id_autorizacion_cobro + " integer ,"
                     + temp_id_agente + " integer,"
                     + temp_id_motivo_solicitud + " integer,"
@@ -87,6 +88,7 @@ public class DBAdapter_Temp_Autorizacion_Cobro {
         ContentValues initialValues = new ContentValues();
         initialValues.put(temp_id_agente, idAgente);
         initialValues.put(temp_establec, idEstablec);
+        initialValues.put(temp_id_android, incrementableIdAndroid());
         initialValues.put(temp_id_motivo_solicitud, motivoSolicitud);
         initialValues.put(temp_id_estado_solicitud, estadoSolicitud);
         initialValues.put(temp_referencia, referencia);
@@ -103,6 +105,17 @@ public class DBAdapter_Temp_Autorizacion_Cobro {
         Cursor cr = mDb.rawQuery("select * from " + SQLITE_TABLE_Temp_Autorizacion_Cobro + ";", null);
 
         return cr.getCount() + 1;
+    }
+    private int incrementableIdAndroid() {
+        int id_ =-1;
+        Cursor cr = mDb.rawQuery("select MAX("+temp_id_android+") from " + SQLITE_TABLE_Temp_Autorizacion_Cobro + ";", null);
+        if(cr.moveToFirst()){
+            id_ = cr.getInt(0);
+        }else{
+            id_=1;
+        }
+
+        return id_;
     }
 
     public Cursor listarAutorizaciones(int idEstablec) {

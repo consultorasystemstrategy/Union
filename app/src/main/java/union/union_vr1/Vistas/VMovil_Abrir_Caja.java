@@ -60,7 +60,6 @@ public class VMovil_Abrir_Caja extends Activity implements View.OnClickListener 
         session.open();
         int cursorLiquidacion = dbAdapter_agente_login.fetchLiquidacion(getDatePhone());
 
-
         Cursor cursor = dbAdapter_agente_login.fetchAllAgentesVentaLogin(getDatePhone());
         idAgente = cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Agente_Login.AG_id_agente_venta));
         login_usuario = cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Agente_Login.LOGIN_usuario));
@@ -76,6 +75,7 @@ public class VMovil_Abrir_Caja extends Activity implements View.OnClickListener 
     }
     private void cajaestaAbierto(){
         new TraerDatos().execute();
+        this.finish();
         startActivity(new Intent(getApplicationContext(),VMovil_Evento_Indice.class));
     }
 

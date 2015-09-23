@@ -37,6 +37,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import union.union_vr1.AsyncTask.SolicitarAutorizacionCobros;
 import union.union_vr1.R;
 import union.union_vr1.Sqlite.Constants;
 import union.union_vr1.Sqlite.CursorAdapter_Cobros_Establecimiento;
@@ -262,7 +263,10 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
             }
 
         });
-        inicioAutorizacion(listView);
+        //inicioAutorizacion(listView);
+    }
+    private void displayAutorizacion (final ListView listView){
+
     }
 
     private void inicioAutorizacion(final ListView listView) {
@@ -434,6 +438,8 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
 
                             int idAgente = session.fetchVarible(1);
                             Log.e("DATOSENVIADOS",""+idAgente+"-"+4+"-"+ 1+"-"+ comprobanteVenta+"-"+ valorCobrar+"-"+ valorPago +"-"+Integer.parseInt(estabX) +"-"+Constants._CREADO+"-"+idComprobante+"-"+nombreEstablec);
+                            SolicitarAutorizacionCobros solicitarAutorizacionCobros = new SolicitarAutorizacionCobros(getApplicationContext());
+                            solicitarAutorizacionCobros.execute(idAgente+"", 4+"", 1+"", comprobanteVenta+"", valorCobrar+"", valorPago+"", estabX, Constants._CREADO+"", idComprobante+"",nombreEstablec+"");
                             long idAutorizacion = dbAutorizacionCobro.createTempAutorizacionPago(idAgente, 4, 1, comprobanteVenta, valorCobrar, valorPago, Integer.parseInt(estabX), Constants._CREADO, idComprobante,nombreEstablec);
                             if(idAutorizacion >0){
                                 Back();

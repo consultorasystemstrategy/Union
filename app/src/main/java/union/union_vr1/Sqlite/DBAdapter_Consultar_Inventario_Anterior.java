@@ -70,7 +70,7 @@ public class DBAdapter_Consultar_Inventario_Anterior {
         return mDb.insert(SQLITE_TABLE_Temp_Consultar_Inventario, null, initialValues);
     }
     public Cursor getConsultarInventario (String fecha){
-        Cursor cr = mDb.rawQuery("select * from "+SQLITE_TABLE_Temp_Consultar_Inventario+" where "+temp_in_fecha+" = '"+fecha+"'",null);
+        Cursor cr = mDb.rawQuery("select  "+temp_in_id_producto+", "+temp_in_nombre+", "+temp_te_cantidad+"  from "+SQLITE_TABLE_Temp_Consultar_Inventario+" where "+temp_in_fecha+" = '"+fecha+"';",null);
         if (cr != null) {
             cr.moveToFirst();
         }

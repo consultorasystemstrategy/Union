@@ -106,9 +106,9 @@ public class ConsultarInventarioAnterior extends AsyncTask<String, String, Strin
                     dbAdapter_consultar_inventario_anterior.createTempConsultarInventario(id, nombre, cantidad, FECHA);
                 }
                 Cursor cursor = dbAdapter_consultar_inventario_anterior.getConsultarInventario(FECHA);
-                cursorAdapter_consultar_inventario = new CursorAdapter_Consultar_Inventario(mainActivity.getApplicationContext(), cursor);
-                ListView listView = (ListView) mainActivity.findViewById(R.id.listviewInventario);
-                listView.setAdapter(cursorAdapter_consultar_inventario);
+               // cursorAdapter_consultar_inventario = new CursorAdapter_Consultar_Inventario(mainActivity.getApplicationContext(), cursor);
+               // ListView listView = (ListView) mainActivity.findViewById(R.id.listviewInventario);
+               // listView.setAdapter(cursorAdapter_consultar_inventario);
                 dismissProgressDialog();
 
 
