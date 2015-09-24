@@ -110,6 +110,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
     private DbAdapter_Stock_Agente dbHelper_Stock_Agente;
     private DbAdaptert_Evento_Establec dbHelper_Evento_Establecimiento;
     private EditText savedText;
+    private String SERIE_DOCUMENTO;
 
 
     //FE
@@ -265,7 +266,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
     TextView textViewSlideCobro;
     TextView textViewSlideMantenimiento;
     TextView textViewSlideCanjesDevoluciones;
-
+private String NUMERO_DOCUMENTO;
     int slideIdEstablecimiento;
 
     private DbAdaptert_Evento_Establec dbAdaptert_evento_establec;
@@ -1610,7 +1611,8 @@ Instantiate and pass a callback
         textoVentaImpresion+= "DNI/RUC: "+ documentoCliente+"\n";
 
         //textoVentaImpresion+= "Direccion: Alameda Nro 2039 - Chosica\n";
-
+NUMERO_DOCUMENTO = numero_documento+"";
+        SERIE_DOCUMENTO =serie;
         id = dbHelper_Comprob_Venta.createComprobVenta(idEstablecimiento,i_tipoDocumento,i_formaPago,tipoVenta,codigo_erp,serie,numero_documento,base_imponible,igv,monto_total,getDatePhone(),null,estado_comprobante, estado_conexion,id_agente_venta, Constants._CREADO, idLiquidacion);
 
         Log.d("Export id CV IGUALES",""+id);
@@ -1745,9 +1747,10 @@ Instantiate and pass a callback
                 String fecha_programada = cursorTempComprobCobros.getString(cursorTempComprobCobros.getColumnIndex(DbAdapter_Temp_Comprob_Cobro.temp_fecha_programada));
                 Double monto_a_pagar = cursorTempComprobCobros.getDouble(cursorTempComprobCobros.getColumnIndex(DbAdapter_Temp_Comprob_Cobro.temp_monto_a_pagar));
                 String idComprobanteCobro = "M:"+ dbHelper_Comprob_Cobros.getIdComrobanteCobro(idEstablecimiento+"");
-                Log.d("RECORRE EL CURSOR TEMP COMPROB COBROS", "YES");
+                String NUMERO_COMPROBANTE = String.format("%08d",  Integer.parseInt(NUMERO_DOCUMENTO));
+                Log.d("RECORRE EL CURSOR TEMP COMPROB COBROS", "YES"+"--"+NUMERO_COMPROBANTE); //...
                 //Crear una consulta para añadir un id al comprobante cobro.
-                long registroInsertado = dbHelper_Comprob_Cobros.createComprobCobros(idEstablecimiento,Integer.parseInt(id+""),id_plan_pago,id_plan_pago_detalle,tipoDocumento.toUpperCase(),codigo_erp,fecha_programada,monto_a_pagar, fecha_cobro, hora_cobro,monto_cobrado,estado_cobro,id_agente_venta,id_forma_cobro, lugar_registro, idLiquidacion,idComprobanteCobro);
+                long registroInsertado = dbHelper_Comprob_Cobros.createComprobCobros(idEstablecimiento,Integer.parseInt(id+""),id_plan_pago,id_plan_pago_detalle,tipoDocumento.toUpperCase(),SERIE_DOCUMENTO+"-"+NUMERO_COMPROBANTE,fecha_programada,monto_a_pagar, fecha_cobro, hora_cobro,monto_cobrado,estado_cobro,id_agente_venta,id_forma_cobro, lugar_registro, idLiquidacion,idComprobanteCobro);
                     Log.d("CC INSERTADO SATISFACTORIAMENTE ", "ID : "+idComprobanteCobro+"....."+ registroInsertado+"-"+Integer.parseInt(id+""));
             }
         }

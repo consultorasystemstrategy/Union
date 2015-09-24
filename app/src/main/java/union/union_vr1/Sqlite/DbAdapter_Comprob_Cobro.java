@@ -437,7 +437,7 @@ public class DbAdapter_Comprob_Cobro {
                         CC_id_establec, CC_id_comprob, CC_id_plan_pago, CC_id_plan_pago_detalle,
                         CC_desc_tipo_doc, CC_doc, CC_fecha_programada, CC_monto_a_pagar,
                         CC_fecha_cobro, CC_monto_cobrado, CC_estado_cobro},
-                Constants._SINCRONIZAR + " = " + Constants._ACTUALIZADO, null, null, null, null);
+                Constants._SINCRONIZAR + " = " + Constants._CREADO, null, null, null, null);
 
         if (mCursor != null) {
             mCursor.moveToFirst();
@@ -470,11 +470,13 @@ public class DbAdapter_Comprob_Cobro {
     public Cursor fetchAllComprobCobrosByEst(String inputText) throws SQLException {
         Log.w(TAG, inputText);
         Cursor mCursor = null;
-        mCursor = mDb. rawQuery("SELECT me.ee_te_nom_establec,mc.* FROM m_comprob_cobro mc,m_evento_establec me where mc.cc_in_id_establec =me.ee_in_id_establec and  "+CC_id_establec + " = " + inputText + " and cc_in_estado_cobro ='1' and cc_in_id_comprobante_cobro is not null  order by cc_te_fecha_programada desc",null);
+        String query = "SELECT me.ee_te_nom_establec,mc.* FROM m_comprob_cobro mc,m_evento_establec me where mc.cc_in_id_establec =me.ee_in_id_establec and  "+CC_id_establec + " = " + inputText + " and cc_in_estado_cobro ='1' and cc_in_id_comprobante_cobro is not null  order by cc_te_fecha_programada desc";
+        mCursor = mDb.rawQuery(query,null);
         if (mCursor != null) {
 
             mCursor.moveToFirst();
         }
+        Log.d("QUERY",""+query);
         return mCursor;
 
     }
