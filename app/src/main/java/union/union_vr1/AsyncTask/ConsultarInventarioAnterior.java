@@ -4,9 +4,13 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.Gravity;
 import android.widget.ListView;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -105,10 +109,72 @@ public class ConsultarInventarioAnterior extends AsyncTask<String, String, Strin
                     Log.d("DATOS", "" + jsonObj.getString("codigoProducto"));
                     dbAdapter_consultar_inventario_anterior.createTempConsultarInventario(id, nombre, cantidad, FECHA);
                 }
-                Cursor cursor = dbAdapter_consultar_inventario_anterior.getConsultarInventario(FECHA);
+                Cursor c = dbAdapter_consultar_inventario_anterior.getConsultarInventario(FECHA);
                // cursorAdapter_consultar_inventario = new CursorAdapter_Consultar_Inventario(mainActivity.getApplicationContext(), cursor);
-               // ListView listView = (ListView) mainActivity.findViewById(R.id.listviewInventario);
-               // listView.setAdapter(cursorAdapter_consultar_inventario);
+                 TableLayout table_layout;
+                table_layout = (TableLayout) mainActivity.findViewById(R.id.tableLayout1);
+                table_layout.removeAllViews();
+
+                if (c.moveToFirst()) {
+                    // cursorAdapter_consultar_inventario = new CursorAdapter_Consultar_Inventario(getApplicationContext(),c);
+                    // listViewInventario.setAdapter(cursorAdapter_consultar_inventario);
+
+                    int rows = c.getCount();
+                    int cols = c.getColumnCount();
+
+
+                    // outer for loop
+                    for (int i = 0; i < rows; i++) {
+
+                        TableRow row = new TableRow(mainActivity.getApplicationContext());
+                        row.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT,
+                                TableRow.LayoutParams.WRAP_CONTENT));
+                        row.setBackgroundColor(Color.parseColor("#1565C0"));
+
+                        // inner for loop
+                        for (int j = 0; j < cols; j++) {
+
+                            TextView tv = new TextView(mainActivity.getApplicationContext());
+                            tv.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,
+                                    TableRow.LayoutParams.WRAP_CONTENT));
+                            tv.setGravity(Gravity.CENTER);
+                            tv.setTextSize(12);
+                            tv.setTextColor(Color.parseColor("#190707"));
+                            tv.setPadding(0, 0, 0, 0);
+                            tv.setText(c.getString(j));
+                            tv.setBackground(mainActivity.getResources().getDrawable(R.drawable.border_bottom_personalizado_tableinventario));
+                            row.addView(tv);
+                            if (i == 0) {
+                                tv.setBackground(mainActivity.getResources().getDrawable(R.drawable.border_bottom_personalizado_tableheader));
+                                tv.setTextColor(Color.parseColor("#FFFFFF"));
+
+                                String tex = "";
+                                switch (j) {
+                                    case 0:
+                                        tex = "Codigo";
+                                        break;
+                                    case 1:
+                                        tex = "Nombre";
+                                        break;
+                                    case 2:
+                                        tex = "Cantidad";
+                                        break;
+                                }
+                                tv.setText(tex);
+
+                            }
+                            if(j==1 && i!=0){
+                                tv.setGravity(Gravity.LEFT);
+                            }
+
+                        }
+
+                        c.moveToNext();
+
+                        table_layout.addView(row);
+
+                    }
+                }
                 dismissProgressDialog();
 
 

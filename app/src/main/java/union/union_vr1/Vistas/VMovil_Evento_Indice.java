@@ -181,7 +181,9 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
 
         if (!export || !importado) {
 
-            if ( conectadoWifi() || conectadoRedMovil() ) {
+
+            if (conectadoWifi() || conectadoRedMovil()) {
+                /*
                 new AlertDialog.Builder(mainActivity)
                         .setTitle("Hemos detectado una Conexión a Internet")
                         .setMessage("" +
@@ -193,12 +195,17 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
                                 new ImportMain(mainActivity).execute();
                             }
                         }).create().show();
+                        */
+
+                new ImportMain(mainActivity).execute();
+
                 session.deleteVariable(7);
                 session.deleteVariable(8);
                 session.createTempSession(7, 1);
                 session.createTempSession(8, 1);
 
             }
+
         }
 
         dbHelper1 = new DbAdapter_Comprob_Venta(this);
@@ -315,34 +322,33 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
     private void enableGPSactiva() {
 
 
-            new AlertDialog.Builder(mainActivity)
-                    .setTitle("GPS")
-                    .setCancelable(false)
-                    .setMessage("Usted tiene que activar el GPS")
-                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            // continue with delete
-                            Intent gpsOptionsIntent = new Intent(
-                                    android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                            startActivity(gpsOptionsIntent);
-                        }
-                    })
+        new AlertDialog.Builder(mainActivity)
+                .setTitle("GPS")
+                .setCancelable(false)
+                .setMessage("Usted tiene que activar el GPS")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // continue with delete
+                        Intent gpsOptionsIntent = new Intent(
+                                android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        startActivity(gpsOptionsIntent);
+                    }
+                })
 
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .show();
-
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
 
 
     }
 
     public boolean enableGps() {
-        boolean estado= false;
+        boolean estado = false;
         LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
 
             estado = true;
         } else {
-            estado  =false;
+            estado = false;
             enableGPSactiva();
 
         }
@@ -375,7 +381,7 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         textviewSlideCInventario = (TextView) findViewById(R.id.slide_textViewCargarInventario);
         textviewSlideARendir = (TextView) findViewById(R.id.slide_textViewARendir);
 
-        textviewSlideConsultarInventario = (TextView)findViewById(R.id.slide_textViewConsultarInventario);
+        textviewSlideConsultarInventario = (TextView) findViewById(R.id.slide_textViewConsultarInventario);
         textviewSlideConsultarInventario.setOnClickListener(this);
 
         textViewIngresosTotales = (TextView) findViewById(R.id.textView_IngresosTotales);
@@ -612,7 +618,7 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         // TODO Auto-generated method stub
         switch (v.getId()) {
             case R.id.slide_textViewConsultarInventario:
-                startActivity(new Intent(getApplicationContext(),VMovil_Consultar_Inventario.class));
+                startActivity(new Intent(getApplicationContext(), VMovil_Consultar_Inventario.class));
                 break;
             case R.id.VEI_BTNclient:
                 Intent i = new Intent(this, VMovil_Menu_Establec.class);

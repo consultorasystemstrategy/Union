@@ -154,6 +154,7 @@ public class DbAdapter_Agente_Login {
         if(cursor.moveToFirst()){
             valor = cursor.getInt(cursor.getColumnIndexOrThrow(AG_LIQUIDACION));
         }
+        Log.d("VALOR",""+valor);
         return  valor;
     }
 

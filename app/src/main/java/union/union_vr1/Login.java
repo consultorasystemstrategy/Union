@@ -19,12 +19,14 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
 import union.union_vr1.Conexion.JSONParser;
 import union.union_vr1.JSONParser.ParserAgente;
 import union.union_vr1.Objects.Agente;
 import union.union_vr1.RestApi.StockAgenteRestApi;
 import union.union_vr1.Sqlite.DbAdapter_Agente_Login;
 import union.union_vr1.Vistas.VMovil_Abrir_Caja;
+
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
@@ -33,18 +35,17 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-public class Login extends Activity implements OnClickListener{
+public class Login extends Activity implements OnClickListener {
 
 
-
-   // private DbAdapter_Temp_Session session;
+    // private DbAdapter_Temp_Session session;
     private Login loginClass;
     private boolean succesLogin;
     ProgressDialog prgDialog;
-	private EditText user, pass;
-	private Button mSubmit, mSalirs;
+    private EditText user, pass;
+    private Button mSubmit, mSalirs;
     private EditText Txt;
-	 // Progress Dialog
+    // Progress Dialog
     private ProgressDialog pDialog;
     private String pru;
     // JSON parser class
@@ -54,11 +55,11 @@ public class Login extends Activity implements OnClickListener{
     private String var1 = "";
     private DbAdapter_Agente_Login dbAdapter_agente;
 
-    public void setVar1(String var1){
-        this.var1=var1;
+    public void setVar1(String var1) {
+        this.var1 = var1;
     }
 
-    public String getVar1(){
+    public String getVar1() {
         return this.var1;
     }
 
@@ -67,41 +68,41 @@ public class Login extends Activity implements OnClickListener{
     //}
 
     //php login script location:
-    
+
     //localhost :  
     //testing on your device
     //put your local ip instead,  on windows, run CMD > ipconfig
     //or in mac's terminal type ifconfig and look for the ip under en0 or en1
-   // private static final String LOGIN_URL = "http://xxx.xxx.x.x:1234/webservice/login.php";
-    
+    // private static final String LOGIN_URL = "http://xxx.xxx.x.x:1234/webservice/login.php";
+
     //testing on Emulator:
-  //  private static final String LOGIN_URL = "http://192.168.0.158:8083/produnion/login.php";
+    //  private static final String LOGIN_URL = "http://192.168.0.158:8083/produnion/login.php";
     //private static final String LOGIN_URL = "http://192.168.0.158:8081/webservice/login.php";
-  //testing from a real server:78
+    //testing from a real server:78
     //private static final String LOGIN_URL = "http://www.yourdomain.com/webservice/login.php";
-    
+
     //JSON element ids from repsonse of php script:
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_MESSAGE = "message";
-    private static final String TAG_NOMBRE  = "name";
+    private static final String TAG_NOMBRE = "name";
 
     //JSON elementos para la tabla m_agente
-   // private static final String TAG_id_agente = "id_agente";
-   // private static final String TAG_id_agente_venta = "id_agente_venta";
-   // private static final String TAG_id_empresa = "id_empresa";
-   // private static final String TAG_id_usuario = "id_usuario";
-   // private static final String TAG_nombre_agente = "nombre_agente";
-   // private static final String TAG_nombre_usuario = "nombre_usuario";
-  //  private static final String TAG_pass_usuario = "pass_usuario";
+    // private static final String TAG_id_agente = "id_agente";
+    // private static final String TAG_id_agente_venta = "id_agente_venta";
+    // private static final String TAG_id_empresa = "id_empresa";
+    // private static final String TAG_id_usuario = "id_usuario";
+    // private static final String TAG_nombre_agente = "nombre_agente";
+    // private static final String TAG_nombre_usuario = "nombre_usuario";
+    //  private static final String TAG_pass_usuario = "pass_usuario";
     private int idAgente;
     private int idLiquidacion;
-    private String nombreUsuario="";
+    private String nombreUsuario = "";
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.login);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        // TODO Auto-generated method stub
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.login);
 
         mainActivity = this;
        /* session = new DbAdapter_Temp_Session(this);
@@ -109,17 +110,17 @@ public class Login extends Activity implements OnClickListener{
 */
 
 
-      //  idAgente = session.fetchVarible(1);
-      //  idLiquidacion = session.fetchVarible(3);
+        //  idAgente = session.fetchVarible(1);
+        //  idLiquidacion = session.fetchVarible(3);
 
         //((MyApplication)getApplication()).setImportado(false);
         //((MyApplication)getApplication()).setExport(false);
 
 
-       // session.deleteVariable(7);
-       // session.createTempSession(7,0);
-       // session.deleteVariable(8);
-       // session.createTempSession(8,0);
+        // session.deleteVariable(7);
+        // session.createTempSession(7,0);
+        // session.deleteVariable(8);
+        // session.createTempSession(8,0);
 
         loginClass = this;
 
@@ -127,23 +128,21 @@ public class Login extends Activity implements OnClickListener{
         dbAdapter_agente.open();
 
 
-
-
-		//setup input fields
-		user = (EditText)findViewById(R.id.username);
-		pass = (EditText)findViewById(R.id.password);
+        //setup input fields
+        user = (EditText) findViewById(R.id.username);
+        pass = (EditText) findViewById(R.id.password);
 
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        nombreUsuario= SP.getString("username", "emerson.f");
+        nombreUsuario = SP.getString("username", "emerson.f");
 
-        user.setText(""+nombreUsuario);
+        user.setText("" + nombreUsuario);
 
-		//setup buttons
-		mSubmit = (Button)findViewById(R.id.login);
+        //setup buttons
+        mSubmit = (Button) findViewById(R.id.login);
         //mSalirs = (Button)findViewById(R.id.salir);
-		
-		//register listeners
-		mSubmit.setOnClickListener(this);
+
+        //register listeners
+        mSubmit.setOnClickListener(this);
         //mSalirs.setOnClickListener(this);
         //estaConectado();
         //if(isOnline()){
@@ -152,7 +151,7 @@ public class Login extends Activity implements OnClickListener{
         //    user.setText("error");
         //}
 
-	}
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -167,7 +166,7 @@ public class Login extends Activity implements OnClickListener{
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        switch (id){
+        switch (id) {
 
             /*case R.id.buttonNewDay:
                 dbAdapter_agente.deleteAllAgentes();
@@ -190,22 +189,22 @@ public class Login extends Activity implements OnClickListener{
     }
 
 
-    protected Boolean estaConectado(){
-        if(conectadoWifi()){
-            user.setText("Conexion a Wifi");
+    protected Boolean estaConectado() {
+        if (conectadoWifi()) {
+            //user.setText("Conexion a Wifi");
             return true;
-        }else{
-            if(conectadoRedMovil()){
-                user.setText("Conexion a Movil");
+        } else {
+            if (conectadoRedMovil()) {
+              //  user.setText("Conexion a Movil");
                 return true;
-            }else{
-                user.setText("No Tiene Conexion a Internet");
+            } else {
+                //user.setText("No Tiene Conexion a Internet");
                 return false;
             }
         }
     }
 
-    protected Boolean conectadoWifi(){
+    protected Boolean conectadoWifi() {
         ConnectivityManager connectivity = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivity != null) {
             NetworkInfo info = connectivity.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
@@ -218,7 +217,7 @@ public class Login extends Activity implements OnClickListener{
         return false;
     }
 
-    protected Boolean conectadoRedMovil(){
+    protected Boolean conectadoRedMovil() {
         ConnectivityManager connectivity = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivity != null) {
             NetworkInfo info = connectivity.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
@@ -231,35 +230,30 @@ public class Login extends Activity implements OnClickListener{
         return false;
     }
 
-	@Override
-	public void onClick(View v) {
-		// TODO Auto-generated method stub
-		switch (v.getId()) {
-		case R.id.login:
+    public void cajaAbierta() {
+        succesLogin = false;
 
+        Cursor cursorAgenteCajaActual = dbAdapter_agente.fetchAllAgentesVentaLogin(getDatePhone());
+        cursorAgenteCajaActual.moveToFirst();
+        String fechaCaja = null;
+        if (cursorAgenteCajaActual.getCount() > 0) {
+            succesLogin = true;
+            fechaCaja = cursorAgenteCajaActual.getString(cursorAgenteCajaActual.getColumnIndexOrThrow(dbAdapter_agente.AG_fecha));
+            Log.d("FECHA", "" + fechaCaja + "-" + cursorAgenteCajaActual.getString(cursorAgenteCajaActual.getColumnIndexOrThrow(dbAdapter_agente.AG_LIQUIDACION)));
+            if (getDatePhone().equals(fechaCaja)) {
+                succesLogin = true;
+            } else {
+                succesLogin = false;
+                Toast.makeText(getApplicationContext(), "Abriendo nueva caja...", Toast.LENGTH_LONG).show();
+            }
+        }
+
+
+        if (cursorAgenteCajaActual.getCount() == 0) {
             succesLogin = false;
+        }
 
-            Cursor cursorAgenteCajaActual = dbAdapter_agente.fetchAllAgentesVentaLogin(getDatePhone());
-            cursorAgenteCajaActual.moveToFirst();
-            String fechaCaja = null;
-            if (cursorAgenteCajaActual.getCount()>0) {
-                succesLogin=true;
-                fechaCaja = cursorAgenteCajaActual.getString(cursorAgenteCajaActual.getColumnIndexOrThrow(dbAdapter_agente.AG_fecha));
-
-                if (getDatePhone().equals(fechaCaja)){
-                    succesLogin=true;
-                }else{
-                    succesLogin=false;
-                    Toast.makeText(getApplicationContext(), "Abriendo nueva caja...", Toast.LENGTH_LONG).show();
-                }
-            }
-
-
-            if(cursorAgenteCajaActual.getCount()==0){
-                succesLogin=false;
-            }
-
-            if (succesLogin){
+        if (succesLogin) {
                 /*
                 ((MyApplication) loginClass.getApplication()).setIdAgente(mCursorAgente.getInt(mCursorAgente.getColumnIndexOrThrow(dbAdapter_agente.AG_id_agente_venta)));
                 ((MyApplication) loginClass.getApplication()).setIdLiquidacion(mCursorAgente.getInt(mCursorAgente.getColumnIndexOrThrow(dbAdapter_agente.AG_liquidacion)));
@@ -281,29 +275,42 @@ public class Login extends Activity implements OnClickListener{
                 session.createTempSession(9,1);*/
 
 
-                Toast.makeText(getApplicationContext(), "Login correcto", Toast.LENGTH_SHORT).show();
-                Intent i = new Intent(Login.this, VMovil_Abrir_Caja.class);
-                finish();
-                startActivity(i);
-            }else{
-                if (conectadoRedMovil()||conectadoWifi()){
-                    new LoginRest().execute();
-                }else{
-                    Toast.makeText(getApplicationContext(), "Necesita estar conectado a internet la primera vez", Toast.LENGTH_SHORT).show();
-                }
+            Toast.makeText(getApplicationContext(), "Login correcto", Toast.LENGTH_SHORT).show();
+            Intent i = new Intent(Login.this, VMovil_Abrir_Caja.class);
+            finish();
+            startActivity(i);
+        } else {
+            if (conectadoRedMovil() || conectadoWifi()) {
+                new LoginRest().execute();
+            } else {
+                Toast.makeText(getApplicationContext(), "Necesita estar conectado a internet la primera vez", Toast.LENGTH_SHORT).show();
             }
+        }
+    }
 
-			//new AttemptLogin().execute();
-			break;
-		/*case R.id.salir:
+    @Override
+    public void onClick(View v) {
+        // TODO Auto-generated method stub
+        switch (v.getId()) {
+            case R.id.login:
+
+                if (estaConectado()) {
+                    new LoginRest().execute();
+
+                } else {
+                    cajaAbierta();
+                }
+                //new AttemptLogin().execute();
+                break;
+        /*case R.id.salir:
             finish();
 			break;*/
-		default:
-			break;
-		}
-	}
+            default:
+                break;
+        }
+    }
 
-    class LoginRest extends AsyncTask<String, String, String>{
+    class LoginRest extends AsyncTask<String, String, String> {
         private String usuario;
         private String clave;
 
@@ -317,24 +324,24 @@ public class Login extends Activity implements OnClickListener{
             publishProgress("" + 10);
             try {
 
-                Log.d("LOGIN DATOS , ", ""+user.getText().toString()+" - " + pass.getText().toString() + " - "+getDatePhone());
-                jsonObjAgente = api.GetDatosAgente(user.getText().toString(),pass.getText().toString());
-                Log.d("JSON OBJECT AGENTE", ""+jsonObjAgente.toString());
+                Log.d("LOGIN DATOS , ", "" + user.getText().toString() + " - " + pass.getText().toString() + " - " + getDatePhone());
+                jsonObjAgente = api.GetDatosAgente(user.getText().toString(), pass.getText().toString());
+                Log.d("JSON OBJECT AGENTE", "" + jsonObjAgente.toString());
             } catch (Exception e) {
                 e.printStackTrace();
             }
             ParserAgente parserAgente = new ParserAgente();
 
-            publishProgress(""+25);
+            publishProgress("" + 25);
             //agenteLista = parserAgente.parserAgenteDatos(jsonObjAgente);
             agenteLista = parserAgente.parserAgente(jsonObjAgente, user.getText().toString(), pass.getText().toString());
-            publishProgress(""+50);
-            if (agenteLista.size()>0){
+            publishProgress("" + 50);
+            if (agenteLista.size() > 0) {
                 succesLogin = true;
                 usuario = user.getText().toString();
                 clave = pass.getText().toString();
-                for (int i = 0; i < agenteLista.size() ; i++) {
-                    Log.d("Agente"+i, "Nombre : "+agenteLista.get(i).getNombreAgente());
+                for (int i = 0; i < agenteLista.size(); i++) {
+                    Log.d("Agente" + i, "Nombre : " + agenteLista.get(i).getNombreAgente());
 
                     /*
                     //VARIABLE GLOBAL, PARA OBTENERLA DESDE CUALQUIER SITIO DE LA APLICACIÓN
@@ -368,16 +375,16 @@ public class Login extends Activity implements OnClickListener{
 
                     agenteLista.get(i).getIdAgenteVenta();
                     boolean existe = dbAdapter_agente.existeAgentesById(agenteLista.get(i).getIdAgenteVenta());
-                    Log.d("EXISTE ", ""+existe+"LIQUIDACION : "+agenteLista.get(i).getIdAgenteVenta());
-                    if (existe){
-                        dbAdapter_agente.updateAgente(agenteLista.get(i), getDatePhone(),usuario,clave);
-                    }else {
+                    Log.d("EXISTE ", "" + existe + "LIQUIDACION : " + agenteLista.get(i).getIdAgenteVenta());
+                    if (existe) {
+                        dbAdapter_agente.updateAgente(agenteLista.get(i), getDatePhone(), usuario, clave);
+                    } else {
                         //NO EXISTE ENTONCES CREEMOS UNO NUEVO
-                        dbAdapter_agente.createAgente(agenteLista.get(i), getDatePhone(),usuario,clave);
+                        dbAdapter_agente.createAgente(agenteLista.get(i), getDatePhone(), usuario, clave);
                     }
                 }
             }
-            publishProgress(""+75);
+            publishProgress("" + 75);
             return null;
         }
 
@@ -394,24 +401,24 @@ public class Login extends Activity implements OnClickListener{
 
         @Override
         protected void onPostExecute(String s) {
-            if(mainActivity.isFinishing()){
+            if (mainActivity.isFinishing()) {
                 //dismissprgDialog();
                 prgDialog.dismiss();
                 return;
-            }else {
+            } else {
 
                 prgDialog.setProgress(100);
                 dismissProgressDialog();
             }
 
-            if (succesLogin){
+            if (succesLogin) {
 
                 Toast.makeText(getApplicationContext(), "Login correcto", Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(Login.this, VMovil_Abrir_Caja.class);
                 finish();
                 startActivity(i);
-            }else{
-                Toast.makeText(getApplicationContext(), "Debe abrir Caja para hoy, o las credenciales son incorrectas", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getApplicationContext(), "Las credenciales son incorrectas", Toast.LENGTH_SHORT).show();
             }
             super.onPostExecute(s);
         }
@@ -513,7 +520,7 @@ public class Login extends Activity implements OnClickListener{
 	}
     */
 
-    public void createProgressDialog(){
+    public void createProgressDialog() {
         prgDialog = new ProgressDialog(this);
         prgDialog.setMessage("Logeando...");
         prgDialog.setIndeterminate(false);
@@ -523,6 +530,7 @@ public class Login extends Activity implements OnClickListener{
         prgDialog.show();
 
     }
+
     private String getDatePhone() {
         Calendar cal = new GregorianCalendar();
         Date date = cal.getTime();

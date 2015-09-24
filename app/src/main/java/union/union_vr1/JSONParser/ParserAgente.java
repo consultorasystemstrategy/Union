@@ -26,7 +26,13 @@ public class ParserAgente {
             JSONObject jsonObj = null;
             for (int i = 0; i < jsonArray.length(); i++) {
                 jsonObj = jsonArray.getJSONObject(i);
-                arrayList.add(new Agente(jsonObj.getInt("idAgente"), jsonObj.getInt("idEmpresa"), jsonObj.getInt("idUsuario"), jsonObj.getString("nombre"), usuario, password, jsonObj.getInt("idLiquidacion"), jsonObj.getDouble("kmInicial"),
+                arrayList.add(new Agente(jsonObj.getInt("idAgente"),
+                        jsonObj.getInt("idEmpresa"),
+                        jsonObj.getInt("idUsuario"),
+                        jsonObj.getString("nombre"),
+                        usuario, password,
+                        jsonObj.getInt("idLiquidacion"),
+                        jsonObj.getDouble("kmInicial"),
                         jsonObj.getDouble("kmFinal"),
                         jsonObj.getString("nombreRuta"),
                         jsonObj.getInt("nroBodegas"),
