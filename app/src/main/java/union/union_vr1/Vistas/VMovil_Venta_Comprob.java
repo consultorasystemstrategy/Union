@@ -415,7 +415,7 @@ public class VMovil_Venta_Comprob extends Activity implements View.OnClickListen
         final int idAutorizacion = cr.getInt(cr.getColumnIndexOrThrow(DBAdapter_Temp_Autorizacion_Cobro.temp_id_autorizacion_cobro));
         final int idAEstablecimiento = cr.getInt(cr.getColumnIndexOrThrow(DBAdapter_Temp_Autorizacion_Cobro.temp_establec));
         final String idComprobanteCobro = cr.getString(cr.getColumnIndexOrThrow(DBAdapter_Temp_Autorizacion_Cobro.temp_id_comprobante));
-        final Double montoCredito = cr.getDouble(cr.getColumnIndexOrThrow(DBAdapter_Temp_Autorizacion_Cobro.temp_vigencia_credito));
+        final Double montoCredito = cr.getDouble(cr.getColumnIndexOrThrow(DBAdapter_Temp_Autorizacion_Cobro.temp_monto_pagado));
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         // set title
         alertDialogBuilder.setTitle("Confirmar Prologa de Pagos");

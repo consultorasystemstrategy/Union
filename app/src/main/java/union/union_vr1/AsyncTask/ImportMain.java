@@ -61,8 +61,6 @@ import union.union_vr1.Vistas.VMovil_Online_Pumovil;
 public class ImportMain extends AsyncTask<String, String, String> {
 
 
-
-
     private DbAdapter_Temp_Session session;
     private Activity mainActivity;
     private ProgressDialog progressDialog;
@@ -77,7 +75,6 @@ public class ImportMain extends AsyncTask<String, String, String> {
     private DbAdapter_Histo_Comprob_Anterior dbAdapter_histo_comprob_anterior;
     private DBAdapter_Temp_Autorizacion_Cobro dbAdapter_temp_autorizacion_cobro;
     private DbAdapter_Ruta_Distribucion dbAdapter_ruta_distribucion;
-
 
 
     //private ListView listView;
@@ -114,11 +111,10 @@ public class ImportMain extends AsyncTask<String, String, String> {
         dbAdapter_ruta_distribucion.open();
 
 
-
 //        idAgente = ((MyApplication)mainActivity.getApplication()).getIdAgente();
-            idAgente = session.fetchVarible(1);
-            idLiquidacion = session.fetchVarible(3);
-        Log.d("DATOS SESSION"," AGENTE: "+idAgente+" LIQUIDACION: "+idLiquidacion);
+        idAgente = session.fetchVarible(1);
+        idLiquidacion = session.fetchVarible(3);
+        Log.d("DATOS SESSION", " AGENTE: " + idAgente + " LIQUIDACION: " + idLiquidacion);
 
         //listView = (ListView) mainActivity.findViewById(R.id.listView);
     }
@@ -149,32 +145,32 @@ public class ImportMain extends AsyncTask<String, String, String> {
 
         String fecha = getDatePhone();
 
-        Log.d("iIMPORT DATOS REALES dAgente, idLiquidacion, Fecha", idAgente+", "+idLiquidacion+","+fecha);
+        Log.d("iIMPORT DATOS REALES dAgente, idLiquidacion, Fecha", idAgente + ", " + idLiquidacion + "," + fecha);
 
 /*
         idAgente = 3;
         idLiquidacion = 10;
         fecha = "02/02/2015";
 */
-        Log.d("IMPORT DATOS DE PRUEBA ESTABLECIMIENTO X RUTA idAgente, idLiquidacion, Fecha", idAgente+", "+idLiquidacion+","+fecha);
+        Log.d("IMPORT DATOS DE PRUEBA ESTABLECIMIENTO X RUTA idAgente, idLiquidacion, Fecha", idAgente + ", " + idLiquidacion + "," + fecha);
 
-        try{
-            publishProgress(""+5);
+        try {
+            publishProgress("" + 5);
             JSONObject jsonObjectStockAgente = api.GetStockAgente(idAgente);
             Log.d("JSON ERROR MESSAGE", getErrorMessage(jsonObjectStockAgente));
-            publishProgress(""+10);
+            publishProgress("" + 10);
             JSONObject jsonObjectTipoGasto = api.GetTipoGasto();
-            publishProgress(""+15);
-            JSONObject jsonObjectPrecio = api.GetPrecioCategoria(idLiquidacion,idAgente);
-            publishProgress(""+20);
-            JSONObject jsonObjectEventoEstablecimiento = api.GetEstablecimeintoXRuta(idLiquidacion,fecha, idAgente);
-            publishProgress(""+25);
+            publishProgress("" + 15);
+            JSONObject jsonObjectPrecio = api.GetPrecioCategoria(idLiquidacion, idAgente);
+            publishProgress("" + 20);
+            JSONObject jsonObjectEventoEstablecimiento = api.GetEstablecimeintoXRuta(idLiquidacion, fecha, idAgente);
+            publishProgress("" + 25);
             JSONObject jsonObjectComprobanteCobro = api.GetHistorialCobrosPendientes();
-            publishProgress(""+30);
+            publishProgress("" + 30);
             JSONObject jsonObjectHistorialVentaDetalle = api.GetHistorialVentaDetalle(idAgente);
-            publishProgress(""+35);
+            publishProgress("" + 35);
             JSONObject jsonObjectHistorialComprobanteAnterior = api.GetComprobanteVentaDetalle_Env();
-            publishProgress(""+40);
+            publishProgress("" + 40);
             JSONObject jsonObjectRutaDistribucion = api.GetConsultarPlan_Distribucion(idAgente);
 
 
@@ -188,12 +184,11 @@ public class ImportMain extends AsyncTask<String, String, String> {
             Log.d("JSON OBJECT RUTA DISTRIBUCION ", jsonObjectRutaDistribucion.toString());
 
 
-
             ParserStockAgente parserStockAgente = new ParserStockAgente();
             ParserTipoGasto parserTipoGasto = new ParserTipoGasto();
             ParserPrecio parserPrecio = new ParserPrecio(mainActivity);
             ParserEventoEstablecimiento parserEventoEstablecimiento = new ParserEventoEstablecimiento();
-            ParserComprobanteCobro  parserComprobanteCobro = new ParserComprobanteCobro();
+            ParserComprobanteCobro parserComprobanteCobro = new ParserComprobanteCobro();
             ParserHistorialVentaDetalles parserHistorialVentaDetalles = new ParserHistorialVentaDetalles();
             ParserComprobanteVentaDetalle parserComprobanteVentaDetalle = new ParserComprobanteVentaDetalle();
 
@@ -206,16 +201,15 @@ public class ImportMain extends AsyncTask<String, String, String> {
             comprobanteVentaDetalles = parserComprobanteVentaDetalle.parserComprobanteVentaDetalle(jsonObjectHistorialComprobanteAnterior);
 
 
-
             boolean rutaSuccess = isSuccesfulImport(jsonObjectRutaDistribucion);
-            Log.d("RUTA SUCCESS", ""+rutaSuccess);
-            if (rutaSuccess){
+            Log.d("RUTA SUCCESS", "" + rutaSuccess);
+            if (rutaSuccess) {
                 JSONArray jsonArray = jsonObjectRutaDistribucion.getJSONArray("Value");
-                JSONObject jsonObj=null;
+                JSONObject jsonObj = null;
 
                 dbAdapter_ruta_distribucion.delleteAllRutaByIdAgente(idAgente);
 
-                for (int i=0; i< jsonArray.length(); i++){
+                for (int i = 0; i < jsonArray.length(); i++) {
                     jsonObj = jsonArray.getJSONObject(i);
 
                     int id = jsonObj.getInt("Id");
@@ -225,116 +219,114 @@ public class ImportMain extends AsyncTask<String, String, String> {
                     int numeroEstablecimiento = jsonObj.getInt("Establecimientos");
 
 
-
-
-                    Log.d("IMPORT RUTA ", diaSemana + " - " + nombre + " - " + numeroEstablecimiento + " - "+ idAgente);
+                    Log.d("IMPORT RUTA ", diaSemana + " - " + nombre + " - " + numeroEstablecimiento + " - " + idAgente);
                     long idRutaInsertada = dbAdapter_ruta_distribucion.createRutaDistribucion(id, idRuta, nombre, diaSemana, numeroEstablecimiento, idAgente);
-                    Log.d("IMPORT ID RUTA ins", ""+ idRutaInsertada);
+                    Log.d("IMPORT ID RUTA ins", "" + idRutaInsertada);
 
                 }
 
 
             }
 
-            publishProgress(""+45);
+            publishProgress("" + 45);
             Log.d("IMPORTANDO ", "INICIANDO ...");
-            for (int i = 0; i < stockAgentes.size() ; i++) {
-                Log.d("Stock Agente"+i, "Nombre : "+stockAgentes.get(i).getNombre());
-                Log.d("Stock Agente"+i, "CÓDIGO DE BARRAS : "+stockAgentes.get(i).getCodigoBarras());
-                Log.d("Stock Agente"+i, "CÓDIGO DE producto : "+stockAgentes.get(i).getCodigo());
+            for (int i = 0; i < stockAgentes.size(); i++) {
+                Log.d("Stock Agente" + i, "Nombre : " + stockAgentes.get(i).getNombre());
+                Log.d("Stock Agente" + i, "CÓDIGO DE BARRAS : " + stockAgentes.get(i).getCodigoBarras());
+                Log.d("Stock Agente" + i, "CÓDIGO DE producto : " + stockAgentes.get(i).getCodigo());
 
 
-                boolean existe = dbAdapter_stock_agente.existsStockAgenteByIdProd(stockAgentes.get(i).getIdProducto(),idLiquidacion);
-                Log.d("EXISTE ", ""+existe);
-                if (existe){
-                    dbAdapter_stock_agente.updateStockAgentes(stockAgentes.get(i),idAgente,idLiquidacion);
-                }else {
+                boolean existe = dbAdapter_stock_agente.existsStockAgenteByIdProd(stockAgentes.get(i).getIdProducto(), idLiquidacion);
+                Log.d("EXISTE ", "" + existe);
+                if (existe) {
+                    dbAdapter_stock_agente.updateStockAgentes(stockAgentes.get(i), idAgente, idLiquidacion);
+                } else {
                     //NO EXISTE ENTONCES CREEMOS UNO NUEVO
-                    dbAdapter_stock_agente.createStockAgentes(stockAgentes.get(i), idAgente, Constants._IMPORTADO,idLiquidacion);
+                    dbAdapter_stock_agente.createStockAgentes(stockAgentes.get(i), idAgente, Constants._IMPORTADO, idLiquidacion);
                 }
             }
 
-            publishProgress(""+50);
-            for (int i=0; i<tipoGastos.size(); i++){
-                Log.d("TipoGastos"+i, "Nombre : "+tipoGastos.get(i).getNombreTipoGasto());
+            publishProgress("" + 50);
+            for (int i = 0; i < tipoGastos.size(); i++) {
+                Log.d("TipoGastos" + i, "Nombre : " + tipoGastos.get(i).getNombreTipoGasto());
 
                 boolean existe = dbAdapter_tipo_gasto.existeTipoGastos(tipoGastos.get(i).getIdTipoGasto());
-                Log.d("EXISTE ", ""+existe);
-                if (existe){
+                Log.d("EXISTE ", "" + existe);
+                if (existe) {
                     dbAdapter_tipo_gasto.updateTipoGasto(tipoGastos.get(i));
-                }else {
+                } else {
                     //NO EXISTE ENTONCES CREEMOS UNO NUEVO
                     dbAdapter_tipo_gasto.createTipoGasto(tipoGastos.get(i));
                 }
             }
 
-            for (int i = 0; i < precios.size() ; i++) {
+            for (int i = 0; i < precios.size(); i++) {
                 Log.d("PRECIO CATEGORÌA : " + i, "Nombre producto : " + precios.get(i).getNombreProducto());
 
                 boolean existe = dbAdapter_precio.existePrecio(precios.get(i).getIdProducto(), precios.get(i).getIdCategoriaEstablecimiento(), precios.get(i).getValorUnidad());
-                Log.d("EXISTE ", ""+existe);
-                if (existe){
+                Log.d("EXISTE ", "" + existe);
+                if (existe) {
                     dbAdapter_precio.updatePrecios(precios.get(i), idAgente);
-                }else {
+                } else {
                     //NO EXISTE ENTONCES CREEMOS UNO NUEVO
                     dbAdapter_precio.createPrecios(precios.get(i), idAgente);
                 }
             }
-            publishProgress(""+55);
-            for (int i = 0; i < eventoEstablecimientos.size() ; i++) {
-                Log.d("ESTABLECIMIENTOS X RUTAS: " + i, " Nombre Establecimiento : " + eventoEstablecimientos.get(i).getNombreEstablecimiento() + ", orden : " + eventoEstablecimientos.get(i).getOrden() +", BARCODE: "+eventoEstablecimientos.get(i).getCodigoBarras());
+            publishProgress("" + 55);
+            for (int i = 0; i < eventoEstablecimientos.size(); i++) {
+                Log.d("ESTABLECIMIENTOS X RUTAS: " + i, " Nombre Establecimiento : " + eventoEstablecimientos.get(i).getNombreEstablecimiento() + ", orden : " + eventoEstablecimientos.get(i).getOrden() + ", BARCODE: " + eventoEstablecimientos.get(i).getCodigoBarras());
                 boolean existe = dbAdaptert_evento_establec.existeEstablecsById(eventoEstablecimientos.get(i).getIdEstablecimiento());
 
-                Log.d("EXISTE ESTABLECIMIENTO", ""+existe);
-                if (existe){
+                Log.d("EXISTE ESTABLECIMIENTO", "" + existe);
+                if (existe) {
                     //dbAdapter_comprob_cobro.updateComprobCobros(comprobanteCobros.get(i));
                     dbAdaptert_evento_establec.updateEstablecimientos(eventoEstablecimientos.get(i), idAgente, idLiquidacion);
-                }else {
+                } else {
                     //NO EXISTE ENTONCES CREEMOS UNO NUEVO
                     long id = dbAdaptert_evento_establec.createEstablecimientos(eventoEstablecimientos.get(i), idAgente, idLiquidacion);
 
-                    Log.d("IMPORT INSERT ESTABLECIMIENTO id ", ""+id);
+                    Log.d("IMPORT INSERT ESTABLECIMIENTO id ", "" + id);
                 }
             }
 
-            publishProgress(""+60);
-            for (int i = 0; i < comprobanteCobros.size() ; i++) {
-                Log.d("COBROS PENDIENTES",""+ comprobanteCobros.toString());
-                Log.d("HISTORIAL COBROS PENDIENTES : " + i, " Monto a pagar : " + comprobanteCobros.get(i).getIdComprobante()+"-fecha-"+comprobanteCobros.get(i).getFechaProgramada());
+            publishProgress("" + 60);
+            for (int i = 0; i < comprobanteCobros.size(); i++) {
+                Log.d("COBROS PENDIENTES", "" + comprobanteCobros.toString());
+                Log.d("HISTORIAL COBROS PENDIENTES : " + i, " Monto a pagar : " + comprobanteCobros.get(i).getIdComprobante() + "-fecha-" + comprobanteCobros.get(i).getFechaProgramada());
                 boolean existe = dbAdapter_comprob_cobro.existeComprobCobro(comprobanteCobros.get(i).getIdComprobanteCobro());
-                Log.d("EXISTE ", ""+existe);
-                if (existe){
+                Log.d("EXISTE ", "" + existe);
+                if (existe) {
                     dbAdapter_comprob_cobro.updateComprobCobros(comprobanteCobros.get(i));
-                }else {
+                } else {
                     //NO EXISTE ENTONCES CREEMOS UNO NUEVO
                     dbAdapter_comprob_cobro.createComprobCobro(comprobanteCobros.get(i));
                 }
             }
-            publishProgress(""+65);
-            for (int i = 0; i < historialVentaDetalleses.size() ; i++) {
+            publishProgress("" + 65);
+            for (int i = 0; i < historialVentaDetalleses.size(); i++) {
                 Log.d("HISTORIAL VENTA DETALLES : " + i, " ID DETALLE : " + historialVentaDetalleses.get(i).getIdDetalle());
                 Log.d("JODER ", "SI HAY DATOS");
                 boolean existe = dbAdapter_histo_venta_detalle.existeHistoVentaDetalle(historialVentaDetalleses.get(i).getIdDetalle());
 
-                Log.d("EXISTE ", ""+existe);
-                if (existe){
+                Log.d("EXISTE ", "" + existe);
+                if (existe) {
                     dbAdapter_histo_venta_detalle.updateHistoVentaDetalle(historialVentaDetalleses.get(i));
-                }else {
+                } else {
                     //NO EXISTE ENTONCES CREEMOS UNO NUEVO
                     dbAdapter_histo_venta_detalle.createHistoVentaDetalle(historialVentaDetalleses.get(i));
                 }
             }
 
-            publishProgress(""+90);
-            for (int i = 0; i < comprobanteVentaDetalles.size() ; i++) {
-                Log.d("HVA HISTORIAL VENTA ANTERIOR : " + i + " - "+ comprobanteVentaDetalles.get(i).getIdComprobante()+ " - " + comprobanteVentaDetalles.get(i).getIdEstablecimiento(), " NOMBRE PRODUCTO : " + comprobanteVentaDetalles.get(i).getNombreProducto());
+            publishProgress("" + 90);
+            for (int i = 0; i < comprobanteVentaDetalles.size(); i++) {
+                Log.d("HVA HISTORIAL VENTA ANTERIOR : " + i + " - " + comprobanteVentaDetalles.get(i).getIdComprobante() + " - " + comprobanteVentaDetalles.get(i).getIdEstablecimiento(), " NOMBRE PRODUCTO : " + comprobanteVentaDetalles.get(i).getNombreProducto());
 
                 boolean existe = dbAdapter_histo_comprob_anterior.existeComprobanteVentaAnterior(comprobanteVentaDetalles.get(i).getIdComprobante());
-                Log.d("HVA ID PRODUCTO",""+comprobanteVentaDetalles.get(i).getIdProducto());
-                Log.d("EXISTE ", ""+existe);
-                if (existe){
+                Log.d("HVA ID PRODUCTO", "" + comprobanteVentaDetalles.get(i).getIdProducto());
+                Log.d("EXISTE ", "" + existe);
+                if (existe) {
                     dbAdapter_histo_comprob_anterior.updateHistoComprobAnterior(comprobanteVentaDetalles.get(i));
-                }else {
+                } else {
                     //NO EXISTE ENTONCES CREEMOS UNO NUEVO
                     dbAdapter_histo_comprob_anterior.createHistoComprobAnterior(comprobanteVentaDetalles.get(i));
                 }
@@ -368,12 +360,12 @@ public class ImportMain extends AsyncTask<String, String, String> {
 
 
             }*/
-            publishProgress(""+95);
+            publishProgress("" + 95);
             //ACTUALIZAR LOS CRÉDITOS DE LOS ESTABLECIMIENTOS
-/*
+
             Cursor cursorEstablecimiento = dbAdaptert_evento_establec.fetchAllEstablecs();
 
-            for (cursorEstablecimiento.moveToFirst(); !cursorEstablecimiento.isAfterLast(); cursorEstablecimiento.moveToNext()){
+            for (cursorEstablecimiento.moveToFirst(); !cursorEstablecimiento.isAfterLast(); cursorEstablecimiento.moveToNext()) {
 
                 int idEstablecimiento = cursorEstablecimiento.getInt(cursorEstablecimiento.getColumnIndexOrThrow(dbAdaptert_evento_establec.EE_id_establec));
                 JSONObject jsonObject = api.GetSolicitudAutorizacionEstablecimiento(idEstablecimiento);
@@ -382,7 +374,7 @@ public class ImportMain extends AsyncTask<String, String, String> {
                 Log.d("IMPORT SOLICITUDES DE AUTORIZACIÓN ", jsonObject.toString());
                 Log.d("IMPORT AUTORIZACION COBROS  ", jsonObjectAutorizacion.toString());
 
-
+/*
                 if (isSuccesfulImport(jsonObjectAutorizacion)) {
 
                     JSONArray jsonArray = jsonObjectAutorizacion.getJSONArray("Value");
@@ -395,27 +387,29 @@ public class ImportMain extends AsyncTask<String, String, String> {
                         int estadoSolicitud = jsonObj.getInt("SolIEstadoSolicitudId");
                         int idAutorizacionCobro = jsonObj.getInt("SolObservacion");
                         String fechaLimite = jsonObj.getString("CliDTFechaLimiteCredito");
+                        String SolReferencia = jsonObj.getString("SolReferencia");
 
 
                         boolean exists = dbAdapter_temp_autorizacion_cobro.existeAutorizacionCobro(idAutorizacionCobro);
 
                         Log.d("EXISTE AC", "" + exists);
                         if (exists) {
-                            int isActualizado = dbAdapter_temp_autorizacion_cobro.updateAutorizacionCobro(idAutorizacionCobro, estadoSolicitud, idEstablecimiento1,fechaLimite);
+                            int isActualizado = dbAdapter_temp_autorizacion_cobro.updateAutorizacionCobro(idAutorizacionCobro, estadoSolicitud, idEstablecimiento1,fechaLimite,SolReferencia);
                             Log.d("IMPORT REGISTRO AUTORIZACION COBRO ACTUALIZADO ", "" + isActualizado);
 
                         }
                     }
 
                 }
+                */
 
 
                 if (isSuccesfulImport(jsonObject)) {
 
                     JSONArray jsonArray = jsonObject.getJSONArray("Value");
-                    JSONObject jsonObj=null;
+                    JSONObject jsonObj = null;
                     for (int i = 0; i < jsonArray.length(); i++) {
-                        jsonObj=jsonArray.getJSONObject(i);
+                        jsonObj = jsonArray.getJSONObject(i);
                         int idEstablecimiento1 = jsonObj.getInt("EstIEstablecimientoId");
                         int montoCredito = jsonObj.getInt("SolDOMontoCredito");
                         int diasCredito = jsonObj.getInt("SolIVigenciaCredito");
@@ -427,13 +421,11 @@ public class ImportMain extends AsyncTask<String, String, String> {
 
             }
 
-            */
+
+            publishProgress("" + 99);
 
 
-            publishProgress(""+99);
-
-
-        }catch (Exception e){
+        } catch (Exception e) {
             Log.d("AysncImport : ", e.getMessage());
 
         }
@@ -448,11 +440,11 @@ public class ImportMain extends AsyncTask<String, String, String> {
 
     @Override
     protected void onPostExecute(String s) {
-        if(mainActivity.isFinishing()){
+        if (mainActivity.isFinishing()) {
             //dismissProgressDialog();
             progressDialog.dismiss();
             return;
-        }else {
+        } else {
 
             progressDialog.setProgress(100);
             dismissProgressDialog();
@@ -539,7 +531,7 @@ public class ImportMain extends AsyncTask<String, String, String> {
         progressDialog.setProgress(Integer.parseInt(values[0]));
     }
 
-    public void createProgressDialog(){
+    public void createProgressDialog() {
         progressDialog = new ProgressDialog(mainActivity);
         progressDialog.setMessage("Importando ...");
         progressDialog.setIndeterminate(false);
@@ -550,11 +542,10 @@ public class ImportMain extends AsyncTask<String, String, String> {
 
     }
 
-    public String getErrorMessage(JSONObject jsonObj)
-    {
+    public String getErrorMessage(JSONObject jsonObj) {
         String errorMessage = "Error Message null";
         try {
-               errorMessage +=jsonObj.getString("ErrorMessage");
+            errorMessage += jsonObj.getString("ErrorMessage");
         } catch (JSONException e) {
             // TODO Auto-generated catch block
             Log.d("JSONParser => parser Error Message", e.getMessage());
@@ -562,12 +553,11 @@ public class ImportMain extends AsyncTask<String, String, String> {
         return errorMessage;
     }
 
-    public boolean isSuccesfulImport(JSONObject jsonObj)
-    {
-        boolean succesful= false;
+    public boolean isSuccesfulImport(JSONObject jsonObj) {
+        boolean succesful = false;
         try {
             Log.d("CADEMA A ÁRSEAR BOOLEAN ", jsonObj.toString());
-            succesful= jsonObj.getBoolean("Successful");
+            succesful = jsonObj.getBoolean("Successful");
         } catch (JSONException e) {
             // TODO Auto-generated catch block
             Log.d("JSONParser => parser Error Message", e.getMessage());
@@ -582,6 +572,7 @@ public class ImportMain extends AsyncTask<String, String, String> {
             progressDialog.dismiss();
         }
     }
+
     private String getDatePhone() {
         Calendar cal = new GregorianCalendar();
         Date date = cal.getTime();

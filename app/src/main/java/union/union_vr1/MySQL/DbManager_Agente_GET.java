@@ -314,7 +314,8 @@ public class DbManager_Agente_GET extends Activity {
                                 co.getInt(TAG_id_forma_cobro),
                                 co.getString(TAG_lugar_registro),
                                 0,
-                                co.getString(TAG_id_comprobante_cobro)
+                                co.getString(TAG_id_comprobante_cobro),
+                                0
                         );
                     }
 

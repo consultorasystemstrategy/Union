@@ -67,16 +67,6 @@ public class CursorAdapter_Cobros_Establecimiento extends CursorAdapter {
             monto=monto-montoCobrado;
 
 
-            if (estado != null) {
-                if (estado.equals("1")) {
-                    estado = "En Proceso";
-                }
-                if (estado.equals("2")) {
-                    estado = "Aprobado";
-                }
-            }else{
-                estado="";
-            }
             DecimalFormat dformat = new DecimalFormat("#.00");
             textViewFecha.setText(fecha);
             textNombreEstablec.setText(nomEstablec);
@@ -84,7 +74,7 @@ public class CursorAdapter_Cobros_Establecimiento extends CursorAdapter {
             textViewDocumento.setText("Documento: " + doc);
             textViewDocumento.setTextColor(context.getApplicationContext().getResources().getColor(R.color.Dark1));
             textViewDeuda.setText("S/. " +dformat.format(monto));
-            textViewEstado.setText(estado);
+            textViewEstado.setText("");
 
 
 

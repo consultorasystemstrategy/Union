@@ -202,7 +202,7 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
         Cursor cursor = dbHelper.fetchAllComprobCobrosByEst(estabX);
 
 
-        Log.d("COBRO DE CRÉDITO","ESTABLECIMIENTO ID:" + estabX);
+        Log.d("COBRO DE CRÉDITO", "ESTABLECIMIENTO ID:" + estabX);
         CursorAdapter_Cobros_Establecimiento adapterCobros = new CursorAdapter_Cobros_Establecimiento(getApplicationContext(), cursor);
 
         final ListView listView = (ListView) findViewById(R.id.VCCR_LSTcresez);
@@ -263,11 +263,9 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
             }
 
         });
-        //inicioAutorizacion(listView);
+        inicioAutorizacion(listView);
     }
-    private void displayAutorizacion (final ListView listView){
 
-    }
 
     private void inicioAutorizacion(final ListView listView) {
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -276,8 +274,8 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
 
                 mSPNcredit.setText("");
                 Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
-                int idComprobante = cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Comprob_Cobro.CC_id_comprobante_cobro));
-
+                String idComprobante = cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Comprob_Cobro.CC_id_comprobante_cobro));
+                Log.d("IDCOMPROBANTE", "" + idComprobante);
                 int estado = dbComprobanteCobro.verProceso(idComprobante);
                 if (estado == 0) {
                     autorizacion(cursor, i);
@@ -294,7 +292,7 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
                     Toast.makeText(getApplicationContext(), "Anulado", Toast.LENGTH_SHORT).show();
                 }
                 if (estado == 5) {
-                    Toast.makeText(getApplicationContext(), "Ejecutado", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Ya realizo prorroga para este comprobante", Toast.LENGTH_SHORT).show();
                 }
 
 
@@ -368,7 +366,7 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
         final Double[] valorProrroga = {0.0, 0.0};
         //Obteniendo Datos del Cursor
         cursor.moveToPosition(p);
-        final int idComprobante = cursor.getInt(cursor.getColumnIndexOrThrow("cc_in_id_comprobante_cobro"));
+        final String idComprobante = cursor.getString(cursor.getColumnIndexOrThrow("cc_in_id_comprobante_cobro"));
         final String nombreEstablec = cursor.getString(cursor.getColumnIndexOrThrow("ee_te_nom_establec"));
         comprobanteVenta = cursor.getInt(cursor.getColumnIndexOrThrow("cc_in_id_comprob"));
         idPlanPago = cursor.getInt(cursor.getColumnIndexOrThrow("cc_in_id_plan_pago"));
@@ -437,14 +435,14 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
                         if (valorPago != 0.0 && valorCobrar != 0.0) {
 
                             int idAgente = session.fetchVarible(1);
-                            Log.e("DATOSENVIADOS",""+idAgente+"-"+4+"-"+ 1+"-"+ comprobanteVenta+"-"+ valorCobrar+"-"+ valorPago +"-"+Integer.parseInt(estabX) +"-"+Constants._CREADO+"-"+idComprobante+"-"+nombreEstablec);
+                            Log.e("DATOSENVIADOS", "" + idAgente + "-" + 4 + "-" + 1 + "-" + comprobanteVenta + "-" + valorCobrar + "-" + valorPago + "-" + Integer.parseInt(estabX) + "-" + Constants._CREADO + "-" + idComprobante + "-" + nombreEstablec);
                             SolicitarAutorizacionCobros solicitarAutorizacionCobros = new SolicitarAutorizacionCobros(getApplicationContext());
-                            solicitarAutorizacionCobros.execute(idAgente+"", 4+"", 1+"", comprobanteVenta+"", valorCobrar+"", valorPago+"", estabX, Constants._CREADO+"", idComprobante+"",nombreEstablec+"");
-                            long idAutorizacion = dbAutorizacionCobro.createTempAutorizacionPago(idAgente, 4, 1, comprobanteVenta, valorCobrar, valorPago, Integer.parseInt(estabX), Constants._CREADO, idComprobante,nombreEstablec);
-                            if(idAutorizacion >0){
+                            solicitarAutorizacionCobros.execute(idAgente + "", 4 + "", 1 + "", comprobanteVenta + "", valorCobrar + "", valorPago + "", estabX, Constants._CREADO + "", idComprobante + "", nombreEstablec + "");
+                            long idAutorizacion = dbAutorizacionCobro.createTempAutorizacionPago(idAgente, 4, 1, comprobanteVenta, valorCobrar, valorPago, Integer.parseInt(estabX), Constants._EXPORTADO, idComprobante, nombreEstablec);
+                            if (idAutorizacion > 0) {
                                 Back();
-                            }else{
-                                Toast.makeText(getApplicationContext(),"Ocurrio un error",Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(getApplicationContext(), "Ocurrio un error", Toast.LENGTH_SHORT).show();
                             }
 
 
@@ -476,7 +474,7 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
                         if (mSPNcredit.getText().equals("")) {
                             Toast.makeText(getApplicationContext(), "Tiene que Seleccionar una Deuda", Toast.LENGTH_SHORT).show();
                         }
-                        if ( Double.parseDouble(df.format(idDeuda)) == Double.parseDouble(mSPNcredit.getText().toString())) {
+                        if (Double.parseDouble(df.format(idDeuda)) == Double.parseDouble(mSPNcredit.getText().toString())) {
                             select("0");
                         } else {
                             if (idDeuda > Double.parseDouble(mSPNcredit.getText().toString())) {
@@ -607,9 +605,8 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
         textviewSlideGastos = (TextView) findViewById(R.id.slide_TextViewGastos);
         textviewSlideResumen = (TextView) findViewById(R.id.slide_textViewResumen);
         textviewSlideARendir = (TextView) findViewById(R.id.slide_textViewARendir);
-        textViewSlideCargar = (TextView)findViewById(R.id.slide_textViewCargarInventario);
+        textViewSlideCargar = (TextView) findViewById(R.id.slide_textViewCargarInventario);
         textViewSlideCargar.setOnClickListener(this);
-
 
 
         textViewSlideNombreEstablecimiento = (TextView) findViewById(R.id.slideVentas_textViewCliente);

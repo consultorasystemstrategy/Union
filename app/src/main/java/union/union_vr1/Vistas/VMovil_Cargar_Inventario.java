@@ -67,7 +67,7 @@ public class VMovil_Cargar_Inventario extends Activity implements View.OnClickLi
     Double slide_pagadoTotal = 0.0;
     Double slide_cobradoTotal = 0.0;
 
-    Double slide_totalRuta =0.0;
+    Double slide_totalRuta = 0.0;
     Double slide_totalPlanta = 0.0;
     Double slide_ingresosTotales = 0.0;
     Double slide_gastosTotales = 0.0;
@@ -88,17 +88,17 @@ public class VMovil_Cargar_Inventario extends Activity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vmovil__cargar__inventario);
 
-        mainActivity  = this;
+        mainActivity = this;
         //
         getStockAgente = new GetStockAgente(mainActivity);
         dbAdapter_temp_inventario = new DBAdapter_Temp_Inventario(this);
         dbAdapter_temp_inventario.open();
         cargarInventario = new CargarInventario(mainActivity);
-        agente = (TextView)findViewById(R.id.textNombreAgente);
-        liquidacion = (TextView)findViewById(R.id.textNumeroLiquidacion);
-        inputNroGuia = (EditText)findViewById(R.id.editNroGuia);
-        btnAgregarGuia = (Button)findViewById(R.id.btnAgregarGuia);
-        listGuias = (ListView)findViewById(R.id.listviewGuias);
+        agente = (TextView) findViewById(R.id.textNombreAgente);
+        liquidacion = (TextView) findViewById(R.id.textNumeroLiquidacion);
+        inputNroGuia = (EditText) findViewById(R.id.editNroGuia);
+        btnAgregarGuia = (Button) findViewById(R.id.btnAgregarGuia);
+        listGuias = (ListView) findViewById(R.id.listviewGuias);
         session = new DbAdapter_Temp_Session(this);
         session.open();
         dbHelperAgente = new DbAdapter_Agente(this);
@@ -112,10 +112,11 @@ public class VMovil_Cargar_Inventario extends Activity implements View.OnClickLi
         //SLIDING MENU
         showSlideMenu(mainActivity);
     }
-    private void displayWidgets(){
+
+    private void displayWidgets() {
         //
         Cursor cursor = dbAdapter_temp_inventario.getAllIvnetario();
-        CursorAdapter_Cargar_Inventario cursorAdapter_cargar_inventario = new CursorAdapter_Cargar_Inventario(getApplicationContext(),cursor);
+        CursorAdapter_Cargar_Inventario cursorAdapter_cargar_inventario = new CursorAdapter_Cargar_Inventario(getApplicationContext(), cursor);
         listGuias.setAdapter(cursorAdapter_cargar_inventario);
 
         ///
@@ -123,16 +124,16 @@ public class VMovil_Cargar_Inventario extends Activity implements View.OnClickLi
         nroLiquidacion = session.fetchVarible(3);
         slideIdAgente = session.fetchVarible(1);
         agente.setText(nombreAgente);
-        liquidacion.setText(nroLiquidacion+"");
+        liquidacion.setText(nroLiquidacion + "");
         btnAgregarGuia.setOnClickListener(this);
     }
 
-    private void iniciaCargar(){
+    private void iniciaCargar() {
 
         final String nroGuia = inputNroGuia.getText().toString();
-        if(inputNroGuia.getText() ==null || inputNroGuia.getText().toString().equals("")){
-            Toast.makeText(getApplicationContext(),"Por favor ingresa la guia",Toast.LENGTH_SHORT).show();
-        }else{
+        if (inputNroGuia.getText() == null || inputNroGuia.getText().toString().equals("")) {
+            Toast.makeText(getApplicationContext(), "Por favor ingresa la guia", Toast.LENGTH_SHORT).show();
+        } else {
 
             AlertDialog.Builder dialogo1 = new AlertDialog.Builder(this);
             dialogo1.setTitle("Importante");
@@ -140,8 +141,9 @@ public class VMovil_Cargar_Inventario extends Activity implements View.OnClickLi
             dialogo1.setCancelable(false);
             dialogo1.setPositiveButton("Seguro", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialogo1, int id) {
-
-                    cargarInventario.execute(""+slideIdAgente,""+nroGuia);
+                    cargarInventario = new CargarInventario(mainActivity);
+                    Log.e("DATOS CARGAR INVENTARIO",""+slideIdAgente+"+++"+nroGuia);
+                    cargarInventario.execute("" + slideIdAgente, "" + nroGuia);
                 }
             });
             dialogo1.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -156,10 +158,10 @@ public class VMovil_Cargar_Inventario extends Activity implements View.OnClickLi
 
 
     //SLIDING MENU
-    public void showSlideMenu(Activity activity){
+    public void showSlideMenu(Activity activity) {
         layoutSlideMenu = View.inflate(activity, R.layout.slide_menu, null);
         // configure the SlidingMenu
-        menu =  new SlidingMenu(activity);
+        menu = new SlidingMenu(activity);
         menu.setMode(SlidingMenu.LEFT);
         menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
         menu.setShadowWidthRes(R.dimen.space_slide);
@@ -169,17 +171,17 @@ public class VMovil_Cargar_Inventario extends Activity implements View.OnClickLi
         menu.attachToActivity(activity, SlidingMenu.SLIDING_CONTENT);
         menu.setMenu(layoutSlideMenu);
 
-        textViewSlideNombreAgente = (TextView)findViewById(R.id.slide_textViewNombreAgente);
-        textViewSlideNombreRuta = (TextView)findViewById(R.id.slide_textViewNombreRuta);
+        textViewSlideNombreAgente = (TextView) findViewById(R.id.slide_textViewNombreAgente);
+        textViewSlideNombreRuta = (TextView) findViewById(R.id.slide_textViewNombreRuta);
         buttonSlideNroEstablecimiento = (Button) findViewById(R.id.slide_buttonNroEstablecimiento);
 
-        textViewSlidePrincipal = (TextView)findViewById(R.id.slide_textviewPrincipal);
-        textViewSlideCliente = (TextView)findViewById(R.id.slide_textViewClientes);
-        textviewSlideCobranzas = (TextView)findViewById(R.id.slide_textViewCobranza);
-        textviewSlideGastos = (TextView)findViewById(R.id.slide_TextViewGastos);
-        textviewSlideResumen = (TextView)findViewById(R.id.slide_textViewResumen);
-        textviewSlideCInventario = (TextView)findViewById(R.id.slide_textViewCargarInventario);
-        textviewSlideARendir = (TextView)findViewById(R.id.slide_textViewARendir);
+        textViewSlidePrincipal = (TextView) findViewById(R.id.slide_textviewPrincipal);
+        textViewSlideCliente = (TextView) findViewById(R.id.slide_textViewClientes);
+        textviewSlideCobranzas = (TextView) findViewById(R.id.slide_textViewCobranza);
+        textviewSlideGastos = (TextView) findViewById(R.id.slide_TextViewGastos);
+        textviewSlideResumen = (TextView) findViewById(R.id.slide_textViewResumen);
+        textviewSlideCInventario = (TextView) findViewById(R.id.slide_textViewCargarInventario);
+        textviewSlideARendir = (TextView) findViewById(R.id.slide_textViewARendir);
 
         textViewIngresosTotales = (TextView) findViewById(R.id.textView_IngresosTotales);
         textViewGastos = (TextView) findViewById(R.id.textView_Gastos);
@@ -194,14 +196,13 @@ public class VMovil_Cargar_Inventario extends Activity implements View.OnClickLi
         textviewSlideARendir.setOnClickListener(this);
 
 
-
         changeDataSlideMenu();
 
 
     }
 
     //SLIDING MENU
-    public void changeDataSlideMenu(){
+    public void changeDataSlideMenu() {
 
         //INICIALIZAMOS OTRA VEZ LAS VARIABLES
         slide_emitidoTotal = 0.0;
@@ -217,7 +218,7 @@ public class VMovil_Cargar_Inventario extends Activity implements View.OnClickLi
         Cursor cursorAgente = dbHelperAgente.fetchAgentesByIds(slideIdAgente, slideIdLiquidacion);
         cursorAgente.moveToFirst();
 
-        if (cursorAgente.getCount()>0){
+        if (cursorAgente.getCount() > 0) {
             slideNombreRuta = cursorAgente.getString(cursorAgente.getColumnIndexOrThrow(dbHelperAgente.AG_nombre_ruta));
             slideNumeroEstablecimientoxRuta = cursorAgente.getInt(cursorAgente.getColumnIndexOrThrow(dbHelperAgente.AG_nro_bodegas));
             slideNombreAgente = cursorAgente.getString(cursorAgente.getColumnIndexOrThrow(dbHelperAgente.AG_nombre_agente));
@@ -238,9 +239,9 @@ public class VMovil_Cargar_Inventario extends Activity implements View.OnClickLi
         }
         //GASTOS
         Utils utils = new Utils();
-        Cursor cursorTotalGastos =dbAdapter_informe_gastos.resumenInformeGastos(utils.getDayPhone());
+        Cursor cursorTotalGastos = dbAdapter_informe_gastos.resumenInformeGastos(utils.getDayPhone());
 
-        for (cursorTotalGastos.moveToFirst(); !cursorTotalGastos.isAfterLast(); cursorTotalGastos.moveToNext()){
+        for (cursorTotalGastos.moveToFirst(); !cursorTotalGastos.isAfterLast(); cursorTotalGastos.moveToNext()) {
             Double rutaGasto = cursorTotalGastos.getDouble(cursorTotalGastos.getColumnIndexOrThrow("RUTA"));
             Double plantaGasto = cursorTotalGastos.getDouble(cursorTotalGastos.getColumnIndexOrThrow("PLANTA"));
 
@@ -250,19 +251,18 @@ public class VMovil_Cargar_Inventario extends Activity implements View.OnClickLi
 
         slide_ingresosTotales = slide_cobradoTotal + slide_pagadoTotal;
         slide_gastosTotales = slide_totalRuta;
-        slide_aRendir = slide_ingresosTotales-slide_gastosTotales;
-
+        slide_aRendir = slide_ingresosTotales - slide_gastosTotales;
 
 
         //MOSTRAMOS EN EL SLIDE LOS DATOS OBTENIDOS
         DecimalFormat df = new DecimalFormat("#.00");
-        textViewSlideNombreAgente.setText(""+slideNombreAgente);
-        textViewSlideNombreRuta.setText(""+slideNombreRuta);
-        buttonSlideNroEstablecimiento.setText(""+slideNumeroEstablecimientoxRuta);
+        textViewSlideNombreAgente.setText("" + slideNombreAgente);
+        textViewSlideNombreRuta.setText("" + slideNombreRuta);
+        buttonSlideNroEstablecimiento.setText("" + slideNumeroEstablecimientoxRuta);
         textviewSlideARendir.setText("Efectivo a Rendir S/. " + df.format(slide_aRendir));
 
-        textViewIngresosTotales.setText(""+df.format(slide_ingresosTotales));
-        textViewGastos.setText(""+df.format(slide_gastosTotales));
+        textViewIngresosTotales.setText("" + df.format(slide_ingresosTotales));
+        textViewGastos.setText("" + df.format(slide_gastosTotales));
 
 
     }
@@ -334,6 +334,7 @@ public class VMovil_Cargar_Inventario extends Activity implements View.OnClickLi
                 break;
         }
     }
+
     @Override
     protected void onDestroy() {
         cargarInventario.dismissProgressDialog();
@@ -356,8 +357,9 @@ public class VMovil_Cargar_Inventario extends Activity implements View.OnClickLi
 
         return super.onOptionsItemSelected(item);
     }
+
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event)  {
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             getStockAgente.execute();
             onBackPressed();
@@ -366,8 +368,9 @@ public class VMovil_Cargar_Inventario extends Activity implements View.OnClickLi
 
         return super.onKeyDown(keyCode, event);
     }
+
     public void onBackPressed() {
-        startActivity(new Intent(getApplicationContext(),VMovil_Evento_Indice.class));
+        startActivity(new Intent(getApplicationContext(), VMovil_Evento_Indice.class));
         this.finish();
     }
 }

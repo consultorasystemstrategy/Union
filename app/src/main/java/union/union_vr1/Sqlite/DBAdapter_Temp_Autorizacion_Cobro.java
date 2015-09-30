@@ -27,7 +27,7 @@ public class DBAdapter_Temp_Autorizacion_Cobro {
     public static final String temp_referencia = "temp_Referencia";
     public static final String temp_montoCredito = "temp_MontoCredito";
     public static final String temp_establec = "temp_Establecimiento";
-    public static final String temp_vigencia_credito = "temp_Vigencia_Credito";
+    public static final String temp_monto_pagado = "temp_monto_pagado";
     public static final String temp_fechaLimite = "temp_fecha_limite";
     public static final String estado_sincronizacion = "estado_sincronizacion";
     public static final String temp_id_comprobante = "estado_id_comprobante";
@@ -50,8 +50,8 @@ public class DBAdapter_Temp_Autorizacion_Cobro {
                     + temp_referencia + " integer,"
                     + temp_montoCredito + " real,"
                     + temp_establec + " integer,"
-                    + temp_id_comprobante + " integer,"
-                    + temp_vigencia_credito + " real,"
+                    + temp_id_comprobante + " text,"
+                    + temp_monto_pagado + " real,"
                     + estado_sincronizacion + " integer ,"
                     + temp_nom_establec + " text ," +
                     temp_fechaLimite + " text );";
@@ -83,7 +83,7 @@ public class DBAdapter_Temp_Autorizacion_Cobro {
 
 
     public long createTempAutorizacionPago(int idAgente, int motivoSolicitud, int estadoSolicitud, int referencia, double aPagar,
-                                           double pagado, int idEstablec, int sincronizacion, int idComprobante, String nombreEstablec) {
+                                           double pagado, int idEstablec, int sincronizacion, String idComprobante, String nombreEstablec) {
 
         ContentValues initialValues = new ContentValues();
         initialValues.put(temp_id_agente, idAgente);
@@ -93,7 +93,7 @@ public class DBAdapter_Temp_Autorizacion_Cobro {
         initialValues.put(temp_id_estado_solicitud, estadoSolicitud);
         initialValues.put(temp_referencia, referencia);
         initialValues.put(temp_montoCredito, aPagar);
-        initialValues.put(temp_vigencia_credito, pagado);
+        initialValues.put(temp_monto_pagado, pagado);
         initialValues.put(estado_sincronizacion, sincronizacion);
         initialValues.put(temp_id_comprobante, idComprobante);
         initialValues.put(temp_nom_establec, nombreEstablec);
@@ -130,7 +130,7 @@ public class DBAdapter_Temp_Autorizacion_Cobro {
         mCursor = mDb.query(true, SQLITE_TABLE_Temp_Autorizacion_Cobro, new String[]{
                         temp_autorizacion_cobro, temp_id_agente,
                         temp_establec, temp_id_motivo_solicitud, temp_id_estado_solicitud,
-                        temp_referencia, temp_montoCredito, temp_vigencia_credito, estado_sincronizacion, temp_id_comprobante, temp_id_autorizacion_cobro
+                        temp_referencia, temp_montoCredito, temp_monto_pagado, estado_sincronizacion, temp_id_comprobante, temp_id_autorizacion_cobro
                 },
                 Constants._SINCRONIZAR + " = " + Constants._CREADO + " AND " + temp_id_estado_solicitud + " = '1'", null,
                 null, null, null, null);
@@ -140,14 +140,14 @@ public class DBAdapter_Temp_Autorizacion_Cobro {
         return mCursor;
     }
 
-    public boolean existeAutorizacionCobro(int idAutorizacionCobro) {
+    public boolean existeAutorizacionCobro(String idAutorizacionCobro) {
         boolean exists = false;
         Cursor mCursor = mDb.query(true, SQLITE_TABLE_Temp_Autorizacion_Cobro, new String[]{
                         temp_autorizacion_cobro, temp_id_agente,
                         temp_establec, temp_id_motivo_solicitud, temp_id_estado_solicitud,
-                        temp_referencia, temp_montoCredito, temp_vigencia_credito, estado_sincronizacion, temp_id_comprobante, temp_fechaLimite
+                        temp_referencia, temp_montoCredito, temp_monto_pagado, estado_sincronizacion, temp_id_comprobante, temp_fechaLimite
                 },
-                temp_id_autorizacion_cobro + " = " + idAutorizacionCobro, null,
+                temp_id_comprobante + " = '" + idAutorizacionCobro+"' and "+temp_id_estado_solicitud+"=1;", null,
                 null, null, null, null);
         if (mCursor != null) {
             mCursor.moveToFirst();
@@ -179,19 +179,28 @@ public class DBAdapter_Temp_Autorizacion_Cobro {
 
         return estado;
     }
+    public double getMontoPagado(String idcomprobante){
+        Cursor cr =mDb.rawQuery("select * from "+SQLITE_TABLE_Temp_Autorizacion_Cobro+" where "+temp_id_comprobante+"='"+idcomprobante+"'",null);
+        cr.moveToFirst();
+        return cr.getDouble(cr.getColumnIndexOrThrow(temp_monto_pagado));
+    }
 
-    public int updateAutorizacionCobro(int idAutorizacionCobro, int estadoSolicitud, int idEstablecimiento, String fechaLimite) {
+    public int updateAutorizacionCobro( int estadoSolicitud, int idEstablecimiento, String fechaLimite,String SolReferenciaIdComprobante) {
 
         ContentValues initialValues = new ContentValues();
         initialValues.put(temp_id_estado_solicitud, estadoSolicitud);
         initialValues.put(Constants._SINCRONIZAR, Constants._IMPORTADO);
         initialValues.put(temp_fechaLimite, fechaLimite);
-        mDb.execSQL("update " + DbAdapter_Comprob_Cobro.SQLITE_TABLE_Comprob_Cobro + " set " + DbAdapter_Comprob_Cobro.CC_estado_prologa + "='2' where " + DbAdapter_Comprob_Cobro.CC_id_autorizacion + "='" + idAutorizacionCobro + "'");
+
+        mDb.execSQL("update " + DbAdapter_Comprob_Cobro.SQLITE_TABLE_Comprob_Cobro + " set " + DbAdapter_Comprob_Cobro.CC_estado_prologa + "='2' where " + DbAdapter_Comprob_Cobro.CC_id_comprobante_cobro + "='" + SolReferenciaIdComprobante + "'");
 
         return mDb.update(SQLITE_TABLE_Temp_Autorizacion_Cobro, initialValues,
-                temp_id_autorizacion_cobro + "=? AND " + temp_establec + " = ?", new String[]{"" + idAutorizacionCobro, "" + idEstablecimiento});
+                temp_id_comprobante + "=? AND " + temp_establec + " = ?", new String[]{"" + SolReferenciaIdComprobante, "" + idEstablecimiento});
+
+
 
     }
+
 
     public int updateAutorizacionCobro_Au(int idAutorizacionCobro, int estadoSolicitud, int idEstablecimiento, String fechaLimite) {
 
