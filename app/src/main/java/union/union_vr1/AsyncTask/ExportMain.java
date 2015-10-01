@@ -267,6 +267,14 @@ public class ExportMain extends AsyncTask<String, String, String> {
 
                                 if (isSuccesfulExport(jsonObjectSuccesfull)){
                                     listIdComprobanteCobro.add(""+cursorPlanPago.getInt(cursorPlanPago.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_id_cob_historial)));
+                                    //Update IdPlanPagoDetalle
+
+                                }
+                                if(isSuccesfulExport(jsonObjectSuccess)){
+                                    int estado = dbAdapter_comprob_cobro.updatePlanPagoDetalleCobros(cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_comprob)),jsonObjectSuccess.getInt("Value"));
+                                    if(estado >0){
+                                        Log.d("IDPLANPAGODETALLE","INSERTTO: "+estado+" - IDPLANPAGODETALLE: "+jsonObjectSuccess.getInt("Value"));
+                                    }
 
                                 }
                                 Log.d("EXPORT JSON PPD S", jsonObjectSuccess.toString());

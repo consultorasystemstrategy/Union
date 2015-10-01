@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <AutoCompleteTextView
+            android:id="@+id/autocompleteBuscar"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="2"
+            android:hint="Buscar Producto" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="10"
+        android:orientation="horizontal">
+
+        <TabHost
+            android:id="@android:id/tabhost"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="vertical">
+
+                <TabWidget
+                    android:id="@android:id/tabs"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"></TabWidget>
+
+                <FrameLayout
+                    android:id="@android:id/tabcontent"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent">
+
+                    <LinearLayout
+                        android:id="@+id/tab1_canjes"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent">
+
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent">
+
+                            <LinearLayout
+                                android:orientation="vertical"
+                                android:layout_width="fill_parent"
+                                android:layout_height="fill_parent"
+                                android:layout_weight="1">
+
+                                <ListView
+                                    android:id="@+id/guias_canjes"
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="fill_parent" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:orientation="vertical"
+                                android:layout_width="fill_parent"
+                                android:layout_height="fill_parent"
+                                android:layout_weight="3.5">
+
+                                <TableLayout
+                                    android:id="@+id/tableLayoutcanjes"
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="fill_parent"
+                                    android:shrinkColumns="*"
+                                    android:stretchColumns="*" >
+                                    <TableRow
+                                        android:layout_height="fill_parent"
+                                        android:layout_width="fill_parent"
+
+                                        android:gravity="center_horizontal">
+                                        <TextView
+                                            android:id="@+id/TextView5"
+                                            android:padding="5dp"
+                                            android:text="Total:"
+                                            android:background="#b0b0b0"
+                                            android:textColor="#000000"
+                                            android:gravity="left"/>
+
+                                        <TextView
+                                            android:id="@+id/TextView0411"
+                                            android:text="0.0"
+                                            android:padding="5dp"
+                                            android:background="#a09f9f"
+                                            android:textColor="#000000"
+                                            android:gravity="center"/>
+                                    </TableRow>
+                                    <TableRow
+                                        android:layout_height="fill_parent"
+                                        android:layout_width="fill_parent"
+                                        android:gravity="center_horizontal">
+                                        <TextView
+                                            android:id="@+id/TextRow1"
+                                            android:text="Base Imponible"
+                                            android:padding="5dp"
+                                            android:background="#b0b0b0"
+                                            android:textColor="#000000"
+                                             android:gravity="left"/>
+
+                                        <TextView
+                                            android:id="@+id/TextRow2"
+                                            android:text="0.0"
+                                            android:background="#a09f9f"
+                                            android:padding="5dp"
+                                            android:textColor="#000000"
+                                            android:gravity="center"/>
+                                    </TableRow>
+                                    <TableRow
+                                        android:layout_height="fill_parent"
+                                        android:layout_width="fill_parent"
+                                        android:gravity="center_horizontal">
+                                        <TextView
+                                            android:id="@+id/TextRow3"
+                                            android:text="IGV:"
+                                            android:padding="5dp"
+                                            android:background="#b0b0b0"
+                                            android:textColor="#000000"
+                                            android:gravity="left"/>
+
+                                        <TextView
+                                            android:id="@+id/TextRow4"
+                                            android:text="0.0"
+                                            android:padding="5dp"
+                                            android:background="#a09f9f"
+                                            android:textColor="#000000"
+                                             android:gravity="center"/>
+                                    </TableRow>
+                                </TableLayout>
+                            </LinearLayout>
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/tab2_devoluciones"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent">
+
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent">
+
+                            <LinearLayout
+                                android:orientation="vertical"
+                                android:layout_width="fill_parent"
+                                android:layout_height="fill_parent"
+                                android:layout_weight="1">
+
+                                <ListView
+                                    android:id="@+id/guias_devoluciones"
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="fill_parent" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:orientation="vertical"
+                                android:layout_width="fill_parent"
+                                android:layout_height="fill_parent"
+                                android:layout_weight="3.5">
+
+                                <TableLayout
+                                    android:id="@+id/tableLayoutdevoluciones"
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="fill_parent"
+                                    android:shrinkColumns="*"
+                                    android:stretchColumns="*" >
+                                    <TableRow
+                                        android:layout_height="fill_parent"
+                                        android:layout_width="fill_parent"
+
+                                        android:gravity="center_horizontal">
+                                        <TextView
+                                            android:id="@+id/TextView6"
+                                            android:padding="5dp"
+                                            android:text="Total:"
+                                            android:background="#b0b0b0"
+                                            android:textColor="#000000"
+                                            android:gravity="left"/>
+
+                                        <TextView
+                                            android:id="@+id/TextView7"
+                                            android:text="0.0"
+                                            android:padding="5dp"
+                                            android:background="#a09f9f"
+                                            android:textColor="#000000"
+                                            android:gravity="center"/>
+                                    </TableRow>
+                                    <TableRow
+                                        android:layout_height="fill_parent"
+                                        android:layout_width="fill_parent"
+                                        android:gravity="center_horizontal">
+                                        <TextView
+                                            android:id="@+id/TextRow8"
+                                            android:text="Base Imponible"
+                                            android:padding="5dp"
+                                            android:background="#b0b0b0"
+                                            android:textColor="#000000"
+                                            android:gravity="left"/>
+
+                                        <TextView
+                                            android:id="@+id/TextRow9"
+                                            android:text="0.0"
+                                            android:background="#a09f9f"
+                                            android:padding="5dp"
+                                            android:textColor="#000000"
+                                            android:gravity="center"/>
+                                    </TableRow>
+                                    <TableRow
+                                        android:layout_height="fill_parent"
+                                        android:layout_width="fill_parent"
+                                        android:gravity="center_horizontal">
+                                        <TextView
+                                            android:id="@+id/TextRow10"
+                                            android:text="IGV:"
+                                            android:padding="5dp"
+                                            android:background="#b0b0b0"
+                                            android:textColor="#000000"
+                                            android:gravity="left"/>
+
+                                        <TextView
+                                            android:id="@+id/TextRow12"
+                                            android:text="0.0"
+                                            android:padding="5dp"
+                                            android:background="#a09f9f"
+                                            android:textColor="#000000"
+                                            android:gravity="center"/>
+                                    </TableRow>
+                                </TableLayout>
+                            </LinearLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+
+                </FrameLayout>
+            </LinearLayout>
+        </TabHost>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <Button
+                android:id="@+id/button_save_guias"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:text="Guardar" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

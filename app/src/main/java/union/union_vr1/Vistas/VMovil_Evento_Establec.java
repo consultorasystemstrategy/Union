@@ -381,7 +381,7 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
                 break;
             case R.id.VEE_BTNcandev:
 
-                Intent idh = new Intent(this, VMovil_Evento_Canjes_Dev.class);
+                Intent idh = new Intent(this, VMovil_Operacion_Canjes_Devoluciones.class);
                 idh.putExtra("idEstabX", valIdEstab);
                 idh.putExtra("idAgente", idAgente);
                 finish();
