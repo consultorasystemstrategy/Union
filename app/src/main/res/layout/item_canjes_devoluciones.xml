@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:padding="5dp"
+        android:layout_height="70dp">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="3"
+            android:background="@color/Personalizado4"
+            android:id="@+id/linearLayoutLista">
+
+            <ImageView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:id="@+id/imageViewLista"
+                android:src="@drawable/ic_action_refresh"
+                android:contentDescription="Place"
+                android:layout_margin="4dp"
+                android:baselineAlignBottom="false" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:layout_marginLeft="16dp">
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Productos Unión S.A.C"
+                android:id="@+id/textViewListaTituloOperacion"
+                android:layout_weight="1"
+                android:layout_gravity="bottom"
+                android:gravity="bottom"
+                android:textSize="12dp"
+                android:textStyle="normal|bold"
+                android:textColor="@color/Dark1" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Productos Unión"
+                android:id="@+id/textViewCantidadOperacion"
+                android:layout_weight="1"
+                android:textSize="10dp"
+                android:textStyle="italic"
+                android:textColor="@color/Dark1" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Orden 4"
+                android:id="@+id/textViewReferencia"
+                android:layout_weight="1"
+                android:gravity="top|left"
+                android:textSize="10dp"
+                android:singleLine="false"
+                android:textStyle="italic"
+                android:textColor="@color/Dark1" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Orden 4"
+                android:id="@+id/textViewPrecioUnitario"
+                android:layout_weight="1"
+                android:layout_gravity="top|left"
+                android:layout_marginTop="dp"
+                android:gravity="top|left"
+                android:textSize="10dp"
+                android:singleLine="false"
+                android:textStyle="italic"
+                android:textColor="@color/Dark1" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="S/. 324.00"
+                android:id="@+id/textViewImporteTotal"
+                android:layout_weight="1"
+                android:gravity="bottom|right"
+                android:layout_marginRight="4dp"
+                android:textColor="@color/verde"
+                android:textSize="10dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

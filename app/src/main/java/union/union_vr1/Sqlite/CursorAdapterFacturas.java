@@ -11,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
+
 import union.union_vr1.R;
 
 /**
@@ -19,6 +21,7 @@ import union.union_vr1.R;
 public class CursorAdapterFacturas extends CursorAdapter {
 
     private LayoutInflater cursorInflater;
+
     public CursorAdapterFacturas(Context context, Cursor c) {
         super(context, c);
         cursorInflater = (LayoutInflater) context.getSystemService(
@@ -27,60 +30,35 @@ public class CursorAdapterFacturas extends CursorAdapter {
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup viewGroup) {
-        return cursorInflater.inflate(R.layout.lista_personalizada, viewGroup, false);
+        return cursorInflater.inflate(R.layout.item_canjes_devoluciones, viewGroup, false);
     }
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
-
-        TextView textViewTitulo = (TextView) view.findViewById(R.id.textViewListaTitulo);
-        TextView textViewSubtitulo = (TextView) view.findViewById(R.id.textViewListaSubtitulo);
-        TextView textViewComment = (TextView) view.findViewById(R.id.textViewListaComment);
-        TextView textViewMonto = (TextView) view.findViewById(R.id.textViewListaMonto);
-        LinearLayout linearLayoutColor = (LinearLayout) view.findViewById(R.id.linearLayoutLista);
+        DecimalFormat df = new DecimalFormat("0.00");
+        TextView textViewListaTituloOperacion = (TextView) view.findViewById(R.id.textViewListaTituloOperacion);
+        TextView textViewCantidadOperacion = (TextView) view.findViewById(R.id.textViewCantidadOperacion);
+        TextView textViewPrecioUnitario = (TextView) view.findViewById(R.id.textViewPrecioUnitario);
+        TextView textViewReferencia = (TextView) view.findViewById(R.id.textViewReferencia);
+        TextView textViewImporteTotal = (TextView) view.findViewById(R.id.textViewImporteTotal);
         ImageView imageView = (ImageView) view.findViewById(R.id.imageViewLista);
 
+        String nombreProducto = cursor.getString(cursor.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_nom_producto));
+        String cantidad = cursor.getString(cursor.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_cantidad));
+        String precioUnitario = cursor.getString(cursor.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_precio_unit));
+        Double importe = cursor.getDouble(cursor.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_importe));
+        String referencia = cursor.getString(cursor.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_lote));
 
-        if (cursor.getCount()>0){
-
-            String producto = cursor.getString(9);
-            String cantidad = cursor.getString(17);
-            String precio = cursor.getString(18);
-            String acc = cursor.getString(5);
-            String mot = cursor.getString(15);
-
-            if (acc.equals("1")) {
-                acc = "Canje";
-
-            } else {
-                acc = "Devolucion";
-            }
-            if (mot.equals("1")) {
-                mot = "Bueno";
-
-            }
-            if (mot.equals("2")) {
-                mot = "Malogrado";
-
-            }
-            if (mot.equals("3")) {
-                mot = "Reclamo";
-
-            }
-            if (mot.equals("4")) {
-                mot = "Vencido-Malo";
-
-            }
-            textViewTitulo.setText(producto);
-            textViewSubtitulo.setText("Cantidad : "+ cantidad);
-            textViewComment.setText(acc + ", Motivo : " +mot);
-            textViewMonto.setText("S/. "+precio);
-
-            linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.Dark1));
-            imageView.setImageDrawable(context.getApplicationContext().getResources().getDrawable(R.drawable.ic_action_refresh));
-
-
+        textViewListaTituloOperacion.setText("Producto: "+nombreProducto);
+        textViewCantidadOperacion.setText("Cantidad: "+cantidad);
+        textViewPrecioUnitario.setText("Precio Unitario: "+precioUnitario);
+        textViewReferencia.setText("Referencia Lote: "+referencia);
+        textViewImporteTotal.setText("Importe: "+importe+"");
+        if(cursor.getInt(cursor.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_id_motivo))==1){
+            imageView.setImageDrawable(null);
+            imageView.setBackgroundResource(R.drawable.ic_action_undo);
         }
+
 
 
     }

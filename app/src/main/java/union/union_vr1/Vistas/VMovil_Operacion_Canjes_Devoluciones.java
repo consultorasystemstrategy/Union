@@ -1,6 +1,8 @@
 package union.union_vr1.Vistas;
 
+import android.app.AlertDialog;
 import android.app.TabActivity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -14,18 +16,25 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.FilterQueryProvider;
+import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TabHost;
+import android.widget.Toast;
 
 import union.union_vr1.R;
+import union.union_vr1.Sqlite.CursorAdapterFacturas;
+import union.union_vr1.Sqlite.DBAdapter_Temp_Canjes_Devoluciones;
 import union.union_vr1.Sqlite.DbAdapter_Stock_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 
 public class VMovil_Operacion_Canjes_Devoluciones extends TabActivity {
+    private DBAdapter_Temp_Canjes_Devoluciones dbAdapter_temp_canjes_devoluciones;
     private DbAdapter_Temp_Session session;
     private DbAdapter_Stock_Agente dbHelper_Stock;
     private AutoCompleteTextView autoComple;
     private TabHost tabHost;
+    private ListView listViewCanjes;
+    private ListView listViewDevoluviones;
     private SimpleCursorAdapter adapter;
     private String establec;
     private int idAgente;
@@ -36,9 +45,10 @@ public class VMovil_Operacion_Canjes_Devoluciones extends TabActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vmovil__operacion__canjes__devoluciones);
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         session = new DbAdapter_Temp_Session(this);
         session.open();
+        dbAdapter_temp_canjes_devoluciones = new DBAdapter_Temp_Canjes_Devoluciones(this);
+        dbAdapter_temp_canjes_devoluciones.open();
         liquidacion = session.fetchVarible(3);
         dbHelper_Stock = new DbAdapter_Stock_Agente(this);
         dbHelper_Stock.open();
@@ -46,8 +56,10 @@ public class VMovil_Operacion_Canjes_Devoluciones extends TabActivity {
         establec = idE.getString("idEstabX");
         idAgente = idE.getInt("idAgente");
         autoComple = (AutoCompleteTextView) findViewById(R.id.autocompleteBuscar);
-        autoComplete();
         tabHost = (TabHost) findViewById(android.R.id.tabhost);
+        listViewCanjes = (ListView)findViewById(R.id.guias_canjes);
+        listViewDevoluviones = (ListView)findViewById(R.id.guias_devoluciones);
+        autoComplete();
 
         TabHost.TabSpec specanjes = tabHost.newTabSpec("Tab1");
         specanjes.setContent(R.id.tab1_canjes);
@@ -63,9 +75,36 @@ public class VMovil_Operacion_Canjes_Devoluciones extends TabActivity {
     }
 
     private void listar_canjes() {
+        //1listar Canjes
+        final Cursor cursor = dbAdapter_temp_canjes_devoluciones.listarCanjes();
+        CursorAdapterFacturas adapter = new CursorAdapterFacturas(getApplicationContext(), cursor);
+        listViewCanjes.setAdapter(adapter);
+        listViewCanjes.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long l) {
+                Cursor cr = (Cursor)listViewCanjes.getItemAtPosition(position);
+                int idforDelete = cr.getInt(cr.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_id_canjes_devoluciones));
+                setMessageForDeleteById(idforDelete);
+                return false;
+            }
+        });
+
 
     }
     private void listar_devoluciones() {
+        //listar devoluciones
+     Cursor cursor = dbAdapter_temp_canjes_devoluciones.listarDevoluciones();
+    CursorAdapterFacturas adapter = new CursorAdapterFacturas(getApplicationContext(), cursor);
+        listViewDevoluviones.setAdapter(adapter);
+        listViewDevoluviones.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long l) {
+                Cursor cr = (Cursor)listViewDevoluviones.getItemAtPosition(position);
+                int idforDelete = cr.getInt(cr.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_id_canjes_devoluciones));
+                setMessageForDeleteById(idforDelete);
+                return false;
+            }
+        });
 
     }
 
@@ -190,6 +229,8 @@ public class VMovil_Operacion_Canjes_Devoluciones extends TabActivity {
     }
 
 
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -210,5 +251,64 @@ public class VMovil_Operacion_Canjes_Devoluciones extends TabActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        setMessageForDelete();
+        //super.onBackPressed();
+    }
+    private void setMessageForDeleteById(final int id){
+
+        final AlertDialog.Builder dialogo = new AlertDialog.Builder(this);
+        dialogo.setTitle("¿Esta seguro de eliminar?");
+        dialogo.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int liquidacion) {
+                dialogInterface.cancel();
+            }
+        });
+        dialogo.setPositiveButton("Eliminar",new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int liquidacion) {
+                int estado = dbAdapter_temp_canjes_devoluciones.deleteCanjesDevoluciones(id);
+                if(estado>0){
+                    Toast.makeText(getApplicationContext(),"Eliminado",Toast.LENGTH_SHORT).show();
+                    listar_canjes();
+                    listar_devoluciones();
+                }else{
+                    Toast.makeText(getApplicationContext(),"Ocurrio un error",Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+        dialogo.create();
+        dialogo.show();
+    }
+    private void setMessageForDelete(){
+        final AlertDialog.Builder dialogo = new AlertDialog.Builder(this);
+        dialogo.setTitle("¿Esta Seguro?");
+        dialogo.setMessage("Al retroceder eliminara los canjes y devoluciones.");
+        dialogo.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int liquidacion) {
+                dialogInterface.cancel();
+            }
+        });
+        dialogo.setPositiveButton("Continuar e Eliminar",new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int liquidacion) {
+                int estado = dbAdapter_temp_canjes_devoluciones.truncateCanjesDevoluciones();
+                if(estado>0){
+                    Toast.makeText(getApplicationContext(),"Eliminado",Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(getApplicationContext(),VMovil_Menu_Establec.class));
+                }else{
+                    Toast.makeText(getApplicationContext(),"Ocurrio un error",Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+        dialogo.create();
+        dialogo.show();
     }
 }

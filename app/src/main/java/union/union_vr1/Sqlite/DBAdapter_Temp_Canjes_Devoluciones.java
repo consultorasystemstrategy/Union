@@ -15,7 +15,7 @@ import union.union_vr1.Conexion.DbHelper;
 
 public class DBAdapter_Temp_Canjes_Devoluciones {
 
-    public static final String temp_venta_detalle = "_id";
+    public static final String temp_id_canjes_devoluciones = "_id";
     public static final String temp_id_comprob = "temp_in_id_comprob";
     public static final String temp_id_producto = "temp_in_id_producto";
     public static final String temp_nom_producto = "temp_te_nom_producto";
@@ -23,7 +23,7 @@ public class DBAdapter_Temp_Canjes_Devoluciones {
     public static final String temp_cantidad = "temp_in_cantidad";
     public static final String temp_precio_unit = "temp_re_precio_unit";
     public static final String temp_importe = "temp_importe";
-    public static final String temp_referencia = "temp_referencia";
+    public static final String temp_lote = "temp_lote";
     public static final String temp_fecha_emision = "temp_fecha_emision";
     public static final String temp_cliente = "temp_cliente";
     public static final String temp_id_establecimiento = "temp_id_establecimiento";
@@ -34,38 +34,36 @@ public class DBAdapter_Temp_Canjes_Devoluciones {
     public static final String temp_estado = "temp_estado";
 
 
-
-
-
     public static final String TAG = "Temp_Venta_Detalle";
 
     private DbHelper mDbHelper;
     private SQLiteDatabase mDb;
 
 
-    private static final String SQLITE_TABLE_Temp_Canjes_Devoluciones = "m_temp_venta_detalle";
+    private static final String SQLITE_TABLE_Temp_Canjes_Devoluciones = "m_temp_canjes_devoluciones";
     private final Context mCtx;
 
-    public static final String CREATE_TABLE_TEMP_VENTA_DETALLE =
-            "create table "+SQLITE_TABLE_Temp_Canjes_Devoluciones+" ("
-                    +temp_venta_detalle+" integer primary key autoincrement,"
-                    +temp_id_comprob+" text,"
-                    +temp_id_producto+" integer,"
-                    +temp_nom_producto+" text,"
-                    +temp_cantidad+" integer,"
-                    +temp_precio_unit+" real,"
-                    +temp_importe+" real,"
-                    +temp_referencia+" text,"
-                    +temp_nom_producto+" text,"
-                    +temp_fecha_emision+" text,"
-                    +temp_cliente+" text,"
-                    +temp_id_establecimiento+" integer,"
-                    +temp_id_documento+" text,"
-                    +temp_id_motivo+" integer,"
-                    +temp_estado_producto+" integer,"
-                    +temp_estado+" integer);";
+    public static final String CREATE_TABLE_TEMP_CANJES_DEVOLUCIONES =
+            "create table " + SQLITE_TABLE_Temp_Canjes_Devoluciones + " ("
+                    + temp_id_canjes_devoluciones + " integer primary key autoincrement,"
+                    + temp_id_comprob+" text,"
+                    + temp_id_producto+" text,"
+                    + temp_nom_producto+" text,"
+                    + temp_codigo_producto+" text,"
+                    + temp_cantidad+" text,"
+                    + temp_precio_unit+ " text,"
+                    + temp_importe+" text,"
+                    + temp_lote+" text,"
+                    + temp_fecha_emision+" text,"
+                    + temp_cliente+" text,"
+                    + temp_id_establecimiento+" text,"
+                    + temp_id_documento+" text,"
+                    + temp_id_motivo+" text,"
+                    + temp_estado_producto+" text,"
+                    + temp_estado + " integer);";
 
-    public static final String DELETE_TABLE_TEMP_VENTA_DETALLE = "DROP TABLE IF EXISTS " + SQLITE_TABLE_Temp_Canjes_Devoluciones;
+
+    public static final String DELETE_TABLE_TEMP_CANJES_DEVOLUCIONES = "DROP TABLE IF EXISTS " + SQLITE_TABLE_Temp_Canjes_Devoluciones;
 
     public DBAdapter_Temp_Canjes_Devoluciones(Context ctx) {
         this.mCtx = ctx;
@@ -83,105 +81,62 @@ public class DBAdapter_Temp_Canjes_Devoluciones {
         }
     }
 
-    public long createTempVentaDetalle(
-            int id_comprob, int id_producto, String nom_producto, int cantidad, double importe,
-            double precio_unit, String prom_anterior, String devuelto, int procedencia, int valorUnidad, String codigoProducto){
+    public long createTempCanjesDevoluciones(String id_comprob, String id_producto, String nom_producto, String codigo_producto, String cantidad, String precio_unit, String importe, String lote, String fecha_emision, String cliente,
+                                       String id_establecimiento, String id_documento, String id_motivo, String estado_producto, String estado) {
 
         ContentValues initialValues = new ContentValues();
-        initialValues.put(temp_id_comprob,id_comprob);
-        initialValues.put(temp_id_producto,id_producto);
-        initialValues.put(temp_nom_producto,nom_producto);
-        initialValues.put(temp_cantidad,cantidad);
-        initialValues.put(temp_importe,importe);
-        initialValues.put(temp_precio_unit,precio_unit);
-       // initialValues.put(temp_prom_anterior,prom_anterior);
-       // initialValues.put(temp_devuelto,devuelto);
-       // initialValues.put(temp_procedencia, procedencia);
-       // initialValues.put(temp_valor_unidad, valorUnidad);
-        initialValues.put(temp_codigo_producto, codigoProducto);
-
+        initialValues.put(temp_id_comprob, id_comprob);
+        initialValues.put(temp_id_producto, id_producto);
+        initialValues.put(temp_nom_producto, nom_producto);
+        initialValues.put(temp_codigo_producto, codigo_producto);
+        initialValues.put(temp_cantidad, cantidad);
+        initialValues.put(temp_precio_unit, precio_unit);
+        initialValues.put(temp_importe, importe);
+        initialValues.put(temp_lote, lote);
+        initialValues.put(temp_fecha_emision, fecha_emision);
+        initialValues.put(temp_cliente, cliente);
+        initialValues.put(temp_id_establecimiento, id_establecimiento);
+        initialValues.put(temp_id_documento, id_documento);
+        initialValues.put(temp_id_motivo, id_motivo);
+        initialValues.put(temp_estado_producto, estado_producto);
+        initialValues.put(temp_estado, estado);
 
         return mDb.insert(SQLITE_TABLE_Temp_Canjes_Devoluciones, null, initialValues);
     }
-
-    public void updateTempVentaDetalle1(String idorig, String iddest, String vals){
-        ContentValues initialValues = new ContentValues();
-        initialValues.put(temp_id_comprob,iddest);
-
-        mDb.update(SQLITE_TABLE_Temp_Canjes_Devoluciones, initialValues,
-                temp_venta_detalle+"=?",new String[]{idorig});
+    public Cursor listarCanjes(){
+        Cursor cursor = mDb.rawQuery("select * from "+SQLITE_TABLE_Temp_Canjes_Devoluciones+" where "+temp_id_motivo+"='2';",null);
+        return  cursor;
+    }
+    public Cursor listarDevoluciones(){
+        Cursor cursor = mDb.rawQuery("select * from "+SQLITE_TABLE_Temp_Canjes_Devoluciones+" where "+temp_id_motivo+"='1';",null);
+        return  cursor;
     }
 
-    public void updateTempVentaDetalleCantidad(long id_temp_venta_detalle, int cantidad, double total){
+    public void updateTempCanjesDevoluciones2(String idorig, String iddest, String vals) {
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(temp_id_comprob, iddest);
+
+        mDb.update(SQLITE_TABLE_Temp_Canjes_Devoluciones, initialValues,
+                temp_id_canjes_devoluciones + "=?", new String[]{idorig});
+    }
+
+    public void updateTempCanjesDevoluciones(long id_temp_venta_detalle, int cantidad, double total) {
         ContentValues initialValues = new ContentValues();
         initialValues.put(temp_cantidad, cantidad);
         initialValues.put(temp_importe, total);
 
         mDb.update(SQLITE_TABLE_Temp_Canjes_Devoluciones, initialValues,
-                temp_venta_detalle+"=?",new String[]{""+id_temp_venta_detalle});
-    }
+                temp_id_canjes_devoluciones + "=?", new String[]{"" + id_temp_venta_detalle});
 
-    public boolean  deleteAllTempVentaDetalle() {
-
-        int doneDelete = 0;
-        doneDelete = mDb.delete(SQLITE_TABLE_Temp_Canjes_Devoluciones, null , null);
-        Log.w(TAG, Integer.toString(doneDelete));
-        return doneDelete > 0;
 
     }
-
-    public boolean deleteTempVentaDetalleById(long id_temp_venta_detalle) {
-
-        int doneDelete = 0;
-        doneDelete = mDb.delete(SQLITE_TABLE_Temp_Canjes_Devoluciones, temp_venta_detalle+"=?", new String[]{""+id_temp_venta_detalle});
-        Log.w(TAG, Integer.toString(doneDelete));
-        return doneDelete > 0;
-
+    public int truncateCanjesDevoluciones(){
+        return mDb.delete(SQLITE_TABLE_Temp_Canjes_Devoluciones,null,null);
+    }
+    public int deleteCanjesDevoluciones(int id){
+        return mDb.delete(SQLITE_TABLE_Temp_Canjes_Devoluciones, temp_id_canjes_devoluciones + " = ?", new String[] { id+"" });
     }
 
-    public Cursor fetchAllTempVentaDetalle() {
 
-        Cursor mCursor = mDb.query(SQLITE_TABLE_Temp_Canjes_Devoluciones, new String[] {temp_venta_detalle,
-                temp_id_comprob,temp_id_producto, temp_nom_producto, temp_cantidad, temp_precio_unit, temp_importe, temp_codigo_producto},null, null, null, null, null);
 
-        if (mCursor != null) {
-            mCursor.moveToFirst();
-        }
-        return mCursor;
-    }
-
-    public Cursor fetchAllTempVentaDetalleByProcedencia(int procedencia) {
-
-        Cursor mCursor = mDb.query(SQLITE_TABLE_Temp_Canjes_Devoluciones, new String[] {temp_venta_detalle,
-                temp_id_comprob,temp_id_producto, temp_nom_producto, temp_cantidad, temp_precio_unit,temp_precio_unit, temp_importe, temp_codigo_producto}, " = ?", new String[]{""+procedencia}, null, null, null);
-
-        if (mCursor != null) {
-            mCursor.moveToFirst();
-        }
-        return mCursor;
-    }
-
-    public Cursor fetchAllTempVentaDetalleByID(long id) {
-
-        Cursor mCursor = mDb.query(SQLITE_TABLE_Temp_Canjes_Devoluciones, new String[] {temp_venta_detalle,
-                temp_id_comprob,temp_id_producto, temp_nom_producto, temp_cantidad, temp_precio_unit,temp_precio_unit, temp_importe,
-               temp_codigo_producto},temp_venta_detalle + " = ?", new String[]{""+id}, null, null, null);
-
-        if (mCursor != null) {
-            mCursor.moveToFirst();
-        }
-        return mCursor;
-    }
-
-    public Cursor fetchTempVentaByIDProducto(int id) {
-
-        Cursor mCursor = mDb.query(SQLITE_TABLE_Temp_Canjes_Devoluciones, new String[] {temp_venta_detalle,
-                temp_id_comprob,temp_id_producto, temp_nom_producto, temp_cantidad, temp_precio_unit,temp_precio_unit, temp_importe,
-               temp_codigo_producto},temp_id_producto + " = ?", new String[]{""+id}, null, null, null);
-
-        if (mCursor != null) {
-            mCursor.moveToFirst();
-        }
-        return mCursor;
-    }
 }

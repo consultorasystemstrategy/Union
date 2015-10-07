@@ -7,6 +7,7 @@ import android.util.Log;
 
 import union.union_vr1.Sqlite.DBAdapter_Consultar_Inventario_Anterior;
 import union.union_vr1.Sqlite.DBAdapter_Temp_Autorizacion_Cobro;
+import union.union_vr1.Sqlite.DBAdapter_Temp_Canjes_Devoluciones;
 import union.union_vr1.Sqlite.DBAdapter_Temp_Inventario;
 import union.union_vr1.Sqlite.DBAdapter_Temp_Venta;
 import union.union_vr1.Sqlite.DbAdapter_Agente;
@@ -77,6 +78,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(DBAdapter_Temp_Inventario.CREATE_TABLE_TEMP_VENTA_Inventario);
         db.execSQL(DBAdapter_Consultar_Inventario_Anterior.CREATE_TABLE_TEMP_CONSULTAR_Inventario);
         db.execSQL(DbAdapter_Agente_Login.CREATE_TABLE_AGENTE);
+        db.execSQL(DBAdapter_Temp_Canjes_Devoluciones.CREATE_TABLE_TEMP_CANJES_DEVOLUCIONES);
 
 
 
@@ -107,7 +109,8 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(DbAdapter_Ruta_Distribucion.DELETE_TABLE_RUTA_DISTRIBUCION);
         db.execSQL(DBAdapter_Temp_Inventario.DELETE_TABLE_TEMP_VENTA_DETALLE);
         db.execSQL(DBAdapter_Consultar_Inventario_Anterior.DELETE_TABLE_TEMP_CONSULTAR_Inventario);
-        db.execSQL(DbAdapter_Agente_Login.CREATE_TABLE_AGENTE);
+        db.execSQL(DbAdapter_Agente_Login.DELETE_TABLE_AGENTE_LOGIN);
+        db.execSQL(DBAdapter_Temp_Canjes_Devoluciones.DELETE_TABLE_TEMP_CANJES_DEVOLUCIONES);
         onCreate(db);
     }
 }
