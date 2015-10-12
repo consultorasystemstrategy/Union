@@ -237,7 +237,6 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
     TextView textViewSlideNombreAgente;
     TextView textViewSlideNombreRuta;
     private TextView textViewSlideCargar;
-
     Button buttonSlideNroEstablecimiento;
 
     int slideIdAgente = 0;
@@ -389,9 +388,7 @@ Instantiate and pass a callback
         dbAdapter_comprob_venta = new DbAdapter_Comprob_Venta(this);
         dbAdapter_comprob_venta.open();
 
-
         autoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.VCAP_AutoCompleteProductos);
-
         session = new DbAdapter_Temp_Session(this);
         session.open();
 
@@ -1762,14 +1759,14 @@ NUMERO_DOCUMENTO = numero_documento+"";
         if (conectadoWifi()||conectadoRedMovil()) {
             exportMain.execute();
         }
-        //new GenerateDigitalSignature().execute();
+
+//        new GenerateDigitalSignature().execute();
 
 
         Intent intent= new Intent(this, VMovil_BluetoothImprimir.class);
         intent.putExtra("idComprobante",id_comprobante);
         finish();
         startActivity(intent);
-
 
     }
 

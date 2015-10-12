@@ -9,7 +9,7 @@
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_weight="1">
+        android:layout_weight="2">
 
         <ScrollView
             android:layout_width="fill_parent"
@@ -127,7 +127,7 @@
                     android:layout_marginTop="16dp"
                     android:layout_marginLeft="64dp"
                     android:layout_marginRight="64dp">
-
+<!--
                     <Button
                         android:layout_width="fill_parent"
                         android:layout_height="fill_parent"
@@ -142,10 +142,10 @@
                         android:text="Canjes / Dev"
                         android:layout_weight="1"
                         android:id="@+id/VEE_BTNcandev"
-                        android:background="@color/azul" />
+                        android:background="@color/azul" />-->
                 </LinearLayout>
 
-
+<!--
                 <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="fill_parent"
@@ -282,7 +282,7 @@
                                 android:id="@+id/listViewCobrosVencidos"></ListView>
                         </LinearLayout>
                     </LinearLayout>
-            </LinearLayout>
+            </LinearLayout>-->
 
 
 
@@ -291,17 +291,10 @@
     </LinearLayout>
 
     <LinearLayout
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_weight="8">
-
-        <Button
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:text="COBRAR"
-            android:id="@+id/VEE_BTNcobros"
-            android:layout_weight="1" />
+        android:layout_weight="1">
 
         <Button
             android:layout_width="fill_parent"
@@ -309,7 +302,39 @@
             android:text="VENDER"
             android:id="@+id/VEE_BTNventas"
             android:layout_weight="1"
-            android:background="@color/verde" />
+            android:background="@color/verde"
+            android:drawableRight="@drawable/ic_shopping_cart_white_36dp"
+            android:paddingRight="8dp" />
+
+        <Button
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:text="CANJES Y DEVOLUCIONES"
+            android:layout_weight="1"
+            android:id="@+id/VEE_BTNcandev"
+            android:background="@color/azul"
+            android:drawableRight="@drawable/ic_swap_horiz_white_36dp"
+            android:paddingRight="8dp" />
+
+        <Button
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:text="MANTENIMIENTO"
+            android:layout_weight="1"
+            android:id="@+id/VEE_BTNmanten"
+            android:background="@color/Personalizado4"
+            android:drawableRight="@drawable/ic_action_view_as_list"
+            android:paddingRight="8dp" />
+
+        <Button
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:text="COBRAR"
+            android:id="@+id/VEE_BTNcobros"
+            android:layout_weight="1"
+            android:drawableRight="@drawable/hand132"
+            android:paddingRight="8dp" />
+
     </LinearLayout>
 
 </LinearLayout>

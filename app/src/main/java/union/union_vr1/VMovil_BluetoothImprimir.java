@@ -140,7 +140,6 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
 
 
         idComprobante = getIntent().getExtras().getInt("idComprobante");
-
         textoImpresion = generarTextoImpresion(idComprobante, pulgadasImpresora);
 
         /*textoImpresion = getIntent().getExtras().getString("textoImpresion");
@@ -216,12 +215,11 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
        String numDoc = "";
        String nombreAgente = "";
        String direccion="";
-       //String sha1="";
+       String sha1="";
 
        double base_imponible = 0.0;
        double igv = 0.0;
        double precio_venta = 0.0;
-
        String ventaDetalle = "";
 
        Cursor cursorVentaCabecera = dbHelperComprobanteVenta.getVentaCabecerabyID(idComprobante);
@@ -237,7 +235,7 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
            dni_ruc = cursorVentaCabecera.getString(cursorVentaCabecera.getColumnIndexOrThrow(DbAdaptert_Evento_Establec.EE_doc_cliente));
            nombreAgente = cursorVentaCabecera.getString(cursorVentaCabecera.getColumnIndexOrThrow(DbAdapter_Agente.AG_nombre_agente));
            direccion = cursorVentaCabecera.getString(cursorVentaCabecera.getColumnIndexOrThrow(DbAdaptert_Evento_Establec.EE_direccion));
-           //sha1 = cursorVentaCabecera.getString(cursorVentaCabecera.getColumnIndexOrThrow(DbAdapter_Comprob_Venta.CV_SHA1));
+           sha1 = cursorVentaCabecera.getString(cursorVentaCabecera.getColumnIndexOrThrow(DbAdapter_Comprob_Venta.CV_SHA1));
 
 
            ventaCabecera+= "NUMERO  : "+comprobante+"\n";
@@ -246,7 +244,7 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
            ventaCabecera+= "CLIENTE : "+ cliente+"\n";
            ventaCabecera+= "DNI/RUC : "+ dni_ruc+"\n";
            ventaCabecera+= "DIRECCION : "+ direccion+"\n";
-//           ventaCabecera+= "SHA1 : "+ sha1+"\n";
+           //ventaCabecera+= "SHA1 : "+ sha1+"\n";
 
 
 
@@ -315,6 +313,18 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
                texto+=" 2 PULGADAS, NO SOPORTADO.\n";
                break;
            case 3:
+               String tipoC="";
+               tipoC=comprobante.substring(0,1);
+               String tipoComprobante="";
+               if(tipoC.equals("F"))
+               {
+                   tipoComprobante="FACTURA ELECTRONICA";
+
+               }
+               else
+               {
+                   tipoComprobante="BOLETA ELECTRONICA";
+               }
                texto+=
                        "            UNIVERSIDAD PERUANA UNION           \n"
                                +"      CENTRO DE APLICACION PRODUCTOS UNION      \n"
@@ -323,6 +333,7 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
                                +"              Telf: 6186309-6186310             \n"
                                +"         Casilla 3564, Lima 1, LIMA PERU        \n"
                                +"                 RUC: 20138122256               \n\n";
+               texto+="               "+tipoComprobante+"             \n\n";
                texto +="NUMERO  : "+comprobante+"\n";
                texto+= "FECHA   : "+ fecha+"\n";
                texto+= "CLIENTE : "+ cliente+"\n";

@@ -64,9 +64,7 @@ public class VMovil_Online_Pumovil extends Activity {
         }else{
 
         }
-
         displayURL();
-
     }
 
     @Override
@@ -84,7 +82,6 @@ public class VMovil_Online_Pumovil extends Activity {
         }else{
 
         }
-
         activity = this;
 
         session = new DbAdapter_Temp_Session(this);
