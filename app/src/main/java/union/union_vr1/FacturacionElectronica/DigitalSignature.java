@@ -18,6 +18,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -47,13 +48,14 @@ public class DigitalSignature {
     FileInputStream fis = null;
 
 
-    public void escribirXML(int tipoDocumento, Context context, String idDocument, String userRUC_DNI, String userName, String totalOperacionesGravadas, String importeTotalVenta, String igvTotal, Cursor cursorTemp) {
+    public String escribirXML(int tipoDocumento, Context context, String idDocument, String userRUC_DNI, String userName, String totalOperacionesGravadas, String importeTotalVenta, String igvTotal, Cursor cursorTemp) {
         FileOutputStream fout = null;
-
+        File myFile = null;
         try {
             Log.d("GENERATE DS","000");
-            File myFile = new File(context.getFilesDir(), "test.xml");
-            fout = context.openFileOutput("test.xml", context.MODE_PRIVATE);
+            myFile = new File(context.getFilesDir(), idDocument+".xml");
+            Log.d("FILE DIR: ",myFile.getAbsolutePath());
+            fout = context.openFileOutput(myFile.getName(), context.MODE_WORLD_READABLE);
         } catch (FileNotFoundException e) {
             //Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
         }
@@ -179,7 +181,7 @@ public class DigitalSignature {
             // INICIO - UBL EXTENSION II
             serializer.startTag(UBLElements.NAMESPACE_EXT, UBLElements.UBLEXTENSION);
             serializer.startTag(UBLElements.NAMESPACE_EXT, UBLElements.EXTENSIONCONTENT);
-            serializer.startTag(UBLElements.NAMESPACE_DS, UBLElements.SIGNATURE);
+/*            serializer.startTag(UBLElements.NAMESPACE_DS, UBLElements.SIGNATURE);
             serializer.attribute(null, UBLElements.Id, context.getString(R.string.ExternalReferenceURI));
 
             serializer.startTag(UBLElements.NAMESPACE_DS, UBLElements.SIGNEDINFO);
@@ -248,7 +250,7 @@ public class DigitalSignature {
 
             serializer.endTag(UBLElements.NAMESPACE_DS, UBLElements.X509DATA);
             serializer.endTag(UBLElements.NAMESPACE_DS, UBLElements.KEYINFO);
-            serializer.endTag(UBLElements.NAMESPACE_DS, UBLElements.SIGNATURE);
+            serializer.endTag(UBLElements.NAMESPACE_DS, UBLElements.SIGNATURE);*/
             serializer.endTag(UBLElements.NAMESPACE_EXT, UBLElements.EXTENSIONCONTENT);
             serializer.endTag(UBLElements.NAMESPACE_EXT, UBLElements.UBLEXTENSION);
             //FIN - UBL EXTENSION II
@@ -628,6 +630,7 @@ public class DigitalSignature {
             serializer.flush();
 
             if (fout != null) {
+                fout.flush();
                 fout.close();
             }
 
@@ -636,11 +639,13 @@ public class DigitalSignature {
         } catch (Exception e) {
             //Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
         }
+
+        return myFile.getPath();
     }
 
 
-    public String leerXML(Context context) throws IOException, ParserConfigurationException, SAXException {
-        fis = context.openFileInput("test.xml");
+    public String leerXML(Context context, String name) throws IOException, ParserConfigurationException, SAXException {
+        fis = context.openFileInput(name);
         /*InputStream is = context.openFileInput("test.xml");
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         byte[] b = new byte[1024];

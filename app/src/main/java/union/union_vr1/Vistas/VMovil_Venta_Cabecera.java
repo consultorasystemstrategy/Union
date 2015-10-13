@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.AssetManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -15,6 +16,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -49,9 +51,17 @@ import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import org.json.JSONObject;
 import org.xml.sax.SAXException;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableEntryException;
+import java.security.cert.CertificateException;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
@@ -60,7 +70,10 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
+import javax.xml.crypto.MarshalException;
+import javax.xml.crypto.dsig.XMLSignatureException;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 
 import union.union_vr1.AsyncTask.ExportMain;
@@ -69,6 +82,7 @@ import union.union_vr1.BarcodeScanner.IntentIntegrator;
 import union.union_vr1.BarcodeScanner.IntentResult;
 import union.union_vr1.FacturacionElectronica.CodigoSHA1;
 import union.union_vr1.FacturacionElectronica.DigitalSignature;
+import union.union_vr1.FacturacionElectronica.Signature;
 import union.union_vr1.InputFilterMinMax;
 import union.union_vr1.R;
 import union.union_vr1.RestApi.StockAgenteRestApi;
@@ -272,6 +286,10 @@ private String NUMERO_DOCUMENTO;
     private DbAdapter_Comprob_Venta dbAdapter_comprob_venta;
 
     private long id;
+
+    //FRIMADO DIGITAL
+    public InputStream keystore;
+    private final static String BKS  ="union.bks";
 
 
     @Override
@@ -1760,13 +1778,13 @@ NUMERO_DOCUMENTO = numero_documento+"";
             exportMain.execute();
         }
 
-//        new GenerateDigitalSignature().execute();
+        new GenerateDigitalSignature().execute();
 
 
-        Intent intent= new Intent(this, VMovil_BluetoothImprimir.class);
+        /*Intent intent= new Intent(this, VMovil_BluetoothImprimir.class);
         intent.putExtra("idComprobante",id_comprobante);
         finish();
-        startActivity(intent);
+        startActivity(intent);*/
 
     }
 
@@ -2459,7 +2477,7 @@ NUMERO_DOCUMENTO = numero_documento+"";
             Log.d("GENERATE DS", ""+0);
             final DigitalSignature handlerXML = new DigitalSignature();
             DecimalFormat df = new DecimalFormat("#.00");
-            handlerXML.escribirXML(i_tipoDocumento, contexto, numeroDocumentoImpresion,documentoCliente, nombreCliente,df.format(base_imponibleFooter), df.format(totalFooter), df.format(igvFooter), simpleCursorAdapter.getCursor());
+            String pathDocument = handlerXML.escribirXML(i_tipoDocumento, contexto, numeroDocumentoImpresion,documentoCliente, nombreCliente,df.format(base_imponibleFooter), df.format(totalFooter), df.format(igvFooter), simpleCursorAdapter.getCursor());
 
             Log.d("GENERATE DS", ""+30);
 
@@ -2467,7 +2485,7 @@ NUMERO_DOCUMENTO = numero_documento+"";
             String textoRead="";
             try {
                 //byteReads = handlerXML.leerXML(contexto);
-                textoRead = handlerXML.leerXML(contexto);
+                textoRead = handlerXML.leerXML(contexto, numeroDocumentoImpresion+".xml");
                 Log.d("GENERATE DS", ""+60);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -2477,6 +2495,46 @@ NUMERO_DOCUMENTO = numero_documento+"";
                 e.printStackTrace();
             }
             try {
+                keystore = getFilefromAssets(BKS);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                InputStream inputStream = new FileInputStream(pathDocument);
+                textoSHA1 = Signature.add(keystore,inputStream,createFile(numeroDocumentoImpresion + ".xml"));
+                Log.d("SHA1", SHA1);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (UnrecoverableEntryException e) {
+                e.printStackTrace();
+            } catch (SAXException e) {
+                e.printStackTrace();
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            } catch (CertificateException e) {
+                e.printStackTrace();
+            } catch (TransformerConfigurationException e) {
+                e.printStackTrace();
+            } catch (TransformerException e) {
+                e.printStackTrace();
+            } catch (MarshalException e) {
+                e.printStackTrace();
+            } catch (ParserConfigurationException e) {
+                e.printStackTrace();
+            } catch (InvalidAlgorithmParameterException e) {
+                e.printStackTrace();
+            } catch (KeyStoreException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (XMLSignatureException e) {
+                e.printStackTrace();
+            }
+
+
+            Log.d("XML ESCRITO: "+pathDocument,""+textoRead);
+            /*try {
 
                 //String textoSHA1 = CodigoSHA1.SHA1(texto);
 //                textoSHA1 = CodigoSHA1.SHA1(byteReads);
@@ -2505,6 +2563,8 @@ NUMERO_DOCUMENTO = numero_documento+"";
             } catch (TransformerException e) {
                 e.printStackTrace();
             }
+
+            */
             return SHA1;
         }
 
@@ -2529,6 +2589,21 @@ NUMERO_DOCUMENTO = numero_documento+"";
             //Toast.makeText(getApplicationContext(),"SHA1 : "+s,Toast.LENGTH_LONG).show();
             startActivity(intent);
         }
+    }
+
+    InputStream getFilefromAssets(String nameDocument)
+            throws IOException
+    {
+        AssetManager am = contexto.getAssets();
+        return am.open(nameDocument);
+    }
+
+    File createFile(String nameDocument)
+            throws IOException, ParserConfigurationException, SAXException {
+        File file = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES), nameDocument);
+        //return File.createTempFile(pathFile,"xml",contexto.getCacheDir());
+        return file;
     }
 
 

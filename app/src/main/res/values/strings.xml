@@ -164,5 +164,6 @@
     <string name="title_activity_imprimir_arqueo_caja">Arqueo Caja</string>
     <string name="title_activity_vmovil__crear__establecimiento">Nuevo establecimiento</string>
     <string name="title_activity_vmovil__operacion__canjes__devoluciones">VMovil_Operacion_Canjes_Devoluciones</string>
+    <string name="title_activity_signature">SignatureActivity</string>
 
 </resources>
