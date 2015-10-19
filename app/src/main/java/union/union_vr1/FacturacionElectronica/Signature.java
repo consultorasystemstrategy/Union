@@ -107,7 +107,6 @@ public class Signature {
 
         signature.sign(dsc);
 
-
         OutputStream os = new FileOutputStream(fileDocumentoFirmado);
         TransformerFactory tf = TransformerFactory.newInstance();
         Transformer trans = tf.newTransformer();

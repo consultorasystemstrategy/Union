@@ -297,7 +297,7 @@ public class DigitalSignature {
             serializer.endTag(UBLElements.NAMESPACE_CAC, UBLElements.PARTYIDENTIFIACTION);
             serializer.startTag(UBLElements.NAMESPACE_CAC, UBLElements.PARTYNAME);
             serializer.startTag(UBLElements.NAMESPACE_CBC, UBLElements.NAME);
-            serializer.text(context.getString(R.string.Empresa));
+            serializer.text(context.getString(R.string.RazonSocial));
             serializer.endTag(UBLElements.NAMESPACE_CBC, UBLElements.NAME);
             serializer.endTag(UBLElements.NAMESPACE_CAC, UBLElements.PARTYNAME);
             serializer.endTag(UBLElements.NAMESPACE_CAC, UBLElements.SIGNATORYPARTY);
@@ -349,7 +349,7 @@ public class DigitalSignature {
             serializer.endTag(UBLElements.NAMESPACE_CAC, UBLElements.POSTALADDRESS);
             serializer.startTag(UBLElements.NAMESPACE_CAC, UBLElements.PARTYLEGALENTITY);
             serializer.startTag(UBLElements.NAMESPACE_CBC, UBLElements.REGISTRATIONNAME);
-            serializer.text(context.getString(R.string.RegistrationName));
+            serializer.text(context.getString(R.string.NombreComercial));
             serializer.endTag(UBLElements.NAMESPACE_CBC, UBLElements.REGISTRATIONNAME);
             serializer.endTag(UBLElements.NAMESPACE_CAC, UBLElements.PARTYLEGALENTITY);
             serializer.endTag(UBLElements.NAMESPACE_CAC, UBLElements.PARTY);

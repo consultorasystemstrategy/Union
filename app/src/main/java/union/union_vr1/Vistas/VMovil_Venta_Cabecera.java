@@ -873,7 +873,6 @@ Instantiate and pass a callback
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
 
 
-
                 int numeroViews =  adapterView.getCount();
                 numeroViews--;
                 if (adapterView.getPositionForView(view) != 1 && adapterView.getPositionForView(view) != numeroViews) {
@@ -1042,10 +1041,7 @@ Instantiate and pass a callback
             nombreProducto.setText("Nombre : S/. " + nombreP);
         }else{
             precio.setText("Producto Scaneado no disponible en el Stock Actual");
-
         }
-
-
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Cantidad");
@@ -1534,7 +1530,7 @@ Instantiate and pass a callback
                 break;
         }
 
-        numeroDocumentoImpresion = serie + "-" +agregarCeros((String.valueOf(numero_documento)),7);
+        numeroDocumentoImpresion = serie + "-" +agregarCeros((String.valueOf(numero_documento)),8);
         Cursor cursorTempComprobCobros = dbHelper_Temp_Comprob_Cobros.fetchAllComprobCobros();
         cursorTempComprobCobros.moveToFirst();
         //Log.d("FORMA DE PAGO ", ""+i_formaPago);
@@ -2600,9 +2596,14 @@ NUMERO_DOCUMENTO = numero_documento+"";
 
     File createFile(String nameDocument)
             throws IOException, ParserConfigurationException, SAXException {
+        //String dir = Environment.DIRECTORY_DOWNLOADS+"/FACTURACION/";
         File file = new File(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES), nameDocument);
+                Environment.DIRECTORY_DOWNLOADS), nameDocument);
+        /*
+        File file = new File(dir, nameDocument);
         //return File.createTempFile(pathFile,"xml",contexto.getCacheDir());
+        file.mkdir();
+        file.createNewFile();*/
         return file;
     }
 
