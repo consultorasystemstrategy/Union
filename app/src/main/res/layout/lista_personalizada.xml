@@ -7,7 +7,7 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="fill_parent"
-        android:layout_height="96dp"
+        android:layout_height="120dp"
         android:layout_marginLeft="12dp"
         android:layout_marginTop="12dp"
         android:layout_marginRight="12dp">
@@ -56,6 +56,7 @@
                 android:id="@+id/textViewListaSubtitulo"
                 android:layout_weight="1"
                 android:textSize="12dp"
+                android:layout_marginTop="8dp"
                 android:textStyle="italic"
                 android:textColor="@color/Dark1" />
 
@@ -70,7 +71,7 @@
                 android:textSize="12dp"
                 android:singleLine="false"
                 android:textStyle="italic"
-                android:layout_marginTop="-8dp"
+                android:layout_marginTop="8dp"
                 android:textColor="@color/Dark1" />
 
             <TextView

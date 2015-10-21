@@ -53,7 +53,7 @@ public class CursorAdapterFacturas extends CursorAdapter {
         textViewCantidadOperacion.setText("Cantidad: "+cantidad);
         textViewPrecioUnitario.setText("Precio Unitario: "+precioUnitario);
         textViewReferencia.setText("Referencia Lote: "+referencia);
-        textViewImporteTotal.setText("Importe: "+importe+"");
+        textViewImporteTotal.setText("Importe: "+df.format(importe)+"");
         if(cursor.getInt(cursor.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_id_motivo))==1){
             imageView.setImageDrawable(null);
             imageView.setBackgroundResource(R.drawable.ic_action_undo);

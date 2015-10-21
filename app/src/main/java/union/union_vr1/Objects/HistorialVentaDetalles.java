@@ -18,7 +18,7 @@ public class HistorialVentaDetalles {
     private Double importe;
     private String fecha;
     private String hora;
-    private int valorUnidad;
+    private double valorUnidad;
     private int categoriaOperacion;
     private int formaOperacion;
     private int cantidadOperacion;
@@ -36,7 +36,7 @@ public class HistorialVentaDetalles {
     private String horaOperacionesDevuelto;
     private int estadoSincronizacion;
 
-    public HistorialVentaDetalles(String idDetalle, int idComprobante, int idEstablecimiento, int idProducto, int idTipoOperacion, int orden, String comprobante, String nombreEstablecimiento, String nombreProducto, int cantidad, Double importe, String fecha, String hora, int valorUnidad, int categoriaOperacion, int formaOperacion, int cantidadOperacion, Double importeOperacion, String fechaOperacion, String horaOperacion, String lote, String lugarRegistro, int estado, int idAgente, int cantidadOperacionesDevuelto, int categoriaOperacionesDevuelto, Double importeOperacionesDevuelto, String fechaOperacionesDevuelto, String horaOperacionesDevuelto, int estadoSincronizacion) {
+    public HistorialVentaDetalles(String idDetalle, int idComprobante, int idEstablecimiento, int idProducto, int idTipoOperacion, int orden, String comprobante, String nombreEstablecimiento, String nombreProducto, int cantidad, Double importe, String fecha, String hora, double valorUnidad, int categoriaOperacion, int formaOperacion, int cantidadOperacion, Double importeOperacion, String fechaOperacion, String horaOperacion, String lote, String lugarRegistro, int estado, int idAgente, int cantidadOperacionesDevuelto, int categoriaOperacionesDevuelto, Double importeOperacionesDevuelto, String fechaOperacionesDevuelto, String horaOperacionesDevuelto, int estadoSincronizacion) {
         this.idDetalle = idDetalle;
         this.idComprobante = idComprobante;
         this.idEstablecimiento = idEstablecimiento;
@@ -173,7 +173,7 @@ public class HistorialVentaDetalles {
         this.hora = hora;
     }
 
-    public int getValorUnidad() {
+    public double getValorUnidad() {
         return valorUnidad;
     }
 

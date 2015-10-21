@@ -38,6 +38,7 @@ public class CursorAdapter_Facturas_Canjes_Dev extends CursorAdapter {
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
+        DecimalFormat df = new DecimalFormat("#.00");
         TextView textViewTitulo = (TextView) view.findViewById(R.id.textViewListaTitulo);
         TextView textViewSubtitulo = (TextView) view.findViewById(R.id.textViewListaSubtitulo);
         TextView textViewComment = (TextView) view.findViewById(R.id.textViewListaComment);
@@ -45,7 +46,7 @@ public class CursorAdapter_Facturas_Canjes_Dev extends CursorAdapter {
         LinearLayout linearLayoutColor = (LinearLayout) view.findViewById(R.id.linearLayoutLista);
         ImageView imageView = (ImageView) view.findViewById(R.id.imageViewLista);
 
-        if (cursor.getCount()>0){
+        if (cursor.getCount() > 0) {
 
 
             String factura = "";
@@ -54,7 +55,9 @@ public class CursorAdapter_Facturas_Canjes_Dev extends CursorAdapter {
             String comprobante = cursor.getString(7);
             String producto = cursor.getString(9);
             String cantidad = cursor.getString(10);
-            int devuelto = cursor.getInt(17)+cursor.getInt(25);
+
+            int canje = cursor.getInt(17);
+            int dev = cursor.getInt(25);
 
             //Cortar el String Comprobante
             System.out.println("con datos");
@@ -65,32 +68,15 @@ public class CursorAdapter_Facturas_Canjes_Dev extends CursorAdapter {
                 fecha = datos[2];
                 monto = datos[3];
 
-
-                String textoAdpater = "Factura: " + factura + ","
-                        + "\nProducto: " + producto + ","
-                        + "\nCantidad: " + cantidad + "    Dev/Canj: " + devuelto + " "
-                        + "\nMonto: " + monto + ""
-                        + "\nFecha: " + fecha + "";
+                double total = Double.parseDouble(monto) * Integer.parseInt(cantidad);
 
 
-                textViewTitulo.setText("Factura : " + factura);
-                textViewSubtitulo.setText("Cantidad : "+ cantidad + ", Fecha : "+ fecha);
-                textViewComment.setText("Producto "+ producto + "\nDev/Canj : "+ devuelto);
-                textViewMonto.setText("S/. "+monto);
+                textViewTitulo.setText("Factura: " + factura);
+                textViewSubtitulo.setText("Cantidad: " + cantidad + "\nFecha : " + fecha);
+                textViewComment.setText("Producto: " + producto + "\nCanjes: " + canje + "\nDevoluciones: " + dev);
+                textViewMonto.setText("S/. " + df.format(total));
             } else {
-                String factura2 = cursor.getString(7);
-                String fecha2 = cursor.getString(12);
-                String monto2 = cursor.getString(11);
 
-                String textoAdpater = "Factura: " + factura2 + ","
-                        + "\nProducto: " + producto + ","
-                        + "\nCantidad: " + cantidad + ""
-                        + "\nMonto: " + monto2 + ""
-                        + "\nFecha: " + fecha2 + "";
-                textViewTitulo.setText("Factura : " + factura2);
-                textViewSubtitulo.setText("Cantidad : "+ cantidad + ", Fecha : "+ fecha2);
-                textViewComment.setText("Producto "+ producto);
-                textViewMonto.setText("S/. "+monto2);
             }
             linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.Dark1));
 
