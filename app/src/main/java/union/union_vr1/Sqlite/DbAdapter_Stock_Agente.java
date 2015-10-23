@@ -216,6 +216,7 @@ public class DbAdapter_Stock_Agente {
 
     }
 
+
     public int stockCanjes(int cantidad, String idProducto,String liquidacion) {
         int sFisico = 0;
         int sDisponible = 0;

@@ -35,6 +35,7 @@ import union.union_vr1.Sqlite.CursorAdapter_Facturas_Canjes_Dev;
 import union.union_vr1.Sqlite.DBAdapter_Temp_Canjes_Devoluciones;
 import union.union_vr1.Sqlite.DbAdapter_Canjes_Devoluciones;
 import union.union_vr1.Sqlite.DbAdapter_Histo_Venta_Detalle;
+import union.union_vr1.Sqlite.DbAdapter_Precio;
 import union.union_vr1.Sqlite.DbAdapter_Stock_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 
@@ -59,6 +60,7 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
     private String valorUnidad;
     private Context ctx = this;
     private DbAdapter_Temp_Session dbAdapter_temp_session;
+    private DbAdapter_Precio dbAdapter_precio;
 
 
     @Override
@@ -72,7 +74,8 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
         //--------------------------------------------
         dbAdapter_histo_venta_detalle = new DbAdapter_Histo_Venta_Detalle(this);
         dbAdapter_histo_venta_detalle.open();
-
+dbAdapter_precio = new DbAdapter_Precio(this);
+        dbAdapter_precio.open();
         dbHelperCanjes_Dev = new DbAdapter_Canjes_Devoluciones(this);
         dbHelperCanjes_Dev.open();
         dbHelperStockAgente = new DbAdapter_Stock_Agente(this);
@@ -260,7 +263,7 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
         final String nomProducto = cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Histo_Venta_Detalle.HD_nom_producto));
 
         final int liqui = cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Histo_Venta_Detalle.HD_id_liquidacion));
-        final int valorUni = cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Histo_Venta_Detalle.HD_valor_unidad));
+        final int valorUni = dbAdapter_precio.getValorUnidad(idProducto+"");
         final String id_comprobante_venta = cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Histo_Venta_Detalle.HD_id_comprob));
         //-----------------------------------------
         String[] datos = comprobante.split("/");
@@ -389,7 +392,7 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
         final String nomProducto = cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Histo_Venta_Detalle.HD_nom_producto));
        // final String lote = cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Histo_Venta_Detalle.HD_lote));
         final int liqui = cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Histo_Venta_Detalle.HD_id_liquidacion));
-        final int valorUni = cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Histo_Venta_Detalle.HD_valor_unidad));
+        final int valorUni = dbAdapter_precio.getValorUnidad(idProducto+"");
         final String id_comprobante_venta = cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Histo_Venta_Detalle.HD_id_comprob));
         //-----------------------------------------
         String[] datos = comprobante.split("/");
