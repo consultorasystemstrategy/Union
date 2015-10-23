@@ -11,4 +11,7 @@ public static final int _CREADO = 2;
 public static final int _ACTUALIZADO = 3;
 public static final int _EXPORTADO = 4;
 
+    public static final int _CANJES = 5;
+    public static final int _DEVOLUCIONES = 6;
+
 }

@@ -28,6 +28,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import union.union_vr1.AsyncTask.ExportCanjesDevoluciones;
 import union.union_vr1.R;
 import union.union_vr1.Sqlite.CursorAdapterFacturas;
 import union.union_vr1.Sqlite.DBAdapter_Temp_Canjes_Devoluciones;
@@ -130,6 +131,7 @@ public class VMovil_Operacion_Canjes_Devoluciones extends TabActivity {
 
         final AlertDialog.Builder dialogo = new AlertDialog.Builder(this);
         dialogo.setTitle("¿Esta seguro?");
+        dialogo.setCancelable(false);
         dialogo.setMessage("Guardara Canjes y Devoluciones");
         dialogo.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
             @Override
@@ -148,10 +150,12 @@ public class VMovil_Operacion_Canjes_Devoluciones extends TabActivity {
 
     }
     private void transOperaciones(){
-        Cursor getAllOperacion = dbAdapter_temp_canjes_devoluciones.getAllOperacion(getDatePhone(),establec);
+       /* Cursor getAllOperacion = dbAdapter_temp_canjes_devoluciones.getAllOperacionHeader(getDatePhone(),establec);
         while(getAllOperacion.moveToNext()){
             Log.d("ITEM 1 DEVOLUCIONES", getAllOperacion.getString(getAllOperacion.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_nom_producto)));
-        }
+        }*/
+        ExportCanjesDevoluciones exportCanjesDevoluciones = new ExportCanjesDevoluciones(getApplicationContext(),this);
+        exportCanjesDevoluciones.execute(getDatePhone(),establec);
 
     }
 
