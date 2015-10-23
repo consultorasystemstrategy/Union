@@ -133,10 +133,10 @@ public class DBAdapter_Temp_Canjes_Devoluciones {
         return mDb.insert(SQLITE_TABLE_Temp_Canjes_Devoluciones, null, initialValues);
     }
 
-    public void updateIdCabecera( String establec) {
+    public void updateIdCabecera( String establec,String ESTADO) {
         String id = "";
         id = getIdForHeader(getDatePhone(), establec);
-        Cursor op = getAllOperacionByEstablec(establec);
+        Cursor op = getAllOperacionByEstablec(establec,ESTADO);
         if (op !=null) {
 
             while (op.moveToNext()) {
@@ -162,6 +162,12 @@ public class DBAdapter_Temp_Canjes_Devoluciones {
         return mDb.update(SQLITE_TABLE_Temp_Canjes_Devoluciones, initialValues,
                 temp_id_canjes_devoluciones + "=?", new String[]{id});
     }
+    public int updateEstadoExportAfter( String id) {
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(Constants._SINCRONIZAR, Constants._ACTUALIZADO+"");
+        return mDb.update(SQLITE_TABLE_Temp_Canjes_Devoluciones, initialValues,
+                temp_id_canjes_devoluciones + "=?", new String[]{id});
+    }
 
     public String getIdForHeader(String fecha, String establec) {
         String id = "";
@@ -180,14 +186,18 @@ public class DBAdapter_Temp_Canjes_Devoluciones {
 
         return id;
     }
-    public Cursor getAllOperacionByEstablec(String establec) {
-        Cursor cursor = mDb.rawQuery("select * from " + SQLITE_TABLE_Temp_Canjes_Devoluciones + " where " + temp_id_establecimiento + "='" + establec + "' and "+temp_fecha_emision+"='"+getDatePhone()+"'", null);
+    public Cursor getAllOperacionEstablecimiento() {
+        Cursor cursor = mDb.rawQuery("select DISTINCT("+temp_id_establecimiento+") from " + SQLITE_TABLE_Temp_Canjes_Devoluciones + " where "+Constants._SINCRONIZAR+"='"+Constants._ACTUALIZADO+"'", null);
+        return cursor;
+    }
+    public Cursor getAllOperacionByEstablec(String establec,String ESTADO) {
+        Cursor cursor = mDb.rawQuery("select * from " + SQLITE_TABLE_Temp_Canjes_Devoluciones + " where " + temp_id_establecimiento + "='" + establec + "' and "+temp_fecha_emision+"='"+getDatePhone()+"' and "+Constants._SINCRONIZAR+"='"+ESTADO+"'", null);
         return cursor;
     }
 
 
-    public Cursor getAllOperacion(String idOperacion) {
-        Cursor cursor = mDb.rawQuery("select * from " + SQLITE_TABLE_Temp_Canjes_Devoluciones + " where " + temp_id_cabecera + "='" + idOperacion + "' and "+Constants._SINCRONIZAR+"='"+Constants._CREADO+"' ", null);
+    public Cursor getAllOperacion(String idOperacion,String ESTADO) {
+        Cursor cursor = mDb.rawQuery("select * from " + SQLITE_TABLE_Temp_Canjes_Devoluciones + " where " + temp_id_cabecera + "='" + idOperacion + "' and "+Constants._SINCRONIZAR+"='"+ESTADO+"' ", null);
         return cursor;
     }
 
@@ -208,7 +218,7 @@ public class DBAdapter_Temp_Canjes_Devoluciones {
     }
 
     public Double[] getInfoCanje(String establec) {
-        Cursor cursor = mDb.rawQuery("select sum(" + temp_importe + ") as " + temp_importe + "," + temp_id_cabecera + " from " + SQLITE_TABLE_Temp_Canjes_Devoluciones + " where " + temp_id_motivo + "='2' and " + temp_id_establecimiento + "='" + establec + "' and " + temp_fecha_emision + "='" + getDatePhone() + "';", null);
+        Cursor cursor = mDb.rawQuery("select sum(" + temp_importe + ") as " + temp_importe + "," + temp_id_cabecera + " from " + SQLITE_TABLE_Temp_Canjes_Devoluciones + " where " + temp_id_motivo + "='2' and " + temp_id_establecimiento + "='" + establec + "' and " + temp_fecha_emision + "='" + getDatePhone() + "' and "+Constants._SINCRONIZAR+"='"+Constants._CREADO+"';", null);
         double total = 0.0000;
         double igv = 0.0000;
         double base = 0.0000;
@@ -222,8 +232,8 @@ public class DBAdapter_Temp_Canjes_Devoluciones {
         return new Double[]{Double.parseDouble(f.format(total)), Double.parseDouble(f.format(base)), Double.parseDouble(f.format(igv))};
     }
 
-    public String[] getInfoCabeceraOperacion(String establec) {
-        Cursor cursor = mDb.rawQuery("select sum(" + temp_importe + ") as " + temp_importe + "," + temp_id_cabecera + " from " + SQLITE_TABLE_Temp_Canjes_Devoluciones + " where " + temp_id_establecimiento + "='" + establec + "' and " + temp_fecha_emision + "='" + getDatePhone() + "';", null);
+    public String[] getInfoCabeceraOperacion(String establec,String ESTADO) {
+        Cursor cursor = mDb.rawQuery("select sum(" + temp_importe + ") as " + temp_importe + "," + temp_id_cabecera + " from " + SQLITE_TABLE_Temp_Canjes_Devoluciones + " where " + temp_id_establecimiento + "='" + establec + "' and " + temp_fecha_emision + "='" + getDatePhone() + "' and "+Constants._SINCRONIZAR+"='"+ESTADO+"';", null);
         double total = 0.0000;
         double igv = 0.0000;
         double base = 0.0000;
@@ -256,7 +266,7 @@ public class DBAdapter_Temp_Canjes_Devoluciones {
         double total = 0.0000;
         double igv = 0.00000;
         double base = 0.00000;
-        Cursor cursor = mDb.rawQuery("select sum(" + temp_importe + ") as " + temp_importe + " from " + SQLITE_TABLE_Temp_Canjes_Devoluciones + " where " + temp_id_motivo + "='1' and " + temp_id_establecimiento + "='" + establec + "' and " + temp_fecha_emision + "='" + getDatePhone() + "';", null);
+        Cursor cursor = mDb.rawQuery("select sum(" + temp_importe + ") as " + temp_importe + " from " + SQLITE_TABLE_Temp_Canjes_Devoluciones + " where " + temp_id_motivo + "='1' and " + temp_id_establecimiento + "='" + establec + "' and " + temp_fecha_emision + "='" + getDatePhone() + "' and "+Constants._SINCRONIZAR+"='"+Constants._CREADO+"';", null);
         cursor.moveToFirst();
 
         if (cursor.getDouble(cursor.getColumnIndexOrThrow(temp_importe)) > 0) {

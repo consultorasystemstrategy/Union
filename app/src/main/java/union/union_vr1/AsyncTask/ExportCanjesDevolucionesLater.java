@@ -2,7 +2,6 @@ package union.union_vr1.AsyncTask;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.app.TabActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -20,33 +19,24 @@ import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 /**
  * Created by Kelvin on 22/10/2015.
  */
-public class ExportCanjesDevoluciones extends AsyncTask<String, String, String> {
+public class ExportCanjesDevolucionesLater extends AsyncTask<String, String, String> {
     private DBAdapter_Temp_Canjes_Devoluciones dbAdapter_temp_canjes_devoluciones;
     private DbAdapter_Temp_Session dbAdapter_temp_session;
     private Context CONTEXT;
     private Activity activity;
     private String ESTABLEC;
     private int AGENTE;
-    private ProgressDialog progressDialog;
+
 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        createProgressDialog();
-    }
-
-    public void createProgressDialog() {
-        progressDialog = new ProgressDialog(activity);
-        progressDialog.setMessage("Exportando...");
-        progressDialog.setIndeterminate(false);
-        progressDialog.setMax(100);
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        progressDialog.setCancelable(false);
-        progressDialog.show();
 
     }
 
-    public ExportCanjesDevoluciones(Context context,Activity  acti) {
+
+
+    public ExportCanjesDevolucionesLater(Context context, Activity acti) {
         CONTEXT = context;
         activity = acti;
         dbAdapter_temp_canjes_devoluciones = new DBAdapter_Temp_Canjes_Devoluciones(context);
@@ -57,16 +47,17 @@ public class ExportCanjesDevoluciones extends AsyncTask<String, String, String> 
 
     @Override
     protected String doInBackground(String... strings) {
-        publishProgress("" + 30);
+
         StockAgenteRestApi api = new StockAgenteRestApi(CONTEXT);
         int idAgente = dbAdapter_temp_session.fetchVarible(1);
         String fecha = strings[0];
         String establec = strings[1];
         String ESTADO_SYNS = strings[2];
+        Log.d("OPERACIONESCABECERA", "" + ESTADO_SYNS);
         ESTABLEC = establec;
         AGENTE = idAgente;
         //Conseguir Canjes y Devoluciones para poder cambiar el id de canjes.
-        dbAdapter_temp_canjes_devoluciones.updateIdCabecera(establec, ESTADO_SYNS);
+        dbAdapter_temp_canjes_devoluciones.updateIdCabecera(establec,ESTADO_SYNS);
         //CONSEGUIR DATOS PARA LA CABECERA DE OPERACIONES
         //creado cuando hay internet
         //Actualizado cuando exporta despues
@@ -76,7 +67,7 @@ public class ExportCanjesDevoluciones extends AsyncTask<String, String, String> 
         Cursor operacionesDetalleForUpdate = dbAdapter_temp_canjes_devoluciones.getAllOperacion(getCabeceraOperacion[3],ESTADO_SYNS);
         Cursor operacionesDetalleForUpdateFinish = dbAdapter_temp_canjes_devoluciones.getAllOperacion(getCabeceraOperacion[3],ESTADO_SYNS);
 
-        publishProgress("" + 50);
+
         //Enviar datos de la cabecera
         JSONObject jsonObject = null;
         try {
@@ -97,7 +88,7 @@ public class ExportCanjesDevoluciones extends AsyncTask<String, String, String> 
                 Log.d("Actualizo", estadoUpdateGuia + "");
             }
             JSONObject jsonObjectDetalle = null;
-            publishProgress("" + 70);
+
             Log.d("ESTADO DEL CAMPO", "" + idGuia);
             while (operacionesDetalle.moveToNext()) {
 
@@ -121,7 +112,7 @@ public class ExportCanjesDevoluciones extends AsyncTask<String, String, String> 
 
                 Log.d("DETALLE", jsonObjectDetalle.toString());
 
-                publishProgress("" + 100);
+
             }
             if (isSuccesfulExport(jsonObjectDetalle)) {
                 Log.d("TERMINO BIEN", jsonObjectDetalle.toString());
@@ -135,6 +126,7 @@ public class ExportCanjesDevoluciones extends AsyncTask<String, String, String> 
 
 
         } catch (Exception e) {
+            Log.d("ERROR NOSE", e.getMessage());
             e.printStackTrace();
         }
 
@@ -144,7 +136,7 @@ public class ExportCanjesDevoluciones extends AsyncTask<String, String, String> 
     @Override
     protected void onProgressUpdate(String... values) {
         super.onProgressUpdate(values);
-        progressDialog.setProgress(Integer.parseInt(values[0]));
+
     }
 
     @Override
@@ -152,30 +144,21 @@ public class ExportCanjesDevoluciones extends AsyncTask<String, String, String> 
         super.onPostExecute(s);
         if ((activity.isFinishing())) {
             //dismissProgressDialog();
-            progressDialog.dismiss();
+
             return;
         } else {
-            progressDialog.setProgress(100);
-            dismissProgressDialog();
-            Toast.makeText(CONTEXT, "EXPORTACIÓN EXITOSA", Toast.LENGTH_LONG).show();
 
-            Intent intent = new Intent(activity, activity.getClass());
-            intent.putExtra("idEstabX",ESTABLEC);
-            intent.putExtra("idAgente",AGENTE);
-            activity.finish();
-            activity.startActivity(intent);
+
+            Toast.makeText(CONTEXT, "EXPORTANDO... CD", Toast.LENGTH_LONG).show();
+
+
         }
 
 
         super.onPostExecute(s);
     }
 
-    public void dismissProgressDialog() {
-        if (progressDialog != null && progressDialog.isShowing()) {
-            progressDialog.dismiss();
-        }
 
-    }
 
     public int parserIdGuiaRetornado(JSONObject jsonObj) {
         int idGuia = -1;

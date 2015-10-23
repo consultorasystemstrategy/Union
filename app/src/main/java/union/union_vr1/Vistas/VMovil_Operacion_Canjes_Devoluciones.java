@@ -2,9 +2,12 @@ package union.union_vr1.Vistas;
 
 import android.app.AlertDialog;
 import android.app.TabActivity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -30,6 +33,7 @@ import java.util.GregorianCalendar;
 
 import union.union_vr1.AsyncTask.ExportCanjesDevoluciones;
 import union.union_vr1.R;
+import union.union_vr1.Sqlite.Constants;
 import union.union_vr1.Sqlite.CursorAdapterFacturas;
 import union.union_vr1.Sqlite.DBAdapter_Temp_Canjes_Devoluciones;
 import union.union_vr1.Sqlite.DbAdapter_Histo_Venta_Detalle;
@@ -142,7 +146,35 @@ public class VMovil_Operacion_Canjes_Devoluciones extends TabActivity {
         dialogo.setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int liquidacion) {
-                transOperaciones();
+                if(conectadoWifi() || conectadoRedMovil()){
+                    transOperaciones();
+                }else{
+                    saveAndExportLast();
+                }
+
+            }
+        });
+        dialogo.create();
+        dialogo.show();
+
+    }
+    private void saveAndExportLast(){
+
+        Cursor cursor = dbAdapter_temp_canjes_devoluciones.getAllOperacionByEstablec(establec,Constants._CREADO+"");
+        while(cursor.moveToNext()){
+            dbAdapter_temp_canjes_devoluciones.updateEstadoExportAfter(cursor.getString(cursor.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_id_canjes_devoluciones)));
+        }
+
+
+        final AlertDialog.Builder dialogo = new AlertDialog.Builder(this);
+        dialogo.setTitle("No estas Conectado");
+        dialogo.setCancelable(false);
+        dialogo.setMessage("Sin embargo se exportaran mas adelante.");
+        dialogo.setPositiveButton("Esta Bien", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int liquidacion) {
+                startActivity(new Intent(getApplicationContext(), VMovil_Evento_Establec.class));
+                finish();
             }
         });
         dialogo.create();
@@ -155,7 +187,7 @@ public class VMovil_Operacion_Canjes_Devoluciones extends TabActivity {
             Log.d("ITEM 1 DEVOLUCIONES", getAllOperacion.getString(getAllOperacion.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_nom_producto)));
         }*/
         ExportCanjesDevoluciones exportCanjesDevoluciones = new ExportCanjesDevoluciones(getApplicationContext(),this);
-        exportCanjesDevoluciones.execute(getDatePhone(),establec);
+        exportCanjesDevoluciones.execute(getDatePhone(),establec, Constants._CREADO+"");
 
     }
 
@@ -168,6 +200,31 @@ public class VMovil_Operacion_Canjes_Devoluciones extends TabActivity {
         listarTotalCanjes();
 
 
+    }
+    protected Boolean conectadoWifi(){
+        ConnectivityManager connectivity = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivity != null) {
+            NetworkInfo info = connectivity.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+            if (info != null) {
+                if (info.isConnected()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    protected Boolean conectadoRedMovil(){
+        ConnectivityManager connectivity = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivity != null) {
+            NetworkInfo info = connectivity.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+            if (info != null) {
+                if (info.isConnected()) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private void mostrarItemsCanjes() {
