@@ -261,6 +261,10 @@ public class DBAdapter_Temp_Canjes_Devoluciones {
         Cursor cursor = mDb.rawQuery("select * from " + SQLITE_TABLE_Temp_Canjes_Devoluciones + " where " + temp_id_motivo + "='1' and " + temp_id_establecimiento + "='" + establec + "' and " + temp_fecha_emision + "='" + getDatePhone() + "' and "+Constants._SINCRONIZAR+"='"+Constants._CREADO+"';", null);
         return cursor;
     }
+    public Cursor listarDevolucionesImpresion(String establec) {
+        Cursor cursor = mDb.rawQuery("select distinct("+temp_id_guia+") as "+temp_id_canjes_devoluciones+","+temp_cliente+","+temp_id_forma+",sum("+temp_importe+") as "+temp_importe+"   from " + SQLITE_TABLE_Temp_Canjes_Devoluciones + " where " + temp_id_motivo + "='1' and " + temp_id_establecimiento + "='" + establec + "' and " + temp_fecha_emision + "='" + getDatePhone() + "' and "+Constants._SINCRONIZAR+"='"+Constants._EXPORTADO+"';", null);
+        return cursor;
+    }
 
     public Double[] getInfoDevoluciones(String establec) {
         double total = 0.0000;
