@@ -53,7 +53,7 @@ public class DigitalSignature {
         File myFile = null;
         try {
             Log.d("GENERATE DS","000");
-            myFile = new File(context.getFilesDir(), idDocument+".xml");
+            myFile = new File(context.getFilesDir(), context.getString(R.string.RUC)+"-"+ idDocument+".xml");
             Log.d("FILE DIR: ",myFile.getAbsolutePath());
             fout = context.openFileOutput(myFile.getName(), context.MODE_WORLD_READABLE);
         } catch (FileNotFoundException e) {
@@ -76,7 +76,7 @@ public class DigitalSignature {
 
             //DEFINIOMS EL PRÓLOGO DEL XML
             serializer.setOutput(fout, UBLElements.ISO88591);
-            serializer.startDocument(null, false);
+            serializer.startDocument("ISO-8859-1", false);
             serializer.setFeature("http://xmlpull.org/v1/doc/features.html#indent-output", true);
 
 

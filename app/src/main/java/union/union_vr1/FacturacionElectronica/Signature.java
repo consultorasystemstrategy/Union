@@ -41,6 +41,7 @@ import javax.xml.crypto.dsig.spec.C14NMethodParameterSpec;
 import javax.xml.crypto.dsig.spec.TransformParameterSpec;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -84,9 +85,9 @@ public class Signature {
                 Collections.singletonList(ref));
 
         KeyStore keyStore = KeyStore.getInstance("BKS");
-        keyStore.load(BKS,"perucentels@2014".toCharArray());
+        keyStore.load(BKS,"upeukeystore".toCharArray());
         KeyStore.PrivateKeyEntry keyEntry
-                = (KeyStore.PrivateKeyEntry) keyStore.getEntry("centelsa", new KeyStore.PasswordProtection("steve".toCharArray()));
+                = (KeyStore.PrivateKeyEntry) keyStore.getEntry("le-fb1066b1-b857-499b-a744-f7b90be3437a", new KeyStore.PasswordProtection("upeu".toCharArray()));
 
         X509Certificate cert = (X509Certificate) keyEntry.getCertificate();
 
@@ -110,6 +111,8 @@ public class Signature {
         OutputStream os = new FileOutputStream(fileDocumentoFirmado);
         TransformerFactory tf = TransformerFactory.newInstance();
         Transformer trans = tf.newTransformer();
+        trans.setOutputProperty(OutputKeys.ENCODING, "ISO-8859-1");
+        trans.setOutputProperty(OutputKeys.STANDALONE, "no");
         trans.transform(new DOMSource(doc), new StreamResult(os));
 
         Node node = doc.getElementsByTagName("ds:DigestValue").item(0);

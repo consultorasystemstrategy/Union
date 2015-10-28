@@ -962,9 +962,25 @@ Instantiate and pass a callback
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
-            case R.id.addMenuProduct:
-                IntentIntegrator intentIntegrator = new IntentIntegrator(mainActivity);
-                intentIntegrator.initiateScan();
+            case R.id.ventaRRPP:
+                /*IntentIntegrator intentIntegrator = new IntentIntegrator(mainActivity);
+                intentIntegrator.initiateScan();*/
+                Toast.makeText(contexto, "VENTA RRPP", Toast.LENGTH_LONG).show();
+
+                //DOCUMENTO SÓLO BOLETA
+                ArrayAdapter<CharSequence> adapterTipoDocumento = ArrayAdapter.createFromResource(this,R.array.tipoDocumentoBoleta,android.R.layout.simple_spinner_item);
+                adapterTipoDocumento.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinnerTipoDocumento.setAdapter(adapterTipoDocumento);
+
+                //TIPO DE PAGO SÓLO AL CONTADO
+                final ArrayAdapter<CharSequence> adapterFormaPago = ArrayAdapter.createFromResource(this,R.array.forma_pago_contado,android.R.layout.simple_spinner_item);
+                adapterFormaPago.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinnerFormaPago.setAdapter(adapterFormaPago);
+
+                //TODOS LOS ELEMENTOS DEBERÁN TENER PRECIO DE 0
+
+                //SE DEBERÁ MANDAR UN PARÁMETRO A IMPRESIÓN, Y A GENERACIÓN DEL FIRMADO QUE ES RR PP
+
                 break;
         }
         return true;
@@ -2475,13 +2491,14 @@ NUMERO_DOCUMENTO = numero_documento+"";
             DecimalFormat df = new DecimalFormat("#.00");
             String pathDocument = handlerXML.escribirXML(i_tipoDocumento, contexto, numeroDocumentoImpresion,documentoCliente, nombreCliente,df.format(base_imponibleFooter), df.format(totalFooter), df.format(igvFooter), simpleCursorAdapter.getCursor());
 
-            Log.d("GENERATE DS", ""+30);
+            Log.d("GpathDocument", ""+pathDocument);
 
             //byte[] byteReads = null;
-            String textoRead="";
+            /*String textoRead="";
             try {
                 //byteReads = handlerXML.leerXML(contexto);
-                textoRead = handlerXML.leerXML(contexto, numeroDocumentoImpresion+".xml");
+                //textoRead = handlerXML.leerXML(contexto, numeroDocumentoImpresion+".xml");
+                textoRead = handlerXML.leerXML(contexto, pathDocument);
                 Log.d("GENERATE DS", ""+60);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -2490,6 +2507,7 @@ NUMERO_DOCUMENTO = numero_documento+"";
             } catch (SAXException e) {
                 e.printStackTrace();
             }
+            */
             try {
                 keystore = getFilefromAssets(BKS);
             } catch (IOException e) {
@@ -2498,7 +2516,8 @@ NUMERO_DOCUMENTO = numero_documento+"";
 
             try {
                 InputStream inputStream = new FileInputStream(pathDocument);
-                textoSHA1 = Signature.add(keystore,inputStream,createFile(numeroDocumentoImpresion + ".xml"));
+                //textoSHA1 = Signature.add(keystore,inputStream,createFile(numeroDocumentoImpresion + ".xml"));
+                textoSHA1 = Signature.add(keystore,inputStream,createFile(contexto.getString(R.string.RUC)+"-"+ numeroDocumentoImpresion+".xml"));
                 Log.d("SHA1", SHA1);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
@@ -2529,7 +2548,7 @@ NUMERO_DOCUMENTO = numero_documento+"";
             }
 
 
-            Log.d("XML ESCRITO: "+pathDocument,""+textoRead);
+            //Log.d("XML ESCRITO: "+pathDocument,""+textoRead);
             /*try {
 
                 //String textoSHA1 = CodigoSHA1.SHA1(texto);

@@ -70,6 +70,10 @@
     <string-array name="forma_pago_credito">
         <item>Credito</item>
     </string-array>
+    <string-array name="forma_pago_contado">
+        <item>Contado</item>
+    </string-array>
+
     <string-array name="tipo_atencion">
         <item>Pendiente</item>
         <item>Atendido</item>
@@ -165,5 +169,6 @@
     <string name="title_activity_vmovil__crear__establecimiento">Nuevo establecimiento</string>
     <string name="title_activity_vmovil__operacion__canjes__devoluciones">VMovil_Operacion_Canjes_Devoluciones</string>
     <string name="title_activity_signature">SignatureActivity</string>
+    <string name="title_activity_ventas_rrpp">Ventas RRPP</string>
 
 </resources>

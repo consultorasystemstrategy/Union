@@ -225,11 +225,18 @@
         <activity
             android:name=".FacturacionElectronica.SignatureActivity"
             android:label="@string/title_activity_signature" >
-            <!--<intent-filter>
+
+            <!--
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>-->
+            </intent-filter>
+            -->
+        </activity>
+        <activity
+            android:name=".VentasRRPP"
+            android:label="@string/title_activity_ventas_rrpp" >
         </activity>
     </application>
 
