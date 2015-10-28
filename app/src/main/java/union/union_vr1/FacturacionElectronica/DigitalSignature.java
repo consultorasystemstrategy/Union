@@ -125,6 +125,7 @@ public class DigitalSignature {
 
                 serializer.endTag(UBLElements.NAMESPACE_SAC, UBLElements.ADDITIONALMONETARYTOTAL);*/
             //OPERACIONES EXONERADAS - TOTAL VALOR DE VENTA
+            /*
             serializer.startTag(UBLElements.NAMESPACE_SAC, UBLElements.ADDITIONALMONETARYTOTAL);
 
             serializer.startTag(UBLElements.NAMESPACE_CBC, UBLElements.ID);
@@ -160,6 +161,7 @@ public class DigitalSignature {
             serializer.endTag(UBLElements.NAMESPACE_CBC, UBLElements.PAYABLEAMOUNT);
 
             serializer.endTag(UBLElements.NAMESPACE_SAC, UBLElements.ADDITIONALMONETARYTOTAL);
+            */
             //IMPORTE TOTAL DE LAS VENTAS[LETRAS]
             serializer.startTag(UBLElements.NAMESPACE_SAC, UBLElements.ADDITIONALPROPERTY);
 
