@@ -157,7 +157,7 @@ public class ImportMain extends AsyncTask<String, String, String> {
         try {
             publishProgress("" + 5);
             JSONObject jsonObjectStockAgente = api.GetStockAgente(idAgente);
-            Log.d("JSON ERROR MESSAGE", getErrorMessage(jsonObjectStockAgente));
+            //Log.d("JSON ERROR MESSAGE", getErrorMessage(jsonObjectStockAgente));
             publishProgress("" + 10);
             JSONObject jsonObjectTipoGasto = api.GetTipoGasto();
             publishProgress("" + 15);
@@ -199,6 +199,19 @@ public class ImportMain extends AsyncTask<String, String, String> {
             comprobanteCobros = parserComprobanteCobro.parserComprobanteCobro(jsonObjectComprobanteCobro);
             historialVentaDetalleses = parserHistorialVentaDetalles.parserHistorialVentaDetalles(jsonObjectHistorialVentaDetalle);
             comprobanteVentaDetalles = parserComprobanteVentaDetalle.parserComprobanteVentaDetalle(jsonObjectHistorialComprobanteAnterior);
+
+            for(int i =0;i<historialVentaDetalleses.size();i++){
+
+                    boolean existe = dbAdapter_histo_venta_detalle.existeHistoVentaDetalle(historialVentaDetalleses.get(i).getIdDetalle());
+
+                    Log.d("EXISTE DETALLE", "" + existe);
+                    if (existe) {
+                        dbAdapter_histo_venta_detalle.updateHistoVentaDetalle(historialVentaDetalleses.get(i));
+                    } else {
+                        //NO EXISTE ENTONCES CREEMOS UNO NUEVO
+                        dbAdapter_histo_venta_detalle.createHistoVentaDetalle(historialVentaDetalleses.get(i));
+                    }
+            }
 
 
             boolean rutaSuccess = isSuccesfulImport(jsonObjectRutaDistribucion);
@@ -302,20 +315,9 @@ public class ImportMain extends AsyncTask<String, String, String> {
                     dbAdapter_comprob_cobro.createComprobCobro(comprobanteCobros.get(i));
                 }
             }
-            publishProgress("" + 65);
-            for (int i = 0; i < historialVentaDetalleses.size(); i++) {
-                Log.d("HISTORIAL VENTA DETALLES : " + i, " ID DETALLE : " + historialVentaDetalleses.get(i).getIdDetalle());
-                Log.d("JODER ", "SI HAY DATOS");
-                boolean existe = dbAdapter_histo_venta_detalle.existeHistoVentaDetalle(historialVentaDetalleses.get(i).getIdDetalle());
 
-                Log.d("EXISTE ", "" + existe);
-                if (existe) {
-                    dbAdapter_histo_venta_detalle.updateHistoVentaDetalle(historialVentaDetalleses.get(i));
-                } else {
-                    //NO EXISTE ENTONCES CREEMOS UNO NUEVO
-                    dbAdapter_histo_venta_detalle.createHistoVentaDetalle(historialVentaDetalleses.get(i));
-                }
-            }
+            publishProgress("" + 65);
+
 
             publishProgress("" + 90);
             for (int i = 0; i < comprobanteVentaDetalles.size(); i++) {
@@ -427,7 +429,7 @@ public class ImportMain extends AsyncTask<String, String, String> {
 
         } catch (Exception e) {
             Log.d("AysncImport : ", e.getMessage());
-
+            Log.d("ERROR",e.getStackTrace()[2].getMethodName()+"");
         }
         return null;
     }

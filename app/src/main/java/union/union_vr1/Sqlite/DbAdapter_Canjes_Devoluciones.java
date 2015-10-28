@@ -122,6 +122,7 @@ public class DbAdapter_Canjes_Devoluciones {
 
     public Cursor listaFacturasByProducto(int idProducto, int idAgente, String idEstablec) {
         Cursor cr = mDb.rawQuery("select * from m_histo_venta_detalle where hd_in_id_producto=" + idProducto + " and hd_in_id_agente=" + idAgente + " and hd_in_id_establec='" + idEstablec + "' and hd_in_estado=1 and hd_in_id_detalle !=''", null);
+       // Cursor cr = mDb.rawQuery("select * from m_histo_venta_detalle ", null);
         if (cr != null) {
             cr.moveToFirst();
         } else {

@@ -76,7 +76,6 @@
                 android:id="@+id/textViewPrecioUnitario"
                 android:layout_weight="1"
                 android:layout_gravity="top|left"
-                android:layout_marginTop="dp"
                 android:gravity="top|left"
                 android:textSize="10dp"
                 android:singleLine="false"

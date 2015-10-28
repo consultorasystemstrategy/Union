@@ -77,7 +77,7 @@ public class DbAdapter_Histo_Venta_Detalle {
                     + HD_importe + " real,"
                     + HD_fecha + " text,"
                     + HD_hora + " text,"
-                    + HD_valor_unidad + " integer,"
+                    + HD_valor_unidad + " real,"
                     + HD_categoria_ope + " integer,"
                     + HD_forma_ope + " integer,"
                     + HD_cantidad_ope + " integer,"
@@ -264,6 +264,43 @@ public class DbAdapter_Histo_Venta_Detalle {
         initialValues.put(HD_estado, estado);
         mDb.update(SQLITE_TABLE_Histo_Venta_Detalle, initialValues,
                 HD_id_hventadet + "=?", new String[]{idorig});
+    }
+    public int  restarupdateHistoVentaDetalleCanje(String idDetalle, int cantidad) {
+        int total=0;
+        Cursor cr = mDb.rawQuery("select * from "+SQLITE_TABLE_Histo_Venta_Detalle+" where "+HD_id_detalle+"='"+idDetalle+"'",null);
+        if(cr.moveToFirst()){
+            int cant = cr.getInt(cr.getColumnIndexOrThrow(HD_cantidad_ope));
+             total= cant-cantidad;
+        }
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(HD_cantidad_ope, total);
+        return mDb.update(SQLITE_TABLE_Histo_Venta_Detalle, initialValues,
+                HD_id_detalle+ "=?", new String[]{idDetalle});
+    }
+    public int  restarupdateHistoVentaDetalleDevolucion(String idDetalle, int cantidad) {
+        int total=0;
+        Cursor cr = mDb.rawQuery("select * from "+SQLITE_TABLE_Histo_Venta_Detalle+" where "+HD_id_detalle+"='"+idDetalle+"'",null);
+        if(cr.moveToFirst()){
+            int cant = cr.getInt(cr.getColumnIndexOrThrow(HD_cantidad_ope_dev));
+            total= cant-cantidad;
+        }
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(HD_cantidad_ope_dev, total);
+        return mDb.update(SQLITE_TABLE_Histo_Venta_Detalle, initialValues,
+                HD_id_detalle+ "=?", new String[]{idDetalle});
+    }
+
+    public int  updateHistoVentaDetalleCanje(String idDetalle, int cantidad) {
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(HD_cantidad_ope, cantidad);
+       return mDb.update(SQLITE_TABLE_Histo_Venta_Detalle, initialValues,
+                 HD_id_detalle+ "=?", new String[]{idDetalle});
+    }
+    public int  updateHistoVentaDetalleDevolucion(String idDetalle, int cantidad) {
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(HD_cantidad_ope_dev, cantidad);
+        return mDb.update(SQLITE_TABLE_Histo_Venta_Detalle, initialValues,
+                HD_id_detalle+ "=?", new String[]{idDetalle});
     }
 
     public void updateHistoVentaDetalle2(String idorig, String iddest, String vals) {

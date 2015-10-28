@@ -24,6 +24,25 @@
         android:ems="10"
         android:id="@+id/cantidad_can_dev_registrado"
         android:layout_gravity="center_horizontal" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Ingrese Lote"
+        android:id="@+id/textView34"
+        android:layout_gravity="center_horizontal"
+        android:textColor="@color/Dark1"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:textStyle="italic" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:id="@+id/editTextlote"
+        android:layout_gravity="center_horizontal" />
 
     <LinearLayout
         android:orientation="horizontal"

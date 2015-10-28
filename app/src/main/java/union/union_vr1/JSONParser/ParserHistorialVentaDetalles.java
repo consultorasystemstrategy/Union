@@ -25,10 +25,12 @@ public class ParserHistorialVentaDetalles {
         ArrayList<HistorialVentaDetalles> arrayList=new ArrayList<HistorialVentaDetalles>();
         try {
             JSONArray jsonArray=object.getJSONArray("Value");
+
             JSONObject jsonObj=null;
             for(int i=0;i<jsonArray.length();i++)
             {
                 jsonObj=jsonArray.getJSONObject(i);
+
                 arrayList.add(new HistorialVentaDetalles(
                         jsonObj.getString("idComprobanteVentaDetalle"),
                         jsonObj.getInt("idComprobanteVenta"),
@@ -42,9 +44,8 @@ public class ParserHistorialVentaDetalles {
                         jsonObj.getInt("cantidad"),
                         jsonObj.getDouble("importe"),
                         jsonObj.getString("fecha"),
-                        null,
-                        //TRAYENDO EL CAMPO PRECIO UNITARIO* CORREGIR Y PREGUNTARLE A JOSMAR
-                        jsonObj.getInt("precioUnitario"),
+                        "",
+                        jsonObj.getDouble("precioUnitario"),
                         0,
                         0,
                         0,
@@ -62,6 +63,7 @@ public class ParserHistorialVentaDetalles {
                         null,
                         Constants._IMPORTADO
                         ));
+                Log.d("datos en "+i,""+arrayList.get(i).getComprobante());
             }
 
         } catch (JSONException e) {

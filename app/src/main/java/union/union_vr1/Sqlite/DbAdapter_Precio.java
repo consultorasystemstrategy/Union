@@ -76,6 +76,16 @@ public class  DbAdapter_Precio {
             mDbHelper.close();
         }
     }
+    public int getValorUnidad(String idProducto) {
+        int valorUnidad = 0;
+
+        Cursor cr = mDb.rawQuery("select * from " + SQLITE_TABLE_Precio + " where "+PR_id_producto+"='"+idProducto+"';", null);
+        if (cr.moveToFirst()) {
+            valorUnidad = cr.getInt(cr.getColumnIndexOrThrow(PR_valor_unidad));
+
+        }
+        return valorUnidad;
+    }
 
     public long createPrecio(
             int id_producto, int id_cat_est, double costo_venta, double precio_unit,

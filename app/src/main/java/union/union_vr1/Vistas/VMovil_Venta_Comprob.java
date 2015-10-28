@@ -40,10 +40,12 @@ import java.util.GregorianCalendar;
 
 import union.union_vr1.R;
 import union.union_vr1.Sqlite.CursorAdapterComprobanteVenta;
+import union.union_vr1.Sqlite.CursorAdapterFacturas;
 import union.union_vr1.Sqlite.CursorAdapter_Autorizacion_Cobros;
 import union.union_vr1.Sqlite.CursorAdapter_Man_Can_Dev;
 import union.union_vr1.Sqlite.CursorAdapter_Man_Cbrz;
 import union.union_vr1.Sqlite.DBAdapter_Temp_Autorizacion_Cobro;
+import union.union_vr1.Sqlite.DBAdapter_Temp_Canjes_Devoluciones;
 import union.union_vr1.Sqlite.DbAdapter_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Canjes_Devoluciones;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
@@ -64,7 +66,7 @@ import static union.union_vr1.R.layout.prompts_cobros_fecha;
 
 public class VMovil_Venta_Comprob extends Activity implements View.OnClickListener{
 
-
+    private DBAdapter_Temp_Canjes_Devoluciones dbAdapter_temp_canjes_devoluciones;
     private DbAdapter_Temp_Session session;
     private int idEstablec;
     private DbAdapter_Comprob_Venta dbHelper;
@@ -139,7 +141,8 @@ public class VMovil_Venta_Comprob extends Activity implements View.OnClickListen
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        dbAdapter_temp_canjes_devoluciones = new DBAdapter_Temp_Canjes_Devoluciones(this);
+        dbAdapter_temp_canjes_devoluciones.open();
         contexto = this;
         setContentView(R.layout.princ_venta_comprob);
 
@@ -207,8 +210,8 @@ public class VMovil_Venta_Comprob extends Activity implements View.OnClickListen
 //Item 3
         TabHost.TabSpec spec3 = tH.newTabSpec("3");
         spec3.setContent(R.id.canje);
-        spec3.setIndicator("Canje/Devoluciones");
-        listarCanjes_devoluciones(idEstablec);
+        spec3.setIndicator("Devoluciones");
+        mostrarItemsDevoluciones(idEstablec);
         tH.addTab(spec3);
 //Item 4
         TabHost.TabSpec spec4 = tH.newTabSpec("4");
@@ -222,14 +225,13 @@ public class VMovil_Venta_Comprob extends Activity implements View.OnClickListen
         showSlideMenu(this);
 
     }
-    private void listarCanjes_devoluciones(int idEstabl){
 
-
-        Cursor cr = dbHelper_Canjes_Dev.listarCanjesDev(idEstabl);
-        cr.moveToFirst();
-        CursorAdapter_Man_Can_Dev adapterCanjes_Dev = new CursorAdapter_Man_Can_Dev(getApplicationContext(),cr);
+    private  void mostrarItemsDevoluciones(int establec){
+        //listar devoluciones
         ListView listaCanjes_Dev = (ListView) findViewById(R.id.listarCanjDev);
-        listaCanjes_Dev.setAdapter(adapterCanjes_Dev);
+        Cursor cursor = dbAdapter_temp_canjes_devoluciones.listarDevolucionesImpresion(establec+"");
+        CursorAdapter_Man_Can_Dev adapter = new CursorAdapter_Man_Can_Dev(getApplicationContext(), cursor);
+        listaCanjes_Dev.setAdapter(adapter);
     }
 
     private void listarCobranzas() {

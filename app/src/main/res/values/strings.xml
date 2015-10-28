@@ -47,6 +47,9 @@
         <item>Canje</item>
         <item>Devolucion</item>
     </string-array>
+    <string-array name="tipo_devolucion_only">
+        <item>Devolucion</item>
+    </string-array>
     <string-array name="tipo_venta">
         <item>Normal</item>
         <item>Rpp</item>
@@ -167,8 +170,9 @@
     <string name="title_activity_vmovil__cargar__inventario">Cargar Inventario</string>
     <string name="title_activity_imprimir_arqueo_caja">Arqueo Caja</string>
     <string name="title_activity_vmovil__crear__establecimiento">Nuevo establecimiento</string>
-    <string name="title_activity_vmovil__operacion__canjes__devoluciones">VMovil_Operacion_Canjes_Devoluciones</string>
+    <string name="title_activity_vmovil__operacion__canjes__devoluciones">Canjes y Devoluciones</string>
     <string name="title_activity_signature">SignatureActivity</string>
     <string name="title_activity_ventas_rrpp">Ventas RRPP</string>
+    <string name="title_activity_maps">Map</string>
 
 </resources>
