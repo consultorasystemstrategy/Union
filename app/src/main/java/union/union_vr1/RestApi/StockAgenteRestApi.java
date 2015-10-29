@@ -154,6 +154,26 @@ public class StockAgenteRestApi {
         result = new JSONObject(r);
         return result;
     }
+    public JSONObject InsCobroManual(int vbint_LiquidacionId,int vint_CategoriaMovimientoId,double vdou_Importe,String vstr_FechaHora,String vstr_Referencia,int vint_UsuarioId,String vstr_Serie,int vint_Numero) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","RestAPI");
+        o.put("method", "InsCobroManual");
+        p.put("vbint_LiquidacionId",mapObject(vbint_LiquidacionId));
+        p.put("vint_CategoriaMovimientoId",mapObject(vint_CategoriaMovimientoId));
+        p.put("vdou_Importe",mapObject(vdou_Importe));
+        p.put("vstr_FechaHora",mapObject(vstr_FechaHora));
+        p.put("vstr_Referencia",mapObject(vstr_Referencia));
+        p.put("vint_UsuarioId",mapObject(vint_UsuarioId));
+        p.put("vstr_Serie",mapObject(vstr_Serie));
+        p.put("vint_Numero",mapObject(vint_Numero));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
 
     public JSONObject CreateComprobanteVenta(String serie,int numDoc,int idFormaPago,String fechaDoc,double baseImponible,double igv,double total,int idTipoCompro,int idAgenteVenta,int anulado,double saldo,int idLiquidacion,int idTipoVenta,String codigoERP,int idEstablec,int idUsuario) throws Exception {
         JSONObject result = null;

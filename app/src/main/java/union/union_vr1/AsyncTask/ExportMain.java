@@ -22,6 +22,7 @@ import union.union_vr1.RestApi.StockAgenteRestApi;
 import union.union_vr1.Sqlite.Constants;
 import union.union_vr1.Sqlite.DBAdapter_Temp_Autorizacion_Cobro;
 import union.union_vr1.Sqlite.DBAdapter_Temp_Canjes_Devoluciones;
+import union.union_vr1.Sqlite.DbAdapter_Cobros_Manuales;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta_Detalle;
@@ -54,6 +55,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
     private DbAdaptert_Evento_Establec dbAdaptert_evento_establec;
     private DBAdapter_Temp_Autorizacion_Cobro dbAdapter_temp_autorizacion_cobro;
     private DBAdapter_Temp_Canjes_Devoluciones dbAdapter_temp_canjes_devoluciones;
+    private DbAdapter_Cobros_Manuales dbAdapter_cobros_manuales;
 
     public ExportMain(Activity mainActivity) {
         this.mainActivity = mainActivity;
@@ -72,6 +74,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
         dbAdaptert_evento_establec = new DbAdaptert_Evento_Establec(mainActivity);
         dbAdapter_histo_venta = new DbAdapter_Histo_Venta(mainActivity);
         dbAdapter_temp_autorizacion_cobro = new DBAdapter_Temp_Autorizacion_Cobro(mainActivity);
+        dbAdapter_cobros_manuales = new DbAdapter_Cobros_Manuales(mainActivity);
 
         //ABRO LA CONEXIÓN A LA DB
         dbAdapter_informe_gastos.open();
@@ -83,6 +86,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
         dbAdaptert_evento_establec.open();
         dbAdapter_histo_venta.open();
         dbAdapter_temp_autorizacion_cobro.open();
+        dbAdapter_cobros_manuales.open();
 
     }
 
@@ -115,6 +119,8 @@ public class ExportMain extends AsyncTask<String, String, String> {
         Cursor cursorHistoVentaDetalleCreated = dbAdapter_histo_venta_detalle.filterExport(idLiquidacion);
         publishProgress("" + 20);
         Cursor cursorAutorizacionCobro = dbAdapter_temp_autorizacion_cobro.filterExport();
+
+        Cursor cursorCobrosManuales = dbAdapter_cobros_manuales.filterExport();
 
         idAgente = session.fetchVarible(1);
         idUsuario = session.fetchVarible(4);
@@ -441,7 +447,35 @@ public class ExportMain extends AsyncTask<String, String, String> {
         publishProgress("" + 65);
         //Get
         publishProgress("" + 70);
+        if(cursorCobrosManuales.getCount()>0){
+            while(cursorCobrosManuales.moveToNext()){
+                JSONObject jsonObject = null;
 
+                try {
+                    int _id = cursorCobrosManuales.getInt(cursorCobrosManuales.getColumnIndexOrThrow(DbAdapter_Cobros_Manuales.CM_id_Cobros_Manuales));
+                    int categoriaMovimiento = cursorCobrosManuales.getInt(cursorCobrosManuales.getColumnIndexOrThrow(DbAdapter_Cobros_Manuales.CM_Categoria_Movimiento));
+                    Double Importe = cursorCobrosManuales.getDouble(cursorCobrosManuales.getColumnIndexOrThrow(DbAdapter_Cobros_Manuales.CM_Importe));
+                    String fechaHora = cursorCobrosManuales.getString(cursorCobrosManuales.getColumnIndexOrThrow(DbAdapter_Cobros_Manuales.CM_Fecha_Hora));
+                    String referencia = cursorCobrosManuales.getString(cursorCobrosManuales.getColumnIndexOrThrow(DbAdapter_Cobros_Manuales.CM_Referencia));
+                    int usuario = cursorCobrosManuales.getInt(cursorCobrosManuales.getColumnIndexOrThrow(DbAdapter_Cobros_Manuales.CM_Usuario));
+                    String serie = cursorCobrosManuales.getString(cursorCobrosManuales.getColumnIndexOrThrow(DbAdapter_Cobros_Manuales.CM_Serie));
+                    int numero = cursorCobrosManuales.getInt(cursorCobrosManuales.getColumnIndexOrThrow(DbAdapter_Cobros_Manuales.CM_Numero));
+
+
+                    jsonObject = api.InsCobroManual(idLiquidacion,categoriaMovimiento,Importe,fechaHora,referencia,usuario,serie,numero);
+                    Log.d("JSONCOBROSMANUALES",jsonObject.toString());
+
+                    if(isSuccesfulExport(jsonObject)){
+                        long estadoUpdate = dbAdapter_cobros_manuales.updateCobrosManuales(Constants._EXPORTADO,_id);
+                        if(estadoUpdate>0){
+                            Log.d("ACTUALIZOCOBROSMANUALES",""+estadoUpdate);
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
         /*
         if (cursorHistoVentaCreated.getCount()>0){
 

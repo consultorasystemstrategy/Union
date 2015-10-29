@@ -7,23 +7,29 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,18 +37,21 @@ import android.widget.Toast;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import union.union_vr1.AsyncTask.ExportMain;
 import union.union_vr1.AsyncTask.SolicitarAutorizacionCobros;
 import union.union_vr1.R;
 import union.union_vr1.Sqlite.Constants;
 import union.union_vr1.Sqlite.CursorAdapter_Cobros_Establecimiento;
 import union.union_vr1.Sqlite.DBAdapter_Temp_Autorizacion_Cobro;
 import union.union_vr1.Sqlite.DbAdapter_Agente;
+import union.union_vr1.Sqlite.DbAdapter_Cobros_Manuales;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta;
 import union.union_vr1.Sqlite.DbAdapter_Informe_Gastos;
@@ -84,13 +93,16 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
     private int valIdCredito = 0;
     private DBAdapter_Temp_Autorizacion_Cobro dbAutorizacionCobro;
     private DbAdapter_Comprob_Cobro dbComprobanteCobro;
+
     private Context mContext;
+    private  Activity mainActivity;
 
 
     //SLIDING MENU VENTAS
     private DbGastos_Ingresos dbGastosIngresos;
     private DbAdapter_Informe_Gastos dbAdapter_informe_gastos;
     private DbAdapter_Agente dbHelperAgente;
+    private DbAdapter_Cobros_Manuales dbAdapter_cobros_manuales;
 
 
     SlidingMenu menu;
@@ -146,6 +158,7 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
 
         session = new DbAdapter_Temp_Session(this);
         session.open();
+        mainActivity = this;
 
         mContext = this;
 
@@ -184,6 +197,11 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
 
         dbHelperAgente = new DbAdapter_Agente(this);
         dbHelperAgente.open();
+
+        dbAdapter_cobros_manuales = new DbAdapter_Cobros_Manuales(this);
+        dbAdapter_cobros_manuales.open();
+
+
 
         //VENTAS
         dbAdaptert_evento_establec = new DbAdaptert_Evento_Establec(this);
@@ -564,11 +582,18 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
         DecimalFormat twoDForm = new DecimalFormat("#.##");
         return Double.valueOf(twoDForm.format(d));
     }
+    private String getTimeAndDate(){
+        Calendar cal = new GregorianCalendar();
+        Date date = cal.getTime();
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        String formatteDate = df.format(date);
+        return formatteDate;
+    }
 
     private String getDatePhone() {
         Calendar cal = new GregorianCalendar();
         Date date = cal.getTime();
-        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd");
         String formatteDate = df.format(date);
         return formatteDate;
     }
@@ -732,6 +757,161 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
     protected void onResume() {
         super.onResume();
         changeDataSlideMenu();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.cobros_manuales, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_cobros) {
+            displayModalCobrosManuales();
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void displayModalCobrosManuales() {
+        final View layout_Cobros_Manuales = View.inflate(this, R.layout.prompts_cobros_manuales, null);
+        final Spinner spinnerTipoCobro = (Spinner) layout_Cobros_Manuales.findViewById(R.id.cobrosManualTipo_cobro_manual);
+        final EditText editTextSerie = (EditText) layout_Cobros_Manuales.findViewById(R.id.cobrosManualSerie);
+        final EditText editTextNumero = (EditText) layout_Cobros_Manuales.findViewById(R.id.cobrosManualNumero);
+        final EditText editTextImporte = (EditText) layout_Cobros_Manuales.findViewById(R.id.cobrosManualImporte);
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                context);
+
+        // set title
+        alertDialogBuilder.setTitle("Cobros Manuales");
+
+        // set dialog message
+        AlertDialog.Builder builder = alertDialogBuilder
+                .setView(layout_Cobros_Manuales)
+                .setCancelable(false)
+                .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        NumberFormat formatter = new DecimalFormat("#0.00");
+                        //Posicion 0 == cobro total, 1 == Parcial
+                        Log.d("ITEMSELECTED", spinnerTipoCobro.getSelectedItemPosition() + "");
+                        int itemTipo = spinnerTipoCobro.getSelectedItemPosition();
+                        String serie = editTextSerie.getText().toString();
+                        String numeroString = editTextNumero.getText().toString();
+                        String importeString = editTextImporte.getText().toString();
+                        if(serie.equals("") || numeroString.equals("")  || importeString.equals("") || serie ==null ||numeroString ==null ||importeString ==null ){
+                            Toast.makeText(getApplicationContext(), "Debe completar todos los campos", Toast.LENGTH_LONG).show();
+                        }else{
+                            int numero = Integer.parseInt(numeroString);
+                            Double importe = Double.parseDouble(formatter.format(Double.parseDouble(importeString)));
+                            estaSeguroCobrar(serie,numero, importe,itemTipo);
+
+                        }
+
+                    }
+
+                })
+                .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Toast.makeText(getApplicationContext(),
+                                "Cancelo ", Toast.LENGTH_SHORT).show();
+                    }
+                });
+        //displayListViewVCC();
+
+        // create alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+
+        // show it
+        alertDialog.show();
+
+        ArrayAdapter<CharSequence> adapterTipoOperacion = ArrayAdapter.createFromResource(this, R.array.tipo_cobros_manuales, android.R.layout.simple_spinner_item);
+
+        adapterTipoOperacion.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        spinnerTipoCobro.setAdapter(adapterTipoOperacion);
+    }
+    private void estaSeguroCobrar(final String serie, final int numero, final Double importe, final int tipoCobro){
+
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                context);
+
+        // set title
+        alertDialogBuilder.setTitle("¿Seguro?");
+
+        // set dialog message
+        AlertDialog.Builder builder = alertDialogBuilder
+                .setMessage("¿Esta seguro de cobrar: S/  "+importe +" ?")
+                .setCancelable(false)
+                .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        String cateMovimiento = "";
+                        if(tipoCobro >0){
+                            cateMovimiento="t";
+                        }else{
+                            cateMovimiento="p";
+                        }
+                        long l = dbAdapter_cobros_manuales.createCobrosManuales(3, importe, getTimeAndDate(),cateMovimiento,slideIdAgente, serie, numero);
+                        if (l > 0) {
+                            if (conectadoRedMovil() || conectadoWifi()) {
+                                new ExportMain(mainActivity).execute();
+                                Toast.makeText(getApplicationContext(), "Se registro correctamente", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(getApplicationContext(), "Guardado correctamente, se exportara cuando tengas conexion a internet", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Ocurrio un Error", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                })
+                .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Toast.makeText(getApplicationContext(),
+                                "Cancelo ", Toast.LENGTH_SHORT).show();
+                    }
+                });
+        //displayListViewVCC();
+
+        // create alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+
+        // show it
+        alertDialog.show();
+    }
+    protected Boolean conectadoWifi(){
+        ConnectivityManager connectivity = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivity != null) {
+            NetworkInfo info = connectivity.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+            if (info != null) {
+                if (info.isConnected()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    protected Boolean conectadoRedMovil(){
+        ConnectivityManager connectivity = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivity != null) {
+            NetworkInfo info = connectivity.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+            if (info != null) {
+                if (info.isConnected()) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
 }

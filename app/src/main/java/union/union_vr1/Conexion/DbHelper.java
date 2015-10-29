@@ -12,6 +12,7 @@ import union.union_vr1.Sqlite.DBAdapter_Temp_Inventario;
 import union.union_vr1.Sqlite.DBAdapter_Temp_Venta;
 import union.union_vr1.Sqlite.DbAdapter_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Agente_Login;
+import union.union_vr1.Sqlite.DbAdapter_Cobros_Manuales;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
 import union.union_vr1.Sqlite.DbAdapter_Histo_Comprob_Anterior;
 import union.union_vr1.Sqlite.DbAdapter_Resumen_Caja;
@@ -79,7 +80,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(DBAdapter_Consultar_Inventario_Anterior.CREATE_TABLE_TEMP_CONSULTAR_Inventario);
         db.execSQL(DbAdapter_Agente_Login.CREATE_TABLE_AGENTE);
         db.execSQL(DBAdapter_Temp_Canjes_Devoluciones.CREATE_TABLE_TEMP_CANJES_DEVOLUCIONES);
-
+        db.execSQL(DbAdapter_Cobros_Manuales.CREATE_TABLE_COBROS_MANUALES);
 
 
     }
@@ -111,6 +112,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(DBAdapter_Consultar_Inventario_Anterior.DELETE_TABLE_TEMP_CONSULTAR_Inventario);
         db.execSQL(DbAdapter_Agente_Login.DELETE_TABLE_AGENTE_LOGIN);
         db.execSQL(DBAdapter_Temp_Canjes_Devoluciones.DELETE_TABLE_TEMP_CANJES_DEVOLUCIONES);
+        db.execSQL(DbAdapter_Cobros_Manuales.DELETE_TABLE_COBROS_MANUALES);
         onCreate(db);
     }
 }
