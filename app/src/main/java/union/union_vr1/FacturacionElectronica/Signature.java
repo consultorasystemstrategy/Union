@@ -2,6 +2,13 @@ package union.union_vr1.FacturacionElectronica;
 
 import android.util.Log;
 
+/*import com.phloc.commons.error.IResourceErrorGroup;
+import com.phloc.ubl.EUBL20DocumentType;
+import com.phloc.ubl.UBL20DocumentTypes;
+import com.phloc.ubl.UBL20Reader;
+import com.phloc.ubl.UBL20Validator;
+import com.phloc.ubl.UBL20Writer;*/
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -9,6 +16,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.math.BigDecimal;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -51,6 +59,13 @@ import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
+
+/*import oasis.names.specification.ubl.schema.xsd.commonaggregatecomponents_2.InvoiceLineType;
+import oasis.names.specification.ubl.schema.xsd.commonbasiccomponents_2.IDType;
+import oasis.names.specification.ubl.schema.xsd.commonbasiccomponents_2.InvoicedQuantityType;
+import oasis.names.specification.ubl.schema.xsd.invoice_2.InvoiceType;
+import un.unece.uncefact.codelist.specification._66411._2001.UnitCodeContentType;*/
+
 /**
  * Created by Steve on 12/10/2015.
  */
@@ -121,4 +136,58 @@ public class Signature {
         //Log.d("DOC",dsc.getParent().getTextContent());
         return node.getTextContent();
     }
+/*
+    public static String writeDocument(Document document, File fileOutput) throws FileNotFoundException, TransformerException {
+*//*
+
+
+        // Read
+        final Document aDoc = DOMReader.readXMLDOM (new ClassPathResource (sFilename),
+                new DOMReaderSettings ().setSchema (EUBL20DocumentType.INVOICE.getSchema ()));*//*
+
+        // Read
+        final InvoiceType aUBLObject = UBL20Reader.readInvoice(document);
+
+
+
+
+        // Validate
+        IResourceErrorGroup aErrors = UBL20Validator.validateInvoice(aUBLObject);
+        
+      *//*  InvoiceType invoiceType = new InvoiceType();
+        InvoiceLineType invoiceLineType = new InvoiceLineType();
+
+        IDType idType = new IDType("1");
+        InvoicedQuantityType invoicedQuantityType = new InvoicedQuantityType();
+
+        BigDecimal bigDecimal = new BigDecimal(150);
+        UnitCodeContentType unitCodeContentType = UnitCodeContentType.EACH;
+
+        invoicedQuantityType.setValue(bigDecimal);
+        invoicedQuantityType.setUnitCode(unitCodeContentType);
+
+
+        invoiceType.setInvoiceLine(Collections.singletonList(invoiceLineType));
+        invoiceLineType.setID(idType);
+        invoiceLineType.setInvoicedQuantity(invoicedQuantityType);*//*
+
+        // write again
+        //EUBL20DocumentType ubl20DocumentTypes = UBL20DocumentTypes.getDocumentTypeOfNamespace(UBLElements.NAMESPACE_CAC);
+
+
+
+
+        final Document documentwrite = UBL20Writer.writeInvoice(aUBLObject);
+
+
+        OutputStream os = new FileOutputStream(fileOutput);
+        TransformerFactory tf = TransformerFactory.newInstance();
+        Transformer trans = tf.newTransformer();
+        trans.setOutputProperty(OutputKeys.ENCODING, "ISO-8859-1");
+        trans.setOutputProperty(OutputKeys.STANDALONE, "no");
+        trans.transform(new DOMSource(documentwrite), new StreamResult(os));
+
+        Log.d("PATH FIRMA", fileOutput.getAbsolutePath());
+        return fileOutput.getAbsolutePath().toString();
+    }*/
 }

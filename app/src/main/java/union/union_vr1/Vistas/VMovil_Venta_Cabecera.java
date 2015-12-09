@@ -49,6 +49,7 @@ import android.widget.Toast;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 import org.json.JSONObject;
+import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 import java.io.File;
@@ -72,6 +73,8 @@ import java.util.Locale;
 
 import javax.xml.crypto.MarshalException;
 import javax.xml.crypto.dsig.XMLSignatureException;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -492,6 +495,8 @@ Instantiate and pass a callback
         adapterFormaPago.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerFormaPago.setAdapter(adapterFormaPago);
 
+
+
         //buttonAgregar = (Button) findViewById(R.id.VC_buttonAgregarProductos);
         buttonVender = (Button) findViewById(R.id.VC_buttonVender);
         buttonVender.setOnClickListener(this);
@@ -602,7 +607,18 @@ Instantiate and pass a callback
 
                                     break;
                                 default:
+                                    if (simpleCursorAdapter.getCursor().getCount()<=0){
 
+                                        Toast toast = Toast.makeText(mContext, "AGREGAR PRODUCTOS A LA VENTA", Toast.LENGTH_SHORT);
+                                        toast.getView().setBackgroundColor(mainActivity.getResources().getColor(R.color.verde));
+                                        TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
+                                        v.setTextColor(mainActivity.getResources().getColor(R.color.Blanco));
+                                        toast.show();
+
+                                        spinnerFormaPago.setAdapter(adapterFormaPago);
+
+                                        break;
+                                    }
                                     new AlertDialog.Builder(mContext)
                                             .setTitle("Está seguro que es toda su venta")
                                             .setMessage("Si define las cuotas ya no podrá agregar productos a la venta, ni eliminarlos\n" +
@@ -1491,7 +1507,7 @@ Instantiate and pass a callback
 
     }
 
-    public void vender(){
+    public void vender()  {
 
 
         //Obtener los datos de las ventas
@@ -1790,13 +1806,27 @@ NUMERO_DOCUMENTO = numero_documento+"";
             exportMain.execute();
         }
 
-        new GenerateDigitalSignature().execute();
+       /* //new GenerateDigitalSignature().execute();
+        try {
+             String stringPath = Signature.writeDocument(getDocumentFromFilePath("20138122256-01-F100-00000040.XML"), createFile("invoice_ubl.xml"));
+                Toast.makeText(getApplicationContext(), stringPath, Toast.LENGTH_SHORT).show();
+        } catch (TransformerException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        } catch (SAXException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+*/
 
-
-        /*Intent intent= new Intent(this, VMovil_BluetoothImprimir.class);
+        Intent intent= new Intent(this, VMovil_BluetoothImprimir.class);
         intent.putExtra("idComprobante",id_comprobante);
         finish();
-        startActivity(intent);*/
+        startActivity(intent);
 
     }
 
@@ -2611,6 +2641,15 @@ NUMERO_DOCUMENTO = numero_documento+"";
     {
         AssetManager am = contexto.getAssets();
         return am.open(nameDocument);
+    }
+
+    Document getDocumentFromFilePath(String filePath)
+            throws IOException, ParserConfigurationException, SAXException {
+        AssetManager am = contexto.getAssets();
+        InputStream is = am.open(filePath);
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        return builder.parse(is);
     }
 
     File createFile(String nameDocument)

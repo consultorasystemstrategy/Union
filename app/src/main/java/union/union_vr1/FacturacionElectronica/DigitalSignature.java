@@ -18,12 +18,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -47,6 +42,21 @@ public class DigitalSignature {
 
     FileInputStream fis = null;
 
+    /**
+     * Construct a new document
+     */
+    public static Document createDocument(){
+        try {
+            DocumentBuilderFactory documentBuilderFactory=DocumentBuilderFactory.newInstance();
+            DocumentBuilder documentBuilder;
+            documentBuilder=documentBuilderFactory.newDocumentBuilder();
+            Document doc=documentBuilder.newDocument();
+            return doc;
+        }
+        catch (  ParserConfigurationException e) {
+        }
+        return null;
+    }
 
     public String escribirXML(int tipoDocumento, Context context, String idDocument, String userRUC_DNI, String userName, String totalOperacionesGravadas, String importeTotalVenta, String igvTotal, Cursor cursorTemp) {
         FileOutputStream fout = null;
@@ -59,6 +69,18 @@ public class DigitalSignature {
         } catch (FileNotFoundException e) {
             //Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
         }
+
+
+
+
+
+        /*BigDecimal bigDecimal = BigDecimal.ONE;
+        InvoicedQuantityType invoicedQuantityType = new InvoicedQuantityType(bigDecimal);
+        invoiceLineType.setInvoicedQuantity(invoicedQuantityType.getValue());
+        invoiceType.setInvoiceLine((List<InvoiceLineType>) invoiceLineType);*/
+
+
+
 
         XmlSerializer serializer = Xml.newSerializer();
         try {
@@ -644,6 +666,7 @@ public class DigitalSignature {
 
         return myFile.getPath();
     }
+
 
 
     public String leerXML(Context context, String name) throws IOException, ParserConfigurationException, SAXException {

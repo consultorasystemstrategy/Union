@@ -1,7 +1,7 @@
 package union.union_vr1.MySQL;
 
 import android.app.Activity;
-import android.content.Intent;
+/*import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -23,9 +23,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import union.union_vr1.R;
-import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
+import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;*/
 
-public class DbManager_Evento_Establec_POST extends Activity implements View.OnClickListener {
+public class DbManager_Evento_Establec_POST extends Activity /*implements View.OnClickListener */{
+/*
 
     private DbAdaptert_Evento_Establec manager;
     private Cursor cursor;
@@ -201,5 +202,6 @@ public class DbManager_Evento_Establec_POST extends Activity implements View.OnC
             Toast.makeText(getApplicationContext(),"Finalizada...",Toast.LENGTH_SHORT).show();
         }
     }
+*/
 
 }

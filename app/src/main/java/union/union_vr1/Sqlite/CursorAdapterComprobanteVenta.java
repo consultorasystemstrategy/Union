@@ -56,6 +56,8 @@ public class CursorAdapterComprobanteVenta extends CursorAdapter {
             Double total = cursor.getDouble(cursor.getColumnIndex(DbAdapter_Comprob_Venta.CV_total));
             int id_forma_pago = Integer.parseInt(cursor.getString(cursor.getColumnIndex(DbAdapter_Comprob_Venta.CV_id_forma_pago)));
             int estado = Integer.parseInt(cursor.getString(cursor.getColumnIndex(DbAdapter_Comprob_Venta.CV_estado_comp)));
+            String serie = cursor.getString(cursor.getColumnIndex(DbAdapter_Comprob_Venta.CV_serie));
+            int id_tipo_documento = cursor.getInt(cursor.getColumnIndex(DbAdapter_Comprob_Venta.CV_id_tipo_doc));
 
 
 
@@ -74,6 +76,20 @@ public class CursorAdapterComprobanteVenta extends CursorAdapter {
                 default:
                     break;
             }
+
+            String tipoDocumento = null;
+            switch (id_tipo_documento){
+                case 1:
+                    tipoDocumento= "FACTURA";
+                    break;
+                case 2:
+                    tipoDocumento= "BOLETA";
+                    break;
+                default:
+                    break;
+            }
+
+
 
 
             String formaPago = null;
@@ -108,12 +124,27 @@ public class CursorAdapterComprobanteVenta extends CursorAdapter {
 
             DecimalFormat df= new DecimalFormat("#0.00");
 
-            textViewTitulo.setText("ERP: " + codigo_erp +  " ID: " + _id );
+            textViewTitulo.setText(tipoDocumento+": "+serie+"-"+agregarCeros(numero_documento,8) );
             textViewSubtitulo.setText(formaPago);
             textViewComment.setText(nombreEstado);
             textViewMonto.setText("S/. "+ df.format(total));
 
         }
 
+    }
+    private static String agregarCeros(String string, int largo)
+    {
+        String ceros = "";
+        int cantidad = largo - string.length();
+        if (cantidad >= 1)
+        {
+            for(int i=0;i<cantidad;i++)
+            {
+                ceros += "0";
+            }
+            return (ceros + string);
+        }
+        else
+            return string;
     }
 }

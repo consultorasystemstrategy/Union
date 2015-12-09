@@ -50,7 +50,12 @@ public class CursorAdapter_Man_Can_Dev extends CursorAdapter {
             String _id_guia = cursor.getString(cursor.getColumnIndex(DBAdapter_Temp_Canjes_Devoluciones.temp_id_canjes_devoluciones));
             String establecimiento =cursor.getString(cursor.getColumnIndex(DBAdapter_Temp_Canjes_Devoluciones.temp_cliente));
             int forma = cursor.getInt(cursor.getColumnIndex(DBAdapter_Temp_Canjes_Devoluciones.temp_id_forma));
-            Double importe = Double.parseDouble(cursor.getString(cursor.getColumnIndex(DBAdapter_Temp_Canjes_Devoluciones.temp_importe)));
+            String importeString = cursor.getString(cursor.getColumnIndex(DBAdapter_Temp_Canjes_Devoluciones.temp_importe));
+            Double importe = 0.0;
+            if(importeString!=null){
+                importe = Double.parseDouble(importeString);
+            }
+
             if(forma==1){
                 nomForma="Normal";
             }else{

@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,6 +23,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -37,7 +42,7 @@ import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 import union.union_vr1.Utils.MyApplication;
 
 
-public class VMovil_Venta_Cabecera_PlanPagos extends Activity {
+public class VMovil_Venta_Cabecera_PlanPagos extends Activity implements DatePickerDialog.OnDateSetListener {
 
 
     private DbAdapter_Temp_Session session;
@@ -80,6 +85,9 @@ public class VMovil_Venta_Cabecera_PlanPagos extends Activity {
 
     private boolean isCuotasCalculated = false;
 
+
+    //cambiar de fecha long l
+    private long _id_plan_pago_selected = -1;
     @Override
     public void onBackPressed() {
         Toast.makeText(getApplicationContext(), "No ha establecido las cuotas", Toast.LENGTH_SHORT).show();
@@ -134,7 +142,7 @@ public class VMovil_Venta_Cabecera_PlanPagos extends Activity {
         monto_credito = cursorEstablecimiento.getDouble(cursorEstablecimiento.getColumnIndex(DbAdaptert_Evento_Establec.EE_monto_credito));
         dias_credito = cursorEstablecimiento.getInt(cursorEstablecimiento.getColumnIndex(DbAdaptert_Evento_Establec.EE_dias_credito));
 
-        Log.d("Establecimiento count cursor : ", "" + cursorEstablecimiento.getCount());
+        Log.d("Establcount cursor : ", "" + cursorEstablecimiento.getCount());
 
         if (monto_credito < total) {
             DialogCreditoInsuficiente(this).show();
@@ -173,7 +181,7 @@ public class VMovil_Venta_Cabecera_PlanPagos extends Activity {
 
 
         header = getLayoutInflater().inflate(R.layout.venta_cabecera_plan_pagos, null);
-        listView.addHeaderView(header);
+        listView.addHeaderView(header, null, false);
 
     }
 
@@ -273,14 +281,17 @@ public class VMovil_Venta_Cabecera_PlanPagos extends Activity {
         buttonEstablecerCuotas.setBackgroundColor(getApplication().getResources().getColor(R.color.PersonalizadoSteve2));
 
         //DESACTIVO EL BOTÓN CALCULAR
-        butttonCalcularCuotas.setEnabled(!isCuotasCalculated);
-        butttonCalcularCuotas.setActivated(!isCuotasCalculated);
+        //butttonCalcularCuotas.setEnabled(!isCuotasCalculated);
+        //butttonCalcularCuotas.setActivated(!isCuotasCalculated);
         butttonCalcularCuotas.setBackgroundColor(getApplication().getResources().getColor(R.color.PersonalizadoSteve4));
 
         dbHelper_TempComprobCobro.deleteAllComprobCobros();
 
         int cuotas = Integer.parseInt(spinnerCuotas.getSelectedItem().toString());
+        int NRO_DIAS_SEMANA = 7;
 
+        Double resto=0.0;
+        Double montoEntero=0.0;
 
         switch (cuotas) {
             case 1:
@@ -297,61 +308,61 @@ public class VMovil_Venta_Cabecera_PlanPagos extends Activity {
                 break;
             case 2:
                 Date date = null;
-                Double sub_monto = total / 2;
+                Double sub_monto = 0.0;
+                resto = total%cuotas;
+                montoEntero = total-resto;
+
                 for (int i = 1; i <= cuotas; i++) {
-                    if (i == 1) {
-                        date = sumaDias(getDatePhone(), 7);
-                    } else if (i == 2) {
-                        date = sumaDias(getDatePhone(), 14);
+
+                    if(i==cuotas){
+                        //ES LA CUOTA FINAL
+                        sub_monto = montoEntero/cuotas + resto;
+                    }else{
+                        //SON LAS  CUOTAS NORMALES
+                        sub_monto = montoEntero/cuotas;
                     }
+
+                    date = sumaDias(getDatePhone(), i*NRO_DIAS_SEMANA);
                     long id = dbHelper_TempComprobCobro.createComprobCobros(idEstablecimiento, id_comprobante, id_plan_pago, id_plan_pago_detalle, tipo_documento, doc, dateToString(date), sub_monto, fecha_cobro, hora_cobro, monto_cobrado, estado_cobro, idAgente, id_forma_cobro, lugar_registro);
                     Log.d("PPC  DÍAS", cuotas+"-"+id);
                 }
                 break;
             case 3:
                 Date date3 = null;
-                Double sub_monto3 = total / 3;
+                Double sub_monto3 = 0.0;
+                resto = total%cuotas;
+                montoEntero = total-resto;
                 for (int i = 1; i <= cuotas; i++) {
-                    switch (i) {
-                        case 1:
-                            date3 = sumaDias(getDatePhone(), 7);
-                            break;
-                        case 2:
-                            date3 = sumaDias(getDatePhone(), 14);
-                            break;
-                        case 3:
-                            date3 = sumaDias(getDatePhone(), 21);
-                            break;
-                        default:
 
-                            break;
+                    if(i==cuotas){
+                        //ES LA CUOTA FINAL
+                        sub_monto3 = montoEntero/cuotas + resto;
+                    }else{
+                        //SON LAS  CUOTAS NORMALES
+                        sub_monto3 = montoEntero/cuotas;
                     }
+
+                    date3 = sumaDias(getDatePhone(), i*NRO_DIAS_SEMANA);
                     long id = dbHelper_TempComprobCobro.createComprobCobros(idEstablecimiento, id_comprobante, id_plan_pago, id_plan_pago_detalle, tipo_documento, doc, dateToString(date3), sub_monto3, fecha_cobro, hora_cobro, monto_cobrado, estado_cobro, idAgente, id_forma_cobro, lugar_registro);
                     Log.d("PPC  DÍAS", cuotas+"-"+id);
                 }
                 break;
             case 4:
                 Date date4 = getDatePhone();
-                Double sub_monto4 = total / 4;
+                Double sub_monto4 = 0.0;
+                resto = total%cuotas;
+                montoEntero = total-resto;
                 for (int i = 1; i <= cuotas; i++) {
-                    switch (i) {
-                        case 1:
-                            date4 = sumaDias(getDatePhone(), 7);
-                            break;
-                        case 2:
-                            date4 = sumaDias(getDatePhone(), 14);
-                            break;
-                        case 3:
-                            date4 = sumaDias(getDatePhone(), 21);
-                            break;
-                        case 4:
-                            date4 = sumaDias(getDatePhone(), 28);
-                            break;
-                        default:
-                            Log.d("Default", "Cuotas 4");
-                            date = sumaDias(getDatePhone(), 7);
-                            break;
+
+                    if(i==cuotas){
+                        //ES LA CUOTA FINAL
+                        sub_monto4 = montoEntero/cuotas + resto;
+                    }else{
+                        //SON LAS  CUOTAS NORMALES
+                        sub_monto4 = montoEntero/cuotas;
                     }
+
+                    date4 = sumaDias(getDatePhone(), i*NRO_DIAS_SEMANA);
                     long id = dbHelper_TempComprobCobro.createComprobCobros(idEstablecimiento, id_comprobante, id_plan_pago, id_plan_pago_detalle, tipo_documento, doc, dateToString(date4), sub_monto4, fecha_cobro, hora_cobro, monto_cobrado, estado_cobro, idAgente, id_forma_cobro, lugar_registro);
                     Log.d("PPC  DÍAS", cuotas+"-"+id);
                 }
@@ -383,10 +394,69 @@ public class VMovil_Venta_Cabecera_PlanPagos extends Activity {
                 0);
 
         listView.setAdapter(simpleCursorAdapter);
+        //CUANDO QUIERE CAMBIAR DE FECHA, AGREGADO A LA DEUDA TÉCNICA
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
+                _id_plan_pago_selected = cursor.getLong(cursor.getColumnIndexOrThrow(dbHelper_TempComprobCobro.temp_id_cob_historial));
+
+                //LANZAR EL DATE PICKER FRAGMENT
+
+                Calendar now = Calendar.getInstance();
+                DatePickerDialog dpd = DatePickerDialog.newInstance(
+                        VMovil_Venta_Cabecera_PlanPagos.this,
+                        now.get(Calendar.YEAR),
+                        now.get(Calendar.MONTH),
+                        now.get(Calendar.DAY_OF_MONTH)
+                );
+                dpd.show(getFragmentManager(), "Datepickerdialog");
+
+            }
+        });
+
+        //CUANDO QUIERA CAMBIAR DE PRECIO, AGREGADO A LA DEUDA TÉCNIA
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
+                _id_plan_pago_selected = cursor.getLong(cursor.getColumnIndexOrThrow(dbHelper_TempComprobCobro.temp_id_cob_historial));
+                dbHelper_TempComprobCobro.updateMontoPanPagos(""+_id_plan_pago_selected, 100.00);
+                return false;
+            }
+        });
+
     }
 
     double formatDecimal(double d) {
         DecimalFormat df = new DecimalFormat("#,00");
         return Double.valueOf(df.format(d));
+    }
+
+    public static double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        BigDecimal bd = new BigDecimal(value);
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
+    }
+
+    @Override
+    public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
+
+        Toast.makeText(getApplicationContext(),"FECHA CAMBIADA: " + year + "/" +(++monthOfYear) + "/" + dayOfMonth, Toast.LENGTH_SHORT).show();
+        /*if (_id_plan_pago_selected!=-1){
+
+            //VALIDAR QUE NO SEA MAYOR A LA SIGUIENTE FECHA.
+
+            //REALIZAR EL UPDATE
+            dbHelper_TempComprobCobro.updateFechaPanPagos(""+_id_plan_pago_selected,dayOfMonth+"/"+(++monthOfYear)+"/"+year);
+            Snackbar.make(butttonCalcularCuotas, "FECHA CAMBIADA: " + year + "/" +(++monthOfYear) + "/" + dayOfMonth, Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+        }
+        */
+
     }
 }

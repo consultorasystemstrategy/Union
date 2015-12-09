@@ -1,7 +1,7 @@
 package union.union_vr1.MySQL;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
+/*import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -31,10 +31,10 @@ import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
 import union.union_vr1.Sqlite.DbAdapter_Histo_Comprob_Anterior;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 import union.union_vr1.Vistas.VMovil_Evento_Indice;
-import union.union_vr1.Vistas.VMovil_Online_Pumovil;
+import union.union_vr1.Vistas.VMovil_Online_Pumovil;*/
 
 public class DbManager_Agente_GET extends Activity {
-
+/*
     //Aqui se se inicializan las variables para manejar los metodos de base de datos sqlite
     private DbAdapter_Agente manager;
     private DbAdaptert_Evento_Establec managerEstablecimiento;
@@ -401,5 +401,5 @@ public class DbManager_Agente_GET extends Activity {
             });
         }
 
-    }
+    }*/
 }

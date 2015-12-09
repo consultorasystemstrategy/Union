@@ -2,7 +2,7 @@ package union.union_vr1.Conexion;
 
 import android.util.Log;
 
-import org.apache.http.HttpEntity;
+/*import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
@@ -12,7 +12,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
-import org.json.JSONObject;
+import org.json.JSONObject;*/
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -22,7 +22,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 public class JSONParser {
- 
+ /*
     static InputStream is = null;
     static JSONObject jObj = null;
     static String json = "";
@@ -96,5 +96,5 @@ public class JSONParser {
         // return JSON String
         return jObj;
  
-    }
+    }*/
 }

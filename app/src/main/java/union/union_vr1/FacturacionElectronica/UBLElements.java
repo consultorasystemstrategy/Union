@@ -37,9 +37,6 @@ public class UBLElements {
     public static String XSI = "xsi";
 
 
-
-
-
     //ELEMENTOS
     public static String INVOICE = "Invoice";
     public static String UBLEXTENSIONS = "UBLExtensions";

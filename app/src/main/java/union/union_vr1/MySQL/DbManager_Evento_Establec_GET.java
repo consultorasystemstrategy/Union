@@ -1,7 +1,7 @@
 package union.union_vr1.MySQL;
 
 import android.app.ListActivity;
-import android.app.ProgressDialog;
+/*import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,11 +19,11 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.List;*/
 
 
 public class DbManager_Evento_Establec_GET extends ListActivity {
-    private DbAdaptert_Evento_Establec manager;
+    /*private DbAdaptert_Evento_Establec manager;
     // Progress Dialog
     private ProgressDialog pDialog;
 
@@ -117,14 +117,14 @@ public class DbManager_Evento_Establec_GET extends ListActivity {
         }
     }
 
-    /**
+    *//**
      * Background Async Task to Load all Empleado by making HTTP Request
-     * */
+     * *//*
     class LoadAllEstablec extends AsyncTask<String, String, String> {
 
-        /**
+        *//**
          * Before starting background thread Show Progress Dialog
-         * */
+         * *//*
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -135,9 +135,9 @@ public class DbManager_Evento_Establec_GET extends ListActivity {
             pDialog.show();
         }
 
-        /**
+        *//**
          * getting All empleados from url
-         * */
+         * *//*
         protected String doInBackground(String... args) {
             // Building Parameters
             List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -216,18 +216,18 @@ public class DbManager_Evento_Establec_GET extends ListActivity {
             return null;
         }
 
-        /**
+        *//**
          * After completing background task Dismiss the progress dialog
-         * **/
+         * **//*
         protected void onPostExecute(String file_url) {
             // dismiss the dialog after getting all empleados
             pDialog.dismiss();
             // updating UI from Background Thread
             runOnUiThread(new Runnable() {
                 public void run() {
-                    /**
+                    *//**
                      * Updating parsed JSON data into ListView
-                     * */
+                     * *//*
                     ListAdapter adapter = new SimpleAdapter(
                             DbManager_Evento_Establec_GET.this, establecsList,
                             R.layout.lista_evento_establec, new String[]{TAG_nom_establec,
@@ -242,5 +242,5 @@ public class DbManager_Evento_Establec_GET extends ListActivity {
 
     }
 
-
+*/
 }

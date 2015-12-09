@@ -99,27 +99,21 @@ public class DbAdapter_Temp_Comprob_Cobro {
         return mDb.insert(SQLITE_TABLE_TEMP_Comprob_Cobro, null, initialValues);
     }
 
-
-    public void updateComprobCobros(String id, double valor){
+    public void updateFechaPanPagos(String id, String fecha){
         ContentValues initialValues = new ContentValues();
-        initialValues.put(temp_monto_a_pagar,valor);
-
-        String[] columnas = new String[]{temp_monto_a_pagar};
-        mDb.update(SQLITE_TABLE_TEMP_Comprob_Cobro, initialValues,
-                temp_id_plan_pago_detalle+"=? AND "+temp_id_comprob+"=?",new String[]{id,"0"});
-    }
-
-    public void updateComprobCobrosCan(String id, String fecha, String hora, double valor, String estado){
-        ContentValues initialValues = new ContentValues();
-        initialValues.put(temp_monto_cobrado,valor);
-        initialValues.put(temp_fecha_cobro,fecha);
-        initialValues.put(temp_hora_cobro,hora);
-        initialValues.put(temp_estado_cobro,estado);
-        String[] columnas = new String[]{temp_monto_a_pagar};
+        initialValues.put(temp_fecha_programada,fecha);
         mDb.update(SQLITE_TABLE_TEMP_Comprob_Cobro, initialValues,
                 temp_id_cob_historial+"=?",new String[]{id});
 
     }
+    public void updateMontoPanPagos(String id, Double monto){
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(temp_monto_a_pagar,monto);
+        mDb.update(SQLITE_TABLE_TEMP_Comprob_Cobro, initialValues,
+                temp_id_cob_historial+"=?",new String[]{id});
+
+    }
+
     public void updateComprobCobrosMan(String id, String fecha, String hora, double valor, String estado){
 
 

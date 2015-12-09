@@ -1,9 +1,11 @@
 package union.union_vr1;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,13 +15,19 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.ParcelUuid;
 import android.preference.PreferenceManager;
+import android.support.v4.content.ContextCompat;
 import android.text.Html;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.sewoo.port.android.BluetoothPort;
+import com.sewoo.request.android.RequestHandler;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,7 +38,11 @@ import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
+import java.util.Vector;
 
+import jpos.JposException;
+import union.union_vr1.BlueTooth.AlertView;
+import union.union_vr1.BlueTooth.Print;
 import union.union_vr1.Sqlite.DbAdapter_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta_Detalle;
@@ -60,7 +72,7 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
     private String textoImpresionContenidoRight = "";*/
 
 
-    // android built in classes for bluetooth operations
+/*    // android built in classes for bluetooth operations
     BluetoothAdapter mBluetoothAdapter;
     BluetoothSocket mmSocket;
     BluetoothDevice mmDevice;
@@ -72,9 +84,9 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
     byte[] readBuffer;
     int readBufferPosition;
     int counter;
-    volatile boolean stopWorker;
+    volatile boolean stopWorker;*/
 
-    private Context contexto;
+    //private Context contexto;
 
 
     private boolean isSincronized= false;
@@ -104,6 +116,30 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
     private String textoImpresionContenidoLeft = "";
     private String textoImpresionContenidoRight = "";
 
+
+    //ADAPT
+    private String defaultAdressImpresora = "00:12:6F:36:7E:9D";
+    // Intent request codes
+    // private static final int REQUEST_CONNECT_DEVICE = 1;
+    private static final int REQUEST_ENABLE_BT = 2;
+
+    //ArrayAdapter<String> adapter;
+    private BluetoothAdapter mBluetoothAdapter;
+    private Vector<BluetoothDevice> remoteDevices;
+    /*private BroadcastReceiver searchFinish;
+    private BroadcastReceiver searchStart;
+    private BroadcastReceiver discoveryResult;
+    */
+    private Thread hThread;
+    private boolean connected;
+    private Context contexto;
+    // UI
+    /*private EditText editText;
+    private Button connectButton;
+    private Button searchButton;
+    private ListView list;*/
+    // BT
+    private BluetoothPort bp;
     @Override
     public void onBackPressed() {
         //super.onStop();
@@ -114,10 +150,29 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
     }
 
     @Override
+    protected void onDestroy()
+    {
+        // TODO Auto-generated method stub
+        super.onDestroy();
+        if((hThread != null) && (hThread.isAlive()))
+        {
+            hThread.interrupt();
+            hThread = null;
+        }
+//		if(mBluetoothAdapter.enable())
+//			mBluetoothAdapter.disable();
+       /* unregisterReceiver(searchFinish);
+        unregisterReceiver(searchStart);
+        unregisterReceiver(discoveryResult);*/
+    }
+
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vmovil__bluetooth_imprimir);
 
+        bluetoothSetup();
         contexto = this;
 
 
@@ -154,8 +209,8 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
         textViewImprimirContenidoRight.setText(textoImpresionContenidoRight);
 
 
-        if (!isSincronized){
-            buttonImprimir.setEnabled(isSincronized);
+        if (!connected){
+            buttonImprimir.setEnabled(connected);
             buttonImprimir.setAlpha((float) 0.0);
             buttonImprimir.setBackgroundColor(getApplication().getResources().getColor(R.color.PersonalizadoSteve4));
         }
@@ -164,20 +219,26 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
         buttonSincronizar.setOnClickListener(this);
 
 
-        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (!mBluetoothAdapter.isEnabled()) {
+            Intent enableBluetooth = new Intent(
+                    BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBluetooth, 0);
+        }
+
+        /*mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
         if (mBluetoothAdapter == null) {
             Log.d("Bluetooth message","No bluetooth adapter available");
-        }
+        }*/
 
-        if (!mBluetoothAdapter.isEnabled()) {
+        /*if (!mBluetoothAdapter.isEnabled()) {
             //enabledBluetooth = true;
-         /*   Intent enableBluetooth = new Intent(
+         *//*   Intent enableBluetooth = new Intent(
                     BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBluetooth, 0);
-*/
+*//*
         }
-        /*mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        *//*mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
         if (mBluetoothAdapter == null) {
             Log.d("Bluetooth message","No bluetooth adapter available");
@@ -189,15 +250,15 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
                     BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBluetooth, 0);
 
-        }*/
-        /*buttonSincronizar.setOnTouchListener(new View.OnTouchListener() {
+        }*//*
+        *//*buttonSincronizar.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 Toast.makeText(contexto, "Procesando ...", Toast.LENGTH_SHORT).show();
                 return false;
             }
-        });*/
-
+        });*//*
+*/
 
     }
 
@@ -363,6 +424,7 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
        }
         return texto;
     }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -375,11 +437,40 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
         switch (view.getId()){
             case R.id.buttonSincronizar:
 
+                if(!connected)
+                {
+                    connectInit();
+                    try
+                    {
+                        btConn(mBluetoothAdapter.getRemoteDevice(defaultAdressImpresora));
+                    }
+                    catch(IllegalArgumentException e)
+                    {
+                        // Bluetooth Address Format [OO:OO:OO:OO:OO:OO]
+                        AlertView.showAlert(e.getMessage(), contexto);
+                        return;
+                    }
+                    catch (IOException e)
+                    {
+                        AlertView.showAlert(e.getMessage(), contexto);
+                        return;
+                    }
+                }
+                // Disconnect routine.
+                else
+                {
+                    // Always run.
+                    btDisconn();
+                }
+
+                /*
                 if (!mBluetoothAdapter.isEnabled()) {
                     Intent enableBluetooth = new Intent(
                             BluetoothAdapter.ACTION_REQUEST_ENABLE);
                     startActivityForResult(enableBluetooth, 0);
-                }else{
+                }
+
+                else{
                     estado = findBT();
                     if (estado) {
                         try {
@@ -401,19 +492,29 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
                     } else {
                         Toast.makeText(getApplicationContext(), "Error : Revise si la impresora está encendida.", Toast.LENGTH_LONG).show();
                     }
-                }
+                }*/
 
 
 
 
                 break;
             case R.id.buttonImprimir:
-                countImpresion++;
+
+                Print print = new Print(contexto);
+
+                try {
+                    print.printDocumento(idComprobante);
+                } catch (JposException e) {
+                    e.printStackTrace();
+                    AlertView.showAlert(e.getMessage(), contexto);
+                    return;
+                }
+                /*countImpresion++;
                 if (countImpresion<=2) {
                     new AsyncTaskImprimir().execute(textoImpresion);
                 }else{
                     Toast.makeText(getApplicationContext(), "Sólo puede imprimir 2 veces.", Toast.LENGTH_LONG).show();
-                }
+                }*/
 
                 break;
             default:
@@ -422,7 +523,7 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
 
     }
 
-    protected class AsyncTaskImprimir extends AsyncTask<String, String, String>{
+ /*   protected class AsyncTaskImprimir extends AsyncTask<String, String, String>{
 
         @Override
         protected String doInBackground(String... strings) {
@@ -607,13 +708,13 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
         try {
             String textoCleaned = cleanAcentos(textoImprimir);
             mmOutputStream.write(textoCleaned.getBytes());
-            /*
+            *//*
             Collection<Charset> charsets= Charset.availableCharsets().values();
             for (Charset c: charsets){
                 mmOutputStream.write((c.name()+"  áéíóú\n").getBytes(Charset.forName(c.name())));
                 Log.d("Avalaible charset", ""+ c.name());
             }
-            */
+            *//*
 
 
             // tell the user data were sent
@@ -643,18 +744,19 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
             Log.d("STACKSTRACE PU", Log.getStackTraceString(e));
             //e.printStackTrace();
         }
-    }
+    }*/
 
     @Override
     protected void onStop() {
 
         super.onStop();
-        try {
+        //btDisconn();
+        /*try {
             closeBT();
         } catch (IOException e) {
             Log.d("STACKSTRACE PU", Log.getStackTraceString(e));
             //e.printStackTrace();
-        }
+        }*/
     }
 
 
@@ -687,5 +789,166 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
         else
             return string;
     }
+
+
+    /**
+     * Set up Bluetooth.
+     */
+    private void bluetoothSetup()
+    {
+        // Initialize
+        clearBtDevData();
+        bp = BluetoothPort.getInstance();
+        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (mBluetoothAdapter == null)
+        {
+            // Device does not support Bluetooth
+        }
+        if (!mBluetoothAdapter.isEnabled())
+        {
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+
+            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+        }
+    }
+
+    private void clearBtDevData()
+    {
+        remoteDevices = new Vector<BluetoothDevice>();
+    }
+
+    // For the Desire Bluetooth close() bug.
+    private void connectInit()
+    {
+        if(!mBluetoothAdapter.isEnabled())
+        {
+            mBluetoothAdapter.enable();
+            try
+            {
+                Thread.sleep(3600);
+            }catch(Exception e){}
+        }
+    }
+
+    // Bluetooth Connection method.
+    private void btConn(final BluetoothDevice btDev) throws IOException
+    {
+        new connTask().execute(btDev);
+    }
+
+
+    /** ------------------------------------------------------------------ */
+    public class connTask extends AsyncTask<BluetoothDevice, Void, Integer>
+    {
+        private final ProgressDialog dialog = new ProgressDialog(VMovil_BluetoothImprimir.this);
+//		private BluetoothPort bp;
+
+        @Override
+        protected void onPreExecute()
+        {
+            // TODO Auto-generated method stub
+//			bp = BluetoothPort.getInstance();
+            dialog.setTitle("Bluetooth");
+            dialog.setMessage("Connecting");
+            dialog.show();
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Integer doInBackground(BluetoothDevice... params)
+        {
+            // TODO Auto-generated method stub
+            Integer retVal = null;
+            try
+            {
+                bp.connect(params[0]);
+                retVal = new Integer(0);
+            }
+            catch (IOException e)
+            {
+
+                retVal = new Integer(-1);
+            }
+            return retVal;
+        }
+
+        @Override
+        protected void onPostExecute(Integer result)
+        {
+            // TODO Auto-generated method stub
+            if(result.intValue() == 0)
+            {
+                RequestHandler rh = new RequestHandler();
+                hThread = new Thread(rh);
+                hThread.start();
+                connected = true;
+
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        // UI
+                        buttonImprimir.setEnabled(connected);
+                        buttonImprimir.setBackgroundColor(contexto.getResources().getColor(R.color.PersonalizadoSteve2));
+                        buttonImprimir.setAlpha((float) 1.0);
+
+                        buttonSincronizar.setText("DESCONECTAR");
+
+                        //TOAST
+                        Toast toast = Toast.makeText(contexto, "SINCRONIZADO", Toast.LENGTH_SHORT);
+                        toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 8);
+                        toast.show();
+                    }
+                });
+                /*list.setEnabled(false);
+                editText.setEnabled(false);
+                searchButton.setEnabled(false);*/
+            }else if (result.intValue() == -1)
+            {
+                Toast toast = Toast.makeText(contexto, "ERROR, REVISE LA IMPRESORA.", Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 8);
+                toast.show();
+            }
+            if(dialog.isShowing())
+            {
+                dialog.dismiss();
+
+
+            }
+            super.onPostExecute(result);
+        }
+    }
+    /** ------------------------------------------------------------------ */
+
+// Bluetooth Disconnection method. - Abnormal Method (Desire Bluetooth close() Bug).
+    private void btDisconn()
+    {
+//		mBluetoothAdapter.disable();
+        try
+        {
+            bp.disconnect();
+            Thread.sleep(1200);
+        }catch (Exception e){
+            Toast toast = Toast.makeText(contexto, e.getMessage(), Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 8);
+            toast.show();
+        }
+
+        if((hThread != null) && (hThread.isAlive()))
+            hThread.interrupt();
+        connected = false;
+        // UI
+        buttonSincronizar.setText("SINCRONIZAR");
+        buttonImprimir.setEnabled(connected);
+        buttonImprimir.setAlpha((float) 0.0);
+        buttonImprimir.setBackgroundColor(getApplication().getResources().getColor(R.color.PersonalizadoSteve4));
+    /*list.setEnabled(true);
+    editText.setEnabled(true);
+    searchButton.setEnabled(true);*/
+        Toast toast = Toast.makeText(contexto, "DESCONECTADO", Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 8);
+        toast.show();
+    }
+
 
 }

@@ -24,8 +24,12 @@ import union.union_vr1.Conexion.JSONParser;
 import union.union_vr1.JSONParser.ParserAgente;
 import union.union_vr1.Objects.Agente;
 import union.union_vr1.RestApi.StockAgenteRestApi;
+import union.union_vr1.Sqlite.DbAdapter_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Agente_Login;
+import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
+import union.union_vr1.Vistas.AppPreferences;
 import union.union_vr1.Vistas.VMovil_Abrir_Caja;
+import union.union_vr1.Vistas.VMovil_Evento_Indice;
 
 import org.json.JSONObject;
 
@@ -50,10 +54,9 @@ public class Login extends Activity implements OnClickListener {
     private String pru;
     // JSON parser class
     JSONParser jsonParser = new JSONParser();
-    Activity mainActivity;
 
     private String var1 = "";
-    private DbAdapter_Agente_Login dbAdapter_agente;
+    private DbAdapter_Agente_Login dbAdapter_agente_login;
 
     public void setVar1(String var1) {
         this.var1 = var1;
@@ -98,6 +101,14 @@ public class Login extends Activity implements OnClickListener {
     private int idLiquidacion;
     private String nombreUsuario = "";
 
+    //REDIRECCIONAR PRINCIPAL
+
+    private DbAdapter_Agente dbAdapter_agente;
+    private DbAdapter_Temp_Session session;
+    private int isCajaOpened;
+    private boolean isCajaActual;
+    private Activity mainActivity;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
@@ -105,6 +116,22 @@ public class Login extends Activity implements OnClickListener {
         setContentView(R.layout.login);
 
         mainActivity = this;
+
+
+        session = new DbAdapter_Temp_Session(this);
+        session.open();
+
+        isCajaOpened = session.fetchVarible(9);
+        Log.d("IS CAJA OPENED", "" + isCajaOpened);
+        if (isCajaOpened==0){
+            // QUEDARSE AQUÍ, LA CAJA ESTÁ CERRADA.
+        }else if (isCajaOpened==1){
+            //LA CAJA ESTÁ ABIERTA
+            redireccionarPrincipal();
+        }else{
+            redireccionarPrincipal();
+        }
+
        /* session = new DbAdapter_Temp_Session(this);
         session.open();
 */
@@ -124,8 +151,8 @@ public class Login extends Activity implements OnClickListener {
 
         loginClass = this;
 
-        dbAdapter_agente = new DbAdapter_Agente_Login(this);
-        dbAdapter_agente.open();
+        dbAdapter_agente_login = new DbAdapter_Agente_Login(this);
+        dbAdapter_agente_login.open();
 
 
         //setup input fields
@@ -149,7 +176,85 @@ public class Login extends Activity implements OnClickListener {
         //    user.setText("exito");
         //}else{
         //    user.setText("error");
-        //}
+        //
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mainActivity==null) {
+            mainActivity = this;
+        }
+
+        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        nombreUsuario = SP.getString("username", "emerson.f");
+
+
+        user.setText("" + nombreUsuario);
+
+    }
+
+    public void redireccionarPrincipal(){
+        dbAdapter_agente = new DbAdapter_Agente(this);
+        dbAdapter_agente.open();
+
+
+        idAgente = session.fetchVarible(1);
+        idLiquidacion = session.fetchVarible(3);
+
+
+        isCajaActual = false;
+
+        Cursor cursorAgenteCajaActual = dbAdapter_agente.fetchAgentesByIds(idAgente,idLiquidacion);
+        cursorAgenteCajaActual.moveToFirst();
+        String fechaCaja = null;
+        if (cursorAgenteCajaActual.getCount()>0) {
+            isCajaActual=true;
+            fechaCaja = cursorAgenteCajaActual.getString(cursorAgenteCajaActual.getColumnIndexOrThrow(dbAdapter_agente.AG_fecha));
+
+            if (getDatePhone().equals(fechaCaja)){
+                isCajaActual=true;
+            }else{
+                //LA CAAJA ESTÁ ABIERTA PERO NO CON LA FECHA ACTUAL
+                Toast.makeText(getApplicationContext(), "Debe Abrir Caja", Toast.LENGTH_LONG).show();
+                isCajaActual=false;
+            }
+        }
+
+
+        if(cursorAgenteCajaActual.getCount()==0){
+            isCajaActual=false;
+        }
+
+        if (isCajaActual){
+                /*
+                ((MyApplication) loginClass.getApplication()).setIdAgente(mCursorAgente.getInt(mCursorAgente.getColumnIndexOrThrow(dbAdapter_agente.AG_id_agente_venta)));
+                ((MyApplication) loginClass.getApplication()).setIdLiquidacion(mCursorAgente.getInt(mCursorAgente.getColumnIndexOrThrow(dbAdapter_agente.AG_liquidacion)));
+                ((MyApplication) loginClass.getApplication()).setIdUsuario(mCursorAgente.getInt(mCursorAgente.getColumnIndexOrThrow(dbAdapter_agente.AG_id_usuario)));
+                ((MyApplication) loginClass.getApplication()).setDisplayedHistorialComprobanteAnterior(false);
+
+*/
+
+            session.deleteVariable(1);
+            session.deleteVariable(3);
+            session.deleteVariable(4);
+            session.deleteVariable(6);
+
+            session.createTempSession(1,cursorAgenteCajaActual.getInt(cursorAgenteCajaActual.getColumnIndexOrThrow(dbAdapter_agente.AG_id_agente_venta)));
+            session.createTempSession(3,cursorAgenteCajaActual.getInt(cursorAgenteCajaActual.getColumnIndexOrThrow(dbAdapter_agente.AG_liquidacion)));
+            session.createTempSession(4,cursorAgenteCajaActual.getInt(cursorAgenteCajaActual.getColumnIndexOrThrow(dbAdapter_agente.AG_id_usuario)));
+            session.createTempSession(6,0);
+
+            Intent i = new Intent(mainActivity, VMovil_Evento_Indice.class);
+            finish();
+            startActivity(i);
+        }else{
+            //LA CAJA ESTÁ ABIERTA PERO NO CON LA FECHA ACTUAL, ENTONCES TIENE QUE ABRIR CAJA
+            //PERO PRIMER TIENE QUE INICIAR SESIÓN, ASÍ QUE LO DEJAMOS AQÚI.
+
+        }
+
 
     }
 
@@ -167,7 +272,9 @@ public class Login extends Activity implements OnClickListener {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         switch (id) {
-
+            case R.id.buttonAjustes:
+                Intent intentA = new Intent(mainActivity, AppPreferences.class);
+                startActivity(intentA);
             /*case R.id.buttonNewDay:
                 dbAdapter_agente.deleteAllAgentes();
                 break;*/
@@ -233,13 +340,13 @@ public class Login extends Activity implements OnClickListener {
     public void cajaAbierta() {
         succesLogin = false;
 
-        Cursor cursorAgenteCajaActual = dbAdapter_agente.fetchAllAgentesVentaLogin(getDatePhone());
+        Cursor cursorAgenteCajaActual = dbAdapter_agente_login.fetchAllAgentesVentaLogin(getDatePhone());
         cursorAgenteCajaActual.moveToFirst();
         String fechaCaja = null;
         if (cursorAgenteCajaActual.getCount() > 0) {
             succesLogin = true;
-            fechaCaja = cursorAgenteCajaActual.getString(cursorAgenteCajaActual.getColumnIndexOrThrow(dbAdapter_agente.AG_fecha));
-            Log.d("FECHA", "" + fechaCaja + "-" + cursorAgenteCajaActual.getString(cursorAgenteCajaActual.getColumnIndexOrThrow(dbAdapter_agente.AG_LIQUIDACION)));
+            fechaCaja = cursorAgenteCajaActual.getString(cursorAgenteCajaActual.getColumnIndexOrThrow(dbAdapter_agente_login.AG_fecha));
+            Log.d("FECHA", "" + fechaCaja + "-" + cursorAgenteCajaActual.getString(cursorAgenteCajaActual.getColumnIndexOrThrow(dbAdapter_agente_login.AG_LIQUIDACION)));
             if (getDatePhone().equals(fechaCaja)) {
                 succesLogin = true;
             } else {
@@ -374,13 +481,13 @@ public class Login extends Activity implements OnClickListener {
 */
 
                     agenteLista.get(i).getIdAgenteVenta();
-                    boolean existe = dbAdapter_agente.existeAgentesById(agenteLista.get(i).getIdAgenteVenta());
+                    boolean existe = dbAdapter_agente_login.existeAgentesById(agenteLista.get(i).getIdAgenteVenta());
                     Log.d("EXISTE ", "" + existe + "LIQUIDACION : " + agenteLista.get(i).getIdAgenteVenta());
                     if (existe) {
-                        dbAdapter_agente.updateAgente(agenteLista.get(i), getDatePhone(), usuario, clave);
+                        dbAdapter_agente_login.updateAgente(agenteLista.get(i), getDatePhone(), usuario, clave);
                     } else {
                         //NO EXISTE ENTONCES CREEMOS UNO NUEVO
-                        dbAdapter_agente.createAgente(agenteLista.get(i), getDatePhone(), usuario, clave);
+                        dbAdapter_agente_login.createAgente(agenteLista.get(i), getDatePhone(), usuario, clave);
                     }
                 }
             }

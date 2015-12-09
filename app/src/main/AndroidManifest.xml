@@ -4,8 +4,6 @@
     android:versionCode="1"
     android:versionName="1.0" >
 
-    <uses-sdk android:minSdkVersion="15" />
-
     <supports-screens android:anyDensity="true" />
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -17,14 +15,15 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.BATTERY_STATS" />
-
-    <android:uses-permission
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+<!--    <android:uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="20" />
-    <android:uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
     <android:uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
-        android:maxSdkVersion="20" />
+        android:maxSdkVersion="20" />-->
 
     <application
         android:name=".Utils.MyApplication"
@@ -89,6 +88,11 @@
             android:name=".Login"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".MySQL.DbManager_Evento_Establec_GET"
@@ -119,11 +123,6 @@
             android:name=".Vistas.VMovil_Online_Pumovil"
             android:label="P. Unión"
             android:screenOrientation="portrait" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".MainActivity"
@@ -155,6 +154,12 @@
             android:label="Canjes y Devoluciones"
             android:screenOrientation="portrait" >
         </activity>
+        <activity
+            android:name=".Vistas.VMovil_Operacion_Canjes_Devoluciones"
+            android:label="Canjes y Devoluciones"
+            android:screenOrientation="portrait" >
+        </activity>
+
         <activity
             android:name=".Vistas.VMovil_Facturas_Canjes_Dev"
             android:label="Canjear o Devolver"
