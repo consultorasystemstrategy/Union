@@ -228,11 +228,11 @@ public class VMovil_Venta_Comprob extends Activity implements View.OnClickListen
 
     private  void mostrarItemsDevoluciones(int establec){
         //listar devoluciones
-        ListView listaCanjes_Dev = (ListView) findViewById(R.id.listarCanjDev);
+     /*   ListView listaCanjes_Dev = (ListView) findViewById(R.id.listarCanjDev);
         Cursor cursor = dbAdapter_temp_canjes_devoluciones.listarDevolucionesImpresion(establec+"");
         cursor.moveToFirst();
         CursorAdapter_Man_Can_Dev adapter = new CursorAdapter_Man_Can_Dev(getApplicationContext(), cursor);
-        listaCanjes_Dev.setAdapter(adapter);
+        listaCanjes_Dev.setAdapter(adapter);*/
     }
 
     private void listarCobranzas() {
@@ -242,7 +242,7 @@ public class VMovil_Venta_Comprob extends Activity implements View.OnClickListen
         final ListView listCbrz = (ListView) findViewById(R.id.VVCO_cbrz);
         listCbrz.setAdapter(cAdapter_Cbrz_Man);
 
-
+/*
         listCbrz.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -260,7 +260,7 @@ public class VMovil_Venta_Comprob extends Activity implements View.OnClickListen
                 }
 
             }
-        });
+        });*/
     }
 
     public void dialog(final String idCompro, String factura, final String hora, final String fecha, final Double monto) {

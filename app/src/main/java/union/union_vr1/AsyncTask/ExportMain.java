@@ -38,7 +38,8 @@ import union.union_vr1.Vistas.VMovil_Online_Pumovil;
  * Created by Usuario on 19/01/2015.
  */
 public class ExportMain extends AsyncTask<String, String, String> {
-
+    private Boolean existeCobrosManuales = false;
+    private Boolean existeCobrosNormales = false;
     private DbAdapter_Temp_Session session;
     private Activity mainActivity;
     private ProgressDialog progressDialog;
@@ -58,6 +59,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
     private DbAdapter_Cobros_Manuales dbAdapter_cobros_manuales;
 
     public ExportMain(Activity mainActivity) {
+
         this.mainActivity = mainActivity;
         //INSTANCIO LAS CLASES DE MIS MANEJADORES DE DB
 
@@ -99,6 +101,8 @@ public class ExportMain extends AsyncTask<String, String, String> {
 
     @Override
     protected String doInBackground(String... strings) {
+        existeCobrosManuales = false;
+        existeCobrosNormales = false;
         //LA CLASE QUE TIENE LOS MÉTODOS DE EXPORTACIÓN A CONSUMIR
         publishProgress("" + 1);
         StockAgenteRestApi api = new StockAgenteRestApi(mainActivity);
@@ -447,8 +451,9 @@ public class ExportMain extends AsyncTask<String, String, String> {
         publishProgress("" + 65);
         //Get
         publishProgress("" + 70);
-        if(cursorCobrosManuales.getCount()>0){
-            while(cursorCobrosManuales.moveToNext()){
+        if (cursorCobrosManuales.getCount() > 0) {
+            existeCobrosManuales = true;
+            while (cursorCobrosManuales.moveToNext()) {
                 JSONObject jsonObject = null;
 
                 try {
@@ -459,22 +464,26 @@ public class ExportMain extends AsyncTask<String, String, String> {
                     String referencia = cursorCobrosManuales.getString(cursorCobrosManuales.getColumnIndexOrThrow(DbAdapter_Cobros_Manuales.CM_Referencia));
                     int usuario = cursorCobrosManuales.getInt(cursorCobrosManuales.getColumnIndexOrThrow(DbAdapter_Cobros_Manuales.CM_Usuario));
                     String serie = cursorCobrosManuales.getString(cursorCobrosManuales.getColumnIndexOrThrow(DbAdapter_Cobros_Manuales.CM_Serie));
-                    int numero = cursorCobrosManuales.getInt(cursorCobrosManuales.getColumnIndexOrThrow(DbAdapter_Cobros_Manuales.CM_Numero));
+                    int numero = cursorCobrosManuales.getInt(cursorCobrosManuales.getColumnIndexOrThrow(DbAdapter_Cobros_Manuales.CM_Numero_comprobante));
 
 
-                    jsonObject = api.InsCobroManual(idLiquidacion,categoriaMovimiento,Importe,fechaHora,referencia,usuario,serie,numero);
-                    Log.d("JSONCOBROSMANUALES",jsonObject.toString());
+                    jsonObject = api.InsCobroManual(idLiquidacion, categoriaMovimiento, Importe, fechaHora, referencia, usuario, serie, numero);
+                    Log.d("JSONCOBROSMANUALES", jsonObject.toString());
 
-                    if(isSuccesfulExport(jsonObject)){
-                        long estadoUpdate = dbAdapter_cobros_manuales.updateCobrosManuales(Constants._EXPORTADO,_id);
-                        if(estadoUpdate>0){
-                            Log.d("ACTUALIZOCOBROSMANUALES",""+estadoUpdate);
+                    if (isSuccesfulExport(jsonObject)) {
+                        long estadoUpdate = dbAdapter_cobros_manuales.updateCobrosManuales(Constants._EXPORTADO, _id);
+                        if (estadoUpdate > 0) {
+                            Log.d("ACTUALIZOCOBROSMANUALES", "" + estadoUpdate);
                         }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
+        }
+        //Export to BD FLEX
+        if (existeCobrosManuales) {
+
         }
         /*
         if (cursorHistoVentaCreated.getCount()>0){
@@ -623,9 +632,12 @@ public class ExportMain extends AsyncTask<String, String, String> {
 
         }*/
 
+        String[] ID_ACTUALIZAR = new String[]{};
+
         publishProgress("" + 75);
 
         if (cursorInsertarCaja.getCount() > 0) {
+            existeCobrosManuales = true;
 
             for (cursorInsertarCaja.moveToFirst(); !cursorInsertarCaja.isAfterLast(); cursorInsertarCaja.moveToNext()) {
                 JSONObject jsonObject = null;
@@ -655,10 +667,17 @@ public class ExportMain extends AsyncTask<String, String, String> {
                             cursorInsertarCaja.getInt(cursorInsertarCaja.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_id_plan_pago_detalle))
                     );
                     Log.d("EXPORT I C MESS", jsonObject.toString());
-                    Log.d("EXPORT I C SUCC", "" + isSuccesfulExport(jsonObject));
+                    Log.d("EXPORT INSERT C", "" + isSuccesfulExport(jsonObject));
 
                     if (isSuccesfulExport(jsonObject)) {
+                        int id = jsonObject.getInt("Value");
                         listidInsertarCaja.add("" + cursorInsertarCaja.getInt(cursorInsertarCaja.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_id_cob_historial)));
+                        int ac = dbAdapter_comprob_cobro.changeEstadoToExportToFlex(cursorInsertarCaja.getString(cursorInsertarCaja.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_id_cob_historial)));
+                        if (ac > 0) {
+                            JSONObject jsonObjectFlex = null;
+                            jsonObjectFlex = api.InsCobro(id);
+                        }
+
                     }
 
 
@@ -672,6 +691,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
 
             String[] idCCInsertarCaja = new String[listidInsertarCaja.size()];
             listidInsertarCaja.toArray(idCCInsertarCaja);
+            ID_ACTUALIZAR = idCCInsertarCaja;
 
             for (int i = 0; i < idCCInsertarCaja.length; i++) {
                 Log.d("ID EXPORTADOS ", "" + idCCInsertarCaja[i]);
@@ -685,6 +705,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
         } else {
             Log.d("EXPORT INSERTAR CAJA", "TODOS LOS REGISTROS INSERTAR CAJA DE COMPROBANTE COBRO ESTÁN EXPORTADOS");
         }
+
         publishProgress("" + 80);
 
         if (cursorAutorizacionCobro.getCount() > 0) {
@@ -815,11 +836,11 @@ public class ExportMain extends AsyncTask<String, String, String> {
         }
         //Conseguir Operaciones:
         Cursor cursor = dbAdapter_temp_canjes_devoluciones.getAllOperacionEstablecimiento();
-        while(cursor.moveToNext()){
+        while (cursor.moveToNext()) {
             String idEstablec = cursor.getString(cursor.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_id_establecimiento));
-            Log.d("Hola mundo",""+cursor.getString(cursor.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_id_establecimiento)));
-            ExportCanjesDevolucionesLater exportCanjesDevoluciones = new ExportCanjesDevolucionesLater(mainActivity.getApplicationContext(),mainActivity);
-            exportCanjesDevoluciones.execute(getDatePhone(),idEstablec, Constants._ACTUALIZADO+"");
+            Log.d("Hola mundo", "" + cursor.getString(cursor.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_id_establecimiento)));
+            ExportCanjesDevolucionesLater exportCanjesDevoluciones = new ExportCanjesDevolucionesLater(mainActivity.getApplicationContext(), mainActivity);
+            exportCanjesDevoluciones.execute(getDatePhone(), idEstablec, Constants._ACTUALIZADO + "");
         }
 
         super.onPostExecute(s);

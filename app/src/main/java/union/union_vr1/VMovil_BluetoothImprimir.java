@@ -375,7 +375,7 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
                break;
            case 3:
                String tipoC="";
-               tipoC=comprobante.substring(0,1);
+             //  tipoC=comprobante.substring(0,1);
                String tipoComprobante="";
                if(tipoC.equals("F"))
                {

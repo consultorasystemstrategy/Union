@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="match_parent"
+    android:background="#E4E2E2"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:padding="8dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <ScrollView
+            android:id="@+id/scrollView6"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/Blanco"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/texaaa"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:paddingBottom="4dp"
+                    android:paddingTop="4dp"
+                    android:text="Tipo Persona"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/ColorPUSecundario"
+                    android:textStyle="italic|bold" />
+
+                <Spinner
+                    android:id="@+id/spinnerTipoPersona"
+                    android:layout_width="fill_parent"
+                    android:layout_height="80dp"
+                    android:popupBackground="#607D8B"
+                    android:layout_gravity="center_horizontal"
+                    android:inputType="number" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/Blanco"
+                android:layout_marginTop="5dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textView34"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:paddingBottom="4dp"
+                    android:paddingTop="4dp"
+                    android:text="Nombres"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/ColorPUSecundario"
+                    android:textStyle="italic|bold" />
+
+                <EditText
+                    android:id="@+id/editNombre"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:ems="10"
+                    android:inputType="text" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/Blanco"
+                android:layout_marginTop="5dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textView23"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:paddingBottom="4dp"
+                    android:paddingTop="4dp"
+                    android:text="Apellido Paterno"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/ColorPUSecundario"
+                    android:textStyle="italic|bold" />
+
+                <EditText
+                    android:id="@+id/editApPaterno"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:ems="10"
+                    android:hint=""
+                    android:inputType="text" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/Blanco"
+                android:layout_marginTop="5dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textVie"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:paddingBottom="4dp"
+                    android:paddingTop="4dp"
+                    android:text="Apellido Materno"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/ColorPUSecundario"
+                    android:textStyle="italic|bold" />
+
+                <EditText
+                    android:id="@+id/editApMaterno"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:ems="10"
+                    android:hint=""
+                    android:inputType="text" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/Blanco"
+                android:layout_marginTop="5dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/texa"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:paddingBottom="4dp"
+                    android:paddingTop="4dp"
+                    android:text="Documento"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/ColorPUSecundario"
+                    android:textStyle="italic|bold" />
+
+                <Spinner
+                    android:id="@+id/spinnerTipoDocumento"
+                    android:layout_width="fill_parent"
+                    android:layout_height="80dp"
+                    android:popupBackground="#607D8B"
+                    android:layout_gravity="center_horizontal"
+                    android:inputType="number" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/Blanco"
+                android:layout_marginTop="5dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textViaae"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:paddingBottom="4dp"
+                    android:paddingTop="4dp"
+                    android:text="Documento de Identidad"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/ColorPUSecundario"
+                    android:textStyle="italic|bold" />
+
+                <EditText
+                    android:id="@+id/editNroDocumento"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:ems="10"
+                    android:hint=""
+                    android:inputType="number" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/Blanco"
+                android:layout_marginTop="5dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/teaaxtViaae"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:paddingBottom="4dp"
+                    android:paddingTop="4dp"
+                    android:text="Celular"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/ColorPUSecundario"
+                    android:textStyle="italic|bold" />
+
+                <EditText
+                    android:id="@+id/editNroCelular"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:ems="10"
+                    android:hint=""
+                    android:inputType="number" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/Blanco"
+                android:layout_marginTop="5dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tsseaaxtViaae"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:paddingBottom="4dp"
+                    android:paddingTop="4dp"
+                    android:text="Correo Electronico"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/ColorPUSecundario"
+                    android:textStyle="italic|bold" />
+
+                <EditText
+                    android:id="@+id/editCorreo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:ems="10"
+                    android:hint=""
+                    android:inputType="textEmailAddress" />
+
+
+            </LinearLayout>
+        </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="5"
+        android:orientation="vertical">
+
+    </LinearLayout>
+
+
+</LinearLayout>

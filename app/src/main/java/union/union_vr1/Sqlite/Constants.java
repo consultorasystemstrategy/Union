@@ -13,5 +13,6 @@ public static final int _EXPORTADO = 4;
 
     public static final int _CANJES = 5;
     public static final int _DEVOLUCIONES = 6;
+    public static final int _EXPORTADO_FLEX = 7;
 
 }

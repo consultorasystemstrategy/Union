@@ -205,7 +205,7 @@ public class StockAgenteRestApi {
     }
 
 
-    public JSONObject CreateInsertarCaja(int idLiquidacionCaja,int idCategoriaMovimiento,double importeDecimal,int estado,String fecha,String referencia,int idusuario,int idcomprbante,int idPlanPago,int idPlanPagoDetalle) throws Exception {
+    public JSONObject CreateInsertarCaja(int idLiquidacionCaja,int idCategoriaMovimiento,double importeDecimal,int estado,String fecha,String referencia,int idusuario,int idcomprobante,int idPlanPago,int idPlanPagoDetalle) throws Exception {
         JSONObject result = null;
         JSONObject o = new JSONObject();
         JSONObject p = new JSONObject();
@@ -218,7 +218,7 @@ public class StockAgenteRestApi {
         p.put("fecha",mapObject(fecha));
         p.put("referencia",mapObject(referencia));
         p.put("idusuario",mapObject(idusuario));
-        p.put("idcomprbante",mapObject(idcomprbante));
+        p.put("idcomprobante",mapObject(idcomprobante));
         p.put("idPlanPago",mapObject(idPlanPago));
         p.put("idPlanPagoDetalle",mapObject(idPlanPagoDetalle));
         o.put("parameters", p);
@@ -427,6 +427,19 @@ public class StockAgenteRestApi {
         p.put("idTipoDev",mapObject(idTipoDev));
         p.put("unidad",mapObject(unidad));
         p.put("idEstablec",mapObject(idEstablec));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+    public JSONObject InsCobro(int vint_ComprobanteId) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","RestAPI");
+        o.put("method", "InsCobro");
+        p.put("vint_ComprobanteId",mapObject(vint_ComprobanteId));
         o.put("parameters", p);
         String s = o.toString();
         String r = load(s);
@@ -749,6 +762,45 @@ public class StockAgenteRestApi {
         p.put("vdou_LiqDOGastos",mapObject(vdou_LiqDOGastos));
         p.put("vdou_LiqDOMontoARendir",mapObject(vdou_LiqDOMontoARendir));
         p.put("vint_KilometrajeFinal",mapObject(vint_KilometrajeFinal));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+
+    public JSONObject sel_SPINNER_TIPO_ESTABLECIMIENTO() throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","RestAPI");
+        o.put("method", "sel_SPINNER_TIPO_ESTABLECIMIENTO");
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+
+    public JSONObject sel_SPINNER_TIPO_PERSONA() throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","RestAPI");
+        o.put("method", "sel_SPINNER_TIPO_PERSONA");
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+
+    public JSONObject sel_SPINNER_TIPO_DOC_IDENTIDAD() throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","RestAPI");
+        o.put("method", "sel_SPINNER_TIPO_DOC_IDENTIDAD");
         o.put("parameters", p);
         String s = o.toString();
         String r = load(s);

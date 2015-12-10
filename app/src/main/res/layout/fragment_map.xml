@@ -1,0 +1,141 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="match_parent" >
+
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent" >
+
+        <com.google.android.gms.maps.MapView xmlns:map="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/map"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:scrollbars="vertical"
+            class="com.google.android.gms.maps.SupportMapFragment"/>
+
+        <RadioGroup
+            android:id="@+id/radio_group_list_selector"
+            android:layout_width="150dp"
+            android:layout_height="48dp"
+            android:padding="5dp"
+            android:orientation="horizontal"
+            android:background="#80000000" >
+
+            <RadioButton
+                android:id="@+id/mapHibrido"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+            <ImageView android:src="@drawable/map_satelite"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center" />
+            <View
+                android:id="@+id/VerticalLine1"
+                android:layout_width="2dip"
+                android:layout_marginLeft="5dp"
+                android:layout_height="match_parent"
+                android:background="#aaa" />
+
+            <RadioButton
+                android:id="@+id/mapNormal"
+                android:layout_width="0dp"
+                android:checked="true"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/map_normal"
+                android:layout_gravity="center" />
+
+        </RadioGroup>
+
+
+
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="180dp"
+        android:padding="10dp"
+        android:id="@+id/layoutflag"
+        android:layout_marginBottom="60dp"
+        android:layout_gravity="center_horizontal|bottom">
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="#fff"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textV75"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:paddingBottom="4dp"
+                    android:paddingTop="4dp"
+                    android:text="Descripcion"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/ColorPUSecundario"
+                    android:textStyle="italic|bold" />
+
+                <EditText
+                    android:id="@+id/map_descripcion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:ems="10"
+                    android:hint="descripcion"
+                    android:inputType="text" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textView23"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:paddingBottom="4dp"
+                    android:paddingTop="4dp"
+                    android:text="Direccion Fiscal"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/ColorPUSecundario"
+                    android:textStyle="italic|bold" />
+
+                <EditText
+                    android:id="@+id/map_direccion_fiscal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:ems="10"
+                    android:hint="direccion fiscal"
+                    android:inputType="text" />
+
+
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
+
+
+
+
+
+
+
