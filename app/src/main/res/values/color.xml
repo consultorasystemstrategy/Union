@@ -38,7 +38,10 @@
 
     <color name="Blanco">#fffffe</color>
 
-
+    <color name="primary">#049DBF</color>
+    <color name="primary_dark">#009D84</color>
+    <color name="accent">#FED94E</color>
+    <color name="text_primary">#4C565E</color>
 
 
 

@@ -11,93 +11,129 @@ import org.json.JSONObject;
 import union.union_vr1.RestApi.StockAgenteRestApi;
 import union.union_vr1.Sqlite.Constants;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Establecimiento;
+import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 
 /**
  * Created by Kelvin on 08/12/2015.
  */
-public class CrearEstablecimiento extends AsyncTask<String,String,String> {
+public class CrearEstablecimiento extends AsyncTask<String, String, String> {
     private Activity mainActivity;
-    private JSONObject jsonObjectCreated= null;
-    private StockAgenteRestApi stockAgenteRestApi ;
+    private JSONObject jsonObjectCreated = null;
+    private StockAgenteRestApi stockAgenteRestApi=null;
     private DbAdapter_Temp_Establecimiento dbAdapter_temp_establecimiento;
+    private DbAdapter_Temp_Session dbAdapter_temp_session;
 
 
-    public CrearEstablecimiento(Activity activity){
-        mainActivity=activity;
+    public CrearEstablecimiento(Activity activity) {
+        mainActivity = activity;
     }
 
     @Override
     protected String doInBackground(String... strings) {
+        stockAgenteRestApi = new StockAgenteRestApi(mainActivity);
         dbAdapter_temp_establecimiento = new DbAdapter_Temp_Establecimiento(mainActivity);
         dbAdapter_temp_establecimiento.open();
+        dbAdapter_temp_session = new DbAdapter_Temp_Session(mainActivity);
+        dbAdapter_temp_session.open();
         Cursor cursor = dbAdapter_temp_establecimiento.fetchTemEstablec();
         try {
-            while(cursor.moveToNext()){
+            int idAgente = dbAdapter_temp_session.fetchVarible(1);
+            int idLiquidacion = dbAdapter_temp_session.fetchVarible(3);
+            while (cursor.moveToNext()) {
+                Log.d("DATOS ERROR", ""+idLiquidacion+"-"+idAgente+"-" + cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_nombres)) + ""
+                        + "-"+ cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_apPaterno))
+                        + "-"+cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_apMaterno))
+                        + "-"+cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_nro_documento))
+                        + "-"+cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_celular_one))
+                        + "-"+cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_correo))
+                        + "-"+cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_tipo_documento))
+                        + "-"+cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_tipo_persona))
+                        + "-"+cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_usuario_accion))
+                        + "-"+cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_nro_documento))
+                        + "-"+cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_tipo_establecimiento))
+                        + "-"+cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_usuario_accion))
+                        + "-"+cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_descripcion))
+                        + "-"+cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_telefono_fijo))
+                        + "-"+cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_celular_one))
+                        + "-"+cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_celular_two))
+                        + "-"+cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_usuario_accion))
+                        + "-"+cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_descripcion_establecimiento))
+                        + "-"+cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_usuario_accion))
+                        + "-"+cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_categoria_estable))
+                        + "-"+cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_tipo_establecimiento))
+                        + "-"+cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_longitud))
+                        + "-"+cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_latitud))
+                        + "-"+cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_usuario_accion)));
 
-                jsonObjectCreated = stockAgenteRestApi.InsUpdLocalizacionPrueba(
-                  cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_nombres)),
-                  cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_apPaterno)),
+
+
+
+
+                jsonObjectCreated = stockAgenteRestApi.InsClienteEstablecimiento(cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_nombres)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_apPaterno)),
                         cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_apMaterno)),
                         cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_nro_documento)),
-                        cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_celular)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_celular_one)),
                         cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_correo)),
-                        1,//EstadoPersona
+                        1,
                         cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_tipo_documento)),
                         cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_tipo_persona)),
-                        1,//Persona Usuario Id
-                        "021548254",//ERP Codigo
-                        1,//Empresa Id
-                        "cliente codigo",//Codigo Cliente
+                        cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_usuario_accion)),
+                        1,//Id Empresa con el ususario
+                        "554",//codigo
                         cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_nro_documento)),
-                        1,//EstadoCliente
-                        1,//Categoria persona
-                        3,//Limite de dias de credito
-                        1,// Id Agente de  venta
-                        1,//Cliente Usuario id
-                        0,//ClienteEstadoAtencion
-                        10.0,//Monto de Credito
-                        1,//Modalidad de Credito
-                        "25/12/2015",//Fecha Limite de Credito
+                        1,
+                        3,
+                        idAgente,//Agente de venta id
+                        cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_usuario_accion)),
+                        1,//estado de atencion
+                        0.0, //Minto de credito
+                        5,//modalidad de credito
                         cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_descripcion)),
-                        1,//direccion estado
-                        1,//Distrito Id
-                        cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_celular)),//Cambiasr por Telefono fijo Establecimeinto
-                        cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_celular)),//ca,biar por celular 1 establecimeinto
-                        cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_celular)),//ca,biar por celular 2 establecimeinto
-                        1,//Usuario id direccion
-                        12,//Establecimeinto aasociado
-                        13,//direccion fiscal
-                        14, //Ruta id
+                        1,
+                        0,//iddistrito
+                        cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_telefono_fijo)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_celular_one)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_celular_two)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_usuario_accion)),
+                        0,//establecimiento asociado
+                        0,//Direccion fiscal Id
                         cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_descripcion_establecimiento)),
-                        0,//orden
-                        1,// estado Establecimiento
-                        1,//usuario establecimeinto
-                        2,//porcentaje devolucion
-                        cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_tipo_establecimiento)),//Categoria Establecimiento
-                        "45454",//Exhibidor
-                        0.0,//Monto de Compra
-                        cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_tipo_establecimiento)),//TipoEstablecimiento
-                        "",//codigo barra
-                        "-7198985",//latitud
-                        "4545",//longitud
-                        1,//localizacion estado
-                        112,//usuario estado,
-                        12,//AtencionEstabblecimiento id,
-                        54, //Liquidacion caja Id
-                        1,//motivo no atendido
-                        1 //Ruta id
-                        );
-                if(isSuccesfulExport(jsonObjectCreated)){
+                        1,
+                        cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_usuario_accion)),
+                        0,//porcentaje devolucion
+                        cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_categoria_estable)),//TIPO establecimiento
+                        "ninguno",
+                        0.0,//Monto de compra
+                        cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_tipo_establecimiento)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_longitud)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_latitud)),
+                        1,
+                        cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_usuario_accion)),
+                        1,
+                        idLiquidacion,//Liquidacion
+                        4,//Motivo no atewncido
+                        0
+
+                );
+
+                //----------------------------
+
+
+                if (isSuccesfulExport(jsonObjectCreated)) {
                     dbAdapter_temp_establecimiento.updateTempEstablecById(cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_id)), Constants._ACTUALIZADO);
                 }
+
+                Log.d("GUARDAR ESTABLECIMIENTO", "" + 1);
             }
-
-
+            Log.d("GUARDAR ESTABLECIMIENTO", "" + jsonObjectCreated);
         } catch (Exception e) {
             e.printStackTrace();
+            Log.d("GUARDAR ESTABLECIMIENTO", "" + e.getMessage());
         }
         return null;
     }
+
     public boolean isSuccesfulExport(JSONObject jsonObj) {
         boolean succesful = false;
         try {

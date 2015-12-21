@@ -186,5 +186,7 @@
     <string name="title_activity_signature">SignatureActivity</string>
     <string name="title_activity_ventas_rrpp">Ventas RRPP</string>
     <string name="title_activity_maps">Map</string>
+    <string name="title_activity_main2">Main2Activity</string>
+    <string name="title_activity_fgfg">fgfg</string>
 
 </resources>

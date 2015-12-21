@@ -2,6 +2,7 @@ package union.union_vr1.Fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -52,17 +53,17 @@ public class FMapaRegistrar extends Fragment {
     public EditText editTextDireccionFiscal;
     public Marker markerEstablecimeinto;
     int anInt = 0;
-public FMapaRegistrar (){}
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_map, container, false);
+
         MapsInitializer.initialize(getActivity());
         mapView = (MapView) v.findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);
-        super.onCreate(savedInstanceState);
         mapView.onResume();
         editTextDescripcion = (EditText)v.findViewById(R.id.map_descripcion);
-        editTextDireccionFiscal = (EditText)v.findViewById(R.id.map_descripcion);
+        editTextDireccionFiscal = (EditText)v.findViewById(R.id.map_direccion_fiscal);
         // Gets to GoogleMap from the MapView and does initialization stuff
         map = mapView.getMap();
         map.getUiSettings().setMyLocationButtonEnabled(true);
@@ -77,11 +78,13 @@ public FMapaRegistrar (){}
             @Override
             public void onMyLocationChange(Location location) {
 
-
+                LatLng latLng = new LatLng(location.getLatitude(),location.getLongitude());
                 anInt = anInt + 1;
                 if (anInt == 1) {
                     map.clear();
-                    location(location);
+                    CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 20);
+                    map.animateCamera(cameraUpdate);
+                    location(new LatLng(location.getLatitude(),location.getLongitude()));
                 }
 
 
@@ -89,8 +92,45 @@ public FMapaRegistrar (){}
         });
 
 
-        displayTouchLayout();
+       // displayTouchLayout();
         return v;
+    }
+/*
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d("EVENTOS  ", "PAUSA");
+        try {
+            SharedPreferences.Editor editor = getActivity().getSharedPreferences("INFORMACION_MAPA", Context.MODE_PRIVATE).edit();
+            editor.putString("descripcion", editTextDescripcion.getText().toString());
+            editor.putString("direccion_fiscal", editTextDireccionFiscal.getText().toString());
+            editor.putString("latitud", markerEstablecimeinto.getPosition().latitude + "");
+            editor.putString("longitud", markerEstablecimeinto.getPosition().longitude+"");
+            editor.commit();
+        }catch (NullPointerException e){
+       //   setMyLocation();
+        }
+ }
+*/
+    @Override
+    public void onResume() {
+        super.onResume();
+        try {
+            Log.d("EVENTOS  ","RESUMEN");
+            SharedPreferences getDataMapa = getActivity().getSharedPreferences("INFORMACION_MAPA", Context.MODE_PRIVATE);
+            double latitud=Double.parseDouble(getDataMapa.getString("latitud", null));
+            double longitud=Double.parseDouble(getDataMapa.getString("longitud", null));
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(latitud,longitud), 20);
+            map.animateCamera(cameraUpdate);
+            location(new LatLng(latitud,longitud));
+        }catch (NullPointerException e){
+
+        }
+
+
+    }
+    public Marker getMarkerEstablecimeinto (){
+        return markerEstablecimeinto;
     }
 
     public boolean isGPSEnabled() {
@@ -144,20 +184,23 @@ public FMapaRegistrar (){}
             @Override
             public boolean onMyLocationButtonClick() {
                 location = map.getMyLocation();
-                  location(location);
+                  location(new LatLng(location.getLatitude(),location.getLongitude()));
                 return false;
             }
         });
     }
-    public void location(Location location){
+    public void location(LatLng location){
         try {
 
-            new GetAddress(getActivity()).execute("", location.getLatitude() + "", location.getLongitude() + "");
+            new GetAddress(getActivity()).execute("", location.latitude + "", location.longitude + "");
             map.clear();
             canEstablec = canEstablec + 1;
-            Log.d("LATLONG", "Lat: " + location.getLatitude() + " , Long: " + location.getLongitude() + " Direccion: ");
-            markerEstablecimeinto = map.addMarker(new MarkerOptions().position(new LatLng(location.getLatitude(), location.getLongitude())).title("Lat: " + location.getLatitude() + " , Long: " + location.getLongitude()));
-
+            Log.d("LATLONG", "Lat: " + location.latitude + " , Long: " + location.longitude + " Direccion: ");
+            markerEstablecimeinto = map.addMarker(new MarkerOptions().position(new LatLng(location.latitude, location.longitude)).title("Lat: " + location.latitude + " , Long: " + location.longitude));
+            SharedPreferences.Editor editor =getActivity().getSharedPreferences("INFORMACION_MAPA", Context.MODE_PRIVATE).edit();
+            editor.putString("latitud",  location.latitude+"");
+            editor.putString("longitud", location.longitude+"");
+            editor.commit();
 
         }catch (NullPointerException e){
             startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));

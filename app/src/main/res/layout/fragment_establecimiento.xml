@@ -23,7 +23,35 @@
                 android:layout_height="fill_parent"
                 android:orientation="vertical">
 
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/Blanco"
+                    android:layout_marginTop="5dp"
+                    android:orientation="vertical">
 
+                    <TextView
+                        android:id="@+id/texa2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:paddingBottom="4dp"
+                        android:paddingTop="4dp"
+                        android:text="Categoria Establecimiento"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="@color/ColorPUSecundario"
+                        android:textStyle="italic|bold" />
+
+                    <Spinner
+                        android:id="@+id/spinnerCategoriaEstablecimiento"
+                        android:layout_width="fill_parent"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_height="80dp"
+                        android:popupBackground="#607D8B"
+                        android:inputType="number" />
+
+
+                </LinearLayout>
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
@@ -68,7 +96,7 @@
                         android:layout_gravity="center_horizontal"
                         android:paddingBottom="4dp"
                         android:paddingTop="4dp"
-                        android:text="Descripcion"
+                        android:text="Nombre Establecimiento"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:textColor="@color/ColorPUSecundario"
                         android:textStyle="italic|bold" />
@@ -84,6 +112,66 @@
 
 
                 </LinearLayout>
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/Blanco"
+                    android:layout_marginTop="5dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textViaaes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:paddingBottom="4dp"
+                        android:paddingTop="4dp"
+                        android:text="Numero Telefono Fijo"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="@color/ColorPUSecundario"
+                        android:textStyle="italic|bold" />
+
+                    <EditText
+                        android:id="@+id/editTelFijo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:ems="10"
+                        android:hint=""
+                        android:inputType="number" />
+
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/Blanco"
+                    android:layout_marginTop="5dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textasViaae"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:paddingBottom="4dp"
+                        android:paddingTop="4dp"
+                        android:text="Numero Celular"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="@color/ColorPUSecundario"
+                        android:textStyle="italic|bold" />
+
+                    <EditText
+                        android:id="@+id/editNumero2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:ems="10"
+                        android:hint=""
+                        android:inputType="number" />
+
+
+                </LinearLayout>
 
 
 
@@ -92,13 +180,7 @@
         </ScrollView>
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_weight="5"
-        android:orientation="vertical">
 
-    </LinearLayout>
 
 
 </LinearLayout>

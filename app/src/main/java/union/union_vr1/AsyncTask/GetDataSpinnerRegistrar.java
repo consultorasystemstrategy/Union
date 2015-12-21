@@ -19,6 +19,7 @@ public class GetDataSpinnerRegistrar extends AsyncTask<String,String,String> {
     private JSONObject jsonObjectEstablecimiento = null;
     private JSONObject jsonObjectIdentidad = null;
     private JSONObject jsonObjectPersona= null;
+    private JSONObject jsonObjectCategoriaEstable= null;
     private StockAgenteRestApi stockAgenteRestApi ;
     private DbAdapter_Temp_DatosSpinner dbAdapter_temp_datosSpinner;
 
@@ -36,6 +37,7 @@ public class GetDataSpinnerRegistrar extends AsyncTask<String,String,String> {
             jsonObjectEstablecimiento = stockAgenteRestApi.sel_SPINNER_TIPO_ESTABLECIMIENTO();
             jsonObjectIdentidad = stockAgenteRestApi.sel_SPINNER_TIPO_DOC_IDENTIDAD();
             jsonObjectPersona = stockAgenteRestApi.sel_SPINNER_TIPO_PERSONA();
+            jsonObjectCategoriaEstable = stockAgenteRestApi.sel_SPINNER_CATEGORIA_ESTABLECIMIENTO();
             //SetEstablecimiento
             setPreferEstablecimiento(jsonObjectEstablecimiento);
             //SetIdentidad
@@ -43,9 +45,12 @@ public class GetDataSpinnerRegistrar extends AsyncTask<String,String,String> {
             //SetPersona
             setPreferPersona(jsonObjectPersona);
             //---------
-            Log.d("ESTABLECIMIENTO",""+jsonObjectEstablecimiento.toString());
+            //Set Categoria Establecimiento
+            setPreferCatEstablec(jsonObjectCategoriaEstable);
+            Log.d("ESTABLECIMIENTO", "" + jsonObjectEstablecimiento.toString());
             Log.d("IDENTIDAD",""+jsonObjectIdentidad.toString());
             Log.d("PERSONA",""+jsonObjectPersona.toString());
+            Log.d("CATEGORIAESTABLEC",""+jsonObjectCategoriaEstable.toString());
 
 
 
@@ -96,6 +101,19 @@ public class GetDataSpinnerRegistrar extends AsyncTask<String,String,String> {
 
     private boolean setPreferPersona(JSONObject  stringMap){
         long a = dbAdapter_temp_datosSpinner.createTempSpinner(stringMap.toString(),3);
+        if(a>0){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+     /*
+    ####### Persona
+    */
+
+    private boolean setPreferCatEstablec(JSONObject  stringMap){
+        long a = dbAdapter_temp_datosSpinner.createTempSpinner(stringMap.toString(),4);
         if(a>0){
             return true;
         }else{

@@ -659,12 +659,12 @@ public class StockAgenteRestApi {
         result = new JSONObject(r);
         return result;
     }
-    public JSONObject InsUpdLocalizacionPrueba(String PerVNombres,String PerVApellPaterno,String PerVApellMaterno,String PerVDocIdentidad,String PerVCelular,String PerVEmail,int PerBEstado,int PerITipoDocIdentidadId,int PerITipoPersonaId,int PerIUsuarioId,String PerVCodigoERP,int PerIEmpresaId,String CliVCodigo,String CliVDocidentidad,int CliBEstado,int CliICategoriaClienteId,int CliIDiasLimiteCredito,int CliIAgenteVentaId,int CliIUsuarioId,int CliBEstadoAtencion,double CliDOMontoCredito,int CliIModalidadCreditoId,String CliDTFechaLimiteCredito,String DirVDescripcion,int DirBEstado,int DirIDistritoId,String DirVTelefonoFijo,String DirVCelular1,String DirVCelular2,int DirIUsuarioId,int DirBEstablecimientoAsociado,int DirBDireccionFiscal,int EstIRutaId,String EstVDescripcion,int EstIOrden,int EstBEstado,int EstIUsuarioId,int EstIPorcentajeDevolucion,int EstICatEstablecimientoId,String EstVExhibidor,double EstDOMontoCompra,int EstITipEstId,String EstVCodigoBarra,String LocVLongitude,String LocVLatitude,int LocBEstado,int LocIUsuarioId,int EveeIAtencionEstablecimientoId,int EveeBILiquidacionCajaId,int EveeIMotivoNoAtendidoId,int EveeIRutaId) throws Exception {
+    public JSONObject InsClienteEstablecimiento(String PerVNombres,String PerVApellPaterno,String PerVApellMaterno,String PerVDocIdentidad,String PerVCelular,String PerVEmail,int PerBEstado,int PerITipoDocIdentidadId,int PerITipoPersonaId,int PerIUsuarioId,int PerIEmpresaId,String CliVCodigo,String CliVDocidentidad,int CliBEstado,int CliICategoriaClienteId,int CliIAgenteVentaId,int CliIUsuarioId,int CliBEstadoAtencion,double CliDOMontoCredito,int CliIModalidadCreditoId,String DirVDescripcion,int DirBEstado,int DirIDistritoId,String DirVTelefonoFijo,String DirVCelular1,String DirVCelular2,int DirIUsuarioId,int DirBEstablecimientoAsociado,int DirBDireccionFiscal,String EstVDescripcion,int EstBEstado,int EstIUsuarioId,int EstIPorcentajeDevolucion,int EstICatEstablecimientoId,String EstVExhibidor,double EstDOMontoCompra,int EstITipEstId,String LocVLongitude,String LocVLatitude,int LocBEstado,int LocIUsuarioId,int EveeIAtencionEstablecimientoId,int EveeBILiquidacionCajaId,int EveeIMotivoNoAtendidoId,int EveeIRutaId) throws Exception {
         JSONObject result = null;
         JSONObject o = new JSONObject();
         JSONObject p = new JSONObject();
         o.put("interface","RestAPI");
-        o.put("method", "InsUpdLocalizacionPrueba");
+        o.put("method", "InsClienteEstablecimiento");
         p.put("PerVNombres",mapObject(PerVNombres));
         p.put("PerVApellPaterno",mapObject(PerVApellPaterno));
         p.put("PerVApellMaterno",mapObject(PerVApellMaterno));
@@ -675,19 +675,16 @@ public class StockAgenteRestApi {
         p.put("PerITipoDocIdentidadId",mapObject(PerITipoDocIdentidadId));
         p.put("PerITipoPersonaId",mapObject(PerITipoPersonaId));
         p.put("PerIUsuarioId",mapObject(PerIUsuarioId));
-        p.put("PerVCodigoERP",mapObject(PerVCodigoERP));
         p.put("PerIEmpresaId",mapObject(PerIEmpresaId));
         p.put("CliVCodigo",mapObject(CliVCodigo));
         p.put("CliVDocidentidad",mapObject(CliVDocidentidad));
         p.put("CliBEstado",mapObject(CliBEstado));
         p.put("CliICategoriaClienteId",mapObject(CliICategoriaClienteId));
-        p.put("CliIDiasLimiteCredito",mapObject(CliIDiasLimiteCredito));
         p.put("CliIAgenteVentaId",mapObject(CliIAgenteVentaId));
         p.put("CliIUsuarioId",mapObject(CliIUsuarioId));
         p.put("CliBEstadoAtencion",mapObject(CliBEstadoAtencion));
         p.put("CliDOMontoCredito",mapObject(CliDOMontoCredito));
         p.put("CliIModalidadCreditoId",mapObject(CliIModalidadCreditoId));
-        p.put("CliDTFechaLimiteCredito",mapObject(CliDTFechaLimiteCredito));
         p.put("DirVDescripcion",mapObject(DirVDescripcion));
         p.put("DirBEstado",mapObject(DirBEstado));
         p.put("DirIDistritoId",mapObject(DirIDistritoId));
@@ -697,9 +694,7 @@ public class StockAgenteRestApi {
         p.put("DirIUsuarioId",mapObject(DirIUsuarioId));
         p.put("DirBEstablecimientoAsociado",mapObject(DirBEstablecimientoAsociado));
         p.put("DirBDireccionFiscal",mapObject(DirBDireccionFiscal));
-        p.put("EstIRutaId",mapObject(EstIRutaId));
         p.put("EstVDescripcion",mapObject(EstVDescripcion));
-        p.put("EstIOrden",mapObject(EstIOrden));
         p.put("EstBEstado",mapObject(EstBEstado));
         p.put("EstIUsuarioId",mapObject(EstIUsuarioId));
         p.put("EstIPorcentajeDevolucion",mapObject(EstIPorcentajeDevolucion));
@@ -707,7 +702,6 @@ public class StockAgenteRestApi {
         p.put("EstVExhibidor",mapObject(EstVExhibidor));
         p.put("EstDOMontoCompra",mapObject(EstDOMontoCompra));
         p.put("EstITipEstId",mapObject(EstITipEstId));
-        p.put("EstVCodigoBarra",mapObject(EstVCodigoBarra));
         p.put("LocVLongitude",mapObject(LocVLongitude));
         p.put("LocVLatitude",mapObject(LocVLatitude));
         p.put("LocBEstado",mapObject(LocBEstado));
@@ -801,6 +795,18 @@ public class StockAgenteRestApi {
         JSONObject p = new JSONObject();
         o.put("interface","RestAPI");
         o.put("method", "sel_SPINNER_TIPO_DOC_IDENTIDAD");
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+    public JSONObject sel_SPINNER_CATEGORIA_ESTABLECIMIENTO() throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","RestAPI");
+        o.put("method", "sel_SPINNER_CATEGORIA_ESTABLECIMIENTO");
         o.put("parameters", p);
         String s = o.toString();
         String r = load(s);
