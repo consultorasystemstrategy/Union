@@ -1,5 +1,6 @@
 package union.union_vr1.Alarm;
 
+import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -7,6 +8,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.database.Cursor;
 import android.media.RingtoneManager;
+import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
 import android.widget.SimpleCursorAdapter;
@@ -18,6 +20,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import union.union_vr1.R;
+import union.union_vr1.Sqlite.Constants;
 import union.union_vr1.Sqlite.DbAdapter_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Informe_Gastos;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
@@ -75,6 +78,7 @@ public class ServiceNotifyResumen extends Service {
         return super.onStartCommand(intent, flags, startId);
     }
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     public void createNotification(String aRendir) {
         // Prepare intent which is triggered if the
         // notification is selected
@@ -101,9 +105,10 @@ public class ServiceNotifyResumen extends Service {
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         // hide the notification after its selected
         noti.flags |= Notification.FLAG_AUTO_CANCEL;
-        notificationManager.notify(0, noti);
-
+        notificationManager.notify(Constants._ID_ALARM, noti);
     }
+
+
     public String getDayPhone()
     {
         Calendar cal = new GregorianCalendar();

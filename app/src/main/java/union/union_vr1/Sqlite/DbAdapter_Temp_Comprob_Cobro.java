@@ -26,6 +26,7 @@ public class DbAdapter_Temp_Comprob_Cobro {
     public static final String temp_estado_cobro = "temp_in_estado_cobro";
     public static final String temp_id_agente = "temp_in_id_agente";
     public static final String temp_id_forma_cobro = "temp_id_forma_cobro";
+    public static final String temp_monto_defined = "temp_monto_defined";
     public static final String temp_lugar_registro = "temp_lugar_registro";
 
     public static final String TAG = "Comprob_Cobro";
@@ -54,6 +55,7 @@ public class DbAdapter_Temp_Comprob_Cobro {
                     +temp_estado_cobro+" integer,"
                     +temp_id_agente+" integer,"
                     +temp_id_forma_cobro+" integer,"
+                    +temp_monto_defined+" integer,"
                     +temp_lugar_registro+" text);";
 
     public static final String DELETE_TABLE_TEMP_COMPROB_COBRO = "DROP TABLE IF EXISTS " + SQLITE_TABLE_TEMP_Comprob_Cobro;
@@ -96,6 +98,8 @@ public class DbAdapter_Temp_Comprob_Cobro {
         initialValues.put(temp_id_agente,id_agente);
         initialValues.put(temp_id_forma_cobro,id_forma_cobro);
         initialValues.put(temp_lugar_registro,lugar_registro);
+        initialValues.put(temp_monto_defined,0);
+
         return mDb.insert(SQLITE_TABLE_TEMP_Comprob_Cobro, null, initialValues);
     }
 
@@ -106,19 +110,32 @@ public class DbAdapter_Temp_Comprob_Cobro {
                 temp_id_cob_historial+"=?",new String[]{id});
 
     }
-    public void updateMontoPanPagos(String id, Double monto){
+    public void updateMontoPanPagos(String id, Double monto, int monto_defined){
         ContentValues initialValues = new ContentValues();
         initialValues.put(temp_monto_a_pagar,monto);
+        if (monto_defined !=-1){
+            initialValues.put(temp_monto_defined, monto_defined);
+        }
         mDb.update(SQLITE_TABLE_TEMP_Comprob_Cobro, initialValues,
                 temp_id_cob_historial+"=?",new String[]{id});
 
     }
 
+    public void updateBlock(String id, int blockeado){
+        ContentValues initialValues = new ContentValues();
+            initialValues.put(temp_monto_defined, blockeado);
+        mDb.update(SQLITE_TABLE_TEMP_Comprob_Cobro, initialValues,
+                temp_id_cob_historial+"=?",new String[]{id});
+
+    }
+
+
+
     public void updateComprobCobrosMan(String id, String fecha, String hora, double valor, String estado){
 
 
 
-        mDb.execSQL("update "+SQLITE_TABLE_TEMP_Comprob_Cobro+" set "+temp_monto_a_pagar+"="+valor+", "+temp_fecha_programada+"='"+fecha+"',"+temp_hora_cobro+"='"+hora+"', "+temp_estado_cobro+"='"+estado+"',"+temp_monto_cobrado+"=0 where "+temp_id_cob_historial+"='"+id+"'");
+        mDb.execSQL("update " + SQLITE_TABLE_TEMP_Comprob_Cobro + " set " + temp_monto_a_pagar + "=" + valor + ", " + temp_fecha_programada + "='" + fecha + "'," + temp_hora_cobro + "='" + hora + "', " + temp_estado_cobro + "='" + estado + "'," + temp_monto_cobrado + "=0 where " + temp_id_cob_historial + "='" + id + "'");
 
     }
     public int updateComprobCobrosCan2(String id, String fecha, String hora, double valor, String estado){
@@ -141,11 +158,19 @@ public class DbAdapter_Temp_Comprob_Cobro {
         return doneDelete > 0;
 
     }
+    public boolean deleteByID(String _id) {
+
+        int doneDelete = 0;
+        doneDelete = mDb.delete(SQLITE_TABLE_TEMP_Comprob_Cobro,  temp_id_cob_historial+"=?",new String[]{_id});
+        Log.w(TAG, Integer.toString(doneDelete));
+        return doneDelete > 0;
+    }
+
 
     public Cursor fetchComprobCobrosByIds(String inputText) throws SQLException {
         Log.w(TAG, inputText);
         Cursor mCursor = null;
-        mCursor = mDb.query(true, SQLITE_TABLE_TEMP_Comprob_Cobro, new String[] {temp_id_cob_historial,
+        mCursor = mDb.query(true, SQLITE_TABLE_TEMP_Comprob_Cobro, new String[]{temp_id_cob_historial,
                         temp_id_establec, temp_id_comprob, temp_desc_tipo_doc, temp_doc, temp_fecha_programada,
                         temp_monto_a_pagar, temp_estado_cobro},
                 temp_id_establec + " = " + inputText, null,
@@ -186,13 +211,52 @@ public class DbAdapter_Temp_Comprob_Cobro {
         Cursor mCursor = mDb.query(SQLITE_TABLE_TEMP_Comprob_Cobro, new String[] {temp_id_cob_historial,
                         temp_id_establec, temp_id_comprob, temp_id_plan_pago, temp_id_plan_pago_detalle,
                         temp_desc_tipo_doc, temp_doc, temp_fecha_programada, temp_monto_a_pagar,
-                        temp_fecha_cobro, temp_monto_cobrado, temp_estado_cobro},
-                null, null, null, null, null);
+                        temp_fecha_cobro, temp_monto_cobrado, temp_estado_cobro, temp_monto_defined},
+                null, null, null, null, temp_fecha_programada + " ASC");
 
         if (mCursor != null) {
             mCursor.moveToFirst();
         }
         return mCursor;
+    }
+
+    public Cursor obtenerUltimoRegistro() {
+
+        Cursor mCursor = mDb.rawQuery("SELECT * FROM "+SQLITE_TABLE_TEMP_Comprob_Cobro+"\n" +
+                " WHERE _id = (SELECT MAX(_id) FROM "+SQLITE_TABLE_TEMP_Comprob_Cobro+")",null);
+
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+    }
+
+    public Cursor fetchCuotasAutomatically() {
+
+        Cursor mCursor = mDb.query(SQLITE_TABLE_TEMP_Comprob_Cobro, new String[] {temp_id_cob_historial,
+                        temp_id_establec, temp_id_comprob, temp_id_plan_pago, temp_id_plan_pago_detalle,
+                        temp_desc_tipo_doc, temp_doc, temp_fecha_programada, temp_monto_a_pagar,
+                        temp_fecha_cobro, temp_monto_cobrado, temp_estado_cobro, temp_monto_defined},
+                temp_monto_defined + " = 0",
+                null, null, null, temp_fecha_programada + " ASC");
+
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+    }
+
+    public Double sumAllDefined() throws SQLException {
+        Double valor = 0.0;
+        Cursor mCursor = null;
+        mCursor = mDb.rawQuery("SELECT SUM("+temp_monto_a_pagar+") AS suma FROM "+SQLITE_TABLE_TEMP_Comprob_Cobro+"\n" +
+                "WHERE "+temp_monto_defined+" = 1 ;", null);
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+            valor = mCursor.getDouble(mCursor.getColumnIndexOrThrow("suma"));
+        }
+        return valor;
+
     }
 
     public Cursor fetchAllComprobCobrosByEst(String inputText) throws SQLException {

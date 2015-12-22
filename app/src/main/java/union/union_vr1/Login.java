@@ -1,7 +1,14 @@
 package union.union_vr1;
 
+import android.accounts.Account;
+import android.accounts.AccountAuthenticatorActivity;
+import android.accounts.AccountManager;
+import android.accounts.AccountManagerCallback;
+import android.accounts.AccountManagerFuture;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.app.Service;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -40,6 +47,37 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 public class Login extends Activity implements OnClickListener {
+
+
+    /**
+     * AQUÍ DEFINO LAS VARIABLES PARA EL SYNCADAPTER
+     */
+
+/*    public static final String ARG_ACCOUNT_TYPE = "1";
+    public static final String ARG_AUTH_TYPE = "2";
+    public static final String ARG_IS_ADDING_NEW_ACCOUNT = "3";
+    public static final String PARAM_USER_PASS = "4";
+    private AccountManager mAccountManager;
+
+    public static final String CODE_NAME = "name";
+
+
+    private AccountManagerCallback<Bundle> mGetAuthTokenCallback =
+            new AccountManagerCallback<Bundle>() {
+                @Override
+                public void run(final AccountManagerFuture<Bundle> arg0) {
+                    try {
+                        token = (String) arg0.getResult().get(AccountManager.KEY_AUTHTOKEN);
+                    } catch (Exception e) {
+                        // handle error
+                    }
+                }
+            };
+    private Account mAccount;
+    public static String token = "";
+
+    private boolean addNewAccount = false;*/
+
 
 
     // private DbAdapter_Temp_Session session;
@@ -109,13 +147,48 @@ public class Login extends Activity implements OnClickListener {
     private boolean isCajaActual;
     private Activity mainActivity;
 
+    private static String TAG = "Steve.Login";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
-
         mainActivity = this;
+
+/*
+        ContentResolver resolver = getContentResolver();
+
+        mAccountManager = (AccountManager) getSystemService(
+                ACCOUNT_SERVICE);
+
+        // Se chequea si existe una cuenta asociada a ACCOUNT_TYPE.
+        Account[] accounts = mAccountManager.getAccountsByType(AccountAuthenticator.ACCOUNT_TYPE);
+        if (accounts.length == 0){
+            // También se puede llamar a metodo mAccountManager.addAcount(...)
+            //TENGO QUE AGREGAR UNA NUEVA CUENTA
+            //PONDRÉ UN VALOR BOOLEANO  ADDNEWACOUNT
+            */
+/*
+            Intent intent = new Intent(this, AuthenticatorActivity.class);
+            intent.putExtra(AuthenticatorActivity.ARG_IS_ADDING_NEW_ACCOUNT, true);
+            startActivity(intent);*//*
+
+            addNewAccount = true;
+
+        }
+        else {
+            mAccount = accounts[0];
+            mAccountManager.getAuthToken(mAccount, AccountAuthenticator.ACCOUNT_TYPE, null, this,
+                    mGetAuthTokenCallback, null);
+            */
+/*resolver.setIsSyncable(mAccount, StudentsContract.AUTHORITY, 1);
+            resolver.setSyncAutomatically(mAccount, StudentsContract.AUTHORITY, true);*//*
+
+        }
+        Log.d(TAG, "ACCOUNTS "+ addNewAccount);
+*/
+
 
 
         session = new DbAdapter_Temp_Session(this);
@@ -402,7 +475,13 @@ public class Login extends Activity implements OnClickListener {
             case R.id.login:
 
                 if (estaConectado()) {
+
+
+
                     new LoginRest().execute();
+
+
+
 
                 } else {
                     cajaAbierta();
@@ -479,7 +558,6 @@ public class Login extends Activity implements OnClickListener {
 
 
 */
-
                     agenteLista.get(i).getIdAgenteVenta();
                     boolean existe = dbAdapter_agente_login.existeAgentesById(agenteLista.get(i).getIdAgenteVenta());
                     Log.d("EXISTE ", "" + existe + "LIQUIDACION : " + agenteLista.get(i).getIdAgenteVenta());
@@ -520,6 +598,10 @@ public class Login extends Activity implements OnClickListener {
 
             if (succesLogin) {
 
+/*                if (addNewAccount){
+
+                    agregarCuenta();
+                }*/
                 Toast.makeText(getApplicationContext(), "Login correcto", Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(Login.this, VMovil_Abrir_Caja.class);
                 finish();
@@ -535,6 +617,18 @@ public class Login extends Activity implements OnClickListener {
             prgDialog.setProgress(Integer.parseInt(values[0]));
         }
     }
+
+/*    public void agregarCuenta(){
+
+                final Account account = new Account(user.getText().toString(),
+                        AccountManager.KEY_ACCOUNT_TYPE);
+                // Creando cuenta en el dispositivo y seteando el token que obtuvimos.
+                mAccountManager.addAccountExplicitly(account, pass.getText().toString(), null);
+
+                // Ojo: hay que setear el token explicitamente si la cuenta no existe,
+                // no basta con mandarlo al authenticator
+                mAccountManager.setAuthToken(account, AccountAuthenticator.AUTHTOKEN_TYPE, user.getText().toString()+"."+pass.getText().toString());
+    }*/
 /*
 	class AttemptLogin extends AsyncTask<String, String, String> {
 

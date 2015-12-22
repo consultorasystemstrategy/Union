@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,6 +35,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import union.union_vr1.R;
+import union.union_vr1.Sqlite.CursorAdapterPlanPagos;
 import union.union_vr1.Sqlite.DBAdapter_Temp_Venta;
 import union.union_vr1.Sqlite.DbAdapter_Precio;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Comprob_Cobro;
@@ -42,15 +44,15 @@ import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 import union.union_vr1.Utils.MyApplication;
 
 
-public class VMovil_Venta_Cabecera_PlanPagos extends Activity implements DatePickerDialog.OnDateSetListener {
+public class VMovil_Venta_Cabecera_PlanPagos extends Activity implements AdapterView.OnItemSelectedListener {
 
 
     private DbAdapter_Temp_Session session;
 
     private Spinner spinnerCuotas;
     private TextView textViewMontoTotal;
-    private Button butttonCalcularCuotas;
-    private Button buttonEstablecerCuotas;
+    //private Button butttonCalcularCuotas;
+    public Button buttonEstablecerCuotas;
 
     DecimalFormat df = new DecimalFormat("#.00");
 
@@ -85,12 +87,26 @@ public class VMovil_Venta_Cabecera_PlanPagos extends Activity implements DatePic
 
     private boolean isCuotasCalculated = false;
 
+    private int cuotas;
+
+    private static String TAG = "PLAN DE PAGOS CLASE";
 
     //cambiar de fecha long l
     private long _id_plan_pago_selected = -1;
+    private boolean isDeleted = false;
+
+    private int countToast = 0;
     @Override
     public void onBackPressed() {
-        Toast.makeText(getApplicationContext(), "No ha establecido las cuotas", Toast.LENGTH_SHORT).show();
+
+            if (countToast<=2){
+                countToast++;
+                Toast.makeText(getApplicationContext(), "No ha establecido las cuotas", Toast.LENGTH_SHORT).show();
+            }
+
+
+
+        //Snackbar.make(textViewMontoTotal, "No ha establecido las cuotas", Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
@@ -111,9 +127,11 @@ public class VMovil_Venta_Cabecera_PlanPagos extends Activity implements DatePic
 
         spinnerCuotas = (Spinner) findViewById(R.id.VCPP_spinnerCuotas);
         textViewMontoTotal = (TextView) findViewById(R.id.VCPP_textViewMontoTotal);
-        butttonCalcularCuotas = (Button) findViewById(R.id.VCPP_buttonCalcularCuotas);
+        //butttonCalcularCuotas = (Button) findViewById(R.id.VCPP_buttonCalcularCuotas);
         buttonEstablecerCuotas = (Button) findViewById(R.id.VCPP_buttonEstablecer);
         listView = (ListView) findViewById(R.id.VCPP_listViewCuotas);
+        listView.setDivider(null);
+        listView.setDividerHeight(0);
 
         if (!isCuotasCalculated){
             buttonEstablecerCuotas.setEnabled(isCuotasCalculated);
@@ -142,11 +160,15 @@ public class VMovil_Venta_Cabecera_PlanPagos extends Activity implements DatePic
         monto_credito = cursorEstablecimiento.getDouble(cursorEstablecimiento.getColumnIndex(DbAdaptert_Evento_Establec.EE_monto_credito));
         dias_credito = cursorEstablecimiento.getInt(cursorEstablecimiento.getColumnIndex(DbAdaptert_Evento_Establec.EE_dias_credito));
 
+
+        Log.d(TAG, "MONTO DE CRÉDITO : "+monto_credito);
+        Log.d(TAG, "DÍAS DE CRÉDITO : "+dias_credito);
+        Log.d(TAG, "TOTAL : "+total);
+
+
+
         Log.d("Establcount cursor : ", "" + cursorEstablecimiento.getCount());
 
-        if (monto_credito < total) {
-            DialogCreditoInsuficiente(this).show();
-        }
 
         switch (dias_credito) {
             case 3:
@@ -180,8 +202,14 @@ public class VMovil_Venta_Cabecera_PlanPagos extends Activity implements DatePic
         spinnerCuotas.setAdapter(adapterCuotas);
 
 
+        spinnerCuotas.setOnItemSelectedListener(this);
+        spinnerCuotas.setSelection(adapterCuotas.getPosition("1"));
         header = getLayoutInflater().inflate(R.layout.venta_cabecera_plan_pagos, null);
-        listView.addHeaderView(header, null, false);
+//        listView.addHeaderView(header, null, false);
+        if (monto_credito < total) {
+            Log.d(TAG, "SE EJECUTA");
+            DialogCreditoInsuficiente(this).show();
+        }
 
     }
 
@@ -189,8 +217,8 @@ public class VMovil_Venta_Cabecera_PlanPagos extends Activity implements DatePic
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Crédito Insuficiente");
-        builder.setMessage("Monto de Crédito : " + monto_credito + "\n" + " < " +
-                "Saldo : " + df.format(total));
+        builder.setMessage("Monto de Crédito : " + df.format(monto_credito) + "\n" + " < " +
+                "Venta : " + df.format(total));
         builder.setPositiveButton("OK", new Dialog.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 Intent intent = new Intent(context, VMovil_Venta_Cabecera.class);
@@ -198,6 +226,7 @@ public class VMovil_Venta_Cabecera_PlanPagos extends Activity implements DatePic
                 startActivity(intent);
             }
         });
+        builder.setCancelable(false);
         return builder.create();
     }
 
@@ -242,16 +271,16 @@ public class VMovil_Venta_Cabecera_PlanPagos extends Activity implements DatePic
     }
 
     public static String dateToString(Date date) {
-        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd");
         return df.format(date);
     }
 
     public void CalcularCuotas(View view) {
 
         switch (view.getId()) {
-            case R.id.VCPP_buttonCalcularCuotas:
-                calcular();
-                break;
+            /*case R.id.VCPP_buttonCalcularCuotas:
+                calcular(Integer.parseInt(spinnerCuotas.getSelectedItem().toString()));
+                break;*/
             case R.id.VCPP_buttonEstablecer:
                   ((MyApplication)this.getApplication()).setCuotasEstablecidas(true);
                 if (!isCuotasCalculated)
@@ -272,7 +301,7 @@ public class VMovil_Venta_Cabecera_PlanPagos extends Activity implements DatePic
         }
     }
 
-    public void calcular() {
+    public void calcular(int cuotas) {
 
         isCuotasCalculated = true;
         //ACTIVO EL BOTÓN ESTABLECER
@@ -283,12 +312,12 @@ public class VMovil_Venta_Cabecera_PlanPagos extends Activity implements DatePic
         //DESACTIVO EL BOTÓN CALCULAR
         //butttonCalcularCuotas.setEnabled(!isCuotasCalculated);
         //butttonCalcularCuotas.setActivated(!isCuotasCalculated);
-        butttonCalcularCuotas.setBackgroundColor(getApplication().getResources().getColor(R.color.PersonalizadoSteve4));
+        //butttonCalcularCuotas.setBackgroundColor(getApplication().getResources().getColor(R.color.PersonalizadoSteve4));
 
         dbHelper_TempComprobCobro.deleteAllComprobCobros();
 
-        int cuotas = Integer.parseInt(spinnerCuotas.getSelectedItem().toString());
-        int NRO_DIAS_SEMANA = 7;
+
+        final int NRO_DIAS_SEMANA = 7;
 
         Double resto=0.0;
         Double montoEntero=0.0;
@@ -371,7 +400,8 @@ public class VMovil_Venta_Cabecera_PlanPagos extends Activity implements DatePic
         }
 
         Cursor cursorTempVentaDetalle = dbHelper_TempComprobCobro.fetchAllComprobCobros();
-        // The desired columns to be bound
+        cursorTempVentaDetalle.moveToFirst();
+        /*// The desired columns to be bound
         String[] columns = new String[]{
                 DbAdapter_Temp_Comprob_Cobro.temp_fecha_programada,
                 DbAdapter_Temp_Comprob_Cobro.temp_monto_a_pagar
@@ -391,11 +421,55 @@ public class VMovil_Venta_Cabecera_PlanPagos extends Activity implements DatePic
                 cursorTempVentaDetalle,
                 columns,
                 to,
-                0);
+                0);*/
 
-        listView.setAdapter(simpleCursorAdapter);
+        final CursorAdapterPlanPagos todoAdapter = new CursorAdapterPlanPagos(this, cursorTempVentaDetalle,Calendar.getInstance(),addDays(getDatePhone(), dias_credito), total, cuotas);
+
+        listView.setAdapter(todoAdapter);
+
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                Cursor cursor = (Cursor) parent.getItemAtPosition(position);
+                _id_plan_pago_selected = cursor.getLong(cursor.getColumnIndexOrThrow(dbHelper_TempComprobCobro.temp_id_cob_historial));
+                Double monto_a_eliminar = cursor.getDouble(cursor.getColumnIndexOrThrow(dbHelper_TempComprobCobro.temp_monto_a_pagar));
+
+                boolean deleted = dbHelper_TempComprobCobro.deleteByID(""+_id_plan_pago_selected);
+
+                Log.d(TAG, "MONTO A ELIMINAR : "+monto_a_eliminar);
+                Log.d(TAG, "_ID ELIMINAR : "+_id_plan_pago_selected);
+
+
+                if (deleted){
+                    Cursor cursorLastItem = dbHelper_TempComprobCobro.obtenerUltimoRegistro();
+                    if (cursorLastItem.getCount()>0){
+                        Double monto_ultimo = cursorLastItem.getDouble(cursorLastItem.getColumnIndexOrThrow(dbHelper_TempComprobCobro.temp_monto_a_pagar));
+
+
+                        long _id = cursorLastItem.getLong(cursorLastItem.getColumnIndexOrThrow("_id"));
+                        Log.d(TAG, "MONTO A ULTIMO A SUMAR : "+monto_ultimo);
+                        Log.d(TAG, "ID_ ÚLTIMO : "+_id);
+                        //EL MENOS 1 INDICA QUE NO DEBEMOS MODIFICAR SI ESTE REGISTRO EL USUARIO LO MODIFICÓ AUTOMÁTICAMETNE
+                        dbHelper_TempComprobCobro.updateMontoPanPagos(""+_id,(monto_ultimo+monto_a_eliminar),-1);
+                    }
+
+                    int numero_cuotas = dbHelper_TempComprobCobro.fetchAllComprobCobros().getCount();
+
+                    todoAdapter.swapCursor(dbHelper_TempComprobCobro.fetchAllComprobCobros());
+                    listView.setAdapter(todoAdapter);
+                    isDeleted = true;
+                    spinnerCuotas.setSelection(adapterCuotas.getPosition(""+numero_cuotas));
+
+
+                    Toast.makeText(VMovil_Venta_Cabecera_PlanPagos.this, "ELIMINADO", Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(VMovil_Venta_Cabecera_PlanPagos.this, "INTENTE DE NUEVO", Toast.LENGTH_SHORT).show();
+                }
+                return false;
+            }
+        });
         //CUANDO QUIERE CAMBIAR DE FECHA, AGREGADO A LA DEUDA TÉCNICA
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        /*listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
@@ -411,6 +485,29 @@ public class VMovil_Venta_Cabecera_PlanPagos extends Activity implements DatePic
                         now.get(Calendar.MONTH),
                         now.get(Calendar.DAY_OF_MONTH)
                 );
+                dpd.setMinDate(now);
+                dpd.setMaxDate(addDays(getDatePhone(), dias_credito));
+
+                Calendar[] calendars = new Calendar[cuotas];
+                *//*for (int k =0; k<calendars.length;k++){
+                    calendars[k] = Calendar.getInstance();
+                }*//*
+                for (int  j=0; j<cuotas; j++){
+                    if (dias_credito==3) {
+                        calendars[j] = Calendar.getInstance();
+                        calendars[j].setTime(getDatePhone());
+                        calendars[j].add(Calendar.DAY_OF_YEAR, dias_credito);
+                    }else{
+                        calendars[j] = Calendar.getInstance();
+                        calendars[j].setTime(getDatePhone());
+                        calendars[j].add(Calendar.DAY_OF_YEAR, NRO_DIAS_SEMANA);
+                    }
+
+
+
+                }
+
+                dpd.setHighlightedDays(calendars);
                 dpd.show(getFragmentManager(), "Datepickerdialog");
 
             }
@@ -423,11 +520,18 @@ public class VMovil_Venta_Cabecera_PlanPagos extends Activity implements DatePic
 
                 Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
                 _id_plan_pago_selected = cursor.getLong(cursor.getColumnIndexOrThrow(dbHelper_TempComprobCobro.temp_id_cob_historial));
-                dbHelper_TempComprobCobro.updateMontoPanPagos(""+_id_plan_pago_selected, 100.00);
+                dbHelper_TempComprobCobro.updateMontoPanPagos("" + _id_plan_pago_selected, 100.00);
                 return false;
             }
-        });
+        });*/
 
+    }
+
+    public static Calendar addDays(Date baseDate, int daysToAdd) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(baseDate);
+        calendar.add(Calendar.DAY_OF_YEAR, daysToAdd);
+        return calendar;
     }
 
     double formatDecimal(double d) {
@@ -444,19 +548,41 @@ public class VMovil_Venta_Cabecera_PlanPagos extends Activity implements DatePic
     }
 
     @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+
+        //Salvar la posición y valor del item actual
+
+        if (!isDeleted) {
+
+            if (spinnerCuotas.getSelectedItem().toString() != null) {
+                calcular(Integer.parseInt(spinnerCuotas.getSelectedItem().toString()));
+            }
+        }else{
+            isDeleted  = false;
+        }
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
+
+/*    @Override
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
 
         Toast.makeText(getApplicationContext(),"FECHA CAMBIADA: " + year + "/" +(++monthOfYear) + "/" + dayOfMonth, Toast.LENGTH_SHORT).show();
-        /*if (_id_plan_pago_selected!=-1){
+        if (_id_plan_pago_selected!=-1){
 
             //VALIDAR QUE NO SEA MAYOR A LA SIGUIENTE FECHA.
 
             //REALIZAR EL UPDATE
-            dbHelper_TempComprobCobro.updateFechaPanPagos(""+_id_plan_pago_selected,dayOfMonth+"/"+(++monthOfYear)+"/"+year);
-            Snackbar.make(butttonCalcularCuotas, "FECHA CAMBIADA: " + year + "/" +(++monthOfYear) + "/" + dayOfMonth, Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();
+            dbHelper_TempComprobCobro.updateFechaPanPagos("" + _id_plan_pago_selected, dayOfMonth + "/" + (monthOfYear) + "/" + year);
+            *//*Snackbar.make(butttonCalcularCuotas, "FECHA CAMBIADA: " + year + "/" +(++monthOfYear) + "/" + dayOfMonth, Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();*//*
+            reloadPlanPagos();
         }
-        */
 
-    }
+    }*/
 }

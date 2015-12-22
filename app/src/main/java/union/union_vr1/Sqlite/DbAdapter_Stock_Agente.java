@@ -355,7 +355,7 @@ public class DbAdapter_Stock_Agente {
                 ST_id_producto + "=?", new String[]{"" + id_producto});
     }
 
-    public void updateStockAgenteCantidad(int id_producto, int cantidadAnulada, int liquidacion) {
+    public int updateStockAgenteCantidad(int id_producto, int cantidadAnulada, int liquidacion) {
         Cursor mCursor = null;
         mCursor = mDb.query(true, SQLITE_TABLE_Stock_Agente, new String[]{ST_id_producto,
                         ST_final, ST_disponible, ST_ventas, ST_fisico},
@@ -379,7 +379,7 @@ public class DbAdapter_Stock_Agente {
         initialValues.put(ST_disponible, disponible);
         initialValues.put(ST_ventas, ventas);
         initialValues.put(ST_fisico, sumado);
-        mDb.update(SQLITE_TABLE_Stock_Agente, initialValues,
+        return mDb.update(SQLITE_TABLE_Stock_Agente, initialValues,
                 ST_id_producto + "=? AND " + ST_liquidacion + " = ? ", new String[]{"" + id_producto, "" + liquidacion});
 
     }

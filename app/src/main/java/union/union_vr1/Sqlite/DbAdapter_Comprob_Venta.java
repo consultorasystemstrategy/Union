@@ -35,6 +35,8 @@ public class DbAdapter_Comprob_Venta {
         //ACTUALIZAMOS ESTE CAMPO[CUANDO UN CLIENTE NOS DICE QUE QUIERE DEVOLVER UN PRODUCTO]
     public static final String CV_estado_comp = "cv_in_estado_comp";
     public static final String CV_liquidacion = "id_liquidacion";
+    //ID DE LA BASE DE DATOS SQL SERVER
+    public static final String CV_id_SQL_SERVER_comprob = "id_sql_server_comprob";
 
     public static final String CV_estado_conexion = "cv_in_estado_conexion";
     public static final String CV_SHA1 = "cv_sha1";
@@ -69,6 +71,7 @@ public class DbAdapter_Comprob_Venta {
                     +CV_estado_conexion+" integer,"
                     +CV_id_agente+" integer, "
                     +CV_liquidacion+" integer, "
+                    +CV_id_SQL_SERVER_comprob+" integer, "
                     +estado_sincronizacion+" integer);";
 
     public static final String DELETE_TABLE_COMPROB_VENTA = "DROP TABLE IF EXISTS " + SQLITE_TABLE_Comprob_Venta;
@@ -211,7 +214,7 @@ public class DbAdapter_Comprob_Venta {
 
     public int updateComprobanteIDReal(int id, int idReal){
         ContentValues initialValues = new ContentValues();
-        initialValues.put(CV_id_comprob, idReal);
+        initialValues.put(CV_id_SQL_SERVER_comprob, idReal);
 
         return mDb.update(SQLITE_TABLE_Comprob_Venta, initialValues,
                 CV_id_comprob+"=?",new String[]{""+id});
@@ -241,14 +244,14 @@ public class DbAdapter_Comprob_Venta {
         Log.d("REGISTROS EXPORTADOS ", ""+cantidadRegistros);
     }
 
-    public void updateComprobanteMontos(long id, Double total, Double igv, Double base_imponible){
+    public int updateComprobanteMontos(long id, Double total, Double igv, Double base_imponible){
         ContentValues initialValues = new ContentValues();
         initialValues.put(CV_total,total);
         initialValues.put(CV_igv,igv);
-        initialValues.put(CV_base_imp,base_imponible);
+        initialValues.put(CV_base_imp, base_imponible);
 
 
-        mDb.update(SQLITE_TABLE_Comprob_Venta, initialValues,
+        return mDb.update(SQLITE_TABLE_Comprob_Venta, initialValues,
                 CV_id_comprob+"=?",new String[]{""+id});
     }
 

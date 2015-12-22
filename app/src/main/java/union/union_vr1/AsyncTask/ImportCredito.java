@@ -166,7 +166,7 @@ public class ImportCredito extends AsyncTask<String, String, String> {
                         int montoCredito = jsonObj.getInt("SolDOMontoCredito");
                         int diasCredito = jsonObj.getInt("SolIVigenciaCredito");
                         Log.d("IMPORT SOLICITUDES DATOS", idEstablecimiento + " - " + montoCredito + " - " + diasCredito);
-                        dbAdaptert_evento_establec.updateEstablecsCredito(idEstablecimiento, montoCredito, diasCredito);
+                        dbAdaptert_evento_establec.updateEstablecsCredito(idEstablecimiento, (double) montoCredito, diasCredito);
                     }
                 }
 

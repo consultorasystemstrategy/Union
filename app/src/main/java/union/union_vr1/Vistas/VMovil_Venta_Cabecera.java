@@ -66,10 +66,14 @@ import java.security.cert.CertificateException;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.xml.crypto.MarshalException;
 import javax.xml.crypto.dsig.XMLSignatureException;
@@ -86,6 +90,7 @@ import union.union_vr1.BarcodeScanner.IntentResult;
 import union.union_vr1.FacturacionElectronica.CodigoSHA1;
 import union.union_vr1.FacturacionElectronica.DigitalSignature;
 import union.union_vr1.FacturacionElectronica.Signature;
+import union.union_vr1.FacturacionElectronica.SimpleXMLAndroid;
 import union.union_vr1.InputFilterMinMax;
 import union.union_vr1.R;
 import union.union_vr1.RestApi.StockAgenteRestApi;
@@ -282,7 +287,10 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
     TextView textViewSlideCobro;
     TextView textViewSlideMantenimiento;
     TextView textViewSlideCanjesDevoluciones;
-private String NUMERO_DOCUMENTO;
+
+
+
+    private String NUMERO_DOCUMENTO;
     int slideIdEstablecimiento;
 
     private DbAdaptert_Evento_Establec dbAdaptert_evento_establec;
@@ -294,7 +302,13 @@ private String NUMERO_DOCUMENTO;
     public InputStream keystore;
     private final static String BKS  ="union.bks";
 
+    //XML DATOS
+    private Map<String, String> map = new HashMap<>();
 
+    private int ventaRRPP = -1;
+
+
+    private static String TAG = "VENTA CABECERA";
     @Override
     protected void onDestroy() {
         exportMain.dismissProgressDialog();
@@ -763,6 +777,8 @@ Instantiate and pass a callback
                         }else{
                             if (disponible>0){
 
+
+
                                 Cursor mCursorPrecioUnitarioGeneral = dbHelper_Precio.fetchAllPrecioByIdProductoAndCategoeria(id_producto,id_categoria_establecimiento);
 
                                 if (mCursorPrecioUnitarioGeneral.getCount()>1){
@@ -979,6 +995,9 @@ Instantiate and pass a callback
 
         switch (item.getItemId()) {
             case R.id.ventaRRPP:
+
+                ventaRRPP =1;
+                setTitle("Venta RR.PP.");
                 /*IntentIntegrator intentIntegrator = new IntentIntegrator(mainActivity);
                 intentIntegrator.initiateScan();*/
                 Toast.makeText(contexto, "VENTA RRPP", Toast.LENGTH_LONG).show();
@@ -993,10 +1012,20 @@ Instantiate and pass a callback
                 adapterFormaPago.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinnerFormaPago.setAdapter(adapterFormaPago);
 
+
+                setVentaRRPP();
+
                 //TODOS LOS ELEMENTOS DEBERÁN TENER PRECIO DE 0
 
                 //SE DEBERÁ MANDAR UN PARÁMETRO A IMPRESIÓN, Y A GENERACIÓN DEL FIRMADO QUE ES RR PP
 
+                break;
+            case R.id.ventaNormal:
+                ventaRRPP = -1;
+                setTitle("Venta de Productos");
+                Toast.makeText(VMovil_Venta_Cabecera.this, "Venta Nueva", Toast.LENGTH_SHORT).show();
+                dbHelper_temp_venta.deleteAllTempVentaDetalle();
+                mostrarProductosParaVender();
                 break;
         }
         return true;
@@ -1129,7 +1158,7 @@ Instantiate and pass a callback
 
             final double[] precio_unitario = {0.0};
 
-            final Cursor mCursorPrecioUnitarioGeneral = dbHelper_Precio.fetchAllPrecioByIdProductoAndCategoeria(id_producto,id_categoria_establecimiento);
+            final Cursor mCursorPrecioUnitarioGeneral = dbHelper_Precio.fetchAllPrecioByIdProductoAndCategoeria(id_producto, id_categoria_establecimiento);
             mCursorPrecioUnitarioGeneral.moveToFirst();
 
             if (mCursorPrecioUnitarioGeneral.getCount()>0) {
@@ -1150,16 +1179,16 @@ Instantiate and pass a callback
                     int position = mCursorPrecioUnitarioGeneral.getPosition();
                     //Toast.makeText(getApplicationContext(), "Position del cursor Valor Unidad "+position, Toast.LENGTH_SHORT).show();
 
-                    if (mCursorPrecioUnitarioGeneral.isLast()){
+                    if (mCursorPrecioUnitarioGeneral.isLast()) {
                         mCursorPrecioUnitarioGeneral.moveToFirst();
-                    }else{
+                    } else {
                         mCursorPrecioUnitarioGeneral.moveToNext();
                     }
                     precio_unitario[0] = mCursorPrecioUnitarioGeneral.getDouble(mCursorPrecioUnitarioGeneral.getColumnIndexOrThrow(DbAdapter_Precio.PR_precio_unit));
                     valor_unidad = mCursorPrecioUnitarioGeneral.getInt(mCursorPrecioUnitarioGeneral.getColumnIndexOrThrow(DbAdapter_Precio.PR_valor_unidad));
                     DecimalFormat df = new DecimalFormat("#.00");
-                    precio.setText("Precio : S/. "+ df.format(precio_unitario[0]));
-                    valorUnidad.setText("Unidad : "+valor_unidad);
+                    precio.setText("Precio : S/. " + df.format(precio_unitario[0]));
+                    valorUnidad.setText("Unidad : " + valor_unidad);
 
 
                 }
@@ -1172,7 +1201,7 @@ Instantiate and pass a callback
                 maximoValor = mCursorStock.getInt(mCursorStock.getColumnIndexOrThrow(dbHelper_Stock_Agente.ST_disponible));
             }
 
-            savedText.setFilters(new InputFilter[]{new InputFilterMinMax(1,maximoValor)});
+            savedText.setFilters(new InputFilter[]{new InputFilterMinMax(1, maximoValor)});
 
 
 
@@ -1212,7 +1241,7 @@ Instantiate and pass a callback
                     String devuelto = null;
 
                     //En una tabla "Temp_Venta" Nos sirve para agregar datos del historial de ventas anteriores y sugerir al usuario, estos son datos temporales
-                    long id = dbHelper_temp_venta.createTempVentaDetalle(1,id_producto,nombre,cantidad,round(total_importe,2), round(precio_unitario[0],2), promedio_anterior, devuelto, procedencia, valor_unidad, ""+id_producto);
+                    long id = dbHelper_temp_venta.createTempVentaDetalle(1, id_producto, nombre, cantidad, round(total_importe, 2), round(precio_unitario[0], 2), promedio_anterior, devuelto, procedencia, valor_unidad, "" + id_producto);
                     //softKeyboard.closeSoftKeyboard();
 
 
@@ -1226,16 +1255,25 @@ Instantiate and pass a callback
                 @Override
                 public void onFocusChange(View v, boolean hasFocus) {
                     if (hasFocus) {
-                        Log.d("FOCUS","ALERT YES");
+                        Log.d("FOCUS", "ALERT YES");
                         alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-                    }else{
-                        Log.d("FOCUS","ALERT FALSE");
+                    } else {
+                        Log.d("FOCUS", "ALERT FALSE");
                         alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
                     }
                 }
             });
             return alertDialog;
     }
+
+    private void setVentaRRPP(){
+
+        int registrosUpdated = dbHelper_temp_venta.updateTempVentaRRPP();
+        //Toast.makeText(VMovil_Venta_Cabecera.this, registrosUpdated + " productos RR.PP", Toast.LENGTH_SHORT).show();
+        mostrarProductosParaVender();
+
+    }
+
     private Dialog dialogSolicitarCredito() {
 
         final View layout = View.inflate(this, R.layout.dialog_solicitar_credito, null);
@@ -1344,10 +1382,13 @@ Instantiate and pass a callback
         String devueltoText = mCursorTempVenta.getString(mCursorTempVenta.getColumnIndex(DBAdapter_Temp_Venta.temp_devuelto));
         String promedioAnteriorText = mCursorTempVenta.getString(mCursorTempVenta.getColumnIndex(DBAdapter_Temp_Venta.temp_prom_anterior));
 
-        final Double precio_unitario = mCursorTempVenta.getDouble(mCursorTempVenta.getColumnIndex(DBAdapter_Temp_Venta.temp_precio_unit));
+        Double precio_unitario = mCursorTempVenta.getDouble(mCursorTempVenta.getColumnIndex(DBAdapter_Temp_Venta.temp_precio_unit));
+        if (ventaRRPP==1){
+            precio_unitario = 0.0;
+        }
 
         nombreProducto.setText(nombre);
-        DecimalFormat df = new DecimalFormat("#.0");
+        DecimalFormat df = new DecimalFormat("0.0");
         precio.setText("Precio : S/. "+df.format(precio_unitario));
         if (devueltoText==null) {
             devuelto.setText("Devueltos : 0");
@@ -1363,6 +1404,7 @@ Instantiate and pass a callback
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Stock ("+maximoValor+")");
+        final Double finalPrecio_unitario = precio_unitario;
         builder.setPositiveButton("OK", new Dialog.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 String texto = null;
@@ -1374,7 +1416,7 @@ Instantiate and pass a callback
 
                 int cantidad = Integer.parseInt(texto);
 
-                dbHelper_temp_venta.updateTempVentaDetalleCantidad(id_temp_venta_detalle, cantidad, cantidad * precio_unitario);
+                dbHelper_temp_venta.updateTempVentaDetalleCantidad(id_temp_venta_detalle, cantidad, cantidad * finalPrecio_unitario);
                 /*Intent intent = new Intent(mContext, VMovil_Venta_Cabecera.class);
                 finish();
                 startActivity(intent);*/
@@ -1512,6 +1554,8 @@ Instantiate and pass a callback
 
         //Obtener los datos de las ventas
 
+
+
         String formaPago = spinnerFormaPago.getSelectedItem().toString();
         String tipoDocumento = spinnerTipoDocumento.getSelectedItem().toString();
 
@@ -1519,6 +1563,9 @@ Instantiate and pass a callback
         FormaPago formaPago1 = FormaPago.valueOf(formaPago);
 
         int tipoVenta = 1;
+        if (ventaRRPP==1){
+            tipoVenta = 2;
+        }
         int numero_documento = 1;
         int estado_conexion = 0;
 
@@ -1528,7 +1575,7 @@ Instantiate and pass a callback
         Double igv  = 0.0;
         Double base_imponible = 0.0;
         String erp_stringTipoDocumento  = null;
-        String serie = null;
+        String serie = "XR";
         String codigo_erp = null;
         numeroDocumentoImpresion =null;
 
@@ -1573,6 +1620,9 @@ Instantiate and pass a callback
             case Credito:
                 i_formaPago = 2;
 
+
+
+
                 //((MyApplication)this.getApplication()).setCuotasEstablecidas(false)
                 session.deleteVariable(5);
                 session.createTempSession(5,0);
@@ -1581,15 +1631,16 @@ Instantiate and pass a callback
         }
 
 
-        String datosConcatenados = "idEestableciminto : " + idEstablecimiento + "\n" +
+     /*   String datosConcatenados = "idEestableciminto : " + idEstablecimiento + "\n" +
                 "idAgente : " + id_agente_venta + "\n" +
                 "Forma de pago : " + formaPago + "\n" +
-                "Tipo Documento : " + tipoDocumento+ "\n" + "---------------------------";
+                "Tipo Documento : " + tipoDocumento+ "\n" + "---------------------------";*/
 
         Cursor cursorAgente = dbHelperAgente.fetchAgentesByIds(id_agente_venta, idLiquidacion);
         cursorAgente.moveToFirst();
         String nombreAgenteVenta = cursorAgente.getString(cursorAgente.getColumnIndexOrThrow(dbHelperAgente.AG_nombre_agente));
 
+/*
         if (anchoImpresora==2){
             textoImpresion+="    UNIVERSIDAD PERUANA UNION   \n"
                     +"     Cent.aplc. Prod. Union     \n"
@@ -1610,8 +1661,9 @@ Instantiate and pass a callback
                     +"                 RUC: 20138122256               \n\n";
             //textoImpresion+= "------------------------------------------------------".substring(0,48);
         }
+*/
 
-
+/*
 
         textoImpresion+= "NUMERO  : "+numeroDocumentoImpresion+"\n";
 //        textoImpresion+= "Código ERP:  "+codigo_erp+"\n";
@@ -1651,109 +1703,121 @@ Instantiate and pass a callback
         textoVentaImpresion+= "Fecha: "+ getDatePhone()+"\n";
         textoVentaImpresion+= "Vendedor: "+ nombreAgenteVenta+"\n";
         textoVentaImpresion+= "Cliente: "+ nombreCliente+"\n";
-        textoVentaImpresion+= "DNI/RUC: "+ documentoCliente+"\n";
+        textoVentaImpresion+= "DNI/RUC: "+ documentoCliente+"\n";*/
 
         //textoVentaImpresion+= "Direccion: Alameda Nro 2039 - Chosica\n";
-NUMERO_DOCUMENTO = numero_documento+"";
-        SERIE_DOCUMENTO =serie;
-        id = dbHelper_Comprob_Venta.createComprobVenta(idEstablecimiento,i_tipoDocumento,i_formaPago,tipoVenta,codigo_erp,serie,numero_documento,base_imponible,igv,monto_total,getDatePhone(),null,estado_comprobante, estado_conexion,id_agente_venta, Constants._CREADO, idLiquidacion);
 
-        Log.d("Export id CV IGUALES",""+id);
+            NUMERO_DOCUMENTO = numero_documento + "";
+            SERIE_DOCUMENTO = serie;
 
+            Log.d(TAG, "SERIE : " + serie);
+            id = dbHelper_Comprob_Venta.createComprobVenta(idEstablecimiento, i_tipoDocumento, i_formaPago, tipoVenta, codigo_erp, serie, numero_documento, base_imponible, igv, monto_total, getDatePhone(), null, estado_comprobante, estado_conexion, id_agente_venta, Constants._CREADO, idLiquidacion);
 
-        id_comprobante = (int) id;
+        Log.d(TAG, "_ID COMPROBANTE DE VENTA : "+id);
+            Log.d("Export id CV IGUALES", "" + id);
 
-
-        Cursor cursorTemp = simpleCursorAdapter.getCursor();
-
-        if (cursorTemp.getCount()<=0){
-            Log.d("CT VC",cursorTemp.getCount()+"");
-            Toast toast =  Toast.makeText(mainActivity,"AGREGAR PRODUCTOS A LA VENTA",Toast.LENGTH_LONG);
-            toast.getView().setBackgroundColor(mainActivity.getResources().getColor(R.color.verde));
-            TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
-            v.setTextColor(mainActivity.getResources().getColor(R.color.Blanco));
-            toast.show();
-            return;
-        }
-
-
-        long comprobVentaDetalle = 0;
+        Log.d(TAG, "ID COMPROBANTE VENTA : " + id);
 
 
 
-        for (cursorTemp.moveToFirst(); !cursorTemp.isAfterLast();cursorTemp.moveToNext()){
+            id_comprobante = (int) id;
 
-            int _id = cursorTemp.getInt(cursorTemp.getColumnIndex(DBAdapter_Temp_Venta.temp_venta_detalle));
-            int id_producto = cursorTemp.getInt(cursorTemp.getColumnIndex(DBAdapter_Temp_Venta.temp_id_producto));
-            String nombre_producto = cursorTemp.getString(cursorTemp.getColumnIndex(DBAdapter_Temp_Venta.temp_nom_producto));
-            int cantidad = cursorTemp.getInt(cursorTemp.getColumnIndex(DBAdapter_Temp_Venta.temp_cantidad));
-            Double precio_unitario = cursorTemp.getDouble(cursorTemp.getColumnIndex(DBAdapter_Temp_Venta.temp_precio_unit));
-            Double importe = cursorTemp.getDouble(cursorTemp.getColumnIndex(DBAdapter_Temp_Venta.temp_importe));
+        Log.d(TAG, "_ID COMPROBANTE DE VENTA : "+id_comprobante);
 
-            String promedio_anterior = cursorTemp.getString(cursorTemp.getColumnIndex(DBAdapter_Temp_Venta.temp_prom_anterior));
-            String devuelto = cursorTemp.getString(cursorTemp.getColumnIndex(DBAdapter_Temp_Venta.temp_devuelto));
-            int valorUnidad = cursorTemp.getInt(cursorTemp.getColumnIndexOrThrow(DBAdapter_Temp_Venta.temp_valor_unidad));
 
-            monto_total += importe;
+            Cursor cursorTemp = simpleCursorAdapter.getCursor();
 
-            comprobVentaDetalle = dbHelper_Comprob_Venta_Detalle.createComprobVentaDetalle(id_comprobante, id_producto, nombre_producto, cantidad, importe,0, precio_unitario, promedio_anterior, devuelto, valorUnidad);
-            dbHelper_Stock_Agente.updateStockAgenteCantidad(id_producto,-(cantidad*valorUnidad), idLiquidacion);
+            if (cursorTemp.getCount() <= 0) {
+                Log.d("CT VC", cursorTemp.getCount() + "");
+                Toast toast = Toast.makeText(mainActivity, "AGREGAR PRODUCTOS A LA VENTA", Toast.LENGTH_LONG);
+                toast.getView().setBackgroundColor(mainActivity.getResources().getColor(R.color.verde));
+                TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
+                v.setTextColor(mainActivity.getResources().getColor(R.color.Blanco));
+                toast.show();
+                return;
+            }
 
-            //3pg, STAR MICRONICS
+
+            long comprobVentaDetalle = 0;
+
+
+            for (cursorTemp.moveToFirst(); !cursorTemp.isAfterLast(); cursorTemp.moveToNext()) {
+
+                int _id = cursorTemp.getInt(cursorTemp.getColumnIndex(DBAdapter_Temp_Venta.temp_venta_detalle));
+                int id_producto = cursorTemp.getInt(cursorTemp.getColumnIndex(DBAdapter_Temp_Venta.temp_id_producto));
+                String nombre_producto = cursorTemp.getString(cursorTemp.getColumnIndex(DBAdapter_Temp_Venta.temp_nom_producto));
+                int cantidad = cursorTemp.getInt(cursorTemp.getColumnIndex(DBAdapter_Temp_Venta.temp_cantidad));
+                Double precio_unitario = cursorTemp.getDouble(cursorTemp.getColumnIndex(DBAdapter_Temp_Venta.temp_precio_unit));
+                Double importe = cursorTemp.getDouble(cursorTemp.getColumnIndex(DBAdapter_Temp_Venta.temp_importe));
+
+                String promedio_anterior = cursorTemp.getString(cursorTemp.getColumnIndex(DBAdapter_Temp_Venta.temp_prom_anterior));
+                String devuelto = cursorTemp.getString(cursorTemp.getColumnIndex(DBAdapter_Temp_Venta.temp_devuelto));
+                int valorUnidad = cursorTemp.getInt(cursorTemp.getColumnIndexOrThrow(DBAdapter_Temp_Venta.temp_valor_unidad));
+
+                monto_total += importe;
+
+                comprobVentaDetalle = dbHelper_Comprob_Venta_Detalle.createComprobVentaDetalle(id_comprobante, id_producto, nombre_producto, cantidad, importe, 0, precio_unitario, promedio_anterior, devuelto, valorUnidad);
+                Log.d(TAG, "ID COMPROBANTE VENTA DETALLE: " + comprobVentaDetalle);
+                int updateStockAgenteCantidad = dbHelper_Stock_Agente.updateStockAgenteCantidad(id_producto, -(cantidad * valorUnidad), idLiquidacion);
+                Log.d(TAG, "UPDATE STOCK AGENTE CANTIDAD ROWS AFECTED: " + updateStockAgenteCantidad);
+
+                //3pg, STAR MICRONICS
             /*if(nombre_producto.length()>=25){
                 nombre_producto=nombre_producto.substring(0,22);
                 nombre_producto+="...";
             }*/
-            //sewoo
+                //sewoo
 
-            if (anchoImpresora==2){
-                if(nombre_producto.length()>=20){
-                    nombre_producto=nombre_producto.substring(0,18);
-                    nombre_producto+="..";
+                if (anchoImpresora == 2) {
+                    if (nombre_producto.length() >= 20) {
+                        nombre_producto = nombre_producto.substring(0, 18);
+                        nombre_producto += "..";
+                    }
+                } else if (anchoImpresora == 3) {
+                    if (nombre_producto.length() >= 30) {
+                        nombre_producto = nombre_producto.substring(0, 28);
+                        nombre_producto += "..";
+                    }
                 }
-            }else if (anchoImpresora==3){
-                if(nombre_producto.length()>=30){
-                    nombre_producto=nombre_producto.substring(0,28);
-                    nombre_producto+="..";
+
+
+                DecimalFormat df = new DecimalFormat("#.00");
+                //star micronics, 3pg
+                //textoImpresion+=String.format("%-6s",cantidad) + String.format("%-34s",nombre_producto) +String.format("%-5s",df.format(importe)) + "\n";
+
+                if (anchoImpresora == 2) {
+                    textoImpresion += String.format("%-4s", cantidad) + String.format("%-21s", nombre_producto) + String.format("%1$7s", df.format(importe)) + "\n";
+                } else if (anchoImpresora == 3) {
+                    textoImpresion += String.format("%-4s", cantidad) + String.format("%-31s", nombre_producto) + String.format("%1$5s", df.format(precio_unitario)) + String.format("%1$8s", df.format(importe)) + "\n";
                 }
+
+                textoImpresionContenidoLeft += String.format("%-6s", cantidad) + String.format("%-28s", nombre_producto) + "\n";
+                textoImpresionContenidoRight += String.format("%-5s", df.format(importe)) + "\n";
+
+           /* datosConcatenados+="Producto  "+ nombre_producto + "Vendido satisfactoriamente con id : "+ comprobVentaDetalle;*/
             }
 
+            base_imponible = monto_total / 1.18;
+            igv = base_imponible * 0.18;
+            int rowsUpdatemonto = dbHelper_Comprob_Venta.updateComprobanteMontos(id, monto_total, igv, base_imponible);
 
-            DecimalFormat df = new DecimalFormat("#.00");
-            //star micronics, 3pg
-            //textoImpresion+=String.format("%-6s",cantidad) + String.format("%-34s",nombre_producto) +String.format("%-5s",df.format(importe)) + "\n";
-
-            if (anchoImpresora==2){
-                textoImpresion+=String.format("%-4s",cantidad) + String.format("%-21s",nombre_producto) +String.format("%1$7s"  ,df.format(importe)) + "\n";
-            }else if (anchoImpresora==3){
-                textoImpresion+=String.format("%-4s",cantidad) + String.format("%-31s",nombre_producto)+String.format("%1$5s"  ,df.format(precio_unitario)) +String.format("%1$8s"  ,df.format(importe)) + "\n";
-            }
-
-            textoImpresionContenidoLeft +=String.format("%-6s",cantidad) + String.format("%-28s",nombre_producto)+ "\n";
-            textoImpresionContenidoRight+= String.format("%-5s",df.format(importe)) + "\n";
-
-            datosConcatenados+="Producto  "+ nombre_producto + "Vendido satisfactoriamente con id : "+ comprobVentaDetalle;
-        }
-
-        base_imponible = monto_total /1.18;
-        igv = base_imponible*0.18;
-        dbHelper_Comprob_Venta.updateComprobanteMontos(id,monto_total,igv, base_imponible);
-        datosConcatenados+="total de gasto : " + monto_total;
+        Log.d(TAG, "UPDATE COMPROBANTE VENTA, LOS MONTOS TOTALES NRO DE COLMNAS AFECTADAS : "+rowsUpdatemonto);
+/*        datosConcatenados+="total de gasto : " + monto_total;
         datosConcatenados+="base impornible: " + base_imponible;
-        datosConcatenados+="igv : " + igv;
+        datosConcatenados+="igv : " + igv;*/
 
 
-        DecimalFormatSymbols simbolos = DecimalFormatSymbols.getInstance(Locale.getDefault());
-        simbolos.setDecimalSeparator('.');
-        DecimalFormat df = new DecimalFormat("#.00", simbolos);
+            DecimalFormatSymbols simbolos = DecimalFormatSymbols.getInstance(Locale.getDefault());
+            simbolos.setDecimalSeparator('.');
+            DecimalFormat df = new DecimalFormat("0.00", simbolos);
 
-        //3PG, STAR MICRONICS
+            //3PG, STAR MICRONICS
         /*textoImpresion += String.format("%-37s","SUB TOTAL:")+ "S/ "+ df.format(base_imponible)+"\n";
         textoImpresion += String.format("%-37s","IGV:")+  "S/ "+ df.format(igv)+"\n";
         textoImpresion += String.format("%-37s","TOTAL:")+  "S/ "+ df.format(monto_total)+"\n";
 */
 
-        if (anchoImpresora==2){
+/*        if (anchoImpresora==2){
             textoImpresion += "\n"+String.format("%-18s","OP. GRAVADA")+String.format("%-7s","S/.")+ String.format("%1$7s",df.format(base_imponible))+"\n";
             textoImpresion += String.format("%-18s","I.G.V.")+String.format("%-7s","S/.")+  String.format("%1$7s",df.format(igv))+"\n";
             textoImpresion += String.format("%-18s","PRECIO VENTA")+String.format("%-7s","S/.")+  String.format("%1$7s",df.format(monto_total))+"\n";
@@ -1766,8 +1830,8 @@ NUMERO_DOCUMENTO = numero_documento+"";
             textoImpresion += String.format("%-18s","PRECIO VENTA")+String.format("%-21s","S/.")+  String.format("%1$9s",df.format(monto_total))+"\n\n";
             textoImpresion+= "------------------------------------------------------".substring(0,48)+"\n";
 
-/*            textoImpresion+= "Son "+NumberToLetterConverter.convertNumberToLetter(df.format(monto_total)).toLowerCase()+"\n";
-            textoImpresion+= "------------------------------------------------------".substring(0,48)+"\n";*/
+*//*            textoImpresion+= "Son "+NumberToLetterConverter.convertNumberToLetter(df.format(monto_total)).toLowerCase()+"\n";
+            textoImpresion+= "------------------------------------------------------".substring(0,48)+"\n";*//*
             textoImpresion+= "VENDEDOR : "+ nombreAgenteVenta+"\n";
 
         }
@@ -1780,34 +1844,61 @@ NUMERO_DOCUMENTO = numero_documento+"";
         textoImpresionContenidoRight+= "S/" +
                 ""+ df.format(base_imponible)+"\n";
             textoImpresionContenidoRight+= "S/"+ df.format(igv)+"\n";
-        textoImpresionContenidoRight+= "S/"+ df.format(monto_total)+"\n";
+        textoImpresionContenidoRight+= "S/"+ df.format(monto_total)+"\n";*/
 
-        dbHelper_Evento_Establecimiento.updateEstadoEstablecs(""+idEstablecimiento,2, getDatePhone());
+            dbHelper_Evento_Establecimiento.updateEstadoEstablecs("" + idEstablecimiento, 2, getDatePhone());
 
-        Log.d("FORMA DE PAGO",""+i_formaPago);
-        if (i_formaPago==2){
-            for (cursorTempComprobCobros.moveToFirst(); !cursorTempComprobCobros.isAfterLast();cursorTempComprobCobros.moveToNext()){
-                String fecha_programada = cursorTempComprobCobros.getString(cursorTempComprobCobros.getColumnIndex(DbAdapter_Temp_Comprob_Cobro.temp_fecha_programada));
-                Double monto_a_pagar = cursorTempComprobCobros.getDouble(cursorTempComprobCobros.getColumnIndex(DbAdapter_Temp_Comprob_Cobro.temp_monto_a_pagar));
-                String idComprobanteCobro = "M:"+ dbHelper_Comprob_Cobros.getIdComrobanteCobro(idEstablecimiento+"");
-                String NUMERO_COMPROBANTE = String.format("%08d",  Integer.parseInt(NUMERO_DOCUMENTO));
-                Log.d("RECORRE EL CURSOR TEMP COMPROB COBROS", "YES"+"--"+NUMERO_COMPROBANTE); //...
-                //Crear una consulta para añadir un id al comprobante cobro.
-                long registroInsertado = dbHelper_Comprob_Cobros.createComprobCobros(idEstablecimiento,Integer.parseInt(id+""),id_plan_pago,id_plan_pago_detalle,tipoDocumento.toUpperCase(),SERIE_DOCUMENTO+"-"+NUMERO_COMPROBANTE,fecha_programada,monto_a_pagar, fecha_cobro, hora_cobro,monto_cobrado,estado_cobro,id_agente_venta,id_forma_cobro, lugar_registro, idLiquidacion,idComprobanteCobro,0);
-                    Log.d("CC INSERTADO SATISFACTORIAMENTE ", "ID : "+idComprobanteCobro+"....."+ registroInsertado+"-"+Integer.parseInt(id+""));
+            Log.d("FORMA DE PAGO", "" + i_formaPago);
+            if (i_formaPago == 2) {
+                for (cursorTempComprobCobros.moveToFirst(); !cursorTempComprobCobros.isAfterLast(); cursorTempComprobCobros.moveToNext()) {
+                    String fecha_programada = cursorTempComprobCobros.getString(cursorTempComprobCobros.getColumnIndex(DbAdapter_Temp_Comprob_Cobro.temp_fecha_programada));
+                    Double monto_a_pagar = cursorTempComprobCobros.getDouble(cursorTempComprobCobros.getColumnIndex(DbAdapter_Temp_Comprob_Cobro.temp_monto_a_pagar));
+                    String idComprobanteCobro = "M:" + dbHelper_Comprob_Cobros.getIdComrobanteCobro(idEstablecimiento + "");
+                    String NUMERO_COMPROBANTE = String.format("%08d", Integer.parseInt(NUMERO_DOCUMENTO));
+                    Log.d("RECORRE EL CURSOR TEMP COMPROB COBROS", "YES" + "--" + NUMERO_COMPROBANTE); //...
+                    //Crear una consulta para añadir un id al comprobante cobro.
+                    long registroInsertado = dbHelper_Comprob_Cobros.createComprobCobros(idEstablecimiento, Integer.parseInt(id + ""), id_plan_pago, id_plan_pago_detalle, tipoDocumento.toUpperCase(), SERIE_DOCUMENTO + "-" + NUMERO_COMPROBANTE, fecha_programada, monto_a_pagar, fecha_cobro, hora_cobro, monto_cobrado, estado_cobro, id_agente_venta, id_forma_cobro, lugar_registro, idLiquidacion, idComprobanteCobro, 0);
+                    Log.d(TAG, "COMPROBANTE COBRO _ID : , "+registroInsertado);
+                    Log.d("CC INSERTADO SATISFACTORIAMENTE ", "ID : " + idComprobanteCobro + "....." + registroInsertado + "-" + Integer.parseInt(id + ""));
+                }
+
+                //DESCONTAR EL CRÉDITO DEL ESTABLECIMIENTO, CON EL MONTO TOTAL VENDIDO AL CRÉDITO
+                Cursor cursorCredito = dbHelper_Evento_Establecimiento.fetchEstablecsById("" + idEstablecimiento);
+
+                cursorEstablecimiento.moveToFirst();
+                Double monto_credito = cursorEstablecimiento.getDouble(cursorEstablecimiento.getColumnIndex(DbAdaptert_Evento_Establec.EE_monto_credito));
+                int dias_credito = cursorEstablecimiento.getInt(cursorEstablecimiento.getColumnIndex(DbAdaptert_Evento_Establec.EE_dias_credito));
+
+                Double descontado = monto_credito - monto_total;
+
+                int rowsUpdated = dbHelper_Evento_Establecimiento.updateEstablecsCredito(idEstablecimiento, descontado, dias_credito);
+                Log.d(TAG, "UPDATE CRÉDITO ESTABLECIMIENTO: ROWS 1 == " + rowsUpdated);
             }
-        }
 
 
-        dbHelper_temp_venta.deleteAllTempVentaDetalle();
-        dbHelper_Temp_Comprob_Cobros.deleteAllComprobCobros();
+            dbHelper_temp_venta.deleteAllTempVentaDetalle();
+            dbHelper_Temp_Comprob_Cobros.deleteAllComprobCobros();
 
-        if (conectadoWifi()||conectadoRedMovil()) {
-            exportMain.execute();
-        }
 
-       /* //new GenerateDigitalSignature().execute();
-        try {
+        buttonVender.setEnabled(false);
+        buttonVender.setActivated(false);
+        buttonVender.setClickable(false);
+
+           if (conectadoWifi() || conectadoRedMovil()) {
+                exportMain.execute();
+               /*Intent intent = new Intent(this, ExportService.class);
+               intent.setAction(Constants.ACTION_EXPORT_SERVICE);
+               startService(intent);*/
+            }
+
+
+
+
+
+
+            new GenerateDigitalSignature().execute();
+
+        /*try {
              String stringPath = Signature.writeDocument(getDocumentFromFilePath("20138122256-01-F100-00000040.XML"), createFile("invoice_ubl.xml"));
                 Toast.makeText(getApplicationContext(), stringPath, Toast.LENGTH_SHORT).show();
         } catch (TransformerException e) {
@@ -1823,11 +1914,10 @@ NUMERO_DOCUMENTO = numero_documento+"";
         }
 */
 
-        Intent intent= new Intent(this, VMovil_BluetoothImprimir.class);
+/*        Intent intent= new Intent(this, VMovil_BluetoothImprimir.class);
         intent.putExtra("idComprobante",id_comprobante);
         finish();
-        startActivity(intent);
-
+        startActivity(intent);*/
     }
 
     public enum TipoDocumento{
@@ -1880,6 +1970,11 @@ NUMERO_DOCUMENTO = numero_documento+"";
             Log.d("CANTIDAD HCA - VC", ""+cantidad);
             Double precio_unitario = cursor.getDouble(indice_precio_unitario);
             Double importe = cursor.getDouble(indice_importe);
+
+            if (ventaRRPP ==1){
+                precio_unitario =0.0;
+                importe = 0.0;
+            }
 
             String promedio_anterior = cursor.getString(indice_promedio_anterior);
             String devuelto = cursor.getString(indice_devuelto);
@@ -1959,6 +2054,7 @@ NUMERO_DOCUMENTO = numero_documento+"";
                 to,
                 0);
 
+
         if (listView.getHeaderViewsCount()<2){
             header = getLayoutInflater().inflate(R.layout.infor_venta_cabecera,null);
             headerNombreEstablecimiento = getLayoutInflater().inflate(R.layout.header_venta,null);
@@ -2009,7 +2105,7 @@ NUMERO_DOCUMENTO = numero_documento+"";
                 "IGV :");
 
 
-        DecimalFormat df = new DecimalFormat("#.00");
+        DecimalFormat df = new DecimalFormat("0.00");
         textViewFooterTotal.setText(" S/. "+df.format(totalFooter)+"\n" +
                 "S/. "+df.format(base_imponibleFooter)+ "\n" +
                 "S/. "+df.format(igvFooter));
@@ -2062,7 +2158,7 @@ NUMERO_DOCUMENTO = numero_documento+"";
     private Dialog myTextDialog() {
         final View layout = View.inflate(this, R.layout.dialog_cantidad_productos, null);
 
-        DecimalFormat df = new DecimalFormat("#.00");
+        DecimalFormat df = new DecimalFormat("0.00");
         final EditText savedText = ((EditText) layout.findViewById(R.id.VCAP_editTextCantidad));
         final TextView nombreProducto = ((TextView) layout.findViewById(R.id.VCPA_textView2NombreProducto));
         final TextView precio = ((TextView) layout.findViewById(R.id.VCPA_textViewPrecio));
@@ -2088,7 +2184,12 @@ NUMERO_DOCUMENTO = numero_documento+"";
 
         if (mCursorPrecioUnitarioGeneral.getCount()>0) {
             double precio_unitario = mCursorPrecioUnitarioGeneral.getDouble(mCursorPrecioUnitarioGeneral.getColumnIndexOrThrow(DbAdapter_Precio.PR_precio_unit));
+
+            if (ventaRRPP==1){
+                precio_unitario =0.0;
+            }
             precio.setText("Precio : S/. "+ df.format(precio_unitario));
+
         }else{
             precio.setText("Precio : S/. No encontrado");
         }
@@ -2129,11 +2230,15 @@ NUMERO_DOCUMENTO = numero_documento+"";
                     }
                 }
 
+                if (ventaRRPP==1){
+                    precio_unitario =0.0;
+                }
+
                 double total_importe = precio_unitario*cantidad;
                 String promedio_anterior = null;
                 String devuelto = null;
 
-                DecimalFormat df = new DecimalFormat("#.00");
+                DecimalFormat df = new DecimalFormat("0.00");
                 //En una tabla "Temp_Venta" Nos sirve para agregar datos del historial de ventas anteriores y sugerir al usuario, estos son datos temporales
 
                 long id = dbHelper_temp_venta.createTempVentaDetalle(1,id_producto,nombre,cantidad,round(total_importe,2), round(precio_unitario,2), promedio_anterior, devuelto, procedencia, valor_unidad,""+codigo_producto);
@@ -2178,11 +2283,17 @@ NUMERO_DOCUMENTO = numero_documento+"";
         if (mCursorPrecioUnitarioGeneral.getCount()>0) {
             precio_unitario[0] = mCursorPrecioUnitarioGeneral.getDouble(mCursorPrecioUnitarioGeneral.getColumnIndexOrThrow(DbAdapter_Precio.PR_precio_unit));
             valor_unidad = mCursorPrecioUnitarioGeneral.getInt(mCursorPrecioUnitarioGeneral.getColumnIndexOrThrow(DbAdapter_Precio.PR_valor_unidad));
+            if (ventaRRPP==1){
+                precio_unitario[0] = 0.0;
+            }
             precio.setText("Precio : S/. "+ df.format(precio_unitario[0]));
             valorUnidad.setText("Unidad : "+valor_unidad);
+
         }else{
             precio.setText("Precio : S/. No encontrado");
         }
+
+
 
 
 
@@ -2199,7 +2310,11 @@ NUMERO_DOCUMENTO = numero_documento+"";
                 }
                 precio_unitario[0] = mCursorPrecioUnitarioGeneral.getDouble(mCursorPrecioUnitarioGeneral.getColumnIndexOrThrow(DbAdapter_Precio.PR_precio_unit));
                 valor_unidad = mCursorPrecioUnitarioGeneral.getInt(mCursorPrecioUnitarioGeneral.getColumnIndexOrThrow(DbAdapter_Precio.PR_valor_unidad));
-                DecimalFormat df = new DecimalFormat("#.00");
+                if (ventaRRPP==1){
+                    precio_unitario[0] = 0.0;
+                }
+
+                DecimalFormat df = new DecimalFormat("0.00");
                 precio.setText("Precio : S/. "+ df.format(precio_unitario[0]));
                 valorUnidad.setText("Unidad : "+valor_unidad);
 
@@ -2248,6 +2363,9 @@ NUMERO_DOCUMENTO = numero_documento+"";
                     }else{
                         Toast.makeText(getApplicationContext(), "No se encontró un precio para esta cantidad de productos, agregar el precio a la base de datos", Toast.LENGTH_LONG).show();;
                     }*/
+                }
+                if (ventaRRPP==1){
+                    precio_unitario[0] = 0.0;
                 }
 
                 double total_importe = precio_unitario[0]*cantidad;
@@ -2515,14 +2633,51 @@ NUMERO_DOCUMENTO = numero_documento+"";
         @Override
         protected String doInBackground(String... strings) {
 
-            String SHA1="";
-            Log.d("GENERATE DS", ""+0);
+            DecimalFormat df = new DecimalFormat("0.00");
+
+            //POR DEFECTO FACTURA
+            String tipo_doccumento = "01";
+
+            if (i_tipoDocumento==1)
+                tipo_doccumento = "01";
+            else if(i_tipoDocumento == 2)
+                tipo_doccumento = "03";
+            else
+                tipo_doccumento = "03";
+
+            map.put("tipo_documento", tipo_doccumento);
+            map.put("id_documento", numeroDocumentoImpresion);
+            map.put("user_ruc_dni", documentoCliente);
+            map.put("user_name", nombreCliente);
+            map.put("total_operaciones_gravadas", df.format(base_imponibleFooter));
+            map.put("total_importe_venta", df.format(totalFooter));
+            map.put("total__igv", df.format(igvFooter));
+
+            Iterator it = map.keySet().iterator();
+            while(it.hasNext()){
+                String key = (String) it.next();
+                Log.d("GENERATE DS","Clave: " + key + " -> Valor: " + map.get(key));
+            }
+
+            File filesinFirmar = null;
+            try {
+                keystore = getFilefromAssets(BKS);
+                filesinFirmar = SimpleXMLAndroid.generarXMLown(File.createTempFile(contexto.getString(R.string.RUC) + "-" + tipo_doccumento + "-" + numeroDocumentoImpresion, "XML"), map, simpleCursorAdapter.getCursor());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }finally {
+                try {
+                    textoSHA1 = Signature.add(keystore, filesinFirmar, createFile(contexto.getString(R.string.RUC)+"-"+tipo_doccumento+"-"+numeroDocumentoImpresion+".XML"));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            /*Log.d("GENERATE DS", ""+0);
             final DigitalSignature handlerXML = new DigitalSignature();
-            DecimalFormat df = new DecimalFormat("#.00");
             String pathDocument = handlerXML.escribirXML(i_tipoDocumento, contexto, numeroDocumentoImpresion,documentoCliente, nombreCliente,df.format(base_imponibleFooter), df.format(totalFooter), df.format(igvFooter), simpleCursorAdapter.getCursor());
 
-            Log.d("GpathDocument", ""+pathDocument);
-
+            Log.d("GpathDocument", ""+pathDocument);*/
             //byte[] byteReads = null;
             /*String textoRead="";
             try {
@@ -2538,20 +2693,17 @@ NUMERO_DOCUMENTO = numero_documento+"";
                 e.printStackTrace();
             }
             */
-            try {
-                keystore = getFilefromAssets(BKS);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
 
-            try {
+           /* try {
                 InputStream inputStream = new FileInputStream(pathDocument);
                 //textoSHA1 = Signature.add(keystore,inputStream,createFile(numeroDocumentoImpresion + ".xml"));
-                textoSHA1 = Signature.add(keystore,inputStream,createFile(contexto.getString(R.string.RUC)+"-"+ numeroDocumentoImpresion+".xml"));
+                //textoSHA1 = Signature.add(keystore,inputStream,createFile(contexto.getString(R.string.RUC)+"-"+ numeroDocumentoImpresion+".xml"));
                 Log.d("SHA1", SHA1);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
-            } catch (UnrecoverableEntryException e) {
+            }*/
+
+            /*catch (UnrecoverableEntryException e) {
                 e.printStackTrace();
             } catch (SAXException e) {
                 e.printStackTrace();
@@ -2575,7 +2727,7 @@ NUMERO_DOCUMENTO = numero_documento+"";
                 e.printStackTrace();
             } catch (XMLSignatureException e) {
                 e.printStackTrace();
-            }
+            }*/
 
 
             //Log.d("XML ESCRITO: "+pathDocument,""+textoRead);
@@ -2610,15 +2762,16 @@ NUMERO_DOCUMENTO = numero_documento+"";
             }
 
             */
-            return SHA1;
+            return textoSHA1;
         }
 
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             Log.d("GENERATE DS", "terminó correctamente");
-            dbHelper_Comprob_Venta.updateSHA1(id_comprobante,textoSHA1);
+            dbHelper_Comprob_Venta.updateSHA1(id_comprobante, textoSHA1);
 
+            Log.d(TAG, "_ID COMPROBANTE DE VENTA : "+id_comprobante);
             Intent intent= new Intent(contexto, VMovil_BluetoothImprimir.class);
             intent.putExtra("idComprobante",id_comprobante);
             //Intent intent= new Intent(contexto, Files.class);
@@ -2656,7 +2809,7 @@ NUMERO_DOCUMENTO = numero_documento+"";
             throws IOException, ParserConfigurationException, SAXException {
         //String dir = Environment.DIRECTORY_DOWNLOADS+"/FACTURACION/";
         File file = new File(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_DOWNLOADS), nameDocument);
+                Environment.DIRECTORY_PICTURES), nameDocument);
         /*
         File file = new File(dir, nameDocument);
         //return File.createTempFile(pathFile,"xml",contexto.getCacheDir());

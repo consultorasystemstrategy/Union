@@ -41,14 +41,26 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import union.union_vr1.AsyncTask.CerrarCaja;
+import union.union_vr1.AsyncTask.ExportService;
 import union.union_vr1.AsyncTask.SolicitarCredito;
 import union.union_vr1.R;
+import union.union_vr1.Sqlite.Constants;
 import union.union_vr1.Sqlite.CursorResumenComprobantes;
+import union.union_vr1.Sqlite.DBAdapter_Temp_Autorizacion_Cobro;
+import union.union_vr1.Sqlite.DBAdapter_Temp_Canjes_Devoluciones;
 import union.union_vr1.Sqlite.DbAdapter_Agente;
+import union.union_vr1.Sqlite.DbAdapter_Cobros_Manuales;
+import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
+import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta;
+import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta_Detalle;
+import union.union_vr1.Sqlite.DbAdapter_Exportacion_Comprobantes;
+import union.union_vr1.Sqlite.DbAdapter_Histo_Venta;
+import union.union_vr1.Sqlite.DbAdapter_Histo_Venta_Detalle;
 import union.union_vr1.Sqlite.DbAdapter_Informe_Gastos;
 import union.union_vr1.Sqlite.DbAdapter_Resumen_Caja;
 import union.union_vr1.Sqlite.DbAdapter_Stock_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
+import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 import union.union_vr1.Sqlite.DbGastos_Ingresos;
 import union.union_vr1.Utils.MyApplication;
 import union.union_vr1.Utils.Utils;
@@ -146,6 +158,8 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
     Double slide_aRendir = 0.0;
 
     private CerrarCaja cerrarCaja;
+
+    private static final String TAG = VMovil_Resumen_Caja.class.getSimpleName();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -242,6 +256,12 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
                 Intent intent = new Intent(mainActivity, ImprimirArqueoCaja.class);
                 startActivity(intent);
                 break;
+            case R.id.buttonExportERP:
+                Intent intentExportERP = new Intent(mainActivity, ExportService.class);
+                intentExportERP.setAction(Constants.ACTION_EXPORT_SERVICE);
+                mainActivity.startService(intentExportERP);
+                break;
+
             default:
                 //ON ITEM SELECTED DEFAULT
                 break;
@@ -501,7 +521,13 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
                             })
                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
-                                    dialogCerrarCaja().show();
+                                    int registrosEnCola = 100;
+                                    registrosEnCola  = validarExport();
+                                    Toast.makeText(VMovil_Resumen_Caja.this, registrosEnCola + " registros en cola.", Toast.LENGTH_SHORT).show();
+                                    if (registrosEnCola == 0){
+                                        dialogCerrarCaja().show();
+                                    }
+
                                 }
                             }).create().show();
 
@@ -516,6 +542,93 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
         });
         listView.addFooterView(viewCerrarCaja,null,true);
 
+    }
+
+    private int validarExport(){
+
+
+        //DEFINO LAS VARIABLES A MIS MANEJADORES DE LAS TABLAS
+         DbAdapter_Informe_Gastos dbAdapter_informe_gastos;
+         DbAdapter_Comprob_Venta dbAdapter_comprob_venta;
+         DbAdapter_Comprob_Venta_Detalle dbAdapter_comprob_venta_detalle;
+         DbAdapter_Histo_Venta dbAdapter_histo_venta;
+         DbAdapter_Comprob_Cobro dbAdapter_comprob_cobro;
+         DbAdapter_Histo_Venta_Detalle dbAdapter_histo_venta_detalle;
+         DbAdaptert_Evento_Establec dbAdaptert_evento_establec;
+         DBAdapter_Temp_Autorizacion_Cobro dbAdapter_temp_autorizacion_cobro;
+         DBAdapter_Temp_Canjes_Devoluciones dbAdapter_temp_canjes_devoluciones;
+         DbAdapter_Cobros_Manuales dbAdapter_cobros_manuales;
+         DbAdapter_Exportacion_Comprobantes dbAdapter_exportacion_comprobantes;
+
+
+
+        //INSTANCIO LAS CLASES DE MIS MANEJADORES DE DB
+
+        dbAdapter_temp_canjes_devoluciones = new DBAdapter_Temp_Canjes_Devoluciones(mainActivity);
+        dbAdapter_temp_canjes_devoluciones.open();
+        session = new DbAdapter_Temp_Session(mainActivity);
+        session.open();
+
+        dbAdapter_informe_gastos = new DbAdapter_Informe_Gastos(mainActivity);
+        dbAdapter_comprob_venta = new DbAdapter_Comprob_Venta(mainActivity);
+        dbAdapter_comprob_venta_detalle = new DbAdapter_Comprob_Venta_Detalle(mainActivity);
+        dbAdapter_comprob_cobro = new DbAdapter_Comprob_Cobro(mainActivity);
+        dbAdapter_histo_venta_detalle = new DbAdapter_Histo_Venta_Detalle(mainActivity);
+        dbAdaptert_evento_establec = new DbAdaptert_Evento_Establec(mainActivity);
+        dbAdapter_histo_venta = new DbAdapter_Histo_Venta(mainActivity);
+        dbAdapter_temp_autorizacion_cobro = new DBAdapter_Temp_Autorizacion_Cobro(mainActivity);
+        dbAdapter_cobros_manuales = new DbAdapter_Cobros_Manuales(mainActivity);
+        dbAdapter_exportacion_comprobantes = new DbAdapter_Exportacion_Comprobantes(mainActivity);
+
+        //ABRO LA CONEXIÓN A LA DB
+        dbAdapter_informe_gastos.open();
+        dbAdapter_comprob_venta.open();
+        dbAdapter_comprob_venta_detalle.open();
+        dbAdapter_histo_venta_detalle.open();
+        dbAdapter_comprob_cobro.open();
+        dbAdapter_histo_venta_detalle.open();
+        dbAdaptert_evento_establec.open();
+        dbAdapter_histo_venta.open();
+        dbAdapter_temp_autorizacion_cobro.open();
+        dbAdapter_cobros_manuales.open();
+        dbAdapter_exportacion_comprobantes.open();
+
+
+        //FILTRO LOS REGISTROS DE LAS TABLAS A EXPORTAR
+
+        int colaInformeGastos = dbAdapter_informe_gastos.filterExport().getCount();
+        int colaComprobanteVenta = dbAdapter_comprob_venta.filterExport().getCount();
+        int colaComprobanteVentaDetalle = dbAdapter_comprob_venta_detalle.filterExport().getCount();
+        int colaComprobanteCobro = dbAdapter_comprob_cobro.filterExport().getCount();
+        int colaInsertarCaja = dbAdapter_comprob_cobro.filterExportUpdatedAndEstadoCobro().getCount();
+        int colaEventoEstablecimiento = dbAdaptert_evento_establec.filterExportUpdated().getCount();
+        //histo venta
+        int colaHistoVentaCreated = dbAdapter_histo_venta.filterExport().getCount();
+        int colaHistoVentaDetalleCreated = dbAdapter_histo_venta_detalle.filterExport(idLiquidacion).getCount();
+        int colaAutorizacionCobro = dbAdapter_temp_autorizacion_cobro.filterExport().getCount();
+        int colaCobrosManuales = dbAdapter_cobros_manuales.filterExport().getCount();
+        int colaExportacionFlex = dbAdapter_exportacion_comprobantes.filterExport().getCount();
+        //KELVIN LO REVISARÁ Y ME DIRÁ
+        int colaCAnjesDevoluciones = dbAdapter_temp_canjes_devoluciones.getAllOperacionEstablecimiento().getCount();
+
+        int totalRegistrosEnCola= colaInformeGastos + colaComprobanteVenta + colaComprobanteVentaDetalle +
+                colaComprobanteCobro+ colaInsertarCaja+ colaEventoEstablecimiento+ colaHistoVentaCreated + colaHistoVentaDetalleCreated + colaAutorizacionCobro
+                + colaCobrosManuales+ colaExportacionFlex;
+        Log.d(TAG, "COLA  TOTAL: " +totalRegistrosEnCola);
+        Log.d(TAG, "COLA colaInformeGastos : "+colaInformeGastos);
+        Log.d(TAG, "COLA colaComprobanteVenta : "+colaComprobanteVenta);
+        Log.d(TAG, "COLA colaComprobanteVentaDetalle : "+colaComprobanteVentaDetalle);
+        Log.d(TAG, "COLA colaComprobanteCobro : "+colaComprobanteCobro);
+        Log.d(TAG, "COLA colaInsertarCaja : "+colaInsertarCaja);
+        Log.d(TAG, "COLA colaEventoEstablecimiento : "+colaEventoEstablecimiento);
+        Log.d(TAG, "COLA colaHistoVentaCreated : "+colaHistoVentaCreated);
+        Log.d(TAG, "COLA colaHistoVentaDetalleCreated : "+colaHistoVentaDetalleCreated);
+        Log.d(TAG, "COLA colaAutorizacionCobro : "+colaAutorizacionCobro);
+        Log.d(TAG, "COLA colaCobrosManuales : "+colaCobrosManuales);
+        Log.d(TAG, "COLA colaExportacionFlex : "+colaExportacionFlex);
+        Log.d(TAG, "COLA colaCAnjesDevoluciones : "+colaCAnjesDevoluciones);
+
+        return totalRegistrosEnCola;
     }
 
     private Dialog dialogCerrarCaja() {
@@ -537,7 +650,7 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
                 v.setTextColor(mainActivity.getResources().getColor(R.color.Blanco));
                 toast.show();
                 Log.d("CERRAR CAJA", ""+idLiquidacion+"-"+slide_ingresosTotales+"-"+slide_gastosTotales+""+slide_aRendir+"-"+kmFinall);
-                cerrarCaja.execute(""+idLiquidacion, ""+slide_ingresosTotales,""+slide_gastosTotales,""+slide_aRendir,""+kmFinall);
+                cerrarCaja.execute(""+idLiquidacion, ""+slide_ingresosTotales,""+slide_gastosTotales,""+slide_aRendir,""+kmFinall, ""+idAgente);
             }
         });
         builder.setView(layout);

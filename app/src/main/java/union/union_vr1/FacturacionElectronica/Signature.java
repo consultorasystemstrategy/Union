@@ -77,7 +77,7 @@ public class Signature {
     * FILEINPUTSTREAM SIN FIRMAR
     * PATH DE LA SALIDA
     * */
-    public static String add(InputStream BKS, InputStream DocumentoSinFirmar, File fileDocumentoFirmado) throws NoSuchAlgorithmException, InvalidAlgorithmParameterException, KeyStoreException, CertificateException, FileNotFoundException, IOException, UnrecoverableEntryException, ParserConfigurationException, SAXException, MarshalException, XMLSignatureException, TransformerConfigurationException, TransformerException  {
+    public static String add(InputStream BKS, File DocumentoSinFirmar, File fileDocumentoFirmado) throws NoSuchAlgorithmException, InvalidAlgorithmParameterException, KeyStoreException, CertificateException, FileNotFoundException, IOException, UnrecoverableEntryException, ParserConfigurationException, SAXException, MarshalException, XMLSignatureException, TransformerConfigurationException, TransformerException  {
 
         Security.addProvider(new org.jcp.xml.dsig.internal.dom.XMLDSigRI());
         Provider providerCrypto = null;
@@ -119,7 +119,7 @@ public class Signature {
 
         DOMSignContext dsc = new DOMSignContext(keyEntry.getPrivateKey(), doc.getElementsByTagNameNS("urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2","ExtensionContent").item(1));
         dsc.setDefaultNamespacePrefix("ds");
-        XMLSignature signature = fac.newXMLSignature(si, ki, null,"#IDSignUNION", null);
+        XMLSignature signature = fac.newXMLSignature(si, ki, null,"SignatureUNION", null);
 
         signature.sign(dsc);
 

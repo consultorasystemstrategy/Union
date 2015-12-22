@@ -215,14 +215,14 @@ public class DbAdaptert_Evento_Establec {
         mDb.update(SQLITE_TABLE_Evento_Establec, initialValues,
                 EE_id_establec+"=?",new String[]{id});
     }
-    public void updateEstablecsCredito(int idEstablecimiento, int montoCredito, int diasCredito){
+    public int updateEstablecsCredito(int idEstablecimiento, Double montoCredito, int diasCredito){
 
         ContentValues initialValues = new ContentValues();
         initialValues.put(EE_monto_credito, montoCredito);
         initialValues.put(EE_dias_credito, diasCredito);
         initialValues.put(Constants._SINCRONIZAR, Constants._ACTUALIZADO);
 
-        mDb.update(SQLITE_TABLE_Evento_Establec, initialValues,
+        return mDb.update(SQLITE_TABLE_Evento_Establec, initialValues,
                 EE_id_establec+"=?",new String[]{""+idEstablecimiento});
     }
 

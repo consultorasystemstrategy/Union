@@ -318,9 +318,9 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
                 finish();
                 startActivity(intent);
                 break;
-            case R.id.buttonImportCredito:
-                new ImportCredito(mainActivity).execute();
-                break;
+            /*case R.id.buttonImportCredito:
+                //new ImportCredito(mainActivity).execute();
+                break;*/
             default:
                 //ON ITEM SELECTED DEFAULT
                 break;

@@ -29,6 +29,7 @@ public class CerrarCaja extends AsyncTask<String, String, String> {
     private int successCerrarCaja = -1;
 
 
+    private static final String TAG = CerrarCaja.class.getSimpleName();
 
     public CerrarCaja(Activity mainActivity) {
         this.mainActivity = mainActivity;
@@ -51,18 +52,28 @@ public class CerrarCaja extends AsyncTask<String, String, String> {
             double gastos = Double.parseDouble(strings[2]);
             double aRendir = Double.parseDouble(strings[3]);
             int kmFinal =Integer.parseInt(strings[4]) ;
-            Log.d("DATOS CERRAR CAJA ", ingresos + " - " + gastos + " - " + aRendir + " - " + kmFinal);
+            int agente =Integer.parseInt(strings[5]) ;
 
-            jsonObject = api.UpdCerrarCaja(
-                    liquidacion,
-                    ingresos,
-                    gastos,
-                    aRendir,
-                    kmFinal
-            );
+            Log.d(TAG, "DATOS CERRAR CAJA : " + liquidacion + "-" + ingresos + " - " + gastos + " - " + aRendir + " - " + kmFinal + "-" + agente);
 
-            successCerrarCaja = jsonObject.getInt("Value");
-            Log.d("JSON CERRAR CAJA", jsonObject.toString());
+            JSONObject jsonObjecTransferencias =  api.InsExportarTransferencias(liquidacion, agente);
+            Log.d(TAG, "JSON TRANSFERENCIAS : "+jsonObjecTransferencias.toString());
+            int successTransferencias = jsonObjecTransferencias.getInt("Value");
+
+            Log.d(TAG, "TRANSFERENCIAS success : "+successTransferencias);
+            if (successTransferencias==1){
+                jsonObject = api.UpdCerrarCaja(
+                        liquidacion,
+                        ingresos,
+                        gastos,
+                        aRendir,
+                        kmFinal
+                );
+
+                successCerrarCaja = jsonObject.getInt("Value");
+                Log.d("JSON CERRAR CAJA", jsonObject.toString());
+            }
+
 
             publishProgress(""+50);
 

@@ -23,7 +23,7 @@ public class ExportCanjesDevolucionesLater extends AsyncTask<String, String, Str
     private DBAdapter_Temp_Canjes_Devoluciones dbAdapter_temp_canjes_devoluciones;
     private DbAdapter_Temp_Session dbAdapter_temp_session;
     private Context CONTEXT;
-    private Activity activity;
+    //private Activity activity;
     private String ESTABLEC;
     private int AGENTE;
 
@@ -36,9 +36,9 @@ public class ExportCanjesDevolucionesLater extends AsyncTask<String, String, Str
 
 
 
-    public ExportCanjesDevolucionesLater(Context context, Activity acti) {
+    public ExportCanjesDevolucionesLater(Context context) {
         CONTEXT = context;
-        activity = acti;
+        //activity = acti;
         dbAdapter_temp_canjes_devoluciones = new DBAdapter_Temp_Canjes_Devoluciones(context);
         dbAdapter_temp_canjes_devoluciones.open();
         dbAdapter_temp_session = new DbAdapter_Temp_Session(context);
@@ -142,7 +142,7 @@ public class ExportCanjesDevolucionesLater extends AsyncTask<String, String, Str
     @Override
     protected void onPostExecute(String s) {
         super.onPostExecute(s);
-        if ((activity.isFinishing())) {
+        /*if ((activity.isFinishing())) {
             //dismissProgressDialog();
 
             return;
@@ -152,7 +152,7 @@ public class ExportCanjesDevolucionesLater extends AsyncTask<String, String, Str
             Toast.makeText(CONTEXT, "EXPORTANDO... CD", Toast.LENGTH_LONG).show();
 
 
-        }
+        }*/
 
 
         super.onPostExecute(s);

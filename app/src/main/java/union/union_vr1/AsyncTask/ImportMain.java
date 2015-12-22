@@ -83,6 +83,8 @@ public class ImportMain extends AsyncTask<String, String, String> {
     private int idAgente;
     private int idLiquidacion;
 
+    private static String TAG = "IMPORT MAIN";
+
     public ImportMain(Activity mainActivity) {
         this.mainActivity = mainActivity;
 
@@ -174,14 +176,14 @@ public class ImportMain extends AsyncTask<String, String, String> {
             JSONObject jsonObjectRutaDistribucion = api.GetConsultarPlan_Distribucion(idAgente);
 
 
-            Log.d("JSON OBJECT STOCK AGENTE : ", jsonObjectStockAgente.toString());
-            Log.d("JSON OBJECT PRECIO : ", jsonObjectPrecio.toString());
-            Log.d("JSON OBJECT TIPO GASTO : ", jsonObjectTipoGasto.toString());
-            Log.d("JSON OBJECT EVENTO ESTABLECIMIENTO : ", jsonObjectEventoEstablecimiento.toString());
-            Log.d("JSON OBJECT COMPROBANTE COBRO : ", jsonObjectComprobanteCobro.toString());
-            Log.d("JSON OBJECT HISTORIAL VENTA DETALLE : ", jsonObjectHistorialVentaDetalle.toString());
-            Log.d("JSON OBJECT HISTORIAL VENTA ANTERIOR ", jsonObjectHistorialComprobanteAnterior.toString());
-            Log.d("JSON OBJECT RUTA DISTRIBUCION ", jsonObjectRutaDistribucion.toString());
+            Log.d(TAG,"JSON OBJECT STOCK AGENTE : "+ jsonObjectStockAgente.toString());
+            Log.d(TAG,"JSON OBJECT PRECIO : "+ jsonObjectPrecio.toString());
+            Log.d(TAG,"JSON OBJECT TIPO GASTO : "+ jsonObjectTipoGasto.toString());
+            Log.d(TAG,"JSON OBJECT EVENTO ESTABLECIMIENTO : "+ jsonObjectEventoEstablecimiento.toString());
+            Log.d(TAG,"JSON OBJECT COMPROBANTE COBRO : "+ jsonObjectComprobanteCobro.toString());
+            Log.d(TAG,"JSON OBJECT HISTORIAL VENTA DETALLE : "+ jsonObjectHistorialVentaDetalle.toString());
+            Log.d(TAG,"JSON OBJECT HISTORIAL VENTA ANTERIOR "+ jsonObjectHistorialComprobanteAnterior.toString());
+            Log.d(TAG,"JSON OBJECT RUTA DISTRIBUCION "+ jsonObjectRutaDistribucion.toString());
 
 
             ParserStockAgente parserStockAgente = new ParserStockAgente();
@@ -416,7 +418,7 @@ public class ImportMain extends AsyncTask<String, String, String> {
                         int montoCredito = jsonObj.getInt("SolDOMontoCredito");
                         int diasCredito = jsonObj.getInt("SolIVigenciaCredito");
                         Log.d("IMPORT SOLICITUDES DATOS", idEstablecimiento + " - " + montoCredito + " - " + diasCredito);
-                        dbAdaptert_evento_establec.updateEstablecsCredito(idEstablecimiento, montoCredito, diasCredito);
+                        dbAdaptert_evento_establec.updateEstablecsCredito(idEstablecimiento, (double) montoCredito, diasCredito);
                     }
                 }
 

@@ -101,7 +101,7 @@ public class DBAdapter_Temp_Venta {
         initialValues.put(temp_id_comprob,iddest);
 
         mDb.update(SQLITE_TABLE_Temp_Venta_Detalle, initialValues,
-                temp_venta_detalle+"=?",new String[]{idorig});
+                temp_venta_detalle + "=?", new String[]{idorig});
     }
 
     public void updateTempVentaDetalleCantidad(long id_temp_venta_detalle, int cantidad, double total){
@@ -112,6 +112,15 @@ public class DBAdapter_Temp_Venta {
         mDb.update(SQLITE_TABLE_Temp_Venta_Detalle, initialValues,
                 temp_venta_detalle+"=?",new String[]{""+id_temp_venta_detalle});
     }
+    public int updateTempVentaRRPP(){
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(temp_precio_unit, 0.0);
+        initialValues.put(temp_importe, 0.0);
+
+        return mDb.update(SQLITE_TABLE_Temp_Venta_Detalle, initialValues,
+                null, null);
+    }
+
 
     public boolean  deleteAllTempVentaDetalle() {
 

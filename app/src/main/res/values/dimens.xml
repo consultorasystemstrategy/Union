@@ -6,6 +6,9 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="navigation_drawer_width">240dp</dimen>
     <dimen name="space_slide">64dp</dimen>
+    <dimen name="padding_boton_icono">4dp</dimen>
+    <dimen name="altura_miniatura_hotel">64dp</dimen>
+
 
 
 </resources>

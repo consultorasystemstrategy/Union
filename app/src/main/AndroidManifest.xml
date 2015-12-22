@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="union.union_vr1"
     android:versionCode="1"
-    android:versionName="1.0" >
+    android:versionName="1.0">
 
     <supports-screens android:anyDensity="true" />
 
@@ -17,19 +17,29 @@
     <uses-permission android:name="android.permission.BATTERY_STATS" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-<!--    <android:uses-permission
+    <!-- PERMISOS PARA EL SYNCADAPTER -->
+
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+    <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
+    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
+
+    <!--
+        <android:uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="20" />
 
     <android:uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
-        android:maxSdkVersion="20" />-->
-
+        android:maxSdkVersion="20" />
+    -->
     <application
         android:name=".Utils.MyApplication"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/TemaDark" >
+        android:theme="@style/TemaDark">
         <service
             android:name=".AsyncTask.TimerGps"
             android:process=":EnviarGps" />
@@ -37,57 +47,47 @@
         <activity
             android:name=".Vistas.VMovil_Menu_Establec"
             android:label="Seleccionar Cliente"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".Vistas.VMovil_Venta_Producto"
             android:label="Ventas"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".MyAndroidAppActivityX"
             android:label="@string/app_name"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".Vistas.VMovil_Venta_Cabecera"
             android:label="Venta de Productos"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".Vistas.VMovil_Evento_Establec"
             android:label="Cliente"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".Vistas.VMovil_Venta_Credito"
             android:label="Plan de Pagos"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".Vistas.VMovil_Venta_Comprob"
             android:label="Mantenimiento"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".Vistas.VMovil_Cobro_Credito"
             android:label="Cobro de Créditos"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".Vistas.VMovil_Evento_Indice"
             android:label="Principal"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".Vistas.VMovil_Evento_Gasto"
             android:label="Gastos"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".Login"
             android:label="@string/app_name"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -97,139 +97,113 @@
         <activity
             android:name=".MySQL.DbManager_Evento_Establec_GET"
             android:label="@string/app_name"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".MySQL.DbManager_Evento_Establec_POST"
             android:label="@string/app_name"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".Vistas.VMovil_Histo_Venta"
             android:label="Historial"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".Vistas.VMovil_Canc_Histo"
             android:label="Reporte"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".Vistas.VMovil_Resumen_Caja"
             android:label="Resumen"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".Vistas.VMovil_Online_Pumovil"
             android:label="P. Unión"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".Vistas.VMovil_Cobros_Totales"
             android:label="Deudas por Cobrar"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".Vistas.VMovil_Venta_Cabecera_AgregarProductos"
             android:label="Agregar productos"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".Vistas.VMovil_Venta_Cabecera_PlanPagos"
             android:label="Plan de Pagos"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".MySQL.DbManager_Agente_GET"
             android:label="Continuar"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".Vistas.VMovil_Evento_Canjes_Dev"
             android:label="Canjes y Devoluciones"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".Vistas.VMovil_Operacion_Canjes_Devoluciones"
             android:label="Canjes y Devoluciones"
-            android:screenOrientation="portrait" >
-        </activity>
-
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".Vistas.VMovil_Facturas_Canjes_Dev"
             android:label="Canjear o Devolver"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".Vistas.mostrar_can_dev_facturas"
             android:label="Canjear o Devolver"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".VMovil_BluetoothImprimir"
             android:label="Imprimir"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".Prueba"
-            android:label="@string/title_activity_prueba" >
-        </activity>
+            android:label="@string/title_activity_prueba"></activity>
 
         <service
             android:name=".Alarm.ServiceNotifyResumen"
             android:enabled="true" />
-}
+        }
         <receiver android:name=".Alarm.ReceiverAlarmFinishedDay" />
 
         <activity
             android:name=".activity_agregar_establecimiento"
-            android:label="@string/title_activity_activity_agregar_establecimiento" >
-        </activity>
+            android:label="@string/title_activity_activity_agregar_establecimiento"></activity>
         <activity
             android:name=".Vistas.Files"
-            android:label="@string/title_activity_files" >
-        </activity>
+            android:label="@string/title_activity_files"></activity>
         <activity
             android:name=".Vistas.AppPreferences"
-            android:label="@string/title_activity_app_preferences" >
-        </activity>
+            android:label="@string/title_activity_app_preferences"></activity>
         <activity
             android:name=".Vistas.VMovil_Consultar_Inventario"
             android:label="@string/title_activity_app_preferences"
-            android:windowSoftInputMode="stateVisible|adjustPan" >
-        </activity>
+            android:windowSoftInputMode="stateVisible|adjustPan"></activity>
         <activity
             android:name=".Vistas.CalendarViewInventario"
             android:label="@string/title_activity_vmovil__cargar__inventario"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".Vistas.VMovil_Cargar_Inventario"
             android:label="@string/title_activity_vmovil__cargar__inventario"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateVisible|adjustPan" >
-        </activity>
+            android:windowSoftInputMode="stateVisible|adjustPan"></activity>
         <activity
             android:name=".Vistas.ImprimirArqueoCaja"
-            android:label="@string/title_activity_imprimir_arqueo_caja" >
-        </activity>
+            android:label="@string/title_activity_imprimir_arqueo_caja"></activity>
         <activity
             android:name=".Vistas.VMovil_Crear_Establecimiento"
-            android:label="@string/title_activity_vmovil__crear__establecimiento" >
-        </activity>
+            android:label="@string/title_activity_vmovil__crear__establecimiento"></activity>
         <activity
             android:name=".Vistas.VMovil_Abrir_Caja"
-            android:label="Abrir Caja" >
+            android:label="Abrir Caja">
             android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".FacturacionElectronica.SignatureActivity"
-            android:label="@string/title_activity_signature" >
+            android:label="@string/title_activity_signature">
 
             <!--
             <intent-filter>
@@ -241,8 +215,31 @@
         </activity>
         <activity
             android:name=".VentasRRPP"
-            android:label="@string/title_activity_ventas_rrpp" >
-        </activity>
+            android:label="@string/title_activity_ventas_rrpp"></activity>
+        <!--
+        <service android:name=".SyncAdapter.AuthenticatorService">
+            <intent-filter>
+                <action android:name="android.accounts.AccountAuthenticator" />
+            </intent-filter>
+            <meta-data android:name="android.accounts.AccountAuthenticator"
+                android:resource="@xml/authenticator" />
+        </service>
+
+        <service
+            android:name=".SyncAdapter.SyncService"
+            android:exported="true"
+        android:process=":sync">
+        <intent-filter>
+            <action android:name="android.content.SyncAdapter"/>
+        </intent-filter>
+        <meta-data android:name="android.content.SyncAdapter"
+            android:resource="@xml/syncadapter" />
+    </service>
+        -->
+
+        <service
+            android:name=".AsyncTask.ExportService"
+            android:exported="false"></service>
     </application>
 
 </manifest>

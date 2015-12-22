@@ -120,7 +120,7 @@ public class DbAdapter_Comprob_Venta_Detalle {
 
         Log.d("SIGNOS INTERROGACIÓN", signosInterrogacion);
         int cantidadRegistros = mDb.update(SQLITE_TABLE_Comprob_Venta_Detalle, initialValues,
-                CD_id_comprob+"= "+ signosInterrogacion,idComprobanteDetalle);
+                CD_comp_detalle+"= "+ signosInterrogacion,idComprobanteDetalle);
 
 
         Log.d("REGISTROS EXPORTADOS ", ""+cantidadRegistros);

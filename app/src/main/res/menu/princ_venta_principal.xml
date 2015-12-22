@@ -1,10 +1,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="union.union_vr1.Vistas.VMovil_Venta_CabeceraX" >
-    <item android:title="Escanear Productos"
-        android:id="@+id/ventaRRPP"
-        android:icon="@drawable/ic_launcher"
-        android:orderInCategory="95"
-        android:showAsAction="ifRoom"
-        />
+    <item android:id="@+id/ventaRRPP"
+        android:title="Venta RRPP"
+        android:orderInCategory="100"
+        android:showAsAction="never" />
+    <item android:id="@+id/ventaNormal"
+        android:title="Venta Normal"
+        android:orderInCategory="100"
+        android:showAsAction="never" />
+
 </menu>

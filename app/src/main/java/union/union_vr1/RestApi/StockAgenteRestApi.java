@@ -755,4 +755,47 @@ public class StockAgenteRestApi {
         result = new JSONObject(r);
         return result;
     }
+
+    public JSONObject InsComprobante(int vint_ComprobanteId) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","RestAPI");
+        o.put("method", "InsComprobante");
+        p.put("vint_ComprobanteId",mapObject(vint_ComprobanteId));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+
+    public JSONObject InsComprobantes(int vint_LiquidacionId) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","RestAPI");
+        o.put("method", "InsComprobantes");
+        p.put("vint_LiquidacionId",mapObject(vint_LiquidacionId));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+
+    public JSONObject InsExportarTransferencias(int IdLiquidacion,int IdAgente) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","RestAPI");
+        o.put("method", "InsExportarTransferencias");
+        p.put("IdLiquidacion",mapObject(IdLiquidacion));
+        p.put("IdAgente",mapObject(IdAgente));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
 }

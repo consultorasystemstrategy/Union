@@ -20,8 +20,7 @@ public class DbAdapter_Tipo_Gasto {
     private DbHelper mDbHelper;
     private SQLiteDatabase mDb;
 
-    //private static final int DATABASE_VERSION = 1;
-    //private static final String DATABASE_NAME = "ProdUnion.sqlite";
+
     private static final String SQLITE_TABLE_Tipo_Gasto = "m_tipo_gasto";
     private final Context mCtx;
 

@@ -40,8 +40,6 @@ public class SignatureActivity extends Activity {
     private Context contexto;
     String textoSHA1 = null;
     //FileInputStream fis = null;
-    private final static String DOCINTRO = "docintro.properties";
-    private final static String DOCUMENTO  ="20138122256-01-F101-00000007.XML";
     private final static String BKS  ="union.bks";
 
 
@@ -57,7 +55,6 @@ public class SignatureActivity extends Activity {
         contexto = getApplicationContext();
 
         try {
-            docSinFirmar = getFilefromAssets(DOCUMENTO);
             keystore = getFilefromAssets(BKS);
 
         } catch (IOException e) {
@@ -71,36 +68,17 @@ public class SignatureActivity extends Activity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String digestValue = null;
+                try {
+                    //File filesinFirmar = SimpleXMLAndroid.generarXMLown(File.createTempFile("20138122256-01-F104-00000011", "XML"));
+                     /*digestValue = Signature.add(keystore, filesinFirmar, createFile("20138122256-01-F104-00000011.XML"));*/
 
-                /*try {
-                    documentoFirmado = Signature.add(keystore, docSinFirmar, createFile("factura_firmada"));
 
-                    boolean read = isExternalStorageReadable();
-                    boolean write = isExternalStorageWritable();
-                    textView.setText("READABLE, WRITEABLE" + read + "," + write + "\n" + documentoFirmado.getAbsolutePath() + "." + readFileAsString(documentoFirmado));
-                } catch (NoSuchAlgorithmException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
-                } catch (InvalidAlgorithmParameterException e) {
-                    e.printStackTrace();
-                } catch (KeyStoreException e) {
-                    e.printStackTrace();
-                } catch (CertificateException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (UnrecoverableEntryException e) {
-                    e.printStackTrace();
-                } catch (ParserConfigurationException e) {
-                    e.printStackTrace();
-                } catch (SAXException e) {
-                    e.printStackTrace();
-                } catch (MarshalException e) {
-                    e.printStackTrace();
-                } catch (XMLSignatureException e) {
-                    e.printStackTrace();
-                } catch (TransformerException e) {
-                    e.printStackTrace();
-                }*/
+                } finally {
+                    textView.setText("DIGESTVALUE: "+digestValue);
+                }
 
             }
         });
@@ -135,7 +113,7 @@ public class SignatureActivity extends Activity {
         File createFile(String pathFile)
                 throws IOException, ParserConfigurationException, SAXException {
             File file = new File(Environment.getExternalStoragePublicDirectory(
-                    Environment.DIRECTORY_PICTURES), "factura_firmada_40.xml");
+                    Environment.DIRECTORY_PICTURES), pathFile);
             //return File.createTempFile(pathFile,"xml",contexto.getCacheDir());
             return file;
         }

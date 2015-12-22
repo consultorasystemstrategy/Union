@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Lunes, 18 de Diciembre  2015"
+        android:id="@+id/textViewFecha"
+        android:gravity="center"
+        android:textColor="@color/PersonalizadoSteve4"
+        android:textSize="16sp"
+        android:textStyle="bold|italic" />
+
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:id="@+id/editTextPrecioCuota"
+        android:hint="Cuota"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:importantForAccessibility="yes"
+        android:inputType="numberDecimal" />
+
+</LinearLayout>

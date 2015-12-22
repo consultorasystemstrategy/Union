@@ -140,6 +140,9 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
     private ListView list;*/
     // BT
     private BluetoothPort bp;
+
+
+    private static String TAG = "BLUETOOTH IMPRIMIR";
     @Override
     public void onBackPressed() {
         //super.onStop();
@@ -195,8 +198,10 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
 
 
         idComprobante = getIntent().getExtras().getInt("idComprobante");
+        Log.d(TAG, "ID_COMPROBANTE : "+idComprobante);
         textoImpresion = generarTextoImpresion(idComprobante, pulgadasImpresora);
 
+        Log.d(TAG, "TEXTO IMPRESION : "+textoImpresion);
         /*textoImpresion = getIntent().getExtras().getString("textoImpresion");
         textoImpresionCabecera = getIntent().getExtras().getString("textoImpresionCabecera");
         textoImpresionContenidoLeft = getIntent().getExtras().getString("textoImpresionContenidoLeft");
@@ -207,6 +212,11 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
         textViewVentaCabecera.setText(ventaCabecera);
         textViewImprimirContenidoLeft.setText(textoImpresionContenidoLeft);
         textViewImprimirContenidoRight.setText(textoImpresionContenidoRight);
+        Log.d(TAG, "TEXTO textoEmpresa : " + textoEmpresa);
+        Log.d(TAG, "TEXTO ventaCabecera : " + ventaCabecera);
+        Log.d(TAG, "TEXTO textoImpresionContenidoLeft : " + textoImpresionContenidoLeft);
+        Log.d(TAG, "TEXTO textoImpresionContenidoRight : " + textoImpresionContenidoRight);
+
 
 
         if (!connected){
@@ -268,11 +278,11 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
        DecimalFormat df = new DecimalFormat("#.00", simbolos);
 
        String texto= "";
-       String comprobante = "";
+       String comprobante = "WS";
        String fecha = "";
        String cliente = "";
        String dni_ruc = "";
-       String serie  ="";
+       String serie  ="XS";
        String numDoc = "";
        String nombreAgente = "";
        String direccion="";
@@ -285,12 +295,18 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
 
        Cursor cursorVentaCabecera = dbHelperComprobanteVenta.getVentaCabecerabyID(idComprobante);
 
+       Log.d(TAG, " COUNT CURSOR VENTA CABECERA : "+ cursorVentaCabecera.getCount());
+
        if (cursorVentaCabecera.getCount()>0){
            cursorVentaCabecera.moveToFirst();
 
            serie = cursorVentaCabecera.getString(cursorVentaCabecera.getColumnIndexOrThrow(DbAdapter_Comprob_Venta.CV_serie));
            numDoc = cursorVentaCabecera.getString(cursorVentaCabecera.getColumnIndexOrThrow(DbAdapter_Comprob_Venta.CV_num_doc));
            comprobante = serie + "-" +agregarCeros((String.valueOf(numDoc)),8);
+           Log.d(TAG, "SERIE : "+serie);
+           Log.d(TAG, "NRMDOC : "+numDoc
+           );
+           Log.d(TAG, "COMPROBANTE : "+comprobante);
            fecha = cursorVentaCabecera.getString(cursorVentaCabecera.getColumnIndexOrThrow(DbAdapter_Comprob_Venta.CV_fecha_doc));
            cliente = cursorVentaCabecera.getString(cursorVentaCabecera.getColumnIndexOrThrow(DbAdaptert_Evento_Establec.EE_nom_cliente));
            dni_ruc = cursorVentaCabecera.getString(cursorVentaCabecera.getColumnIndexOrThrow(DbAdaptert_Evento_Establec.EE_doc_cliente));
@@ -312,6 +328,8 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
 
 
            Cursor cursorVentaDetalle = dbHelperComprobanteVentaDetalle.fetchAllComprobVentaDetalleByIdComp(idComprobante);
+
+           Log.d(TAG, "COUNT DETALLES : "+cursorVentaDetalle.getCount());
 
            if (cursorVentaCabecera.getCount()>0){
 
@@ -374,7 +392,7 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
                texto+=" 2 PULGADAS, NO SOPORTADO.\n";
                break;
            case 3:
-               String tipoC="";
+/*               String tipoC="";
                tipoC=comprobante.substring(0,1);
                String tipoComprobante="";
                if(tipoC.equals("F"))
@@ -414,9 +432,9 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
                texto += String.format("%1$48s","---------");
                texto += String.format("%-18s","PRECIO VENTA")+String.format("%-21s","S/.")+  String.format("%1$9s",df.format(precio_venta))+"\n\n";
                texto+= "------------------------------------------------------".substring(0,48)+"\n";
-/*               texto+= "Son "+ NumberToLetterConverter.convertNumberToLetter(df.format(precio_venta).replace(',','.')).toLowerCase()+"\n";
-               texto+= "------------------------------------------------------".substring(0,48)+"\n";*/
-               texto+= "VENDEDOR : "+ nombreAgente+"\n";
+*//*               texto+= "Son "+ NumberToLetterConverter.convertNumberToLetter(df.format(precio_venta).replace(',','.')).toLowerCase()+"\n";
+               texto+= "------------------------------------------------------".substring(0,48)+"\n";*//*
+               texto+= "VENDEDOR : "+ nombreAgente+"\n";*/
                break;
            default:
                texto+=" NO SE PUEDE RECONOCER EL NÚMERO DE PULGADAS...";

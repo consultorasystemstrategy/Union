@@ -9,9 +9,10 @@ import android.util.Log;
  * Created by Usuario on 18/03/2015.
  */
 public class ReceiverAlarmFinishedDay extends BroadcastReceiver {
+    private static final String TAG = ReceiverAlarmFinishedDay.class.getSimpleName();
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.d("ALARMA BROADCAST RECEIVER INICIALIZATED","OK");
+        Log.d(TAG, "ALARMA BROADCAST RECEIVER INICIALIZATED" +"OK");
         Intent service = new Intent(context, ServiceNotifyResumen.class);
         context.startService(service);
     }

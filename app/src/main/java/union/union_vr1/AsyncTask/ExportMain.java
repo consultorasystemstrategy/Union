@@ -2,6 +2,8 @@ package union.union_vr1.AsyncTask;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -26,6 +28,7 @@ import union.union_vr1.Sqlite.DbAdapter_Cobros_Manuales;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta_Detalle;
+import union.union_vr1.Sqlite.DbAdapter_Exportacion_Comprobantes;
 import union.union_vr1.Sqlite.DbAdapter_Histo_Venta;
 import union.union_vr1.Sqlite.DbAdapter_Histo_Venta_Detalle;
 import union.union_vr1.Sqlite.DbAdapter_Informe_Gastos;
@@ -56,9 +59,17 @@ public class ExportMain extends AsyncTask<String, String, String> {
     private DBAdapter_Temp_Autorizacion_Cobro dbAdapter_temp_autorizacion_cobro;
     private DBAdapter_Temp_Canjes_Devoluciones dbAdapter_temp_canjes_devoluciones;
     private DbAdapter_Cobros_Manuales dbAdapter_cobros_manuales;
+    private DbAdapter_Exportacion_Comprobantes dbAdapter_exportacion_comprobantes;
 
+    private static String TAG = ExportMain.class.getSimpleName();
+
+    private Context context;
     public ExportMain(Activity mainActivity) {
+
+
         this.mainActivity = mainActivity;
+
+
         //INSTANCIO LAS CLASES DE MIS MANEJADORES DE DB
 
         dbAdapter_temp_canjes_devoluciones = new DBAdapter_Temp_Canjes_Devoluciones(mainActivity);
@@ -75,6 +86,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
         dbAdapter_histo_venta = new DbAdapter_Histo_Venta(mainActivity);
         dbAdapter_temp_autorizacion_cobro = new DBAdapter_Temp_Autorizacion_Cobro(mainActivity);
         dbAdapter_cobros_manuales = new DbAdapter_Cobros_Manuales(mainActivity);
+        dbAdapter_exportacion_comprobantes = new DbAdapter_Exportacion_Comprobantes(mainActivity);
 
         //ABRO LA CONEXIÓN A LA DB
         dbAdapter_informe_gastos.open();
@@ -87,14 +99,15 @@ public class ExportMain extends AsyncTask<String, String, String> {
         dbAdapter_histo_venta.open();
         dbAdapter_temp_autorizacion_cobro.open();
         dbAdapter_cobros_manuales.open();
+        dbAdapter_exportacion_comprobantes.open();
 
     }
-
 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        createProgressDialog();
+            createProgressDialog();
+
     }
 
     @Override
@@ -140,7 +153,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
 
 */
 
-        Log.d("EXPORT", "INICIANDO EXPORTACIÓN ...");
+        Log.d("EXPORT", "INICIANDO EXPORTACIÓN ..." + TAG);
 
         publishProgress("" + 30);
         List<String> listIdInfomeGastos = new ArrayList<String>();
@@ -150,6 +163,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
         List<String> listIdEstablecimientoUpdated = new ArrayList<String>();
         List<String> listidInsertarCaja = new ArrayList<String>();
         List<String> listIdAutorizacionCobro = new ArrayList<String>();
+        List<String> listIdExportacionFlex = new ArrayList<>();
 
 
         List<String> listIdHVCreated = new ArrayList<String>();
@@ -162,6 +176,8 @@ public class ExportMain extends AsyncTask<String, String, String> {
 
         publishProgress("" + 50);
         //EXPORTAR TODOS LOS REGISTROS CREADOS EN ANDROID [GUARDADOS EN SQLITE]
+
+        //COMPROBANTE DE VENTA
         if (cursorComprobanteVenta.getCount() > 0) {
             for (cursorComprobanteVenta.moveToFirst(); !cursorComprobanteVenta.isAfterLast(); cursorComprobanteVenta.moveToNext()) {
                 JSONObject jsonObjectSuccesfull = null;
@@ -209,6 +225,9 @@ public class ExportMain extends AsyncTask<String, String, String> {
                             Log.d("ID COMP V RETURN", "" + idComprobanteVentaRetornado);
 
                             int registrosActualizados = dbAdapter_comprob_venta_detalle.updateComprobVentaDetalleReal(cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_comprob)), idComprobanteVentaRetornado);
+                            long _id_mapeo = dbAdapter_exportacion_comprobantes.createRegistroExportacion(cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_comprob)), idComprobanteVentaRetornado, Constants._CREADO);
+
+                            Log.d(TAG, "_ID_MAPEO EXPORTACION COMPROBANTS : "+_id_mapeo);
                             Log.d("CV UPDATE", "" + registrosActualizados);
                         }
                     } else if (cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_forma_pago)) == 2) {
@@ -243,6 +262,14 @@ public class ExportMain extends AsyncTask<String, String, String> {
 
                             //EXPORTO Y SI ES CV AL CRÉDITO ACTUALIZO EL ID CREADO POR ANDROID AL ID CREADO EN SQL SERVER
                             int registrosUpdtCV = dbAdapter_comprob_venta.updateComprobanteIDReal(cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_comprob)), idComprobanteVentaRetornado);
+
+                            /**
+                             * creo un registro para mapear los _id entre los sistemas
+                             * */
+                            long _id_mapeo = dbAdapter_exportacion_comprobantes.createRegistroExportacion(cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_comprob)), idComprobanteVentaRetornado, Constants._CREADO);
+
+                            Log.d(TAG, "_ID_MAPEO EXPORTACION COMPROBANTS : "+_id_mapeo);
+
 
                             Log.d("n# IDS cv -><-", "" + cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_comprob)) + "to" + idComprobanteVentaRetornado + "#s UPD-->" + registrosUpdtCV);
 
@@ -386,6 +413,67 @@ public class ExportMain extends AsyncTask<String, String, String> {
 
             Log.d("EXPORT ", "TODOS LOS COMPROBANTES DE VENTA DETALLE ESTÁN EXPORTADOS");
         }
+
+
+        //EXPORTACIÓN AL FLEX
+
+        publishProgress("" + 58);
+
+/*
+        Cursor cursorExportacionFlex = dbAdapter_exportacion_comprobantes.filterExport();
+
+
+        Log.d(TAG, "COUNT CURSOR_EXPORTACION_FLEX :" + cursorExportacionFlex.getCount());
+        if (cursorExportacionFlex.getCount()>0){
+            for (cursorExportacionFlex.moveToFirst();!cursorExportacionFlex.isAfterLast(); cursorExportacionFlex.moveToNext()){
+                JSONObject jsonObjectSuccesfull = null;
+                Log.d(TAG, "EXPORTACIÓN AL FLEX -->  _ID : " + cursorExportacionFlex.getLong(cursorExportacionFlex.getColumnIndexOrThrow(dbAdapter_exportacion_comprobantes.EC_id)) + ", _ID_SID : " +
+                                cursorExportacionFlex.getInt(cursorExportacionFlex.getColumnIndexOrThrow(dbAdapter_exportacion_comprobantes.EC_id_sid)) + ", _ID_SQLITE : " +
+                                cursorExportacionFlex.getInt(cursorExportacionFlex.getColumnIndexOrThrow(dbAdapter_exportacion_comprobantes.EC_id_sqlite)) + ", ESTADO_SINCRONIZACIÓN : " +
+                                cursorExportacionFlex.getInt(cursorExportacionFlex.getColumnIndexOrThrow(dbAdapter_exportacion_comprobantes.EC_estado_sincronizacion))
+                );
+
+                try {
+                    jsonObjectSuccesfull = api.InsComprobante(cursorExportacionFlex.getInt(cursorExportacionFlex.getColumnIndexOrThrow(dbAdapter_exportacion_comprobantes.EC_id_sid)));
+
+                    Log.d(TAG, "SUCCES EXPORTACIÓN FLEX " + isSuccesfulExport(jsonObjectSuccesfull));
+                    Log.d(TAG, "JSON EXPORTACIÓN FLEX " + jsonObjectSuccesfull.toString());
+
+                    int idRespuestaFlex = parserIDRespuestaFlex(jsonObjectSuccesfull);
+
+                    Log.d(TAG, "ID RESPUESTA FLEX : " + idRespuestaFlex);
+
+                    if (idRespuestaFlex>=1) {
+                        listIdExportacionFlex.add(""+ cursorExportacionFlex.getLong(cursorExportacionFlex.getColumnIndexOrThrow(dbAdapter_exportacion_comprobantes.EC_id)));
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            String[] idExportacionComprobantes = new String[listIdExportacionFlex.size()];
+            listIdExportacionFlex.toArray(idExportacionComprobantes);
+
+            for (int i = 0; i < idExportacionComprobantes.length; i++) {
+                Log.d(TAG, "_ID EXPORT SATISFACTORIO, EXPORTACION COMPROBANTES " + idExportacionComprobantes[i]);
+            }
+
+            if (listIdExportacionFlex.size() > 0) {
+                 int nRegistrosExportados= dbAdapter_exportacion_comprobantes.changeEstadoToExport(idExportacionComprobantes, Constants._EXPORTADO);
+                Log.d(TAG, "REGISTROS EXPORTADOS AL FLEX : "+ nRegistrosExportados);
+            }
+
+
+
+
+
+        }else{
+            Log.d(TAG, "TODOS LOS COMPROBANTES ESTÁN EXPORTADOS AL FLEX");
+        }
+*/
+
 
         publishProgress("" + 60);
         if (cursorInformeGastos.getCount() > 0) {
@@ -798,11 +886,13 @@ public class ExportMain extends AsyncTask<String, String, String> {
     @Override
     protected void onProgressUpdate(String... values) {
         super.onProgressUpdate(values);
-        progressDialog.setProgress(Integer.parseInt(values[0]));
+            progressDialog.setProgress(Integer.parseInt(values[0]));
+
     }
 
     @Override
     protected void onPostExecute(String s) {
+
 
         if (mainActivity.isFinishing()) {
             //dismissProgressDialog();
@@ -818,9 +908,13 @@ public class ExportMain extends AsyncTask<String, String, String> {
         while(cursor.moveToNext()){
             String idEstablec = cursor.getString(cursor.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_id_establecimiento));
             Log.d("Hola mundo",""+cursor.getString(cursor.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_id_establecimiento)));
-            ExportCanjesDevolucionesLater exportCanjesDevoluciones = new ExportCanjesDevolucionesLater(mainActivity.getApplicationContext(),mainActivity);
+            ExportCanjesDevolucionesLater exportCanjesDevoluciones = new ExportCanjesDevolucionesLater(mainActivity.getApplicationContext());
             exportCanjesDevoluciones.execute(getDatePhone(),idEstablec, Constants._ACTUALIZADO+"");
         }
+
+        Intent intent = new Intent(mainActivity, ExportService.class);
+        intent.setAction(Constants.ACTION_EXPORT_SERVICE);
+        mainActivity.startService(intent);
 
         super.onPostExecute(s);
     }
@@ -863,6 +957,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
         return idPlanPagoDetalle;
     }*/
     public int getIdComprobanteVentaRetornado(JSONObject object) {
+        Log.d(TAG, "JSON PARSER ID_COMPROB_VENTA_RETORNADO : " + object);
         int idComprobante = -1;
         try {
             JSONArray jsonArray = object.getJSONArray("Value");
@@ -909,6 +1004,18 @@ public class ExportMain extends AsyncTask<String, String, String> {
         }
         return idGuia;
     }
+    public int parserIDRespuestaFlex(JSONObject jsonObj) {
+        int idRespuesta = -1;
+        try {
+            Log.d("CADENA A PARSEAR ", jsonObj.toString());
+            idRespuesta = jsonObj.getInt("Value");
+        } catch (JSONException e) {
+            // TODO Auto-generated catch block
+            Log.d("JSONPARSER ERROR", e.getMessage());
+        }
+        return idRespuesta;
+    }
+
 
     private String getDatePhone() {
         Calendar cal = new GregorianCalendar();

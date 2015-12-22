@@ -27,7 +27,8 @@
                 android:textStyle="bold|italic"
                 android:textSize="24dp"
                 android:textIsSelectable="false"
-                android:background="@color/PersonalizadoSteve3" />
+                android:background="@drawable/background_geometry"
+                android:gravity="center" />
 
             <Spinner
                 android:layout_width="fill_parent"
@@ -38,7 +39,8 @@
                 android:spinnerMode="dialog"
                 android:focusableInTouchMode="false"
                 android:focusable="false"
-                android:contentDescription="@string/VCPP" />
+                android:contentDescription="@string/VCPP"
+                />
 
         </LinearLayout>
 
@@ -63,20 +65,12 @@
             <Button
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:text="Calcular"
-                android:id="@+id/VCPP_buttonCalcularCuotas"
-                android:layout_weight="1"
-                android:background="@color/PersonalizadoSteve2"
-                android:onClick="CalcularCuotas" />
-
-            <Button
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
                 android:text="Establecer Cuotas"
                 android:id="@+id/VCPP_buttonEstablecer"
                 android:layout_weight="1"
                 android:background="@color/PersonalizadoSteve2"
-                android:onClick="CalcularCuotas" />
+                android:onClick="CalcularCuotas"
+                android:textColor="@color/Blanco" />
 
         </LinearLayout>
     </LinearLayout>
