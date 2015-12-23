@@ -95,7 +95,7 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
     private DbAdapter_Comprob_Cobro dbComprobanteCobro;
 
     private Context mContext;
-    private  Activity mainActivity;
+    private Activity mainActivity;
 
 
     //SLIDING MENU VENTAS
@@ -200,7 +200,6 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
 
         dbAdapter_cobros_manuales = new DbAdapter_Cobros_Manuales(this);
         dbAdapter_cobros_manuales.open();
-
 
 
         //VENTAS
@@ -336,6 +335,9 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
                         dbHelper.updateComprobCobrosCan(idCobro, getDatePhone(), getTimePhone(), idValNew, estadox);
                         Toast.makeText(getApplicationContext(),
                                 "Actualizado", Toast.LENGTH_SHORT).show();
+                        if(conectadoWifi() || conectadoRedMovil()){
+                            new ExportMain(mainActivity).execute();
+                        }
 //<
                         //displayListViewVCC();
                         mSPNcredit.setText("0.0");
@@ -582,10 +584,11 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
         DecimalFormat twoDForm = new DecimalFormat("#.##");
         return Double.valueOf(twoDForm.format(d));
     }
-    private String getTimeAndDate(){
+
+    private String getTimeAndDate() {
         Calendar cal = new GregorianCalendar();
         Date date = cal.getTime();
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss.SSS");
         String formatteDate = df.format(date);
         return formatteDate;
     }
@@ -593,7 +596,7 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
     private String getDatePhone() {
         Calendar cal = new GregorianCalendar();
         Date date = cal.getTime();
-        SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd");
+        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         String formatteDate = df.format(date);
         return formatteDate;
     }
@@ -807,12 +810,12 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
                         String serie = editTextSerie.getText().toString();
                         String numeroString = editTextNumero.getText().toString();
                         String importeString = editTextImporte.getText().toString();
-                        if(serie.equals("") || numeroString.equals("")  || importeString.equals("") || serie ==null ||numeroString ==null ||importeString ==null ){
+                        if (serie.equals("") || numeroString.equals("") || importeString.equals("") || serie == null || numeroString == null || importeString == null) {
                             Toast.makeText(getApplicationContext(), "Debe completar todos los campos", Toast.LENGTH_LONG).show();
-                        }else{
+                        } else {
                             int numero = Integer.parseInt(numeroString);
                             Double importe = Double.parseDouble(formatter.format(Double.parseDouble(importeString)));
-                            estaSeguroCobrar(serie,numero, importe,itemTipo);
+                            estaSeguroCobrar(serie, numero, importe, itemTipo);
 
                         }
 
@@ -839,7 +842,8 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
 
         spinnerTipoCobro.setAdapter(adapterTipoOperacion);
     }
-    private void estaSeguroCobrar(final String serie, final int numero, final Double importe, final int tipoCobro){
+
+    private void estaSeguroCobrar(final String serie, final int numero, final Double importe, final int tipoCobro) {
 
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
@@ -850,17 +854,17 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
 
         // set dialog message
         AlertDialog.Builder builder = alertDialogBuilder
-                .setMessage("¿Esta seguro de cobrar: S/  "+importe +" ?")
+                .setMessage("¿Esta seguro de cobrar: S/  " + importe + " ?")
                 .setCancelable(false)
                 .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         String cateMovimiento = "";
-                        if(tipoCobro >0){
-                            cateMovimiento="t";
-                        }else{
-                            cateMovimiento="p";
+                        if (tipoCobro > 0) {
+                            cateMovimiento = "t";
+                        } else {
+                            cateMovimiento = "p";
                         }
-                        long l = dbAdapter_cobros_manuales.createCobrosManuales(3, importe, getTimeAndDate(),cateMovimiento,slideIdAgente, serie, numero);
+                        long l = dbAdapter_cobros_manuales.createCobrosManuales(3, importe, getTimeAndDate(), cateMovimiento, slideIdAgente, serie, numero, dbAdaptert_evento_establec.getNameCliente(Integer.parseInt(estabX)), Integer.parseInt(estabX),getDatePhone(),getTimePhone());
                         if (l > 0) {
                             if (conectadoRedMovil() || conectadoWifi()) {
                                 new ExportMain(mainActivity).execute();
@@ -888,7 +892,8 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
         // show it
         alertDialog.show();
     }
-    protected Boolean conectadoWifi(){
+
+    protected Boolean conectadoWifi() {
         ConnectivityManager connectivity = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivity != null) {
             NetworkInfo info = connectivity.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
@@ -901,7 +906,7 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
         return false;
     }
 
-    protected Boolean conectadoRedMovil(){
+    protected Boolean conectadoRedMovil() {
         ConnectivityManager connectivity = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivity != null) {
             NetworkInfo info = connectivity.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);

@@ -54,20 +54,14 @@ public class CursorAdapter_Man_Cbrz extends CursorAdapter {
         if (cursor.getCount()>0) {
 
 
-            String man_doc = cursor.getString(1);
-            String man_cliente = cursor.getString(2);
-            String man_fecha= cursor.getString(4);
-            String man_hora= cursor.getString(5);
-            String man_monto= cursor.getString(6);
-            String man_estado= cursor.getString(7);
+            String man_doc = cursor.getString(cursor.getColumnIndexOrThrow("cc_te_doc"));
+            String man_cliente = cursor.getString(cursor.getColumnIndexOrThrow("ee_te_nom_cliente"));
+            String man_fecha= cursor.getString(cursor.getColumnIndexOrThrow("cc_te_fecha_cobro"));
+            String man_hora= cursor.getString(cursor.getColumnIndexOrThrow("cc_te_hora_cobro"));
+            String man_monto= cursor.getString(cursor.getColumnIndexOrThrow("cc_re_monto_cobrado"));
+            String man_estado= cursor.getString(cursor.getColumnIndexOrThrow("estado"));
 
 
-            String cobros_Man = "Doc: "+man_doc+"," +
-                    "\nCliente: "+man_cliente+"," +
-                    "\nFecha: "+man_fecha+"," +
-                    "\nHora: "+man_hora+"," +
-                    "\nMonto: "+man_monto+"," +
-                    "\nEstado: "+man_estado+"";
 
             String estado = man_estado;
             if (estado.equals("Cobrado")){

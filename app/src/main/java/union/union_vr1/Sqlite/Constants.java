@@ -13,6 +13,7 @@ public class Constants {
 
     public static final int _CANJES = 5;
     public static final int _DEVOLUCIONES = 6;
+    public static final int _EXPORTADO_FLEX = 7;
 
     public static final int _FLEX_ID_DEFECTO = -1;
 

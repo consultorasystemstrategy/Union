@@ -51,6 +51,14 @@
         <item>Cobro Total</item>
         <item>Cobro Parcial</item>
     </string-array>
+    <string-array name="tipo_documento">
+        <item>DNI</item>
+        <item>RUC</item>
+    </string-array>
+    <string-array name="tipo_persona">
+        <item>Natural</item>
+        <item>Juridica</item>
+    </string-array>
     <string-array name="tipo_devolucion_only">
         <item>Devolucion</item>
     </string-array>
@@ -178,5 +186,7 @@
     <string name="title_activity_signature">SignatureActivity</string>
     <string name="title_activity_ventas_rrpp">Ventas RRPP</string>
     <string name="title_activity_maps">Map</string>
+    <string name="title_activity_main2">Main2Activity</string>
+    <string name="title_activity_fgfg">fgfg</string>
 
 </resources>

@@ -17,7 +17,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
     dexOptions {
         preDexLibraries = false
         javaMaxHeapSize "4g"

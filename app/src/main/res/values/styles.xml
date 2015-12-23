@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!--Tranparencia-->
     <style name="Transparent" parent="android:style/Theme.Translucent">
         <item name="android:windowNoTitle">true</item>
@@ -16,9 +16,26 @@
         FF4081
     </style>
 
+
 <!-- Base application theme. -->
     <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
         <!-- Customize your theme here. -->
+    </style>
+    <style name="RegistrarEstablecimiento" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="android:background" >@color/Blanco</item>
+
+    </style>
+    <style name="CustomRegister" parent="@style/Theme.AppCompat.Light">
+        <item name="android:actionBarStyle"  >@style/MyActionBar</item>
+        <item name="actionBarStyle">@style/MyActionBar</item>
+
+    </style>
+    <style name="MyActionBar" parent="@style/Widget.AppCompat.ActionBar.Solid">
+        <item name="titleTextStyle">@style/MyTitleTextStyle</item>
+        <item name="background">@color/Personalizado4</item>
+    </style>
+    <style name="MyTitleTextStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/Blanco</item>
     </style>
 
     <!-- PERSONALIZANDO LOS TEMAS PARA LA INTERGAZ DE USUARIO-->
@@ -113,6 +130,29 @@
         <item name="android:minHeight">16dp</item>
         <item name="android:maxHeight">16dp</item>
     </style>
+    <style name="spinner_style" >
+    <item name="android:layout_marginLeft">2dp</item>
+    <item name="android:layout_marginRight">2dp</item>
+    <item name="android:layout_marginBottom">2dp</item>
+    <item name="android:paddingLeft">8dp</item>
+    <item name="android:paddingTop">5dp</item>
+    <item name="android:textColor">@color/Dark4</item>
+    <item name="android:paddingBottom">5dp</item>
+    </style>
+
+    <!--Style for -->
+
+
+    <style name="AppThemeEstablec" parent="Theme.AppCompat.Light">
+        <item name="android:colorPrimary">@color/primary_dark_material_light</item>
+        <item name="android:colorPrimaryDark">@color/primary_dark_material_dark</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:actionBarStyle"  >@style/MyActionBar</item>
+        <item name="actionBarStyle">@style/MyActionBar</item>
+        <item name="actionMenuTextColor">@android:color/white</item>
+    </style>
+
+    <!--hkjgfhshjug-->
 
 
 

@@ -440,7 +440,7 @@ public class VMovil_Menu_Establec extends Activity implements View.OnClickListen
         switch (v.getId()) {
 
             case R.id.buttonAddEstablecimientos:
-                Intent iae = new Intent(this, activity_agregar_establecimiento.class);
+                Intent iae = new Intent(this, VMovil_Crear_Establecimiento.class);
                 startActivity(iae);
                 break;
             case R.id.slide_textViewCargarInventario:

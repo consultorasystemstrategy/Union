@@ -205,7 +205,7 @@ public class StockAgenteRestApi {
     }
 
 
-    public JSONObject CreateInsertarCaja(int idLiquidacionCaja,int idCategoriaMovimiento,double importeDecimal,int estado,String fecha,String referencia,int idusuario,int idcomprbante,int idPlanPago,int idPlanPagoDetalle) throws Exception {
+    public JSONObject CreateInsertarCaja(int idLiquidacionCaja,int idCategoriaMovimiento,double importeDecimal,int estado,String fecha,String referencia,int idusuario,int idcomprobante,int idPlanPago,int idPlanPagoDetalle) throws Exception {
         JSONObject result = null;
         JSONObject o = new JSONObject();
         JSONObject p = new JSONObject();
@@ -218,7 +218,7 @@ public class StockAgenteRestApi {
         p.put("fecha",mapObject(fecha));
         p.put("referencia",mapObject(referencia));
         p.put("idusuario",mapObject(idusuario));
-        p.put("idcomprbante",mapObject(idcomprbante));
+        p.put("idcomprobante",mapObject(idcomprobante));
         p.put("idPlanPago",mapObject(idPlanPago));
         p.put("idPlanPagoDetalle",mapObject(idPlanPagoDetalle));
         o.put("parameters", p);
@@ -427,6 +427,19 @@ public class StockAgenteRestApi {
         p.put("idTipoDev",mapObject(idTipoDev));
         p.put("unidad",mapObject(unidad));
         p.put("idEstablec",mapObject(idEstablec));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+    public JSONObject InsCobro(int vint_ComprobanteId) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","RestAPI");
+        o.put("method", "InsCobro");
+        p.put("vint_ComprobanteId",mapObject(vint_ComprobanteId));
         o.put("parameters", p);
         String s = o.toString();
         String r = load(s);
@@ -646,12 +659,12 @@ public class StockAgenteRestApi {
         result = new JSONObject(r);
         return result;
     }
-    public JSONObject InsUpdLocalizacionPrueba(String PerVNombres,String PerVApellPaterno,String PerVApellMaterno,String PerVDocIdentidad,String PerVCelular,String PerVEmail,int PerBEstado,int PerITipoDocIdentidadId,int PerITipoPersonaId,int PerIUsuarioId,String PerVCodigoERP,int PerIEmpresaId,String CliVCodigo,String CliVDocidentidad,int CliBEstado,int CliICategoriaClienteId,int CliIDiasLimiteCredito,int CliIAgenteVentaId,int CliIUsuarioId,int CliBEstadoAtencion,double CliDOMontoCredito,int CliIModalidadCreditoId,String CliDTFechaLimiteCredito,String DirVDescripcion,int DirBEstado,int DirIDistritoId,String DirVTelefonoFijo,String DirVCelular1,String DirVCelular2,int DirIUsuarioId,int DirBEstablecimientoAsociado,int DirBDireccionFiscal,int EstIRutaId,String EstVDescripcion,int EstIOrden,int EstBEstado,int EstIUsuarioId,int EstIPorcentajeDevolucion,int EstICatEstablecimientoId,String EstVExhibidor,double EstDOMontoCompra,int EstITipEstId,String EstVCodigoBarra,String LocVLongitude,String LocVLatitude,int LocBEstado,int LocIUsuarioId,int EveeIAtencionEstablecimientoId,int EveeBILiquidacionCajaId,int EveeIMotivoNoAtendidoId,int EveeIRutaId) throws Exception {
+    public JSONObject InsClienteEstablecimiento(String PerVNombres,String PerVApellPaterno,String PerVApellMaterno,String PerVDocIdentidad,String PerVCelular,String PerVEmail,int PerBEstado,int PerITipoDocIdentidadId,int PerITipoPersonaId,int PerIUsuarioId,int PerIEmpresaId,String CliVCodigo,String CliVDocidentidad,int CliBEstado,int CliICategoriaClienteId,int CliIAgenteVentaId,int CliIUsuarioId,int CliBEstadoAtencion,double CliDOMontoCredito,int CliIModalidadCreditoId,String DirVDescripcion,int DirBEstado,int DirIDistritoId,String DirVTelefonoFijo,String DirVCelular1,String DirVCelular2,int DirIUsuarioId,int DirBEstablecimientoAsociado,int DirBDireccionFiscal,String EstVDescripcion,int EstBEstado,int EstIUsuarioId,int EstIPorcentajeDevolucion,int EstICatEstablecimientoId,String EstVExhibidor,double EstDOMontoCompra,int EstITipEstId,String LocVLongitude,String LocVLatitude,int LocBEstado,int LocIUsuarioId,int EveeIAtencionEstablecimientoId,int EveeBILiquidacionCajaId,int EveeIMotivoNoAtendidoId,int EveeIRutaId) throws Exception {
         JSONObject result = null;
         JSONObject o = new JSONObject();
         JSONObject p = new JSONObject();
         o.put("interface","RestAPI");
-        o.put("method", "InsUpdLocalizacionPrueba");
+        o.put("method", "InsClienteEstablecimiento");
         p.put("PerVNombres",mapObject(PerVNombres));
         p.put("PerVApellPaterno",mapObject(PerVApellPaterno));
         p.put("PerVApellMaterno",mapObject(PerVApellMaterno));
@@ -749,6 +762,57 @@ public class StockAgenteRestApi {
         p.put("vdou_LiqDOGastos",mapObject(vdou_LiqDOGastos));
         p.put("vdou_LiqDOMontoARendir",mapObject(vdou_LiqDOMontoARendir));
         p.put("vint_KilometrajeFinal",mapObject(vint_KilometrajeFinal));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+
+    public JSONObject sel_SPINNER_TIPO_ESTABLECIMIENTO() throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","RestAPI");
+        o.put("method", "sel_SPINNER_TIPO_ESTABLECIMIENTO");
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+
+    public JSONObject sel_SPINNER_TIPO_PERSONA() throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","RestAPI");
+        o.put("method", "sel_SPINNER_TIPO_PERSONA");
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+
+    public JSONObject sel_SPINNER_TIPO_DOC_IDENTIDAD() throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","RestAPI");
+        o.put("method", "sel_SPINNER_TIPO_DOC_IDENTIDAD");
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+    public JSONObject sel_SPINNER_CATEGORIA_ESTABLECIMIENTO() throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","RestAPI");
+        o.put("method", "sel_SPINNER_CATEGORIA_ESTABLECIMIENTO");
         o.put("parameters", p);
         String s = o.toString();
         String r = load(s);

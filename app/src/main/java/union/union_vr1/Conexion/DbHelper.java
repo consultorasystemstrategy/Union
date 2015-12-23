@@ -20,6 +20,8 @@ import union.union_vr1.Sqlite.DbAdapter_Resumen_Caja;
 import union.union_vr1.Sqlite.DbAdapter_Ruta_Distribucion;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Barcode_Scanner;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Comprob_Cobro;
+import union.union_vr1.Sqlite.DbAdapter_Temp_DatosSpinner;
+import union.union_vr1.Sqlite.DbAdapter_Temp_Establecimiento;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 import union.union_vr1.Sqlite.DbAdapter_Tipo_Gasto;
@@ -84,6 +86,8 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(DbAdapter_Cobros_Manuales.CREATE_TABLE_COBROS_MANUALES);
         //MAPEA LOS ID DE LOS COMPROBANTES ENTRE LOS SISTEMAS
         db.execSQL(DbAdapter_Exportacion_Comprobantes.CREATE_TABLE_EXPORTACION_COMPROBANTES);
+        db.execSQL(DbAdapter_Temp_DatosSpinner.CREATE_TABLE_Temp_Session);
+        db.execSQL(DbAdapter_Temp_Establecimiento.CREATE_TABLE_TEMP_ESTABLEC);
 
 
 
@@ -119,6 +123,8 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(DBAdapter_Temp_Canjes_Devoluciones.DELETE_TABLE_TEMP_CANJES_DEVOLUCIONES);
         db.execSQL(DbAdapter_Cobros_Manuales.DELETE_TABLE_COBROS_MANUALES);
         db.execSQL(DbAdapter_Exportacion_Comprobantes.DELETE_TABLE_EXPORTACION_COMPROBANTES);
+        db.execSQL(DbAdapter_Temp_DatosSpinner.DELETE_TABLE_Temp_data_spinner);
+        db.execSQL(DbAdapter_Temp_Establecimiento.DELETE_TABLE_Temp_Establec);
         onCreate(db);
     }
 }

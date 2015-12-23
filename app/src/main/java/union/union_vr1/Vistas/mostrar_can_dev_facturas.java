@@ -1,6 +1,5 @@
 package union.union_vr1.Vistas;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.TabActivity;
 import android.content.DialogInterface;

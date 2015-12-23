@@ -359,6 +359,11 @@ public class DbAdaptert_Evento_Establec {
         }
         return mCursor;
     }
+    public String getNameCliente(int establec){
+        Cursor cursor = mDb.rawQuery("select * from "+SQLITE_TABLE_Evento_Establec+" where "+EE_id_establec+"='"+establec+"'",null);
+        cursor.moveToFirst();
+        return cursor.getString(cursor.getColumnIndexOrThrow(EE_nom_cliente));
+    }
 
     public Cursor filterExportUpdated() {
         Cursor mCursor = null;

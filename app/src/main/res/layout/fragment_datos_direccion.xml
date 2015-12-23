@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/Blanco"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textView34"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:paddingBottom="4dp"
+            android:paddingTop="4dp"
+            android:text="Descripcion Direccion"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/Dark1"
+            android:textStyle="italic" />
+
+        <EditText
+            android:id="@+id/cobrosManualImporte"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:ems="10"
+            android:hint="Descripcion"
+            android:inputType="numberDecimal" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textView23"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:paddingBottom="4dp"
+            android:paddingTop="4dp"
+            android:text="Importe"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/Dark1"
+            android:textStyle="italic" />
+
+        <EditText
+            android:id="@+id/cobrosManualImporte3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:ems="10"
+            android:hint="Importe"
+            android:inputType="numberDecimal" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textVie"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:paddingBottom="4dp"
+            android:paddingTop="4dp"
+            android:text="Importe"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/Dark1"
+            android:textStyle="italic" />
+
+        <EditText
+            android:id="@+id/cobrosManualImpor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:ems="10"
+            android:hint="Importe"
+            android:inputType="numberDecimal" />
+
+
+    </LinearLayout>
+
+</LinearLayout>

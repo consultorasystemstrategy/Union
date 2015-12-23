@@ -382,7 +382,9 @@ public class DbAdapter_Agente {
     public int getIdUsuario(){
         Cursor cr = mDb.rawQuery("select * from "+SQLITE_TABLE_Agente+"",null);
         cr.moveToFirst();
-        return cr.getInt(cr.getColumnIndexOrThrow(AG_id_usuario));
+//
+     return cr.getInt(cr.getColumnIndexOrThrow(AG_id_usuario));
+
     }
 
 
