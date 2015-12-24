@@ -2,6 +2,8 @@ package union.union_vr1.AsyncTask;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -26,6 +28,7 @@ import union.union_vr1.Sqlite.DbAdapter_Cobros_Manuales;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta_Detalle;
+import union.union_vr1.Sqlite.DbAdapter_Exportacion_Comprobantes;
 import union.union_vr1.Sqlite.DbAdapter_Histo_Venta;
 import union.union_vr1.Sqlite.DbAdapter_Histo_Venta_Detalle;
 import union.union_vr1.Sqlite.DbAdapter_Informe_Gastos;
@@ -80,6 +83,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
         dbAdapter_histo_venta = new DbAdapter_Histo_Venta(mainActivity);
         dbAdapter_temp_autorizacion_cobro = new DBAdapter_Temp_Autorizacion_Cobro(mainActivity);
         dbAdapter_cobros_manuales = new DbAdapter_Cobros_Manuales(mainActivity);
+        dbAdapter_exportacion_comprobantes = new DbAdapter_Exportacion_Comprobantes(mainActivity);
 
         //ABRO LA CONEXIÓN A LA DB
         dbAdapter_informe_gastos.open();
@@ -92,7 +96,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
         dbAdapter_histo_venta.open();
         dbAdapter_temp_autorizacion_cobro.open();
         dbAdapter_cobros_manuales.open();
-
+        dbAdapter_exportacion_comprobantes.open();
     }
 
 
@@ -175,7 +179,11 @@ public class ExportMain extends AsyncTask<String, String, String> {
             for (cursorComprobanteVenta.moveToFirst(); !cursorComprobanteVenta.isAfterLast(); cursorComprobanteVenta.moveToNext()) {
                 JSONObject jsonObjectSuccesfull = null;
                 int idComprobanteVentaRetornado = -1;
-                Log.d("Datos Export CV", cursorComprobanteVenta.getString(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_serie)) + " - " +
+                long _id_comp_venta = -1;
+                _id_comp_venta = cursorComprobanteVenta.getLong(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_comprob));
+                Log.d("Datos Export CV",
+                        cursorComprobanteVenta.getString(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_comprob)) + " - " +
+                        cursorComprobanteVenta.getString(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_serie)) + " - " +
                         cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_num_doc)) + " - " +
                         cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_forma_pago)) + " - " +
                         cursorComprobanteVenta.getString(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_fecha_doc)) + " - " +
@@ -217,8 +225,10 @@ public class ExportMain extends AsyncTask<String, String, String> {
                             idComprobanteVentaRetornado = getIdComprobanteVentaRetornado(jsonObjectSuccesfull);
                             Log.d("ID COMP V RETURN", "" + idComprobanteVentaRetornado);
 
-                            int registrosActualizados = dbAdapter_comprob_venta_detalle.updateComprobVentaDetalleReal(cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_comprob)), idComprobanteVentaRetornado);
-                            long _id_mapeo = dbAdapter_exportacion_comprobantes.createRegistroExportacion(cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_comprob)), idComprobanteVentaRetornado, Constants._CREADO);
+                            int registrosActualizados = dbAdapter_comprob_venta_detalle.updateComprobVentaDetalleReal( _id_comp_venta, idComprobanteVentaRetornado);
+                            Log.d(TAG, "DETALLES ACTUALIZADOS : "+ registrosActualizados);
+                            long _id_mapeo = -1;
+                            _id_mapeo = dbAdapter_exportacion_comprobantes.createRegistroExportacion(_id_comp_venta, idComprobanteVentaRetornado, Constants._CREADO);
 
                             Log.d(TAG, "_ID_MAPEO EXPORTACION COMPROBANTS : "+_id_mapeo);
                             Log.d("CV UPDATE", "" + registrosActualizados);

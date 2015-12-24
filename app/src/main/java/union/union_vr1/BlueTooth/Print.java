@@ -13,16 +13,25 @@ import com.sewoo.jpos.command.ESCPOS;
 import com.sewoo.jpos.request.RequestQueue;
 import com.sewoo.jpos.POSPrinterService;
 
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Locale;
 
 import jpos.JposException;
 import jpos.POSPrinterConst;
+import union.union_vr1.Sqlite.Constants;
 import union.union_vr1.Sqlite.DbAdapter_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta_Detalle;
+import union.union_vr1.Sqlite.DbAdapter_Informe_Gastos;
+import union.union_vr1.Sqlite.DbAdapter_Transferencias;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
+import union.union_vr1.Sqlite.DbGastos_Ingresos;
 
 public class Print {
 
@@ -32,6 +41,8 @@ public class Print {
     private CPCL cpclPtr;
     private RequestQueue rq;
     private static String lineas= "------------------------------------------------------".substring(0,48);
+    private static String asteriscos= "********************************************************".substring(0,48);
+
 
     private static int FACTURA = 1;
     private static int BOLETA = 2;
@@ -40,7 +51,21 @@ public class Print {
 
 
     private DbAdapter_Comprob_Venta dbHelperComprobanteVenta;
+    private DbGastos_Ingresos dbHelperGastosIngr;
     private DbAdapter_Comprob_Venta_Detalle dbHelperComprobanteVentaDetalle;
+    private DbAdapter_Informe_Gastos dbAdapter_informe_gastos;
+
+    private DbAdapter_Transferencias dbAdapter_transferencias;
+
+
+    int nTotal = 0;
+    Double emitidoTotal = 0.0;
+    Double pagadoTotal = 0.0;
+    Double cobradoTotal = 0.0;
+
+
+    Double totalRuta = 0.0;
+    Double totalPlanta = 0.0;
 
     public Print(Context context){
         this.context = context;
@@ -53,6 +78,12 @@ public class Print {
         dbHelperComprobanteVentaDetalle = new DbAdapter_Comprob_Venta_Detalle(context);
         dbHelperComprobanteVenta.open();
         dbHelperComprobanteVentaDetalle.open();
+        dbHelperGastosIngr =  new DbGastos_Ingresos(context);
+        dbHelperGastosIngr.open();
+        dbAdapter_informe_gastos = new DbAdapter_Informe_Gastos(context);
+        dbAdapter_informe_gastos.open();
+
+
     }
 
     public Print(POSPrinterService posPtr) {
@@ -109,9 +140,9 @@ public class Print {
 
     }
 
-    private void printCabecera(int tipoDocumento) throws JposException
+    public void printCabecera(int tipoDocumento) throws JposException
     {
-        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "UNIVERSIDAD PERUANA UNION" + LF );
+        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "UNIVERSIDAD PERUANA UNION" + LF);
         posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "CENTRO DE APLICACION PRODUCTOS UNION" + LF );
         posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "CAR. CENTRAL KM. 19.5 VILLA UNION-NANA" + LF );
         posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "Lurigancho-Chosica Fax: 6186311" + LF );
@@ -121,13 +152,20 @@ public class Print {
 
 
         switch (tipoDocumento){
-            case 1:
+            case Constants.DOCUMENTO_FACTURA:
                 posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + "FACTURA ELECTRONICA" + LF + LF);
                 break;
-            case 2:
+            case Constants.DOCUMENTO_BOLETA:
                 posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + "BOLETA ELECTRONICA" + LF + LF);
                 break;
+            case Constants.DOCUMENTO_TRANSFERENCIA:
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT,ESC + "|cA" + ESC + "|bC" + ESC + "|2C" + "TRANSFERENCIAS" + LF + LF + LF);
+                break;
+            case Constants.DOCUMENTO_ARQUEO:
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT,ESC + "|cA" + ESC + "|bC" + ESC + "|2C" + "RESUMEN DEL DÍA" + LF + LF + LF);
+                break;
             default:
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT,ESC + "|cA" + ESC + "|bC" + ESC + "|2C" + "PRODUCTOS UNION" + LF + LF + LF);
                 break;
 
         }
@@ -138,9 +176,16 @@ public class Print {
         posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + lineas + LF);
     }
 
+    private void printAsteriscos() throws JposException
+    {
+        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + asteriscos + LF);
+    }
+
+
+
     private void imprimircomprobante(int idComprobante, int pulgadas) throws JposException {
         DecimalFormatSymbols simbolos = DecimalFormatSymbols.getInstance(Locale.ENGLISH);
-        DecimalFormat df = new DecimalFormat("#.00", simbolos);
+        DecimalFormat df = new DecimalFormat("0.00", simbolos);
 
         String texto= "";
         String comprobante = "";
@@ -247,9 +292,9 @@ public class Print {
                 // IMPRIMIR DATOS GENERALES DEL CLIENTE Y EL DOCUMETNO
                 posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "NUMERO  : " + comprobante + LF);
                 posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "FECHA   : " + fecha+ LF);
-                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "CLIENTE : " + cliente + LF);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "CLIENTE : " + cleanAcentos(cliente) + LF);
                 posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "DNI/RUC : " + dni_ruc + LF);
-                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "DIRECCION : " + direccion + LF);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "DIRECCION : " + cleanAcentos(direccion) + LF);
                 //ESTO SOLO PARA PRUEBAS ELIMINARLO
                 if (sha1==null){
                     sha1 = "ECGeF3Moo0qfijT3izDanpL8j6I=";
@@ -284,7 +329,7 @@ public class Print {
                                 nombreProducto += "..";
                             }
                         }
-                        String detalleVenta = ESC + "|lA" + String.format("%-4s", cantidad) + String.format("%-31s", nombreProducto) + String.format("%1$5s", df.format(precioUnitario)) + String.format("%1$8s", df.format(importe)) + LF;
+                        String detalleVenta = ESC + "|lA" + String.format("%-4s", cantidad) + String.format("%-31s", cleanAcentos(nombreProducto)) + String.format("%1$5s", df.format(precioUnitario)) + String.format("%1$8s", df.format(importe)) + LF;
                         posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, detalleVenta);
                         //textoImpresionContenidoLeft +=String.format("%-6s",cantidad) + String.format("%-28s",nombreProducto)+ "\n";
                         //textoImpresionContenidoRight+= String.format("%-5s",df.format(importe)) + "\n";
@@ -316,7 +361,7 @@ public class Print {
 
 
                     posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + lineas + LF + LF);
-                    posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + "VENDEDOR: " + nombreAgente + LF + LF + LF);
+                    posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + "VENDEDOR: " + cleanAcentos(nombreAgente) + LF + LF + LF);
                     posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT,ESC + "|cA" + ESC + "|bC" + ESC + "|2C" + "GRACIAS POR SU COMPRA" + LF + LF + LF);
                 break;
             default:
@@ -342,4 +387,211 @@ public class Print {
             return string;
     }
 
+    public void printTransferencia(int idLiquidacion, String nombreAgente) throws JposException {
+
+        dbAdapter_transferencias = new DbAdapter_Transferencias(context);
+        dbAdapter_transferencias.open();
+
+        Cursor cursorTransferencias= dbAdapter_transferencias.getTransferencias(idLiquidacion);
+
+        cursorTransferencias.moveToFirst();
+
+
+
+        if (cursorTransferencias.getCount()>0){
+
+
+
+            printCabecera(Constants.DOCUMENTO_TRANSFERENCIA);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "AGENTE       : " + nombreAgente + LF);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "LIQUIDACION  : " + idLiquidacion + LF);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "FECHA        : " + getDateFull() + LF);
+
+
+
+            int id_almacen = -1;
+            int i= 0;
+
+            for (cursorTransferencias.moveToFirst(); !cursorTransferencias.isAfterLast(); cursorTransferencias.moveToNext()){
+
+                String codigo = cursorTransferencias.getString(cursorTransferencias.getColumnIndexOrThrow(DbAdapter_Transferencias.T_codigo));
+                String producto = cursorTransferencias.getString(cursorTransferencias.getColumnIndexOrThrow(DbAdapter_Transferencias.T_producto));
+                String descripcion_transferencia = cursorTransferencias.getString(cursorTransferencias.getColumnIndexOrThrow(DbAdapter_Transferencias.T_descripcion_transferencia));
+                int id_almacen_actual = cursorTransferencias.getInt(cursorTransferencias.getColumnIndexOrThrow(DbAdapter_Transferencias.T_almacen_id));
+                int cantidad = cursorTransferencias.getInt(cursorTransferencias.getColumnIndexOrThrow(DbAdapter_Transferencias.T_cantidad));
+
+                if (id_almacen != id_almacen_actual){
+                    //IMPRIMIR TRANSFERENCIA DESCRIPCION
+                    printLineas();
+                    //posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + cleanAcentos(descripcion_transferencia) + LF + LF + LF);
+                    //posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT,ESC + "|cA" + ESC + "|bC" + ESC + "|2C" + cleanAcentos(descripcion_transferencia) + LF + LF + LF);
+                    posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + cleanAcentos(descripcion_transferencia) + LF + LF );
+                    String cabeceraVenta = ESC + "|lA" +String.format("%-3s","#")+  String.format("%-6s","COD") + String.format("%-30s","PRODUCTO")+ String.format("%1$9s","CANT") + LF;
+                    posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, cabeceraVenta);
+                    printLineas();
+                    //ASIGNAR ID_ALMACEN
+
+                    id_almacen = id_almacen_actual;
+                }
+
+                if (producto.length() >= 34) {
+                    producto = producto.substring(0, 32);
+                    producto += "..";
+                }
+
+                String detalleTransferencia = ESC + "|lA" + String.format("%-3s", ++i) + String.format("%-6s", codigo)+ String.format("%-34s", cleanAcentos(producto)) + String.format("%1$5s", cantidad) + LF + LF + LF + LF;
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, detalleTransferencia);
+            }
+        }
+
+    }
+
+    public void printArqueo(int idLiquidacion, String nombreAgente) throws JposException {
+        DecimalFormatSymbols simbolos = DecimalFormatSymbols.getInstance(Locale.ENGLISH);
+        DecimalFormat df = new DecimalFormat("0.00", simbolos);
+
+        //String texto = ".\n";
+
+
+        Cursor cursorResumen = dbHelperGastosIngr.listarIngresosGastos(idLiquidacion);
+        cursorResumen.moveToFirst();
+
+        if (cursorResumen.getCount()>0) {
+            for (cursorResumen.moveToFirst(); !cursorResumen.isAfterLast(); cursorResumen.moveToNext()) {
+                int n = cursorResumen.getInt(cursorResumen.getColumnIndexOrThrow("n"));
+                Double emitido = cursorResumen.getDouble(cursorResumen.getColumnIndexOrThrow("emitidas"));
+                Double pagado = cursorResumen.getDouble(cursorResumen.getColumnIndexOrThrow("pagado"));
+                Double cobrado = cursorResumen.getDouble(cursorResumen.getColumnIndexOrThrow("cobrado"));
+                String documento = cursorResumen.getString(cursorResumen.getColumnIndexOrThrow("comprobante"));
+                nTotal += n;
+                emitidoTotal += emitido;
+                pagadoTotal += pagado;
+                cobradoTotal += cobrado;
+
+            }
+        }
+
+
+        Cursor cursorTotalGastos = dbAdapter_informe_gastos.resumenInformeGastos(getDayPhone());
+
+        if (cursorTotalGastos.getCount()>0){
+            for (cursorTotalGastos.moveToFirst(); !cursorTotalGastos.isAfterLast(); cursorTotalGastos.moveToNext()) {
+                Double rutaGasto = cursorTotalGastos.getDouble(cursorTotalGastos.getColumnIndexOrThrow("RUTA"));
+                Double plantaGasto = cursorTotalGastos.getDouble(cursorTotalGastos.getColumnIndexOrThrow("PLANTA"));
+                String nombreGasto = cursorTotalGastos.getString(cursorTotalGastos.getColumnIndexOrThrow("tg_te_nom_tipo_gasto"));
+
+                totalRuta += rutaGasto;
+                totalPlanta += plantaGasto;
+            }
+        }
+
+
+
+        Double ingresosTotales = cobradoTotal + pagadoTotal;
+        Double gastosTotales = totalRuta;
+        Double aRendir = ingresosTotales - gastosTotales;
+
+
+        printCabecera(Constants.DOCUMENTO_ARQUEO);
+        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "AGENTE       : " + nombreAgente + LF);
+        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "LIQUIDACION  : " + idLiquidacion + LF);
+        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "FECHA        : " + getDateFull() + LF+ LF+ LF);
+
+
+        String ingresos = ESC + "|lA" +String.format("%-20s", "INGRESOS TOTALES")+ String.format("%-16s", "S/.") + String.format("%1$12s", df.format(ingresosTotales)) + LF;
+        String gastos = ESC + "|lA" +String.format("%-20s", "GASTOS TOTALES\"")+ String.format("%-16s", "S/.") + String.format("%1$12s", df.format(gastosTotales)) + LF;
+        String total = ESC + "|lA" +String.format("%-20s", "TOTAL A RENDIR")+ String.format("%-16s", "S/.") + String.format("%1$12s", df.format(aRendir)) + LF+ LF+ LF;
+
+        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ingresos);
+        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, gastos);
+        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, total);
+
+
+
+
+        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + cleanAcentos("INGRESOS") + LF + LF);
+
+
+
+        String cabeceraIngresos = ESC + "|cA" + ESC + "|bC"+String.format("%-20s", "COMPROBANTE")+ String.format("%1$4s", "")  + String.format("%1$8s", "EMIT.") + String.format("%1$8s", "PAG.") + String.format("%1$8s", "COB.") + LF;
+        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, cabeceraIngresos);
+
+        cursorResumen.moveToFirst();
+        if (cursorResumen.getCount()>0){
+            for (cursorResumen.moveToFirst(); !cursorResumen.isAfterLast(); cursorResumen.moveToNext()) {
+                int n = cursorResumen.getInt(cursorResumen.getColumnIndexOrThrow("n"));
+                Double emitido = cursorResumen.getDouble(cursorResumen.getColumnIndexOrThrow("emitidas"));
+                Double pagado = cursorResumen.getDouble(cursorResumen.getColumnIndexOrThrow("pagado"));
+                Double cobrado = cursorResumen.getDouble(cursorResumen.getColumnIndexOrThrow("cobrado"));
+                String documento = cursorResumen.getString(cursorResumen.getColumnIndexOrThrow("comprobante"));
+                String detalle = ESC + "|lA" +String.format("%-20s", documento)+ String.format("%1$4s", n)  + String.format("%1$8s",  df.format(emitido)) + String.format("%1$8s", df.format(pagado)) + String.format("%1$8s", df.format(cobrado)) + LF;
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, detalle);
+            }
+        }
+        printLineas();
+        String totalIngresos = ESC + "|cA" + ESC + "|bC" +String.format("%-20s", "Total") + String.format("%1$4s", nTotal) + String.format("%1$8s", df.format(emitidoTotal)) + String.format("%1$8s", df.format(pagadoTotal)) + String.format("%1$8s", df.format(cobradoTotal)) +LF+LF+LF;
+        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, totalIngresos);
+
+        /*String cabeceraGastos = ESC + "|lA" +String.format("%-20s", "Total") + String.format("%1$4s", nTotal) + String.format("%1$8s", df.format(emitidoTotal)) + String.format("%1$8s", df.format(pagadoTotal)) + String.format("%1$8s", df.format(cobradoTotal)) + LF;
+        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, cabeceraGastos);*/
+
+
+        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + cleanAcentos("GASTOS") + LF + LF);
+
+
+
+        String cabeceraGastos = ESC + "|cA" + ESC + "|bC" + String.format("%-27s", "Tipo de Gasto") + String.format("%1$7s", "Ruta") + String.format("%1$14s", "Planta")+ LF;
+        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, cabeceraGastos);
+
+
+        cursorTotalGastos.moveToFirst();
+        for (cursorTotalGastos.moveToFirst(); !cursorTotalGastos.isAfterLast(); cursorTotalGastos.moveToNext()) {
+            Double rutaGasto = cursorTotalGastos.getDouble(cursorTotalGastos.getColumnIndexOrThrow("RUTA"));
+            Double plantaGasto = cursorTotalGastos.getDouble(cursorTotalGastos.getColumnIndexOrThrow("PLANTA"));
+            String nombreGasto = cursorTotalGastos.getString(cursorTotalGastos.getColumnIndexOrThrow("tg_te_nom_tipo_gasto"));
+
+            if (nombreGasto.length()>=27){
+                nombreGasto= nombreGasto.substring(0,24);
+                nombreGasto+="..";
+
+            }
+            String detalleGastos = ESC + "|lA" + String.format("%-27s", nombreGasto) + String.format("%1$7s", df.format(rutaGasto)) + String.format("%1$14s", df.format(plantaGasto))+ LF ;
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, detalleGastos);
+        }
+
+
+        printLineas();
+        String totalGastos = ESC + "|cA" + ESC + "|bC" +String.format("%-27s", "Total") + String.format("%1$7s", df.format(totalRuta)) + String.format("%1$14s", df.format(totalPlanta))+LF+LF+LF + LF + LF ;
+        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, totalGastos);
+    }
+
+    private String getDateFull() {
+        Calendar cal = new GregorianCalendar();
+        Date date = cal.getTime();
+        DateFormat format = DateFormat.getDateInstance(DateFormat.FULL);
+        String formatteDate = format.format(date);
+        return formatteDate.substring(0, 1).toUpperCase() + formatteDate.substring(1);
+    }
+
+    public static String cleanAcentos(String string) {
+        /*String original = "áàäéèëíìïóòöúùuñÁÀÄÉÈËÍÌÏÓÒÖÚÙÜÑçÇü·':";
+        String ascii = "aaaeeeiiiooouuunAAAEEEIIIOOOUUUNcCu   ";*/
+        String original = "áàäéèëíìïóòöúùuñÁÀÄÉÈËÍÌÏÓÒÖÚÙÜÑçÇü·'";
+        String ascii = "aaaeeeiiiooouuunAAAEEEIIIOOOUUUNcCu  ";
+        if (string != null) {
+            //Recorro la cadena y remplazo los caracteres originales por aquellos sin acentos
+            for (int i = 0; i < original.length(); i++ ) {
+                string = string.replace(original.charAt(i), ascii.charAt(i));
+            }
+        }
+        return string;
+    }
+
+    public String getDayPhone()
+    {
+        Calendar cal = new GregorianCalendar();
+        Date date = cal.getTime();
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        return df.format(date);
+    }
 }

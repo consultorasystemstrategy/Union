@@ -527,7 +527,7 @@ public class Login extends Activity implements OnClickListener {
                 usuario = user.getText().toString();
                 clave = pass.getText().toString();
                 for (int i = 0; i < agenteLista.size(); i++) {
-                    Log.d("Agente" + i, "Nombre : " + agenteLista.get(i).getNombreAgente());
+                    Log.d("Agente" + i, "Nombre : " + agenteLista.get(i).getNombreAgente() + ", MAC : " + agenteLista.get(i).getMAC());
 
                     /*
                     //VARIABLE GLOBAL, PARA OBTENERLA DESDE CUALQUIER SITIO DE LA APLICACIÓN

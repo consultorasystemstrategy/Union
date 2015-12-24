@@ -188,5 +188,6 @@
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_main2">Main2Activity</string>
     <string name="title_activity_fgfg">fgfg</string>
+    <string name="title_activity_bluetooth__printer">Impresión</string>
 
 </resources>

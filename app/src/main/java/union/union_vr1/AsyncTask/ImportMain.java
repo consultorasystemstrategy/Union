@@ -288,6 +288,7 @@ public class ImportMain extends AsyncTask<String, String, String> {
                 }
             }
             publishProgress("" + 55);
+
             for (int i = 0; i < eventoEstablecimientos.size(); i++) {
                 Log.d("ESTABLECIMIENTOS X RUTAS: " + i, " Nombre Establecimiento : " + eventoEstablecimientos.get(i).getNombreEstablecimiento() + ", orden : " + eventoEstablecimientos.get(i).getOrden() + ", BARCODE: " + eventoEstablecimientos.get(i).getCodigoBarras());
                 boolean existe = dbAdaptert_evento_establec.existeEstablecsById(eventoEstablecimientos.get(i).getIdEstablecimiento());

@@ -44,8 +44,10 @@ import jpos.JposException;
 import union.union_vr1.BlueTooth.AlertView;
 import union.union_vr1.BlueTooth.Print;
 import union.union_vr1.Sqlite.DbAdapter_Agente;
+import union.union_vr1.Sqlite.DbAdapter_Agente_Login;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta_Detalle;
+import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 import union.union_vr1.Utils.NumberToLetterConverter;
 import union.union_vr1.Vistas.VMovil_Evento_Establec;
@@ -64,6 +66,7 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
     private TextView textViewImprimirContenidoLeft;
     private TextView textViewImprimirContenidoRight;
 
+    private int idLiquidacion;
 
     private String textoImpresion = "";
     private String textoImpresionCabecera = "";
@@ -98,7 +101,9 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
     private boolean enabledBluetooth = false;
 
     private DbAdapter_Comprob_Venta dbHelperComprobanteVenta;
+    private DbAdapter_Agente_Login dbAdapter_agente_login;
     private DbAdapter_Comprob_Venta_Detalle dbHelperComprobanteVentaDetalle;
+    private DbAdapter_Temp_Session session;
     private int pulgadasImpresora=0;
 
 
@@ -117,8 +122,8 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
     private String textoImpresionContenidoRight = "";
 
 
-    //ADAPT
-    private String defaultAdressImpresora = "00:12:6F:36:7E:9D";
+    //BLUETOOTH VARIABLES
+    private String defaultAdressImpresora = "00:12:6F:XX:XX:XX";
     // Intent request codes
     // private static final int REQUEST_CONNECT_DEVICE = 1;
     private static final int REQUEST_ENABLE_BT = 2;
@@ -183,11 +188,26 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
         dbHelperComprobanteVentaDetalle = new DbAdapter_Comprob_Venta_Detalle(this);
         dbHelperComprobanteVenta.open();
         dbHelperComprobanteVentaDetalle.open();
+        dbAdapter_agente_login = new DbAdapter_Agente_Login(this);
+        dbAdapter_agente_login.open();
+        session = new DbAdapter_Temp_Session(this);
+        session.open();
 
+
+        idLiquidacion = session.fetchVarible(3);
 
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         nameImpresora= SP.getString("impresoraNombre", defaultNameImpresora);
         pulgadasImpresora= Integer.parseInt(SP.getString("impresoraAncho", "3"));
+
+        Cursor cursor = dbAdapter_agente_login.fetchAgenteMAC(idLiquidacion);
+        Log.d(TAG, "CURSOR COUNT MAC : "+cursor.getCount());
+        if (cursor.getCount()>0){
+            defaultAdressImpresora = cursor.getString(cursor.getColumnIndexOrThrow(dbAdapter_agente_login.AG_MAC));
+        }
+
+        Log.d(TAG, "ADRESS IMPRESORA : " +defaultAdressImpresora);
+
 
         buttonImprimir = (Button) findViewById(R.id.buttonImprimir);
         buttonSincronizar = (Button) findViewById(R.id.buttonSincronizar);

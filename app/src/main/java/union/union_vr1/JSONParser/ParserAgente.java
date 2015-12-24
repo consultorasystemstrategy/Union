@@ -42,6 +42,8 @@ public class ParserAgente {
                         jsonObj.getInt("correlativoBoleta"),
                         jsonObj.getInt("correlativoFactura"),
                         jsonObj.getInt("correlativoRPP"),
+                        jsonObj.getString("MAC"),
+                        jsonObj.getInt("rolid"),
                         Constants._IMPORTADO
                 ));
             }

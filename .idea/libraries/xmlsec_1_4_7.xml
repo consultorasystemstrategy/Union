@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="xmlsec-1.4.7">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/app/libs/xmlsec-1.4.7.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

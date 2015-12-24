@@ -56,8 +56,9 @@ public class DbAdapter_Exportacion_Comprobantes {
         }
     }
 
-    public long createRegistroExportacion(int id_sqlite, int id_sid, int estado_sincronizacion) {
+    public long createRegistroExportacion(long id_sqlite, int id_sid, int estado_sincronizacion) {
 
+        long _id_mapeo = -1;
         /**
          * SE CREA UN REGISTRO QUE MAPEA LOS ID DE LOS COMPROBANTES ENTRE LOS SISTEMAS
          * _ID_SQLITE
@@ -68,10 +69,12 @@ public class DbAdapter_Exportacion_Comprobantes {
         initialValues.put(EC_id_sqlite,id_sqlite);
         initialValues.put(EC_id_sid,id_sid);
         initialValues.put(EC_id_flex,Constants._FLEX_ID_DEFECTO);
-        initialValues.put(EC_estado_sincronizacion,estado_sincronizacion);
+        initialValues.put(EC_estado_sincronizacion, estado_sincronizacion);
 
 
-        return mDb.insert(SQLITE_TABLE_EXPORTACION_COMPROBANTES, null, initialValues);
+        _id_mapeo = mDb.insert(SQLITE_TABLE_EXPORTACION_COMPROBANTES, null, initialValues);
+        Log.d(TAG, "_ID MAPEO : "+ _id_mapeo);
+        return _id_mapeo;
     }
 
     public Cursor filterExport() {

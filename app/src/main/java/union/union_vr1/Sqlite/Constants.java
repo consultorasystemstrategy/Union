@@ -21,6 +21,14 @@ public class Constants {
     public static final int FROM_SERVICE = 2;
     public static final int _ID_ALARM = 6975;
 
+    public static final int DOCUMENTO_TRANSFERENCIA = 1000;
+    public static final int DOCUMENTO_FACTURA = 1;
+    public static final int DOCUMENTO_BOLETA = 2;
+    public static final int DOCUMENTO_ARQUEO = 1001;
+
+
+    public static final int NO_ASIGNADO = -1;
+
 
     public static final String ACTION_EXPORT_SERVICE = "EXPORT_SERVICE";
 

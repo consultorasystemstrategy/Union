@@ -95,7 +95,7 @@ public class DbAdapter_Comprob_Venta_Detalle {
         return mDb.insert(SQLITE_TABLE_Comprob_Venta_Detalle, null, initialValues);
     }
 
-    public int updateComprobVentaDetalleReal(int idComprobante, int idReal){
+    public int updateComprobVentaDetalleReal(long idComprobante, int idReal){
         ContentValues initialValues = new ContentValues();
         initialValues.put(CD_id_comprob_real, idReal);
 

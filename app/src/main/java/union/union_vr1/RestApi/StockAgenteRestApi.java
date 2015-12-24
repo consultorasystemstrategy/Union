@@ -675,19 +675,19 @@ public class StockAgenteRestApi {
         p.put("PerITipoDocIdentidadId",mapObject(PerITipoDocIdentidadId));
         p.put("PerITipoPersonaId",mapObject(PerITipoPersonaId));
         p.put("PerIUsuarioId",mapObject(PerIUsuarioId));
-        p.put("PerVCodigoERP",mapObject(PerVCodigoERP));
+        //p.put("PerVCodigoERP",mapObject(PerVCodigoERP));
         p.put("PerIEmpresaId",mapObject(PerIEmpresaId));
         p.put("CliVCodigo",mapObject(CliVCodigo));
         p.put("CliVDocidentidad",mapObject(CliVDocidentidad));
         p.put("CliBEstado",mapObject(CliBEstado));
         p.put("CliICategoriaClienteId",mapObject(CliICategoriaClienteId));
-        p.put("CliIDiasLimiteCredito",mapObject(CliIDiasLimiteCredito));
+        /*p.put("CliIDiasLimiteCredito",mapObject(CliIDiasLimiteCredito));*/
         p.put("CliIAgenteVentaId",mapObject(CliIAgenteVentaId));
         p.put("CliIUsuarioId",mapObject(CliIUsuarioId));
         p.put("CliBEstadoAtencion",mapObject(CliBEstadoAtencion));
         p.put("CliDOMontoCredito",mapObject(CliDOMontoCredito));
         p.put("CliIModalidadCreditoId",mapObject(CliIModalidadCreditoId));
-        p.put("CliDTFechaLimiteCredito",mapObject(CliDTFechaLimiteCredito));
+        //p.put("CliDTFechaLimiteCredito",mapObject(CliDTFechaLimiteCredito));
         p.put("DirVDescripcion",mapObject(DirVDescripcion));
         p.put("DirBEstado",mapObject(DirBEstado));
         p.put("DirIDistritoId",mapObject(DirIDistritoId));
@@ -697,9 +697,9 @@ public class StockAgenteRestApi {
         p.put("DirIUsuarioId",mapObject(DirIUsuarioId));
         p.put("DirBEstablecimientoAsociado",mapObject(DirBEstablecimientoAsociado));
         p.put("DirBDireccionFiscal",mapObject(DirBDireccionFiscal));
-        p.put("EstIRutaId",mapObject(EstIRutaId));
+        //p.put("EstIRutaId",mapObject(EstIRutaId));
         p.put("EstVDescripcion",mapObject(EstVDescripcion));
-        p.put("EstIOrden",mapObject(EstIOrden));
+        //p.put("EstIOrden",mapObject(EstIOrden));
         p.put("EstBEstado",mapObject(EstBEstado));
         p.put("EstIUsuarioId",mapObject(EstIUsuarioId));
         p.put("EstIPorcentajeDevolucion",mapObject(EstIPorcentajeDevolucion));
@@ -707,7 +707,7 @@ public class StockAgenteRestApi {
         p.put("EstVExhibidor",mapObject(EstVExhibidor));
         p.put("EstDOMontoCompra",mapObject(EstDOMontoCompra));
         p.put("EstITipEstId",mapObject(EstITipEstId));
-        p.put("EstVCodigoBarra",mapObject(EstVCodigoBarra));
+        //p.put("EstVCodigoBarra",mapObject(EstVCodigoBarra));
         p.put("LocVLongitude",mapObject(LocVLongitude));
         p.put("LocVLatitude",mapObject(LocVLatitude));
         p.put("LocBEstado",mapObject(LocBEstado));
@@ -856,6 +856,21 @@ public class StockAgenteRestApi {
         o.put("method", "InsExportarTransferencias");
         p.put("IdLiquidacion",mapObject(IdLiquidacion));
         p.put("IdAgente",mapObject(IdAgente));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+
+    public JSONObject fsel_ObtenerTransferencias(int vint_AgenteId,int vint_LiquidacionId) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","RestAPI");
+        o.put("method", "fsel_ObtenerTransferencias");
+        p.put("vint_AgenteId",mapObject(vint_AgenteId));
+        p.put("vint_LiquidacionId",mapObject(vint_LiquidacionId));
         o.put("parameters", p);
         String s = o.toString();
         String r = load(s);

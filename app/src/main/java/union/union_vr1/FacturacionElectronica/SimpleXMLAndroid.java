@@ -753,16 +753,22 @@ public class SimpleXMLAndroid {
                         
                         //INFORMACIÓN SOBRE EL CLIENTE
                         UblAccountingCustomerParty accountingCustomerParty = new UblAccountingCustomerParty();
-                        
-                        accountingCustomerParty.setCustomerAssignedAccountID(user_ruc_dni);
+
+                        if (tipo_documento.equals("03")){
+                            if (user_ruc_dni.length()==11){
+                                user_ruc_dni =  user_ruc_dni.substring(2,10);
+                            }
+                        }
+
+
+                            accountingCustomerParty.setCustomerAssignedAccountID(user_ruc_dni);
                             if (user_ruc_dni.length()==11)
                                 accountingCustomerParty.setAdditionalAccountID("6");
                             else if(user_ruc_dni.length()==8)
                                 accountingCustomerParty.setAdditionalAccountID("1");
-                            else if (user_ruc_dni.length()>10)
+                            else
                                 accountingCustomerParty.setAdditionalAccountID("6");
-                            else if (user_ruc_dni.length()<=10)
-                                accountingCustomerParty.setAdditionalAccountID("1");
+
                         
                         UblParty partyCliente = new UblParty();
                         UblPartyLegalEntity legalEntityCliente = new UblPartyLegalEntity();

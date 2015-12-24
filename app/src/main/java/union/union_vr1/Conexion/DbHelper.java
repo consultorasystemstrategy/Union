@@ -23,6 +23,7 @@ import union.union_vr1.Sqlite.DbAdapter_Temp_Comprob_Cobro;
 import union.union_vr1.Sqlite.DbAdapter_Temp_DatosSpinner;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Establecimiento;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
+import union.union_vr1.Sqlite.DbAdapter_Transferencias;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 import union.union_vr1.Sqlite.DbAdapter_Tipo_Gasto;
 import union.union_vr1.Sqlite.DbAdapter_Informe_Gastos;
@@ -37,7 +38,7 @@ import union.union_vr1.Sqlite.DbAdapter_Histo_Venta_Detalle;
  */
 public class DbHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 9;
+    private static final int DATABASE_VERSION = 10;
     private static final String DATABASE_NAME = "ProdUniondb.sqlite";
 
     public DbHelper(Context context) {
@@ -88,6 +89,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(DbAdapter_Exportacion_Comprobantes.CREATE_TABLE_EXPORTACION_COMPROBANTES);
         db.execSQL(DbAdapter_Temp_DatosSpinner.CREATE_TABLE_Temp_Session);
         db.execSQL(DbAdapter_Temp_Establecimiento.CREATE_TABLE_TEMP_ESTABLEC);
+        db.execSQL(DbAdapter_Transferencias.CREATE_TABLE_TRANSFERENCIAS);
 
 
 
@@ -125,6 +127,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(DbAdapter_Exportacion_Comprobantes.DELETE_TABLE_EXPORTACION_COMPROBANTES);
         db.execSQL(DbAdapter_Temp_DatosSpinner.DELETE_TABLE_Temp_data_spinner);
         db.execSQL(DbAdapter_Temp_Establecimiento.DELETE_TABLE_Temp_Establec);
+        db.execSQL(DbAdapter_Transferencias.DELETE_TABLE_TRANSFERENCIAS);
         onCreate(db);
     }
 }

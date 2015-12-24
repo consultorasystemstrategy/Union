@@ -24,6 +24,9 @@ public class DbAdapter_Agente_Login {
     public static final String LOGIN_usuario= "login_usuario";
     public static final String LOGIN_clave = "login_clave";
     public static final String AG_fecha = "fecha";
+    public static final String AG_MAC = "MAC";
+    public static final String AG_rol_id = "rol_id";
+
     public static final String AG_LIQUIDACION = "LIQUIDACION";
 
     //FALTA TRAER ESTOS CAMPOS
@@ -56,6 +59,8 @@ public class DbAdapter_Agente_Login {
                     +LOGIN_clave+" text, "
                     +AG_fecha+" text, "
                     +AG_LIQUIDACION+" integer, "
+                    +AG_MAC+" text, "
+                    +AG_rol_id+" integer, "
                     +estado_sincronizacion+ " integer);";
 
     public static final String DELETE_TABLE_AGENTE_LOGIN = "DROP TABLE IF EXISTS " + SQLITE_TABLE_Agente;
@@ -92,6 +97,9 @@ public class DbAdapter_Agente_Login {
         initialValues.put(LOGIN_clave, clave);
         initialValues.put(AG_LIQUIDACION, agente.getLiquidacion());
         initialValues.put(AG_fecha, fecha);
+        initialValues.put(AG_MAC, agente.getMAC());
+        initialValues.put(AG_rol_id, agente.getRolid());
+
 
 
         return mDb.insert(SQLITE_TABLE_Agente, null, initialValues);
@@ -113,9 +121,11 @@ public class DbAdapter_Agente_Login {
         initialValues.put(AG_LIQUIDACION, agente.getLiquidacion());
         initialValues.put(LOGIN_clave, clave);
         initialValues.put(AG_fecha, fecha);
+        initialValues.put(AG_MAC, agente.getMAC());
+        initialValues.put(AG_rol_id, agente.getRolid());
 
         mDb.update(SQLITE_TABLE_Agente, initialValues,
-                AG_id_agente_venta+"=?",new String[]{""+agente.getIdAgenteVenta()});
+                AG_id_agente_venta + "=?", new String[]{"" + agente.getIdAgenteVenta()});
     }
 
     public boolean existeAgentesById(int idAgenteVenta) throws SQLException {
@@ -135,6 +145,21 @@ public class DbAdapter_Agente_Login {
         }
         return exists;
 
+    }
+
+    public Cursor fetchAgenteMAC(int liquidacion) throws SQLException {
+        Cursor mCursor = null;
+        mCursor = mDb.query(true, SQLITE_TABLE_Agente, new String[] {AG_id_agente_venta,
+                        AG_nombre_agente, AG_serie_boleta, AG_serie_factura,AG_serie_rrpp
+                        ,AG_correlativo_boleta , AG_correlativo_factura, AG_correlativo_rrpp
+                        , LOGIN_usuario,AG_LIQUIDACION , LOGIN_clave,AG_fecha , AG_MAC,AG_rol_id },
+                AG_LIQUIDACION + " = " + liquidacion, null,
+                null, null, null, null);
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+
+        return mCursor;
     }
 
 

@@ -157,7 +157,7 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
     Double slide_gastosTotales = 0.0;
     Double slide_aRendir = 0.0;
 
-    private CerrarCaja cerrarCaja;
+    //private CerrarCaja cerrarCaja;
 
     private static final String TAG = VMovil_Resumen_Caja.class.getSimpleName();
     @Override
@@ -179,7 +179,7 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
         //SLIDING MENU
         dbGastosIngresos = new DbGastos_Ingresos(this);
         dbGastosIngresos.open();
-        cerrarCaja = new CerrarCaja(mainActivity);
+        //cerrarCaja = new CerrarCaja(mainActivity);
 
         //dbAdapter_informe_gastos = new DbAdapter_Informe_Gastos(this);
         //dbAdapter_informe_gastos.open();
@@ -502,8 +502,8 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                session.deleteVariable(9);
-                session.createTempSession(9, 0);
+                /*session.deleteVariable(9);
+                session.createTempSession(9, 0);*/
                 /*Intent intent = new Intent(activity, VMovil_Online_Pumovil.class);
                 finish();
                 startActivity(intent);*/
@@ -650,7 +650,7 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
                 v.setTextColor(mainActivity.getResources().getColor(R.color.Blanco));
                 toast.show();
                 Log.d("CERRAR CAJA", ""+idLiquidacion+"-"+slide_ingresosTotales+"-"+slide_gastosTotales+""+slide_aRendir+"-"+kmFinall);
-                cerrarCaja.execute(""+idLiquidacion, ""+slide_ingresosTotales,""+slide_gastosTotales,""+slide_aRendir,""+kmFinall, ""+idAgente);
+                new CerrarCaja(mainActivity).execute(""+idLiquidacion, ""+slide_ingresosTotales,""+slide_gastosTotales,""+slide_aRendir,""+kmFinall, ""+idAgente);
             }
         });
         builder.setView(layout);
