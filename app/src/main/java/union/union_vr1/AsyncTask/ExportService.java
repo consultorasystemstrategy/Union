@@ -78,10 +78,12 @@ public class ExportService extends IntentService {
         Cursor cursorExportacionFlex = dbAdapter_exportacion_comprobantes.filterExport();
 
 
+
         Log.d(TAG, "COUNT CURSOR_EXPORTACION_FLEX :" + cursorExportacionFlex.getCount());
 
 
         if (cursorExportacionFlex.getCount()>0){
+
             builder.setProgress(cursorExportacionFlex.getCount(), 0, false);
             startForeground(1, builder.build());
 

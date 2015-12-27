@@ -23,7 +23,6 @@ import android.widget.AdapterView.OnItemClickListener;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
-import java.text.DecimalFormat;
 
 import union.union_vr1.R;
 import union.union_vr1.Sqlite.CursorAdapterEstablecimientoColor;
@@ -43,6 +42,7 @@ import union.union_vr1.activity_agregar_establecimiento;
 public class VMovil_Menu_Establec extends Activity implements View.OnClickListener{
 
 
+
     private DbAdapter_Temp_Session session;
     private DbAdaptert_Evento_Establec dbHelper;
     private SimpleCursorAdapter dataAdapter;
@@ -52,7 +52,7 @@ public class VMovil_Menu_Establec extends Activity implements View.OnClickListen
     private TextView textViewNombreRuta;
     private int idLiquidacion;
     private Activity mainActivity;
-    private Button buttonAgregarEstablecimiento;
+
     private TextView textViewSlideCargar;
 
 
@@ -99,6 +99,7 @@ public class VMovil_Menu_Establec extends Activity implements View.OnClickListen
     Double slide_aRendir = 0.0;
 
 
+    Utils df = new Utils();
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -146,8 +147,7 @@ public class VMovil_Menu_Establec extends Activity implements View.OnClickListen
 
         }
         textViewNombreRuta.setText("Ruta : "+nombreRuta);
-        buttonAgregarEstablecimiento = (Button) findViewById(R.id.buttonAddEstablecimientos);
-        buttonAgregarEstablecimiento.setOnClickListener(this);
+
 
         //Generate ListView from SQLite Database
         displayListView();
@@ -422,7 +422,6 @@ public class VMovil_Menu_Establec extends Activity implements View.OnClickListen
 
 
         //MOSTRAMOS EN EL SLIDE LOS DATOS OBTENIDOS
-        DecimalFormat df = new DecimalFormat("#.00");
         textViewSlideNombreAgente.setText(""+slideNombreAgente);
         textViewSlideNombreRuta.setText(""+slideNombreRuta);
         buttonSlideNroEstablecimiento.setText(""+slideNumeroEstablecimientoxRuta);
@@ -439,10 +438,6 @@ public class VMovil_Menu_Establec extends Activity implements View.OnClickListen
         // TODO Auto-generated method stub
         switch (v.getId()) {
 
-            case R.id.buttonAddEstablecimientos:
-                Intent iae = new Intent(this, VMovil_Crear_Establecimiento.class);
-                startActivity(iae);
-                break;
             case R.id.slide_textViewCargarInventario:
                 Intent cInventario = new Intent(this, VMovil_Cargar_Inventario.class);
                 startActivity(cInventario);

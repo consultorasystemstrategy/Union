@@ -7,13 +7,17 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.LightingColorFilter;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +34,8 @@ import union.union_vr1.AsyncTask.ExportMain;
 import union.union_vr1.AsyncTask.ImportCredito;
 import union.union_vr1.AsyncTask.ImportMain;
 import union.union_vr1.R;
+import union.union_vr1.Servicios.ServiceImport;
+import union.union_vr1.Sqlite.Constants;
 import union.union_vr1.Sqlite.DbAdapter_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta;
@@ -109,9 +115,13 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
 
     int slideIdEstablecimiento;
 
+
+
     private DbAdaptert_Evento_Establec dbAdaptert_evento_establec;
     private DbAdapter_Comprob_Venta dbAdapter_comprob_venta;
 
+
+    Utils df = new Utils();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -185,7 +195,15 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
         TextView nombreCliente = (TextView)findViewById(R.id.textViewEstablecimientoCliente);
         TextView deuda = (TextView) findViewById(R.id.textViewEstablecimientoDeuda);
         LinearLayout linearLayoutColor = (LinearLayout) findViewById(R.id.linearLayoutEstablecimientoColor);
-        TextView orden = (TextView) findViewById(R.id.textViewEstablecimientoOrden);
+
+        RatingBar ratingBar = (RatingBar) findViewById(R.id.rating);
+
+/*        Drawable progress = ratingBar.getProgressDrawable();
+        DrawableCompat.setTint(progress, Color.YELLOW);*/
+
+        LayerDrawable stars = (LayerDrawable) ratingBar.getProgressDrawable();
+        stars.getDrawable(2).setColorFilter(ContextCompat.getColor(mainActivity, R.color.accent), PorterDuff.Mode.SRC_ATOP);
+
 
         cursorEstablecimiento.moveToFirst();
 
@@ -199,15 +217,16 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
             double deudaTotal = cursorEstablecimiento.getDouble(cursorEstablecimiento.getColumnIndexOrThrow("cc_re_monto_a_pagar")) ;
 
 
-            DecimalFormat df= new DecimalFormat("#0.00");
+
+//            DecimalFormat df= new DecimalFormat("#0.00");
 
 
 
             nombreEstablecimiento.setText(numeroOrden + ". " +nombre_establecimiento);
             nombreEstablecimiento.setSingleLine(false);
             nombreCliente.setText(nombre_cliente);
-            orden.setText("");
             deuda.setText("S/. "+df.format(deudaTotal));
+            ratingBar.setRating(4);
 
             switch (id_estado_atencion){
                 case 1:
@@ -308,7 +327,10 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
         switch (id){
 
             case R.id.buttonImport:
-                new ImportMain(mainActivity).execute();
+                //new ImportMain(mainActivity).execute();
+                Intent intentImportService = new Intent(mainActivity, ServiceImport.class);
+                intentImportService.setAction(Constants.ACTION_IMPORT_SERVICE);
+                mainActivity.startService(intentImportService);
                 break;
             case R.id.buttonExportar:
                 new ExportMain(mainActivity).execute();
@@ -615,7 +637,7 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
 
 
         //MOSTRAMOS EN EL SLIDE LOS DATOS OBTENIDOS
-        DecimalFormat df = new DecimalFormat("#.00");
+//        DecimalFormat df = new DecimalFormat("#.00");
         textViewSlideNombreAgente.setText(""+slideNombreAgente);
         textViewSlideNombreRuta.setText(""+slideNombreRuta);
         buttonSlideNroEstablecimiento.setText(""+slideNumeroEstablecimientoxRuta);

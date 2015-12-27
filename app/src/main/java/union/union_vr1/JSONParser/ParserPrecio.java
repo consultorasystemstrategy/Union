@@ -21,15 +21,12 @@ import union.union_vr1.Vistas.VMovil_Online_Pumovil;
 public class ParserPrecio {
 
 
-    private DbAdapter_Temp_Session session;
-    private Activity mainActivity;
-    public ParserPrecio(Activity mainActivity) {
+    private int idAgente = -1;
+    private static String TAG = ParserPrecio.class.getSimpleName();
+    public ParserPrecio(int idAgente) {
         super();
-        this.mainActivity = mainActivity;
 
-        session = new DbAdapter_Temp_Session(mainActivity);
-        session.open();
-
+        this.idAgente = idAgente;
     }
 
     public ArrayList<Precio> parserPrecio(JSONObject object)
@@ -48,8 +45,7 @@ public class ParserPrecio {
                         jsonObj.getDouble("costoVenta"),
                         jsonObj.getDouble("costoUnidad"),
                         jsonObj.getInt("valorUnidad"),
-//                        ((MyApplication) mainActivity.getApplication()).getIdAgente(),
-                        session.fetchVarible(1),
+                        idAgente,
                         jsonObj.getInt("desde"),
                         jsonObj.getInt("hasta"),
                         jsonObj.getString("nombreProducto"),
@@ -59,7 +55,7 @@ public class ParserPrecio {
 
         } catch (JSONException e) {
             // TODO Auto-generated catch block
-            Log.d("JSONParser => parsePrecio", e.getMessage());
+            Log.d(TAG, "JSONParser => parsePrecio"+ e.getMessage());
         }
         return arrayList;
     }

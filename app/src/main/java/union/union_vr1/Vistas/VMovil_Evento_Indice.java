@@ -32,7 +32,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DateFormat;
-import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -43,6 +42,7 @@ import java.util.Timer;
 
 import union.union_vr1.Alarm.ReceiverAlarmFinishedDay;
 import union.union_vr1.AsyncTask.ExportMain;
+import union.union_vr1.AsyncTask.ExportService;
 import union.union_vr1.AsyncTask.ImportCredito;
 import union.union_vr1.AsyncTask.ImportMain;
 import union.union_vr1.AsyncTask.TimerGps;
@@ -50,6 +50,8 @@ import union.union_vr1.BarcodeScanner.IntentIntegrator;
 import union.union_vr1.BarcodeScanner.IntentResult;
 import union.union_vr1.R;
 import union.union_vr1.RestApi.StockAgenteRestApi;
+import union.union_vr1.Servicios.ServiceImport;
+import union.union_vr1.Sqlite.Constants;
 import union.union_vr1.Sqlite.DbAdapter_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta;
@@ -128,6 +130,10 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
     Double slide_ingresosTotales = 0.0;
     Double slide_gastosTotales = 0.0;
     Double slide_aRendir = 0.0;
+
+
+    //UTILIZARÉ EL DECIMAL FORMAT
+    Utils df = new Utils();
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
@@ -459,7 +465,6 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
 
 
         //MOSTRAMOS EN EL SLIDE LOS DATOS OBTENIDOS
-        DecimalFormat df = new DecimalFormat("#.00");
         textViewSlideNombreAgente.setText("" + slideNombreAgente);
         textViewSlideNombreRuta.setText("" + slideNombreRuta);
         buttonSlideNroEstablecimiento.setText("" + slideNumeroEstablecimientoxRuta);
@@ -498,7 +503,12 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
                 intentIntegrator.initiateScan();
                 break;
             case R.id.buttonImport:
-                new ImportMain(mainActivity).execute();
+
+                //new ImportMain(mainActivity).execute();
+                Intent intentImportService = new Intent(mainActivity, ServiceImport.class);
+                intentImportService.setAction(Constants.ACTION_IMPORT_SERVICE);
+                mainActivity.startService(intentImportService);
+
                 break;
             case R.id.buttonExportar:
                 new ExportMain(mainActivity).execute();
@@ -507,9 +517,9 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
                 Intent intent = new Intent(mainActivity, AppPreferences.class);
                 startActivity(intent);
                 break;
-            case R.id.buttonImportCredito:
+            /*case R.id.buttonImportCredito:
                 new ImportCredito(mainActivity).execute();
-                break;
+                break;*/
             default:
                 //ON ITEM SELECTED DEFAULT
                 break;

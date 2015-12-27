@@ -34,7 +34,6 @@ import android.widget.Toast;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -114,7 +113,6 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
 
     private Activity activity;
 
-    DecimalFormat df = new DecimalFormat("#.0");
 
     //SLIDING MENU
     private DbGastos_Ingresos dbGastosIngresos;
@@ -158,6 +156,7 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
     Double slide_aRendir = 0.0;
 
     //private CerrarCaja cerrarCaja;
+    Utils df = new Utils();
 
     private static final String TAG = VMovil_Resumen_Caja.class.getSimpleName();
     @Override
@@ -488,7 +487,6 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
         Double aRendir = ingresosTotales-gastosTotales;
 
 
-        DecimalFormat df = new DecimalFormat("#.0");
         textViewResumenIngresos.setText("S/. "+df.format(ingresosTotales));
         textViewResumenGastos.setText("S/. "+df.format(gastosTotales));
         textViewResumenARendir.setText("S/. "+df.format(aRendir));
@@ -817,7 +815,6 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
 
 
         //MOSTRAMOS EN EL SLIDE LOS DATOS OBTENIDOS
-        DecimalFormat df = new DecimalFormat("#.00");
         textViewSlideNombreAgente.setText(""+slideNombreAgente);
         textViewSlideNombreRuta.setText(""+slideNombreRuta);
         buttonSlideNroEstablecimiento.setText(""+slideNumeroEstablecimientoxRuta);

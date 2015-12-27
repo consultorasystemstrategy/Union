@@ -94,6 +94,7 @@ import union.union_vr1.FacturacionElectronica.SimpleXMLAndroid;
 import union.union_vr1.InputFilterMinMax;
 import union.union_vr1.R;
 import union.union_vr1.RestApi.StockAgenteRestApi;
+import union.union_vr1.Servicios.ServiceExport;
 import union.union_vr1.Sqlite.Constants;
 import union.union_vr1.Sqlite.DBAdapter_Temp_Venta;
 import union.union_vr1.Sqlite.DbAdapter_Agente;
@@ -109,9 +110,6 @@ import union.union_vr1.Sqlite.DbAdapter_Temp_Comprob_Cobro;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 import union.union_vr1.Sqlite.DbGastos_Ingresos;
-import union.union_vr1.Utils.Keyboard;
-import union.union_vr1.Utils.MyApplication;
-import union.union_vr1.Utils.NumberToLetterConverter;
 import union.union_vr1.Utils.SoftKeyboard;
 import union.union_vr1.Utils.Utils;
 import union.union_vr1.VMovil_BluetoothImprimir;
@@ -308,7 +306,9 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
     private int ventaRRPP = -1;
 
 
-    private static String TAG = "VENTA CABECERA";
+    Utils df = new Utils();
+
+    private static String TAG = VMovil_Venta_Cabecera.class.getSimpleName();
     @Override
     protected void onDestroy() {
         exportMain.dismissProgressDialog();
@@ -351,6 +351,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 
 
 
@@ -670,7 +671,7 @@ Instantiate and pass a callback
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 String tipoDocumento = spinnerTipoDocumento.getSelectedItem().toString();
                 TipoDocumento tipoDocumento1 = TipoDocumento.valueOf(tipoDocumento);
-                DecimalFormat df = new DecimalFormat("#.00");
+//                DecimalFormat df = new DecimalFormat("#.00");
 
                 switch (tipoDocumento1){
                     case factura:
@@ -1087,7 +1088,7 @@ Instantiate and pass a callback
         String nombreP = null;
         final View layout = View.inflate(this, R.layout.dialog_cantidad_productos, null);
 
-        DecimalFormat df = new DecimalFormat("#.00");
+//        DecimalFormat df = new DecimalFormat("#.00");
         final EditText savedText = ((EditText) layout.findViewById(R.id.VCAP_editTextCantidad));
         final TextView nombreProducto = ((TextView) layout.findViewById(R.id.VCPA_textView2NombreProducto));
         final TextView precio = ((TextView) layout.findViewById(R.id.VCPA_textViewPrecio));
@@ -1150,7 +1151,7 @@ Instantiate and pass a callback
     private Dialog scannerDialogValorUnidad(){
             final View layout = View.inflate(this, R.layout.dialog_cantidad_productos_valor_unidad, null);
 
-            DecimalFormat df = new DecimalFormat("#.00");
+//            DecimalFormat df = new DecimalFormat("#.00");
             final EditText savedText = ((EditText) layout.findViewById(R.id.VCAP_editTextCantidad));
             final TextView nombreProducto = ((TextView) layout.findViewById(R.id.VCPA_textView2NombreProducto));
             final TextView precio = ((TextView) layout.findViewById(R.id.VCPA_textViewPrecio));
@@ -1186,7 +1187,7 @@ Instantiate and pass a callback
                     }
                     precio_unitario[0] = mCursorPrecioUnitarioGeneral.getDouble(mCursorPrecioUnitarioGeneral.getColumnIndexOrThrow(DbAdapter_Precio.PR_precio_unit));
                     valor_unidad = mCursorPrecioUnitarioGeneral.getInt(mCursorPrecioUnitarioGeneral.getColumnIndexOrThrow(DbAdapter_Precio.PR_valor_unidad));
-                    DecimalFormat df = new DecimalFormat("#.00");
+//                    DecimalFormat df = new DecimalFormat("#.00");
                     precio.setText("Precio : S/. " + df.format(precio_unitario[0]));
                     valorUnidad.setText("Unidad : " + valor_unidad);
 
@@ -1388,7 +1389,7 @@ Instantiate and pass a callback
         }
 
         nombreProducto.setText(nombre);
-        DecimalFormat df = new DecimalFormat("0.0");
+//        DecimalFormat df = new DecimalFormat("0.00");
         precio.setText("Precio : S/. "+df.format(precio_unitario));
         if (devueltoText==null) {
             devuelto.setText("Devueltos : 0");
@@ -1781,7 +1782,7 @@ Instantiate and pass a callback
                 }
 
 
-                DecimalFormat df = new DecimalFormat("#.00");
+//                DecimalFormat df = new DecimalFormat("#.00");
                 //star micronics, 3pg
                 //textoImpresion+=String.format("%-6s",cantidad) + String.format("%-34s",nombre_producto) +String.format("%-5s",df.format(importe)) + "\n";
 
@@ -1807,9 +1808,9 @@ Instantiate and pass a callback
         datosConcatenados+="igv : " + igv;*/
 
 
-            DecimalFormatSymbols simbolos = DecimalFormatSymbols.getInstance(Locale.getDefault());
+/*            DecimalFormatSymbols simbolos = DecimalFormatSymbols.getInstance(Locale.getDefault());
             simbolos.setDecimalSeparator('.');
-            DecimalFormat df = new DecimalFormat("0.00", simbolos);
+            DecimalFormat df = new DecimalFormat("0.00", simbolos);*/
 
             //3PG, STAR MICRONICS
         /*textoImpresion += String.format("%-37s","SUB TOTAL:")+ "S/ "+ df.format(base_imponible)+"\n";
@@ -1885,11 +1886,14 @@ Instantiate and pass a callback
         buttonVender.setClickable(false);
 
            if (conectadoWifi() || conectadoRedMovil()) {
-                exportMain.execute();
-               /*Intent intent = new Intent(this, ExportService.class);
+               // exportMain.execute();
+               Intent intent = new Intent(this, ServiceExport.class);
                intent.setAction(Constants.ACTION_EXPORT_SERVICE);
-               startService(intent);*/
+               startService(intent);
+
             }
+
+
 
 
 
@@ -2105,7 +2109,7 @@ Instantiate and pass a callback
                 "IGV :");
 
 
-        DecimalFormat df = new DecimalFormat("0.00");
+//        DecimalFormat df = new DecimalFormat("0.00");
         textViewFooterTotal.setText(" S/. "+df.format(totalFooter)+"\n" +
                 "S/. "+df.format(base_imponibleFooter)+ "\n" +
                 "S/. "+df.format(igvFooter));
@@ -2158,7 +2162,7 @@ Instantiate and pass a callback
     private Dialog myTextDialog() {
         final View layout = View.inflate(this, R.layout.dialog_cantidad_productos, null);
 
-        DecimalFormat df = new DecimalFormat("0.00");
+        //DecimalFormat df = new DecimalFormat("0.00");
         final EditText savedText = ((EditText) layout.findViewById(R.id.VCAP_editTextCantidad));
         final TextView nombreProducto = ((TextView) layout.findViewById(R.id.VCPA_textView2NombreProducto));
         final TextView precio = ((TextView) layout.findViewById(R.id.VCPA_textViewPrecio));
@@ -2238,7 +2242,7 @@ Instantiate and pass a callback
                 String promedio_anterior = null;
                 String devuelto = null;
 
-                DecimalFormat df = new DecimalFormat("0.00");
+//                DecimalFormat df = new DecimalFormat("0.00");
                 //En una tabla "Temp_Venta" Nos sirve para agregar datos del historial de ventas anteriores y sugerir al usuario, estos son datos temporales
 
                 long id = dbHelper_temp_venta.createTempVentaDetalle(1,id_producto,nombre,cantidad,round(total_importe,2), round(precio_unitario,2), promedio_anterior, devuelto, procedencia, valor_unidad,""+codigo_producto);
@@ -2268,7 +2272,7 @@ Instantiate and pass a callback
     private Dialog myTextDialogValorUnidad() {
         final View layout = View.inflate(this, R.layout.dialog_cantidad_productos_valor_unidad, null);
 
-        DecimalFormat df = new DecimalFormat("#.00");
+//        DecimalFormat df = new DecimalFormat("#.00");
         final EditText savedText = ((EditText) layout.findViewById(R.id.VCAP_editTextCantidad));
         final TextView nombreProducto = ((TextView) layout.findViewById(R.id.VCPA_textView2NombreProducto));
         final TextView precio = ((TextView) layout.findViewById(R.id.VCPA_textViewPrecio));
@@ -2314,7 +2318,7 @@ Instantiate and pass a callback
                     precio_unitario[0] = 0.0;
                 }
 
-                DecimalFormat df = new DecimalFormat("0.00");
+//                DecimalFormat df = new DecimalFormat("0.00");
                 precio.setText("Precio : S/. "+ df.format(precio_unitario[0]));
                 valorUnidad.setText("Unidad : "+valor_unidad);
 
@@ -2410,7 +2414,7 @@ Instantiate and pass a callback
 
     double formatDecimal(double d)
     {
-        DecimalFormat df = new DecimalFormat("#,00");
+//        DecimalFormat df = new DecimalFormat("#,00");
         return Double.valueOf(df.format(d));
     }
 
@@ -2565,7 +2569,7 @@ Instantiate and pass a callback
 
 
         //MOSTRAMOS EN EL SLIDE LOS DATOS OBTENIDOS
-        DecimalFormat df = new DecimalFormat("#.00");
+        //DecimalFormat df = new DecimalFormat("#.00");
         textViewSlideNombreAgente.setText(""+slideNombreAgente);
         textViewSlideNombreRuta.setText(""+slideNombreRuta);
         buttonSlideNroEstablecimiento.setText(""+slideNumeroEstablecimientoxRuta);
@@ -2633,7 +2637,7 @@ Instantiate and pass a callback
         @Override
         protected String doInBackground(String... strings) {
 
-            DecimalFormat df = new DecimalFormat("0.00");
+//            DecimalFormat df = new DecimalFormat("0.00");
 
             //POR DEFECTO FACTURA
             String tipo_doccumento = "01";
