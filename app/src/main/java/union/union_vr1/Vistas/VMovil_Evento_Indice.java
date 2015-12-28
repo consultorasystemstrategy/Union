@@ -598,7 +598,7 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
             String fecha_Programada = cursor.getString(cursor.getColumnIndexOrThrow("cc_te_fecha_programada"));
             Log.e("FECHAPARA PAGO", fecha_Programada);
             try {
-                Date dSqlite = df.parse(fecha_Programada);
+                Date dSqlite = df.parse(Utils.getDatePhoneConvert(fecha_Programada));
                 Date dSistema = df.parse(getDatePhone());
                 if (dSqlite.before(dSistema)) {
                     btn.setBackground(getApplicationContext().getResources().getDrawable(R.drawable.border_right_red));
