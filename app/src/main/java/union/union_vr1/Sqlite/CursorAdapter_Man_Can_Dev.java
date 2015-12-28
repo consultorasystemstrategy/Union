@@ -14,6 +14,7 @@ import android.widget.TextView;
 import java.text.DecimalFormat;
 
 import union.union_vr1.R;
+import union.union_vr1.Utils.Utils;
 
 /**
  * Created by Usuario on 22/12/2014.
@@ -53,7 +54,7 @@ public class CursorAdapter_Man_Can_Dev extends CursorAdapter {
             String importeString = cursor.getString(cursor.getColumnIndex(DBAdapter_Temp_Canjes_Devoluciones.temp_importe));
             Double importe = 0.0;
             if(importeString!=null){
-                importe = Double.parseDouble(importeString);
+                importe = Double.parseDouble(Utils.replaceComa(importeString));
             }
 
             if(forma==1){

@@ -78,6 +78,19 @@ public class Utils {
         }
         return fechaR;
     }
+    public static String getDatePhoneConvertFormat(String date) {
+        SimpleDateFormat format2 = new SimpleDateFormat("yyyy/mm/dd");
+        SimpleDateFormat format1 = new SimpleDateFormat("dd/mm/yyyy");
+        String fechaR = "";
+        try {
+            Date fecha = format1.parse(date);
+            fechaR = format2.format(fecha);
+        } catch (ParseException ex) {
+
+        }
+        Log.d("FECHA",""+fechaR);
+        return fechaR;
+    }
 
     public static String replaceComa(String string) {
         String original = ",";

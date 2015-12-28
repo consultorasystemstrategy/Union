@@ -218,18 +218,18 @@ public class DbAdapter_Canjes_Devoluciones {
         return cr;
     }
 
-    public String obtenerPrecio(int idProducto, int idCategoriEstablec, Context ctx, String idesta) {
+    public String obtenerPrecio(int idProducto, int idCategoriEstablec,  String idesta) {
         if (idCategoriEstablec == 0) {
             Cursor ce = mDb.rawQuery("select _id, ee_in_id_cat_est from m_evento_establec where ee_in_id_establec='" + idesta + "' ", null);
             ce.moveToFirst();
             idCategoriEstablec = ce.getInt(1);
         }
-        String precio = "No se Encontro precio de producto por favor intente Nuevamente";
-        Cursor cr = mDb.rawQuery("select _id,pr_re_precio_unit  from m_precio where pr_in_id_producto=" + idProducto + " and pr_in_id_cat_estt=" + idCategoriEstablec + " ", null);
+        String precio = "-1";
+        Cursor cr = mDb.rawQuery("select _id, pr_re_precio_unit  from m_precio where pr_in_id_producto=" + idProducto + " and pr_in_id_cat_estt=" + idCategoriEstablec + " ", null);
         if (cr.moveToFirst()) {
-            precio = cr.getString(1);
+            precio = cr.getString(cr.getColumnIndexOrThrow("pr_re_precio_unit"));
         } else {
-            System.out.println(precio + idProducto + idCategoriEstablec);
+            System.out.println(precio +"-"+ idProducto +"-"+ idCategoriEstablec);
         }
         return precio;
 

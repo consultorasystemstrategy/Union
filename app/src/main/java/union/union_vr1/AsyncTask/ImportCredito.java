@@ -23,6 +23,7 @@ import union.union_vr1.Sqlite.DbAdapter_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
+import union.union_vr1.Utils.Utils;
 import union.union_vr1.Vistas.VMovil_Cobro_Credito;
 
 /**
@@ -94,7 +95,7 @@ public class ImportCredito extends AsyncTask<String, String, String> {
                         int idEstablecimiento1 = jsonObj.getInt("EstIEstablecimientoId");
                         int estadoSolicitud = jsonObj.getInt("SolIEstadoSolicitudId");
                         String idAutorizacionCobro = jsonObj.getString("SolObservacion");
-                        String fechaLimite = jsonObj.getString("CliDTFechaLimiteCredito");
+                        String fechaLimite = Utils.getDatePhoneConvertFormat(jsonObj.getString("CliDTFechaLimiteCredito"));
                         // String fechaLimite = "02/10/2015";
                         String SolReferenciaIdAndroid = jsonObj.getString("SolReferencia");
                         Log.d("DATOS", "" + montocredito+"--"+idEstablecimiento1+"--"+estadoSolicitud+"--"+idAutorizacionCobro+"--"+fechaLimite+"--"+SolReferenciaIdAndroid);

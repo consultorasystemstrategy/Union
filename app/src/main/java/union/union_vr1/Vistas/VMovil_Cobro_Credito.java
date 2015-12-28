@@ -453,8 +453,8 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
                     public void onClick(DialogInterface dialog, int id) {
 
                         DecimalFormat df = new DecimalFormat("#.00");
-                        double valorPago = Double.parseDouble(cantidadHoy.getText().toString());
-                        double valorCobrar = Double.parseDouble(cantidadProrroga.getText().toString());
+                        double valorPago = Double.parseDouble(Utils.replaceComa(cantidadHoy.getText().toString()));
+                        double valorCobrar = Double.parseDouble(Utils.replaceComa(cantidadProrroga.getText().toString()));
 
                         if (valorPago != 0.0 && valorCobrar != 0.0) {
 
@@ -498,7 +498,7 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
                         if (mSPNcredit.getText().equals("")) {
                             Toast.makeText(getApplicationContext(), "Tiene que Seleccionar una Deuda", Toast.LENGTH_SHORT).show();
                         }
-                        if (Double.parseDouble(df.format(idDeuda)) == Double.parseDouble(mSPNcredit.getText().toString())) {
+                        if (Double.parseDouble(Utils.replaceComa(df.format(idDeuda))) == Double.parseDouble(Utils.replaceComa(mSPNcredit.getText().toString()))) {
                             select("0");
                         } else {
                             if (idDeuda > Double.parseDouble(mSPNcredit.getText().toString())) {
