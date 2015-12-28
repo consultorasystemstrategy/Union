@@ -30,14 +30,6 @@ import com.sewoo.port.android.BluetoothPort;
 import com.sewoo.request.android.RequestHandler;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.charset.Charset;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.util.Locale;
-import java.util.Set;
-import java.util.UUID;
 import java.util.Vector;
 
 import jpos.JposException;
@@ -51,6 +43,7 @@ import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta_Detalle;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 import union.union_vr1.Utils.NumberToLetterConverter;
+import union.union_vr1.Utils.Utils;
 import union.union_vr1.Vistas.VMovil_Evento_Establec;
 import union.union_vr1.Vistas.VMovil_Evento_Indice;
 
@@ -150,6 +143,8 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
     private ListView list;*/
     // BT
     private BluetoothPort bp;
+
+    Utils df = new Utils();
 
 
     private static String TAG = VMovil_BluetoothImprimir.class.getSimpleName();
@@ -304,9 +299,7 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
     }
 
    private String generarTextoImpresion(int idComprobante, int pulgadas){
-       DecimalFormatSymbols simbolos = DecimalFormatSymbols.getInstance(Locale.ENGLISH);
 
-       DecimalFormat df = new DecimalFormat("#.00", simbolos);
 
        String texto= "";
        String comprobante = "WS";
