@@ -337,7 +337,7 @@
             android:id="@+id/VEE_BTNcobros"
             android:layout_weight="1"
             android:drawableRight="@drawable/hand132"
-            android:paddingRight="8dp" />
+            android:paddingRight="16dp" />
 
     </LinearLayout>
 

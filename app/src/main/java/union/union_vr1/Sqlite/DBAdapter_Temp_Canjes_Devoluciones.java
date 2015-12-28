@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import union.union_vr1.Conexion.DbHelper;
+import union.union_vr1.Utils.Utils;
 
 /**
  * Created by Usuario on 15/12/2014.
@@ -47,7 +48,7 @@ public class DBAdapter_Temp_Canjes_Devoluciones {
 
     public static final String temp_estado = "temp_estado";
 
-    public DecimalFormat f = new DecimalFormat("##.00");
+    public DecimalFormat f = new DecimalFormat("0.00");
     public static final String TAG = "Temp_Venta_Detalle";
 
     private DbHelper mDbHelper;
@@ -229,7 +230,7 @@ public class DBAdapter_Temp_Canjes_Devoluciones {
             igv = total - base;
             Log.d("INFO", ":Total: " + f.format(total) + " Igv: " + f.format(igv) + " BASE: " + f.format(base) + "IDCOMPROBANTE " + cursor.getString(cursor.getColumnIndexOrThrow(temp_id_cabecera)));
         }
-        return new Double[]{Double.parseDouble(f.format(total)), Double.parseDouble(f.format(base)), Double.parseDouble(f.format(igv))};
+        return new Double[]{Double.parseDouble(Utils.replaceComa(f.format(total))), Double.parseDouble(Utils.replaceComa(f.format(base))), Double.parseDouble(Utils.replaceComa(f.format(igv)))};
     }
 
     public String[] getInfoCabeceraOperacion(String establec,String ESTADO) {
@@ -246,7 +247,7 @@ public class DBAdapter_Temp_Canjes_Devoluciones {
             idCabecera = cursor.getString(cursor.getColumnIndexOrThrow(temp_id_cabecera));
             Log.d("INFO", ":Total: " + f.format(total) + " Igv: " + f.format(igv) + " BASE: " + f.format(base) + "IDCOMPROBANTE " + cursor.getString(cursor.getColumnIndexOrThrow(temp_id_cabecera)));
         }
-        return new String[]{Double.parseDouble(f.format(total)) + "", Double.parseDouble(f.format(base)) + "", Double.parseDouble(f.format(igv)) + "", idCabecera};
+        return new String[]{Double.parseDouble(Utils.replaceComa(f.format(total))) + "", Double.parseDouble(Utils.replaceComa(f.format(base))) + "", Double.parseDouble(Utils.replaceComa(f.format(igv))) + "", idCabecera};
     }
 
     private String getDatePhone() {
@@ -283,7 +284,7 @@ public class DBAdapter_Temp_Canjes_Devoluciones {
             Log.d("INFO", ":Total: " + f.format(total) + " Igv: " + f.format(igv) + " BASE: " + f.format(base));
         }
         Log.d("INFO", ":Total: " + f.format(total) + " Igv: " + f.format(igv) + " BASE: " + f.format(base));
-        return new Double[]{Double.parseDouble(f.format(total)), Double.parseDouble(f.format(base)), Double.parseDouble(f.format(igv))};
+        return new Double[]{Double.parseDouble(Utils.replaceComa(f.format(total))), Double.parseDouble(Utils.replaceComa(f.format(base))), Double.parseDouble(Utils.replaceComa(f.format(igv)))};
     }
 
     public void updateTempCanjesDevoluciones2(String idorig, String iddest, String vals) {

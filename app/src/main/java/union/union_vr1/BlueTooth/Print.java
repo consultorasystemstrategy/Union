@@ -172,6 +172,7 @@ public class Print {
     }
 
     public void printRepresentacion(int tipoDocumento) throws JposException {
+        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "AUTORIZADO MEDIANTE RESOLUCION N. 0180050000804/SUNAT" + LF );
         switch (tipoDocumento){
             case Constants.DOCUMENTO_FACTURA:
                 posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "REPRESENTACION IMPRESA DE LA FACTURA ELECTRONICA" + LF + LF );

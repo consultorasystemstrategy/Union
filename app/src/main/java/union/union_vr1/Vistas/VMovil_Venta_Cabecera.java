@@ -1555,6 +1555,7 @@ Instantiate and pass a callback
 
         //Obtener los datos de las ventas
 
+        Toast.makeText(VMovil_Venta_Cabecera.this, "Generando ...", Toast.LENGTH_SHORT).show();
 
 
         String formaPago = spinnerFormaPago.getSelectedItem().toString();
