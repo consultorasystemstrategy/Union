@@ -13,7 +13,6 @@ import android.os.IBinder;
 import android.util.Log;
 import android.widget.SimpleCursorAdapter;
 
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -25,6 +24,7 @@ import union.union_vr1.Sqlite.DbAdapter_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Informe_Gastos;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 import union.union_vr1.Sqlite.DbGastos_Ingresos;
+import union.union_vr1.Utils.Utils;
 import union.union_vr1.Vistas.VMovil_Resumen_Caja;
 
 /**
@@ -41,7 +41,8 @@ public class ServiceNotifyResumen extends Service {
     private Double totalRuta = 0.0;
     private Double totalPlanta = 0.0;
     private Double aRendir = 0.0;
-    
+
+    Utils df = new Utils();
     private NotificationManager mManager;
     @Override
     public IBinder onBind(Intent intent) {
@@ -72,7 +73,6 @@ public class ServiceNotifyResumen extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d("ALARMA SERVICE INICIALIZATED", "OK");
 
-        DecimalFormat df = new DecimalFormat("#.00");
         createNotification(df.format(aRendir));
         stopSelf();
         return super.onStartCommand(intent, flags, startId);

@@ -13,6 +13,9 @@ import org.json.JSONObject;
 
 import union.union_vr1.R;
 import union.union_vr1.RestApi.StockAgenteRestApi;
+import union.union_vr1.Servicios.ServiceExport;
+import union.union_vr1.Servicios.ServiceImport;
+import union.union_vr1.Sqlite.Constants;
 import union.union_vr1.Sqlite.DBAdapter_Temp_Inventario;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
@@ -120,6 +123,13 @@ public class CargarInventario extends AsyncTask<String, String, String> {
                 TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
                 v.setTextColor(mainActivity.getResources().getColor(R.color.Blanco));
                 toast.show();
+
+
+                Intent intent = new Intent(mainActivity, ServiceImport.class);
+                intent.setAction(Constants.ACTION_IMPORT_SERVICE);
+                mainActivity.startService(intent);
+
+
 
 
             }

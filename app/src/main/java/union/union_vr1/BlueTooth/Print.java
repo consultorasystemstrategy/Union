@@ -439,7 +439,7 @@ public class Print {
                     producto += "..";
                 }
 
-                String detalleTransferencia = ESC + "|lA" + String.format("%-3s", ++i) + String.format("%-6s", codigo)+ String.format("%-34s", cleanAcentos(producto)) + String.format("%1$5s", cantidad) + LF + LF + LF + LF;
+                String detalleTransferencia = ESC + "|lA" + String.format("%-3s", ++i) + String.format("%-6s", codigo)+ String.format("%-34s", cleanAcentos(producto)) + String.format("%1$5s", cantidad) + LF;
                 posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, detalleTransferencia);
             }
         }

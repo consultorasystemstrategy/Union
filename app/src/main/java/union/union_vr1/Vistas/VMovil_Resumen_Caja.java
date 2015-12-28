@@ -519,7 +519,7 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
                             })
                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
-                                    int registrosEnCola = 100;
+                                    int registrosEnCola = 11;
                                     registrosEnCola  = validarExport();
                                     Toast.makeText(VMovil_Resumen_Caja.this, registrosEnCola + " registros en cola.", Toast.LENGTH_SHORT).show();
                                     if (registrosEnCola == 0){
@@ -638,17 +638,20 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
         builder.setTitle("Ingrese Km Final");
         builder.setPositiveButton("OK", new Dialog.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
+
                 String kmFinal = editTextKmFinal.getText().toString().trim();
-                int kmFinall = Integer.parseInt(kmFinal);
+                if (kmFinal.length()>0){
+                    int kmFinall = Integer.parseInt(kmFinal);
 
-                Toast toast = Toast.makeText(mainActivity.getApplicationContext(), "CERRANDO CAJA...",Toast.LENGTH_SHORT);
+                    Toast toast = Toast.makeText(mainActivity.getApplicationContext(), "CERRANDO CAJA...",Toast.LENGTH_SHORT);
 
-                toast.getView().setBackgroundColor(mainActivity.getResources().getColor(R.color.verde));
-                TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
-                v.setTextColor(mainActivity.getResources().getColor(R.color.Blanco));
-                toast.show();
-                Log.d("CERRAR CAJA", ""+idLiquidacion+"-"+slide_ingresosTotales+"-"+slide_gastosTotales+""+slide_aRendir+"-"+kmFinall);
-                new CerrarCaja(mainActivity).execute(""+idLiquidacion, ""+slide_ingresosTotales,""+slide_gastosTotales,""+slide_aRendir,""+kmFinall, ""+idAgente);
+                    toast.getView().setBackgroundColor(mainActivity.getResources().getColor(R.color.verde));
+                    TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
+                    v.setTextColor(mainActivity.getResources().getColor(R.color.Blanco));
+                    toast.show();
+                    Log.d("CERRAR CAJA", ""+idLiquidacion+"-"+slide_ingresosTotales+"-"+slide_gastosTotales+""+slide_aRendir+"-"+kmFinall);
+                    new CerrarCaja(mainActivity).execute(""+idLiquidacion, ""+slide_ingresosTotales,""+slide_gastosTotales,""+slide_aRendir,""+kmFinall, ""+idAgente);
+                }
             }
         });
         builder.setView(layout);
