@@ -532,7 +532,7 @@ public class ServiceExport extends IntentService {
                    if (Utils.isSuccesful(jsonObject)) {
                        long estadoUpdate = dbAdapter_cobros_manuales.updateCobrosManuales(Constants._EXPORTADO, _id);
                        if (estadoUpdate > 0) {
-                           Log.d("ACTUALIZOCOBROSMANUALES", "" + estadoUpdate);
+                           Log.d("ACTUALIZOCOBROSMANUALES", "" + estadoUpdate);//
                        }
                    }
                } catch (Exception e) {
