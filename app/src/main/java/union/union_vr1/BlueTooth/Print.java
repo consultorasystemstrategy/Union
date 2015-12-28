@@ -24,6 +24,7 @@ import java.util.Locale;
 
 import jpos.JposException;
 import jpos.POSPrinterConst;
+import union.union_vr1.FacturacionElectronica.NumberToLetterConverter;
 import union.union_vr1.Sqlite.Constants;
 import union.union_vr1.Sqlite.DbAdapter_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta;
@@ -145,18 +146,19 @@ public class Print {
         posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "UNIVERSIDAD PERUANA UNION" + LF);
         posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "CENTRO DE APLICACION PRODUCTOS UNION" + LF );
         posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "CAR. CENTRAL KM. 19.5 VILLA UNION-NANA" + LF );
-        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "Lurigancho-Chosica Fax: 6186311" + LF );
+        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "Lurigancho-Chosica" + LF );
         posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "Telf: 6186309-6186310" + LF );
-        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "Casilla 3564, Lima 1, LIMA PERU" + LF );
         posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "RUC: 20138122256" + LF + LF );
 
 
         switch (tipoDocumento){
             case Constants.DOCUMENTO_FACTURA:
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + "REPRESENTACION IMPRESA DE LA " + LF );
                 posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + "FACTURA ELECTRONICA" + LF + LF);
                 break;
             case Constants.DOCUMENTO_BOLETA:
-                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + "BOLETA  DE VENTA ELECTRONICA" + LF + LF);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + "REPRESENTACION IMPRESA DE LA " + LF );
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + "BOLETA DE VENTA ELECTRONICA" + LF + LF);
                 break;
             case Constants.DOCUMENTO_TRANSFERENCIA:
                 posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT,ESC + "|cA" + ESC + "|bC" + ESC + "|2C" + "TRANSFERENCIAS" + LF + LF + LF);
@@ -172,8 +174,11 @@ public class Print {
     }
 
     public void printRepresentacion(int tipoDocumento) throws JposException {
-        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "AUTORIZADO MEDIANTE RESOLUCION N. 0180050000804/SUNAT" + LF );
-        switch (tipoDocumento){
+
+        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + Constants.PRINT_AUTORIZADO_ + LF );
+        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + Constants.PRINT_N_RESOLUCION + LF + LF);
+
+        /*switch (tipoDocumento){
             case Constants.DOCUMENTO_FACTURA:
                 posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "REPRESENTACION IMPRESA DE LA FACTURA ELECTRONICA" + LF + LF );
                 break;
@@ -183,9 +188,9 @@ public class Print {
             default:
                 posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT,ESC + "|cA" + ESC + "|bC" + ESC + "|2C" + "PRODUCTOS UNION" + LF + LF + LF);
                 break;
-        }
-        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + "Visualice este documento en" + LF);
-        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + "http://www.upeu.edu.pe/" + LF + LF + LF );
+        }*/
+        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + Constants.PRINT_VISUALICE + LF);
+        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + Constants.PRINT_URL + LF + LF + LF );
 
     }
     private void printLineas() throws JposException
@@ -374,11 +379,12 @@ public class Print {
                     posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, rayaTotal);
                     //posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|rA" + ESC + "|bC" + "---------" + LF);
                     posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, precioVenta);
+                    posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + NumberToLetterConverter.convertNumberToLetter(df.format(precio_venta)) + LF );
 
 
                     posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + lineas + LF + LF);
 
-                    posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + "CAJERO(A) : " + cleanAcentos(nombreAgente) + LF + LF);
+                    posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + "CAJERO(A) : " + cleanAcentos(nombreAgente) + LF);
                     posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + sha1 + LF + LF);
                     if(tipoC.equals("F"))
                     {

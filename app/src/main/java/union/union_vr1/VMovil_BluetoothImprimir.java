@@ -43,6 +43,7 @@ import java.util.Vector;
 import jpos.JposException;
 import union.union_vr1.BlueTooth.AlertView;
 import union.union_vr1.BlueTooth.Print;
+import union.union_vr1.Sqlite.Constants;
 import union.union_vr1.Sqlite.DbAdapter_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Agente_Login;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta;
@@ -65,6 +66,8 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
     private TextView textViewVentaCabecera;
     private TextView textViewImprimirContenidoLeft;
     private TextView textViewImprimirContenidoRight;
+    private TextView textViewContenidoBottom;
+
 
     private int idLiquidacion;
 
@@ -120,6 +123,8 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
     private String ventaCabecera="";
     private String textoImpresionContenidoLeft = "";
     private String textoImpresionContenidoRight = "";
+    private String textoImpresionContenidoBottom = "";
+
 
 
     //BLUETOOTH VARIABLES
@@ -147,7 +152,7 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
     private BluetoothPort bp;
 
 
-    private static String TAG = "BLUETOOTH IMPRIMIR";
+    private static String TAG = VMovil_BluetoothImprimir.class.getSimpleName();
     @Override
     public void onBackPressed() {
         //super.onStop();
@@ -217,14 +222,16 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
         textViewImprimirCabecera = (TextView) findViewById(R.id.textViewImprimirCabecera);
         textViewImprimirContenidoLeft = (TextView) findViewById(R.id.textViewImprimirContenidoLeft);
         textViewImprimirContenidoRight = (TextView) findViewById(R.id.textViewImprimirContenidoRight);
+        textViewContenidoBottom = (TextView) findViewById(R.id.textViewBottom);
         textViewVentaCabecera = (TextView) findViewById(R.id.textViewVentaCabecera);
+
 
 
         idComprobante = getIntent().getExtras().getInt("idComprobante");
         Log.d(TAG, "ID_COMPROBANTE : "+idComprobante);
         textoImpresion = generarTextoImpresion(idComprobante, pulgadasImpresora);
 
-        Log.d(TAG, "TEXTO IMPRESION : "+textoImpresion);
+        Log.d(TAG, "TEXTO IMPRESION : " + textoImpresion);
         /*textoImpresion = getIntent().getExtras().getString("textoImpresion");
         textoImpresionCabecera = getIntent().getExtras().getString("textoImpresionCabecera");
         textoImpresionContenidoLeft = getIntent().getExtras().getString("textoImpresionContenidoLeft");
@@ -235,6 +242,7 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
         textViewVentaCabecera.setText(ventaCabecera);
         textViewImprimirContenidoLeft.setText(textoImpresionContenidoLeft);
         textViewImprimirContenidoRight.setText(textoImpresionContenidoRight);
+        textViewContenidoBottom.setText(textoImpresionContenidoBottom);
         Log.d(TAG, "TEXTO textoEmpresa : " + textoEmpresa);
         Log.d(TAG, "TEXTO ventaCabecera : " + ventaCabecera);
         Log.d(TAG, "TEXTO textoImpresionContenidoLeft : " + textoImpresionContenidoLeft);
@@ -340,11 +348,9 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
 
            ventaCabecera+= "NUMERO  : "+comprobante+"\n";
            ventaCabecera+= "FECHA   : "+ fecha+"\n";
-           ventaCabecera+= "VENDEDOR: "+ nombreAgente+"\n";
            ventaCabecera+= "CLIENTE : "+ cliente+"\n";
            ventaCabecera+= "DNI/RUC : "+ dni_ruc+"\n";
            ventaCabecera+= "DIRECCION : "+ direccion+"\n";
-           ventaCabecera+= "SHA1 : "+ sha1+"\n";
 
 
 
@@ -403,6 +409,18 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
                    ""+ df.format(base_imponible)+"\n";
            textoImpresionContenidoRight+= "S/"+ df.format(igv)+"\n";
            textoImpresionContenidoRight+= "S/"+ df.format(precio_venta)+"\n";
+
+           textoImpresionContenidoBottom+= "CAJERO(A)  : "+nombreAgente+"\n\n";
+           textoImpresionContenidoBottom+= sha1 +"\n\n";
+           textoImpresionContenidoBottom+= Constants.PRINT_AUTORIZADO_+"\n";
+           textoImpresionContenidoBottom+= Constants.PRINT_N_RESOLUCION+"\n\n";
+           textoImpresionContenidoBottom+= Constants.PRINT_VISUALICE+"\n";
+           textoImpresionContenidoBottom+= Constants.PRINT_URL+"\n";
+
+
+
+
+           ventaCabecera+= "FECHA   : "+ fecha+"\n";
 /*
            texto += "B.I:"+df.format(base_imponible)+"\n";
            texto += "IGV.:"+df.format(igv)+"\n";

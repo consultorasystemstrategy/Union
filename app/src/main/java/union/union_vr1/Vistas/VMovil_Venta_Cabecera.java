@@ -1307,20 +1307,27 @@ Instantiate and pass a callback
         builder.setTitle("Cantidad a Solicitar");
         builder.setPositiveButton("OK", new Dialog.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
+
+
                 String cantidad = editTextCantidadCredito.getText().toString().trim();
-                int cantidadCredito = Integer.parseInt(cantidad);
+                if (cantidad.length()>0 && cantidad.length()<10){
+                    int cantidadCredito = Integer.parseInt(cantidad);
 
-                solicitarCredito.execute(""+id_agente_venta,""+idEstablecimiento,""+cantidadCredito,""+diasCredito);
+                    solicitarCredito.execute(""+id_agente_venta,""+idEstablecimiento,""+cantidadCredito,""+diasCredito);
 
-                Toast toast = Toast.makeText(mContext.getApplicationContext(), "Crédito solicitado esperar...",Toast.LENGTH_SHORT);
-                toast.getView().setBackgroundColor(mainActivity.getResources().getColor(R.color.verde));
-                TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
-                v.setTextColor(mainActivity.getResources().getColor(R.color.Blanco));
-                toast.show();
+                    Toast toast = Toast.makeText(mContext.getApplicationContext(), "Crédito solicitado esperar...",Toast.LENGTH_SHORT);
+                    toast.getView().setBackgroundColor(mainActivity.getResources().getColor(R.color.verde));
+                    TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
+                    v.setTextColor(mainActivity.getResources().getColor(R.color.Blanco));
+                    toast.show();
 
-                Intent intent = new Intent(mContext, VMovil_Evento_Establec.class);
-                startActivity(intent);
-                finish();
+                    Intent intent = new Intent(mContext, VMovil_Evento_Establec.class);
+                    startActivity(intent);
+                    finish();
+                }else
+                {
+                    Toast.makeText(VMovil_Venta_Cabecera.this, "Número invalido, intente de nuevo", Toast.LENGTH_SHORT).show();
+                }
             }
         });
         builder.setView(layout);
