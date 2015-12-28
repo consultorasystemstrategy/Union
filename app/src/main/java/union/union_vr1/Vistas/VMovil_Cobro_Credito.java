@@ -501,10 +501,10 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
                         if (Double.parseDouble(Utils.replaceComa(df.format(idDeuda))) == Double.parseDouble(Utils.replaceComa(mSPNcredit.getText().toString()))) {
                             select("0");
                         } else {
-                            if (idDeuda > Double.parseDouble(mSPNcredit.getText().toString())) {
+                            if (idDeuda > Double.parseDouble(Utils.replaceComa(mSPNcredit.getText().toString()))) {
                                 select("1");
                             }
-                            if (idDeuda < Double.parseDouble(mSPNcredit.getText().toString())) {
+                            if (idDeuda < Double.parseDouble(Utils.replaceComa(mSPNcredit.getText().toString()))) {
                                 //  Toast.makeText(getApplicationContext(), "El ingreso sobrepasa la deuda", Toast.LENGTH_SHORT).show();
                             }
 

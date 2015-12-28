@@ -377,12 +377,12 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
         dialogo.setItems(items, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
                 int idmotivoNoAtencion = ++item;
-                dbHelper.updateEstadoNoAtendido(idEstabl, 3, idmotivoNoAtencion, items[item], getDatePhone());
+                dbHelper.updateEstadoNoAtendido(idEstabl, 3, idmotivoNoAtencion, items[item-1], getDatePhone());
                 Intent intent2 = new Intent(getApplicationContext(), VMovil_Menu_Establec.class);
                 finish();
                 startActivity(intent2);
 
-                Toast.makeText(getApplicationContext(), "No atendio por : " + items[item], Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "No atendio por : " + items[item-1], Toast.LENGTH_LONG).show();
             }
         });
         dialogo.create();
