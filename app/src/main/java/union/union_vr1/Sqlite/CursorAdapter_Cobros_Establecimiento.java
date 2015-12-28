@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import union.union_vr1.R;
+import union.union_vr1.Utils.Utils;
 
 /**
  * Created by Usuario on 18/12/2014.
@@ -68,7 +69,7 @@ public class CursorAdapter_Cobros_Establecimiento extends CursorAdapter {
 
 
             DecimalFormat dformat = new DecimalFormat("#.00");
-            textViewFecha.setText(fecha);
+            textViewFecha.setText(Utils.getDatePhoneConvert(fecha));
             textNombreEstablec.setText(nomEstablec);
             textViewFecha.setTextColor(context.getApplicationContext().getResources().getColor(R.color.Dark1));
             textViewDocumento.setText("Documento: " + doc);
@@ -81,7 +82,7 @@ public class CursorAdapter_Cobros_Establecimiento extends CursorAdapter {
             SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
             try {
 
-                Date dSqlite = df.parse(fecha);
+                Date dSqlite = df.parse(Utils.getDatePhoneConvert(fecha));
                 Date dSistema = df.parse(getDatePhone());
 
                 if (dSqlite.before(dSistema)) {

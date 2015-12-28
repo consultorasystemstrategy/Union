@@ -261,7 +261,7 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
                 try {
                     cursor.moveToNext();
                     SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-                    Date dSqlite = df.parse(fecha);
+                    Date dSqlite = df.parse(Utils.getDatePhoneConvert(fecha));
                     Date dSistema = df.parse(fech());
 
                     if (dSqlite.equals(dSistema)) {
