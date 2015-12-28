@@ -156,13 +156,13 @@ public class Print {
                 posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + "FACTURA ELECTRONICA" + LF + LF);
                 break;
             case Constants.DOCUMENTO_BOLETA:
-                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + "BOLETA ELECTRONICA" + LF + LF);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + "BOLETA  DE VENTA ELECTRONICA" + LF + LF);
                 break;
             case Constants.DOCUMENTO_TRANSFERENCIA:
                 posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT,ESC + "|cA" + ESC + "|bC" + ESC + "|2C" + "TRANSFERENCIAS" + LF + LF + LF);
                 break;
             case Constants.DOCUMENTO_ARQUEO:
-                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT,ESC + "|cA" + ESC + "|bC" + ESC + "|2C" + "RESUMEN DEL DÍA" + LF + LF + LF);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT,ESC + "|cA" + ESC + "|bC" + ESC + "|2C" + "RESUMEN DEL DIA" + LF + LF + LF);
                 break;
             default:
                 posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT,ESC + "|cA" + ESC + "|bC" + ESC + "|2C" + "PRODUCTOS UNION" + LF + LF + LF);
@@ -171,6 +171,22 @@ public class Print {
         }
     }
 
+    public void printRepresentacion(int tipoDocumento) throws JposException {
+        switch (tipoDocumento){
+            case Constants.DOCUMENTO_FACTURA:
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "REPRESENTACION IMPRESA DE LA FACTURA ELECTRONICA" + LF + LF );
+                break;
+            case Constants.DOCUMENTO_BOLETA:
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "REPRESENTACION IMPRESA DE LA BOLETA ELECTRONICA" + LF + LF );
+                break;
+            default:
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT,ESC + "|cA" + ESC + "|bC" + ESC + "|2C" + "PRODUCTOS UNION" + LF + LF + LF);
+                break;
+        }
+        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + "Visualice este documento en" + LF);
+        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + "http://www.upeu.edu.pe/" + LF + LF + LF );
+
+    }
     private void printLineas() throws JposException
     {
         posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + lineas + LF);
@@ -299,7 +315,6 @@ public class Print {
                 if (sha1==null){
                     sha1 = "ECGeF3Moo0qfijT3izDanpL8j6I=";
                 }
-                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "SHA1    : " + sha1 + LF + LF);
 
                 //IMPRIMIR CABECERA DE LA VENTA
                 printLineas();
@@ -361,8 +376,17 @@ public class Print {
 
 
                     posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + lineas + LF + LF);
-                    posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + "VENDEDOR: " + cleanAcentos(nombreAgente) + LF + LF + LF);
-                    posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT,ESC + "|cA" + ESC + "|bC" + ESC + "|2C" + "GRACIAS POR SU COMPRA" + LF + LF + LF);
+
+                    posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + "CAJERO(A) : " + cleanAcentos(nombreAgente) + LF + LF);
+                    posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + sha1 + LF + LF);
+                    if(tipoC.equals("F"))
+                    {
+                        printRepresentacion(Constants.DOCUMENTO_FACTURA);
+                    }
+                    else if(tipoC.equals("B"))
+                    {
+                        printRepresentacion(Constants.DOCUMENTO_BOLETA);
+                    }
                 break;
             default:
                 //texto+=" NO SE PUEDE RECONOCER EL NUMERO DE PULGADAS...";

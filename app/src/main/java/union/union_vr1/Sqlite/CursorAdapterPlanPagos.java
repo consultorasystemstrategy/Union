@@ -36,6 +36,7 @@ import java.util.Locale;
 
 import union.union_vr1.InputFilterMinMax;
 import union.union_vr1.R;
+import union.union_vr1.Vistas.VMovil_Venta_Cabecera_PlanPagos;
 
 /**
  * Created by Usuario on 14/12/2015.
@@ -53,7 +54,7 @@ public class CursorAdapterPlanPagos extends CursorAdapter implements DatePickerD
     private Double total;
     private int cuotas;
 
-    private static String TAG = "CURSOR ADAPTER PLAN PAGOS";
+    private static String TAG = CursorAdapterPlanPagos.class.getSimpleName();
 
     public CursorAdapterPlanPagos(Context context, Cursor c, Calendar minDate, Calendar maxDate, Double total, int cuotas) {
 
@@ -249,14 +250,15 @@ public class CursorAdapterPlanPagos extends CursorAdapter implements DatePickerD
                     Double resto = 0.0;
                     Double montoEntero = 0.0;
                     int cuotasAutomaticas = cursor.getCount();
+                    int cuotasValidas = 1 ;
 
                     resto = monto % cuotasAutomaticas;
                     montoEntero = monto - resto;
 
                     Log.d(TAG, "MONTO : "+monto);
                     Log.d(TAG, "RESTO : "+resto);
-                    Log.d(TAG, "MONTO ENTERO : "+montoEntero);
-                    Log.d(TAG, "CUOTAS AUTOMATICAS : "+cuotasAutomaticas);
+                    Log.d(TAG, "MONTO ENTERO : " + montoEntero);
+                    Log.d(TAG, "CUOTAS AUTOMATICAS : " + cuotasAutomaticas);
 
 
 
@@ -269,13 +271,19 @@ public class CursorAdapterPlanPagos extends CursorAdapter implements DatePickerD
                         } else {
                             cuotaAutomatica = montoEntero / cuotasAutomaticas;
                         }
-                        Log.d(TAG, "PRECIO AUTOMATICO : "+cuotasAutomaticas);
-                        dbHelper_TempComprobCobro.updateMontoPanPagos("" + cursor.getLong(cursor.getColumnIndex("_id")), round(cuotaAutomatica,2), 0);
+                        Log.d(TAG, "PRECIO AUTOMATICO : " + cuotasAutomaticas);
+                        if (cuotaAutomatica>0){
+                            cuotasValidas++;
+                            dbHelper_TempComprobCobro.updateMontoPanPagos("" + cursor.getLong(cursor.getColumnIndex("_id")), round(cuotaAutomatica,2), 0);
+                        }else{
+                            dbHelper_TempComprobCobro.deleteByID(""+cursor.getLong(cursor.getColumnIndex("_id")));
+                        }
 
                     }
 
 
                     swapCursor(dbHelper_TempComprobCobro.fetchAllComprobCobros());
+                    VMovil_Venta_Cabecera_PlanPagos.setSelection(cuotasValidas);
                 }else {
                     Toast.makeText(context, "TODAS LAS CUOTAS DEFINIDAS", Toast.LENGTH_SHORT).show();
                 }

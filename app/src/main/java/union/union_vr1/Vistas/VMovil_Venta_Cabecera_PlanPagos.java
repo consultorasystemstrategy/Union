@@ -49,7 +49,7 @@ public class VMovil_Venta_Cabecera_PlanPagos extends Activity implements Adapter
 
     private DbAdapter_Temp_Session session;
 
-    private Spinner spinnerCuotas;
+    public static Spinner spinnerCuotas;
     private TextView textViewMontoTotal;
     //private Button butttonCalcularCuotas;
     public Button buttonEstablecerCuotas;
@@ -59,7 +59,7 @@ public class VMovil_Venta_Cabecera_PlanPagos extends Activity implements Adapter
     private Cursor cursorEstablecimiento;
     private DbAdaptert_Evento_Establec dbHelperEventoEstablecimiento;
     private DbAdapter_Temp_Comprob_Cobro dbHelper_TempComprobCobro;
-    private ArrayAdapter<CharSequence> adapterCuotas;
+    public static ArrayAdapter<CharSequence> adapterCuotas;
     private Double monto_credito;
     private int dias_credito;
     private Double total = 0.0;
@@ -525,6 +525,10 @@ public class VMovil_Venta_Cabecera_PlanPagos extends Activity implements Adapter
             }
         });*/
 
+    }
+
+    public static void setSelection (int cuotas){
+        spinnerCuotas.setSelection(adapterCuotas.getPosition(""+cuotas));
     }
 
     public static Calendar addDays(Date baseDate, int daysToAdd) {

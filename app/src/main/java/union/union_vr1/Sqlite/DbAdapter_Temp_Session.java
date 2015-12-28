@@ -17,6 +17,8 @@ public class DbAdapter_Temp_Session {
     public static final String session_id_session = "_id";
     public static final String session_id_variable = "temp_id_variable";
     public static final String session_valor = "temp_id_valor";
+    public static final String session_valor_string = "temp_valor_string";
+
     public static final String TAG = "Temp SESSION";
 
     private DbHelper mDbHelper;
@@ -29,6 +31,7 @@ public class DbAdapter_Temp_Session {
             "create table if not exists "+SQLITE_TABLE_Temp_session+" ("
                     +session_id_session+" integer primary key autoincrement,"
                     +session_id_variable+" integer, "
+                    +session_valor_string+" text, "
                     +session_valor + " integer);";
 
     public static final String DELETE_TABLE_Temp_session = "DROP TABLE IF EXISTS " + SQLITE_TABLE_Temp_session;
@@ -57,6 +60,15 @@ public class DbAdapter_Temp_Session {
 
         return mDb.insert(SQLITE_TABLE_Temp_session, null, initialValues);
     }
+    public long createTempSessionString(int idVariable, String valor) {
+
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(session_id_variable, idVariable);
+        initialValues.put(session_valor_string, valor);
+
+        return mDb.insert(SQLITE_TABLE_Temp_session, null, initialValues);
+    }
+
 
 
 
@@ -73,7 +85,7 @@ public class DbAdapter_Temp_Session {
     public int fetchVarible(int idVariable) {
 
         Cursor mCursor = mDb.query(SQLITE_TABLE_Temp_session, new String[] {session_id_session,
-                        session_id_variable, session_valor},
+                        session_id_variable, session_valor, session_valor_string},
                 session_id_variable + " = ? " ,
                 new String[]{
                         ""+idVariable
@@ -90,6 +102,29 @@ public class DbAdapter_Temp_Session {
 
         return mCursor.getInt(mCursor.getColumnIndexOrThrow(session_valor));
     }
+
+    public String fetchMAC() {
+
+        Cursor mCursor = mDb.query(SQLITE_TABLE_Temp_session, new String[] {session_id_session,
+                        session_id_variable, session_valor, session_valor_string},
+                session_id_variable + " = ? " ,
+                new String[]{
+                        ""+Constants._ID_SESSION_MAC
+                },
+                null, null, null);
+
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        if (mCursor.getCount()==0){
+            Log.d("SESSION", "valor 0");
+            return "XX:XX:XX:XX:XX:XX";
+        }
+
+        return mCursor.getString(mCursor.getColumnIndexOrThrow(session_valor_string));
+    }
+
+
 
     public boolean deleteAll() {
 

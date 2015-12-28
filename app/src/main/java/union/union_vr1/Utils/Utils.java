@@ -79,5 +79,16 @@ public class Utils {
         return fechaR;
     }
 
+    public static String replaceComa(String string) {
+        String original = ",";
+        String ascii = ".";
+        if (string != null) {
+            //Recorro la cadena y remplazo los caracteres originales por aquellos sin acentos
+            for (int i = 0; i < original.length(); i++ ) {
+                string = string.replace(original.charAt(i), ascii.charAt(i));
+            }
+        }
+        return string;
+    }
 
 }

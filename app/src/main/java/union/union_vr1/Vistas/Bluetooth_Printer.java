@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
+import android.util.Log;
 import android.view.Gravity;
 import android.widget.CompoundButton;
 import android.widget.Toast;
@@ -68,6 +69,8 @@ public class Bluetooth_Printer extends Activity {
     // BT
     private BluetoothPort bp;
 
+    private final static String TAG = Bluetooth_Printer.class.getSimpleName();
+
 
     @Override
     protected void onDestroy() {
@@ -110,10 +113,13 @@ public class Bluetooth_Printer extends Activity {
             //defaultAdressImpresora = cursor.getString(cursor.getColumnIndexOrThrow(dbAdapter_agente.MAC));
         }
 
-        Cursor cursorMAC = dbAdapter_agente_login.fetchAgenteMAC(idLiquidacion);
+        /*Cursor cursorMAC = dbAdapter_agente_login.fetchAgenteMAC(idLiquidacion);
         if (cursor.getCount()>0){
             defaultAdressImpresora = cursorMAC.getString(cursorMAC.getColumnIndexOrThrow(dbAdapter_agente_login.AG_MAC));
-        }
+        }*/
+
+        defaultAdressImpresora = session.fetchMAC();
+        Log.d(TAG, "ADRESS IMPRESORA : " + defaultAdressImpresora);
 
         buttonArqueo = (ToggleButton) findViewById(R.id.buttonArqueoCaja);
         buttonTransferencias = (ToggleButton) findViewById(R.id.buttonTransferencias);

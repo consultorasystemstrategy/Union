@@ -34,6 +34,8 @@ public class Constants {
     public static final String ACTION_EXPORT_SERVICE = "EXPORT_SERVICE";
     public static final String ACTION_IMPORT_SERVICE = "IMPORT_SERVICE";
 
+    public static final int _ID_SESSION_MAC = 12;
+
 
 
 }

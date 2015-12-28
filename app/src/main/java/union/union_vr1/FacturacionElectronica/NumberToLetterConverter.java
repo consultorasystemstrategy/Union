@@ -9,6 +9,9 @@ package union.union_vr1.FacturacionElectronica;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+
+import union.union_vr1.Utils.Utils;
+
 /**
  *
  * @author Usuario
@@ -39,7 +42,7 @@ public class NumberToLetterConverter {
      */
     public static String convertNumberToLetter(String number)
             throws NumberFormatException {
-        return convertNumberToLetter(Double.parseDouble(number));
+        return convertNumberToLetter(Double.parseDouble(Utils.replaceComa(number)));
     }
 
     /**
@@ -65,7 +68,8 @@ public class NumberToLetterConverter {
         // formateamos el numero, para ajustarlo a el formato de tres puntos
         // decimales
         String formatedDouble = format.format(doubleNumber);
-        doubleNumber = Double.parseDouble(formatedDouble);
+
+        doubleNumber = Double.parseDouble(Utils.replaceComa(formatedDouble));
 
         // Validamos que sea un numero legal
         if (doubleNumber > 999999999)

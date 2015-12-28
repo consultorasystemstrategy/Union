@@ -200,11 +200,14 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
         nameImpresora= SP.getString("impresoraNombre", defaultNameImpresora);
         pulgadasImpresora= Integer.parseInt(SP.getString("impresoraAncho", "3"));
 
-        Cursor cursor = dbAdapter_agente_login.fetchAgenteMAC(idLiquidacion);
+       /* Cursor cursor = dbAdapter_agente_login.fetchAgenteMAC(idLiquidacion);
+        cursor.moveToFirst();
         Log.d(TAG, "CURSOR COUNT MAC : "+cursor.getCount());
         if (cursor.getCount()>0){
             defaultAdressImpresora = cursor.getString(cursor.getColumnIndexOrThrow(dbAdapter_agente_login.AG_MAC));
-        }
+        }*/
+
+        defaultAdressImpresora = session.fetchMAC();
 
         Log.d(TAG, "ADRESS IMPRESORA : " +defaultAdressImpresora);
 
@@ -466,7 +469,6 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
     @Override
     protected void onResume() {
         super.onResume();
-
     }
 
     @Override

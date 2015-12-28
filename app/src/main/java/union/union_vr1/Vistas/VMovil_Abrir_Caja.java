@@ -146,6 +146,7 @@ public class VMovil_Abrir_Caja extends Activity implements View.OnClickListener 
                         session.deleteVariable(9);
                         session.deleteVariable(10);
                         session.deleteVariable(11);
+                        session.deleteVariable(12);
                         session.createTempSession(1, agenteLista.get(i).getIdAgenteVenta());
                         session.createTempSession(3, agenteLista.get(i).getLiquidacion());
                         session.createTempSession(4, agenteLista.get(i).getIdUsuario());
@@ -155,6 +156,7 @@ public class VMovil_Abrir_Caja extends Activity implements View.OnClickListener 
                         int correlativoBoleta = agenteLista.get(i).getCorrelativoBoleta() + 1;
                         session.createTempSession(10, correlativoFactura);
                         session.createTempSession(11, correlativoBoleta);
+                        session.createTempSessionString(12, agenteLista.get(i).getMAC());
 
 
                         agenteLista.get(i).getIdAgenteVenta();
@@ -228,6 +230,7 @@ public class VMovil_Abrir_Caja extends Activity implements View.OnClickListener 
                             session.deleteVariable(9);
                             session.deleteVariable(10);
                             session.deleteVariable(11);
+                            session.deleteVariable(12);
                             session.createTempSession(1, agenteLista.get(i).getIdAgenteVenta());
                             session.createTempSession(3, agenteLista.get(i).getLiquidacion());
                             session.createTempSession(4, agenteLista.get(i).getIdUsuario());
@@ -237,6 +240,7 @@ public class VMovil_Abrir_Caja extends Activity implements View.OnClickListener 
                             int correlativoBoleta = agenteLista.get(i).getCorrelativoBoleta() + 1;
                             session.createTempSession(10, correlativoFactura);
                             session.createTempSession(11, correlativoBoleta);
+                            session.createTempSessionString(12, agenteLista.get(i).getMAC());
 
 
                             agenteLista.get(i).getIdAgenteVenta();

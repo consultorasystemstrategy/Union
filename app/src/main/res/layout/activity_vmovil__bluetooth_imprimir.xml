@@ -10,8 +10,6 @@
     android:orientation="vertical"
     android:background="@color/Blanco">
 
-
-
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -46,7 +44,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:background="@drawable/border_bottom"
-                android:gravity="center|fill_vertical"
+                android:gravity="fill_vertical|right"
                 android:layout_gravity="center_vertical"
                 android:paddingBottom="2dp">
                 <TextView
@@ -73,11 +71,11 @@
                     android:layout_height="wrap_content"
                     android:text="Importe"
                     android:typeface="monospace"
-                    android:gravity="right"
                     android:textStyle="bold"
                     android:textSize="12sp"
                     android:layout_weight="1"
-                    android:paddingRight="48dp" />
+                    android:paddingRight="48dp"
+                    android:gravity="right" />
             </LinearLayout>
 
             <LinearLayout
