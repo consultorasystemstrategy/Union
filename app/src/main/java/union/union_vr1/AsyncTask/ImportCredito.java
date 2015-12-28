@@ -71,7 +71,7 @@ public class ImportCredito extends AsyncTask<String, String, String> {
             Cursor cursorEstablecimiento = dbAdaptert_evento_establec.fetchAllEstablecs();
             DbAdapter_Comprob_Cobro dbAdapter_comprob_cobro = new DbAdapter_Comprob_Cobro(mainActivity);
             dbAdapter_comprob_cobro.open();
-            publishProgress("" + 20);
+
             for (cursorEstablecimiento.moveToFirst(); !cursorEstablecimiento.isAfterLast(); cursorEstablecimiento.moveToNext()) {
 
                 int idEstablecimiento = cursorEstablecimiento.getInt(cursorEstablecimiento.getColumnIndexOrThrow(dbAdaptert_evento_establec.EE_id_establec));
@@ -95,7 +95,7 @@ public class ImportCredito extends AsyncTask<String, String, String> {
                         int estadoSolicitud = jsonObj.getInt("SolIEstadoSolicitudId");
                         String idAutorizacionCobro = jsonObj.getString("SolObservacion");
                         String fechaLimite = jsonObj.getString("CliDTFechaLimiteCredito");
-                       // String fechaLimite = "02/10/2015";
+                        // String fechaLimite = "02/10/2015";
                         String SolReferenciaIdAndroid = jsonObj.getString("SolReferencia");
                         Log.d("DATOS", "" + montocredito+"--"+idEstablecimiento1+"--"+estadoSolicitud+"--"+idAutorizacionCobro+"--"+fechaLimite+"--"+SolReferenciaIdAndroid);
 
@@ -163,10 +163,10 @@ public class ImportCredito extends AsyncTask<String, String, String> {
                     for (int i = 0; i < jsonArray.length(); i++) {
                         jsonObj = jsonArray.getJSONObject(i);
                         int idEstablecimiento1 = jsonObj.getInt("EstIEstablecimientoId");
-                        int montoCredito = jsonObj.getInt("SolDOMontoCredito");
+                        double montoCredito = jsonObj.getInt("SolDOMontoCredito");
                         int diasCredito = jsonObj.getInt("SolIVigenciaCredito");
                         Log.d("IMPORT SOLICITUDES DATOS", idEstablecimiento + " - " + montoCredito + " - " + diasCredito);
-                        dbAdaptert_evento_establec.updateEstablecsCredito(idEstablecimiento, (double) montoCredito, diasCredito);
+                        dbAdaptert_evento_establec.updateEstablecsCredito(idEstablecimiento, montoCredito, diasCredito);
                     }
                 }
 

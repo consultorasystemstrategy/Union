@@ -43,6 +43,7 @@ import java.util.Timer;
 import union.union_vr1.Alarm.ReceiverAlarmFinishedDay;
 import union.union_vr1.AsyncTask.ExportMain;
 import union.union_vr1.AsyncTask.ExportService;
+import union.union_vr1.AsyncTask.GetDataSpinnerRegistrar;
 import union.union_vr1.AsyncTask.ImportCredito;
 import union.union_vr1.AsyncTask.ImportMain;
 import union.union_vr1.AsyncTask.TimerGps;
@@ -141,7 +142,7 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.princ_evento_indice);
         mainActivity = this;
-
+        new GetDataSpinnerRegistrar(this).execute();
         session = new DbAdapter_Temp_Session(this);
         session.open();
 

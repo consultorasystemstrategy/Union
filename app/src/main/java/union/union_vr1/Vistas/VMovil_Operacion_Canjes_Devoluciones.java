@@ -189,6 +189,9 @@ public class VMovil_Operacion_Canjes_Devoluciones extends TabActivity {
         ExportCanjesDevoluciones exportCanjesDevoluciones = new ExportCanjesDevoluciones(getApplicationContext(),this);
         exportCanjesDevoluciones.execute(getDatePhone(),establec, Constants._CREADO+"");
 
+        startActivity(new Intent(getApplicationContext(), VMovil_Evento_Establec.class));
+        finish();
+
     }
 
     private void listar_canjes() {
@@ -450,6 +453,7 @@ public class VMovil_Operacion_Canjes_Devoluciones extends TabActivity {
             setMessageForDelete();
         }else{
             startActivity(new Intent(getApplicationContext(),VMovil_Evento_Establec.class));
+            finish();
         }
 
 

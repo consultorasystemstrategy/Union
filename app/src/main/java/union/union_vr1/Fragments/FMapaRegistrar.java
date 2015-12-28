@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 
@@ -33,6 +34,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+
 import union.union_vr1.AsyncTask.GetAddress;
 import union.union_vr1.R;
 
@@ -49,6 +51,7 @@ public class FMapaRegistrar extends Fragment {
     private Location location;
     private LinearLayout linearLayoutDetalle;
     boolean estado = false;
+    private ImageView imageViewIcono;
     public EditText editTextDescripcion;
     public EditText editTextDireccionFiscal;
     public Marker markerEstablecimeinto;
@@ -71,6 +74,7 @@ public class FMapaRegistrar extends Fragment {
         map.setMyLocationEnabled(true);
         buttonHibrido = (RadioButton) v.findViewById(R.id.mapHibrido);
         buttonNormal = (RadioButton) v.findViewById(R.id.mapNormal);
+        imageViewIcono = (ImageView)v.findViewById(R.id.imgFiscal);
         eventButtons();
         linearLayoutDetalle = (LinearLayout) v.findViewById(R.id.layoutflag);
         setMyLocation();
@@ -78,40 +82,46 @@ public class FMapaRegistrar extends Fragment {
             @Override
             public void onMyLocationChange(Location location) {
 
-                LatLng latLng = new LatLng(location.getLatitude(),location.getLongitude());
+                LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
                 anInt = anInt + 1;
                 if (anInt == 1) {
                     map.clear();
-                    CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 20);
+                    CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 17);
                     map.animateCamera(cameraUpdate);
-                    location(new LatLng(location.getLatitude(),location.getLongitude()));
+                    location(new LatLng(location.getLatitude(), location.getLongitude()));
                 }
+            }
+        });
 
-
+        imageViewIcono.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String descr = editTextDescripcion.getText().toString();
+                editTextDireccionFiscal.setText(descr);
             }
         });
 
 
-       // displayTouchLayout();
+        // displayTouchLayout();
         return v;
     }
-/*
-    @Override
-    public void onPause() {
-        super.onPause();
-        Log.d("EVENTOS  ", "PAUSA");
-        try {
-            SharedPreferences.Editor editor = getActivity().getSharedPreferences("INFORMACION_MAPA", Context.MODE_PRIVATE).edit();
-            editor.putString("descripcion", editTextDescripcion.getText().toString());
-            editor.putString("direccion_fiscal", editTextDireccionFiscal.getText().toString());
-            editor.putString("latitud", markerEstablecimeinto.getPosition().latitude + "");
-            editor.putString("longitud", markerEstablecimeinto.getPosition().longitude+"");
-            editor.commit();
-        }catch (NullPointerException e){
-       //   setMyLocation();
-        }
- }
-*/
+    /*
+        @Override
+        public void onPause() {
+            super.onPause();
+            Log.d("EVENTOS  ", "PAUSA");
+            try {
+                SharedPreferences.Editor editor = getActivity().getSharedPreferences("INFORMACION_MAPA", Context.MODE_PRIVATE).edit();
+                editor.putString("descripcion", editTextDescripcion.getText().toString());
+                editor.putString("direccion_fiscal", editTextDireccionFiscal.getText().toString());
+                editor.putString("latitud", markerEstablecimeinto.getPosition().latitude + "");
+                editor.putString("longitud", markerEstablecimeinto.getPosition().longitude+"");
+                editor.commit();
+            }catch (NullPointerException e){
+           //   setMyLocation();
+            }
+     }
+    */
     @Override
     public void onResume() {
         super.onResume();
@@ -120,10 +130,13 @@ public class FMapaRegistrar extends Fragment {
             SharedPreferences getDataMapa = getActivity().getSharedPreferences("INFORMACION_MAPA", Context.MODE_PRIVATE);
             double latitud=Double.parseDouble(getDataMapa.getString("latitud", null));
             double longitud=Double.parseDouble(getDataMapa.getString("longitud", null));
-            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(latitud,longitud), 20);
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(latitud,longitud), 17);
             map.animateCamera(cameraUpdate);
             location(new LatLng(latitud,longitud));
         }catch (NullPointerException e){
+
+        }
+        catch (NumberFormatException e){
 
         }
 
@@ -147,13 +160,13 @@ public class FMapaRegistrar extends Fragment {
                 // id_inserto =
 
 
-                    if (estado) {
-                        estado = false;
-                        linearLayoutDetalle.setVisibility(View.VISIBLE);
-                    } else {
-                        estado = true;
-                        linearLayoutDetalle.setVisibility(View.INVISIBLE);
-                    }
+                if (estado) {
+                    estado = false;
+                    linearLayoutDetalle.setVisibility(View.VISIBLE);
+                } else {
+                    estado = true;
+                    linearLayoutDetalle.setVisibility(View.INVISIBLE);
+                }
 
 
                 return false;
@@ -180,14 +193,40 @@ public class FMapaRegistrar extends Fragment {
 
     private void setMyLocation() {
 
-        map.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
-            @Override
-            public boolean onMyLocationButtonClick() {
-                location = map.getMyLocation();
-                  location(new LatLng(location.getLatitude(),location.getLongitude()));
-                return false;
+
+
+        try {
+
+            final double finalLon = map.getMyLocation().getLatitude();
+            final double finalLat = map.getMyLocation().getLongitude();
+            map.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
+                @Override
+                public boolean onMyLocationButtonClick() {
+                    location = map.getMyLocation();
+                    location(new LatLng(finalLat, finalLon));
+                    return false;
+                }
+            });
+
+
+        }catch (NullPointerException e){
+
+            try {
+                Log.d("EVENTOS  ","RESUMEN");
+                SharedPreferences getDataMapa = getActivity().getSharedPreferences("INFORMACION_MAPA", Context.MODE_PRIVATE);
+                double latitud=Double.parseDouble(getDataMapa.getString("latitud", null));
+                double longitud=Double.parseDouble(getDataMapa.getString("longitud", null));
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(latitud,longitud), 17);
+                map.animateCamera(cameraUpdate);
+                location(new LatLng(latitud,longitud));
+            }catch (NullPointerException v){
+
             }
-        });
+            catch (NumberFormatException v){
+
+            }
+
+        }
     }
     public void location(LatLng location){
         try {
@@ -208,33 +247,4 @@ public class FMapaRegistrar extends Fragment {
     }
 
 
-    public String getAddress(Context ctx, Location location) {
-        StringBuilder result = new StringBuilder();
-        try {
-            Geocoder geocoder = new Geocoder(ctx, Locale.getDefault());
-            List<Address>
-                    addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-            if (addresses.size() > 0) {
-                Address address = addresses.get(0);
-                String locality = address.getLocality();
-                String city = address.getCountryName();
-                String region_code = address.getCountryCode();
-                String zipcode = address.getSubLocality();
-
-                result.append(address.getAddressLine(0));
-                result.append(address.getPremises());
-                result.append(address.getAdminArea());
-                result.append(address.getSubAdminArea());
-                result.append(address.getFeatureName());
-                result.append(address.getLocale().getDisplayName());
-                result.append(address.getSubThoroughfare());
-                Log.d("DIRECCION", result.toString());
-
-            }
-        } catch (IOException e) {
-            Log.e("DIRECCION", e.getMessage());
-        }
-
-        return result.toString();
-    }
 }

@@ -47,6 +47,8 @@ import java.util.GregorianCalendar;
 import union.union_vr1.AsyncTask.ExportMain;
 import union.union_vr1.AsyncTask.SolicitarAutorizacionCobros;
 import union.union_vr1.R;
+import union.union_vr1.Servicios.ServiceExport;
+import union.union_vr1.Servicios.ServiceImport;
 import union.union_vr1.Sqlite.Constants;
 import union.union_vr1.Sqlite.CursorAdapter_Cobros_Establecimiento;
 import union.union_vr1.Sqlite.DBAdapter_Temp_Autorizacion_Cobro;
@@ -336,7 +338,9 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
                         Toast.makeText(getApplicationContext(),
                                 "Actualizado", Toast.LENGTH_SHORT).show();
                         if(conectadoWifi() || conectadoRedMovil()){
-                            new ExportMain(mainActivity).execute();
+                            Intent intent = new Intent(mainActivity, ServiceExport.class);
+                            intent.setAction(Constants.ACTION_IMPORT_SERVICE);
+                            mainActivity.startService(intent);
                         }
 //<
                         //displayListViewVCC();

@@ -371,8 +371,12 @@ public class ImportMain extends AsyncTask<String, String, String> {
             publishProgress("" + 95);
             //ACTUALIZAR LOS CRÉDITOS DE LOS ESTABLECIMIENTOS
 
+             /*Actualizando estado  de cobro*/
             Cursor cursorEstablecimiento = dbAdaptert_evento_establec.fetchAllEstablecs();
-
+            int idUsuario = dbAdapter_agente.getIdUsuario();
+            DbAdapter_Comprob_Cobro dbAdapter_comprob_cobro = new DbAdapter_Comprob_Cobro(mainActivity);
+            dbAdapter_comprob_cobro.open();
+            publishProgress("" + 20);
             for (cursorEstablecimiento.moveToFirst(); !cursorEstablecimiento.isAfterLast(); cursorEstablecimiento.moveToNext()) {
 
                 int idEstablecimiento = cursorEstablecimiento.getInt(cursorEstablecimiento.getColumnIndexOrThrow(dbAdaptert_evento_establec.EE_id_establec));
@@ -382,34 +386,79 @@ public class ImportMain extends AsyncTask<String, String, String> {
                 Log.d("IMPORT SOLICITUDES DE AUTORIZACIÓN ", jsonObject.toString());
                 Log.d("IMPORT AUTORIZACION COBROS  ", jsonObjectAutorizacion.toString());
 
-/*
+
                 if (isSuccesfulImport(jsonObjectAutorizacion)) {
 
                     JSONArray jsonArray = jsonObjectAutorizacion.getJSONArray("Value");
                     JSONObject jsonObj = null;
-                    Log.d("IMPORT AUTORIZACION COBROS  ", jsonArray.length()+":CANTIDAD"+isSuccesfulImport(jsonObjectAutorizacion));
+                    Log.d("IMPORT AUTORIZACION COBROS  ", jsonArray.length() + ":CANTIDAD" + isSuccesfulImport(jsonObjectAutorizacion));
                     for (int i = 0; i < jsonArray.length(); i++) {
                         jsonObj = jsonArray.getJSONObject(i);
-                        Log.d("CLARO PUES CAMPEON",jsonObj.getInt("SolObservacion")+"");
+                        Log.d("JSON DATOS", jsonObj.toString());
+                        String montocredito = jsonObj.getString("SolDOMontoCredito");
                         int idEstablecimiento1 = jsonObj.getInt("EstIEstablecimientoId");
                         int estadoSolicitud = jsonObj.getInt("SolIEstadoSolicitudId");
-                        int idAutorizacionCobro = jsonObj.getInt("SolObservacion");
+                        String idAutorizacionCobro = jsonObj.getString("SolObservacion");
                         String fechaLimite = jsonObj.getString("CliDTFechaLimiteCredito");
-                        String SolReferencia = jsonObj.getString("SolReferencia");
+                        // String fechaLimite = "02/10/2015";
+                        String SolReferenciaIdAndroid = jsonObj.getString("SolReferencia");
+                        Log.d("DATOS", "" + montocredito+"--"+idEstablecimiento1+"--"+estadoSolicitud+"--"+idAutorizacionCobro+"--"+fechaLimite+"--"+SolReferenciaIdAndroid);
 
+                        boolean exists = dbAdapter_temp_autorizacion_cobro.existeAutorizacionCobro(SolReferenciaIdAndroid);
 
-                        boolean exists = dbAdapter_temp_autorizacion_cobro.existeAutorizacionCobro(idAutorizacionCobro);
-
-                        Log.d("EXISTE AC", "" + exists);
+                        Log.d("EXISTEAC", "" + exists);
                         if (exists) {
-                            int isActualizado = dbAdapter_temp_autorizacion_cobro.updateAutorizacionCobro(idAutorizacionCobro, estadoSolicitud, idEstablecimiento1,fechaLimite,SolReferencia);
-                            Log.d("IMPORT REGISTRO AUTORIZACION COBRO ACTUALIZADO ", "" + isActualizado);
+                            int isActualizado = dbAdapter_temp_autorizacion_cobro.updateAutorizacionCobro(estadoSolicitud, idEstablecimiento1, fechaLimite, SolReferenciaIdAndroid);
+
+                            Log.d("IMPORT REGISTRO AUTORIZACION COBRO ACTUALIZADO ", "" + isActualizado+"ESTADO SOLICITUD"+estadoSolicitud);
+                            if (estadoSolicitud == 2) {
+                                Log.d("GET CURSOR INDEX","123456");
+                                Cursor cr = dbAdapter_comprob_cobro.getComprobanteCobroById(SolReferenciaIdAndroid);
+
+                                if (cr.moveToFirst()) {
+
+                                    double montopagado = dbAdapter_temp_autorizacion_cobro.getMontoPagado(SolReferenciaIdAndroid);
+                                    Log.d("MONTO PAGADO",""+montopagado);
+                                    int estado = dbAdapter_comprob_cobro.updateComprobCobrosAutorizacion(0, montopagado, SolReferenciaIdAndroid);
+                                    Log.e("IDESTADO",""+estado);
+                                    if (estado > 0) {
+                                        String idComprobante = dbAdapter_comprob_cobro.getIdComrobanteCobro(idEstablecimiento1 + "");
+                                        int id_establec = cr.getInt(cr.getColumnIndexOrThrow(DbAdapter_Comprob_Cobro.CC_id_establec));
+                                        int id_comprob = cr.getInt(cr.getColumnIndexOrThrow(DbAdapter_Comprob_Cobro.CC_id_comprob));
+                                        int id_plan_pago = cr.getInt(cr.getColumnIndexOrThrow(DbAdapter_Comprob_Cobro.CC_id_plan_pago));
+                                        int id_plan_pago_detalle = cr.getInt(cr.getColumnIndexOrThrow(DbAdapter_Comprob_Cobro.CC_id_plan_pago_detalle));
+                                        String desc_tipo_doc = cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Comprob_Cobro.CC_desc_tipo_doc));
+                                        String doc = cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Comprob_Cobro.CC_doc));
+                                        String fecha_programada = fechaLimite;
+                                        String monto_a_pagar = montocredito;
+                                        String fecha_cobro = "";
+                                        String hora_cobro = "";
+                                        double monto_cobrado = 0.0;
+                                        int estado_cobro = 1;
+                                        int id_agente = cr.getInt(cr.getColumnIndexOrThrow(DbAdapter_Comprob_Cobro.CC_id_agente));
+                                        int id_forma_cobro = cr.getInt(cr.getColumnIndexOrThrow(DbAdapter_Comprob_Cobro.CC_id_forma_cobro));
+                                        String lugar_registro = cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Comprob_Cobro.CC_lugar_registro));
+                                        int liquidacion = idLiquidacion;
+                                        long l =dbAdapter_comprob_cobro.createComprobCobros(id_establec, id_comprob, id_plan_pago, id_plan_pago_detalle, desc_tipo_doc, doc, fecha_programada, Double.parseDouble(monto_a_pagar), fecha_cobro, hora_cobro, monto_cobrado, estado_cobro, id_agente, id_forma_cobro, lugar_registro, liquidacion, idComprobante, 4);
+                                        Log.d("JSON CREDITOINSERTO",""+l);
+                                        if(l >0){
+                                            Log.d("JSON CREDITOINSERTO","-"+id_plan_pago+"-"+id_plan_pago_detalle);
+                                            JSONObject jsonObject1 = api.CreatePlanPagoDetalleExp(id_plan_pago, getDatePhone() , Double.parseDouble(montocredito),idUsuario, fecha_programada);
+                                            Log.d("JSON CREDITO",""+jsonObject1.toString());
+                                        }
+
+
+
+                                    }
+                                }
+
+
+                            }
 
                         }
                     }
 
                 }
-                */
 
 
                 if (isSuccesfulImport(jsonObject)) {
@@ -419,10 +468,10 @@ public class ImportMain extends AsyncTask<String, String, String> {
                     for (int i = 0; i < jsonArray.length(); i++) {
                         jsonObj = jsonArray.getJSONObject(i);
                         int idEstablecimiento1 = jsonObj.getInt("EstIEstablecimientoId");
-                        int montoCredito = jsonObj.getInt("SolDOMontoCredito");
+                        double montoCredito = jsonObj.getInt("SolDOMontoCredito");
                         int diasCredito = jsonObj.getInt("SolIVigenciaCredito");
                         Log.d("IMPORT SOLICITUDES DATOS", idEstablecimiento + " - " + montoCredito + " - " + diasCredito);
-                        dbAdaptert_evento_establec.updateEstablecsCredito(idEstablecimiento, (double) montoCredito, diasCredito);
+                        dbAdaptert_evento_establec.updateEstablecsCredito(idEstablecimiento, montoCredito, diasCredito);
                     }
                 }
 

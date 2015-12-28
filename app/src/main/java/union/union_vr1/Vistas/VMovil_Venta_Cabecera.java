@@ -1858,7 +1858,7 @@ Instantiate and pass a callback
                     String NUMERO_COMPROBANTE = String.format("%08d", Integer.parseInt(NUMERO_DOCUMENTO));
                     Log.d("RECORRE EL CURSOR TEMP COMPROB COBROS", "YES" + "--" + NUMERO_COMPROBANTE); //...
                     //Crear una consulta para añadir un id al comprobante cobro.
-                    long registroInsertado = dbHelper_Comprob_Cobros.createComprobCobros(idEstablecimiento, Integer.parseInt(id + ""), id_plan_pago, id_plan_pago_detalle, tipoDocumento.toUpperCase(), SERIE_DOCUMENTO + "-" + NUMERO_COMPROBANTE, fecha_programada, monto_a_pagar, fecha_cobro, hora_cobro, monto_cobrado, estado_cobro, id_agente_venta, id_forma_cobro, lugar_registro, idLiquidacion, idComprobanteCobro, 0);
+                    long registroInsertado = dbHelper_Comprob_Cobros.createComprobCobros(idEstablecimiento, Integer.parseInt(id + ""), id_plan_pago, id_plan_pago_detalle, tipoDocumento.toUpperCase(), SERIE_DOCUMENTO + "-" + NUMERO_COMPROBANTE,fecha_programada, monto_a_pagar, fecha_cobro, hora_cobro, monto_cobrado, estado_cobro, id_agente_venta, id_forma_cobro, lugar_registro, idLiquidacion, idComprobanteCobro, 0);
                     Log.d(TAG, "COMPROBANTE COBRO _ID : , "+registroInsertado);
                     Log.d("CC INSERTADO SATISFACTORIAMENTE ", "ID : " + idComprobanteCobro + "....." + registroInsertado + "-" + Integer.parseInt(id + ""));
                 }

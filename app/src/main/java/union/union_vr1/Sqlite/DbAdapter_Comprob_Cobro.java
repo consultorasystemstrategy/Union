@@ -45,6 +45,7 @@ public class DbAdapter_Comprob_Cobro {
     public static final String CC_estado_prologa = "cc_estado_prologa";
     public static final String CC_liquidacion = "id_liquidacion";
     public static final String CC_estado_flex = "cc_estado_flex";
+    public static final String CC_id_flex = "CC_id_flex";
 
     public static final String TAG = "Comprob_Cobro";
     private DbHelper mDbHelper;
@@ -72,6 +73,7 @@ public class DbAdapter_Comprob_Cobro {
                     + CC_monto_cobrado + " real,"
                     + CC_estado_cobro + " integer,"
                     + CC_id_agente + " integer,"
+                    + CC_id_flex + " integer,"
                     + CC_id_forma_cobro + " integer,"
                     + CC_estado_flex + " integer,"
                     + CC_lugar_registro + " text, "
@@ -306,9 +308,16 @@ public class DbAdapter_Comprob_Cobro {
                 CC_id_comprobante_cobro + "=?", new String[]{id});
         return i;
     }
-    public int changeEstadoToExportToFlex(String idComprobante) {
+    public int changeEstadoToExportToFlex(String idComprobante, int estado) {
         ContentValues initialValues = new ContentValues();
-        initialValues.put(CC_estado_flex, Constants._EXPORTADO_FLEX);
+        initialValues.put(Constants._SINCRONIZAR, estado);
+        return  mDb.update(SQLITE_TABLE_Comprob_Cobro, initialValues,
+                CC_id_cob_historial + "=?", new String[]{idComprobante});
+    }
+
+    public int changeEstadoToExportToFlexForId(String idComprobante, int estado, int idFlex) {
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(CC_estado_flex, estado);
         return  mDb.update(SQLITE_TABLE_Comprob_Cobro, initialValues,
                 CC_id_cob_historial + "=?", new String[]{idComprobante});
     }
@@ -487,6 +496,9 @@ public class DbAdapter_Comprob_Cobro {
             mCursor.moveToFirst();
         }
         return mCursor;
+    }
+    public Cursor fetchNormal(){
+        return mDb.rawQuery("select * from "+SQLITE_TABLE_Comprob_Cobro+" where "+CC_estado_flex+"='"+Constants.POR_EXPORTAR_FLEX+"'",null);
     }
 
     public Cursor filterExport() {

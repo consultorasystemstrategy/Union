@@ -74,7 +74,7 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
         //--------------------------------------------
         dbAdapter_histo_venta_detalle = new DbAdapter_Histo_Venta_Detalle(this);
         dbAdapter_histo_venta_detalle.open();
-dbAdapter_precio = new DbAdapter_Precio(this);
+        dbAdapter_precio = new DbAdapter_Precio(this);
         dbAdapter_precio.open();
         dbHelperCanjes_Dev = new DbAdapter_Canjes_Devoluciones(this);
         dbHelperCanjes_Dev.open();
@@ -519,13 +519,13 @@ dbAdapter_precio = new DbAdapter_Precio(this);
             categoria_op = "1";
         }
         if (categoria_op.equals("Malogrado")) {
-            categoria_op = "2";
-        }
-        if (categoria_op.equals("Reclamo")) {
             categoria_op = "3";
         }
-        if (categoria_op.equals("Vencido-Malo")) {
+        if (categoria_op.equals("Reclamo")) {
             categoria_op = "4";
+        }
+        if (categoria_op.equals("Vencido-Malo")) {
+            categoria_op = "2";
         }
 
         if (tipo_op.equals("Canje")) {

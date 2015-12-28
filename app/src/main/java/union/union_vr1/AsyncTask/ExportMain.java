@@ -759,11 +759,11 @@ public class ExportMain extends AsyncTask<String, String, String> {
                     if (isSuccesfulExport(jsonObject)) {
                         int id = jsonObject.getInt("Value");
                         listidInsertarCaja.add("" + cursorInsertarCaja.getInt(cursorInsertarCaja.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_id_cob_historial)));
-                        int ac = dbAdapter_comprob_cobro.changeEstadoToExportToFlex(cursorInsertarCaja.getString(cursorInsertarCaja.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_id_cob_historial)));
+                        /*int ac = dbAdapter_comprob_cobro.changeEstadoToExportToFlex(cursorInsertarCaja.getString(cursorInsertarCaja.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_id_cob_historial)));
                         if (ac > 0) {
                             JSONObject jsonObjectFlex = null;
                             jsonObjectFlex = api.InsCobro(id);
-                        }
+                        }*/
 
                     }
 

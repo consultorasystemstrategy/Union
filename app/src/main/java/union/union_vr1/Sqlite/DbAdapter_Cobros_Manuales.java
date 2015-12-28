@@ -28,6 +28,8 @@ public class DbAdapter_Cobros_Manuales {
     public static final String CM_Referencia = "vstr_Referencia";
     public static final String CM_Usuario = "vint_UsuarioId";
     public static final String CM_Serie = "vstr_Serie";
+    public static final String CM_id_flex = "vstr_id_flex";
+    public static final String CM_Estado_flex = "CM_Estado_flex";
     public static final String CM_Numero = "vint_Numero";
     public static  final String CM_Numero_comprobante = "CM_Numero_comprobante";
 
@@ -50,6 +52,8 @@ public class DbAdapter_Cobros_Manuales {
                     + CM_Fecha + " text,"
                     + CM_Hora + " text,"
                     + CM_Usuario + " integer,"
+                    + CM_id_flex+ " integer,"
+                    + CM_Estado_flex + " integer,"
                     + CM_Estado + " integer,"
                     + CM_Numero_comprobante + " integer,"
                     + CM_Id_Establecimiento + " integer,"
@@ -108,11 +112,30 @@ public class DbAdapter_Cobros_Manuales {
         return cursor;
     }
 
+    public Cursor filterExportForFlex() {
+        Cursor cursor = mDb.rawQuery("select * from " + SQLITE_TABLE_Cobros_Manuales + " where " +CM_Estado_flex + "='" + Constants._EXPORTADO_FLEX+ "'", null);
+        return cursor;
+    }
+
 
     public long updateCobrosManuales(int estado, int id) {
 
         ContentValues initialValues = new ContentValues();
         initialValues.put(Constants._SINCRONIZAR, estado);
+        return mDb.update(SQLITE_TABLE_Cobros_Manuales,
+                initialValues,
+                CM_id_Cobros_Manuales + "=?",
+                new String[]{
+                        "" + id
+                });
+    }
+
+    public long updateCobrosManualesPorId(int estado, int id,int idFlex) {
+
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(Constants._SINCRONIZAR, estado);
+        initialValues.put(CM_id_flex, idFlex);
+        initialValues.put(CM_Estado_flex, estado);
         return mDb.update(SQLITE_TABLE_Cobros_Manuales,
                 initialValues,
                 CM_id_Cobros_Manuales + "=?",

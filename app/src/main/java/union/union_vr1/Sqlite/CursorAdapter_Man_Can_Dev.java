@@ -48,7 +48,7 @@ public class CursorAdapter_Man_Can_Dev extends CursorAdapter {
             imageView.setImageDrawable(context.getApplicationContext().getResources().getDrawable(R.drawable.ic_action_accept));
             String nomForma = "";
             String _id_guia = cursor.getString(cursor.getColumnIndex(DBAdapter_Temp_Canjes_Devoluciones.temp_id_canjes_devoluciones));
-            String establecimiento =cursor.getString(cursor.getColumnIndex(DBAdapter_Temp_Canjes_Devoluciones.temp_cliente));
+            String comprobante =cursor.getString(cursor.getColumnIndex(DBAdapter_Temp_Canjes_Devoluciones.temp_id_comprob_venta));
             int forma = cursor.getInt(cursor.getColumnIndex(DBAdapter_Temp_Canjes_Devoluciones.temp_id_forma));
             String importeString = cursor.getString(cursor.getColumnIndex(DBAdapter_Temp_Canjes_Devoluciones.temp_importe));
             Double importe = 0.0;
@@ -63,7 +63,7 @@ public class CursorAdapter_Man_Can_Dev extends CursorAdapter {
             }
             DecimalFormat df= new DecimalFormat("#0.00");
 
-            textViewTitulo.setText("CLIENTE: " + establecimiento +"");
+            textViewTitulo.setText("COMPROBANTE: " + comprobante +"");
             textViewSubtitulo.setText("ID GUIA: "+_id_guia);
             textViewComment.setText("FORMA DEVOLUCION: "+nomForma);
             textViewMonto.setText("S/. "+ df.format(importe));

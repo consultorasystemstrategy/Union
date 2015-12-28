@@ -54,13 +54,15 @@ public class VMovil_Crear_Establecimiento extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_agregar_establecimiento);
         //..........
+        clearAllPreferences();
+
         dbAdapter_agente = new DbAdapter_Agente(this);
         dbAdapter_agente.open();
         idusuario = dbAdapter_agente.getIdUsuario();
 
         dbAdapter_temp_establecimiento = new DbAdapter_Temp_Establecimiento(this);
         dbAdapter_temp_establecimiento.open();
-        new GetDataSpinnerRegistrar(this).execute();
+        //
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         dbAdapter_temp_datosSpinner = new DbAdapter_Temp_DatosSpinner(this);
@@ -84,6 +86,12 @@ public class VMovil_Crear_Establecimiento extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        saveMapa();
+        item.setVisible(false);
+    }
 
     private void actualizar() {
        /* if (conectadoWifi() || conectadoRedMovil()) {*/
@@ -121,25 +129,28 @@ public class VMovil_Crear_Establecimiento extends AppCompatActivity {
     }
 
     private boolean validaMapa() {
-        EditText editTextDescripcion;
-        EditText editTextDireccionFiscal;
-        editTextDescripcion = (EditText) fragmentMapa.getView().findViewById(R.id.map_descripcion);
-        editTextDireccionFiscal = (EditText) fragmentMapa.getView().findViewById(R.id.map_direccion_fiscal);
-        if ((editTextDescripcion.getText().toString() == null || editTextDescripcion.getText().toString() == "" || editTextDireccionFiscal.getText().toString() == null || editTextDireccionFiscal.getText().toString() == "")) {
-            return false;
-        } else {
-            return true;
+        boolean estado = false;
+        try {
+
+            EditText editTextDescripcion;
+            EditText editTextDireccionFiscal;
+            editTextDescripcion = (EditText) fragmentMapa.getView().findViewById(R.id.map_descripcion);
+            editTextDireccionFiscal = (EditText) fragmentMapa.getView().findViewById(R.id.map_direccion_fiscal);
+            if ((editTextDescripcion.getText().toString() == null || editTextDescripcion.getText().toString() == "" || editTextDireccionFiscal.getText().toString() == null || editTextDireccionFiscal.getText().toString() == "")) {
+                estado = false;
+            } else {
+                estado = true;
+            }
+
+        } catch (NullPointerException e) {
+            estado = false;
         }
 
+        return estado;
+
     }
 
-    private boolean validaCliente() {
-        return false;
-    }
 
-    private boolean validaEstablecimiento() {
-        return false;
-    }
 
 
     public void saveMapa() {
@@ -238,31 +249,6 @@ public class VMovil_Crear_Establecimiento extends AppCompatActivity {
         }
     }
 
-    protected Boolean conectadoWifi() {
-        ConnectivityManager connectivity = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (connectivity != null) {
-            NetworkInfo info = connectivity.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-            if (info != null) {
-                if (info.isConnected()) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    protected Boolean conectadoRedMovil() {
-        ConnectivityManager connectivity = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (connectivity != null) {
-            NetworkInfo info = connectivity.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
-            if (info != null) {
-                if (info.isConnected()) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -277,6 +263,9 @@ public class VMovil_Crear_Establecimiento extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id) {
+            case android.R.id.home:
+                onBackPressed();
+                break;
             case R.id.menu_establec:
                 saveCliente();
                 saveEstalecimiento();
@@ -347,18 +336,57 @@ public class VMovil_Crear_Establecimiento extends AppCompatActivity {
         String telFijo = getDataEstablec.getString("telFijo", null);
         String numero2 = getDataEstablec.getString("numero2", null);
         Log.d("INFORMACION ESTABLEC", "TIPO PERSONA: " + idTipoPersona + " TIPO DOCUMENTO: " + idTipoDocumento + " CATE ESTABLEC: " + idcat_Establec + " TIPO_ESTABLEC : " + idtipo_Establec);
-        Log.d("INFORMACION ESTABLEC {",1 + "-"+ idusuario +   "-"+ telFijo + "-"+ nroCelular + "-"+ numero2 + "-"+ latitud + "-"+ longitud + "-"+ descripcion + "-"+ direccion_fiscal + "-"+ idTipoPersona + "-"+ nombre + "-"+ apPaterno + "-"+ apMaterno + "-"+ idTipoDocumento + "-"+Integer.parseInt(nroDocumento) + "-"+ 1 + "-"+ correo + "-"+ idtipo_Establec + "-"+ nombreEstablec + "-"+idcat_Establec + "-"+Constants._CREADO);
+        Log.d("INFORMACION ESTABLEC {", 1 + "-" + idusuario + "-" + telFijo + "-" + nroCelular + "-" + numero2 + "-" + latitud + "-" + longitud + "-" + descripcion + "-" + direccion_fiscal + "-" + idTipoPersona + "-" + nombre + "-" + apPaterno + "-" + apMaterno + "-" + idTipoDocumento + "-" + Integer.parseInt(nroDocumento) + "-" + 1 + "-" + correo + "-" + idtipo_Establec + "-" + nombreEstablec + "-" + idcat_Establec + "-" + Constants._CREADO);
         long estado = dbAdapter_temp_establecimiento.createTempEstablec(1, idusuario + "", telFijo, nroCelular, numero2, latitud, longitud, descripcion, direccion_fiscal, idTipoPersona, nombre, apPaterno, apMaterno, idTipoDocumento,
-                Integer.parseInt(nroDocumento), 1, correo, idtipo_Establec, nombreEstablec,idcat_Establec,Constants._CREADO);
+                Integer.parseInt(nroDocumento), 1, correo, idtipo_Establec, nombreEstablec, idcat_Establec, Constants._CREADO);
         Log.d("ESTADO INSERTO", "" + estado);
-        Log.d("","");
+        Log.d("", "");
         if (estado > 0) {
+
             if (conectadoWifi() || conectadoRedMovil()) {
                 new CrearEstablecimiento(this).execute();
+                clearAllPreferences();
+                startActivity(new Intent(getApplicationContext(),VMovil_Menu_Establec.class));
             }
         } else {
-
+            clearAllPreferences();
+            startActivity(new Intent(getApplicationContext(), VMovil_Menu_Establec.class));
         }
+
+    }
+
+    private void clearAllPreferences() {
+
+        SharedPreferences.Editor editorMapa = getSharedPreferences("INFORMACION_MAPA", Context.MODE_PRIVATE).edit();
+        editorMapa.putString("descripcion", "");
+        editorMapa.putString("direccion_fiscal", "");
+        editorMapa.putString("latitud", "");
+        editorMapa.putString("longitud", "");
+        editorMapa.commit();
+
+
+        SharedPreferences.Editor editorCliente = getSharedPreferences("INFORMACION_CLIENTE", Context.MODE_PRIVATE).edit();
+        editorCliente.putString("tipo_persona", "");
+        editorCliente.putString("tipo_documento", "");
+        editorCliente.putString("nombre", "");
+        editorCliente.putString("apPaterno", "");
+        editorCliente.putString("apMaterno", "");
+        editorCliente.putString("nroDocumento", "");
+        editorCliente.putString("nroCelular", "");
+        editorCliente.putString("correo", "");
+        editorCliente.commit();
+
+
+        SharedPreferences.Editor editorEstablec = getSharedPreferences("INFORMACION_ESTABLECIMIENTO", Context.MODE_PRIVATE).edit();
+        editorEstablec.putString("nombre", "");
+        editorEstablec.putString("tipo_establec", "");
+        editorEstablec.putString("categoria_establec", "");
+        editorEstablec.putString("telFijo", "");
+        editorEstablec.putString("numero2", "");
+        editorEstablec.commit();
+
+        //startActivity(new Intent(getApplicationContext(),VMovil_Menu_Establec.class));
+        // this.finish();
 
     }
 
@@ -434,5 +462,41 @@ public class VMovil_Crear_Establecimiento extends AppCompatActivity {
         return id;
     }
 
+    protected Boolean conectadoWifi() {
+        ConnectivityManager connectivity = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivity != null) {
+            NetworkInfo info = connectivity.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+            if (info != null) {
+                if (info.isConnected()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
+    protected Boolean conectadoRedMovil() {
+        ConnectivityManager connectivity = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivity != null) {
+            NetworkInfo info = connectivity.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+            if (info != null) {
+                if (info.isConnected()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        clearAllPreferences();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        clearAllPreferences();
+    }
 }
