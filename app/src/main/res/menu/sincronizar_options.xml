@@ -5,10 +5,10 @@
         android:title="Importar"
         android:orderInCategory="100"
         android:showAsAction="never" />
-    <item android:id="@+id/buttonImportCredito"
+   <!-- <item android:id="@+id/buttonImportCredito"
         android:title="Importar Crédito"
         android:orderInCategory="100"
-        android:showAsAction="never" />
+        android:showAsAction="never" />-->
     <item android:id="@+id/buttonExportar"
         android:title="Exportar"
         android:orderInCategory="100"
