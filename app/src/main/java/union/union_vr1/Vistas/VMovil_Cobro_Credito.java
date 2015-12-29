@@ -818,7 +818,7 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
                             Toast.makeText(getApplicationContext(), "Debe completar todos los campos", Toast.LENGTH_LONG).show();
                         } else {
                             int numero = Integer.parseInt(numeroString);
-                            Double importe = Double.parseDouble(formatter.format(Double.parseDouble(importeString)));
+                            Double importe = Double.parseDouble( Utils.replaceComa(formatter.format( Double.parseDouble(Utils.replaceComa( importeString)))));
                             estaSeguroCobrar(serie, numero, importe, itemTipo);
 
                         }
