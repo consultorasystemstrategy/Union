@@ -39,6 +39,7 @@ import union.union_vr1.Sqlite.DBAdapter_Temp_Canjes_Devoluciones;
 import union.union_vr1.Sqlite.DbAdapter_Histo_Venta_Detalle;
 import union.union_vr1.Sqlite.DbAdapter_Stock_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
+import union.union_vr1.Utils.Utils;
 
 public class VMovil_Operacion_Canjes_Devoluciones extends TabActivity {
     private DBAdapter_Temp_Canjes_Devoluciones dbAdapter_temp_canjes_devoluciones;
@@ -68,11 +69,13 @@ public class VMovil_Operacion_Canjes_Devoluciones extends TabActivity {
     private int idProducto;
     private int liquidacion;
     private String [] datosHeader;
+    TabActivity activity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vmovil__operacion__canjes__devoluciones);
+        activity=this;
         session = new DbAdapter_Temp_Session(this);
         session.open();
         dbAdapter_temp_canjes_devoluciones = new DBAdapter_Temp_Canjes_Devoluciones(this);
@@ -187,7 +190,7 @@ public class VMovil_Operacion_Canjes_Devoluciones extends TabActivity {
             Log.d("ITEM 1 DEVOLUCIONES", getAllOperacion.getString(getAllOperacion.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_nom_producto)));
         }*/
         ExportCanjesDevoluciones exportCanjesDevoluciones = new ExportCanjesDevoluciones(getApplicationContext(),this);
-        exportCanjesDevoluciones.execute(getDatePhone(),establec, Constants._CREADO+"");
+        exportCanjesDevoluciones.execute(getDatePhone(), establec, Constants._CREADO + "");
 
         startActivity(new Intent(getApplicationContext(), VMovil_Evento_Establec.class));
         finish();
@@ -287,8 +290,8 @@ public class VMovil_Operacion_Canjes_Devoluciones extends TabActivity {
                 int liquidacion = session.fetchVarible(3);
                 int estado = cr.getInt(cr.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_estado));
                 String iddetale = cr.getString(cr.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_id_detalle));
-                Log.d("DATOS RESTART",cantidad+"-"+idProducto+"-"+idforDelete);
-                setMessageForDeleteById(idforDelete,1,cantidad,idProducto,liquidacion,estado,iddetale);
+                Log.d("DATOS RESTART", cantidad + "-" + idProducto + "-" + idforDelete);
+                setMessageForDeleteById(idforDelete, 1, cantidad, idProducto, liquidacion, estado, iddetale);
                 return false;
             }
         });
@@ -357,16 +360,23 @@ public class VMovil_Operacion_Canjes_Devoluciones extends TabActivity {
 
 
                     autoComple.setText(nom);
-                    Intent faCanjeDev = new Intent(getApplicationContext(), VMovil_Facturas_Canjes_Dev.class);
-                    faCanjeDev.putExtra("idAgente", idAgente);
-                    faCanjeDev.putExtra("idEstablec", establec);
-                    faCanjeDev.putExtra("idProducto", idProducto);
-                    faCanjeDev.putExtra("nomProducto", nom);
-                    faCanjeDev.putExtra("valorUnidad", valorUnidad);
-                    Log.e("idProducto", "" + idProducto + "-" + nom);
-                    startActivity(faCanjeDev);
-                    finish();
 
+                    if(idProducto ==0){
+
+                        Utils.setToast(activity,"No cuenta con stock para este producto",R.color.rojo);
+
+                    }else {
+
+                        Intent faCanjeDev = new Intent(getApplicationContext(), VMovil_Facturas_Canjes_Dev.class);
+                        faCanjeDev.putExtra("idAgente", idAgente);
+                        faCanjeDev.putExtra("idEstablec", establec);
+                        faCanjeDev.putExtra("idProducto", idProducto);
+                        faCanjeDev.putExtra("nomProducto", nom);
+                        faCanjeDev.putExtra("valorUnidad", valorUnidad);
+                        Log.e("idProducto", "" + idProducto + "-" + nom);
+                        startActivity(faCanjeDev);
+                        finish();
+                    }
 
                 } else {
                     adapter.getFilter().filter(charSequence.toString());

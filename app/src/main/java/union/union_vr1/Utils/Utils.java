@@ -1,6 +1,10 @@
 package union.union_vr1.Utils;
 
+import android.app.Activity;
+import android.content.Context;
 import android.util.Log;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,6 +17,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
+
+import union.union_vr1.R;
 
 /**
  * Created by Usuario on 26/03/2015.
@@ -102,6 +108,13 @@ public class Utils {
             }
         }
         return string;
+    }
+    public static void setToast(Activity activity,String mensaje,int tipoMensaje){
+        Toast toast = Toast.makeText(activity.getApplicationContext(),mensaje, Toast.LENGTH_LONG);
+        toast.getView().setBackgroundColor(activity.getResources().getColor(tipoMensaje));
+        TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
+        v.setTextColor(activity.getResources().getColor(R.color.Blanco));
+        toast.show();
     }
 
 }

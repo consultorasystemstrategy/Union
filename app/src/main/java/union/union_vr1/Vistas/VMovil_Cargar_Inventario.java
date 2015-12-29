@@ -74,13 +74,14 @@ public class VMovil_Cargar_Inventario extends Activity implements View.OnClickLi
     Double slide_aRendir = 0.0;
     String nombreAgente = "";
     int nroLiquidacion = 0;
-    private GetStockAgente getStockAgente;
+
     //widgets
     private TextView agente;
     private TextView liquidacion;
     private EditText inputNroGuia;
     private Button btnAgregarGuia;
     private ListView listGuias;
+    private int nroAgregados=0;
 
 
     @Override
@@ -90,7 +91,7 @@ public class VMovil_Cargar_Inventario extends Activity implements View.OnClickLi
 
         mainActivity = this;
         //
-        getStockAgente = new GetStockAgente(mainActivity);
+
         dbAdapter_temp_inventario = new DBAdapter_Temp_Inventario(this);
         dbAdapter_temp_inventario.open();
         cargarInventario = new CargarInventario(mainActivity);
@@ -144,6 +145,7 @@ public class VMovil_Cargar_Inventario extends Activity implements View.OnClickLi
                     cargarInventario = new CargarInventario(mainActivity);
                     Log.e("DATOS CARGAR INVENTARIO",""+slideIdAgente+"+++"+nroGuia);
                     cargarInventario.execute("" + slideIdAgente, "" + nroGuia);
+                    nroAgregados = nroAgregados+1;
                 }
             });
             dialogo1.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -272,54 +274,54 @@ public class VMovil_Cargar_Inventario extends Activity implements View.OnClickLi
         // TODO Auto-generated method stub
         switch (v.getId()) {
             case R.id.VEI_BTNclient:
-                getStockAgente.execute();
+                new GetStockAgente(this).execute();
                 Intent i = new Intent(this, VMovil_Menu_Establec.class);
                 startActivity(i);
                 break;
             case R.id.VEI_BTNinfgas:
-                getStockAgente.execute();
+                new GetStockAgente(this).execute();
                 Intent ig = new Intent(this, VMovil_Evento_Gasto.class);
                 startActivity(ig);
                 break;
             case R.id.VEI_BTNresume:
-                getStockAgente.execute();
+                new GetStockAgente(this).execute();
                 Intent ir = new Intent(this, VMovil_Resumen_Caja.class);
                 startActivity(ir);
                 break;
 
             case R.id.VEI_BTNcobrarTodo:
-                getStockAgente.execute();
+                new GetStockAgente(this).execute();
                 Intent cT = new Intent(this, VMovil_Cobros_Totales.class);
                 startActivity(cT);
                 break;
             case R.id.buttonNumeroEstablecimientos:
-                getStockAgente.execute();
+                new GetStockAgente(this).execute();
                 Intent ine = new Intent(this, VMovil_Menu_Establec.class);
                 startActivity(ine);
                 break;
             //SLIDING MENU
             case R.id.slide_textviewPrincipal:
-                getStockAgente.execute();
+                new GetStockAgente(this).execute();
                 Intent iP = new Intent(this, VMovil_Evento_Indice.class);
                 startActivity(iP);
                 break;
             case R.id.slide_textViewClientes:
-                getStockAgente.execute();
+                new GetStockAgente(this).execute();
                 Intent ic1 = new Intent(this, VMovil_Menu_Establec.class);
                 startActivity(ic1);
                 break;
             case R.id.slide_textViewCobranza:
-                getStockAgente.execute();
+                new GetStockAgente(this).execute();
                 Intent cT1 = new Intent(this, VMovil_Cobros_Totales.class);
                 startActivity(cT1);
                 break;
             case R.id.slide_TextViewGastos:
-                getStockAgente.execute();
+                new GetStockAgente(this).execute();
                 Intent ig1 = new Intent(this, VMovil_Evento_Gasto.class);
                 startActivity(ig1);
                 break;
             case R.id.slide_textViewResumen:
-                getStockAgente.execute();
+                new GetStockAgente(this).execute();
                 Intent ir1 = new Intent(this, VMovil_Resumen_Caja.class);
                 startActivity(ir1);
                 break;
@@ -361,7 +363,7 @@ public class VMovil_Cargar_Inventario extends Activity implements View.OnClickLi
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            getStockAgente.execute();
+            new GetStockAgente(this).execute();
             onBackPressed();
             return true;
         }
@@ -372,5 +374,17 @@ public class VMovil_Cargar_Inventario extends Activity implements View.OnClickLi
     public void onBackPressed() {
         startActivity(new Intent(getApplicationContext(), VMovil_Evento_Indice.class));
         this.finish();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        new GetStockAgente(this).execute();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        new GetStockAgente(this).execute();
     }
 }
