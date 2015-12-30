@@ -144,7 +144,7 @@ public class CursorAdapterPlanPagos extends CursorAdapter implements DatePickerD
             public void onClick(View v) {
                 _id_plan_pago_selected = final_id;
 
-                dbHelper_TempComprobCobro.updateBlock(""+_id_plan_pago_selected, 0);
+                dbHelper_TempComprobCobro.updateBlock("" + _id_plan_pago_selected, 0);
 
                 swapCursor(dbHelper_TempComprobCobro.fetchAllComprobCobros());
             }
@@ -178,12 +178,12 @@ public class CursorAdapterPlanPagos extends CursorAdapter implements DatePickerD
             @Override
             public void onClick(View v) {
                 _id_plan_pago_selected = final_id;
-                if (finalDefinido ==1){
+                if (finalDefinido == 1) {
                     Toast.makeText(context, "YA ESTÁ DEFINIDO", Toast.LENGTH_SHORT).show();
 
-                }else if( dbHelper_TempComprobCobro.fetchCuotasAutomatically().getCount()<=1){
+                } else if (dbHelper_TempComprobCobro.fetchCuotasAutomatically().getCount() <= 1) {
                     Toast.makeText(context, "ÚLTIMA CUOTA AUTOMÁTICA", Toast.LENGTH_SHORT).show();
-                }else {
+                } else {
                     dialogEditarCuota(_id_plan_pago_selected, finalFecha_programada).show();
                 }
             }
@@ -224,6 +224,7 @@ public class CursorAdapterPlanPagos extends CursorAdapter implements DatePickerD
             public void onClick(DialogInterface dialog, int which) {
                 String texto = null;
                 Double value = 0.0;
+                int cuotasValidas = 0 ;
 
                 texto = savedText.getText().toString().trim();
 
@@ -241,7 +242,10 @@ public class CursorAdapterPlanPagos extends CursorAdapter implements DatePickerD
 
 
                 //OBTENER UN CURSOR CON LAS CUOTAS NO DEFINIDAS POR EL USUARIO Y ACTUALIZARLAS
+                Cursor cursorDefined = dbHelper_TempComprobCobro.fetchCuotasDefined();
+                cuotasValidas += cursorDefined.getCount();
                 Cursor cursor = dbHelper_TempComprobCobro.fetchCuotasAutomatically();
+
 
                 if (cursor.getCount()>0) {
                     cursor.moveToFirst();
@@ -250,7 +254,8 @@ public class CursorAdapterPlanPagos extends CursorAdapter implements DatePickerD
                     Double resto = 0.0;
                     Double montoEntero = 0.0;
                     int cuotasAutomaticas = cursor.getCount();
-                    int cuotasValidas = 1 ;
+                    boolean deleted = false;
+
 
                     resto = monto % cuotasAutomaticas;
                     montoEntero = monto - resto;
@@ -267,7 +272,6 @@ public class CursorAdapterPlanPagos extends CursorAdapter implements DatePickerD
                         Double cuotaAutomatica = 0.0;
                         if (cursor.isLast()) {
                             cuotaAutomatica = montoEntero / cuotasAutomaticas + resto;
-
                         } else {
                             cuotaAutomatica = montoEntero / cuotasAutomaticas;
                         }
@@ -276,27 +280,21 @@ public class CursorAdapterPlanPagos extends CursorAdapter implements DatePickerD
                             cuotasValidas++;
                             dbHelper_TempComprobCobro.updateMontoPanPagos("" + cursor.getLong(cursor.getColumnIndex("_id")), round(cuotaAutomatica,2), 0);
                         }else{
+                            deleted = true;
                             dbHelper_TempComprobCobro.deleteByID(""+cursor.getLong(cursor.getColumnIndex("_id")));
                         }
-
                     }
-
-
                     swapCursor(dbHelper_TempComprobCobro.fetchAllComprobCobros());
-                    VMovil_Venta_Cabecera_PlanPagos.setSelection(cuotasValidas);
+                    if (deleted){
+                        VMovil_Venta_Cabecera_PlanPagos.setSelection(cuotasValidas);
+                    }
                 }else {
                     Toast.makeText(context, "TODAS LAS CUOTAS DEFINIDAS", Toast.LENGTH_SHORT).show();
                 }
-
-
-
-
-
             }
         });
 
         builder.setView(layout);
-
         final AlertDialog alertDialog = builder.create();
         savedText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -310,7 +308,6 @@ public class CursorAdapterPlanPagos extends CursorAdapter implements DatePickerD
                 }
             }
         });
-
         return alertDialog;
     }
 

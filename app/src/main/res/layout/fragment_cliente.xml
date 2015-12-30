@@ -193,7 +193,7 @@
                     android:textColor="@color/ColorPUSecundario"
                     android:textStyle="italic|bold" />
 
-                <EditText
+                <AutoCompleteTextView
                     android:id="@+id/editNroDocumento"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

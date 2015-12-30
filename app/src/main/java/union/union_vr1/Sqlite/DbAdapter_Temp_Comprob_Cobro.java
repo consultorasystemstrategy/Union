@@ -222,8 +222,8 @@ public class DbAdapter_Temp_Comprob_Cobro {
 
     public Cursor obtenerUltimoRegistro() {
 
-        Cursor mCursor = mDb.rawQuery("SELECT * FROM "+SQLITE_TABLE_TEMP_Comprob_Cobro+"\n" +
-                " WHERE _id = (SELECT MAX(_id) FROM "+SQLITE_TABLE_TEMP_Comprob_Cobro+")",null);
+        Cursor mCursor = mDb.rawQuery("SELECT * FROM " + SQLITE_TABLE_TEMP_Comprob_Cobro + "\n" +
+                " WHERE _id = (SELECT MAX(_id) FROM " + SQLITE_TABLE_TEMP_Comprob_Cobro + ")", null);
 
         if (mCursor != null) {
             mCursor.moveToFirst();
@@ -233,7 +233,7 @@ public class DbAdapter_Temp_Comprob_Cobro {
 
     public Cursor fetchCuotasAutomatically() {
 
-        Cursor mCursor = mDb.query(SQLITE_TABLE_TEMP_Comprob_Cobro, new String[] {temp_id_cob_historial,
+        Cursor mCursor = mDb.query(SQLITE_TABLE_TEMP_Comprob_Cobro, new String[]{temp_id_cob_historial,
                         temp_id_establec, temp_id_comprob, temp_id_plan_pago, temp_id_plan_pago_detalle,
                         temp_desc_tipo_doc, temp_doc, temp_fecha_programada, temp_monto_a_pagar,
                         temp_fecha_cobro, temp_monto_cobrado, temp_estado_cobro, temp_monto_defined},
@@ -245,6 +245,22 @@ public class DbAdapter_Temp_Comprob_Cobro {
         }
         return mCursor;
     }
+
+    public Cursor fetchCuotasDefined() {
+
+        Cursor mCursor = mDb.query(SQLITE_TABLE_TEMP_Comprob_Cobro, new String[] {temp_id_cob_historial,
+                        temp_id_establec, temp_id_comprob, temp_id_plan_pago, temp_id_plan_pago_detalle,
+                        temp_desc_tipo_doc, temp_doc, temp_fecha_programada, temp_monto_a_pagar,
+                        temp_fecha_cobro, temp_monto_cobrado, temp_estado_cobro, temp_monto_defined},
+                temp_monto_defined + " = 1",
+                null, null, null, temp_fecha_programada + " ASC");
+
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+    }
+
 
     public Double sumAllDefined() throws SQLException {
         Double valor = 0.0;

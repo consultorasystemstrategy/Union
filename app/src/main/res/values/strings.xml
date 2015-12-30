@@ -173,10 +173,12 @@
     <string-array name="listServidorTipo">
         <item>Local</item>
         <item>Remoto</item>
+        <item>Red interna</item>
     </string-array>
     <string-array name="listValuesServidorTipo">
         <item>1</item>
         <item>2</item>
+        <item>3</item>
     </string-array>
 
     <string name="title_activity_vmovil__cargar__inventario">Cargar Inventario</string>

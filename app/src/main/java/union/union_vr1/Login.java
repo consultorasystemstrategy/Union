@@ -57,7 +57,7 @@ public class Login extends Activity implements OnClickListener {
     public static final String ARG_AUTH_TYPE = "2";
     public static final String ARG_IS_ADDING_NEW_ACCOUNT = "3";
     public static final String PARAM_USER_PASS = "4";
-    private AccountManager mAccountManager;
+    private AccountManager mAccountManager;z
 
     public static final String CODE_NAME = "name";
 

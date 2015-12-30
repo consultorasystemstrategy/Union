@@ -204,8 +204,6 @@ public class VMovil_Operacion_Canjes_Devoluciones extends TabActivity {
         textViewDocumentoCanje.setText(datosHeader[1]);
         mostrarItemsCanjes();
         listarTotalCanjes();
-
-
     }
     protected Boolean conectadoWifi(){
         ConnectivityManager connectivity = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);

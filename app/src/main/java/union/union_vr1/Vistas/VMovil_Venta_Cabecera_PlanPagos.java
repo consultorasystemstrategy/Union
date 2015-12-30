@@ -89,11 +89,11 @@ public class VMovil_Venta_Cabecera_PlanPagos extends Activity implements Adapter
 
     private int cuotas;
 
-    private static String TAG = "PLAN DE PAGOS CLASE";
+    private static String TAG =  VMovil_Venta_Cabecera_PlanPagos.class.getSimpleName();
 
     //cambiar de fecha long l
     private long _id_plan_pago_selected = -1;
-    private boolean isDeleted = false;
+    private static boolean isDeleted = false;
 
     private int countToast = 0;
     @Override
@@ -528,6 +528,7 @@ public class VMovil_Venta_Cabecera_PlanPagos extends Activity implements Adapter
     }
 
     public static void setSelection (int cuotas){
+        isDeleted = true;
         spinnerCuotas.setSelection(adapterCuotas.getPosition(""+cuotas));
     }
 
@@ -562,8 +563,8 @@ public class VMovil_Venta_Cabecera_PlanPagos extends Activity implements Adapter
             if (spinnerCuotas.getSelectedItem().toString() != null) {
                 calcular(Integer.parseInt(spinnerCuotas.getSelectedItem().toString()));
             }
-        }else{
-            isDeleted  = false;
+        }else {
+            isDeleted = false;
         }
 
     }

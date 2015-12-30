@@ -34,7 +34,9 @@ public class StockAgenteRestApi {
     //SERVIDOR REMOTO
         private final String urlStringRemoto = "http://190.81.172.113/RestFull/StockAgente.ashx";
 
+    private final String urlStringRedInterna = "http://192.168.13.31/RestFull/StockAgente.ashx";
     private String urlString = "http://192.168.0.158/RestFull/StockAgente.ashx";
+
 
     private Context contexto;
     private int servidorTipo=1;
@@ -43,10 +45,21 @@ public class StockAgenteRestApi {
         this.contexto = contexto;
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(contexto);
         servidorTipo =  Integer.parseInt(SP.getString("servidorTipo", "1"));
+        switch (servidorTipo){
+            case 1:
+                urlString = urlStringLocal;
+                break;
+            case 2:
+                urlString = urlStringRemoto;
+                break;
+            case 3:
+                urlString = urlStringRedInterna;
+            default:
+                break;
+        }
+
         if (servidorTipo==1){
-            urlString = urlStringLocal;
         }else if (servidorTipo==2){
-            urlString = urlStringRemoto;
         }
     }
 

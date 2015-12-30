@@ -379,7 +379,7 @@ public class Print {
                     posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, rayaTotal);
                     //posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|rA" + ESC + "|bC" + "---------" + LF);
                     posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, precioVenta);
-                    posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + NumberToLetterConverter.convertNumberToLetter(df.format(precio_venta)) + LF );
+                    posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + (NumberToLetterConverter.convertNumberToLetter(df.format(precio_venta))).toUpperCase() + LF );
 
 
                     posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + lineas + LF + LF);
@@ -399,7 +399,6 @@ public class Print {
                 //texto+=" NO SE PUEDE RECONOCER EL NUMERO DE PULGADAS...";
                 break;
         }
-
     }
 
     private static String agregarCeros(String string, int largo)

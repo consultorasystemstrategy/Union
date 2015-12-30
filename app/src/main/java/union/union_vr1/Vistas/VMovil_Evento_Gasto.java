@@ -414,7 +414,9 @@ public class VMovil_Evento_Gasto extends Activity implements View.OnClickListene
         Double total = 0.0;
 
         if (editTextTotal.getText().toString().equals("")){
+            Toast.makeText(VMovil_Evento_Gasto.this, "Debe agregar un monto.", Toast.LENGTH_SHORT).show();
             total = 0.0;
+            return;
         }else{
             total = Double.valueOf(editTextTotal.getText().toString());
         }
