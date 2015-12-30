@@ -98,6 +98,7 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
     private TextView textViewResumenIngresos;
     private TextView textViewResumenGastos;
     private TextView textViewResumenARendir;
+    private TextView textviewSlideConsultarInventario;
     private View viewResumen;
     private Activity mainActivity;
 
@@ -710,6 +711,9 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
             case R.id.slide_textViewARendir:
 
                 break;
+            case R.id.slide_textViewConsultarInventario:
+                startActivity(new Intent(getApplicationContext(), VMovil_Consultar_Inventario.class));
+                break;
             default:
                 break;
         }
@@ -733,7 +737,7 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
         textViewSlideNombreAgente = (TextView)findViewById(R.id.slide_textViewNombreAgente);
         textViewSlideNombreRuta = (TextView)findViewById(R.id.slide_textViewNombreRuta);
         buttonSlideNroEstablecimiento = (Button) findViewById(R.id.slide_buttonNroEstablecimiento);
-
+        textviewSlideConsultarInventario = (TextView) findViewById(R.id.slide_textViewConsultarInventario);
         textViewSlidePrincipal = (TextView)findViewById(R.id.slide_textviewPrincipal);
         textViewSlideCliente = (TextView)findViewById(R.id.slide_textViewClientes);
         textviewSlideCobranzas = (TextView)findViewById(R.id.slide_textViewCobranza);
@@ -746,7 +750,7 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
 
         textViewSlideCargar = (TextView)findViewById(R.id.slide_textViewCargarInventario);
         textViewSlideCargar.setOnClickListener(this);
-
+        textviewSlideConsultarInventario.setOnClickListener(this);
         textViewSlidePrincipal.setOnClickListener(this);
         textViewSlideCliente.setOnClickListener(this);
         textviewSlideCobranzas.setOnClickListener(this);

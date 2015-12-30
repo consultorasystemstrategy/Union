@@ -85,6 +85,7 @@ public class VMovil_Evento_Gasto extends Activity implements View.OnClickListene
     TextView textviewSlideARendir;
     TextView textViewSlideNombreAgente;
     TextView textViewSlideNombreRuta;
+    TextView textviewSlideConsultarInventario;
     Button buttonSlideNroEstablecimiento;
     private TextView textViewSlideCargar;
     TextView textViewIngresosTotales;
@@ -282,6 +283,9 @@ public class VMovil_Evento_Gasto extends Activity implements View.OnClickListene
                 break;
             case R.id.slide_textViewARendir:
 
+                break;
+            case R.id.slide_textViewConsultarInventario:
+                startActivity(new Intent(getApplicationContext(), VMovil_Consultar_Inventario.class));
                 break;
             default:
                 break;
@@ -690,13 +694,13 @@ public class VMovil_Evento_Gasto extends Activity implements View.OnClickListene
         textviewSlideGastos = (TextView)findViewById(R.id.slide_TextViewGastos);
         textviewSlideResumen = (TextView)findViewById(R.id.slide_textViewResumen);
         textviewSlideARendir = (TextView)findViewById(R.id.slide_textViewARendir);
-
+        textviewSlideConsultarInventario = (TextView) findViewById(R.id.slide_textViewConsultarInventario);
         textViewIngresosTotales = (TextView) findViewById(R.id.textView_IngresosTotales);
         textViewGastos = (TextView) findViewById(R.id.textView_Gastos);
 
         textViewSlideCargar = (TextView)findViewById(R.id.slide_textViewCargarInventario);
         textViewSlideCargar.setOnClickListener(this);
-
+        textviewSlideConsultarInventario.setOnClickListener(this);
         textViewSlidePrincipal.setOnClickListener(this);
         textViewSlideCliente.setOnClickListener(this);
         textviewSlideCobranzas.setOnClickListener(this);

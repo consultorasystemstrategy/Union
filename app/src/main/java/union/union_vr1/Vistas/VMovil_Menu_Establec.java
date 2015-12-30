@@ -73,9 +73,9 @@ public class VMovil_Menu_Establec extends Activity implements View.OnClickListen
     TextView textviewSlideARendir;
     TextView textViewSlideNombreAgente;
     TextView textViewSlideNombreRuta;
+    TextView textviewSlideCInventario;
+    TextView textviewSlideConsultarInventario;
     Button buttonSlideNroEstablecimiento;
-
-
     TextView textViewIngresosTotales;
     TextView textViewGastos;
 
@@ -335,13 +335,15 @@ public class VMovil_Menu_Establec extends Activity implements View.OnClickListen
         textviewSlideGastos = (TextView)findViewById(R.id.slide_TextViewGastos);
         textviewSlideResumen = (TextView)findViewById(R.id.slide_textViewResumen);
         textviewSlideARendir = (TextView)findViewById(R.id.slide_textViewARendir);
-
+        textviewSlideCInventario = (TextView) findViewById(R.id.slide_textViewCargarInventario);
+        textviewSlideConsultarInventario = (TextView) findViewById(R.id.slide_textViewConsultarInventario);
         textViewIngresosTotales = (TextView) findViewById(R.id.textView_IngresosTotales);
         textViewGastos = (TextView) findViewById(R.id.textView_Gastos);
         textViewSlideCargar = (TextView)findViewById(R.id.slide_textViewCargarInventario);
         textViewSlideCargar.setOnClickListener(this);
 
-
+        textviewSlideConsultarInventario.setOnClickListener(this);
+        textviewSlideCInventario.setOnClickListener(this);
         textViewSlidePrincipal.setOnClickListener(this);
         textViewSlideCliente.setOnClickListener(this);
         textviewSlideCobranzas.setOnClickListener(this);
@@ -469,6 +471,9 @@ public class VMovil_Menu_Establec extends Activity implements View.OnClickListen
                 break;
             case R.id.slide_textViewARendir:
 
+                break;
+            case R.id.slide_textViewConsultarInventario:
+                startActivity(new Intent(getApplicationContext(), VMovil_Consultar_Inventario.class));
                 break;
             default:
                 break;

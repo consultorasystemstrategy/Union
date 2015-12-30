@@ -179,7 +179,7 @@
             android:label="@string/title_activity_app_preferences" />
         <activity
             android:name=".Vistas.VMovil_Consultar_Inventario"
-            android:label="@string/title_activity_app_preferences"
+            android:label="Consultar Inventario"
             android:windowSoftInputMode="stateVisible|adjustPan" />
         <activity
             android:name=".Vistas.CalendarViewInventario"
