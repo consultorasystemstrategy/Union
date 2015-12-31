@@ -109,7 +109,7 @@ public class CerrarCaja extends AsyncTask<String, String, String> {
 
                 successCerrarCaja =1;
 
-/*                jsonObject = api.UpdCerrarCaja(
+                jsonObject = api.UpdCerrarCaja(
                         liquidacion,
                         ingresos,
                         gastos,
@@ -118,9 +118,8 @@ public class CerrarCaja extends AsyncTask<String, String, String> {
                 );
 
                 successCerrarCaja = jsonObject.getInt("Value");
-                Log.d("JSON CERRAR CAJA", jsonObject.toString());*/
+                Log.d("JSON CERRAR CAJA", jsonObject.toString());
             }
-
 
             publishProgress("" + 50);
 

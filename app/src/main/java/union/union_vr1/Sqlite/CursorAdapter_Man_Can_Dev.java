@@ -39,6 +39,9 @@ public class CursorAdapter_Man_Can_Dev extends CursorAdapter {
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
 
+        //" + temp_id_motivo + "='1'
+
+
         TextView textViewTitulo = (TextView) view.findViewById(R.id.textViewListaTitulo);
         TextView textViewSubtitulo = (TextView) view.findViewById(R.id.textViewListaSubtitulo);
         TextView textViewComment = (TextView) view.findViewById(R.id.textViewListaComment);
@@ -46,6 +49,15 @@ public class CursorAdapter_Man_Can_Dev extends CursorAdapter {
         ImageView imageView = (ImageView) view.findViewById(R.id.imageViewLista);
 
         if (cursor.getCount()>0) {
+            String operacion = "";
+
+            int tipoOperacion = cursor.getInt(cursor.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_id_motivo));
+            if(tipoOperacion==1){
+                operacion="Devolucion";
+            }else{
+                operacion = "Canje";
+            }
+
             imageView.setImageDrawable(context.getApplicationContext().getResources().getDrawable(R.drawable.ic_action_accept));
             String nomForma = "";
             String _id_guia = cursor.getString(cursor.getColumnIndex(DBAdapter_Temp_Canjes_Devoluciones.temp_id_canjes_devoluciones));
@@ -66,7 +78,7 @@ public class CursorAdapter_Man_Can_Dev extends CursorAdapter {
 
             textViewTitulo.setText("COMPROBANTE: " + comprobante +"");
             textViewSubtitulo.setText("ID GUIA: "+_id_guia);
-            textViewComment.setText("FORMA DEVOLUCION: "+nomForma);
+            textViewComment.setText(""+operacion+":  "+nomForma);
             textViewMonto.setText("S/. "+ df.format(importe));
 
         }

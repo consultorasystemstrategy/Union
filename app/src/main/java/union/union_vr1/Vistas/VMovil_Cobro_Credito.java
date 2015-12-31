@@ -333,7 +333,9 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
                 .setCancelable(false)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        idValNew = Double.parseDouble(mSPNcredit.getText().toString()) + idVal2;
+                        Double suma = (Double.parseDouble(Utils.replaceComa(mSPNcredit.getText().toString())) + idVal2);
+                       // idValNew = Double.parseDouble(mSPNcredit.getText().toString()) + idVal2;
+                        idValNew=suma;
                         dbHelper.updateComprobCobrosCan(idCobro, getDatePhone(), getTimePhone(), idValNew, estadox);
                         Toast.makeText(getApplicationContext(),
                                 "Actualizado", Toast.LENGTH_SHORT).show();
@@ -430,9 +432,9 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
 
                 if (valorHoy.length() > 0) {
 
-                    valorProrroga[0] = idDeuda - Double.parseDouble(valorHoy.toString());
+                    valorProrroga[0] = idDeuda - Double.parseDouble(Utils.replaceComa(valorHoy.toString()));
                     if (valorProrroga[0] < 0 || valorProrroga[0] >= idDeuda) {
-                        valorProrroga[1] = Double.parseDouble(valorHoy.toString());
+                        valorProrroga[1] = Double.parseDouble(Utils.replaceComa(valorHoy.toString()));
                         cantidadProrroga.setError("Error en Valor");
                         cantidadHoy.setText("");
                     } else {

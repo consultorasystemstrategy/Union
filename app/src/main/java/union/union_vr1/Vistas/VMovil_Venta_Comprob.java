@@ -210,7 +210,7 @@ public class VMovil_Venta_Comprob extends Activity implements View.OnClickListen
 //Item 3
         TabHost.TabSpec spec3 = tH.newTabSpec("3");
         spec3.setContent(R.id.canje);
-        spec3.setIndicator("Devoluciones");
+        spec3.setIndicator("Dev / Can");
         mostrarItemsDevoluciones(idEstablec);
         tH.addTab(spec3);
 //Item 4

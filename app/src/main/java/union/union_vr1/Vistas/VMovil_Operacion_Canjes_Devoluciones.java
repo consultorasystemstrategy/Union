@@ -149,11 +149,7 @@ public class VMovil_Operacion_Canjes_Devoluciones extends TabActivity {
         dialogo.setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int liquidacion) {
-                if(conectadoWifi() || conectadoRedMovil()){
-                    transOperaciones();
-                }else{
                     saveAndExportLast();
-                }
 
             }
         });
@@ -168,7 +164,7 @@ public class VMovil_Operacion_Canjes_Devoluciones extends TabActivity {
             dbAdapter_temp_canjes_devoluciones.updateEstadoExportAfter(cursor.getString(cursor.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_id_canjes_devoluciones)));
         }
 
-
+/*
         final AlertDialog.Builder dialogo = new AlertDialog.Builder(this);
         dialogo.setTitle("No estas Conectado");
         dialogo.setCancelable(false);
@@ -181,7 +177,15 @@ public class VMovil_Operacion_Canjes_Devoluciones extends TabActivity {
             }
         });
         dialogo.create();
-        dialogo.show();
+        dialogo.show();*/
+
+        if(conectadoWifi() || conectadoRedMovil()){
+            ExportCanjesDevoluciones exportCanjesDevoluciones = new ExportCanjesDevoluciones(getApplicationContext(),this);
+            exportCanjesDevoluciones.execute(getDatePhone(), establec, Constants._CREADO + "");
+        }
+
+        startActivity(new Intent(getApplicationContext(), VMovil_Evento_Establec.class));
+        finish();
 
     }
     private void transOperaciones(){
@@ -189,11 +193,7 @@ public class VMovil_Operacion_Canjes_Devoluciones extends TabActivity {
         while(getAllOperacion.moveToNext()){
             Log.d("ITEM 1 DEVOLUCIONES", getAllOperacion.getString(getAllOperacion.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_nom_producto)));
         }*/
-        ExportCanjesDevoluciones exportCanjesDevoluciones = new ExportCanjesDevoluciones(getApplicationContext(),this);
-        exportCanjesDevoluciones.execute(getDatePhone(), establec, Constants._CREADO + "");
 
-        startActivity(new Intent(getApplicationContext(), VMovil_Evento_Establec.class));
-        finish();
 
     }
 

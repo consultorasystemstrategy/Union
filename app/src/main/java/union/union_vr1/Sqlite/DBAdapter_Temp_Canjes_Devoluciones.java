@@ -258,7 +258,7 @@ public class DBAdapter_Temp_Canjes_Devoluciones {
         return formatteDate;
     }
     public Cursor listarDevolucionesMantenimiento(String establec) {
-        Cursor cursor = mDb.rawQuery("select * from " + SQLITE_TABLE_Temp_Canjes_Devoluciones + " where " + temp_id_motivo + "='1' and " + temp_id_establecimiento + "='" + establec + "' and " + temp_fecha_emision + "='" + getDatePhone() + "' ;", null);
+        Cursor cursor = mDb.rawQuery("select * from " + SQLITE_TABLE_Temp_Canjes_Devoluciones + " where   " + temp_id_establecimiento + "='" + establec + "' and " + temp_fecha_emision + "='" + getDatePhone() + "' ;", null);
         return cursor;
     }
     public Cursor listarDevoluciones(String establec) {

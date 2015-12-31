@@ -1,9 +1,12 @@
 package union.union_vr1.Vistas;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
@@ -24,6 +27,7 @@ import java.util.Vector;
 import jpos.JposException;
 import union.union_vr1.BlueTooth.AlertView;
 import union.union_vr1.BlueTooth.Print;
+import union.union_vr1.Login;
 import union.union_vr1.R;
 import union.union_vr1.Sqlite.Constants;
 import union.union_vr1.Sqlite.DbAdapter_Agente;
@@ -71,7 +75,8 @@ public class Bluetooth_Printer extends Activity {
 
     private final static String TAG = Bluetooth_Printer.class.getSimpleName();
 
-
+    int countPrinterTransferencia = 0;
+    int countPrinterArqueo = 0;
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -82,6 +87,37 @@ public class Bluetooth_Printer extends Activity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+
+        if (countPrinterTransferencia==0){
+            backPressedDialog(Bluetooth_Printer.this, "Aún no imprimió Transferencia", Login.class).show();
+        }else{
+            if (countPrinterArqueo==0){
+                backPressedDialog(Bluetooth_Printer.this, "Aún no imprimió Resumen Caja", Login.class).show();
+            }else{
+                Intent intent = new Intent(getApplicationContext(), Login.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+            }
+        }
+
+    }
+
+    public Dialog backPressedDialog(final Activity main, final String mensaje, final Class claseAEnviar){
+        return new AlertDialog.Builder(main)
+                .setTitle(mensaje)
+                .setMessage("¿Está seguro que desea salir?")
+                .setNegativeButton(android.R.string.no, null)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // FIRE ZE MISSILES!
+                        finish();
+                        Intent intent = new Intent(main, claseAEnviar);
+                        startActivity(intent);
+                    }
+                }).create();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -162,6 +198,7 @@ public class Bluetooth_Printer extends Activity {
 
                     try {
                         print.printTransferencia(idLiquidacion, nombreAgente);
+                        countPrinterTransferencia++;
                     } catch (JposException e) {
                         e.printStackTrace();
                         AlertView.showAlert(e.getMessage(), contexto);
@@ -211,6 +248,7 @@ public class Bluetooth_Printer extends Activity {
                     try {
                         //AQUÍ IMPRIMIRÉ EL ARQUEO
                         print.printArqueo(idLiquidacion, nombreAgente);
+                        countPrinterArqueo++;
                     } catch (JposException e) {
                         e.printStackTrace();
                         AlertView.showAlert(e.getMessage(), contexto);

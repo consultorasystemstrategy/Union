@@ -316,6 +316,7 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
        double igv = 0.0;
        double precio_venta = 0.0;
        String ventaDetalle = "";
+       int tipoVenta = -1;
 
        Cursor cursorVentaCabecera = dbHelperComprobanteVenta.getVentaCabecerabyID(idComprobante);
 
@@ -337,6 +338,8 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
            nombreAgente = cursorVentaCabecera.getString(cursorVentaCabecera.getColumnIndexOrThrow(DbAdapter_Agente.AG_nombre_agente));
            direccion = cursorVentaCabecera.getString(cursorVentaCabecera.getColumnIndexOrThrow(DbAdaptert_Evento_Establec.EE_direccion));
            sha1 = cursorVentaCabecera.getString(cursorVentaCabecera.getColumnIndexOrThrow(DbAdapter_Comprob_Venta.CV_SHA1));
+           tipoVenta = cursorVentaCabecera.getInt(cursorVentaCabecera.getColumnIndexOrThrow(DbAdapter_Comprob_Venta.CV_id_tipo_venta));
+
 
 
            ventaCabecera+= "NUMERO  : "+comprobante+"\n";
@@ -404,11 +407,13 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
            textoImpresionContenidoRight+= "S/"+ df.format(precio_venta)+"\n";
 
            textoImpresionContenidoBottom+= "CAJERO(A)  : "+nombreAgente+"\n\n";
-           textoImpresionContenidoBottom+= sha1 +"\n\n";
-           textoImpresionContenidoBottom+= Constants.PRINT_AUTORIZADO_+"\n";
-           textoImpresionContenidoBottom+= Constants.PRINT_N_RESOLUCION+"\n\n";
-           textoImpresionContenidoBottom+= Constants.PRINT_VISUALICE+"\n";
-           textoImpresionContenidoBottom+= Constants.PRINT_URL+"\n";
+           if (tipoVenta!=2){
+               textoImpresionContenidoBottom+= sha1 +"\n\n";
+               textoImpresionContenidoBottom+= Constants.PRINT_AUTORIZADO_+"\n";
+               textoImpresionContenidoBottom+= Constants.PRINT_N_RESOLUCION+"\n\n";
+               textoImpresionContenidoBottom+= Constants.PRINT_VISUALICE+"\n";
+               textoImpresionContenidoBottom+= Constants.PRINT_URL+"\n";
+           }
 
 
 

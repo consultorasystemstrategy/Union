@@ -57,7 +57,6 @@ public class ExportService extends IntentService {
             if (Constants.ACTION_EXPORT_SERVICE.equals(action)) {
                 exportarComprobantesFlex();
             }
-
         }
     }
 
@@ -129,11 +128,6 @@ public class ExportService extends IntentService {
                 int nRegistrosExportados= dbAdapter_exportacion_comprobantes.changeEstadoToExport(idExportacionComprobantes, Constants._EXPORTADO);
                 Log.d(TAG, "REGISTROS EXPORTADOS AL FLEX : "+ nRegistrosExportados);
             }
-
-
-
-
-
         }else{
             Log.d(TAG, "TODOS LOS COMPROBANTES ESTÁN EXPORTADOS AL FLEX");
         }

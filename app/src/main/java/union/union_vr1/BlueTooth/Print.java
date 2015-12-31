@@ -144,11 +144,11 @@ public class Print {
     public void printCabecera(int tipoDocumento) throws JposException
     {
         posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "UNIVERSIDAD PERUANA UNION" + LF);
-        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "CENTRO DE APLICACION PRODUCTOS UNION" + LF );
+        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "CENTRO DE APLICACION PRODUCTOS UNION" + LF);
         posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "CAR. CENTRAL KM. 19.5 VILLA UNION-NANA" + LF );
-        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "Lurigancho-Chosica" + LF );
+        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "Lurigancho-Chosica" + LF);
         posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "Telf: 6186309-6186310" + LF );
-        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "RUC: 20138122256" + LF + LF );
+        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "RUC: 20138122256" + LF + LF);
 
 
         switch (tipoDocumento){
@@ -166,6 +166,9 @@ public class Print {
             case Constants.DOCUMENTO_ARQUEO:
                 posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT,ESC + "|cA" + ESC + "|bC" + ESC + "|2C" + "RESUMEN DEL DIA" + LF + LF + LF);
                 break;
+            case Constants.DOCUMENTO_RRPP:
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT,ESC + "|cA" + ESC + "|bC" + ESC + "|2C" + "VENTA RRPP" + LF + LF + LF);
+                break;
             default:
                 posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT,ESC + "|cA" + ESC + "|bC" + ESC + "|2C" + "PRODUCTOS UNION" + LF + LF + LF);
                 break;
@@ -173,7 +176,7 @@ public class Print {
         }
     }
 
-    public void printRepresentacion(int tipoDocumento) throws JposException {
+    public void printRepresentacion() throws JposException {
 
         posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + Constants.PRINT_AUTORIZADO_ + LF );
         posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + Constants.PRINT_N_RESOLUCION + LF + LF);
@@ -224,6 +227,7 @@ public class Print {
         double igv = 0.0;
         double precio_venta = 0.0;
         String ventaDetalle = "";
+        int tipoVenta = -1;
 
         Cursor cursorVentaCabecera = dbHelperComprobanteVenta.getVentaCabecerabyID(idComprobante);
 
@@ -239,7 +243,8 @@ public class Print {
             nombreAgente = cursorVentaCabecera.getString(cursorVentaCabecera.getColumnIndexOrThrow(DbAdapter_Agente.AG_nombre_agente));
             direccion = cursorVentaCabecera.getString(cursorVentaCabecera.getColumnIndexOrThrow(DbAdaptert_Evento_Establec.EE_direccion));
             sha1 = cursorVentaCabecera.getString(cursorVentaCabecera.getColumnIndexOrThrow(DbAdapter_Comprob_Venta.CV_SHA1));
-
+            //tipo de venta NORMAL O RRPP
+            tipoVenta = cursorVentaCabecera.getInt(cursorVentaCabecera.getColumnIndexOrThrow(DbAdapter_Comprob_Venta.CV_id_tipo_venta));
 
             /*ventaCabecera+= "NUMERO  : "+comprobante+"\n";
             ventaCabecera+= "FECHA   : "+ fecha+"\n";
@@ -306,7 +311,11 @@ public class Print {
                 }
                 else if(tipoC.equals("B"))
                 {
-                    printCabecera(BOLETA);
+                    if (tipoVenta==1){
+                        printCabecera(BOLETA);
+                    }else{
+                        printCabecera(Constants.DOCUMENTO_RRPP);
+                    }
                 } else {
                     printCabecera(BOLETA);
                 }
@@ -383,17 +392,19 @@ public class Print {
 
 
                     posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + lineas + LF + LF);
-
                     posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + "CAJERO(A) : " + cleanAcentos(nombreAgente) + LF);
-                    posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + sha1 + LF + LF);
-                    if(tipoC.equals("F"))
+                    if (tipoVenta!=2){
+                        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + sha1 + LF + LF);
+                        printRepresentacion();
+                    }
+
+                    /*if(tipoC.equals("F"))
                     {
                         printRepresentacion(Constants.DOCUMENTO_FACTURA);
                     }
-                    else if(tipoC.equals("B"))
-                    {
+                    else if(tipoC.equals("B")) {
                         printRepresentacion(Constants.DOCUMENTO_BOLETA);
-                    }
+                    }*/
                 break;
             default:
                 //texto+=" NO SE PUEDE RECONOCER EL NUMERO DE PULGADAS...";
@@ -433,11 +444,9 @@ public class Print {
 
 
             printCabecera(Constants.DOCUMENTO_TRANSFERENCIA);
-            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "AGENTE       : " + nombreAgente + LF);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "AGENTE       : " + cleanAcentos(nombreAgente) + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "LIQUIDACION  : " + idLiquidacion + LF);
-            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "FECHA        : " + getDateFull() + LF);
-
-
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "FECHA        : " + cleanAcentos(getDateFull()) + LF);
 
             int id_almacen = -1;
             int i= 0;
@@ -523,9 +532,9 @@ public class Print {
 
 
         printCabecera(Constants.DOCUMENTO_ARQUEO);
-        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "AGENTE       : " + nombreAgente + LF);
+        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "AGENTE       : " + cleanAcentos(nombreAgente) + LF);
         posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "LIQUIDACION  : " + idLiquidacion + LF);
-        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "FECHA        : " + getDateFull() + LF+ LF+ LF);
+        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "FECHA        : " + cleanAcentos(getDateFull()) + LF+ LF+ LF);
 
 
         String ingresos = ESC + "|lA" +String.format("%-20s", "INGRESOS TOTALES")+ String.format("%-16s", "S/.") + String.format("%1$12s", df.format(ingresosTotales)) + LF;
