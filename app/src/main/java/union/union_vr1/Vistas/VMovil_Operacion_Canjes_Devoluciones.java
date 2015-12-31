@@ -32,6 +32,8 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import union.union_vr1.AsyncTask.ExportCanjesDevoluciones;
+import union.union_vr1.AsyncTask.ExportCanjesDevolucionesLater;
+import union.union_vr1.AsyncTask.ExportMain;
 import union.union_vr1.R;
 import union.union_vr1.Sqlite.Constants;
 import union.union_vr1.Sqlite.CursorAdapterFacturas;
@@ -180,9 +182,8 @@ public class VMovil_Operacion_Canjes_Devoluciones extends TabActivity {
         dialogo.show();*/
 
         if(conectadoWifi() || conectadoRedMovil()){
-            ExportCanjesDevoluciones exportCanjesDevoluciones = new ExportCanjesDevoluciones(getApplicationContext(),this);
-            exportCanjesDevoluciones.execute(getDatePhone(), establec, Constants._CREADO + "");
-        }
+            new ExportMain(this).execute();
+          }
 
         startActivity(new Intent(getApplicationContext(), VMovil_Evento_Establec.class));
         finish();
