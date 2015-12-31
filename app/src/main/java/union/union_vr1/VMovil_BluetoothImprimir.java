@@ -33,11 +33,13 @@ import java.io.IOException;
 import java.util.Vector;
 
 import jpos.JposException;
+import jpos.POSPrinterConst;
 import union.union_vr1.BlueTooth.AlertView;
 import union.union_vr1.BlueTooth.Print;
 import union.union_vr1.Sqlite.Constants;
 import union.union_vr1.Sqlite.DbAdapter_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Agente_Login;
+import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta_Detalle;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
@@ -100,6 +102,7 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
     private DbAdapter_Agente_Login dbAdapter_agente_login;
     private DbAdapter_Comprob_Venta_Detalle dbHelperComprobanteVentaDetalle;
     private DbAdapter_Temp_Session session;
+    private DbAdapter_Comprob_Cobro dbAdapter_comprob_cobro;
     private int pulgadasImpresora=0;
 
 
@@ -192,6 +195,8 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
         dbAdapter_agente_login.open();
         session = new DbAdapter_Temp_Session(this);
         session.open();
+        dbAdapter_comprob_cobro = new DbAdapter_Comprob_Cobro(this);
+        dbAdapter_comprob_cobro.open();
 
 
         idLiquidacion = session.fetchVarible(3);
@@ -311,12 +316,14 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
        String nombreAgente = "";
        String direccion="";
        String sha1="";
+       String tipoC="";
 
        double base_imponible = 0.0;
        double igv = 0.0;
        double precio_venta = 0.0;
        String ventaDetalle = "";
        int tipoVenta = -1;
+       int idFormaPago = -1;
 
        Cursor cursorVentaCabecera = dbHelperComprobanteVenta.getVentaCabecerabyID(idComprobante);
 
@@ -328,6 +335,7 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
            serie = cursorVentaCabecera.getString(cursorVentaCabecera.getColumnIndexOrThrow(DbAdapter_Comprob_Venta.CV_serie));
            numDoc = cursorVentaCabecera.getString(cursorVentaCabecera.getColumnIndexOrThrow(DbAdapter_Comprob_Venta.CV_num_doc));
            comprobante = serie + "-" +agregarCeros((String.valueOf(numDoc)),8);
+           tipoC=comprobante.substring(0,1);
            Log.d(TAG, "SERIE : "+serie);
            Log.d(TAG, "NRMDOC : "+numDoc
            );
@@ -339,7 +347,7 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
            direccion = cursorVentaCabecera.getString(cursorVentaCabecera.getColumnIndexOrThrow(DbAdaptert_Evento_Establec.EE_direccion));
            sha1 = cursorVentaCabecera.getString(cursorVentaCabecera.getColumnIndexOrThrow(DbAdapter_Comprob_Venta.CV_SHA1));
            tipoVenta = cursorVentaCabecera.getInt(cursorVentaCabecera.getColumnIndexOrThrow(DbAdapter_Comprob_Venta.CV_id_tipo_venta));
-
+           idFormaPago = cursorVentaCabecera.getInt(cursorVentaCabecera.getColumnIndexOrThrow(DbAdapter_Comprob_Venta.CV_id_forma_pago));
 
 
            ventaCabecera+= "NUMERO  : "+comprobante+"\n";
@@ -405,12 +413,43 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
                    ""+ df.format(base_imponible)+"\n";
            textoImpresionContenidoRight+= "S/"+ df.format(igv)+"\n";
            textoImpresionContenidoRight+= "S/"+ df.format(precio_venta)+"\n";
+           switch (idFormaPago){
+               case Constants.FORMA_DE_PAGO_CONTADO:
+                   textoImpresionContenidoBottom+= "CONTADO"+"\n";
+                   break;
+               case Constants.FORMA_DE_PAGO_CREDITO:
+                   textoImpresionContenidoBottom+= "CREDITO"+"\n\n";
+                   Cursor cursorCredito = dbAdapter_comprob_cobro.fetchComprobCobrosByIdComprobante(idComprobante);
+                   if (cursorCredito.getCount()>0){
+                       cursorCredito.moveToFirst();
+                       for (cursorCredito.moveToFirst(); !cursorCredito.isAfterLast() ; cursorCredito.moveToNext()){
+                           String primeraFechaCobro = cursorCredito.getString(cursorCredito.getColumnIndexOrThrow(DbAdapter_Comprob_Cobro.CC_fecha_programada));
+                           Double monto_Pagar = cursorCredito.getDouble(cursorCredito.getColumnIndexOrThrow(DbAdapter_Comprob_Cobro.CC_monto_a_pagar));
 
-           textoImpresionContenidoBottom+= "CAJERO(A)  : "+nombreAgente+"\n\n";
+                           textoImpresionContenidoBottom+= String.format("%-14s", primeraFechaCobro) + String.format("%1$10s", df.format(monto_Pagar)) +"\n";
+                       }
+
+                       textoImpresionContenidoBottom+= "\n";
+                       textoImpresionContenidoBottom+= "____________________"+"\n";
+                       textoImpresionContenidoBottom+= "Firma del cliente"+"\n\n";
+
+
+
+                   }
+                   break;
+               default:
+                   break;
+           }
+
+           textoImpresionContenidoBottom+= "AGENTE  : "+nombreAgente+"\n\n";
            if (tipoVenta!=2){
                textoImpresionContenidoBottom+= sha1 +"\n\n";
-               textoImpresionContenidoBottom+= Constants.PRINT_AUTORIZADO_+"\n";
-               textoImpresionContenidoBottom+= Constants.PRINT_N_RESOLUCION+"\n\n";
+               if(tipoC.equals("F"))
+               {
+                   textoImpresionContenidoBottom+= Constants.REPRESENTACION_FACTURA+"\n\n";
+               }else if(tipoC.equals("B")){
+                   textoImpresionContenidoBottom+= Constants.REPRESENTACION_BOLETA+"\n\n";
+               }
                textoImpresionContenidoBottom+= Constants.PRINT_VISUALICE+"\n";
                textoImpresionContenidoBottom+= Constants.PRINT_URL+"\n";
            }

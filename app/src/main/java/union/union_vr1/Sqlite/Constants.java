@@ -43,6 +43,13 @@ public class Constants {
     public static final String PRINT_VISUALICE= "Visualice este documento en";
     public static final String PRINT_URL= "http://www.upeu.edu.pe/";
 
+    public static final int FORMA_DE_PAGO_CONTADO = 1;
+    public static final int FORMA_DE_PAGO_CREDITO = 2;
+
+    public static final String REPRESENTACION_BOLETA = "REPRESENTACION IMPRESA DE LA BOLETA DE VENTA ELECTRONICA";
+    public static final String REPRESENTACION_FACTURA = "REPRESENTACION IMPRESA DE LA FACTURA DE VENTA ELECTRONICA";
+
+
 
 
 

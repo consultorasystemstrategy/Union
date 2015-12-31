@@ -252,10 +252,10 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id) {
-            case R.id.buttonPrint:
+            /*case R.id.buttonPrint:
                 Intent intent = new Intent(mainActivity, ImprimirArqueoCaja.class);
                 startActivity(intent);
-                break;
+                break;*/
             case R.id.buttonExportERP:
                 Intent intentExportERP = new Intent(mainActivity, ExportService.class);
                 intentExportERP.setAction(Constants.ACTION_EXPORT_SERVICE);

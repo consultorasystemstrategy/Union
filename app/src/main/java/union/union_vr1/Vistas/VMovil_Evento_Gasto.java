@@ -35,6 +35,7 @@ import java.util.List;
 
 import union.union_vr1.CustomOnItemSelectedListener;
 import union.union_vr1.R;
+import union.union_vr1.Servicios.ServiceExport;
 import union.union_vr1.Sqlite.Constants;
 import union.union_vr1.Sqlite.DBAdapter_Temp_Venta;
 import union.union_vr1.Sqlite.DbAdapter_Agente;
@@ -110,6 +111,14 @@ public class VMovil_Evento_Gasto extends Activity implements View.OnClickListene
     Double slide_gastosTotales = 0.0;
     Double slide_aRendir = 0.0;
 
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(this, ServiceExport.class);
+        intent.setAction(Constants.ACTION_EXPORT_SERVICE);
+        startService(intent);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
