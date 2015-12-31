@@ -34,6 +34,7 @@ import union.union_vr1.AsyncTask.ExportMain;
 import union.union_vr1.AsyncTask.ImportCredito;
 import union.union_vr1.AsyncTask.ImportMain;
 import union.union_vr1.R;
+import union.union_vr1.Servicios.ServiceExport;
 import union.union_vr1.Servicios.ServiceImport;
 import union.union_vr1.Sqlite.Constants;
 import union.union_vr1.Sqlite.DbAdapter_Agente;
@@ -338,7 +339,10 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
                 mainActivity.startService(intentImportService);
                 break;
             case R.id.buttonExportar:
-                new ExportMain(mainActivity).execute();
+                //new ExportMain(mainActivity).execute();
+                Intent intentExportService = new Intent(mainActivity, ServiceExport.class);
+                intentExportService.setAction(Constants.ACTION_EXPORT_SERVICE);
+                mainActivity.startService(intentExportService);
                 break;
             case R.id.buttonRedireccionarPrincipal:
                 Intent intent = new Intent(mainActivity, VMovil_Evento_Indice.class);

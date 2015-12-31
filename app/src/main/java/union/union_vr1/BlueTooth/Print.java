@@ -42,6 +42,7 @@ public class Print {
     private CPCL cpclPtr;
     private RequestQueue rq;
     private static String lineas= "------------------------------------------------------".substring(0,48);
+    private static String igualLinea= "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=".substring(0,48);
     private static String asteriscos= "********************************************************".substring(0,48);
 
 
@@ -146,18 +147,15 @@ public class Print {
         posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "UNIVERSIDAD PERUANA UNION" + LF);
         posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "CENTRO DE APLICACION PRODUCTOS UNION" + LF);
         posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "CAR. CENTRAL KM. 19.5 VILLA UNION-NANA" + LF );
-        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "Lurigancho-Chosica" + LF);
-        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "Telf: 6186309-6186310" + LF );
-        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "RUC: 20138122256" + LF + LF);
-
+        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "LIMA - LIMA - LURIGANCHO" + LF);
+        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "RUC: 20138122256" + LF);
+        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "Telf: 6186309-6186310" + LF  + LF);
 
         switch (tipoDocumento){
             case Constants.DOCUMENTO_FACTURA:
-                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + "REPRESENTACION IMPRESA DE LA " + LF );
                 posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + "FACTURA ELECTRONICA" + LF + LF);
                 break;
             case Constants.DOCUMENTO_BOLETA:
-                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + "REPRESENTACION IMPRESA DE LA " + LF );
                 posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + "BOLETA DE VENTA ELECTRONICA" + LF + LF);
                 break;
             case Constants.DOCUMENTO_TRANSFERENCIA:
@@ -176,22 +174,24 @@ public class Print {
         }
     }
 
-    public void printRepresentacion() throws JposException {
+    public void printRepresentacion(int tipoDocumento) throws JposException {
 
-        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + Constants.PRINT_AUTORIZADO_ + LF );
-        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + Constants.PRINT_N_RESOLUCION + LF + LF);
+/*        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + Constants.PRINT_AUTORIZADO_ + LF );
+        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + Constants.PRINT_N_RESOLUCION + LF + LF);*/
 
-        /*switch (tipoDocumento){
+        switch (tipoDocumento){
             case Constants.DOCUMENTO_FACTURA:
-                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "REPRESENTACION IMPRESA DE LA FACTURA ELECTRONICA" + LF + LF );
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "REPRESENTACION IMPRESA DE LA FACTURA DE" + LF);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "VENTA ELECTRONICA" + LF + LF );
                 break;
             case Constants.DOCUMENTO_BOLETA:
-                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "REPRESENTACION IMPRESA DE LA BOLETA ELECTRONICA" + LF + LF );
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "REPRESENTACION IMPRESA DE LA BOLETA DE " + LF);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "VENTA ELECTRONICA" + LF + LF );
                 break;
             default:
                 posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT,ESC + "|cA" + ESC + "|bC" + ESC + "|2C" + "PRODUCTOS UNION" + LF + LF + LF);
                 break;
-        }*/
+        }
         posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + Constants.PRINT_VISUALICE + LF);
         posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + Constants.PRINT_URL + LF + LF + LF );
 
@@ -200,6 +200,11 @@ public class Print {
     {
         posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + lineas + LF);
     }
+    private void printIgualLinea() throws JposException
+    {
+        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + igualLinea + LF);
+    }
+
 
     private void printAsteriscos() throws JposException
     {
@@ -228,6 +233,7 @@ public class Print {
         double precio_venta = 0.0;
         String ventaDetalle = "";
         int tipoVenta = -1;
+        double _CERO= 0.0;
 
         Cursor cursorVentaCabecera = dbHelperComprobanteVenta.getVentaCabecerabyID(idComprobante);
 
@@ -322,10 +328,10 @@ public class Print {
 
                 // IMPRIMIR DATOS GENERALES DEL CLIENTE Y EL DOCUMETNO
                 posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "NUMERO  : " + comprobante + LF);
-                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "FECHA   : " + fecha+ LF);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "FECHA   : " + fecha+ LF+ LF);
                 posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "CLIENTE : " + cleanAcentos(cliente) + LF);
                 posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "DNI/RUC : " + dni_ruc + LF);
-                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "DIRECCION : " + cleanAcentos(direccion) + LF);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "DIRECCION : " + cleanAcentos(direccion) + LF + LF);
                 //ESTO SOLO PARA PRUEBAS ELIMINARLO
                 if (sha1==null){
                     sha1 = "ECGeF3Moo0qfijT3izDanpL8j6I=";
@@ -333,7 +339,7 @@ public class Print {
 
                 //IMPRIMIR CABECERA DE LA VENTA
                 printLineas();
-                String cabeceraVenta = ESC + "|lA" + String.format("%-6s","CANT") + String.format("%-30s","PRODUCTO")+String.format("%-5s","P.U.")+  String.format("%-7s","IMPORTE")+ LF;
+                String cabeceraVenta = ESC + "|lA" + String.format("%-6s","CANT") + String.format("%-30s","DESCRIPCION")+String.format("%-5s","P.U.")+  String.format("%-7s","IMPORTE")+ LF;
                 posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, cabeceraVenta);
                 printLineas();
                 //IMPRIMIR DETALLE DE LA VENTA RECORREREMOS EL CURSOR
@@ -371,40 +377,56 @@ public class Print {
                 printLineas();
                 //posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + lineas + LF + LF);
 
+                if (tipoVenta!=2) {
                     //INFORMACION SOBRE LAS OPERACIONES
-                    String gravada = ESC + "|lA" + String.format("%-18s","OP. GRAVADA")+String.format("%-21s","S/.")+ String.format("%1$9s",df.format(base_imponible))+ LF;
-                    /*String inafecta = ESC + "|lA" + String.format("%-18s","OP. INAFECTA")+String.format("%-21s","S/.")+ String.format("%1$9s",df.format("0.00"))+ LF;
-                    String exonerada = ESC + "|lA" + String.format("%-18s","OP. EXONERADA")+String.format("%-21s","S/.")+ String.format("%1$9s",df.format("0.00"))+ LF;
-                    String gratuita = ESC + "|lA" + String.format("%-18s","OP. GRATUIRA")+String.format("%-21s","S/.")+ String.format("%1$9s",df.format("0.00"))+ LF;*/
-                    String IGV = ESC + "|lA" + String.format("%-18s","I.G.V.")+String.format("%-21s","S/.")+ String.format("%1$9s",df.format(igv))+ LF;
-                    String rayaTotal = ESC + "|rA" +"---------"+ LF;
-                    String precioVenta= String.format("%-18s","PRECIO VENTA")+String.format("%-21s","S/.")+  String.format("%1$9s",df.format(precio_venta))+ LF;
+                    String gravada = ESC + "|lA" + String.format("%-18s", "OP. GRAVADA") + String.format("%-21s", "S/.") + String.format("%1$9s", df.format(base_imponible)) + LF;
+                    String inafecta = ESC + "|lA" + String.format("%-18s", "OP. INAFECTA") + String.format("%-21s", "S/.") + String.format("%1$9s", df.format(_CERO)) + LF;
+                    String exonerada = ESC + "|lA" + String.format("%-18s", "OP. EXONERADA") + String.format("%-21s", "S/.") + String.format("%1$9s", df.format(_CERO)) + LF;
+                    String gratuita = ESC + "|lA" + String.format("%-18s", "OP. GRATUITA") + String.format("%-21s", "S/.") + String.format("%1$9s", df.format(_CERO)) + LF;
+                    String descuentos = ESC + "|lA" + String.format("%-18s", "DESCUENTOS") + String.format("%-21s", "S/.") + String.format("%1$9s", df.format(_CERO)) + LF;
+                    String IGV = ESC + "|lA" + String.format("%-18s", "I.G.V.") + String.format("%-21s", "S/.") + String.format("%1$9s", df.format(igv)) + LF;
+                    String rayaTotal = ESC + "|rA" + "---------" + LF;
+                    String precioVenta = String.format("%-18s", "PRECIO VENTA") + String.format("%-21s", "S/.") + String.format("%1$9s", df.format(precio_venta)) + LF;
                     posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, gravada);
-                /*    posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, inafecta);
+                    posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, inafecta);
                     posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, exonerada);
                     posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, gratuita);
-                */
+                    posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, descuentos);
                     posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, IGV);
                     posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, rayaTotal);
                     //posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|rA" + ESC + "|bC" + "---------" + LF);
                     posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, precioVenta);
+                }else {
+                    String gravada = ESC + "|lA" + String.format("%-18s", "OP. GRAVADA") + String.format("%-21s", "S/.") + String.format("%1$9s", df.format(base_imponible)) + LF;
+                    String IGV = ESC + "|lA" + String.format("%-18s", "I.G.V.") + String.format("%-21s", "S/.") + String.format("%1$9s", df.format(igv)) + LF;
+                    String rayaTotal = ESC + "|rA" + "---------" + LF;
+                    String precioVenta = String.format("%-18s", "PRECIO VENTA") + String.format("%-21s", "S/.") + String.format("%1$9s", df.format(precio_venta)) + LF;
+                    posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, gravada);
+                    posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, IGV);
+                    posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, rayaTotal);
+                    //posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|rA" + ESC + "|bC" + "---------" + LF);
+                    posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, precioVenta);
+
+                }
+                printLineas();
                     posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + (NumberToLetterConverter.convertNumberToLetter(df.format(precio_venta))).toUpperCase() + LF );
-
-
                     posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + lineas + LF + LF);
                     posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + "CAJERO(A) : " + cleanAcentos(nombreAgente) + LF);
+
                     if (tipoVenta!=2){
-                        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + sha1 + LF + LF);
-                        printRepresentacion();
+                        printIgualLinea();
+                        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + "V. Resumen: " + sha1 + LF + LF);
+
+                        if(tipoC.equals("F"))
+                        {
+                            printRepresentacion(Constants.DOCUMENTO_FACTURA);
+                        }
+                        else if(tipoC.equals("B")) {
+                            printRepresentacion(Constants.DOCUMENTO_BOLETA);
+                        }
                     }
 
-                    /*if(tipoC.equals("F"))
-                    {
-                        printRepresentacion(Constants.DOCUMENTO_FACTURA);
-                    }
-                    else if(tipoC.equals("B")) {
-                        printRepresentacion(Constants.DOCUMENTO_BOLETA);
-                    }*/
+
                 break;
             default:
                 //texto+=" NO SE PUEDE RECONOCER EL NUMERO DE PULGADAS...";
@@ -600,7 +622,7 @@ public class Print {
 
 
         printLineas();
-        String totalGastos = ESC + "|cA" + ESC + "|bC" +String.format("%-27s", "Total") + String.format("%1$7s", df.format(totalRuta)) + String.format("%1$14s", df.format(totalPlanta))+LF+LF+LF + LF + LF ;
+        String totalGastos = ESC + "|cA" + ESC + "|bC" +String.format("%-27s", "Total") + String.format("%1$7s", df.format(totalRuta)) + String.format("%1$14s", df.format(totalPlanta))+LF + LF + LF  ;
         posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, totalGastos);
     }
 

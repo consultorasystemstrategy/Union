@@ -51,6 +51,7 @@ import union.union_vr1.BarcodeScanner.IntentIntegrator;
 import union.union_vr1.BarcodeScanner.IntentResult;
 import union.union_vr1.R;
 import union.union_vr1.RestApi.StockAgenteRestApi;
+import union.union_vr1.Servicios.ServiceExport;
 import union.union_vr1.Servicios.ServiceImport;
 import union.union_vr1.Sqlite.Constants;
 import union.union_vr1.Sqlite.DbAdapter_Agente;
@@ -512,7 +513,10 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
 
                 break;
             case R.id.buttonExportar:
-                new ExportMain(mainActivity).execute();
+                //new ExportMain(mainActivity).execute();
+                Intent intentExportService = new Intent(mainActivity, ServiceExport.class);
+                intentExportService.setAction(Constants.ACTION_EXPORT_SERVICE);
+                mainActivity.startService(intentExportService);
                 break;
             case R.id.buttonAjustes:
                 Intent intent = new Intent(mainActivity, AppPreferences.class);

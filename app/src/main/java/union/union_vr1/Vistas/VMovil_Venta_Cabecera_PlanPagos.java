@@ -54,7 +54,7 @@ public class VMovil_Venta_Cabecera_PlanPagos extends Activity implements Adapter
     //private Button butttonCalcularCuotas;
     public Button buttonEstablecerCuotas;
 
-    DecimalFormat df = new DecimalFormat("#.00");
+    DecimalFormat df = new DecimalFormat("0.00");
 
     private Cursor cursorEstablecimiento;
     private DbAdaptert_Evento_Establec dbHelperEventoEstablecimiento;

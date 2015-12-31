@@ -602,7 +602,6 @@ Instantiate and pass a callback
                                                 .setNegativeButton(android.R.string.no,new DialogInterface.OnClickListener() {
                                                     @Override
                                                     public void onClick(DialogInterface dialogInterface, int i) {
-
                                                         spinnerFormaPago.setAdapter(adapterFormaPago);
                                                     }
                                                 })
@@ -610,7 +609,9 @@ Instantiate and pass a callback
                                                     public void onClick(DialogInterface dialog, int id) {
                                                         dialogSolicitarCredito().show();
                                                     }
-                                                }).create().show();
+                                                })
+                                                .setCancelable(false)
+                                                .create().show();
 
                                     }else{
                                         Toast toast = Toast.makeText(mContext, "Sin crédito y sin conexión", Toast.LENGTH_SHORT);
@@ -651,7 +652,9 @@ Instantiate and pass a callback
                                                     finish();
                                                     startActivity(intent);
                                                 }
-                                            }).create().show();
+                                            })
+                                            .setCancelable(false)
+                                            .create().show();
 
                                     break;
                             }
