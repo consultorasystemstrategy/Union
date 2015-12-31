@@ -84,7 +84,7 @@ public class VMovil_Abrir_Caja extends Activity implements View.OnClickListener 
         editKm.setInputType(InputType.TYPE_CLASS_NUMBER);
         editKm.setTextColor(0xff000000);
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-        alertDialogBuilder.setTitle("¿Esta Seguro de Abrir Caja?");
+        alertDialogBuilder.setTitle("¿Esta Seguro de Abrir Cuenta?");
         alertDialogBuilder.setView(editKm);
         AlertDialog.Builder builder = alertDialogBuilder
                 .setMessage("Ingrese Kilometraje")
@@ -94,7 +94,7 @@ public class VMovil_Abrir_Caja extends Activity implements View.OnClickListener 
                         if (editKm.getText().toString().equals("")) {
                             editKm.setError("Ingrese Kilometraje");
                         } else {
-                            Toast.makeText(getApplicationContext(), "Abriendo Caja...", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "Abriendo Cuenta...", Toast.LENGTH_SHORT).show();
                             kilometraje = Integer.parseInt(editKm.getText().toString());
                             new AbriCaja().execute();
                         }
