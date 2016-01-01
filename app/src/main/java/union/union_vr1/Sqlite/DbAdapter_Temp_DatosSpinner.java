@@ -23,7 +23,7 @@ public class DbAdapter_Temp_DatosSpinner {
     private static final String SQLITE_TABLE_Temp_data_spinner = "m_temp_spinner_data";
     private final Context mCtx;
 
-    public static final String CREATE_TABLE_Temp_Session =
+    public static final String CREATE_TABLE_DATOS_SPINNER =
             "create table if not exists "+SQLITE_TABLE_Temp_data_spinner+" ("
                     +spinner_id_session+" integer primary key,"
                     +spinner_variable+" text );";

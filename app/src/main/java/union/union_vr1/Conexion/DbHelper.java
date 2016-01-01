@@ -3,8 +3,8 @@ package union.union_vr1.Conexion;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
+import union.union_vr1.Sqlite.DBAdapter_Cliente_Ruta;
 import union.union_vr1.Sqlite.DBAdapter_Consultar_Inventario_Anterior;
 import union.union_vr1.Sqlite.DBAdapter_Temp_Autorizacion_Cobro;
 import union.union_vr1.Sqlite.DBAdapter_Temp_Canjes_Devoluciones;
@@ -12,6 +12,7 @@ import union.union_vr1.Sqlite.DBAdapter_Temp_Inventario;
 import union.union_vr1.Sqlite.DBAdapter_Temp_Venta;
 import union.union_vr1.Sqlite.DbAdapter_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Agente_Login;
+import union.union_vr1.Sqlite.DbAdapter_Categoria_Establecimiento;
 import union.union_vr1.Sqlite.DbAdapter_Cobros_Manuales;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
 import union.union_vr1.Sqlite.DbAdapter_Exportacion_Comprobantes;
@@ -23,6 +24,9 @@ import union.union_vr1.Sqlite.DbAdapter_Temp_Comprob_Cobro;
 import union.union_vr1.Sqlite.DbAdapter_Temp_DatosSpinner;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Establecimiento;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
+import union.union_vr1.Sqlite.DbAdapter_Tipo_Doc_Identidad;
+import union.union_vr1.Sqlite.DbAdapter_Tipo_Establecimiento;
+import union.union_vr1.Sqlite.DbAdapter_Tipo_Persona;
 import union.union_vr1.Sqlite.DbAdapter_Transferencias;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 import union.union_vr1.Sqlite.DbAdapter_Tipo_Gasto;
@@ -38,7 +42,7 @@ import union.union_vr1.Sqlite.DbAdapter_Histo_Venta_Detalle;
  */
 public class DbHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 16;
+    private static final int DATABASE_VERSION = 19;
     private static final String DATABASE_NAME = "ProdUniondb.sqlite";
 
     public DbHelper(Context context) {
@@ -87,9 +91,18 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(DbAdapter_Cobros_Manuales.CREATE_TABLE_COBROS_MANUALES);
         //MAPEA LOS ID DE LOS COMPROBANTES ENTRE LOS SISTEMAS
         db.execSQL(DbAdapter_Exportacion_Comprobantes.CREATE_TABLE_EXPORTACION_COMPROBANTES);
-        db.execSQL(DbAdapter_Temp_DatosSpinner.CREATE_TABLE_Temp_Session);
+        db.execSQL(DbAdapter_Temp_DatosSpinner.CREATE_TABLE_DATOS_SPINNER);
         db.execSQL(DbAdapter_Temp_Establecimiento.CREATE_TABLE_TEMP_ESTABLEC);
         db.execSQL(DbAdapter_Transferencias.CREATE_TABLE_TRANSFERENCIAS);
+        db.execSQL(DBAdapter_Cliente_Ruta.CREATE_TABLE_CLIENTE_RUTA);
+
+        db.execSQL(DbAdapter_Categoria_Establecimiento.CREATE_TABLE_CAT_ESTABLECIMIENTO);
+
+        db.execSQL(DbAdapter_Tipo_Doc_Identidad.CREATE_TABLE_TIPO_DOC_IDENTIDAD);
+
+        db.execSQL(DbAdapter_Tipo_Establecimiento.CREATE_TABLE_TIPO_ESTABLECIMIENTO);
+
+        db.execSQL(DbAdapter_Tipo_Persona.CREATE_TABLE_TIPO_PERSONA);
 
 
 
@@ -128,6 +141,17 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(DbAdapter_Temp_DatosSpinner.DELETE_TABLE_Temp_data_spinner);
         db.execSQL(DbAdapter_Temp_Establecimiento.DELETE_TABLE_Temp_Establec);
         db.execSQL(DbAdapter_Transferencias.DELETE_TABLE_TRANSFERENCIAS);
+        db.execSQL(DBAdapter_Cliente_Ruta.DELETE_TABLE_CLIENTE_RUTA);
+
+
+
+        db.execSQL(DbAdapter_Categoria_Establecimiento.DELETE_TABLE_CATEGORIA_ESTABLECIMIENTO);
+
+        db.execSQL(DbAdapter_Tipo_Doc_Identidad.DELETE_TABLE_TIPO_DOC_IDENTIDAD);
+
+        db.execSQL(DbAdapter_Tipo_Establecimiento.DELETE_TABLE_TIPO_ESTABLECIMIENTO);
+
+        db.execSQL(DbAdapter_Tipo_Persona.DELETE_TABLE_TIPO_PERSONA);
         onCreate(db);
     }
 }

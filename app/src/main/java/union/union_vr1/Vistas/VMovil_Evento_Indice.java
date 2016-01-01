@@ -41,8 +41,10 @@ import java.util.Timer;
 
 
 import union.union_vr1.Alarm.ReceiverAlarmFinishedDay;
+import union.union_vr1.AsyncTask.CrearEstablecimiento;
 import union.union_vr1.AsyncTask.ExportMain;
 import union.union_vr1.AsyncTask.ExportService;
+import union.union_vr1.AsyncTask.GetClienteRuta;
 import union.union_vr1.AsyncTask.GetDataSpinnerRegistrar;
 import union.union_vr1.AsyncTask.ImportCredito;
 import union.union_vr1.AsyncTask.ImportMain;
@@ -114,6 +116,7 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
     Button buttonSlideNroEstablecimiento;
     TextView textViewIngresosTotales;
     TextView textViewGastos;
+    TextView textViewAgregarPunto;
 
     int slideIdAgente = 0;
     int slideIdLiquidacion = 0;
@@ -143,7 +146,7 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.princ_evento_indice);
         mainActivity = this;
-        new GetDataSpinnerRegistrar(this).execute();
+
         session = new DbAdapter_Temp_Session(this);
         session.open();
 
@@ -206,6 +209,9 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
                         */
 
                 new ImportMain(mainActivity).execute();
+                new GetDataSpinnerRegistrar(mainActivity).execute();
+                new GetClienteRuta(mainActivity).execute();
+                new GetDataSpinnerRegistrar(mainActivity).execute();
 
                 session.deleteVariable(7);
                 session.deleteVariable(8);
@@ -380,7 +386,7 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         textViewSlideNombreAgente = (TextView) findViewById(R.id.slide_textViewNombreAgente);
         textViewSlideNombreRuta = (TextView) findViewById(R.id.slide_textViewNombreRuta);
         buttonSlideNroEstablecimiento = (Button) findViewById(R.id.slide_buttonNroEstablecimiento);
-
+        textViewAgregarPunto = (TextView) findViewById(R.id.slide_textViewAgregarPunto);
         textViewSlidePrincipal = (TextView) findViewById(R.id.slide_textviewPrincipal);
         textViewSlideCliente = (TextView) findViewById(R.id.slide_textViewClientes);
         textviewSlideCobranzas = (TextView) findViewById(R.id.slide_textViewCobranza);
@@ -395,7 +401,7 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         textViewIngresosTotales = (TextView) findViewById(R.id.textView_IngresosTotales);
         textViewGastos = (TextView) findViewById(R.id.textView_Gastos);
 
-
+        textViewAgregarPunto.setOnClickListener(this);
         textViewSlidePrincipal.setOnClickListener(this);
         textViewSlideCliente.setOnClickListener(this);
         textviewSlideCobranzas.setOnClickListener(this);
@@ -510,6 +516,10 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
                 Intent intentImportService = new Intent(mainActivity, ServiceImport.class);
                 intentImportService.setAction(Constants.ACTION_IMPORT_SERVICE);
                 mainActivity.startService(intentImportService);
+
+                new GetDataSpinnerRegistrar(mainActivity).execute();
+                new GetClienteRuta(mainActivity).execute(slideIdAgente+"");
+                new GetDataSpinnerRegistrar(mainActivity).execute();
 
                 break;
             case R.id.buttonExportar:
@@ -682,6 +692,9 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
                 break;
             case R.id.slide_textViewARendir:
 
+                break;
+            case R.id.slide_textViewAgregarPunto:
+                startActivity(new Intent(getApplicationContext(), VMovil_Crear_Establecimiento.class));
                 break;
             default:
                 break;

@@ -56,8 +56,14 @@ public class DbAdapter_Tipo_Persona {
     }
 
 
-    public Cursor fetchTipoPersona() {
-        Cursor cursor = mDb.rawQuery("select * from "+SQLITE_TABLE_TIPO_PERSONA+" order by "+ tipo_Persona_Id +" asc",null);
+    public Cursor fetchTipoPersona(int id) {
+        Cursor cursor=null;
+        if(id==-1){
+             cursor = mDb.rawQuery("select * from "+SQLITE_TABLE_TIPO_PERSONA+" order by "+ tipo_Persona_Id +" asc",null);
+        }else{
+             cursor = mDb.rawQuery("select * from "+SQLITE_TABLE_TIPO_PERSONA+" where "+tipo_Persona_PersonaId+"='"+id+"' order by "+ tipo_Persona_Id +" asc",null);
+        }
+
         return cursor;
     }
 

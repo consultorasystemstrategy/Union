@@ -1,102 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="horizontal"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#E4E2E2"
+    android:orientation="vertical">
 
-    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:padding="8dp">
 
-        <com.google.android.gms.maps.MapView
-            android:id="@+id/map"
-            class="com.google.android.gms.maps.SupportMapFragment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:scrollbars="vertical" />
-
-        <RadioGroup
-            android:id="@+id/radio_group_list_selector"
-            android:layout_width="80dp"
-            android:layout_height="150dp"
-            android:layout_gravity="top|left"
-            android:background="#80000000"
-            android:orientation="vertical"
-            android:padding="5dp">
-
-            <RadioButton
-                android:id="@+id/mapHibrido"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:text="Satelite"
-                android:textColor="#fff"
-                android:textSize="10dp" />
-
-            <View
-                android:id="@+id/VerticalLine1"
-                android:layout_width="match_parent"
-                android:layout_height="2dip"
-                android:layout_marginLeft="5dp"
-                android:background="#aaa" />
-
-            <RadioButton
-                android:id="@+id/mapNormal"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:checked="true"
-                android:text="Normal"
-                android:textColor="#fff"
-                android:textSize="10dp" />
-
-
-        </RadioGroup>
-
-        <LinearLayout
-            android:id="@+id/layoutflag"
+        <ScrollView
+            android:id="@+id/scrollView6"
             android:layout_width="fill_parent"
-            android:layout_height="180dp"
-            android:layout_gravity="center_horizontal|bottom"
-            android:background="#fff"
-            android:orientation="horizontal">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="10"
-
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:id="@+id/imgFiscal"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/flecha" />
-
-            </LinearLayout>
+            android:layout_height="fill_parent">
 
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:paddingTop="10dp">
+                android:orientation="vertical">
+
 
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/Blanco"
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/textV75"
+                        android:id="@+id/textView34"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:paddingBottom="4dp"
                         android:paddingTop="4dp"
-                        android:text="Direccion "
+                        android:text="Direccion"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:textColor="@color/ColorPUSecundario"
                         android:textStyle="italic|bold" />
@@ -107,16 +49,24 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:ems="10"
-                        android:hint="descripcion"
                         android:inputType="text" />
 
 
                 </LinearLayout>
 
+
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/Blanco"
                     android:orientation="vertical">
+
+                    <CheckBox
+                        android:id="@+id/checkBoxAviableDF"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="false" />
 
                     <TextView
                         android:id="@+id/textView23"
@@ -136,24 +86,31 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:ems="10"
-                        android:hint="direccion fiscal"
+                        android:hint=""
                         android:inputType="text" />
 
 
                 </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/Blanco"
+                    android:orientation="vertical">
+
+                    <WebView
+                        android:id="@+id/webViewMap"
+                        android:layout_width="fill_parent"
+                        android:layout_height="300dp" />
+
+
+                </LinearLayout>
+
+
             </LinearLayout>
-
-        </LinearLayout>
-
-
-    </FrameLayout>
+        </ScrollView>
+    </LinearLayout>
 
 
 </LinearLayout>
-
-
-
-
-
-
-

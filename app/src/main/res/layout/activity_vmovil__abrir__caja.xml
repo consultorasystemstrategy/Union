@@ -46,7 +46,7 @@
                 <Button
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
-                    android:text="Abrir Caja"
+                    android:text="Abrir Cuenta"
                     android:id="@+id/btnAbrirCja" />
             </LinearLayout>
 

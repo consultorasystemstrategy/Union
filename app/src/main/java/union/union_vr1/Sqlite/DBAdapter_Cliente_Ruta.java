@@ -140,7 +140,7 @@ public class DBAdapter_Cliente_Ruta {
 
     public Boolean existeClienteRuta(String numero, int tipoDoc) {
         Boolean aBoolean = false;
-        Cursor mCursor = mDb.rawQuery("select * from " + SQLITE_TABLE_CLIENTE_RUTA + " WHERE " + cliente_ruta_docIdentidad + " like '%" + numero + "%' and " + cliente_ruta_tipo_docIdentidad + "='" + tipoDoc + "'; ", null);
+        Cursor mCursor = mDb.rawQuery("select * from " + SQLITE_TABLE_CLIENTE_RUTA + " WHERE " + cliente_ruta_docIdentidad + " like '" + numero + "%' and " + cliente_ruta_tipo_docIdentidad + "='" + tipoDoc + "'; ", null);
 
         if (mCursor.moveToFirst()) {
             aBoolean =true;
