@@ -482,20 +482,22 @@ Instantiate and pass a callback
         if (cursorEstablecimiento.getCount()>0) {
             idTipoDocCliente = cursorEstablecimiento.getInt(cursorEstablecimiento.getColumnIndexOrThrow(DbAdaptert_Evento_Establec.EE_id_tipo_doc_cliente));
         }
+
+        spinnerTipoDocumento = (Spinner) findViewById(R.id.VC_spinnerTipoDocumento);
         if (idTipoDocCliente==1){
-            spinnerTipoDocumento = (Spinner) findViewById(R.id.VC_spinnerTipoDocumento);
             ArrayAdapter<CharSequence> adapterTipoDocumento = ArrayAdapter.createFromResource(this,R.array.tipoDocumentoBoleta,android.R.layout.simple_spinner_item);
             adapterTipoDocumento.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinnerTipoDocumento.setPrompt("Seleccionar Documento");
             spinnerTipoDocumento.setAdapter(adapterTipoDocumento);
         }else if (idTipoDocCliente==2){
-            spinnerTipoDocumento = (Spinner) findViewById(R.id.VC_spinnerTipoDocumento);
             ArrayAdapter<CharSequence> adapterTipoDocumento = ArrayAdapter.createFromResource(this,R.array.tipoDocumentoFacturaBoleta,android.R.layout.simple_spinner_item);
             adapterTipoDocumento.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinnerTipoDocumento.setPrompt("Seleccionar Documento");
             spinnerTipoDocumento.setAdapter(adapterTipoDocumento);
         }else{
-            spinnerTipoDocumento = (Spinner) findViewById(R.id.VC_spinnerTipoDocumento);
             ArrayAdapter<CharSequence> adapterTipoDocumento = ArrayAdapter.createFromResource(this,R.array.tipoDocumento,android.R.layout.simple_spinner_item);
             adapterTipoDocumento.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinnerTipoDocumento.setPrompt("Seleccionar Documento");
             spinnerTipoDocumento.setAdapter(adapterTipoDocumento);
         }
 
@@ -508,6 +510,7 @@ Instantiate and pass a callback
         spinnerFormaPago = (Spinner) findViewById(R.id.VC_spinnerFormaPago);
         final ArrayAdapter<CharSequence> adapterFormaPago = ArrayAdapter.createFromResource(this,R.array.forma_pago,android.R.layout.simple_spinner_item);
         adapterFormaPago.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerFormaPago.setPrompt("Seleccionar Forma de Pago");
         spinnerFormaPago.setAdapter(adapterFormaPago);
 
 
@@ -1285,6 +1288,7 @@ Instantiate and pass a callback
 
 
         final EditText editTextCantidadCredito = ((EditText) layout.findViewById(R.id.VCSC_editText_CantidadCredito));
+        editTextCantidadCredito.setText(Utils.replaceComa(df.format(totalFooter)));
         spinnerDiasCredito = ((Spinner) layout.findViewById(R.id.VCSC_spinner_DiasCredito));
 
 
@@ -1312,18 +1316,17 @@ Instantiate and pass a callback
             public void onClick(DialogInterface dialog, int which) {
 
 
-                String cantidad = editTextCantidadCredito.getText().toString().trim();
+                String cantidad = Utils.replaceComa(editTextCantidadCredito.getText().toString().trim());
                 if (cantidad.length()>0 && cantidad.length()<10){
-                    int cantidadCredito = Integer.parseInt(cantidad);
+                    Double cantidadCredito = Double.parseDouble(cantidad);
 
-                    solicitarCredito.execute(""+id_agente_venta,""+idEstablecimiento,""+cantidadCredito,""+diasCredito);
+                    new SolicitarCredito(mainActivity).execute(""+id_agente_venta,""+idEstablecimiento,""+cantidadCredito,""+diasCredito);
 
                     Toast toast = Toast.makeText(mContext.getApplicationContext(), "Crédito solicitado esperar...",Toast.LENGTH_SHORT);
                     toast.getView().setBackgroundColor(mainActivity.getResources().getColor(R.color.verde));
                     TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
                     v.setTextColor(mainActivity.getResources().getColor(R.color.Blanco));
                     toast.show();
-
                     Intent intent = new Intent(mContext, VMovil_Evento_Establec.class);
                     startActivity(intent);
                     finish();
@@ -1456,7 +1459,7 @@ Instantiate and pass a callback
         return alertDialog;
     }
     private enum FormaPago{
-        Contado, Credito
+        Contado, Credito, Seleccionar
     }
 
     @Override
@@ -1474,10 +1477,47 @@ Instantiate and pass a callback
             case R.id.VC_buttonVender:
                 //((MyApplication)this.getApplication()).setDisplayedHistorialComprobanteAnterior(false);
 
-                session.deleteVariable(6);
-                session.createTempSession(6,0);
 
-                vender();
+                Cursor cursorTemp = simpleCursorAdapter.getCursor();
+
+                if (cursorTemp.getCount() <= 0) {
+                    Log.d("CT VC", cursorTemp.getCount() + "");
+                    Toast toast = Toast.makeText(mainActivity, "AGREGAR PRODUCTOS A LA VENTA", Toast.LENGTH_LONG);
+                    toast.getView().setBackgroundColor(mainActivity.getResources().getColor(R.color.verde));
+                    TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
+                    v.setTextColor(mainActivity.getResources().getColor(R.color.Blanco));
+                    toast.show();
+                    return;
+                }
+
+                String formaPago = spinnerFormaPago.getSelectedItem().toString();
+                String tipoDocumento = spinnerTipoDocumento.getSelectedItem().toString();
+
+                if (formaPago.equals("Seleccionar") && tipoDocumento.equals("Seleccionar")){
+                    Toast.makeText(VMovil_Venta_Cabecera.this, "Seleccionar Tipo de Documento, y Forma de pago", Toast.LENGTH_SHORT).show();
+                    return;
+                }else if (formaPago.equals("Seleccionar")){
+                    Toast.makeText(VMovil_Venta_Cabecera.this, "Seleccionar Forma de pago", Toast.LENGTH_SHORT).show();
+                    return;
+                }else if(tipoDocumento.equals("Seleccionar")) {
+                    Toast.makeText(VMovil_Venta_Cabecera.this, "Seleccionar Tipo de Docuemnto", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                new AlertDialog.Builder(VMovil_Venta_Cabecera.this)
+                        .setTitle("Confirmación")
+                        .setMessage("¿Está seguro de generar el comprobante electrónico?")
+                        .setNegativeButton(android.R.string.no, null)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                // FIRE ZE MISSILES!
+                                vender();
+                                session.deleteVariable(6);
+                                session.createTempSession(6,0);
+                            }
+                        })
+                        .create().show();
+
                 break;
 
                 //SLIDING MENU
@@ -1903,13 +1943,6 @@ Instantiate and pass a callback
                startService(intent);
 
             }
-
-
-
-
-
-
-
 
             new GenerateDigitalSignature().execute();
 

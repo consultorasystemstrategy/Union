@@ -7,6 +7,7 @@ package union.union_vr1.BlueTooth;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.google.android.gms.drive.query.internal.FieldWithSortOrder;
 import com.sewoo.jpos.command.CPCL;
 import com.sewoo.jpos.command.CPCLConst;
 import com.sewoo.jpos.command.ESCPOS;
@@ -27,6 +28,7 @@ import jpos.POSPrinterConst;
 import union.union_vr1.FacturacionElectronica.NumberToLetterConverter;
 import union.union_vr1.Sqlite.Constants;
 import union.union_vr1.Sqlite.DbAdapter_Agente;
+import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta_Detalle;
 import union.union_vr1.Sqlite.DbAdapter_Informe_Gastos;
@@ -56,6 +58,7 @@ public class Print {
     private DbGastos_Ingresos dbHelperGastosIngr;
     private DbAdapter_Comprob_Venta_Detalle dbHelperComprobanteVentaDetalle;
     private DbAdapter_Informe_Gastos dbAdapter_informe_gastos;
+    private DbAdapter_Comprob_Cobro dbAdapter_comprob_cobro;
 
     private DbAdapter_Transferencias dbAdapter_transferencias;
 
@@ -84,7 +87,8 @@ public class Print {
         dbHelperGastosIngr.open();
         dbAdapter_informe_gastos = new DbAdapter_Informe_Gastos(context);
         dbAdapter_informe_gastos.open();
-
+        dbAdapter_comprob_cobro = new DbAdapter_Comprob_Cobro(context);
+        dbAdapter_comprob_cobro.open();
 
     }
 
@@ -144,7 +148,7 @@ public class Print {
 
     public void printCabecera(int tipoDocumento) throws JposException
     {
-        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "UNIVERSIDAD PERUANA UNION" + LF);
+        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "UNIVERSIDAD PERUANA UNION" + LF+ LF);
         posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "CENTRO DE APLICACION PRODUCTOS UNION" + LF);
         posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "CAR. CENTRAL KM. 19.5 VILLA UNION-NANA" + LF );
         posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "LIMA - LIMA - LURIGANCHO" + LF);
@@ -156,7 +160,7 @@ public class Print {
                 posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + "FACTURA ELECTRONICA" + LF + LF);
                 break;
             case Constants.DOCUMENTO_BOLETA:
-                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + "BOLETA DE VENTA ELECTRONICA" + LF + LF);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + "BOLETA ELECTRONICA" + LF + LF);
                 break;
             case Constants.DOCUMENTO_TRANSFERENCIA:
                 posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT,ESC + "|cA" + ESC + "|bC" + ESC + "|2C" + "TRANSFERENCIAS" + LF + LF + LF);
@@ -234,6 +238,7 @@ public class Print {
         String ventaDetalle = "";
         int tipoVenta = -1;
         double _CERO= 0.0;
+        int idFormaPago = 1;
 
         Cursor cursorVentaCabecera = dbHelperComprobanteVenta.getVentaCabecerabyID(idComprobante);
 
@@ -251,6 +256,7 @@ public class Print {
             sha1 = cursorVentaCabecera.getString(cursorVentaCabecera.getColumnIndexOrThrow(DbAdapter_Comprob_Venta.CV_SHA1));
             //tipo de venta NORMAL O RRPP
             tipoVenta = cursorVentaCabecera.getInt(cursorVentaCabecera.getColumnIndexOrThrow(DbAdapter_Comprob_Venta.CV_id_tipo_venta));
+            idFormaPago = cursorVentaCabecera.getInt(cursorVentaCabecera.getColumnIndexOrThrow(DbAdapter_Comprob_Venta.CV_id_forma_pago));
 
             /*ventaCabecera+= "NUMERO  : "+comprobante+"\n";
             ventaCabecera+= "FECHA   : "+ fecha+"\n";
@@ -410,8 +416,35 @@ public class Print {
                 }
                 printLineas();
                     posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + (NumberToLetterConverter.convertNumberToLetter(df.format(precio_venta))).toUpperCase() + LF );
-                    posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + lineas + LF + LF);
-                    posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + "CAJERO(A) : " + cleanAcentos(nombreAgente) + LF);
+                    posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + lineas + LF );
+                switch (idFormaPago){
+                    case Constants.FORMA_DE_PAGO_CONTADO:
+                        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + "CONTADO" + LF);
+                        break;
+                    case Constants.FORMA_DE_PAGO_CREDITO:
+                        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + "CREDITO"+ LF + LF);
+                        Cursor cursorCredito = dbAdapter_comprob_cobro.fetchComprobCobrosByIdComprobante(idComprobante);
+                        if (cursorCredito.getCount()>0){
+                            cursorCredito.moveToFirst();
+                            for (cursorCredito.moveToFirst(); !cursorCredito.isAfterLast() ; cursorCredito.moveToNext()){
+                                String primeraFechaCobro = cursorCredito.getString(cursorCredito.getColumnIndexOrThrow(DbAdapter_Comprob_Cobro.CC_fecha_programada));
+                                Double monto_Pagar = cursorCredito.getDouble(cursorCredito.getColumnIndexOrThrow(DbAdapter_Comprob_Cobro.CC_monto_a_pagar));
+                                String cuotaDetalle = ESC + "|lA" + String.format("%-13s", "") + String.format("%-14s", primeraFechaCobro) + String.format("%1$10s", df.format(monto_Pagar)) + String.format("%1$11s", "") + LF;
+                                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, cuotaDetalle);
+                            }
+
+                            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + "" + LF);
+                            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + "____________________" + LF);
+                            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + "Firma del cliente" + LF + LF);
+
+
+
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                    posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + "AGENTE : " + cleanAcentos(nombreAgente) + LF);
 
                     if (tipoVenta!=2){
                         printIgualLinea();
@@ -574,7 +607,7 @@ public class Print {
 
 
 
-        String cabeceraIngresos = ESC + "|cA" + ESC + "|bC"+String.format("%-20s", "COMPROBANTE")+ String.format("%1$4s", "")  + String.format("%1$8s", "EMIT.") + String.format("%1$8s", "PAG.") + String.format("%1$8s", "COB.") + LF;
+        String cabeceraIngresos = ESC + "|cA" + ESC + "|bC"+String.format("%-18s", "COMPROBANTE")+ String.format("%1$6s", "CANT.")  + String.format("%1$8s", "EMIT.") + String.format("%1$8s", "PAG.") + String.format("%1$8s", "COB.") + LF;
         posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, cabeceraIngresos);
 
         cursorResumen.moveToFirst();
@@ -637,8 +670,8 @@ public class Print {
     public static String cleanAcentos(String string) {
         /*String original = "áàäéèëíìïóòöúùuñÁÀÄÉÈËÍÌÏÓÒÖÚÙÜÑçÇü·':";
         String ascii = "aaaeeeiiiooouuunAAAEEEIIIOOOUUUNcCu   ";*/
-        String original = "áàäéèëíìïóòöúùuñÁÀÄÉÈËÍÌÏÓÒÖÚÙÜÑçÇü·'";
-        String ascii = "aaaeeeiiiooouuunAAAEEEIIIOOOUUUNcCu  ";
+        String original = "áàäéèëíìïóòöúùuñÁÀÄÉÈËÍÌÏÓÒÖÚÙÜÑçÇü·'°";
+        String ascii = "aaaeeeiiiooouuunAAAEEEIIIOOOUUUNcCu  .";
         if (string != null) {
             //Recorro la cadena y remplazo los caracteres originales por aquellos sin acentos
             for (int i = 0; i < original.length(); i++ ) {

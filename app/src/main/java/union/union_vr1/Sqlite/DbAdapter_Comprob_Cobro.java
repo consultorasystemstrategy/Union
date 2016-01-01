@@ -497,6 +497,22 @@ public class DbAdapter_Comprob_Cobro {
         }
         return mCursor;
     }
+    public Cursor fetchComprobCobrosByIdComprobante(int id_comprob) {
+
+        Cursor mCursor = mDb.query(SQLITE_TABLE_Comprob_Cobro, new String[]{
+
+                        CC_id_comprobante_cobro, CC_id_cob_historial,
+                        CC_id_establec, CC_id_comprob, CC_id_plan_pago, CC_id_plan_pago_detalle,
+                        CC_desc_tipo_doc, CC_doc, CC_fecha_programada, CC_monto_a_pagar,
+                        CC_fecha_cobro, CC_monto_cobrado, CC_estado_cobro, Constants._SINCRONIZAR},
+                CC_id_comprob + " = "+ id_comprob , null, null, null,  CC_fecha_programada + " ASC");
+
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+    }
+
     public Cursor fetchNormal(){
         return mDb.rawQuery("select * from "+SQLITE_TABLE_Comprob_Cobro+" where "+CC_estado_flex+"='"+Constants.POR_EXPORTAR_FLEX+"'",null);
     }

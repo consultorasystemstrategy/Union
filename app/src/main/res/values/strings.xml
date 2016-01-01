@@ -79,6 +79,7 @@
         <item>Vencido-Malo</item>
     </string-array>
     <string-array name="forma_pago">
+        <item>Seleccionar</item>
         <item>Contado</item>
         <item>Credito</item>
     </string-array>
@@ -97,9 +98,10 @@
     <!-- Principal_evento_gasto.xml -->
     <string-array name="procedenciaGasto">
         <item>planta</item>
-        <item>ruta</item>
+        <!--<item>ruta</item>-->
     </string-array>
     <string-array name="tipoDocumento">
+        <item>Seleccionar</item>
         <item>factura</item>
         <item>boleta</item>
         <item>ficha</item>
@@ -108,6 +110,7 @@
         <item>factura</item>
     </string-array>
     <string-array name="tipoDocumentoFacturaBoleta">
+        <item>Seleccionar</item>
         <item>factura</item>
         <item>boleta</item>
     </string-array>
