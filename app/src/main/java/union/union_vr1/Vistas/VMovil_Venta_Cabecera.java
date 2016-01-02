@@ -1969,7 +1969,7 @@ Instantiate and pass a callback
     }
 
     public enum TipoDocumento{
-        factura, boleta, ficha
+        factura, boleta, ficha,Seleccionar
     }
     private void displayHistorialComprobanteAnterior() {
 

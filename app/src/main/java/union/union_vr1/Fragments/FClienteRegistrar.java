@@ -1,8 +1,5 @@
 package union.union_vr1.Fragments;
 
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -16,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.FilterQueryProvider;
 import android.widget.SimpleCursorAdapter;
@@ -28,12 +26,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import union.union_vr1.R;
 import union.union_vr1.Sqlite.DBAdapter_Cliente_Ruta;
+import union.union_vr1.Sqlite.DbAdapter_Categoria_Establecimiento;
 import union.union_vr1.Sqlite.DbAdapter_Temp_DatosSpinner;
-import union.union_vr1.Vistas.VMovil_Facturas_Canjes_Dev;
+import union.union_vr1.Sqlite.DbAdapter_Tipo_Doc_Identidad;
+import union.union_vr1.Sqlite.DbAdapter_Tipo_Establecimiento;
+import union.union_vr1.Sqlite.DbAdapter_Tipo_Persona;
 
 /**
  * Created by Kelvin on 04/11/2015.
@@ -52,12 +52,10 @@ public class FClienteRegistrar extends Fragment {
     Toast toastBucsando;
     Toast toast;
 
+
     private View v;
-    private DbAdapter_Temp_DatosSpinner dbAdapter_temp_datosSpinner;
-    private ArrayList<String> stringArrayListPersona = new ArrayList<>();
-    private ArrayList<String> stringArrayListDocIdentidad = new ArrayList<>();
-    private JSONObject jsonObjectChiildIdentidad = null;
-    private JSONObject jsonObjectPersona = null;
+    private DbAdapter_Tipo_Doc_Identidad dbAdapter_tipo_doc_identidad;
+    private DbAdapter_Tipo_Persona dbAdapter_tipo_persona;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -68,13 +66,18 @@ public class FClienteRegistrar extends Fragment {
         toast.setGravity(Gravity.TOP | Gravity.LEFT, 0, 0);
         TextView vz = (TextView) toast.getView().findViewById(android.R.id.message);
         vz.setTextColor(getActivity().getResources().getColor(R.color.Blanco));
+        //................DB
+
+
+        dbAdapter_tipo_doc_identidad = new DbAdapter_Tipo_Doc_Identidad(getActivity());
+        dbAdapter_tipo_persona = new DbAdapter_Tipo_Persona(getActivity());
+        dbAdapter_tipo_doc_identidad.open();
+        dbAdapter_tipo_persona.open();
         //-.....
         toastBucsando.getView().setBackgroundColor(getActivity().getResources().getColor(R.color.amarillo));
         toastBucsando.setGravity(Gravity.TOP | Gravity.LEFT, 0, 0);
         TextView va = (TextView) toastBucsando.getView().findViewById(android.R.id.message);
         va.setTextColor(getActivity().getResources().getColor(R.color.Blanco));
-        dbAdapter_temp_datosSpinner = new DbAdapter_Temp_DatosSpinner(getActivity().getApplicationContext());
-        dbAdapter_temp_datosSpinner.open();
         dbAdapter_cliente_ruta = new DBAdapter_Cliente_Ruta(getActivity().getApplicationContext());
         dbAdapter_cliente_ruta.open();
         spinnerTipoPesona = (Spinner) v.findViewById(R.id.spinnerTipoPersona);
@@ -85,11 +88,14 @@ public class FClienteRegistrar extends Fragment {
         autoNroDocumento = (AutoCompleteTextView) v.findViewById(R.id.editNroDocumento);
         editTextNroCelular = (EditText) v.findViewById(R.id.editNroCelular);
         editTextCorreo = (EditText) v.findViewById(R.id.editCorreo);
+
+
         callmethod();
         spinnerTipoDocumento.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                tipoDoc = tipo_Documento(i);
+                Cursor cursor = (Cursor)adapterView.getItemAtPosition(i);
+                tipoDoc=cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Tipo_Doc_Identidad.tipo_Doc_IdentidadId));
             }
 
             @Override
@@ -106,7 +112,7 @@ public class FClienteRegistrar extends Fragment {
 
         final SimpleCursorAdapter adapter;
         Cursor cr = dbAdapter_cliente_ruta.listarDocumentoClientexRuta("", tipoDoc);
-        cr.moveToFirst();
+
 
 
         String[] columnas = new String[]{
@@ -138,7 +144,12 @@ public class FClienteRegistrar extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-
+                if(charSequence.toString().equals("")){
+                    toastBucsando.cancel();
+                    toast.show();
+                    spinnerTipoDocumento.setEnabled(false);
+                    disableWidgets();
+                }
             }
 
             @Override
@@ -148,23 +159,16 @@ public class FClienteRegistrar extends Fragment {
                 Log.d("ESTADOEXISTERUTA", "" + estado);
                 if (estado) {
                     toastBucsando.cancel();
-
                     toast.show();
-
-
+                    spinnerTipoDocumento.setEnabled(false);
                     disableWidgets();
 
                 } else {
 
-                    try {
-                        toast.cancel();
-
-                        toastBucsando.show();
-                        setSpinnerDocIdentidad();
-                        enableWidgets();
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                    toast.cancel();
+                    toastBucsando.show();
+                    spinnerTipoDocumento.setEnabled(true);
+                    enableWidgets();
                 }
 
             }
@@ -194,6 +198,7 @@ public class FClienteRegistrar extends Fragment {
                 cursor.moveToFirst();
                 nom = cursor.getString(5);
                 autoNroDocumento.setText(nom);
+
                 setValueForm(cursor);
 
             }
@@ -223,20 +228,14 @@ public class FClienteRegistrar extends Fragment {
     private void setValueForm(Cursor cr) {
         cr.moveToFirst();
         int tipoPersona = cr.getInt(cr.getColumnIndexOrThrow(DBAdapter_Cliente_Ruta.cliente_ruta_tipo_PerIdentidad));
-        String TipoPersona = tipo_DocumentoById(tipoPersona);
+        setAdapterTipoPersona(tipoPersona);
         String nombres = cr.getString(cr.getColumnIndexOrThrow(DBAdapter_Cliente_Ruta.cliente_ruta_nombres));
         String apPaterno = cr.getString(cr.getColumnIndexOrThrow(DBAdapter_Cliente_Ruta.cliente_ruta_apPaterno));
         String apMaterno = cr.getString(cr.getColumnIndexOrThrow(DBAdapter_Cliente_Ruta.cliente_ruta_apMaterno));
         String celular = cr.getString(cr.getColumnIndexOrThrow(DBAdapter_Cliente_Ruta.cliente_ruta_celular));
         Log.d("CELULAR", "" + celular);
         String correo = cr.getString(cr.getColumnIndexOrThrow(DBAdapter_Cliente_Ruta.cliente_ruta_email));
-        stringArrayListPersona = new ArrayList<String>();
 
-        stringArrayListPersona.add(TipoPersona);
-
-        ArrayAdapter<String> adapterTipoPersona = new ArrayAdapter<String>(getActivity().getApplicationContext(), R.layout.layout_item_spinner, stringArrayListPersona);
-        adapterTipoPersona.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerTipoPesona.setAdapter(adapterTipoPersona);
 
         editTextNombre.setText(nombres);
         editTextApPaterno.setText(apPaterno);
@@ -249,93 +248,51 @@ public class FClienteRegistrar extends Fragment {
     }
 
     private void callmethod() {
+        setAdapterTipoDocIdentidad();
+        setAdapterTipoPersona(-1);
 
-        try {
-            setSpinnerDocIdentidad();
-            setSpinnerPersona();
-        } catch (JSONException e) {
-            e.printStackTrace();
-            Log.d("ERROR:c", "" + e.getMessage());
-        }
+    }
+    private void setAdapterTipoDocIdentidad(){
+        Cursor cr = dbAdapter_tipo_doc_identidad.fetchTipoDocIden();
+        SimpleCursorAdapter simpleCursorAdapter ;
+        int[] to = new int[]{
+                android.R.id.text1,
+
+        };
+
+        String[] columns = new String[]{
+                DbAdapter_Tipo_Doc_Identidad.tipo_Doc_Descripcion,
+
+        };
+        simpleCursorAdapter = new SimpleCursorAdapter(getActivity().getApplicationContext(),android.R.layout.simple_dropdown_item_1line,cr,columns,to,0);
+        spinnerTipoDocumento.setAdapter(simpleCursorAdapter);
+    }
+
+    private void setAdapterTipoPersona(int id){
+        Cursor cr = dbAdapter_tipo_persona.fetchTipoPersona(id);
+        SimpleCursorAdapter simpleCursorAdapter ;
+        int[] to = new int[]{
+                android.R.id.text1,
+
+        };
+
+        String[] columns = new String[]{
+                DbAdapter_Tipo_Persona.tipo_Persona_Descripcion,
+
+        };
+        simpleCursorAdapter = new SimpleCursorAdapter(getActivity().getApplicationContext(),android.R.layout.simple_dropdown_item_1line,cr,columns,to,0);
+        spinnerTipoPesona.setAdapter(simpleCursorAdapter);
     }
 
 
-    private void setSpinnerDocIdentidad() throws JSONException {
-        spinnerTipoDocumento = (Spinner)v.findViewById(R.id.spinnerTipoDocumento);
-        Cursor cursor = dbAdapter_temp_datosSpinner.fetchTemSpinnerTipo(2);
-        cursor.moveToFirst();
-        JSONObject jsonObject = new JSONObject(cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_DatosSpinner.spinner_variable)));
-        JSONArray jsonArray = jsonObject.getJSONArray("Value");
-
-        for (int i = 0; i < jsonArray.length(); i++) {
-            jsonObjectChiildIdentidad = jsonArray.getJSONObject(i);
-            stringArrayListDocIdentidad.add(i, jsonObjectChiildIdentidad.getString("TdiVDescripcion"));
-
-        }
-        ArrayAdapter<String> adapterTipoIdentidad = new ArrayAdapter<String>(getActivity().getApplicationContext(), R.layout.layout_item_spinner, stringArrayListDocIdentidad);
-        adapterTipoIdentidad.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerTipoDocumento.setAdapter(adapterTipoIdentidad);
-
-    }
-
-    private void setSpinnerPersona() throws JSONException {
-        spinnerTipoPesona = (Spinner)v.findViewById(R.id.spinnerTipoPersona);
-        Cursor cursor = dbAdapter_temp_datosSpinner.fetchTemSpinnerTipo(3);
-        cursor.moveToFirst();
-        JSONObject jsonObject = new JSONObject(cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_DatosSpinner.spinner_variable)));
-        JSONArray jsonArray = jsonObject.getJSONArray("Value");
-
-        for (int i = 0; i < jsonArray.length(); i++) {
-            jsonObjectPersona = jsonArray.getJSONObject(i);
-            stringArrayListPersona.add(i, jsonObjectPersona.getString("TperVDescripcion"));
-        }
-        ArrayAdapter<String> adapterTipoPersona = new ArrayAdapter<String>(getActivity().getApplicationContext(), R.layout.layout_item_spinner, stringArrayListPersona);
-        adapterTipoPersona.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerTipoPesona.setAdapter(adapterTipoPersona);
-    }
 
 
-    private int tipo_Documento(int position) {
-        Cursor cursor = dbAdapter_temp_datosSpinner.fetchTemSpinnerTipo(2);
-        cursor.moveToFirst();
-        int id = 0;
-        JSONObject jsonObject = null;
-        try {
-            jsonObject = new JSONObject(cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_DatosSpinner.spinner_variable)));
-            JSONArray jsonArray = jsonObject.getJSONArray("Value");
-            id = jsonArray.getJSONObject(position).getInt("TdiTipoDocIdentidadId");
-            Log.d("TIPO DOCUMENTO", "" + jsonArray.get(position).toString());
-        } catch (JSONException e) {
-            e.printStackTrace();
-
-        }
-        return id;
-    }
-
-    private String tipo_DocumentoById(int idTipo) {
-        Cursor cursor = dbAdapter_temp_datosSpinner.fetchTemSpinnerTipo(3);
-        cursor.moveToFirst();
-        String id = "";
-        JSONObject jsonObject = null;
-        try {
-            jsonObject = new JSONObject(cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_DatosSpinner.spinner_variable)));
-            JSONArray jsonArray = jsonObject.getJSONArray("Value");
-
-            for (int i = 0; i < jsonArray.length(); i++) {
-                if (jsonArray.getJSONObject(i).getInt("TperITipoPersonaId") == idTipo) {
-                    id = jsonArray.getJSONObject(i).getString("TperVDescripcion");
-                }
-                ;
-                Log.d("TIPO DOCUMENTO", "" + jsonArray.get(i).toString());
-            }
 
 
-        } catch (JSONException e) {
-            e.printStackTrace();
 
-        }
-        return id;
-    }
+
+
+
 
 
 }

@@ -73,7 +73,7 @@ public class VMovil_Crear_Establecimiento extends AppCompatActivity {
         fragmentCliente = new FClienteRegistrar();
         fragmentEstablecimiento = new FEstablecimientoRegistrar();
         TabsAdapter tabsAdapter = new TabsAdapter(getSupportFragmentManager());
-        tabsAdapter.addFragment(fragmentMapa, "Registro Mapa");
+        tabsAdapter.addFragment(fragmentMapa, "Registro Direccion");
         tabsAdapter.addFragment(fragmentCliente, "Cliente");
         tabsAdapter.addFragment(fragmentEstablecimiento, "Establecimiento");
         viewPager.setAdapter(tabsAdapter);

@@ -20,10 +20,10 @@ public class DbAdapter_Tipo_Establecimiento {
     private DbHelper mDbHelper;
     private SQLiteDatabase mDb;
 
-    private static final String SQLITE_TABLE_TIPO_ESTABLECIMIENTO = "m_temp_spinner_data";
+    private static final String SQLITE_TABLE_TIPO_ESTABLECIMIENTO = "tipo_establecimiento";
     private final Context mCtx;
 
-    public static final String CREATE_TABLE_MOTIVO_DEVOLUCION =
+    public static final String CREATE_TABLE_TIPO_ESTABLECIMIENTO =
             "create table if not exists "+ SQLITE_TABLE_TIPO_ESTABLECIMIENTO +" ("
                     +tipo_Establecimiento_Id+" integer primary key,"
                     +tipo_Establecimiento_EstablecimientoId+" integer ,"
@@ -47,7 +47,7 @@ public class DbAdapter_Tipo_Establecimiento {
         }
     }
 
-    public long createMotivoDevolu(int id,String descripcion) {
+    public long creatTipoEstablec(int id,String descripcion) {
 
         ContentValues initialValues = new ContentValues();
         initialValues.put(tipo_Establecimiento_EstablecimientoId, id);
@@ -56,13 +56,13 @@ public class DbAdapter_Tipo_Establecimiento {
     }
 
 
-    public Cursor fetchMotivoDevolu() {
+    public Cursor fetchTipoEstablec() {
         Cursor cursor = mDb.rawQuery("select * from "+ SQLITE_TABLE_TIPO_ESTABLECIMIENTO +" order by "+tipo_Establecimiento_Id+" asc",null);
         return cursor;
     }
 
 
-    public boolean deleteAllMotivoDevolu() {
+    public boolean deleteAllTipoEstablec() {
 
         int doneDelete = 0;
         doneDelete = mDb.delete(SQLITE_TABLE_TIPO_ESTABLECIMIENTO, null ,null);

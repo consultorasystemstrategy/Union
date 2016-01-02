@@ -13,23 +13,23 @@ import union.union_vr1.Conexion.DbHelper;
  */
 public class DbAdapter_Categoria_Establecimiento {
 
-    public static final String motivo_id = "_id";
-    public static final String motivo_DevolucionId = "CateICatEstablecimientoId";
-    public static final String motivo_Descripcion = "CateVDescripcion";
+    public static final String cat_Establec_Id = "_id";
+    public static final String cat_Establec_EstablecId = "CateICatEstablecimientoId";
+    public static final String cat_Establec_Descripcion = "CateVDescripcion";
 
     private DbHelper mDbHelper;
     private SQLiteDatabase mDb;
 
-    private static final String SQLITE_TABLE_MOTIVO_DEVOLUCION = "m_temp_spinner_data";
+    private static final String SQLITE_TABLE_CAT_ESTABLECIMIENTO = "categoria_establecimiento";
     private final Context mCtx;
 
-    public static final String CREATE_TABLE_MOTIVO_DEVOLUCION =
-            "create table if not exists "+SQLITE_TABLE_MOTIVO_DEVOLUCION+" ("
-                    +motivo_id+" integer primary key,"
-                    +motivo_DevolucionId+" integer ,"
-                    +motivo_Descripcion+" text );";
+    public static final String CREATE_TABLE_CAT_ESTABLECIMIENTO=
+            "create table if not exists "+ SQLITE_TABLE_CAT_ESTABLECIMIENTO +" ("
+                    + cat_Establec_Id +" integer primary key,"
+                    + cat_Establec_EstablecId +" integer ,"
+                    + cat_Establec_Descripcion +" text );";
 
-    public static final String DELETE_TABLE_MOTIVO_DEVOLUCION= "DROP TABLE IF EXISTS " + SQLITE_TABLE_MOTIVO_DEVOLUCION;
+    public static final String DELETE_TABLE_CATEGORIA_ESTABLECIMIENTO= "DROP TABLE IF EXISTS " + SQLITE_TABLE_CAT_ESTABLECIMIENTO;
 
     public DbAdapter_Categoria_Establecimiento(Context ctx) {
         this.mCtx = ctx;
@@ -47,25 +47,25 @@ public class DbAdapter_Categoria_Establecimiento {
         }
     }
 
-    public long createMotivoDevolu(int id,String descripcion) {
+    public long createCatEstablecimiento(int id,String descripcion) {
 
         ContentValues initialValues = new ContentValues();
-        initialValues.put(motivo_DevolucionId, id);
-        initialValues.put(motivo_Descripcion, descripcion);
-        return mDb.insert(SQLITE_TABLE_MOTIVO_DEVOLUCION, null, initialValues);
+        initialValues.put(cat_Establec_EstablecId, id);
+        initialValues.put(cat_Establec_Descripcion, descripcion);
+        return mDb.insert(SQLITE_TABLE_CAT_ESTABLECIMIENTO, null, initialValues);
     }
 
 
-    public Cursor fetchMotivoDevolu() {
-        Cursor cursor = mDb.rawQuery("select * from "+SQLITE_TABLE_MOTIVO_DEVOLUCION+" order by "+motivo_DevolucionId+" asc",null);
+    public Cursor fetchCatEstablecimiento() {
+        Cursor cursor = mDb.rawQuery("select * from "+ SQLITE_TABLE_CAT_ESTABLECIMIENTO +" order by "+ cat_Establec_Id +" asc",null);
         return cursor;
     }
 
 
-    public boolean deleteAllMotivoDevolu() {
+    public boolean deleteCatEstablecimiento() {
 
         int doneDelete = 0;
-        doneDelete = mDb.delete(SQLITE_TABLE_MOTIVO_DEVOLUCION, null ,null);
+        doneDelete = mDb.delete(SQLITE_TABLE_CAT_ESTABLECIMIENTO, null ,null);
         return doneDelete > 0;
 
     }

@@ -38,6 +38,7 @@ public class GetClienteRuta extends AsyncTask<String, String, String> {
             parseClienteRuta(jsonobject);
         } catch (Exception e) {
             e.printStackTrace();
+            Log.d("ERROR","CLIENTE"+e.getMessage());
         }
         return null;
     }
