@@ -2,12 +2,12 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+    buildToolsVersion "23.0.0"
 
     defaultConfig {
         applicationId "union.union_vr1"
         minSdkVersion 16
-        targetSdkVersion 21
+        targetSdkVersion 23
         versionCode 1
         versionName "1.0"
     }
@@ -56,10 +56,10 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libraries')
     compile files('libs/xmlsec-1.4.7.jar')
-    compile 'com.android.support:design:23.0.1'
-    compile 'com.android.support:appcompat-v7:23.0.1'
-    compile 'com.android.support:recyclerview-v7:23.0.1'
-    compile 'com.android.support:cardview-v7:23.0.1'
+    compile 'com.android.support:design:23.1.0'
+    compile 'com.android.support:appcompat-v7:23.1.0'
+    compile 'com.android.support:recyclerview-v7:23.1.0'
+    compile 'com.android.support:cardview-v7:23.1.0'
     compile 'com.google.android.gms:play-services:6.5.87'
     compile project(':SlidingMenu')
     compile 'com.wdullaer:materialdatetimepicker:2.0.2'
