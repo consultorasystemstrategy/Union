@@ -47,7 +47,6 @@
                         android:layout_width="fill_parent"
                         android:layout_height="80dp"
                         android:popupBackground="#607D8B"
-                        style="@style/Widget.MyApp.HeaderBar.Spinner"
                         android:layout_gravity="center_horizontal"
                         android:inputType="number" />
 
@@ -112,7 +111,6 @@
                         android:layout_width="fill_parent"
                         android:layout_height="80dp"
                         android:popupBackground="#607D8B"
-                        style="@style/Widget.MyApp.HeaderBar.Spinner"
                         android:layout_gravity="center_horizontal"
                         android:inputType="number" />
 

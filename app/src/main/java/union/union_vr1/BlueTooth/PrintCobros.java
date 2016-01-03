@@ -7,7 +7,6 @@ package union.union_vr1.BlueTooth;
 import android.content.Context;
 import android.database.Cursor;
 
-import com.google.android.gms.drive.query.internal.FieldWithSortOrder;
 import com.sewoo.jpos.command.CPCL;
 import com.sewoo.jpos.command.CPCLConst;
 import com.sewoo.jpos.command.ESCPOS;

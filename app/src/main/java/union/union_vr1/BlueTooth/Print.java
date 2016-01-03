@@ -7,7 +7,6 @@ package union.union_vr1.BlueTooth;
 import android.content.Context;
 import android.database.Cursor;
 
-import com.google.android.gms.drive.query.internal.FieldWithSortOrder;
 import com.sewoo.jpos.command.CPCL;
 import com.sewoo.jpos.command.CPCLConst;
 import com.sewoo.jpos.command.ESCPOS;
@@ -35,6 +34,7 @@ import union.union_vr1.Sqlite.DbAdapter_Informe_Gastos;
 import union.union_vr1.Sqlite.DbAdapter_Transferencias;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 import union.union_vr1.Sqlite.DbGastos_Ingresos;
+import union.union_vr1.Utils.Utils;
 
 public class Print {
 
@@ -73,6 +73,7 @@ public class Print {
     Double totalPlanta = 0.0;
 
     public Print(Context context){
+
         this.context = context;
         posPtr = new POSPrinterService();
         cpclPtr = new CPCL();
@@ -422,16 +423,19 @@ public class Print {
                         posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + "CONTADO" + LF);
                         break;
                     case Constants.FORMA_DE_PAGO_CREDITO:
+                        /*String credito = ESC + "|lA" + String.format("%-18s", "CREDITO") + String.format("%-21s", "S/.") + String.format("%1$9s", df.format(precio_venta)) + LF;
+                        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, credito);*/
                         posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + "CREDITO"+ LF + LF);
                         Cursor cursorCredito = dbAdapter_comprob_cobro.fetchComprobCobrosByIdComprobante(idComprobante);
                         if (cursorCredito.getCount()>0){
                             cursorCredito.moveToFirst();
-                            for (cursorCredito.moveToFirst(); !cursorCredito.isAfterLast() ; cursorCredito.moveToNext()){
+                            //SÓLO IMPRIMIR LA PRIMERA CUOTA
+                            /*for (cursorCredito.moveToFirst(); !cursorCredito.isAfterLast() ; cursorCredito.moveToNext()){*/
                                 String primeraFechaCobro = cursorCredito.getString(cursorCredito.getColumnIndexOrThrow(DbAdapter_Comprob_Cobro.CC_fecha_programada));
                                 Double monto_Pagar = cursorCredito.getDouble(cursorCredito.getColumnIndexOrThrow(DbAdapter_Comprob_Cobro.CC_monto_a_pagar));
-                                String cuotaDetalle = ESC + "|lA" + String.format("%-13s", "") + String.format("%-14s", primeraFechaCobro) + String.format("%1$10s", df.format(monto_Pagar)) + String.format("%1$11s", "") + LF;
+                                String cuotaDetalle = ESC + "|lA" + String.format("%-17s", "Fecha de Pago") + String.format("%-14s", Utils.format(primeraFechaCobro)) + String.format("%1$17s", df.format(monto_Pagar))  + LF;
                                 posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, cuotaDetalle);
-                            }
+                            /*}*/
 
                             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + "" + LF);
                             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + "____________________" + LF);

@@ -154,7 +154,7 @@ public class Bluetooth_Printer extends Activity {
             defaultAdressImpresora = cursorMAC.getString(cursorMAC.getColumnIndexOrThrow(dbAdapter_agente_login.AG_MAC));
         }*/
 
-        defaultAdressImpresora = session.fetchMAC();
+        defaultAdressImpresora = session.fetchMAC(Constants._ID_SESSION_MAC);
         Log.d(TAG, "ADRESS IMPRESORA : " + defaultAdressImpresora);
 
         buttonArqueo = (ToggleButton) findViewById(R.id.buttonArqueoCaja);

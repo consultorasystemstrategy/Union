@@ -137,7 +137,6 @@ public class StockAgenteRestApi {
                     }
                 }
             }
-
         }
         return finalValue;
     }

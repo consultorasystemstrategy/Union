@@ -28,6 +28,7 @@ public class DbAdaptert_Evento_Establec {
     public static final String estado_sincronizacion = "estado_sincronizacion";
     public static final String EE_codigo_barras = "ee_in_codigo_barras";
     public static final String EE_direccion = "ee_in_direccion";
+    public static final String EE_direccion_principal = "ee_in_direccion_principal";
     public static final String EE_time_atencion = "ee_in_time_atencion";
     //Estado creado
     public static  final String EE_estado_autorizado = "ee_in_estado_autorizado";
@@ -63,6 +64,7 @@ public class DbAdaptert_Evento_Establec {
                     +EE_nom_establec+" text,"
                     +EE_codigo_barras+" text,"
                     +EE_direccion+" text,"
+                    +EE_direccion_principal+" text,"
                     +EE_nom_cliente+" text,"
                     +EE_time_atencion+" text,"
                     +EE_doc_cliente         +" text,"
@@ -143,8 +145,8 @@ public class DbAdaptert_Evento_Establec {
         initialValues.put(EE_id_liquidacion,id_liquidacion);
         initialValues.put(EE_codigo_barras,establecimiento.getCodigoBarras());
         initialValues.put(EE_direccion,establecimiento.getDireccion());
+        initialValues.put(EE_direccion_principal,establecimiento.getDireccionPrincipal());
         initialValues.put(EE_estado_autorizado,establecimiento.getEstadoAutorizado());
-
 
         return mDb.insert(SQLITE_TABLE_Evento_Establec, null, initialValues);
     }
@@ -168,6 +170,7 @@ public class DbAdaptert_Evento_Establec {
         initialValues.put(EE_id_liquidacion,id_liquidacion);
         initialValues.put(EE_codigo_barras,establecimiento.getCodigoBarras());
         initialValues.put(EE_direccion,establecimiento.getDireccion());
+        initialValues.put(EE_direccion_principal,establecimiento.getDireccionPrincipal());
         initialValues.put(EE_estado_autorizado,establecimiento.getEstadoAutorizado());
 
 
@@ -180,7 +183,7 @@ public class DbAdaptert_Evento_Establec {
         Cursor mCursor = null;
         mCursor = mDb.query(true, SQLITE_TABLE_Evento_Establec, new String[] {EE_id_evt_establec,
                         EE_id_establec, EE_id_cat_est, EE_nom_establec, EE_nom_cliente, EE_orden,
-                        EE_id_estado_atencion,EE_monto_credito,EE_dias_credito, EE_time_atencion},
+                        EE_id_estado_atencion,EE_monto_credito,EE_dias_credito, EE_time_atencion, EE_direccion_principal},
                 EE_id_establec + " = " + idEstablec, null,
                 null, null, null, null);
         if (mCursor != null) {
@@ -309,7 +312,7 @@ public class DbAdaptert_Evento_Establec {
                         EE_id_establec, EE_id_cat_est, EE_id_tipo_doc_cliente, EE_id_estado_atencion,
                         EE_nom_establec, EE_nom_cliente, EE_doc_cliente, EE_orden, EE_surtido_stock_ant,
                         EE_surtido_venta_ant, EE_monto_credito, EE_dias_credito, EE_id_estado_no_atencion,
-                        EE_id_agente, EE_time_atencion},
+                        EE_id_agente, EE_time_atencion, EE_direccion_principal},
                 EE_id_establec + " = " + inputText, null,
                 null, null, null, null);
         if (mCursor != null) {
@@ -324,7 +327,7 @@ public class DbAdaptert_Evento_Establec {
                         EE_id_establec, EE_id_cat_est, EE_id_tipo_doc_cliente, EE_id_estado_atencion,
                         EE_nom_establec, EE_nom_cliente, EE_doc_cliente, EE_orden, EE_surtido_stock_ant,
                         EE_surtido_venta_ant, EE_monto_credito, EE_dias_credito, EE_id_estado_no_atencion,
-                        EE_id_agente,EE_codigo_barras, EE_time_atencion},
+                        EE_id_agente,EE_codigo_barras, EE_time_atencion, EE_direccion_principal},
                 EE_codigo_barras + " LIKE '%" + barcode+"%' AND "+EE_id_liquidacion + " = " +liquidacion, null,
                 null, null, null, null);
         if (mCursor != null) {
@@ -356,7 +359,7 @@ public class DbAdaptert_Evento_Establec {
         Cursor mCursor = mDb.query(SQLITE_TABLE_Evento_Establec, new String[] {EE_id_evt_establec,
                         EE_id_establec, EE_id_cat_est, EE_id_tipo_doc_cliente, EE_id_estado_atencion, EE_id_estado_no_atencion,
                         EE_nom_establec, EE_nom_cliente, EE_doc_cliente, EE_orden, EE_surtido_stock_ant,
-                        EE_surtido_venta_ant, EE_monto_credito, EE_dias_credito, EE_id_agente, EE_time_atencion},
+                        EE_surtido_venta_ant, EE_monto_credito, EE_dias_credito, EE_id_agente, EE_time_atencion, EE_direccion_principal},
                 null, null, null, null, null);
 
         if (mCursor != null) {
@@ -375,7 +378,7 @@ public class DbAdaptert_Evento_Establec {
         mCursor = mDb.query(true, SQLITE_TABLE_Evento_Establec, new String[] {EE_id_evt_establec,
                         EE_id_establec, EE_id_cat_est, EE_id_tipo_doc_cliente, EE_id_estado_atencion, EE_id_estado_no_atencion,
                         EE_nom_establec, EE_nom_cliente, EE_doc_cliente, EE_orden, EE_surtido_stock_ant,
-                        EE_surtido_venta_ant, EE_monto_credito, EE_dias_credito, EE_id_agente, EE_time_atencion},
+                        EE_surtido_venta_ant, EE_monto_credito, EE_dias_credito, EE_id_agente, EE_time_atencion, EE_direccion_principal},
                 Constants._SINCRONIZAR + " = " + Constants._ACTUALIZADO, null,
                 null, null, null, null);
         if (mCursor != null) {
@@ -406,7 +409,7 @@ public class DbAdaptert_Evento_Establec {
                         EE_id_establec, EE_id_cat_est, EE_id_tipo_doc_cliente, EE_id_estado_atencion,
                         EE_nom_establec, EE_nom_cliente, EE_doc_cliente, EE_orden, EE_surtido_stock_ant,
                         EE_surtido_venta_ant, EE_monto_credito, EE_dias_credito, EE_id_estado_no_atencion,
-                        EE_id_agente},
+                        EE_id_agente, EE_direccion_principal},
                 null, null, null, null,EE_id_estado_atencion + ", " + EE_orden);
 
         if (mCursor != null) {
