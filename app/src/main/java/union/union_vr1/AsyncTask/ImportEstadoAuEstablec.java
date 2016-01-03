@@ -55,22 +55,22 @@ public class ImportEstadoAuEstablec extends AsyncTask<String, String, String> {
 
         int idCliente = Integer.parseInt(strings[0]);
         int idEstablecimiento = Integer.parseInt(strings[1]);
+        JSONObject jsonObject=null;
 
         try {
-            JSONObject jsonObject = api.fupd_EstadoClienteEstablecimiento(idCliente,idEstablecimiento,idAgente);
+            jsonObject = api.fupd_EstadoClienteEstablecimiento(idCliente,idEstablecimiento,idAgente);
             Log.d("JSON AUTO ESTAB",""+jsonObject.toString());
             if(Utils.isSuccesful(jsonObject)){
                 int inserto = jsonObject.getInt("Value");
                 if(inserto>0){
-                    Intent intent = new Intent(mainActivity, ServiceImport.class);
-                    intent.setAction(Constants.ACTION_IMPORT_SERVICE);
-                    mainActivity.startService(intent);
+                    new ImportMain(mainActivity).execute();
                 }else{
 
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
+            Log.d("JSON AUTO ESTAB", "" + jsonObject.toString());
         }
 
 

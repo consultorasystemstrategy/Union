@@ -199,8 +199,13 @@
             android:label="@string/title_activity_imprimir_arqueo_caja" />
         <activity
             android:name=".Vistas.VMovil_Crear_Establecimiento"
-            android:theme="@style/CustomRegister"
+            android:theme="@style/Theme.AppCompat.Light"
             android:label="@string/title_activity_vmovil__crear__establecimiento" />
+        <activity
+            android:name=".Vistas.VMovil_Modificar_Estab"
+            android:theme="@style/Theme.AppCompat.Light"
+            android:label="Modificar Establecimiento" />
+
         <activity
             android:name=".Vistas.VMovil_Abrir_Caja"
             android:label="Abrir Caja">

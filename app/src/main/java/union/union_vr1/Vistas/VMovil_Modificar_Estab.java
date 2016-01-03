@@ -14,7 +14,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,16 +21,10 @@ import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.Spinner;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import union.union_vr1.AsyncTask.CrearEstablecimiento;
-import union.union_vr1.AsyncTask.GetDataSpinnerRegistrar;
-import union.union_vr1.AsyncTask.ImportMain;
-import union.union_vr1.Fragments.FClienteRegistrar;
-import union.union_vr1.Fragments.FEstablecimientoRegistrar;
-import union.union_vr1.Fragments.FMapaRegistrar;
+import union.union_vr1.Fragments.FClienteEditar;
+import union.union_vr1.Fragments.FEstablecimientoEditar;
+import union.union_vr1.Fragments.FMapaEditar;
 import union.union_vr1.R;
 import union.union_vr1.Sqlite.Constants;
 import union.union_vr1.Sqlite.DbAdapter_Agente;
@@ -43,7 +36,7 @@ import union.union_vr1.Sqlite.DbAdapter_Tipo_Establecimiento;
 import union.union_vr1.Sqlite.DbAdapter_Tipo_Persona;
 import union.union_vr1.Utils.TabsAdapter;
 
-public class VMovil_Crear_Establecimiento extends AppCompatActivity {
+public class VMovil_Modificar_Estab extends AppCompatActivity {
     private Fragment fragmentMapa;
     private Fragment fragmentCliente;
     private Fragment fragmentEstablecimiento;
@@ -92,8 +85,9 @@ public class VMovil_Crear_Establecimiento extends AppCompatActivity {
 
     //DATA FOR DIRECCION
 
-    String direccionEs = "";
-    String direccionFiscalEs = "";
+    String direccionEs="";
+    String direccionFiscalEs="";
+    String idEstablecimiento;
 
     //WIDGETS
 
@@ -106,7 +100,7 @@ public class VMovil_Crear_Establecimiento extends AppCompatActivity {
         setContentView(R.layout.activity_agregar_establecimiento);
         //..........
 
-
+        idEstablecimiento = getIntent().getExtras().getString("idEstab");
         dbAdapter_agente = new DbAdapter_Agente(this);
         dbAdapter_agente.open();
         idusuario = dbAdapter_agente.getIdUsuario();
@@ -120,12 +114,22 @@ public class VMovil_Crear_Establecimiento extends AppCompatActivity {
         dbAdapter_temp_datosSpinner.open();
         //..........
         viewPager = (ViewPager) findViewById(R.id.viewpagerarticulos);
-        fragmentMapa = new FMapaRegistrar();
-        fragmentCliente = new FClienteRegistrar();
-        fragmentEstablecimiento = new FEstablecimientoRegistrar();
+        fragmentMapa = new FMapaEditar();
+        fragmentCliente = new FClienteEditar();
+        fragmentEstablecimiento = new FEstablecimientoEditar();
+
+        Bundle bundle = new Bundle();
+        bundle.putString("idEstablecimiento", idEstablecimiento);
+
+        fragmentMapa.setArguments(bundle);
+        fragmentCliente.setArguments(bundle);
+        fragmentEstablecimiento.setArguments(bundle);
+
+
+
         TabsAdapter tabsAdapter = new TabsAdapter(getSupportFragmentManager());
         tabsAdapter.addFragment(fragmentCliente, "Cliente");
-        tabsAdapter.addFragment(fragmentMapa, "Registro Direccion");
+        tabsAdapter.addFragment(fragmentMapa, "Actualizar Direccion");
         tabsAdapter.addFragment(fragmentEstablecimiento, "Establecimiento");
         viewPager.setAdapter(tabsAdapter);
         tabLayout = (TabLayout) findViewById(R.id.tablayout);
@@ -180,8 +184,7 @@ public class VMovil_Crear_Establecimiento extends AppCompatActivity {
         });
 
     }
-
-    private void guardarDireccion() {
+    private void guardarDireccion(){
 
         try {
             editTextDescripcion = (EditText) fragmentMapa.getView().findViewById(R.id.map_descripcion);
@@ -190,25 +193,25 @@ public class VMovil_Crear_Establecimiento extends AppCompatActivity {
             direccionEs = editTextDescripcion.getText().toString();
             direccionFiscalEs = editTextDireccionFiscal.getText().toString();
 
-        } catch (NullPointerException e) {
+        }catch (NullPointerException e){
 
         }
+
 
 
         Log.d("Informacion-Direccion", direccionEs + "-" + direccionFiscalEs);
 
 
     }
-
-    private void guardarEstablec() {
+    private void guardarEstablec(){
 
         try {
 
             spinnerTipoEstablecimeinto = (Spinner) fragmentEstablecimiento.getView().findViewById(R.id.spinnerTipoEstablecimiento);
             spinnerCategoriaEstablecimeinto = (Spinner) fragmentEstablecimiento.getView().findViewById(R.id.spinnerCategoriaEstablecimiento);
-            editTextNombreEstablec = (EditText) fragmentEstablecimiento.getView().findViewById(R.id.editDescripcion);
-            editTextTelFijo = (EditText) fragmentEstablecimiento.getView().findViewById(R.id.editTelFijo);
-            editTextTelMovil2 = (EditText) fragmentEstablecimiento.getView().findViewById(R.id.editNumero2);
+            editTextNombreEstablec = (EditText)fragmentEstablecimiento.getView().findViewById(R.id.editDescripcion);
+            editTextTelFijo = (EditText)fragmentEstablecimiento.getView().findViewById(R.id.editTelFijo);
+            editTextTelMovil2 = (EditText)fragmentEstablecimiento.getView().findViewById(R.id.editNumero2);
 
             Cursor crEsTE = (Cursor) spinnerTipoEstablecimeinto.getSelectedItem();
             Cursor crEsCE = (Cursor) spinnerCategoriaEstablecimeinto.getSelectedItem();
@@ -218,15 +221,15 @@ public class VMovil_Crear_Establecimiento extends AppCompatActivity {
             EstelFijo = editTextTelFijo.getText().toString();
             Esmovil = editTextTelMovil2.getText().toString();
 
-        } catch (NullPointerException e) {
+        }catch (NullPointerException e){
 
         }
 
 
-        Log.d("Informacion-Establec", EscatEStablec + "-" + Esmovil);
+        Log.d("Informacion-Establec",EscatEStablec+"-"+Esmovil);
     }
 
-    private void guardarCliente() {
+    private void guardarCliente()  {
 
         try {
 
@@ -244,18 +247,20 @@ public class VMovil_Crear_Establecimiento extends AppCompatActivity {
             tipoDocumento = cDoc.getString(cDoc.getColumnIndexOrThrow(DbAdapter_Tipo_Doc_Identidad.tipo_Doc_IdentidadId));
             tipoPersona = cPer.getString(cPer.getColumnIndexOrThrow(DbAdapter_Tipo_Persona.tipo_Persona_PersonaId));
             nombres = editTextNombre.getText().toString();
-            apPaterno = editTextApPaterno.getText().toString();
-            apMaterno = editTextApMaterno.getText().toString();
+            apPaterno= editTextApPaterno.getText().toString();
+            apMaterno =editTextApMaterno.getText().toString();
             documento = autoNroDocumento.getText().toString();
-            celular = editTextNroCelular.getText().toString();
-            correo = editTextCorreo.getText().toString();
+            celular= editTextNroCelular.getText().toString();
+            correo =editTextCorreo.getText().toString();
 
-        } catch (NullPointerException e) {
+        }catch (NullPointerException e){
 
         }
 
 
-        Log.d("Informacion-Cliente", tipoDocumento + "-" + celular);
+
+
+        Log.d("Informacion-Cliente",tipoDocumento+"-"+celular);
 
     }
 
@@ -277,7 +282,7 @@ public class VMovil_Crear_Establecimiento extends AppCompatActivity {
                 onBackPressed();
                 break;
             case R.id.menu_establec:
-                guardarEstablec();
+               guardarEstablec();
                 alertConfirmar();
                 break;
             default:
@@ -292,7 +297,7 @@ public class VMovil_Crear_Establecimiento extends AppCompatActivity {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setTitle("Seguro de Guardar");
         AlertDialog.Builder builder = alertDialogBuilder
-                .setMessage("Operacion:")
+                .setMessage("Tiene ")
                 .setCancelable(false)
                 .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
@@ -317,7 +322,7 @@ public class VMovil_Crear_Establecimiento extends AppCompatActivity {
         Double lon = Double.parseDouble(prefs.getString("LONGITUD", null));
 
 
-        long estado = dbAdapter_temp_establecimiento.createTempEstablec(1, idusuario + "", EstelFijo, celular, Esmovil, lat, lon, direccionEs, direccionFiscalEs, Integer.parseInt(tipoPersona), nombres, apPaterno, apMaterno, Integer.parseInt(tipoDocumento),
+       long estado = dbAdapter_temp_establecimiento.createTempEstablec(1, idusuario + "",EstelFijo, celular, Esmovil, lat, lon, direccionEs, direccionFiscalEs, Integer.parseInt(tipoPersona),nombres, apPaterno, apMaterno, Integer.parseInt(tipoDocumento),
                 Integer.parseInt(documento), 1, correo, Integer.parseInt(EstipoEStablec), EsnomEstablec, Integer.parseInt(EscatEStablec), Constants._CREADO);
         Log.d("ESTADO INSERTO", "" + estado);
         Log.d("", "");
@@ -325,17 +330,18 @@ public class VMovil_Crear_Establecimiento extends AppCompatActivity {
 
             if (conectadoWifi() || conectadoRedMovil()) {
                 new CrearEstablecimiento(this).execute();
-                new ImportMain(this).execute();
+
                 startActivity(new Intent(getApplicationContext(), VMovil_Menu_Establec.class));
-                this.finish();
             }
         } else {
-            new ImportMain(this).execute();
+
             startActivity(new Intent(getApplicationContext(), VMovil_Menu_Establec.class));
-            this.finish();
         }
 
     }
+
+
+
 
 
     protected Boolean conectadoWifi() {
@@ -372,8 +378,10 @@ public class VMovil_Crear_Establecimiento extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        this.finish();
-        super.onBackPressed();
+
+
+
+                super.onBackPressed();
 
     }
 }

@@ -185,8 +185,8 @@ public class DbAdapter_Temp_Establecimiento {
         return cursor;
     }
 
-    public Cursor fetchTemEstablec(int id) {
-        Cursor cursor = mDb.rawQuery("select * from " + SQLITE_TABLE_Temp_Establec + " where  " + establec_id + "='" + id + "'", null);
+    public Cursor fetchTemEstablecById(String id) {
+        Cursor cursor = mDb.rawQuery("select * from " + SQLITE_TABLE_Temp_Establec + " where  " + establec_id_remoto + "='" + id + "'", null);
         return cursor;
     }
 
@@ -199,10 +199,11 @@ public class DbAdapter_Temp_Establecimiento {
 
     }
 
-    public long updateTempEstablecById(int id,
+    public long updateTempEstablecById(int id,int idRemoto,
                                        int estado_actualizacion) {
 
         ContentValues initialValues = new ContentValues();
+        initialValues.put(establec_id_remoto, idRemoto);
         initialValues.put(Constants._SINCRONIZAR, estado_actualizacion);
         return mDb.update(SQLITE_TABLE_Temp_Establec, initialValues,
                 establec_id + "=?", new String[]{id + ""});

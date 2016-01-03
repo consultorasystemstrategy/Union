@@ -1,17 +1,12 @@
 package union.union_vr1.Fragments;
 
-import android.Manifest;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.location.Address;
-import android.location.Geocoder;
+import android.database.Cursor;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -26,33 +21,14 @@ import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.Toast;
 
-import com.google.android.gms.maps.CameraUpdate;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.MapsInitializer;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-
-
-import union.union_vr1.AsyncTask.GetAddress;
 import union.union_vr1.R;
+import union.union_vr1.Sqlite.DbAdapter_Temp_Establecimiento;
 
 /**
  * Created by Kelvin on 04/11/2015.
  */
-public class FMapaRegistrar extends Fragment {
+public class FMapaEditar extends Fragment {
 
     // private RadioButton buttonHibrido;
     // private RadioButton buttonNormal;
@@ -69,8 +45,7 @@ public class FMapaRegistrar extends Fragment {
     LocationManager mLocationManager;
     Location myLocation;
     String idEstablecimiento;
-
-
+    private DbAdapter_Temp_Establecimiento dbAdapter_temp_establecimiento;
 
 
 
@@ -79,10 +54,15 @@ public class FMapaRegistrar extends Fragment {
         v = inflater.inflate(R.layout.fragment_map, container, false);
         estadoDF = true;
         myLocation = null;
+        dbAdapter_temp_establecimiento = new DbAdapter_Temp_Establecimiento(getActivity());
+        dbAdapter_temp_establecimiento.open();
         //MapsInitializer.initialize(getActivity());
        /* mapView = (MapView) v.findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);
         mapView.onResume();*/
+        idEstablecimiento = getArguments().getString("idEstablecimiento");
+
+
         btnActualizarP = (Button) v.findViewById(R.id.btnActualizarP);
         editTextDescripcion = (EditText) v.findViewById(R.id.map_descripcion);
         editTextDireccionFiscal = (EditText) v.findViewById(R.id.map_direccion_fiscal);
@@ -99,6 +79,8 @@ public class FMapaRegistrar extends Fragment {
         webViewMap.setWebChromeClient(new WebChromeClient());
         webViewMap.setWebViewClient(new WebViewClient());
         webViewMap.setBackgroundColor(0x00000000);
+
+
         // Gets to GoogleMap from the MapView and does initialization stuff
         // map = mapView.getMap();
         // map.getUiSettings().setMyLocationButtonEnabled(true);
@@ -143,13 +125,13 @@ public class FMapaRegistrar extends Fragment {
         public void onLocationChanged(Location location) {
             myLocation = location;
             Log.e("MYLOCATION", "LAT: " + location.getLatitude() + " - LON: " + location.getLongitude());
-            if (estadoPosicion) {
-                SharedPreferences.Editor editor =getActivity().getSharedPreferences("GPS", Context.MODE_PRIVATE).edit();
-                editor.putString("LATITUD", ""+location.getLatitude());
+            if (!estadoPosicion) {
+                SharedPreferences.Editor editor = getActivity().getSharedPreferences("GPS", Context.MODE_PRIVATE).edit();
+                editor.putString("LATITUD", "" + location.getLatitude());
                 editor.putString("LONGITUD", "" + location.getLongitude());
                 editor.commit();
-                estadoPosicion=false;
-                String urlMap="http://maps.google.com/maps/api/staticmap?center="+location.getLatitude()+","+location.getLongitude()+",&zoom=17&markers=icon:http://www.myiconfinder.com/uploads/iconsets/256-256-a5485b563efc4511e0cd8bd04ad0fe9e.png|"+location.getLatitude()+","+location.getLongitude()+"&path=color:0x0000FF80|weight:5|"+location.getLatitude()+","+location.getLongitude()+"&size=400x300";//
+                estadoPosicion = true;
+                String urlMap = "http://maps.google.com/maps/api/staticmap?center=" + location.getLatitude() + "," + location.getLongitude() + ",&zoom=17&markers=icon:http://www.myiconfinder.com/uploads/iconsets/256-256-a5485b563efc4511e0cd8bd04ad0fe9e.png|" + location.getLatitude() + "," + location.getLongitude() + "&path=color:0x0000FF80|weight:5|" + location.getLatitude() + "," + location.getLongitude() + "&size=400x300";//
                 webViewMap.loadUrl(urlMap);
 
             }
@@ -172,44 +154,28 @@ public class FMapaRegistrar extends Fragment {
     };
 
     private void display() {
-       // editTextDireccionFiscal.setEnabled(false);
-        editTextDescripcion.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        Cursor cr = dbAdapter_temp_establecimiento.fetchTemEstablecById(idEstablecimiento);
 
-            }
+        if(cr.moveToFirst()){
+            String urlMap = "http://maps.google.com/maps/api/staticmap?center=" + cr.getDouble(cr.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_latitud))+ "," + cr.getDouble(cr.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_longitud)) + ",&zoom=17&markers=icon:http://www.myiconfinder.com/uploads/iconsets/256-256-a5485b563efc4511e0cd8bd04ad0fe9e.png|" +cr.getDouble(cr.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_latitud)) + "," + cr.getDouble(cr.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_longitud)) + "&path=color:0x0000FF80|weight:5|" + cr.getDouble(cr.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_latitud)) + "," + cr.getDouble(cr.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_longitud)) + "&size=400x300";//
+            webViewMap.loadUrl(urlMap);
+            editTextDescripcion.setText(cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_descripcion)));
+            editTextDireccionFiscal.setText(cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_direccion_fiscal)));
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                if (!estadoDF) {
+        }
 
 
-                    editTextDireccionFiscal.setText(editTextDescripcion.getText().toString());
 
-                } else {
-
-                    editTextDireccionFiscal.setText("");
-
-                }
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
 
         checkBoxDF.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!estadoDF) {
-                   // editTextDireccionFiscal.setEnabled(true);
+
                     editTextDireccionFiscal.setText("");
                     estadoDF = true;
                 } else {
-                   // editTextDireccionFiscal.setEnabled(false);
+
                     editTextDireccionFiscal.setText(editTextDescripcion.getText().toString());
                     estadoDF = false;
                 }
@@ -219,7 +185,7 @@ public class FMapaRegistrar extends Fragment {
         btnActualizarP.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                estadoPosicion=true;
+                estadoPosicion = true;
             }
         });
 
