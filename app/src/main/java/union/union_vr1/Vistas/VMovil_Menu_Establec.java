@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -246,14 +248,14 @@ public class VMovil_Menu_Establec extends Activity implements View.OnClickListen
                 int id_agente = cursor.getInt(cursor.getColumnIndexOrThrow(DbAdaptert_Evento_Establec.EE_id_agente));
 
                 int estado_autorizado = cursor.getInt(cursor.getColumnIndexOrThrow(DbAdaptert_Evento_Establec.EE_estado_autorizado));
-                Log.d("ESTADO",""+estado_autorizado);
+                Log.d("ESTADO", "" + estado_autorizado);
 
-                switch (estado_autorizado){
+                switch (estado_autorizado) {
                     case 1: //editar
-                        Utils.setToast(VMovil_Menu_Establec.this,"No esta autorizado para la venta",R.color.rojo);
+                        Utils.setToast(VMovil_Menu_Establec.this, "No esta autorizado para la venta", R.color.rojo);
                         break;
                     case 2://nada
-                        Utils.setToast(VMovil_Menu_Establec.this,"No esta autorizado para la venta",R.color.rojo);
+                        Utils.setToast(VMovil_Menu_Establec.this, "No esta autorizado para la venta", R.color.rojo);
                         break;
                     case 3:
                         eleccion(idEstablec, id_agente);
@@ -508,6 +510,29 @@ public class VMovil_Menu_Establec extends Activity implements View.OnClickListen
             default:
                 break;
         }
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_activity_agregar_establecimiento, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.actionagrgar) {
+            startActivity(new Intent(getApplicationContext(),VMovil_Crear_Establecimiento.class));
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
 }

@@ -284,8 +284,8 @@ public class FClienteRegistrar extends Fragment {
                 DbAdapter_Tipo_Doc_Identidad.tipo_Doc_Descripcion,
 
         };
-        simpleCursorAdapter = new SimpleCursorAdapter(getActivity().getApplicationContext(),android.R.layout.simple_dropdown_item_1line,cr,columns,to,0);
-        simpleCursorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        simpleCursorAdapter = new SimpleCursorAdapter(getActivity().getApplicationContext(),R.layout.layout_item_spinner,cr,columns,to,0);
+        simpleCursorAdapter.setDropDownViewResource(R.layout.layout_item_spinner);
         spinnerTipoDocumento.setAdapter(simpleCursorAdapter);
     }
 
@@ -301,8 +301,8 @@ public class FClienteRegistrar extends Fragment {
                 DbAdapter_Tipo_Persona.tipo_Persona_Descripcion,
 
         };
-        simpleCursorAdapter = new SimpleCursorAdapter(getActivity().getApplicationContext(),android.R.layout.simple_dropdown_item_1line,cr,columns,to,0);
-        simpleCursorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        simpleCursorAdapter = new SimpleCursorAdapter(getActivity().getApplicationContext(),R.layout.layout_item_spinner,cr,columns,to,0);
+        simpleCursorAdapter.setDropDownViewResource(R.layout.layout_item_spinner);
         spinnerTipoPesona.setAdapter(simpleCursorAdapter);
     }
 

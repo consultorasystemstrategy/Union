@@ -386,7 +386,7 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         textViewSlideNombreAgente = (TextView) findViewById(R.id.slide_textViewNombreAgente);
         textViewSlideNombreRuta = (TextView) findViewById(R.id.slide_textViewNombreRuta);
         buttonSlideNroEstablecimiento = (Button) findViewById(R.id.slide_buttonNroEstablecimiento);
-        textViewAgregarPunto = (TextView) findViewById(R.id.slide_textViewAgregarPunto);
+       // textViewAgregarPunto = (TextView) findViewById(R.id.slide_textViewAgregarPunto);
         textViewSlidePrincipal = (TextView) findViewById(R.id.slide_textviewPrincipal);
         textViewSlideCliente = (TextView) findViewById(R.id.slide_textViewClientes);
         textviewSlideCobranzas = (TextView) findViewById(R.id.slide_textViewCobranza);
@@ -401,7 +401,7 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         textViewIngresosTotales = (TextView) findViewById(R.id.textView_IngresosTotales);
         textViewGastos = (TextView) findViewById(R.id.textView_Gastos);
 
-        textViewAgregarPunto.setOnClickListener(this);
+       // textViewAgregarPunto.setOnClickListener(this);
         textViewSlidePrincipal.setOnClickListener(this);
         textViewSlideCliente.setOnClickListener(this);
         textviewSlideCobranzas.setOnClickListener(this);
@@ -693,9 +693,9 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
             case R.id.slide_textViewARendir:
 
                 break;
-            case R.id.slide_textViewAgregarPunto:
-                startActivity(new Intent(getApplicationContext(), VMovil_Crear_Establecimiento.class));
-                break;
+           // case R.id.slide_textViewAgregarPunto:
+              //  startActivity(new Intent(getApplicationContext(), VMovil_Crear_Establecimiento.class));
+                //break;
             default:
                 break;
         }

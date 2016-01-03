@@ -318,7 +318,7 @@ public class VMovil_Crear_Establecimiento extends AppCompatActivity {
 
 
         long estado = dbAdapter_temp_establecimiento.createTempEstablec(1, idusuario + "", EstelFijo, celular, Esmovil, lat, lon, direccionEs, direccionFiscalEs, Integer.parseInt(tipoPersona), nombres, apPaterno, apMaterno, Integer.parseInt(tipoDocumento),
-                Integer.parseInt(documento), 1, correo, Integer.parseInt(EstipoEStablec), EsnomEstablec, Integer.parseInt(EscatEStablec), Constants._CREADO);
+                Integer.parseInt(documento), 1, correo, Integer.parseInt(EstipoEStablec), EsnomEstablec, Integer.parseInt(EscatEStablec), Constants._CREADO,0);
         Log.d("ESTADO INSERTO", "" + estado);
         Log.d("", "");
         if (estado > 0) {
