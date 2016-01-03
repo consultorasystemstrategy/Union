@@ -102,7 +102,7 @@ public class DbAdapter_Temp_Establecimiento {
             String _apPaterno,
             String _apMaterno,
             int _tipo_documento,
-            int _nro_documento,
+            String _nro_documento,
             int _estado_guardado,
             String _correo,
             int _tipo_establecimiento,
