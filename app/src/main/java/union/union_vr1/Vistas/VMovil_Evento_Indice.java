@@ -187,7 +187,8 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
                 break;
         }
 
-
+        int idAgente = session.fetchVarible(1);
+        idLiquidacion = session.fetchVarible(3);
         setAlarm();
 
         if (!export || !importado) {
@@ -210,7 +211,7 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
 
                 new ImportMain(mainActivity).execute();
                 new GetDataSpinnerRegistrar(mainActivity).execute();
-                new GetClienteRuta(mainActivity).execute();
+                new GetClienteRuta(mainActivity).execute(""+idAgente);
                 new GetDataSpinnerRegistrar(mainActivity).execute();
 
                 session.deleteVariable(7);
@@ -269,8 +270,7 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         mFecha = (TextView) findViewById(R.id.textViewFecha);
 
 
-        int idAgente = session.fetchVarible(1);
-        idLiquidacion = session.fetchVarible(3);
+
         Cursor cursorAgente = dbHelper3.fetchAgentesByIds(idAgente, idLiquidacion);
         cursorAgente.moveToFirst();
 

@@ -212,7 +212,7 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
             defaultAdressImpresora = cursor.getString(cursor.getColumnIndexOrThrow(dbAdapter_agente_login.AG_MAC));
         }*/
 
-        defaultAdressImpresora = session.fetchMAC();
+        defaultAdressImpresora = session.fetchMAC(Constants._ID_SESSION_MAC);
 
         Log.d(TAG, "ADRESS IMPRESORA : " +defaultAdressImpresora);
 
@@ -422,12 +422,12 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
                    Cursor cursorCredito = dbAdapter_comprob_cobro.fetchComprobCobrosByIdComprobante(idComprobante);
                    if (cursorCredito.getCount()>0){
                        cursorCredito.moveToFirst();
-                       for (cursorCredito.moveToFirst(); !cursorCredito.isAfterLast() ; cursorCredito.moveToNext()){
+                       /*for (cursorCredito.moveToFirst(); !cursorCredito.isAfterLast() ; cursorCredito.moveToNext()){*/
                            String primeraFechaCobro = cursorCredito.getString(cursorCredito.getColumnIndexOrThrow(DbAdapter_Comprob_Cobro.CC_fecha_programada));
                            Double monto_Pagar = cursorCredito.getDouble(cursorCredito.getColumnIndexOrThrow(DbAdapter_Comprob_Cobro.CC_monto_a_pagar));
 
                            textoImpresionContenidoBottom+= String.format("%-14s", primeraFechaCobro) + String.format("%1$10s", df.format(monto_Pagar)) +"\n";
-                       }
+                       /*}*/
 
                        textoImpresionContenidoBottom+= "\n";
                        textoImpresionContenidoBottom+= "____________________"+"\n";
@@ -453,9 +453,6 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
                textoImpresionContenidoBottom+= Constants.PRINT_VISUALICE+"\n";
                textoImpresionContenidoBottom+= Constants.PRINT_URL+"\n";
            }
-
-
-
 
            ventaCabecera+= "FECHA   : "+ fecha+"\n";
 /*

@@ -138,7 +138,7 @@ public class VMovil_BluetoothImpCobros extends Activity implements View.OnClickL
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         nameImpresora = SP.getString("impresoraNombre", defaultNameImpresora);
         pulgadasImpresora = Integer.parseInt(SP.getString("impresoraAncho", "3"));
-        defaultAdressImpresora = session.fetchMAC();
+        defaultAdressImpresora = session.fetchMAC(Constants._ID_SESSION_MAC);
 
         Log.d(TAG, "ADRESS IMPRESORA : " + defaultAdressImpresora);
 

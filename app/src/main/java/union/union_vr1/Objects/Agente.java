@@ -35,8 +35,9 @@ public class Agente {
 
     private int rutaId;
     private int rolid;
+    private String MAC2;
 
-    public Agente(int idAgenteVenta, int idEmpresa, int idUsuario, String nombreAgente, String nombreUsuario, String passUsuario, int liquidacion, Double kmInicial, Double kmFinal, String nombreRuta, int nroBodegas, String serieBoleta, String serieFactura, String serieRrpp, int correlativoBoleta, int correlativoFactura, int correlativoRrpp, String MAC, int rolid, int estadoSincronizado,int rutaId) {
+    public Agente(int idAgenteVenta, int idEmpresa, int idUsuario, String nombreAgente, String nombreUsuario, String passUsuario, int liquidacion, Double kmInicial, Double kmFinal, String nombreRuta, int nroBodegas, String serieBoleta, String serieFactura, String serieRrpp, int correlativoBoleta, int correlativoFactura, int correlativoRrpp, String MAC, int rolid, int estadoSincronizado, String MAC2, int rutaId) {
         this.idAgenteVenta = idAgenteVenta;
         this.idEmpresa = idEmpresa;
         this.idUsuario = idUsuario;
@@ -57,9 +58,18 @@ public class Agente {
         this.estadoSincronizado = estadoSincronizado;
         this.MAC = MAC;
         this.rolid = rolid;
+        this.MAC2 = MAC2;
         this.rutaId = rutaId;
     }
 
+
+    public String getMAC2() {
+        return MAC2;
+    }
+
+    public void setMAC2(String MAC2) {
+        this.MAC2 = MAC2;
+    }
 
     public String getMAC() {
         return MAC;

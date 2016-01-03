@@ -105,6 +105,20 @@ public class Utils {
         Log.d("FECHA",""+fechaR);
         return fechaR;
     }
+    public static String format(String date) {
+        SimpleDateFormat format2 = new SimpleDateFormat("yyyy/mm/dd");
+        SimpleDateFormat format1 = new SimpleDateFormat("dd/mm/yyyy");
+        String fechaR = "";
+        try {
+            Date fecha = format2.parse(date);
+            fechaR = format1.format(fecha);
+        } catch (ParseException ex) {
+
+        }
+        Log.d("FECHA",""+fechaR);
+        return fechaR;
+    }
+
 
     public static String replaceComa(String string) {
         String original = ",";

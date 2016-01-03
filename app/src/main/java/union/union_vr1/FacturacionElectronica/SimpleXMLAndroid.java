@@ -954,15 +954,7 @@ public class SimpleXMLAndroid {
                         
                         invoiceXML.setUblExtensions(ublExtensions);
                         
-                        
-                        
-                        
-                        
-                                
-                        
-                        
-                        
-        
+
         
         //File xmlFile = new File(PATH_FIRMADO);
 

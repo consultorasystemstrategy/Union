@@ -23,12 +23,13 @@ public class EventoEstablecimiento {
     private int estadoSincronizacion;
     private String codigoBarras;
     private String direccion;
+    private String direccionPrincipal;
 
 
 
     private int estadoAutorizado;
 
-    public EventoEstablecimiento(int idEstablecimiento, int idCategoriaEstablecimiento, int tipoDocCliente, int estadoAtencion, String nombreEstablecimiento, String nombreCliente, String docCliente, int orden, int surtidoStockAnterior, int surtidoVentaAnterior, Double montoCredito, int diasCredito, int idEstadoNoAtencion, String estadoNoAtencionComentario, int idAgente, int estadoSincronizacion, String codigoBarras, String direccion,int  estadoAutorizado) {
+    public EventoEstablecimiento(int idEstablecimiento, int idCategoriaEstablecimiento, int tipoDocCliente, int estadoAtencion, String nombreEstablecimiento, String nombreCliente, String docCliente, int orden, int surtidoStockAnterior, int surtidoVentaAnterior, Double montoCredito, int diasCredito, int idEstadoNoAtencion, String estadoNoAtencionComentario, int idAgente, int estadoSincronizacion, String codigoBarras, String direccion ,int  estadoAutorizado, String direccionPrincipal) {
         this.idEstablecimiento = idEstablecimiento;
         this.idCategoriaEstablecimiento = idCategoriaEstablecimiento;
         this.tipoDocCliente = tipoDocCliente;
@@ -47,10 +48,18 @@ public class EventoEstablecimiento {
         this.estadoSincronizacion = estadoSincronizacion;
         this.codigoBarras = codigoBarras;
         this. direccion = direccion;
+        this.direccionPrincipal = direccionPrincipal;
         this.estadoAutorizado = estadoAutorizado;
     }
 
 
+    public String getDireccionPrincipal() {
+        return direccionPrincipal;
+    }
+
+    public void setDireccionPrincipal(String direccionPrincipal) {
+        this.direccionPrincipal = direccionPrincipal;
+    }
 
     public String getDireccion() {
         return direccion;

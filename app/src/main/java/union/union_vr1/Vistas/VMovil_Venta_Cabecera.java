@@ -1969,10 +1969,9 @@ Instantiate and pass a callback
     }
 
     public enum TipoDocumento{
-        factura, boleta, ficha,Seleccionar
+        factura, boleta, ficha, Seleccionar
     }
     private void displayHistorialComprobanteAnterior() {
-
 
         //Log.d("DISPLAY ID ESTABLECIMIENTO ", ""+idEstablecimiento);;
 

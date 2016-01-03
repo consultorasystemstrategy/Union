@@ -103,13 +103,14 @@ public class DbAdapter_Temp_Session {
         return mCursor.getInt(mCursor.getColumnIndexOrThrow(session_valor));
     }
 
-    public String fetchMAC() {
+    public String fetchMAC(int ID_SESSION) {
 
         Cursor mCursor = mDb.query(SQLITE_TABLE_Temp_session, new String[] {session_id_session,
                         session_id_variable, session_valor, session_valor_string},
                 session_id_variable + " = ? " ,
+                //ID_SESSION, 12 = MAC PRINT, 13 = MAC DEVICE CIPHERLABS
                 new String[]{
-                        ""+Constants._ID_SESSION_MAC
+                        ""+ID_SESSION
                 },
                 null, null, null);
 

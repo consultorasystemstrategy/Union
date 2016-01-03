@@ -15,6 +15,8 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -82,6 +84,7 @@ public class Login extends Activity implements OnClickListener {
 
     // private DbAdapter_Temp_Session session;
     private Login loginClass;
+    private boolean succesMACDevice;
     private boolean succesLogin;
     ProgressDialog prgDialog;
     private EditText user, pass;
@@ -560,6 +563,18 @@ public class Login extends Activity implements OnClickListener {
 
 
 */
+
+
+                    WifiManager manager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+                    WifiInfo info = manager.getConnectionInfo();
+                    String address = info.getMacAddress();
+
+                    Log.d(TAG, "MAC ADRESS : "+ address);
+
+                    if (address.equals(agenteLista.get(i).getMAC2())){
+                        succesMACDevice = true;
+                    }
+
                     agenteLista.get(i).getIdAgenteVenta();
                     boolean existe = dbAdapter_agente_login.existeAgentesById(agenteLista.get(i).getIdAgenteVenta());
                     Log.d("EXISTE ", "" + existe + "LIQUIDACION : " + agenteLista.get(i).getIdAgenteVenta());
@@ -604,10 +619,15 @@ public class Login extends Activity implements OnClickListener {
 
                     agregarCuenta();
                 }*/
-                Toast.makeText(getApplicationContext(), "Login correcto", Toast.LENGTH_SHORT).show();
-                Intent i = new Intent(Login.this, VMovil_Abrir_Caja.class);
-                finish();
-                startActivity(i);
+                if (succesMACDevice){
+                    Toast.makeText(getApplicationContext(), "Login correcto", Toast.LENGTH_SHORT).show();
+                    Intent i = new Intent(Login.this, VMovil_Abrir_Caja.class);
+                    finish();
+                    startActivity(i);
+                }else {
+                    Toast.makeText(getApplicationContext(), "USUARIO NO AUTORIZADO EN ESTE DISPOSITIVO.", Toast.LENGTH_SHORT).show();
+                }
+
             } else {
                 Toast.makeText(getApplicationContext(), "Las credenciales son incorrectas", Toast.LENGTH_SHORT).show();
             }

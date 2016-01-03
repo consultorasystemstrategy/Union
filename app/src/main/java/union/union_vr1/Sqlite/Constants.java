@@ -37,6 +37,7 @@ public class Constants {
     public static final String ACTION_IMPORT_SERVICE = "IMPORT_SERVICE";
 
     public static final int _ID_SESSION_MAC = 12;
+    public static final int _ID_SESSION_MAC_DEVICE_CIPHER_LAB = 13;
 
     public static final String PRINT_AUTORIZADO_= "AUTORIZADO MEDIANTE RESOLUCION";
     public static final String PRINT_N_RESOLUCION= "N. 0180050000804/SUNAT";

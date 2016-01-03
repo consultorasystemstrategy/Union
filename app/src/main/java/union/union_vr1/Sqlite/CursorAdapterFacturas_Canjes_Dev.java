@@ -50,8 +50,8 @@ public class CursorAdapterFacturas_Canjes_Dev extends CursorAdapter{
             Double precio = cursor.getDouble(27);
             String idProducto = cursor.getString(4);
             Double precioUnidad = precio/cantidad;
-            DecimalFormat dfi= new DecimalFormat("#0.00");
-            DecimalFormat df= new DecimalFormat("#0.00");
+            DecimalFormat dfi= new DecimalFormat("0.00");
+            DecimalFormat df= new DecimalFormat("0.00");
             String textAdapter = "Producto: "+producto+"" +
                     "\nCantidad: "+(cantidad)+"" +
                     "\nP.U: "+precio+"" +
