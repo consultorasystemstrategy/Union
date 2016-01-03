@@ -37,6 +37,7 @@ import union.union_vr1.Sqlite.Constants;
 import union.union_vr1.Sqlite.DbAdapter_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Agente_Login;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
+import union.union_vr1.Utils.Utils;
 
 public class VMovil_Abrir_Caja extends Activity implements View.OnClickListener {
     private boolean succesLogin;
@@ -182,10 +183,17 @@ public class VMovil_Abrir_Caja extends Activity implements View.OnClickListener 
                         session.createTempSessionString(Constants._ID_SESSION_MAC, agenteLista.get(i).getMAC());
                         session.createTempSessionString(Constants._ID_SESSION_MAC_DEVICE_CIPHER_LAB, agenteLista.get(i).getMAC2());
 
-                        WifiManager manager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+                       /* WifiManager manager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
                         WifiInfo info = manager.getConnectionInfo();
-                        String address = info.getMacAddress();
+                        String address = info.getMacAddress().toUpperCase();
 
+                        Log.d(TAG, "MAC ADRESS : "+ address);
+
+                        if (address.equals(agenteLista.get(i).getMAC2())){
+                            succesMACDevice = true;
+                        }*/
+
+                        String address =  Utils.getBluetoothMacAddress();
                         Log.d(TAG, "MAC ADRESS : "+ address);
 
                         if (address.equals(agenteLista.get(i).getMAC2())){
@@ -276,10 +284,17 @@ public class VMovil_Abrir_Caja extends Activity implements View.OnClickListener 
                             session.createTempSession(11, correlativoBoleta);
                             session.createTempSessionString(12, agenteLista.get(i).getMAC());
                             session.createTempSessionString(13, agenteLista.get(i).getMAC2());
-
+/*
                             WifiManager manager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
                             WifiInfo info = manager.getConnectionInfo();
-                            String address = info.getMacAddress();
+                            String address = info.getMacAddress().toUpperCase();
+                            Log.d(TAG, "MAC ADRESS : "+ address);
+
+                            if (address.equals(agenteLista.get(i).getMAC2())){
+                                succesMACDevice = true;
+                            }*/
+
+                            String address =  Utils.getBluetoothMacAddress();
                             Log.d(TAG, "MAC ADRESS : "+ address);
 
                             if (address.equals(agenteLista.get(i).getMAC2())){

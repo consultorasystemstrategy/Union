@@ -1,6 +1,7 @@
 package union.union_vr1.Utils;
 
 import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.util.Log;
 import android.widget.TextView;
@@ -131,12 +132,44 @@ public class Utils {
         }
         return string;
     }
-    public static void setToast(Activity activity,String mensaje,int tipoMensaje){
-        Toast toast = Toast.makeText(activity.getApplicationContext(),mensaje, Toast.LENGTH_LONG);
-        toast.getView().setBackgroundColor(activity.getResources().getColor(tipoMensaje));
+    public static void setToast(Context context,String mensaje,int tipoMensaje){
+        Toast toast = Toast.makeText(context.getApplicationContext(),mensaje, Toast.LENGTH_LONG);
+        toast.getView().setBackgroundColor(context.getResources().getColor(tipoMensaje));
         TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
-        v.setTextColor(activity.getResources().getColor(R.color.Blanco));
+        v.setTextColor(context.getResources().getColor(R.color.Blanco));
         toast.show();
+    }
+
+    /**
+     * get bluetooth local device name
+     * @return device name String
+     */
+    public static String getLocalBluetoothName() {
+        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
+        // if device does not support Bluetooth
+        if(mBluetoothAdapter==null){
+            Log.d(TAG,"device does not support bluetooth");
+            return null;
+        }
+
+        return mBluetoothAdapter.getName();
+    }
+
+    /**
+     * get bluetooth adapter MAC address
+     * @return MAC address String
+     */
+    public static String getBluetoothMacAddress() {
+        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
+        // if device does not support Bluetooth
+        if(mBluetoothAdapter==null){
+            Log.d(TAG,"device does not support bluetooth");
+            return null;
+        }
+
+        return mBluetoothAdapter.getAddress();
     }
 
 }

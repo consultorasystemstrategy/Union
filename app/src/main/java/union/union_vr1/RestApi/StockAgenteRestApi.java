@@ -34,14 +34,18 @@ public class StockAgenteRestApi {
     //SERVIDOR REMOTO
         private final String urlStringRemoto = "http://190.81.172.113/RestFull/StockAgente.ashx";
 
-    private final String urlStringRedInterna = "http://192.168.13.31/RestFull/StockAgente.ashx";
+    /*private final String urlStringRedInterna = "http://192.168.13.31/RestFull/StockAgente.ashx";*/
+    private final String urlStringRedInterna = "https://sidim.upeu.edu.pe/ServiciosAndroid/StockAgente.ashx";
     private String urlString = "http://192.168.0.158/RestFull/StockAgente.ashx";
 
 
     private Context contexto;
     private int servidorTipo=1;
 
+    private static final String TAG = StockAgenteRestApi.class.getSimpleName();
+
     public StockAgenteRestApi(Context contexto) {
+
         this.contexto = contexto;
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(contexto);
         servidorTipo =  Integer.parseInt(SP.getString("servidorTipo", "1"));
@@ -57,6 +61,7 @@ public class StockAgenteRestApi {
             default:
                 break;
         }
+        Log.d(TAG, urlString);
 
         if (servidorTipo==1){
         }else if (servidorTipo==2){
@@ -746,6 +751,7 @@ public class StockAgenteRestApi {
         o.put("parameters", p);
         String s = o.toString();
         String r = load(s);
+        Log.d(TAG, "STRING R: "+ r);
         result = new JSONObject(r);
         return result;
     }

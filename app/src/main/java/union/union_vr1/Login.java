@@ -8,6 +8,7 @@ import android.accounts.AccountManagerFuture;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.app.Service;
+import android.bluetooth.BluetoothAdapter;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -29,6 +30,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.sewoo.port.android.BluetoothPort;
+
 import union.union_vr1.Conexion.JSONParser;
 import union.union_vr1.JSONParser.ParserAgente;
 import union.union_vr1.Objects.Agente;
@@ -36,6 +39,7 @@ import union.union_vr1.RestApi.StockAgenteRestApi;
 import union.union_vr1.Sqlite.DbAdapter_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Agente_Login;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
+import union.union_vr1.Utils.Utils;
 import union.union_vr1.Vistas.AppPreferences;
 import union.union_vr1.Vistas.VMovil_Abrir_Caja;
 import union.union_vr1.Vistas.VMovil_Evento_Indice;
@@ -150,7 +154,11 @@ public class Login extends Activity implements OnClickListener {
     private boolean isCajaActual;
     private Activity mainActivity;
 
-    private static String TAG = "Steve.Login";
+    private static String TAG = Login.class.getSimpleName();
+
+
+    private BluetoothAdapter mBluetoothAdapter;
+    private static final int REQUEST_ENABLE_BT = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,6 +166,7 @@ public class Login extends Activity implements OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
         mainActivity = this;
+
 
 /*
         ContentResolver resolver = getContentResolver();
@@ -254,6 +263,33 @@ public class Login extends Activity implements OnClickListener {
         //    user.setText("error");
         //
 
+        bluetoothSetup();
+
+        if (!mBluetoothAdapter.isEnabled()) {
+            Intent enableBluetooth = new Intent(
+                    BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBluetooth, 0);
+        }
+    }
+
+    /**
+     * Set up Bluetooth.
+     */
+    private void bluetoothSetup()
+    {
+        // Initialize
+        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (mBluetoothAdapter == null)
+        {
+            // Device does not support Bluetooth
+        }
+        assert mBluetoothAdapter != null;
+        if (!mBluetoothAdapter.isEnabled())
+        {
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+
+            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+        }
     }
 
     @Override
@@ -478,14 +514,7 @@ public class Login extends Activity implements OnClickListener {
             case R.id.login:
 
                 if (estaConectado()) {
-
-
-
                     new LoginRest().execute();
-
-
-
-
                 } else {
                     cajaAbierta();
                 }
@@ -531,7 +560,7 @@ public class Login extends Activity implements OnClickListener {
                 usuario = user.getText().toString();
                 clave = pass.getText().toString();
                 for (int i = 0; i < agenteLista.size(); i++) {
-                    Log.d("Agente" + i, "Nombre : " + agenteLista.get(i).getNombreAgente() + ", MAC : " + agenteLista.get(i).getMAC());
+                    Log.d(TAG,"Agente : " + i +" , Nombre : " + agenteLista.get(i).getNombreAgente() + ", MAC CIPHERLAB: "+agenteLista.get(i).getMAC2());
                     session.deleteVariable(777);
                     session.createTempSession(777, agenteLista.get(i).getRutaId());
                     /*
@@ -565,10 +594,11 @@ public class Login extends Activity implements OnClickListener {
 */
 
 
-                    WifiManager manager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+                    /*WifiManager manager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
                     WifiInfo info = manager.getConnectionInfo();
-                    String address = info.getMacAddress();
-
+                    String address = info.getMacAddress().toUpperCase();
+*/
+                    String address =  Utils.getBluetoothMacAddress();
                     Log.d(TAG, "MAC ADRESS : "+ address);
 
                     if (address.equals(agenteLista.get(i).getMAC2())){

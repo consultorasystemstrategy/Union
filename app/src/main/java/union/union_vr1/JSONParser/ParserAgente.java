@@ -15,6 +15,8 @@ import union.union_vr1.Sqlite.Constants;
  * Created by Usuario on 19/01/2015.
  */
 public class ParserAgente {
+
+    private static final String TAG = ParserAgente.class.getSimpleName();
     public ParserAgente() {
         super();
     }
@@ -52,7 +54,7 @@ public class ParserAgente {
 
         } catch (JSONException e) {
             // TODO Auto-generated catch block
-            Log.d("JSONParser => parseAgente", e.getMessage());
+            Log.d(TAG, "JSONParser => parseAgente : " + e.getMessage());
         }
         return arrayList;
     }

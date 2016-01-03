@@ -25,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.RatingBar;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,6 +43,7 @@ import union.union_vr1.Vistas.VMovil_Modificar_Estab;
  * Created by Usuario on 08/12/2014.
  */
 public class CursorAdapterEstablecimientoColor extends CursorAdapter {
+    int estado_autorizado = -1;
     Context context;
     Cursor cursor = null;
     int estado_au = 0;
@@ -50,6 +52,7 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter {
     private LayoutInflater cursorInflater;
     Utils df = new Utils();
     private DbAdaptert_Evento_Establec dbHelper;
+    private static final String TAG = CursorAdapterEstablecimientoColor.class.getSimpleName();
 
     public CursorAdapterEstablecimientoColor(Context context, Cursor c) {
         super(context, c, true);
@@ -121,98 +124,88 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter {
                     linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.amarillo));
                     break;
             }
-         /*
-            switch (estado_au) {
-                case 1: //editar
 
+            estado_autorizado = cursor.getInt(cursor.getColumnIndexOrThrow(DbAdaptert_Evento_Establec.EE_estado_autorizado));
+
+            switch (estado_autorizado){
+                case 1: //editar
+                    linearLayout.setAlpha((float) 0.5);
                     break;
                 case 2://nada
-                    linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.material_grey_900));
                     break;
                 case 3:
-                    switch (id_estado_atencion) {
-                        case 1:
-                            linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.azul));
-                            break;
-                        case 2:
-                            linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.verde));
-                            break;
-                        case 3:
-                            linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.rojo));
-                            break;
-                        case 4:
-                            linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.amarillo));
-                            break;
-                    }
-
                     break;
                 case 4://editar
-
+                    linearLayout.setAlpha((float)0.5);
                     break;
                 case 5://editar
-
+                    linearLayout.setAlpha((float)0.5);
                     break;
                 case 6://nada
-                    linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.material_grey_900));
                     break;
                 case 7:
-                    switch (id_estado_atencion) {
-                        case 1:
-                            linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.azul));
-                            break;
-                        case 2:
-                            linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.verde));
-                            break;
-                        case 3:
-                            linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.rojo));
-                            break;
-                        case 4:
-                            linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.amarillo));
-                            break;
-                    }
                     break;
                 case 8://editar
-
+                    linearLayout.setAlpha((float)0.5);
                     break;
-            } */
-
+                default:
+                    break;
+            }
             linearLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
 
-                    int estado_autorizado = cursor.getInt(cursor.getColumnIndexOrThrow(DbAdaptert_Evento_Establec.EE_estado_autorizado));
-                    //Log.d("ESTADO", "" + estado_autorizado + id_establecimiento);
-                    Log.d("ESTADO", estado_autorizado + ": " + nombre_establecimiento);
+                    Log.d(TAG, "ESTADO : " + "" + estado_autorizado + id_establecimiento);
+
                     switch (estado_autorizado) {
                         case 1: //editar
-                            // Utils.setToast((Activity) (context), "No esta autorizado para la venta", R.color.rojo);
+                            Utils.setToast(context, "No esta autorizado para la venta", R.color.rojo);
                             break;
                         case 2://nada
-                            //  Utils.setToast((Activity) (context), "No esta autorizado para la venta", R.color.rojo);
+                            Utils.setToast(context, "No esta autorizado para la venta", R.color.rojo);
                             break;
                         case 3:
                             eleccion(id_establecimiento);
                             break;
                         case 4://editar
-                            //  Utils.setToast((Activity) (context), "No esta autorizado para la venta", R.color.rojo);
+                            Utils.setToast(context, "No esta autorizado para la venta", R.color.rojo);
                             break;
                         case 5://editar
-                            // Utils.setToast((Activity) (context), "No esta autorizado para la venta", R.color.rojo);
+                            Utils.setToast(context, "No esta autorizado para la venta", R.color.rojo);
                             break;
                         case 6://nada
-                            // Utils.setToast((Activity) (context), "No esta autorizado para la venta", R.color.rojo);
+                            Utils.setToast(context, "No esta autorizado para la venta", R.color.rojo);
                             break;
                         case 7:
                             eleccion(id_establecimiento);
                             break;
                         case 8://editar
-                            // Utils.setToast((Activity) (context), "No esta autorizado para la venta", R.color.rojo);
+                            Utils.setToast(context, "No esta autorizado para la venta", R.color.rojo);
+                            break;
+                        default:
+                            Utils.setToast(context, "No esta autorizado para la venta", R.color.rojo);
                             break;
                     }
                 }
             });
 
+
+            //CUANDO YA ESTÁ AUTORIZADO, OCULTO LA OPCIÓN DE MODIFICAR
+            switch (estado_autorizado){
+                case 3:
+                    imageButtonOp.setActivated(false);
+                    imageButtonOp.setClickable(false);
+                    imageButtonOp.setAlpha((float) 0.0);
+                    break;
+                case 7:
+                    imageButtonOp.setActivated(false);
+                    imageButtonOp.setClickable(false);
+                    imageButtonOp.setAlpha((float) 0.0);
+                    break;
+                default:
+                    break;
+            }
 
             imageButtonOp.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -251,7 +244,7 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter {
 
         switch (estado_au) {
             case 1: //editar
-                // Utils.setToast((Activity) (context), "No esta autorizado para la venta", R.color.rojo);
+                Utils.setToast(context, "No esta autorizado para la venta", R.color.rojo);
                 items = new String[]{"Editar", "Refrescar"};
                 icons = new Integer[]{android.R.drawable.ic_menu_edit,
                         android.R.drawable.ic_menu_upload};
@@ -260,10 +253,10 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter {
                 messageDialog(adapter, idEstablec);
                 break;
             case 2://nada
-                //Utils.setToast((Activity) (context), "No esta autorizado para la venta", R.color.rojo);
+                Utils.setToast(context, "No esta autorizado para la venta", R.color.rojo);
                 break;
             case 3:
-
+                Utils.setToast(context, "Ya está autorizado.", R.color.verde);
                 break;
             case 4://editar
                 items = new String[]{"Editar", "Refrescar"};
@@ -281,10 +274,10 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter {
                 messageDialog(adapter, idEstablec);
                 break;
             case 6://nada
-                // Utils.setToast((Activity) (context), "No esta autorizado para la venta", R.color.rojo);
+                Utils.setToast((Activity) (context), "No esta autorizado para la venta", R.color.rojo);
                 break;
             case 7:
-
+                Utils.setToast(context, "Ya está autorizado.", R.color.verde);
                 break;
             case 8://editar
                 items = new String[]{"Editar", "Refrescar"};
@@ -292,6 +285,9 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter {
                         android.R.drawable.ic_menu_upload};
                 adapter = new ArrayAdapterWithIcon(context, items, icons);
                 messageDialog(adapter, idEstablec);
+                break;
+            default:
+                Utils.setToast(context, "Ya está autorizado.", R.color.verde);
                 break;
         }
 
