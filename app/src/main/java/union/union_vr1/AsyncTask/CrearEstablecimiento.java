@@ -24,6 +24,7 @@ public class CrearEstablecimiento extends AsyncTask<String, String, String> {
     private DbAdapter_Temp_Session dbAdapter_temp_session;
 
 
+
     public CrearEstablecimiento(Activity activity) {
         mainActivity = activity;
     }
@@ -35,6 +36,7 @@ public class CrearEstablecimiento extends AsyncTask<String, String, String> {
         dbAdapter_temp_establecimiento.open();
         dbAdapter_temp_session = new DbAdapter_Temp_Session(mainActivity);
         dbAdapter_temp_session.open();
+        int ruta = dbAdapter_temp_session.fetchVarible(777);
         Cursor cursor = dbAdapter_temp_establecimiento.fetchTemEstablec();
         try {
             int idAgente = dbAdapter_temp_session.fetchVarible(1);
@@ -103,7 +105,7 @@ public class CrearEstablecimiento extends AsyncTask<String, String, String> {
                         cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_usuario_accion)),
                         0,//porcentaje devolucion
                         cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_categoria_estable)),//TIPO establecimiento
-                        "ninguno",
+                        "Ninguno",
                         0.0,//Monto de compra
                         cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_tipo_establecimiento)),
                         cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_longitud)),
@@ -113,7 +115,8 @@ public class CrearEstablecimiento extends AsyncTask<String, String, String> {
                         1,
                         idLiquidacion,//Liquidacion
                         4,//Motivo no atewncido
-                        0
+                        ruta,//RUTAid
+                        cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_direccion_fiscal))
 
                 );
 

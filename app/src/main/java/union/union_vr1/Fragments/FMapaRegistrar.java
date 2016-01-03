@@ -1,8 +1,10 @@
 package union.union_vr1.Fragments;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -54,12 +56,13 @@ public class FMapaRegistrar extends Fragment {
     // private RadioButton buttonHibrido;
     // private RadioButton buttonNormal;
     private View v;
+    boolean estadoPosicion = true;
     // private MapView mapView;
     // private GoogleMap map;
     private boolean estadoDF;
-    public EditText editTextDescripcion;
-    public EditText editTextDireccionFiscal;
-    public Marker markerEstablecimeinto;
+    private EditText editTextDescripcion;
+    private EditText editTextDireccionFiscal;
+    private Button btnActualizarP;
     private CheckBox checkBoxDF;
     private WebView webViewMap;
     LocationManager mLocationManager;
@@ -68,24 +71,25 @@ public class FMapaRegistrar extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_map, container, false);
-        estadoDF = false;
+        estadoDF = true;
         myLocation = null;
         MapsInitializer.initialize(getActivity());
        /* mapView = (MapView) v.findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);
         mapView.onResume();*/
+        btnActualizarP = (Button) v.findViewById(R.id.btnActualizarP);
         editTextDescripcion = (EditText) v.findViewById(R.id.map_descripcion);
         editTextDireccionFiscal = (EditText) v.findViewById(R.id.map_direccion_fiscal);
         checkBoxDF = (CheckBox) v.findViewById(R.id.checkBoxAviableDF);
-        webViewMap = (WebView)v.findViewById(R.id.webViewMap);
+        webViewMap = (WebView) v.findViewById(R.id.webViewMap);
 
 
-        webViewMap.getSettings().setAppCachePath( getActivity().getApplicationContext().getCacheDir().getAbsolutePath()+ "/cache" );
-        webViewMap.getSettings().setAllowFileAccess( true );
-        webViewMap.getSettings().setAppCacheEnabled( true );
-        webViewMap.getSettings().setJavaScriptEnabled( true );
-        webViewMap.getSettings().setDomStorageEnabled( true );
-        webViewMap.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT );
+        webViewMap.getSettings().setAppCachePath(getActivity().getApplicationContext().getCacheDir().getAbsolutePath() + "/cache");
+        webViewMap.getSettings().setAllowFileAccess(true);
+        webViewMap.getSettings().setAppCacheEnabled(true);
+        webViewMap.getSettings().setJavaScriptEnabled(true);
+        webViewMap.getSettings().setDomStorageEnabled(true);
+        webViewMap.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
         webViewMap.setWebChromeClient(new WebChromeClient());
         webViewMap.setWebViewClient(new WebViewClient());
         webViewMap.setBackgroundColor(0x00000000);
@@ -119,20 +123,30 @@ public class FMapaRegistrar extends Fragment {
         displatLocation();
         return v;
     }
-    private void displatLocation(){
+
+    private void displatLocation() {
         mLocationManager = (LocationManager) getActivity().getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
 
         mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000,
                 0, mLocaction);
     }
 
-    private final LocationListener mLocaction = new LocationListener(){
+    private final LocationListener mLocaction = new LocationListener() {
 
         @Override
         public void onLocationChanged(Location location) {
             myLocation = location;
             Log.e("MYLOCATION", "LAT: " + location.getLatitude() + " - LON: " + location.getLongitude());
-            webViewMap.loadUrl("http://maps.google.com/maps?q="+location.getLatitude()+","+location.getLongitude()+"");
+            if (estadoPosicion) {
+                SharedPreferences.Editor editor =getActivity().getSharedPreferences("GPS", Context.MODE_PRIVATE).edit();
+                editor.putString("LATITUD", ""+location.getLatitude());
+                editor.putString("LONGITUD", ""+location.getLongitude());
+                editor.commit();
+                estadoPosicion=false;
+                String urlMap="http://maps.google.com/maps/api/staticmap?center="+location.getLatitude()+","+location.getLongitude()+",&zoom=17&markers=icon:http://www.myiconfinder.com/uploads/iconsets/256-256-a5485b563efc4511e0cd8bd04ad0fe9e.png|"+location.getLatitude()+","+location.getLongitude()+"&path=color:0x0000FF80|weight:5|"+location.getLatitude()+","+location.getLongitude()+"";//&size=600x600
+                webViewMap.loadUrl(urlMap);
+
+            }
         }
 
         @Override
@@ -152,7 +166,7 @@ public class FMapaRegistrar extends Fragment {
     };
 
     private void display() {
-        editTextDireccionFiscal.setEnabled(false);
+       // editTextDireccionFiscal.setEnabled(false);
         editTextDescripcion.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -185,14 +199,21 @@ public class FMapaRegistrar extends Fragment {
             @Override
             public void onClick(View v) {
                 if (!estadoDF) {
-                    editTextDireccionFiscal.setEnabled(true);
+                   // editTextDireccionFiscal.setEnabled(true);
                     editTextDireccionFiscal.setText("");
                     estadoDF = true;
                 } else {
-                    editTextDireccionFiscal.setEnabled(false);
+                   // editTextDireccionFiscal.setEnabled(false);
                     editTextDireccionFiscal.setText(editTextDescripcion.getText().toString());
                     estadoDF = false;
                 }
+            }
+        });
+
+        btnActualizarP.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                estadoPosicion=true;
             }
         });
 
@@ -220,10 +241,7 @@ public class FMapaRegistrar extends Fragment {
         super.onResume();
 
 
-
     }
-
-
 
 
 }

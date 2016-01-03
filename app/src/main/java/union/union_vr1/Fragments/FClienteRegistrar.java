@@ -8,6 +8,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -60,13 +61,21 @@ public class FClienteRegistrar extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_cliente, container, false);
+        v.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                return true;
+
+            }
+        });
         toastBucsando= Toast.makeText(getActivity().getApplicationContext(), "Buscando...", 1000);
         toast = Toast.makeText(getActivity().getApplicationContext(), "Encontrado", Toast.LENGTH_SHORT);
         toast.getView().setBackgroundColor(getActivity().getResources().getColor(R.color.verde));
         toast.setGravity(Gravity.TOP | Gravity.LEFT, 0, 0);
         TextView vz = (TextView) toast.getView().findViewById(android.R.id.message);
         vz.setTextColor(getActivity().getResources().getColor(R.color.Blanco));
-        //................DB
+        //...........
 
 
         dbAdapter_tipo_doc_identidad = new DbAdapter_Tipo_Doc_Identidad(getActivity());
@@ -145,31 +154,35 @@ public class FClienteRegistrar extends Fragment {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
                 if(charSequence.toString().equals("")){
-                    toastBucsando.cancel();
-                    toast.show();
+                   // toastBucsando.cancel();
+                  //  toast.show();
+                    spinnerTipoDocumento.setEnabled(true);
+                    enableWidgets();
+                    setAdapterTipoDocIdentidad();
+                    setAdapterTipoPersona(-1);
+
+                }
+                Boolean estado = dbAdapter_cliente_ruta.existeClienteRuta(charSequence.toString(), tipoDoc);
+                Log.d("ESTADOEXISTERUTA", "" + estado);
+                if (estado) {
+                    // toastBucsando.cancel();
+                    // toast.show();
                     spinnerTipoDocumento.setEnabled(false);
                     disableWidgets();
+
+                } else {
+
+                    // toast.cancel();
+                    // toastBucsando.show();
+                    spinnerTipoDocumento.setEnabled(true);
+                    enableWidgets();
                 }
             }
 
             @Override
             public void afterTextChanged(Editable editable) {
 
-                Boolean estado = dbAdapter_cliente_ruta.existeClienteRuta(editable.toString(), tipoDoc);
-                Log.d("ESTADOEXISTERUTA", "" + estado);
-                if (estado) {
-                    toastBucsando.cancel();
-                    toast.show();
-                    spinnerTipoDocumento.setEnabled(false);
-                    disableWidgets();
 
-                } else {
-
-                    toast.cancel();
-                    toastBucsando.show();
-                    spinnerTipoDocumento.setEnabled(true);
-                    enableWidgets();
-                }
 
             }
         });
@@ -223,6 +236,14 @@ public class FClienteRegistrar extends Fragment {
         editTextApMaterno.setEnabled(true);
         editTextNroCelular.setEnabled(true);
         editTextCorreo.setEnabled(true);
+
+
+
+        editTextNombre.setText("");
+        editTextApPaterno.setText("");
+        editTextApMaterno.setText("");
+        editTextNroCelular.setText("");
+        editTextCorreo.setText("");
     }
 
     private void setValueForm(Cursor cr) {

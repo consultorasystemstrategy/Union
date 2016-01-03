@@ -515,6 +515,7 @@ public class Login extends Activity implements OnClickListener {
                 Log.d("JSON OBJECT AGENTE", "" + jsonObjAgente.toString());
             } catch (Exception e) {
                 e.printStackTrace();
+                Log.d("JSON OBJECT AGENTE", "" + e.getMessage());
             }
             ParserAgente parserAgente = new ParserAgente();
 
@@ -528,7 +529,8 @@ public class Login extends Activity implements OnClickListener {
                 clave = pass.getText().toString();
                 for (int i = 0; i < agenteLista.size(); i++) {
                     Log.d("Agente" + i, "Nombre : " + agenteLista.get(i).getNombreAgente() + ", MAC : " + agenteLista.get(i).getMAC());
-
+                    session.deleteVariable(777);
+                    session.createTempSession(777, agenteLista.get(i).getRutaId());
                     /*
                     //VARIABLE GLOBAL, PARA OBTENERLA DESDE CUALQUIER SITIO DE LA APLICACIÓN
                     ((MyApplication) loginClass.getApplication()).setIdAgente(agenteLista.get(i).getIdAgenteVenta());

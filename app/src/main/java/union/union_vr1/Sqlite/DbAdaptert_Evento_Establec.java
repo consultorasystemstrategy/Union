@@ -29,6 +29,8 @@ public class DbAdaptert_Evento_Establec {
     public static final String EE_codigo_barras = "ee_in_codigo_barras";
     public static final String EE_direccion = "ee_in_direccion";
     public static final String EE_time_atencion = "ee_in_time_atencion";
+    //Estado creado
+    public static  final String EE_estado_autorizado = "ee_in_estado_autorizado";
 
 
     //FALTA OBTENER ESTE CAMPO
@@ -72,7 +74,8 @@ public class DbAdaptert_Evento_Establec {
                     +EE_id_estado_no_atencion+" integer,"
                     +EE_estado_no_atencion_comentario+" text,"
                     +EE_id_agente+" integer, "
-                    +EE_id_liquidacion+" integer, " +
+                    +EE_id_liquidacion+" integer, "
+                    +EE_estado_autorizado+" integer, " +
                     estado_sincronizacion+" integer);";
 
     public static final String DELETE_TABLE_EVENTO_ESTABLEC = "DROP TABLE IF EXISTS " + SQLITE_TABLE_Evento_Establec;
@@ -140,6 +143,7 @@ public class DbAdaptert_Evento_Establec {
         initialValues.put(EE_id_liquidacion,id_liquidacion);
         initialValues.put(EE_codigo_barras,establecimiento.getCodigoBarras());
         initialValues.put(EE_direccion,establecimiento.getDireccion());
+        initialValues.put(EE_estado_autorizado,establecimiento.getEstadoAutorizado());
 
 
         return mDb.insert(SQLITE_TABLE_Evento_Establec, null, initialValues);
@@ -164,6 +168,7 @@ public class DbAdaptert_Evento_Establec {
         initialValues.put(EE_id_liquidacion,id_liquidacion);
         initialValues.put(EE_codigo_barras,establecimiento.getCodigoBarras());
         initialValues.put(EE_direccion,establecimiento.getDireccion());
+        initialValues.put(EE_estado_autorizado,establecimiento.getEstadoAutorizado());
 
 
         mDb.update(SQLITE_TABLE_Evento_Establec, initialValues,

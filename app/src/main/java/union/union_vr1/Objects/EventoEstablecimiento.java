@@ -24,7 +24,11 @@ public class EventoEstablecimiento {
     private String codigoBarras;
     private String direccion;
 
-    public EventoEstablecimiento(int idEstablecimiento, int idCategoriaEstablecimiento, int tipoDocCliente, int estadoAtencion, String nombreEstablecimiento, String nombreCliente, String docCliente, int orden, int surtidoStockAnterior, int surtidoVentaAnterior, Double montoCredito, int diasCredito, int idEstadoNoAtencion, String estadoNoAtencionComentario, int idAgente, int estadoSincronizacion, String codigoBarras, String direccion) {
+
+
+    private int estadoAutorizado;
+
+    public EventoEstablecimiento(int idEstablecimiento, int idCategoriaEstablecimiento, int tipoDocCliente, int estadoAtencion, String nombreEstablecimiento, String nombreCliente, String docCliente, int orden, int surtidoStockAnterior, int surtidoVentaAnterior, Double montoCredito, int diasCredito, int idEstadoNoAtencion, String estadoNoAtencionComentario, int idAgente, int estadoSincronizacion, String codigoBarras, String direccion,int  estadoAutorizado) {
         this.idEstablecimiento = idEstablecimiento;
         this.idCategoriaEstablecimiento = idCategoriaEstablecimiento;
         this.tipoDocCliente = tipoDocCliente;
@@ -43,6 +47,7 @@ public class EventoEstablecimiento {
         this.estadoSincronizacion = estadoSincronizacion;
         this.codigoBarras = codigoBarras;
         this. direccion = direccion;
+        this.estadoAutorizado = estadoAutorizado;
     }
 
 
@@ -187,5 +192,13 @@ public class EventoEstablecimiento {
 
     public void setEstadoSincronizacion(int estadoSincronizacion) {
         this.estadoSincronizacion = estadoSincronizacion;
+    }
+
+    public int getEstadoAutorizado() {
+        return estadoAutorizado;
+    }
+
+    public void setEstadoAutorizado(int estadoAutorizado) {
+        this.estadoAutorizado = estadoAutorizado;
     }
 }

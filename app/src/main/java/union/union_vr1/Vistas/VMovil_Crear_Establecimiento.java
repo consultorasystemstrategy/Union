@@ -18,6 +18,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.Spinner;
 
@@ -33,8 +34,12 @@ import union.union_vr1.Fragments.FMapaRegistrar;
 import union.union_vr1.R;
 import union.union_vr1.Sqlite.Constants;
 import union.union_vr1.Sqlite.DbAdapter_Agente;
+import union.union_vr1.Sqlite.DbAdapter_Categoria_Establecimiento;
 import union.union_vr1.Sqlite.DbAdapter_Temp_DatosSpinner;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Establecimiento;
+import union.union_vr1.Sqlite.DbAdapter_Tipo_Doc_Identidad;
+import union.union_vr1.Sqlite.DbAdapter_Tipo_Establecimiento;
+import union.union_vr1.Sqlite.DbAdapter_Tipo_Persona;
 import union.union_vr1.Utils.TabsAdapter;
 
 public class VMovil_Crear_Establecimiento extends AppCompatActivity {
@@ -48,13 +53,58 @@ public class VMovil_Crear_Establecimiento extends AppCompatActivity {
     private int idusuario;
     private DbAdapter_Temp_DatosSpinner dbAdapter_temp_datosSpinner;
     private DbAdapter_Temp_Establecimiento dbAdapter_temp_establecimiento;
+    //DATA CLIENTE:
+
+    String tipoDocumento = "";
+    String documento = "";
+    String tipoPersona = "";
+    String nombres = "";
+    String apPaterno = "";
+    String apMaterno = "";
+    String celular = "";
+    String correo = "";
+
+    //WIDGETS CLIENTE
+    private Spinner spinnerTipoDocumento;
+    private Spinner spinnerTipoPesona;
+    private EditText editTextNombre;
+    private EditText editTextApPaterno;
+    private EditText editTextApMaterno;
+    private AutoCompleteTextView autoNroDocumento;
+    private EditText editTextNroCelular;
+    private EditText editTextCorreo;
+
+    //DATA ESTABLEC
+    String EstipoEStablec;
+    String EscatEStablec;
+    String EsnomEstablec;
+    String EstelFijo;
+    String Esmovil;
+
+    //WIDGETS ESTABLEC
+
+    private Spinner spinnerTipoEstablecimeinto;
+    private Spinner spinnerCategoriaEstablecimeinto;
+    private EditText editTextNombreEstablec;
+    private EditText editTextTelFijo;
+    private EditText editTextTelMovil2;
+
+    //DATA FOR DIRECCION
+
+    String direccionEs="";
+    String direccionFiscalEs="";
+
+    //WIDGETS
+
+    private EditText editTextDescripcion;
+    private EditText editTextDireccionFiscal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_agregar_establecimiento);
         //..........
-        clearAllPreferences();
+
 
         dbAdapter_agente = new DbAdapter_Agente(this);
         dbAdapter_agente.open();
@@ -73,8 +123,8 @@ public class VMovil_Crear_Establecimiento extends AppCompatActivity {
         fragmentCliente = new FClienteRegistrar();
         fragmentEstablecimiento = new FEstablecimientoRegistrar();
         TabsAdapter tabsAdapter = new TabsAdapter(getSupportFragmentManager());
-        tabsAdapter.addFragment(fragmentMapa, "Registro Direccion");
         tabsAdapter.addFragment(fragmentCliente, "Cliente");
+        tabsAdapter.addFragment(fragmentMapa, "Registro Direccion");
         tabsAdapter.addFragment(fragmentEstablecimiento, "Establecimiento");
         viewPager.setAdapter(tabsAdapter);
         tabLayout = (TabLayout) findViewById(R.id.tablayout);
@@ -89,7 +139,7 @@ public class VMovil_Crear_Establecimiento extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        saveMapa();
+
         item.setVisible(false);
     }
 
@@ -106,15 +156,17 @@ public class VMovil_Crear_Establecimiento extends AppCompatActivity {
                 Log.d("SELECTED", ": " + position);
                 switch (position) {
                     case 0:
-                        Log.d("DEVUELVE", validaMapa() + "");
+                        // Log.d("DEVUELVE", validaMapa() + "");
                         item.setVisible(false);
+
                         break;
                     case 1:
-                        Log.d("DEVUELVE", validaMapa() + "");
-                        saveMapa();
+                        //Log.d("DEVUELVE", validaMapa() + "");
+                        guardarCliente();
                         item.setVisible(false);
                         break;
                     case 2:
+                        guardarDireccion();
                         item.setVisible(true);
                         break;
                 }
@@ -127,126 +179,60 @@ public class VMovil_Crear_Establecimiento extends AppCompatActivity {
         });
 
     }
+    private void guardarDireccion(){
 
-    private boolean validaMapa() {
-        boolean estado = false;
-        try {
+        editTextDescripcion = (EditText) fragmentMapa.getView().findViewById(R.id.map_descripcion);
+        editTextDireccionFiscal = (EditText) fragmentMapa.getView().findViewById(R.id.map_direccion_fiscal);
 
-            EditText editTextDescripcion;
-            EditText editTextDireccionFiscal;
-            editTextDescripcion = (EditText) fragmentMapa.getView().findViewById(R.id.map_descripcion);
-            editTextDireccionFiscal = (EditText) fragmentMapa.getView().findViewById(R.id.map_direccion_fiscal);
-            if ((editTextDescripcion.getText().toString() == null || editTextDescripcion.getText().toString() == "" || editTextDireccionFiscal.getText().toString() == null || editTextDireccionFiscal.getText().toString() == "")) {
-                estado = false;
-            } else {
-                estado = true;
-            }
+        direccionEs = editTextDescripcion.getText().toString();
+        direccionFiscalEs = editTextDireccionFiscal.getText().toString();
 
-        } catch (NullPointerException e) {
-            estado = false;
-        }
-
-        return estado;
-
-    }
-
-
-
-
-    public void saveMapa() {
-
-
-        try {
-            EditText editTextDescripcion;
-            EditText editTextDireccionFiscal;
-            editTextDescripcion = (EditText) fragmentMapa.getView().findViewById(R.id.map_descripcion);
-            editTextDireccionFiscal = (EditText) fragmentMapa.getView().findViewById(R.id.map_direccion_fiscal);
-            SharedPreferences.Editor editor = getSharedPreferences("INFORMACION_MAPA", Context.MODE_PRIVATE).edit();
-            editor.putString("descripcion", editTextDescripcion.getText().toString());
-            editor.putString("direccion_fiscal", editTextDireccionFiscal.getText().toString());
-
-            editor.commit();
-        } catch (NullPointerException e) {
-            Log.d("ERROR", "" + e.getMessage());
-        }
+        Log.d("Informacion-Direccion", direccionEs + "-" + direccionFiscalEs);
 
 
     }
+    private void guardarEstablec(){
 
-    private void saveCliente() {
+        spinnerTipoEstablecimeinto = (Spinner) fragmentEstablecimiento.getView().findViewById(R.id.spinnerTipoEstablecimiento);
+        spinnerCategoriaEstablecimeinto = (Spinner) fragmentEstablecimiento.getView().findViewById(R.id.spinnerCategoriaEstablecimiento);
+        editTextNombreEstablec = (EditText)fragmentEstablecimiento.getView().findViewById(R.id.editDescripcion);
+        editTextTelFijo = (EditText)fragmentEstablecimiento.getView().findViewById(R.id.editTelFijo);
+        editTextTelMovil2 = (EditText)fragmentEstablecimiento.getView().findViewById(R.id.editNumero2);
 
-
-        try {
-            Spinner spinnerTipoDocumento;
-            Spinner spinnerTipoPesona;
-            //
-            EditText editTextNombre;
-            EditText editTextApPaterno;
-            EditText editTextApMaterno;
-            EditText editTextNroDocumento;
-            EditText editTextNroCelular;
-            EditText editTextCorreo;
-            spinnerTipoPesona = (Spinner) fragmentCliente.getView().findViewById(R.id.spinnerTipoPersona);
-            spinnerTipoDocumento = (Spinner) fragmentCliente.getView().findViewById(R.id.spinnerTipoDocumento);
-            editTextNombre = (EditText) fragmentCliente.getView().findViewById(R.id.editNombre);
-            editTextApPaterno = (EditText) fragmentCliente.getView().findViewById(R.id.editApPaterno);
-            editTextApMaterno = (EditText) fragmentCliente.getView().findViewById(R.id.editApMaterno);
-            editTextNroDocumento = (EditText) fragmentCliente.getView().findViewById(R.id.editNroDocumento);
-            editTextNroCelular = (EditText) fragmentCliente.getView().findViewById(R.id.editNroCelular);
-            editTextCorreo = (EditText) fragmentCliente.getView().findViewById(R.id.editCorreo);
-
-            int tipo_persona = spinnerTipoPesona.getSelectedItemPosition();
-            int tipo_documento = spinnerTipoDocumento.getSelectedItemPosition();
-            String nombre = editTextNombre.getText().toString();
-            String apPaterno = editTextApPaterno.getText().toString();
-            String apMaterno = editTextApMaterno.getText().toString();
-            String nroDocumento = editTextNroDocumento.getText().toString();
-            String nroCelular = editTextNroCelular.getText().toString();
-            String correo = editTextCorreo.getText().toString();
-            SharedPreferences.Editor editor = getSharedPreferences("INFORMACION_CLIENTE", Context.MODE_PRIVATE).edit();
-            editor.putString("tipo_persona", tipo_persona + "");
-            editor.putString("tipo_documento", tipo_documento + "");
-            editor.putString("nombre", nombre + "");
-            editor.putString("apPaterno", apPaterno + "");
-            editor.putString("apMaterno", apMaterno + "");
-            editor.putString("nroDocumento", nroDocumento + "");
-            editor.putString("nroCelular", nroCelular + "");
-            editor.putString("correo", correo + "");
-
-            editor.commit();
-        } catch (NullPointerException e) {
-
-        }
+        Cursor crEsTE = (Cursor) spinnerTipoEstablecimeinto.getSelectedItem();
+        Cursor crEsCE = (Cursor) spinnerCategoriaEstablecimeinto.getSelectedItem();
+        EscatEStablec = crEsCE.getString(crEsCE.getColumnIndexOrThrow(DbAdapter_Categoria_Establecimiento.cat_Establec_EstablecId));
+        EstipoEStablec = crEsTE.getString(crEsTE.getColumnIndexOrThrow(DbAdapter_Tipo_Establecimiento.tipo_Establecimiento_EstablecimientoId));
+        EsnomEstablec = editTextNombreEstablec.getText().toString();
+        EstelFijo = editTextTelFijo.getText().toString();
+        Esmovil = editTextTelMovil2.getText().toString();
+        Log.d("Informacion-Establec",EscatEStablec+"-"+Esmovil);
     }
 
-    private void saveEstalecimiento() {
+    private void guardarCliente() {
 
-        try {
-            Spinner spinnerTipoEstablecimeinto;
-            Spinner spinnerCategoriaEstablecimeinto;
-            EditText editTextNombre;
-            EditText editTextTelFijo;
-            EditText editTextNumero2;
-            spinnerTipoEstablecimeinto = (Spinner) fragmentEstablecimiento.getView().findViewById(R.id.spinnerTipoEstablecimiento);
-            spinnerCategoriaEstablecimeinto = (Spinner) fragmentEstablecimiento.getView().findViewById(R.id.spinnerCategoriaEstablecimiento);
-            editTextNombre = (EditText) fragmentEstablecimiento.getView().findViewById(R.id.editDescripcion);
-            editTextTelFijo = (EditText) fragmentEstablecimiento.getView().findViewById(R.id.editTelFijo);
-            editTextNumero2 = (EditText) fragmentEstablecimiento.getView().findViewById(R.id.editNumero2);
-            int catEstablec = spinnerCategoriaEstablecimeinto.getSelectedItemPosition();
-            int tipoEstablec = spinnerTipoEstablecimeinto.getSelectedItemPosition();
-            String nombreEstablec = editTextNombre.getText().toString();
-            String telFijo = editTextTelFijo.getText().toString();
-            String numero2 = editTextNumero2.getText().toString();
-            SharedPreferences.Editor editor = getSharedPreferences("INFORMACION_ESTABLECIMIENTO", Context.MODE_PRIVATE).edit();
-            editor.putString("nombre", nombreEstablec);
-            editor.putString("tipo_establec", tipoEstablec + "");
-            editor.putString("categoria_establec", catEstablec + "");
-            editor.putString("telFijo", telFijo + "");
-            editor.putString("numero2", numero2 + "");
-            editor.commit();
-        } catch (NullPointerException e) {
+        spinnerTipoPesona = (Spinner) fragmentCliente.getView().findViewById(R.id.spinnerTipoPersona);
+        spinnerTipoDocumento = (Spinner) fragmentCliente.getView().findViewById(R.id.spinnerTipoDocumento);
+        editTextNombre = (EditText) fragmentCliente.getView().findViewById(R.id.editNombre);
+        editTextApPaterno = (EditText) fragmentCliente.getView().findViewById(R.id.editApPaterno);
+        editTextApMaterno = (EditText) fragmentCliente.getView().findViewById(R.id.editApMaterno);
+        autoNroDocumento = (AutoCompleteTextView) fragmentCliente.getView().findViewById(R.id.editNroDocumento);
+        editTextNroCelular = (EditText) fragmentCliente.getView().findViewById(R.id.editNroCelular);
+        editTextCorreo = (EditText) fragmentCliente.getView().findViewById(R.id.editCorreo);
+        Cursor cPer = (Cursor) spinnerTipoPesona.getSelectedItem();
+        Cursor cDoc = (Cursor) spinnerTipoDocumento.getSelectedItem();
+        //SET  DATA IN STRINGS
+        tipoDocumento = cDoc.getString(cDoc.getColumnIndexOrThrow(DbAdapter_Tipo_Doc_Identidad.tipo_Doc_IdentidadId));
+        tipoPersona = cPer.getString(cPer.getColumnIndexOrThrow(DbAdapter_Tipo_Persona.tipo_Persona_PersonaId));
+        nombres = editTextNombre.getText().toString();
+        apPaterno= editTextApPaterno.getText().toString();
+        apMaterno =editTextApMaterno.getText().toString();
+        documento = autoNroDocumento.getText().toString();
+        celular= editTextNroCelular.getText().toString();
+        correo =editTextCorreo.getText().toString();
 
-        }
+        Log.d("Informacion-Cliente",tipoDocumento+"-"+celular);
+
     }
 
 
@@ -267,8 +253,7 @@ public class VMovil_Crear_Establecimiento extends AppCompatActivity {
                 onBackPressed();
                 break;
             case R.id.menu_establec:
-                saveCliente();
-                saveEstalecimiento();
+               guardarEstablec();
                 alertConfirmar();
                 break;
             default:
@@ -303,164 +288,32 @@ public class VMovil_Crear_Establecimiento extends AppCompatActivity {
     }
 
     private void getDta() {
-        //Informacion de Mapa
+        SharedPreferences prefs = getSharedPreferences("GPS", MODE_PRIVATE);
+        Double lat = Double.parseDouble(prefs.getString("LATITUD", null));
+        Double lon = Double.parseDouble(prefs.getString("LONGITUD", null));
 
-        SharedPreferences getDataMapa = getSharedPreferences("INFORMACION_MAPA", MODE_PRIVATE);
-        String descripcion = getDataMapa.getString("descripcion", null);
-        String direccion_fiscal = getDataMapa.getString("direccion_fiscal", null);
-        double latitud = Double.parseDouble(getDataMapa.getString("latitud", null));
-        double longitud = Double.parseDouble(getDataMapa.getString("longitud", null));
 
-        Log.d("INFORMACION MAPA {", " descripcion: " + descripcion + " : direccion_fiscal: " + direccion_fiscal + " : latitud" + latitud + " : longitud" + longitud + "");
-
-        //Informacion de Cliente
-
-        SharedPreferences getDataCliente = getSharedPreferences("INFORMACION_CLIENTE", MODE_PRIVATE);
-        //Log.d("DATA EN JSON",""+tipo_persona);
-        int idTipoPersona = tipo_Persona(Integer.parseInt(getDataCliente.getString("tipo_persona", null)));
-        int idTipoDocumento = tipo_Documento(Integer.parseInt(getDataCliente.getString("tipo_documento", null)));
-        String nombre = getDataCliente.getString("nombre", null);
-        String apPaterno = getDataCliente.getString("apPaterno", null);
-        String apMaterno = getDataCliente.getString("apMaterno", null);
-        String nroDocumento = getDataCliente.getString("nroDocumento", null);
-        String nroCelular = getDataCliente.getString("nroCelular", null);
-        String correo = getDataCliente.getString("correo", null);
-
-        Log.d("INFORMACION CLIENTE{", " tipo_persona: " + idTipoPersona + " : tipo_documento: " + idTipoDocumento + " : nombre" + nombre + " : apPaterno" + apPaterno + " : apMaterno" + apMaterno + " : nroDocumento" + nroDocumento + " : nroCelular" + nroCelular + " : correo" + correo);
-
-        //Informacion de establecimiento
-        SharedPreferences getDataEstablec = getSharedPreferences("INFORMACION_ESTABLECIMIENTO", MODE_PRIVATE);
-        String nombreEstablec = getDataEstablec.getString("nombre", null);
-        int idcat_Establec = categoria_Establec(Integer.parseInt(getDataEstablec.getString("categoria_establec", null)));
-        int idtipo_Establec = tipo_Establec(Integer.parseInt(getDataEstablec.getString("tipo_establec", null)));
-        String telFijo = getDataEstablec.getString("telFijo", null);
-        String numero2 = getDataEstablec.getString("numero2", null);
-        Log.d("INFORMACION ESTABLEC", "TIPO PERSONA: " + idTipoPersona + " TIPO DOCUMENTO: " + idTipoDocumento + " CATE ESTABLEC: " + idcat_Establec + " TIPO_ESTABLEC : " + idtipo_Establec);
-        Log.d("INFORMACION ESTABLEC {", 1 + "-" + idusuario + "-" + telFijo + "-" + nroCelular + "-" + numero2 + "-" + latitud + "-" + longitud + "-" + descripcion + "-" + direccion_fiscal + "-" + idTipoPersona + "-" + nombre + "-" + apPaterno + "-" + apMaterno + "-" + idTipoDocumento + "-" + Integer.parseInt(nroDocumento) + "-" + 1 + "-" + correo + "-" + idtipo_Establec + "-" + nombreEstablec + "-" + idcat_Establec + "-" + Constants._CREADO);
-        long estado = dbAdapter_temp_establecimiento.createTempEstablec(1, idusuario + "", telFijo, nroCelular, numero2, latitud, longitud, descripcion, direccion_fiscal, idTipoPersona, nombre, apPaterno, apMaterno, idTipoDocumento,
-                Integer.parseInt(nroDocumento), 1, correo, idtipo_Establec, nombreEstablec, idcat_Establec, Constants._CREADO);
+       long estado = dbAdapter_temp_establecimiento.createTempEstablec(1, idusuario + "",EstelFijo, celular, Esmovil, lat, lon, direccionEs, direccionFiscalEs, Integer.parseInt(tipoPersona),nombres, apPaterno, apMaterno, Integer.parseInt(tipoDocumento),
+                Integer.parseInt(documento), 1, correo, Integer.parseInt(EstipoEStablec), EsnomEstablec, Integer.parseInt(EscatEStablec), Constants._CREADO);
         Log.d("ESTADO INSERTO", "" + estado);
         Log.d("", "");
         if (estado > 0) {
 
             if (conectadoWifi() || conectadoRedMovil()) {
                 new CrearEstablecimiento(this).execute();
-                clearAllPreferences();
-                startActivity(new Intent(getApplicationContext(),VMovil_Menu_Establec.class));
+
+                startActivity(new Intent(getApplicationContext(), VMovil_Menu_Establec.class));
             }
         } else {
-            clearAllPreferences();
+
             startActivity(new Intent(getApplicationContext(), VMovil_Menu_Establec.class));
         }
 
     }
 
-    private void clearAllPreferences() {
-
-        SharedPreferences.Editor editorMapa = getSharedPreferences("INFORMACION_MAPA", Context.MODE_PRIVATE).edit();
-        editorMapa.putString("descripcion", "");
-        editorMapa.putString("direccion_fiscal", "");
-        editorMapa.putString("latitud", "");
-        editorMapa.putString("longitud", "");
-        editorMapa.commit();
 
 
-        SharedPreferences.Editor editorCliente = getSharedPreferences("INFORMACION_CLIENTE", Context.MODE_PRIVATE).edit();
-        editorCliente.putString("tipo_persona", "");
-        editorCliente.putString("tipo_documento", "");
-        editorCliente.putString("nombre", "");
-        editorCliente.putString("apPaterno", "");
-        editorCliente.putString("apMaterno", "");
-        editorCliente.putString("nroDocumento", "");
-        editorCliente.putString("nroCelular", "");
-        editorCliente.putString("correo", "");
-        editorCliente.commit();
 
-
-        SharedPreferences.Editor editorEstablec = getSharedPreferences("INFORMACION_ESTABLECIMIENTO", Context.MODE_PRIVATE).edit();
-        editorEstablec.putString("nombre", "");
-        editorEstablec.putString("tipo_establec", "");
-        editorEstablec.putString("categoria_establec", "");
-        editorEstablec.putString("telFijo", "");
-        editorEstablec.putString("numero2", "");
-        editorEstablec.commit();
-
-        //startActivity(new Intent(getApplicationContext(),VMovil_Menu_Establec.class));
-        // this.finish();
-
-    }
-
-    private int tipo_Persona(int position) {
-        Cursor cursor = dbAdapter_temp_datosSpinner.fetchTemSpinnerTipo(3);
-        cursor.moveToFirst();
-        int id = 0;
-        // Log.d("DATA EN JSON", "" + cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_DatosSpinner.spinner_variable)));
-        JSONObject jsonObject = null;
-        try {
-            jsonObject = new JSONObject(cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_DatosSpinner.spinner_variable)));
-            JSONArray jsonArray = jsonObject.getJSONArray("Value");
-            id = jsonArray.getJSONObject(position).getInt("TperITipoPersonaId");
-            Log.d("TIPO PERSONA", "" + jsonArray.get(position).toString());
-        } catch (JSONException e) {
-            e.printStackTrace();
-
-        }
-        return id;
-    }
-
-    private int tipo_Documento(int position) {
-        Cursor cursor = dbAdapter_temp_datosSpinner.fetchTemSpinnerTipo(2);
-        cursor.moveToFirst();
-        int id = 0;
-        // Log.d("DATA EN JSON", "" + cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_DatosSpinner.spinner_variable)));
-        JSONObject jsonObject = null;
-        try {
-            jsonObject = new JSONObject(cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_DatosSpinner.spinner_variable)));
-            JSONArray jsonArray = jsonObject.getJSONArray("Value");
-            id = jsonArray.getJSONObject(position).getInt("TdiTipoDocIdentidadId");
-            Log.d("TIPO DOCUMENTO", "" + jsonArray.get(position).toString());
-        } catch (JSONException e) {
-            e.printStackTrace();
-
-        }
-        return id;
-    }
-
-    private int categoria_Establec(int position) {
-        Cursor cursor = dbAdapter_temp_datosSpinner.fetchTemSpinnerTipo(4);
-        cursor.moveToFirst();
-        int id = 0;
-        // Log.d("DATA EN JSON", "" + cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_DatosSpinner.spinner_variable)));
-        JSONObject jsonObject = null;
-        try {
-            jsonObject = new JSONObject(cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_DatosSpinner.spinner_variable)));
-            JSONArray jsonArray = jsonObject.getJSONArray("Value");
-            id = jsonArray.getJSONObject(position).getInt("CateICatEstablecimientoId");
-            Log.d("CATEGORIA ESTABLEC", "" + jsonArray.get(position).toString());
-        } catch (JSONException e) {
-            e.printStackTrace();
-
-        }
-        return id;
-    }
-
-    private int tipo_Establec(int position) {
-        Cursor cursor = dbAdapter_temp_datosSpinner.fetchTemSpinnerTipo(1);
-        cursor.moveToFirst();
-        int id = 0;
-        // Log.d("DATA EN JSON", "" + cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_DatosSpinner.spinner_variable)));
-        JSONObject jsonObject = null;
-        try {
-            jsonObject = new JSONObject(cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_DatosSpinner.spinner_variable)));
-            JSONArray jsonArray = jsonObject.getJSONArray("Value");
-            id = jsonArray.getJSONObject(position).getInt("TieITipEstId");
-            Log.d("TIPO ESTABLEC", "" + jsonArray.get(position).toString());
-        } catch (JSONException e) {
-            e.printStackTrace();
-
-        }
-        return id;
-    }
 
     protected Boolean conectadoWifi() {
         ConnectivityManager connectivity = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -491,12 +344,12 @@ public class VMovil_Crear_Establecimiento extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        clearAllPreferences();
+
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        clearAllPreferences();
+
     }
 }

@@ -20,6 +20,7 @@
         android:background="@color/Blanco"
         android:elevation="4dp"
         app:tabGravity="fill"
+        android:clickable="false"
         app:tabMode="scrollable"
         app:tabSelectedTextColor="#000"
         app:tabTextColor="#E0E0E0"/>

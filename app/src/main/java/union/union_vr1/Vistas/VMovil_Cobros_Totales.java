@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -182,19 +184,20 @@ public class VMovil_Cobros_Totales extends Activity implements View.OnClickListe
                         cCobro.open();
 
                         int estado = cCobro.updateComprobCobrosCan2(idCCobro, getDatePhone(), getTimePhone(), deuda, "0");
-                        Log.e("ESTADO DE COBRANZA",""+estado+"-"+idCCobro);
-                        if (estado >0) {
+                        Log.e("ESTADO DE COBRANZA", "" + estado + "-" + idCCobro);
+                        if (estado > 0) {
 
-                            /*
-                            if (conectadoWifi()||conectadoRedMovil()){
-                                exportMain.execute();
+
+                            if (conectadoWifi() || conectadoRedMovil()) {
+                                new ExportMain(VMovil_Cobros_Totales.this).execute();
                             }
-                            */
+
 
                             listarCobrosTotales();
 
                             Toast.makeText(getApplicationContext(), "Actualizado", Toast.LENGTH_SHORT).show();
-
+                            //
+                            startActivity(new Intent(VMovil_Cobros_Totales.this, VMovil_BluetoothImpCobros.class).putExtra("idComprobante", ""+idCCobro).putExtra("importe", ""+deuda));
                             //Back();
 
                         } else {
@@ -221,6 +224,31 @@ public class VMovil_Cobros_Totales extends Activity implements View.OnClickListe
     public void Back() {
         Intent i = new Intent(this, VMovil_Evento_Indice.class);
         startActivity(i);
+    }
+    protected Boolean conectadoWifi() {
+        ConnectivityManager connectivity = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivity != null) {
+            NetworkInfo info = connectivity.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+            if (info != null) {
+                if (info.isConnected()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    protected Boolean conectadoRedMovil() {
+        ConnectivityManager connectivity = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivity != null) {
+            NetworkInfo info = connectivity.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+            if (info != null) {
+                if (info.isConnected()) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
 

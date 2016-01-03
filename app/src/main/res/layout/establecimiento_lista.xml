@@ -8,6 +8,7 @@
         android:orientation="horizontal"
         android:layout_width="fill_parent"
         android:layout_height="128dp"
+        android:id="@+id/layoutenter"
         android:layout_marginLeft="12dp"
         android:layout_marginTop="12dp"
         android:layout_marginRight="12dp">
@@ -37,16 +38,31 @@
             android:layout_weight="1"
             android:layout_marginLeft="16dp">
 
-            <TextView
+
+            <LinearLayout
+                android:orientation="horizontal"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="Productos Unión S.A.C"
-                android:id="@+id/textViewEstablecimientoNombre"
-                android:layout_weight="1"
-                android:layout_gravity="bottom"
-                android:gravity="bottom"
-                android:textSize="16dp"
-                android:textStyle="normal|bold" />
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Productos Unión S.A.C"
+                    android:id="@+id/textViewEstablecimientoNombre"
+                    android:layout_weight="1"
+                    android:gravity="bottom"
+                    android:textSize="16dp"
+                    android:textStyle="normal|bold" />
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/imgOperaciones"
+                    android:background="@drawable/ic_action_overflow" />
+
+            </LinearLayout>
+
+
 
             <TextView
                 android:layout_width="fill_parent"

@@ -70,7 +70,8 @@ public class ParserEventoEstablecimiento {
                         jsonObj.getInt("LiqIAgenteVentaId"),
                         Constants._IMPORTADO,
                         jsonObj.getString("EstVCodigoBarra"),
-                        jsonObj.getString("Direccion")
+                        jsonObj.getString("Direccion"),
+                        jsonObj.getInt("EstadoId")
                         ));
             }
 

@@ -79,7 +79,7 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
     String tipoDoc;
     String doc;
     int comprobanteVenta;
-    private String idCobro;
+    private String idCobro="-1";
     private String Estado;
     private String idEstado;
     private String idMontoCancelado;
@@ -334,8 +334,11 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
                         if(conectadoWifi() || conectadoRedMovil()){
                             new ExportMain(VMovil_Cobro_Credito.this).execute();
                         }
+
+                        startActivity(new Intent(getApplicationContext(),VMovil_BluetoothImpCobros.class).putExtra("idComprobante",""+idCobro).putExtra("importe",""+idValNew));
 //<
                         //displayListViewVCC();
+                        idCobro="-1";
                         mSPNcredit.setText("0.0");
                         displayListViewVCC();
                         displayListViewVCC();
@@ -487,7 +490,7 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener {
                     DecimalFormat df = new DecimalFormat("#.00");
 
                     if (idEstado.equals("1")) {
-                        if (mSPNcredit.getText().equals("")) {
+                        if (mSPNcredit.getText().equals("") || idCobro.equals("-1")) {
                             Toast.makeText(getApplicationContext(), "Tiene que Seleccionar una Deuda", Toast.LENGTH_SHORT).show();
                         }
                         if (Double.parseDouble(Utils.replaceComa(df.format(idDeuda))) == Double.parseDouble(Utils.replaceComa(mSPNcredit.getText().toString()))) {

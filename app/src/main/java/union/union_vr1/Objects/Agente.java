@@ -24,9 +24,19 @@ public class Agente {
     private int correlativoRrpp;
     private int estadoSincronizado;
     private String MAC;
+
+    public int getRutaId() {
+        return rutaId;
+    }
+
+    public void setRutaId(int rutaId) {
+        this.rutaId = rutaId;
+    }
+
+    private int rutaId;
     private int rolid;
 
-    public Agente(int idAgenteVenta, int idEmpresa, int idUsuario, String nombreAgente, String nombreUsuario, String passUsuario, int liquidacion, Double kmInicial, Double kmFinal, String nombreRuta, int nroBodegas, String serieBoleta, String serieFactura, String serieRrpp, int correlativoBoleta, int correlativoFactura, int correlativoRrpp, String MAC, int rolid, int estadoSincronizado) {
+    public Agente(int idAgenteVenta, int idEmpresa, int idUsuario, String nombreAgente, String nombreUsuario, String passUsuario, int liquidacion, Double kmInicial, Double kmFinal, String nombreRuta, int nroBodegas, String serieBoleta, String serieFactura, String serieRrpp, int correlativoBoleta, int correlativoFactura, int correlativoRrpp, String MAC, int rolid, int estadoSincronizado,int rutaId) {
         this.idAgenteVenta = idAgenteVenta;
         this.idEmpresa = idEmpresa;
         this.idUsuario = idUsuario;
@@ -47,6 +57,7 @@ public class Agente {
         this.estadoSincronizado = estadoSincronizado;
         this.MAC = MAC;
         this.rolid = rolid;
+        this.rutaId = rutaId;
     }
 
 

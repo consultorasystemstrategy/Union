@@ -35,7 +35,7 @@
                         android:id="@+id/textView34"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
+                        android:layout_gravity="left"
                         android:paddingBottom="4dp"
                         android:paddingTop="4dp"
                         android:text="Direccion"
@@ -72,7 +72,7 @@
                         android:id="@+id/textView23"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
+                        android:layout_gravity="left"
                         android:paddingBottom="4dp"
                         android:paddingTop="4dp"
                         android:text="Direccion Fiscal"
@@ -98,6 +98,13 @@
                     android:layout_marginTop="5dp"
                     android:background="@color/Blanco"
                     android:orientation="vertical">
+
+                    <Button
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/btnActualizarP"
+                        android:text="Actualizar posicion"
+                        android:layout_marginBottom="5dp"/>
 
                     <WebView
                         android:id="@+id/webViewMap"

@@ -47,6 +47,14 @@ public class Utils {
         return formatteDate;
     }
 
+    public static String getTimePhone() {
+        Calendar cal = new GregorianCalendar();
+        Date date = cal.getTime();
+        SimpleDateFormat df = new SimpleDateFormat("hh:mm:ss");
+        String formatteTime = df.format(date);
+        return formatteTime;
+    }
+
     public static boolean isSuccesfulImport(JSONObject jsonObj) {
         boolean succesful = false;
         try {

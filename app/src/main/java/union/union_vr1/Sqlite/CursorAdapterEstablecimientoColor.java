@@ -1,6 +1,10 @@
 package union.union_vr1.Sqlite;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -10,51 +14,65 @@ import android.graphics.drawable.LayerDrawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.CursorAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
+import union.union_vr1.AsyncTask.ImportEstadoAuEstablec;
+import union.union_vr1.Charts.Line;
 import union.union_vr1.R;
 import union.union_vr1.Utils.Utils;
+import union.union_vr1.Vistas.VMovil_Evento_Establec;
 
 /**
  * Created by Usuario on 08/12/2014.
  */
-public class CursorAdapterEstablecimientoColor extends CursorAdapter{
-
+public class CursorAdapterEstablecimientoColor extends CursorAdapter {
+    Context context;
+    Cursor cursor = null;
+    int estado_au = 0;
+    int position = -1;
+    private DbAdapter_Temp_Session session;
     private LayoutInflater cursorInflater;
     Utils df = new Utils();
     private DbAdaptert_Evento_Establec dbHelper;
+
     public CursorAdapterEstablecimientoColor(Context context, Cursor c) {
         super(context, c, true);
+        this.context = context;
+        cursor = c;
+
+
         dbHelper = new DbAdaptert_Evento_Establec(context);
         dbHelper.open();
+        session = new DbAdapter_Temp_Session(context);
+        session.open();
         cursorInflater = (LayoutInflater) context.getSystemService(
                 Context.LAYOUT_INFLATER_SERVICE);
 
     }
 
     @Override
-    public View newView(Context context, Cursor cursor, ViewGroup viewGroup) {
-        /*final LayoutInflater inflater  = LayoutInflater.from(context);
-        final View view = inflater.inflate(R.layout.establecimiento_lista, viewGroup,false);
-        return view;*/
-        return cursorInflater.inflate(R.layout.establecimiento_lista, viewGroup, false);
+    public View getView(int position, View view, ViewGroup parent) {
 
-    }
+        cursor.moveToPosition(position);
 
-    @Override
-    public void bindView(View view, Context context, Cursor cursor) {
-
+        view = cursorInflater.inflate(R.layout.establecimiento_lista, parent, false);
+        LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.layoutenter);
+        ImageButton imageButtonOp = (ImageButton) view.findViewById(R.id.imgOperaciones);
         TextView nombreEstablecimiento = (TextView) view.findViewById(R.id.textViewEstablecimientoNombre);
         TextView nombreCliente = (TextView) view.findViewById(R.id.textViewEstablecimientoCliente);
         TextView deuda = (TextView) view.findViewById(R.id.textViewEstablecimientoDeuda);
@@ -69,26 +87,26 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter{
         stars.getDrawable(2).setColorFilter(ContextCompat.getColor(context, R.color.accent), PorterDuff.Mode.SRC_ATOP);
 
 
-        if (cursor.getCount()>0){
-
-            String id_establecimiento = cursor.getString(cursor.getColumnIndex(dbHelper.EE_id_establec));
-            String nombre_establecimiento = cursor.getString(cursor.getColumnIndex(dbHelper.EE_nom_establec));
+        if (cursor.getCount() > 0) {
+            estado_au = cursor.getInt(cursor.getColumnIndexOrThrow(DbAdaptert_Evento_Establec.EE_estado_autorizado));
+            final String id_establecimiento = cursor.getString(cursor.getColumnIndex(dbHelper.EE_id_establec));
+            final String nombre_establecimiento = cursor.getString(cursor.getColumnIndex(dbHelper.EE_nom_establec));
             String nombre_cliente = cursor.getString(cursor.getColumnIndex(dbHelper.EE_nom_cliente));
             int id_estado_atencion = Integer.parseInt(cursor.getString(cursor.getColumnIndex(dbHelper.EE_id_estado_atencion)));
             int numeroOrden = cursor.getInt(cursor.getColumnIndexOrThrow(dbHelper.EE_orden));
-            double deudaTotal = cursor.getDouble(cursor.getColumnIndexOrThrow("cc_re_monto_a_pagar")) ;
+            double deudaTotal = cursor.getDouble(cursor.getColumnIndexOrThrow("cc_re_monto_a_pagar"));
             String dir = cursor.getString(cursor.getColumnIndexOrThrow(dbHelper.EE_direccion));
             //float rating = cursor.getFloat(cursor.getColumnIndexOrThrow(dbHelper.EE_rating));
 
 
-            nombreEstablecimiento.setText(numeroOrden + ". " +nombre_establecimiento);
+            nombreEstablecimiento.setText(numeroOrden + ". " + nombre_establecimiento);
             nombreEstablecimiento.setSingleLine(false);
             nombreCliente.setText(nombre_cliente);
-            deuda.setText("S/. "+df.format(deudaTotal));
+            deuda.setText("S/. " + df.format(deudaTotal));
             direccion.setText(dir);
             ratingBar.setRating(4);
 
-            switch (id_estado_atencion){
+            switch (id_estado_atencion) {
                 case 1:
                     linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.azul));
                     break;
@@ -102,7 +120,185 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter{
                     linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.amarillo));
                     break;
             }
+            switch (estado_au) {
+                case 1: //editar
+
+                    break;
+                case 2://nada
+                    linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.material_blue_grey_800));
+                    break;
+                case 3:
+
+                    break;
+                case 4://editar
+
+                    break;
+                case 5://editar
+
+                    break;
+                case 6://nada
+                    linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.material_blue_grey_800));
+                    break;
+                case 7:
+
+                    break;
+                case 8://editar
+
+                    break;
+            }
+
+            linearLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+
+                    int estado_autorizado = cursor.getInt(cursor.getColumnIndexOrThrow(DbAdaptert_Evento_Establec.EE_estado_autorizado));
+                    Log.d("ESTADO", "" + estado_autorizado + id_establecimiento);
+
+                    switch (estado_autorizado) {
+                        case 1: //editar
+                            Utils.setToast((Activity) (context), "No esta autorizado para la venta", R.color.rojo);
+                            break;
+                        case 2://nada
+                            Utils.setToast((Activity) (context), "No esta autorizado para la venta", R.color.rojo);
+                            break;
+                        case 3:
+                            eleccion(id_establecimiento);
+                            break;
+                        case 4://editar
+                            Utils.setToast((Activity) (context), "No esta autorizado para la venta", R.color.rojo);
+                            break;
+                        case 5://editar
+                            Utils.setToast((Activity) (context), "No esta autorizado para la venta", R.color.rojo);
+                            break;
+                        case 6://nada
+                            Utils.setToast((Activity) (context), "No esta autorizado para la venta", R.color.rojo);
+                            break;
+                        case 7:
+                            eleccion(id_establecimiento);
+                            break;
+                        case 8://editar
+                            Utils.setToast((Activity) (context), "No esta autorizado para la venta", R.color.rojo);
+                            break;
+                    }
+                }
+            });
+
+
+            imageButtonOp.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    setActionOperacion(nombre_establecimiento);
+                }
+            });
         }
 
+        return super.getView(position, view, parent);
+    }
+
+    @Override
+    public View newView(Context context, Cursor cursor, ViewGroup viewGroup) {
+        /*final LayoutInflater inflater  = LayoutInflater.from(context);
+        final View view = inflater.inflate(R.layout.establecimiento_lista, viewGroup,false);
+        return view;*/
+        return cursorInflater.inflate(R.layout.establecimiento_lista, viewGroup, false);
+
+    }
+
+
+    @Override
+    public void bindView(View view, final Context context, final Cursor cursor) {
+
+
+    }
+
+    private void setActionOperacion(final String idEstablec) {
+
+        String[] items = new String[]{};
+        Integer[] icons = new Integer[]{};
+        ListAdapter adapter = null;
+
+        //SWITCH
+
+        switch (estado_au) {
+            case 1: //editar
+                Utils.setToast((Activity) (context), "No esta autorizado para la venta", R.color.rojo);
+                items = new String[]{"Editar", "Refrescar"};
+                icons = new Integer[]{android.R.drawable.ic_menu_edit,
+                        android.R.drawable.ic_menu_upload};
+
+                adapter = new ArrayAdapterWithIcon(context, items, icons);
+                messageDialog(adapter, idEstablec);
+                break;
+            case 2://nada
+                Utils.setToast((Activity) (context), "No esta autorizado para la venta", R.color.rojo);
+                break;
+            case 3:
+
+                break;
+            case 4://editar
+                items = new String[]{"Editar", "Refrescar"};
+                icons = new Integer[]{android.R.drawable.ic_menu_edit,
+                        android.R.drawable.ic_menu_upload};
+
+                adapter = new ArrayAdapterWithIcon(context, items, icons);
+                messageDialog(adapter, idEstablec);
+                break;
+            case 5://editar
+                items = new String[]{"Editar", "Refrescar"};
+                icons = new Integer[]{android.R.drawable.ic_menu_edit,
+                        android.R.drawable.ic_menu_upload};
+                adapter = new ArrayAdapterWithIcon(context, items, icons);
+                messageDialog(adapter, idEstablec);
+                break;
+            case 6://nada
+                Utils.setToast((Activity) (context), "No esta autorizado para la venta", R.color.rojo);
+                break;
+            case 7:
+
+                break;
+            case 8://editar
+                items = new String[]{"Editar", "Refrescar"};
+                icons = new Integer[]{android.R.drawable.ic_menu_edit,
+                        android.R.drawable.ic_menu_upload};
+                adapter = new ArrayAdapterWithIcon(context, items, icons);
+                messageDialog(adapter, idEstablec);
+                break;
+        }
+
+
+    }
+
+    private void messageDialog(final ListAdapter adapter, final String idEstablec) {
+        new AlertDialog.Builder(context).setTitle("Escoge una opcion")
+                .setAdapter(adapter, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int item) {
+
+                        String itemString = (String) adapter.getItem(item);
+                        Toast.makeText(context, "Item Selected: " + itemString + "---" + idEstablec, Toast.LENGTH_SHORT).show();
+
+                        switch (itemString) {
+                            case "Editar":
+                                break;
+                            case "Refrescar":
+                                new ImportEstadoAuEstablec((Activity) context).execute("IDKELVIN", idEstablec);
+                                break;
+                        }
+                    }
+                }).show();
+    }
+
+    private void eleccion(String idEstabl) {
+        Intent i = new Intent((context), VMovil_Evento_Establec.class);
+
+        //dbAdapter_temp_barcode_scanner.deleteAll();
+        //((MyApplication) this.getApplication()).setIdEstablecimiento(Integer.parseInt(idEstabl));
+        session.deleteVariable(2);
+        session.createTempSession(2, Integer.parseInt(idEstabl));
+        //dbAdapter_temp_barcode_scanner.createTempScanner(Integer.parseInt(idEstabl));
+        //session.deleteVariable(2);
+        //session.createTempSession(2, Integer.parseInt(idEstabl));
+
+        (context).startActivity(i);
     }
 }

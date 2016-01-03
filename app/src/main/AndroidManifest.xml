@@ -47,6 +47,11 @@
             android:name=".Vistas.VMovil_Menu_Establec"
             android:label="Seleccionar Cliente"
             android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".Vistas.VMovil_BluetoothImpCobros"
+            android:label="Imprimir Cobros"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Vistas.VMovil_Venta_Producto"
             android:label="Ventas"
