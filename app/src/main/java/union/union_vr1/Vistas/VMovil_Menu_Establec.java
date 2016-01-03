@@ -516,7 +516,7 @@ public class VMovil_Menu_Establec extends Activity implements View.OnClickListen
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_activity_agregar_establecimiento, menu);
+        getMenuInflater().inflate(R.menu.menu_vmovil__crear__establecimiento, menu);
         return true;
     }
 
