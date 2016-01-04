@@ -41,7 +41,7 @@
                         android:text="Categoria Establecimiento"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:textColor="@color/Dark1"
-                        android:textStyle="italic|bold" />
+                        android:textStyle="bold" />
 
                     <Spinner
                         android:id="@+id/spinnerCategoriaEstablecimiento"
@@ -71,7 +71,7 @@
                         android:text="Tipo de Establecimiento"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:textColor="@color/Dark1"
-                        android:textStyle="italic|bold" />
+                        android:textStyle="bold" />
 
                     <Spinner
                         android:id="@+id/spinnerTipoEstablecimiento"
@@ -102,7 +102,7 @@
                         android:text="Nombre Establecimiento"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:textColor="@color/Dark1"
-                        android:textStyle="italic|bold" />
+                        android:textStyle="bold" />
 
                     <EditText
                         android:id="@+id/editDescripcion"
@@ -133,7 +133,7 @@
                         android:text="Numero Telefono Fijo"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:textColor="@color/Dark1"
-                        android:textStyle="italic|bold" />
+                        android:textStyle="bold" />
 
                     <EditText
                         android:id="@+id/editTelFijo"
@@ -164,7 +164,7 @@
                         android:text="Numero Celular"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:textColor="@color/Dark1"
-                        android:textStyle="italic|bold" />
+                        android:textStyle="bold" />
 
                     <EditText
                         android:id="@+id/editNumero2"

@@ -27,7 +27,7 @@
         android:title="Servidor"
         android:summary="Selecciona el tipo de servidor a probar."
         android:key="servidorTipo"
-        android:defaultValue="1"
+        android:defaultValue="3"
         android:entries="@array/listServidorTipo"
         android:entryValues="@array/listValuesServidorTipo" />
 

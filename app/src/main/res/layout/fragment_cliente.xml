@@ -40,7 +40,7 @@
                         android:text="Documento"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:textColor="@color/Dark1"
-                        android:textStyle="italic|bold" />
+                        android:textStyle="bold" />
 
                     <Spinner
                         android:id="@+id/spinnerTipoDocumento"
@@ -71,7 +71,7 @@
                         android:text="Documento de Identidad"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:textColor="@color/Dark1"
-                        android:textStyle="italic|bold" />
+                        android:textStyle="bold" />
 
 
                     <AutoCompleteTextView
@@ -104,7 +104,7 @@
                         android:text="Tipo Persona"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:textColor="@color/Dark1"
-                        android:textStyle="italic|bold" />
+                        android:textStyle="bold" />
 
                     <Spinner
                         android:id="@+id/spinnerTipoPersona"
@@ -135,7 +135,7 @@
                         android:text="Nombres"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:textColor="@color/Dark1"
-                        android:textStyle="italic|bold" />
+                        android:textStyle="bold" />
 
                     <EditText
                         android:id="@+id/editNombre"
@@ -166,7 +166,7 @@
                         android:text="Apellido Paterno"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:textColor="@color/Dark1"
-                        android:textStyle="italic|bold" />
+                        android:textStyle="bold" />
 
                     <EditText
                         android:id="@+id/editApPaterno"
@@ -198,7 +198,7 @@
                         android:text="Apellido Materno"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:textColor="@color/Dark1"
-                        android:textStyle="italic|bold" />
+                        android:textStyle="bold" />
 
                     <EditText
                         android:id="@+id/editApMaterno"
@@ -230,7 +230,7 @@
                         android:paddingLeft="10dp"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:textColor="@color/Dark1"
-                        android:textStyle="italic|bold" />
+                        android:textStyle="bold" />
 
                     <EditText
                         android:id="@+id/editNroCelular"
@@ -262,7 +262,7 @@
                         android:text="Correo Electronico"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:textColor="@color/Dark1"
-                        android:textStyle="italic|bold" />
+                        android:textStyle="bold" />
 
                     <EditText
                         android:id="@+id/editCorreo"

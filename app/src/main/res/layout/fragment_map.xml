@@ -42,7 +42,7 @@
                         android:text="Direccion"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:textColor="@color/Dark1"
-                        android:textStyle="italic|bold" />
+                        android:textStyle="bold" />
 
                     <EditText
                         android:id="@+id/map_descripcion"
@@ -80,7 +80,7 @@
                         android:text="Direccion Fiscal"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:textColor="@color/Dark1"
-                        android:textStyle="italic|bold" />
+                        android:textStyle="bold" />
 
                     <EditText
                         android:id="@+id/map_direccion_fiscal"
