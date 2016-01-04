@@ -20,8 +20,10 @@ import android.view.MenuItem;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import union.union_vr1.AsyncTask.CrearEstablecimiento;
+import union.union_vr1.AsyncTask.ImportMain;
 import union.union_vr1.AsyncTask.ModificarEstablecimiento;
 import union.union_vr1.Fragments.FClienteEditar;
 import union.union_vr1.Fragments.FEstablecimientoEditar;
@@ -109,6 +111,9 @@ public class VMovil_Modificar_Estab extends AppCompatActivity {
         dbAdapter_temp_establecimiento = new DbAdapter_Temp_Establecimiento(this);
         dbAdapter_temp_establecimiento.open();
         //
+        //Cursor cr = dbAdapter_temp_establecimiento.fetchTemEstablecById(idEstablecimiento);
+        //cr.moveToFirst();
+        //Log.d("IDREMOTO",""+cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_id_remoto)));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         dbAdapter_temp_datosSpinner = new DbAdapter_Temp_DatosSpinner(this);
@@ -323,22 +328,24 @@ public class VMovil_Modificar_Estab extends AppCompatActivity {
         Double lon = Double.parseDouble(prefs.getString("LONGITUD", null));
 
 
-       long estado = dbAdapter_temp_establecimiento.updateTempEstablec( idEstablecimiento, idusuario+"",EstelFijo, celular, Integer.parseInt(Esmovil), lat, lon, direccionEs, direccionFiscalEs, Integer.parseInt(tipoPersona),nombres, apPaterno, apMaterno, Integer.parseInt(tipoDocumento),
-                Integer.parseInt(documento), 1, correo, Integer.parseInt(EstipoEStablec), EsnomEstablec, Integer.parseInt(EscatEStablec), Constants._CREADO,1);
+       long estado = dbAdapter_temp_establecimiento.updateTempEstablec( idEstablecimiento+"", idusuario+"",EstelFijo+"", celular+"",Esmovil+"", lat+"", lon+"", direccionEs+"", direccionFiscalEs, tipoPersona,nombres, apPaterno, apMaterno,tipoDocumento,
+              documento+"", 1+"", correo,EstipoEStablec, EsnomEstablec,EscatEStablec,1+"");
         Log.d("ESTADO INSERTO", "" + estado);
         Log.d("", "");
         if (estado > 0) {
 
             if (conectadoWifi() || conectadoRedMovil()) {
+
+                Toast.makeText(VMovil_Modificar_Estab.this, "Inicio Task", Toast.LENGTH_SHORT).show();
                 new ModificarEstablecimiento(this).execute();
 
                 startActivity(new Intent(getApplicationContext(), VMovil_Menu_Establec.class));
-                this.finish();
+                new ImportMain(this).execute();
             }
         } else {
 
-            startActivity(new Intent(getApplicationContext(), VMovil_Menu_Establec.class));
-            this.finish();
+           // startActivity(new Intent(getApplicationContext(), VMovil_Menu_Establec.class));
+
         }
 
     }

@@ -30,7 +30,7 @@ public class DbAdapter_Temp_Establecimiento {
     public static final String establec_tipo_documento = "establec_tipo_documento";
     public static final String establec_nro_documento = "establec_nro_documento";
     public static final String establec_estado_guardado = "establec_estado_guardado";
-    public static final String establec_categoria_estable="establec_categoria_estable";
+    public static final String establec_categoria_estable = "establec_categoria_estable";
     public static final String establec_correo = "establec_correo";
     public static final String establec_tipo_establecimiento = "establec_tipo_establecimiento";
     public static final String establec_descripcion_establecimiento = "establec_descripcion_establecimiento";
@@ -106,8 +106,8 @@ public class DbAdapter_Temp_Establecimiento {
             int _estado_guardado,
             String _correo,
             int _tipo_establecimiento,
-            String _descripcion_establecimiento,int _categoria_establec,
-            int _ESTADO,int _estadoEditado
+            String _descripcion_establecimiento, int _categoria_establec,
+            int _ESTADO, int _estadoEditado
     ) {
 
         ContentValues initialValues = new ContentValues();
@@ -139,25 +139,26 @@ public class DbAdapter_Temp_Establecimiento {
 
     public long updateTempEstablec(
             String idRemoto,
-                                   String _usuario_accion,
-                                   String _telefono_fijo,
-                                   String _celular_one,
-                                   int _celular_two,
-                                   double _latitud,
-                                   double _longitud,
-                                   String _descripcion,
-                                   String _direccion_fiscal,
-                                   int _tipo_persona,
-                                   String _nombres,
-                                   String _apPaterno,
-                                   String _apMaterno,
-                                   int _tipo_documento,
-                                   int _nro_documento,
-                                   int _estado_guardado,
-                                   String _correo,
-                                   int _tipo_establecimiento,
-                                   String _descripcion_establecimiento,int catEstablec,
-                                   int _ESTADO, int estadoEditado) {
+            String _usuario_accion,
+            String _telefono_fijo,
+            String _celular_one,
+            String _celular_two,
+            String _latitud,
+            String _longitud,
+            String _descripcion_direccion,
+            String _direccion_fiscal,
+            String _tipo_persona,
+            String _nombres,
+            String _apPaterno,
+            String _apMaterno,
+            String _tipo_documento,
+            String _nro_documento,
+            String _estado_guardado,
+            String _correo,
+            String _tipo_establecimiento,
+            String _descripcion_establecimiento,
+            String _categoria_establec,
+            String _estadoEditado) {
 
         ContentValues initialValues = new ContentValues();
         initialValues.put(establec_usuario_accion, _usuario_accion);
@@ -166,7 +167,7 @@ public class DbAdapter_Temp_Establecimiento {
         initialValues.put(establec_celular_two, _celular_two);
         initialValues.put(establec_latitud, _latitud);
         initialValues.put(establec_longitud, _longitud);
-        initialValues.put(establec_descripcion, _descripcion);
+        initialValues.put(establec_descripcion, _descripcion_direccion);
         initialValues.put(establec_direccion_fiscal, _direccion_fiscal);
         initialValues.put(establec_tipo_persona, _tipo_persona);
         initialValues.put(establec_nombres, _nombres);
@@ -176,23 +177,30 @@ public class DbAdapter_Temp_Establecimiento {
         initialValues.put(establec_nro_documento, _nro_documento);
         initialValues.put(establec_estado_guardado, _estado_guardado);
         initialValues.put(establec_correo, _correo);
+        initialValues.put(establec_categoria_estable, _categoria_establec);
         initialValues.put(establec_tipo_establecimiento, _tipo_establecimiento);
         initialValues.put(establec_descripcion_establecimiento, _descripcion_establecimiento);
-        initialValues.put(establec_editado, estadoEditado);
+        initialValues.put(establec_editado, _estadoEditado);
         return mDb.update(SQLITE_TABLE_Temp_Establec, initialValues,
                 establec_id_remoto + "=?", new String[]{idRemoto + ""});
     }
-    public long update(int _id_remoto,int estado){
+
+    public long update(int _id_remoto, int estado) {
 
         ContentValues initialValues = new ContentValues();
         initialValues.put(establec_editado, estado);
         return mDb.update(SQLITE_TABLE_Temp_Establec, initialValues,
-                establec_id_remoto + "=?", new String[]{_id_remoto+""});
+                establec_id_remoto + "=?", new String[]{_id_remoto + ""});
 
     }
 
     public Cursor fetchTemEstablec() {
-        Cursor cursor = mDb.rawQuery("select * from " + SQLITE_TABLE_Temp_Establec + " order by " + establec_id + " asc", null);
+        Cursor cursor = mDb.rawQuery("select * from " + SQLITE_TABLE_Temp_Establec + " where " + establec_editado + "='0' and " + Constants._SINCRONIZAR + "='" + Constants._CREADO + "' order by " + establec_id + " asc", null);
+        return cursor;
+    }
+
+    public Cursor fetchTemEstablecEdit() {
+        Cursor cursor = mDb.rawQuery("select * from " + SQLITE_TABLE_Temp_Establec + " where " + establec_editado + "='1' AND " + Constants._SINCRONIZAR + "='" + Constants._ACTUALIZADO + "' order by " + establec_id + " asc", null);
         return cursor;
     }
 
@@ -210,7 +218,7 @@ public class DbAdapter_Temp_Establecimiento {
 
     }
 
-    public long updateTempEstablecById(int id,int idRemoto,
+    public long updateTempEstablecById(int id, int idRemoto,
                                        int estado_actualizacion) {
 
         ContentValues initialValues = new ContentValues();

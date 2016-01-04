@@ -925,4 +925,45 @@ public class StockAgenteRestApi {
         result = new JSONObject(r);
         return result;
     }
+
+    public JSONObject fupd_ClienteEstablecimiento(int EstablecimientoId,String PerVNombres,String PerVApellPaterno,String PerVApellMaterno,String PerVDocIdentidad,String PerVCelular,String PerVEmail,int PerITipoDocIdentidadId,int PerITipoPersonaId,int PerIUsuarioId,int PerIEmpresaId,String CliVCodigo,int CliICategoriaClienteId,int CliIAgenteVentaId,int CliIUsuarioId,String DirVDescripcion,String DirVDescripcion_Fiscal,int DirBEstado,int DirIDistritoId,String DirVTelefonoFijo,String DirVCelular1,String DirBDireccionFiscal,String EstVDescripcion,int EstIUsuarioId,int EstICatEstablecimientoId,int EstITipEstId,String LocVLongitude,String LocVLatitude) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","RestAPI");
+        o.put("method", "fupd_ClienteEstablecimiento");
+        p.put("EstablecimientoId",mapObject(EstablecimientoId));
+        p.put("PerVNombres",mapObject(PerVNombres));
+        p.put("PerVApellPaterno",mapObject(PerVApellPaterno));
+        p.put("PerVApellMaterno",mapObject(PerVApellMaterno));
+        p.put("PerVDocIdentidad",mapObject(PerVDocIdentidad));
+        p.put("PerVCelular",mapObject(PerVCelular));
+        p.put("PerVEmail",mapObject(PerVEmail));
+        p.put("PerITipoDocIdentidadId",mapObject(PerITipoDocIdentidadId));
+        p.put("PerITipoPersonaId",mapObject(PerITipoPersonaId));
+        p.put("PerIUsuarioId",mapObject(PerIUsuarioId));
+        p.put("PerIEmpresaId",mapObject(PerIEmpresaId));
+        p.put("CliVCodigo",mapObject(CliVCodigo));
+        p.put("CliICategoriaClienteId",mapObject(CliICategoriaClienteId));
+        p.put("CliIAgenteVentaId",mapObject(CliIAgenteVentaId));
+        p.put("CliIUsuarioId",mapObject(CliIUsuarioId));
+        p.put("DirVDescripcion",mapObject(DirVDescripcion));
+        p.put("DirVDescripcion_Fiscal",mapObject(DirVDescripcion_Fiscal));
+        p.put("DirBEstado",mapObject(DirBEstado));
+        p.put("DirIDistritoId",mapObject(DirIDistritoId));
+        p.put("DirVTelefonoFijo",mapObject(DirVTelefonoFijo));
+        p.put("DirVCelular1",mapObject(DirVCelular1));
+        p.put("DirBDireccionFiscal",mapObject(DirBDireccionFiscal));
+        p.put("EstVDescripcion",mapObject(EstVDescripcion));
+        p.put("EstIUsuarioId",mapObject(EstIUsuarioId));
+        p.put("EstICatEstablecimientoId",mapObject(EstICatEstablecimientoId));
+        p.put("EstITipEstId",mapObject(EstITipEstId));
+        p.put("LocVLongitude",mapObject(LocVLongitude));
+        p.put("LocVLatitude",mapObject(LocVLatitude));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
 }

@@ -329,7 +329,7 @@ public class VMovil_Crear_Establecimiento extends AppCompatActivity {
                 new CrearEstablecimiento(this).execute();
                 new ImportMain(this).execute();
                 startActivity(new Intent(getApplicationContext(), VMovil_Menu_Establec.class));
-                this.finish();
+                onBackPressed();
             }
         } else {
             new ImportMain(this).execute();

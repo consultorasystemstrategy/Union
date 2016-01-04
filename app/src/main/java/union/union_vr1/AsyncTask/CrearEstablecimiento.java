@@ -121,7 +121,8 @@ public class CrearEstablecimiento extends AsyncTask<String, String, String> {
 
                 if (isSuccesfulExport(jsonObjectCreated)) {
                     int idRemoto = jsonObjectCreated.getInt("Value");
-                    dbAdapter_temp_establecimiento.updateTempEstablecById(cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_id)), idRemoto, Constants._ACTUALIZADO);
+                   long a = dbAdapter_temp_establecimiento.updateTempEstablecById(cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_id)), idRemoto, Constants._ACTUALIZADO);
+                    Log.d("ESTADO",""+a+"--"+idRemoto);
                 }
 
                 Log.d("GUARDAR ESTABLECIMIENTO", "" + 1);

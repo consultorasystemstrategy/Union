@@ -10,6 +10,7 @@ import org.json.JSONObject;
 
 import union.union_vr1.RestApi.StockAgenteRestApi;
 import union.union_vr1.Sqlite.Constants;
+import union.union_vr1.Sqlite.DBAdapter_Temp_Inventario;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Establecimiento;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 
@@ -35,101 +36,61 @@ public class ModificarEstablecimiento extends AsyncTask<String, String, String> 
         dbAdapter_temp_establecimiento.open();
         dbAdapter_temp_session = new DbAdapter_Temp_Session(mainActivity);
         dbAdapter_temp_session.open();
-        int ruta = dbAdapter_temp_session.fetchVarible(777);
-        Cursor cursor = dbAdapter_temp_establecimiento.fetchTemEstablec();
+
+        Cursor cursor = dbAdapter_temp_establecimiento.fetchTemEstablecEdit();
         try {
             int idAgente = dbAdapter_temp_session.fetchVarible(1);
             int idLiquidacion = dbAdapter_temp_session.fetchVarible(3);
             while (cursor.moveToNext()) {
-                Log.d("DATOS ERROR", "" + idLiquidacion + "-" + idAgente + "-" + cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_nombres)) + ""
-                        + "-" + cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_apPaterno))
-                        + "-" + cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_apMaterno))
-                        + "-" + cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_nro_documento))
-                        + "-" + cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_celular_one))
-                        + "-" + cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_correo))
-                        + "-" + cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_tipo_documento))
-                        + "-" + cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_tipo_persona))
-                        + "-" + cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_usuario_accion))
-                        + "-" + cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_nro_documento))
-                        + "-" + cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_tipo_establecimiento))
-                        + "-" + cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_usuario_accion))
-                        + "-" + cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_descripcion))
-                        + "-" + cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_telefono_fijo))
-                        + "-" + cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_celular_one))
-                        + "-" + cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_celular_two))
-                        + "-" + cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_usuario_accion))
-                        + "-" + cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_descripcion_establecimiento))
-                        + "-" + cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_usuario_accion))
-                        + "-" + cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_categoria_estable))
-                        + "-" + cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_tipo_establecimiento))
-                        + "-" + cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_longitud))
-                        + "-" + cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_latitud))
-                        + "-" + cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_usuario_accion)));
 
 
-                jsonObjectCreated = stockAgenteRestApi.InsClienteEstablecimiento(cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_nombres)),
+                jsonObjectCreated = stockAgenteRestApi.fupd_ClienteEstablecimiento(
+                        cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_id_remoto)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_nombres)),
                         cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_apPaterno)),
                         cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_apMaterno)),
                         cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_nro_documento)),
                         cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_celular_one)),
                         cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_correo)),
-                        1,
                         cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_tipo_documento)),
                         cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_tipo_persona)),
                         cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_usuario_accion)),
                         1,//Id Empresa con el ususario
                         "554",//codigo
-                        cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_nro_documento)),
-                        1,
                         3,
                         idAgente,//Agente de venta id
                         cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_usuario_accion)),
-                        1,//estado de atencion
-                        0.0, //Minto de credito
-                        5,//modalidad de credito
-                        cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_descripcion)),
+                     //Minto de credito
+                        cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_descripcion)),//modalidad de credito
+                        cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_direccion_fiscal)),
                         1,
                         0,//iddistrito
                         cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_telefono_fijo)),
                         cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_celular_one)),
-                        cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_celular_two)),
-                        cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_usuario_accion)),
-                        0,//establecimiento asociado
-                        0,//Direccion fiscal Id
+                        0+"",
                         cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_descripcion_establecimiento)),
-                        1,
-                        cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_usuario_accion)),
-                        0,//porcentaje devolucion
-                        cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_categoria_estable)),//TIPO establecimiento
-                        "Ninguno",
-                        0.0,//Monto de compra
+                        cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_usuario_accion)),//establecimiento asociado
+                        cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_categoria_estable)),//Direccion fiscal Id
                         cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_tipo_establecimiento)),
                         cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_longitud)),
-                        cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_latitud)),
-                        1,
-                        cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_usuario_accion)),
-                        1,
-                        idLiquidacion,//Liquidacion
-                        4,//Motivo no atewncido
-                        ruta,//RUTAid
-                        cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_direccion_fiscal))
+                        cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_latitud))
 
                 );
-
+                Log.e("JSON EDIT ESTAB", "" + jsonObjectCreated.toString());
                 //----------------------------
-                Log.d("JSON C EST", ""+jsonObjectCreated.toString());
+                Log.e("JSON EDIT ESTAB", "" + jsonObjectCreated.toString());
 
                 if (isSuccesfulExport(jsonObjectCreated)) {
                     int idRemoto = jsonObjectCreated.getInt("Value");
-                    dbAdapter_temp_establecimiento.updateTempEstablecById(cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_id)), idRemoto, Constants._ACTUALIZADO);
+                   // dbAdapter_temp_establecimiento.updateTempEstablecById(cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_id)), idRemoto, Constants._ACTUALIZADO);
                 }
 
-                Log.d("GUARDAR ESTABLECIMIENTO", "" + 1);
+                Log.e("EDIT ESTAB ESTABLECIMIENTO", "" + 1);
             }
-            Log.d("GUARDAR ESTABLECIMIENTO", "" + jsonObjectCreated);
+            Log.e("EDIT ESTAB ESTABLECIMIENTO", "" + jsonObjectCreated);
         } catch (Exception e) {
             e.printStackTrace();
-            Log.d("GUARDAR ESTABLECIMIENTO", "" + e.getMessage());
+            Log.e("EDIT ESTAB ESTABLECIMIENTO", "" + e.getMessage());
         }
         return null;
     }

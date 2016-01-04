@@ -3,6 +3,7 @@ package union.union_vr1.Fragments;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -59,6 +60,7 @@ public class FClienteEditar extends Fragment {
         dbAdapter_temp_establecimiento = new DbAdapter_Temp_Establecimiento(getActivity());
         dbAdapter_temp_establecimiento.open();
         idEstablecimiento = getArguments().getString("idEstablecimiento");
+        Log.d("ESTABLECIMIENTO",""+idEstablecimiento);
         toastBucsando= Toast.makeText(getActivity().getApplicationContext(), "Buscando...", 1000);
         toast = Toast.makeText(getActivity().getApplicationContext(), "Encontrado", Toast.LENGTH_SHORT);
         toast.getView().setBackgroundColor(getActivity().getResources().getColor(R.color.verde));
@@ -135,7 +137,7 @@ public class FClienteEditar extends Fragment {
                 0);
 
 
-        autoNroDocumento.setAdapter(adapter);
+        //autoNroDocumento.setAdapter(adapter);
 
         display();
 
