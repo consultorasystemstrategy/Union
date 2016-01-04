@@ -277,7 +277,7 @@ public class FClienteRegistrar extends Fragment {
         Cursor cr = dbAdapter_tipo_doc_identidad.fetchTipoDocIden();
         SimpleCursorAdapter simpleCursorAdapter ;
         int[] to = new int[]{
-                android.R.id.text1,
+                R.id.textSpinner,
         };
 
         String[] columns = new String[]{
@@ -293,7 +293,7 @@ public class FClienteRegistrar extends Fragment {
         Cursor cr = dbAdapter_tipo_persona.fetchTipoPersona(id);
         SimpleCursorAdapter simpleCursorAdapter ;
         int[] to = new int[]{
-                android.R.id.text1,
+                R.id.textSpinner,
 
         };
 

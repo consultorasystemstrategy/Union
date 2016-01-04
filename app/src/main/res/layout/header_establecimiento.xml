@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="4dp">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:background="@drawable/border_bottom_green">
+
+        <union.union_vr1.Utils.RoundedLetterView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/letter"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_marginStart="8dp"
+            tools:visibility="visible"
+            app:backgroundColorValue="@color/verde"
+            app:titleColor="@android:color/white"
+            app:titleSize="35dp"
+            app:titleText="A"
+            android:layout_marginBottom="2dp" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="COMPLETE NAME HERE!"
+            android:id="@+id/completeName"
+            android:layout_toEndOf="@+id/rlv_name_view"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_marginBottom="2dp"
+            android:textSize="16dp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+</LinearLayout>

@@ -50,6 +50,16 @@ public class Constants {
     public static final String REPRESENTACION_BOLETA = "REPRESENTACION IMPRESA DE LA BOLETA DE VENTA ELECTRONICA";
     public static final String REPRESENTACION_FACTURA = "REPRESENTACION IMPRESA DE LA FACTURA DE VENTA ELECTRONICA";
 
+    public static final String _SPINNER_DEFAULT_COMPROBANTE = "Tipo de Comprobante";
+    public static final String _FACTURA = "Factura";
+    public static final String _BOLETA = "Boleta";
+
+    public static final String _SPINNER_DEFAULT_PAGO = "Forma de pago";
+    public static final String _CONTADO = "Contado";
+    public static final String _CREDITO = "Credito";
+
+
+
 
 
 

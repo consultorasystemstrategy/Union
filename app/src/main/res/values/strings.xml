@@ -79,7 +79,7 @@
         <item>Vencido-Malo</item>
     </string-array>
     <string-array name="forma_pago">
-        <item>Seleccionar</item>
+        <item>Forma de pago</item>
         <item>Contado</item>
         <item>Credito</item>
     </string-array>
@@ -97,11 +97,11 @@
     </string-array>
     <!-- Principal_evento_gasto.xml -->
     <string-array name="procedenciaGasto">
-        <item>planta</item>
+        <item>ruta</item>
         <!--<item>ruta</item>-->
     </string-array>
     <string-array name="tipoDocumento">
-        <item>Seleccionar</item>
+        <item>Tipo de Comprobante</item>
         <item>Factura</item>
         <item>Boleta</item>
         <item>Ficha</item>
@@ -110,7 +110,7 @@
         <item>factura</item>
     </string-array>
     <string-array name="tipoDocumentoFacturaBoleta">
-        <item>Seleccionar</item>
+        <item>Tipo de Comprobante</item>
         <item>Factura</item>
         <item>Boleta</item>
     </string-array>

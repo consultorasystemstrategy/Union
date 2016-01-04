@@ -70,7 +70,7 @@ public class FEstablecimientoRegistrar extends Fragment {
         Cursor cr = dbAdapter_tipo_establecimiento.fetchTipoEstablec();
         SimpleCursorAdapter simpleCursorAdapter ;
         int[] to = new int[]{
-                android.R.id.text1,
+                R.id.textSpinner,
 
         };
 
@@ -87,7 +87,7 @@ public class FEstablecimientoRegistrar extends Fragment {
         Cursor cr = dbAdapter_categoria_establecimiento.fetchCatEstablecimiento();
         SimpleCursorAdapter simpleCursorAdapter ;
         int[] to = new int[]{
-                android.R.id.text1,
+                R.id.textSpinner,
 
         };
 

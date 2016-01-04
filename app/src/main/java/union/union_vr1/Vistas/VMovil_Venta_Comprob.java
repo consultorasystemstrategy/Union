@@ -58,6 +58,7 @@ import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 import union.union_vr1.Sqlite.DbGastos_Ingresos;
 import union.union_vr1.Utils.MyApplication;
+import union.union_vr1.Utils.RoundedLetterView;
 import union.union_vr1.Utils.Utils;
 import union.union_vr1.VMovil_BluetoothImprimir;
 
@@ -224,6 +225,29 @@ public class VMovil_Venta_Comprob extends Activity implements View.OnClickListen
         //SLIDING MENU
         showSlideMenu(this);
 
+        showHeader();
+
+    }
+
+    private void showHeader(){
+        TextView textViewNombreEstablecimiento = (TextView) findViewById(R.id.completeName);
+        RoundedLetterView letter = (RoundedLetterView) findViewById(R.id.letter);
+
+
+
+        Cursor cursorEstablecimiento = dbAdaptert_evento_establec.fetchEstablecsById(""+idEstablec);
+        cursorEstablecimiento.moveToFirst();
+        String nombreEstablecimiento = "";
+        if (cursorEstablecimiento.getCount()>0) {
+            nombreEstablecimiento = cursorEstablecimiento.getString(cursorEstablecimiento.getColumnIndexOrThrow(dbAdaptert_evento_establec
+                    .EE_nom_establec));
+        }
+        textViewNombreEstablecimiento.setText(nombreEstablecimiento);
+        if(nombreEstablecimiento.length() == 0){
+            letter.setTitleText("A");
+        }else{
+            letter.setTitleText(nombreEstablecimiento.substring(0, 1).toUpperCase());
+        }
     }
 
     private  void mostrarItemsDevoluciones(int establec){

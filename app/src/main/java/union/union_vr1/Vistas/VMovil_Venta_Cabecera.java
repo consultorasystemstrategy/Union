@@ -110,6 +110,7 @@ import union.union_vr1.Sqlite.DbAdapter_Temp_Comprob_Cobro;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 import union.union_vr1.Sqlite.DbGastos_Ingresos;
+import union.union_vr1.Utils.RoundedLetterView;
 import union.union_vr1.Utils.SoftKeyboard;
 import union.union_vr1.Utils.Utils;
 import union.union_vr1.VMovil_BluetoothImprimir;
@@ -573,76 +574,34 @@ Instantiate and pass a callback
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
-                String formaDePago = adapterView.getItemAtPosition(i).toString();
-                FormaPago formaPago = FormaPago.valueOf(formaDePago);
+                String formaPago = adapterView.getItemAtPosition(i).toString();
 
-                switch (formaPago){
-                    case Contado:
+                if(formaPago.equals(Constants._CONTADO)){
+                        //DO NOTHING
+                }else if(formaPago.equals(Constants._CREDITO)){
 
-                        break;
-                    case Credito:
 
-                        if (isEstablecidasCuotas){
+                    if (isEstablecidasCuotas){
 
-                        }
-                        else {
+                    }
+                    else {
 
-                            Cursor cursorEstablecimientoCredito = dbHelper_Evento_Establecimiento.fetchEstablecsById(""+idEstablecimiento);
-                            cursorEstablecimiento.moveToFirst();
-                            int montoCredito = -1;
-                            montoCredito = cursorEstablecimientoCredito.getInt(cursorEstablecimientoCredito.getColumnIndexOrThrow(dbHelper_Evento_Establecimiento.EE_monto_credito));
-                            switch (montoCredito){
-                                case -1:
+                        Cursor cursorEstablecimientoCredito = dbHelper_Evento_Establecimiento.fetchEstablecsById(""+idEstablecimiento);
+                        cursorEstablecimiento.moveToFirst();
+                        int montoCredito = -1;
+                        montoCredito = cursorEstablecimientoCredito.getInt(cursorEstablecimientoCredito.getColumnIndexOrThrow(dbHelper_Evento_Establecimiento.EE_monto_credito));
+                        switch (montoCredito){
+                            case -1:
 
-                                    break;
-                                case 0:
+                                break;
+                            case 0:
 
-                                    if (conectadoWifi()||conectadoRedMovil()) {
-                                        new AlertDialog.Builder(mContext)
-                                                .setTitle("Ops, No cuenta con crédito")
-                                                .setMessage("" +
-                                                        "¿Desea solicitar crédito?")
-                                                .setNegativeButton(android.R.string.no,new DialogInterface.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                                        spinnerFormaPago.setAdapter(adapterFormaPago);
-                                                    }
-                                                })
-                                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                                    public void onClick(DialogInterface dialog, int id) {
-                                                        dialogSolicitarCredito().show();
-                                                    }
-                                                })
-                                                .setCancelable(false)
-                                                .create().show();
-
-                                    }else{
-                                        Toast toast = Toast.makeText(mContext, "Sin crédito y sin conexión", Toast.LENGTH_SHORT);
-                                        toast.getView().setBackgroundColor(mainActivity.getResources().getColor(R.color.verde));
-                                        TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
-                                        v.setTextColor(mainActivity.getResources().getColor(R.color.Blanco));
-                                        toast.show();
-                                    }
-
-                                    break;
-                                default:
-                                    if (simpleCursorAdapter.getCursor().getCount()<=0){
-
-                                        Toast toast = Toast.makeText(mContext, "AGREGAR PRODUCTOS A LA VENTA", Toast.LENGTH_SHORT);
-                                        toast.getView().setBackgroundColor(mainActivity.getResources().getColor(R.color.verde));
-                                        TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
-                                        v.setTextColor(mainActivity.getResources().getColor(R.color.Blanco));
-                                        toast.show();
-
-                                        spinnerFormaPago.setAdapter(adapterFormaPago);
-
-                                        break;
-                                    }
+                                if (conectadoWifi()||conectadoRedMovil()) {
                                     new AlertDialog.Builder(mContext)
-                                            .setTitle("Está seguro que es toda su venta")
-                                            .setMessage("Si define las cuotas ya no podrá agregar productos a la venta, ni eliminarlos\n" +
-                                                    "¿Está seguro que está todo listo?")
-                                            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                            .setTitle("Ops, No cuenta con crédito")
+                                            .setMessage("" +
+                                                    "¿Desea solicitar crédito?")
+                                            .setNegativeButton(android.R.string.no,new DialogInterface.OnClickListener() {
                                                 @Override
                                                 public void onClick(DialogInterface dialogInterface, int i) {
                                                     spinnerFormaPago.setAdapter(adapterFormaPago);
@@ -650,21 +609,62 @@ Instantiate and pass a callback
                                             })
                                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                                 public void onClick(DialogInterface dialog, int id) {
-                                                    Intent intent = new Intent(getApplicationContext(), VMovil_Venta_Cabecera_PlanPagos.class);
-                                                    intent.putExtra("total", totalFooter);
-                                                    finish();
-                                                    startActivity(intent);
+                                                    dialogSolicitarCredito().show();
                                                 }
                                             })
                                             .setCancelable(false)
                                             .create().show();
 
-                                    break;
-                            }
+                                }else{
+                                    Toast toast = Toast.makeText(mContext, "Sin crédito y sin conexión", Toast.LENGTH_SHORT);
+                                    toast.getView().setBackgroundColor(mainActivity.getResources().getColor(R.color.verde));
+                                    TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
+                                    v.setTextColor(mainActivity.getResources().getColor(R.color.Blanco));
+                                    toast.show();
+                                }
 
+                                break;
+                            default:
+                                if (simpleCursorAdapter.getCursor().getCount()<=0){
+
+                                    Toast toast = Toast.makeText(mContext, "AGREGAR PRODUCTOS A LA VENTA", Toast.LENGTH_SHORT);
+                                    toast.getView().setBackgroundColor(mainActivity.getResources().getColor(R.color.verde));
+                                    TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
+                                    v.setTextColor(mainActivity.getResources().getColor(R.color.Blanco));
+                                    toast.show();
+
+                                    spinnerFormaPago.setAdapter(adapterFormaPago);
+
+                                    break;
+                                }
+                                new AlertDialog.Builder(mContext)
+                                        .setTitle("Está seguro que es toda su venta")
+                                        .setMessage("Si define las cuotas ya no podrá agregar productos a la venta, ni eliminarlos\n" +
+                                                "¿Está seguro que está todo listo?")
+                                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i) {
+                                                spinnerFormaPago.setAdapter(adapterFormaPago);
+                                            }
+                                        })
+                                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                                Intent intent = new Intent(getApplicationContext(), VMovil_Venta_Cabecera_PlanPagos.class);
+                                                intent.putExtra("total", totalFooter);
+                                                finish();
+                                                startActivity(intent);
+                                            }
+                                        })
+                                        .setCancelable(false)
+                                        .create().show();
+
+                                break;
                         }
-                        break;
+
+                    }
+
                 }
+
             }
 
             @Override
@@ -676,24 +676,31 @@ Instantiate and pass a callback
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 String tipoDocumento = spinnerTipoDocumento.getSelectedItem().toString();
-                TipoDocumento tipoDocumento1 = TipoDocumento.valueOf(tipoDocumento);
+
+                if (tipoDocumento.equals(Constants._FACTURA)){
+                    textViewFooterText.setText("Total :\n" +
+                            "Base imponible :\n" +
+                            "IGV :");
+
+                    textViewFooterTotal.setText(" S/. "+df.format(totalFooter)+"\n" +
+                            "S/. "+df.format(base_imponibleFooter)+ "\n" +
+                            "S/. "+df.format(igvFooter));
+                }else if (tipoDocumento.equals(Constants._BOLETA)){
+                    textViewFooterText.setText("Total :");
+                    textViewFooterTotal.setText("S/. "+df.format(totalFooter));
+                }else
+                {
+                    //DO NOTHING
+                }
+
+/*                TipoDocumento tipoDocumento1 = TipoDocumento.valueOf(tipoDocumento);
 //                DecimalFormat df = new DecimalFormat("#.00");
 
                 switch (tipoDocumento1){
                     case Factura:
-                        textViewFooterText.setText("Total :\n" +
-                                "Base imponible :\n" +
-                                "IGV :");
-
-                        textViewFooterTotal.setText(" S/. "+df.format(totalFooter)+"\n" +
-                                "S/. "+df.format(base_imponibleFooter)+ "\n" +
-                                "S/. "+df.format(igvFooter));
 
                         break;
                     case Boleta:
-
-                        textViewFooterText.setText("Total :");
-                        textViewFooterTotal.setText("S/. "+df.format(totalFooter));
 
                         break;
                     case Ficha:
@@ -701,7 +708,7 @@ Instantiate and pass a callback
                         textViewFooterTotal.setText("S/. "+df.format(totalFooter));
                         break;
                 }
-
+*/
             }
 
             @Override
@@ -1001,12 +1008,12 @@ Instantiate and pass a callback
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
-            case R.id.ventaRRPP:
+            /*case R.id.ventaRRPP:
 
                 ventaRRPP =1;
                 setTitle("Venta RR.PP.");
-                /*IntentIntegrator intentIntegrator = new IntentIntegrator(mainActivity);
-                intentIntegrator.initiateScan();*/
+                *//*IntentIntegrator intentIntegrator = new IntentIntegrator(mainActivity);
+                intentIntegrator.initiateScan();*//*
                 Toast.makeText(contexto, "VENTA RRPP", Toast.LENGTH_LONG).show();
 
                 //DOCUMENTO SÓLO BOLETA
@@ -1026,7 +1033,7 @@ Instantiate and pass a callback
 
                 //SE DEBERÁ MANDAR UN PARÁMETRO A IMPRESIÓN, Y A GENERACIÓN DEL FIRMADO QUE ES RR PP
 
-                break;
+                break;*/
             case R.id.ventaNormal:
                 ventaRRPP = -1;
                 setTitle("Venta de Productos");
@@ -1289,6 +1296,8 @@ Instantiate and pass a callback
 
         final EditText editTextCantidadCredito = ((EditText) layout.findViewById(R.id.VCSC_editText_CantidadCredito));
         editTextCantidadCredito.setText(Utils.replaceComa(df.format(totalFooter)));
+
+
         spinnerDiasCredito = ((Spinner) layout.findViewById(R.id.VCSC_spinner_DiasCredito));
 
 
@@ -1458,9 +1467,9 @@ Instantiate and pass a callback
 
         return alertDialog;
     }
-    private enum FormaPago{
+/*    private enum FormaPago{
         Contado, Credito, Seleccionar
-    }
+    }*/
 
     @Override
     public void onClick(View view) {
@@ -1493,14 +1502,14 @@ Instantiate and pass a callback
                 String formaPago = spinnerFormaPago.getSelectedItem().toString();
                 String tipoDocumento = spinnerTipoDocumento.getSelectedItem().toString();
 
-                if (formaPago.equals("Seleccionar") && tipoDocumento.equals("Seleccionar")){
+                if (formaPago.equals(Constants._SPINNER_DEFAULT_COMPROBANTE) && tipoDocumento.equals(Constants._SPINNER_DEFAULT_PAGO)){
                     Toast.makeText(VMovil_Venta_Cabecera.this, "Seleccionar Tipo de Documento, y Forma de pago", Toast.LENGTH_SHORT).show();
                     return;
-                }else if (formaPago.equals("Seleccionar")){
+                }else if (formaPago.equals(Constants._SPINNER_DEFAULT_PAGO)){
                     Toast.makeText(VMovil_Venta_Cabecera.this, "Seleccionar Forma de pago", Toast.LENGTH_SHORT).show();
                     return;
-                }else if(tipoDocumento.equals("Seleccionar")) {
-                    Toast.makeText(VMovil_Venta_Cabecera.this, "Seleccionar Tipo de Docuemnto", Toast.LENGTH_SHORT).show();
+                }else if(tipoDocumento.equals(Constants._SPINNER_DEFAULT_COMPROBANTE)) {
+                    Toast.makeText(VMovil_Venta_Cabecera.this, "Seleccionar Tipo de Documento", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -1611,8 +1620,8 @@ Instantiate and pass a callback
         String formaPago = spinnerFormaPago.getSelectedItem().toString();
         String tipoDocumento = spinnerTipoDocumento.getSelectedItem().toString();
 
-        TipoDocumento tipoDocumento1 = TipoDocumento.valueOf(tipoDocumento);
-        FormaPago formaPago1 = FormaPago.valueOf(formaPago);
+        /*TipoDocumento tipoDocumento1 = TipoDocumento.valueOf(tipoDocumento);
+        FormaPago formaPago1 = FormaPago.valueOf(formaPago);*/
 
         int tipoVenta = 1;
         if (ventaRRPP==1){
@@ -1635,50 +1644,47 @@ Instantiate and pass a callback
         cursorEstablecimiento.moveToFirst();
         documentoCliente = cursorEstablecimiento.getString(cursorEstablecimiento.getColumnIndexOrThrow(dbHelper_Evento_Establecimiento.EE_doc_cliente));
         nombreCliente = cursorEstablecimiento.getString(cursorEstablecimiento.getColumnIndexOrThrow(dbHelper_Evento_Establecimiento.EE_nom_cliente));
-        switch (tipoDocumento1){
-            case Factura:
-                i_tipoDocumento = 1;
-                erp_stringTipoDocumento="FV";
-                serie = dbHelperAgente.getSerieFacturaByIdAgente(id_agente_venta,idLiquidacion );
-                codigo_erp = erp_stringTipoDocumento+serie;
-                numero_documento = session.fetchVarible(10);
-                Log.d("CODIGO ERP ", codigo_erp);
-                session.deleteVariable(10);
-                session.createTempSession(10,numero_documento+1);
-                break;
-            case Boleta:
-                i_tipoDocumento = 2;
-                erp_stringTipoDocumento="BV";
-                serie = dbHelperAgente.getSerieBoletaByIdAgente(id_agente_venta, idLiquidacion);
-                codigo_erp = erp_stringTipoDocumento+serie;
-                numero_documento = session.fetchVarible(11);
-                session.deleteVariable(11);
-                session.createTempSession(11,numero_documento+1);
-                Log.d("CODIGO ERP ", codigo_erp);
-                break;
-            case Ficha:
-                Log.d("CODIGO ERP ", codigo_erp);
-                break;
+
+
+        if (tipoDocumento.equals(Constants._FACTURA)){
+            i_tipoDocumento = 1;
+            erp_stringTipoDocumento="FV";
+            serie = dbHelperAgente.getSerieFacturaByIdAgente(id_agente_venta,idLiquidacion );
+            codigo_erp = erp_stringTipoDocumento+serie;
+            numero_documento = session.fetchVarible(10);
+            Log.d("CODIGO ERP ", codigo_erp);
+            session.deleteVariable(10);
+            session.createTempSession(10,numero_documento+1);
+        }else if (tipoDocumento.equals(Constants._BOLETA)){
+            i_tipoDocumento = 2;
+            erp_stringTipoDocumento="BV";
+            serie = dbHelperAgente.getSerieBoletaByIdAgente(id_agente_venta, idLiquidacion);
+            codigo_erp = erp_stringTipoDocumento+serie;
+            numero_documento = session.fetchVarible(11);
+            session.deleteVariable(11);
+            session.createTempSession(11,numero_documento+1);
+            Log.d("CODIGO ERP ", codigo_erp);
+        }else
+        {
+            Log.d("CODIGO ERP ", codigo_erp);
+            //DO NOTHING
         }
+
 
         numeroDocumentoImpresion = serie + "-" +agregarCeros((String.valueOf(numero_documento)),8);
         Cursor cursorTempComprobCobros = dbHelper_Temp_Comprob_Cobros.fetchAllComprobCobros();
         cursorTempComprobCobros.moveToFirst();
         //Log.d("FORMA DE PAGO ", ""+i_formaPago);
-        switch (formaPago1){
-            case Contado:
-                i_formaPago = 1;
-                break;
-            case Credito:
-                i_formaPago = 2;
 
+        if(formaPago.equals(Constants._CONTADO)){
 
+            i_formaPago = 1;
 
+        }else if(formaPago.equals(Constants._CREDITO)){
 
-                //((MyApplication)this.getApplication()).setCuotasEstablecidas(false)
-                session.deleteVariable(5);
-                session.createTempSession(5,0);
-                break;
+            i_formaPago = 2;
+            session.deleteVariable(5);
+            session.createTempSession(5,0);
 
         }
 
@@ -1968,9 +1974,9 @@ Instantiate and pass a callback
         startActivity(intent);*/
     }
 
-    public enum TipoDocumento{
+ /*   public enum TipoDocumento{
         Factura, Boleta, Ficha, Seleccionar
-    }
+    }*/
     private void displayHistorialComprobanteAnterior() {
 
         //Log.d("DISPLAY ID ESTABLECIMIENTO ", ""+idEstablecimiento);;
@@ -2057,6 +2063,25 @@ Instantiate and pass a callback
     }
     public void mostrarProductosParaVender(){
 
+
+        TextView textViewNombreEstablecimiento = (TextView) findViewById(R.id.completeName);
+        RoundedLetterView letter = (RoundedLetterView) findViewById(R.id.letter);
+
+
+
+        Cursor cursorEstablecimiento = dbHelper_Evento_Establecimiento.fetchEstablecsById(""+idEstablecimiento);
+        cursorEstablecimiento.moveToFirst();
+        String nombreEstablecimiento = "";
+        if (cursorEstablecimiento.getCount()>0) {
+            nombreEstablecimiento = cursorEstablecimiento.getString(cursorEstablecimiento.getColumnIndexOrThrow(dbHelper_Evento_Establecimiento.EE_nom_establec));
+        }
+        textViewNombreEstablecimiento.setText(nombreEstablecimiento);
+        if(nombreEstablecimiento.length() == 0){
+            letter.setTitleText("A");
+        }else{
+            letter.setTitleText(nombreEstablecimiento.substring(0, 1).toUpperCase());
+        }
+
         Log.d("AUTOCOMPLETE KEYBOARD",""+autoCompleteTextView.getTag()+"-"+autoCompleteTextView.getId());
 
         //autoCompleteTextView.clearFocus();
@@ -2102,10 +2127,12 @@ Instantiate and pass a callback
                 0);
 
 
-        if (listView.getHeaderViewsCount()<2){
+        if (listView.getHeaderViewsCount()<1){
             header = getLayoutInflater().inflate(R.layout.infor_venta_cabecera,null);
-            headerNombreEstablecimiento = getLayoutInflater().inflate(R.layout.header_venta,null);
-            TextView textViewNombreEstablecimiento = (TextView) headerNombreEstablecimiento.findViewById(R.id.headerEstablecimientoNombre);
+            /*headerNombreEstablecimiento = getLayoutInflater().inflate(R.layout.header_establecimiento,null);
+            TextView textViewNombreEstablecimiento = (TextView) headerNombreEstablecimiento.findViewById(R.id.completeName);
+            RoundedLetterView letter = (RoundedLetterView) headerNombreEstablecimiento.findViewById(R.id.letter);
+
 
 
             Cursor cursorEstablecimiento = dbHelper_Evento_Establecimiento.fetchEstablecsById(""+idEstablecimiento);
@@ -2115,8 +2142,14 @@ Instantiate and pass a callback
                 nombreEstablecimiento = cursorEstablecimiento.getString(cursorEstablecimiento.getColumnIndexOrThrow(dbHelper_Evento_Establecimiento.EE_nom_establec));
             }
             textViewNombreEstablecimiento.setText(nombreEstablecimiento);
+            if(nombreEstablecimiento.length() == 0){
+                letter.setTitleText("A");
+            }else{
+                letter.setTitleText(nombreEstablecimiento.substring(0, 1).toUpperCase());
+            }
 
-            listView.addHeaderView(headerNombreEstablecimiento,null,false);
+
+            listView.addHeaderView(headerNombreEstablecimiento, null, false);*/
             listView.addHeaderView(header,null, false);
         }
 

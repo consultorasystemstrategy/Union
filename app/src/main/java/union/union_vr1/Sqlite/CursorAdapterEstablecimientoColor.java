@@ -69,12 +69,30 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter {
 
     }
 
-    @Override
+ /*   @Override
     public View getView(int position, View view, ViewGroup parent) {
 
-        cursor.moveToPosition(position);
+        *//*cursor.moveToPosition(position);*//*
 
-        view = cursorInflater.inflate(R.layout.establecimiento_lista, parent, false);
+
+
+        return super.getView(position, view, parent);
+    }*/
+
+    @Override
+    public View newView(Context context, Cursor cursor, ViewGroup viewGroup) {
+        /*final LayoutInflater inflater  = LayoutInflater.from(context);
+        final View view = inflater.inflate(R.layout.establecimiento_lista, viewGroup,false);
+        return view;*/
+        return cursorInflater.inflate(R.layout.establecimiento_lista, viewGroup, false);
+
+    }
+
+
+    @Override
+    public void bindView(View view, final Context context, final Cursor cursor) {
+
+        /*view = cursorInflater.inflate(R.layout.establecimiento_lista, parent, false);*/
         LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.layoutenter);
         ImageButton imageButtonOp = (ImageButton) view.findViewById(R.id.imgOperaciones);
         TextView nombreEstablecimiento = (TextView) view.findViewById(R.id.textViewEstablecimientoNombre);
@@ -214,24 +232,6 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter {
                 }
             });
         }
-
-        return super.getView(position, view, parent);
-    }
-
-    @Override
-    public View newView(Context context, Cursor cursor, ViewGroup viewGroup) {
-        /*final LayoutInflater inflater  = LayoutInflater.from(context);
-        final View view = inflater.inflate(R.layout.establecimiento_lista, viewGroup,false);
-        return view;*/
-        return cursorInflater.inflate(R.layout.establecimiento_lista, viewGroup, false);
-
-    }
-
-
-    @Override
-    public void bindView(View view, final Context context, final Cursor cursor) {
-
-
     }
 
     private void setActionOperacion(final String idEstablec) {

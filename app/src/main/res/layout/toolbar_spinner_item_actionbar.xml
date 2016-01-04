@@ -6,7 +6,7 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@android:id/text1"
+        android:id="@+id/textSpinner"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:drawablePadding="8dp"

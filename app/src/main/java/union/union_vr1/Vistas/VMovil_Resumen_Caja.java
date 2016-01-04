@@ -43,6 +43,7 @@ import union.union_vr1.AsyncTask.CerrarCaja;
 import union.union_vr1.AsyncTask.ExportService;
 import union.union_vr1.AsyncTask.SolicitarCredito;
 import union.union_vr1.R;
+import union.union_vr1.Servicios.ServiceExport;
 import union.union_vr1.Sqlite.Constants;
 import union.union_vr1.Sqlite.CursorResumenComprobantes;
 import union.union_vr1.Sqlite.DBAdapter_Temp_Autorizacion_Cobro;
@@ -257,9 +258,14 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
                 startActivity(intent);
                 break;*/
             case R.id.buttonExportERP:
+                Intent intentExportService = new Intent(mainActivity, ServiceExport.class);
+                intentExportService.setAction(Constants.ACTION_EXPORT_SERVICE);
+                mainActivity.startService(intentExportService);
+
                 Intent intentExportERP = new Intent(mainActivity, ExportService.class);
                 intentExportERP.setAction(Constants.ACTION_EXPORT_SERVICE);
                 mainActivity.startService(intentExportERP);
+
                 break;
 
             default:
