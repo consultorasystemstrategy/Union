@@ -680,7 +680,7 @@ Instantiate and pass a callback
 //                DecimalFormat df = new DecimalFormat("#.00");
 
                 switch (tipoDocumento1){
-                    case factura:
+                    case Factura:
                         textViewFooterText.setText("Total :\n" +
                                 "Base imponible :\n" +
                                 "IGV :");
@@ -690,13 +690,13 @@ Instantiate and pass a callback
                                 "S/. "+df.format(igvFooter));
 
                         break;
-                    case boleta:
+                    case Boleta:
 
                         textViewFooterText.setText("Total :");
                         textViewFooterTotal.setText("S/. "+df.format(totalFooter));
 
                         break;
-                    case ficha:
+                    case Ficha:
                         textViewFooterText.setText("Total :");
                         textViewFooterTotal.setText("S/. "+df.format(totalFooter));
                         break;
@@ -1636,7 +1636,7 @@ Instantiate and pass a callback
         documentoCliente = cursorEstablecimiento.getString(cursorEstablecimiento.getColumnIndexOrThrow(dbHelper_Evento_Establecimiento.EE_doc_cliente));
         nombreCliente = cursorEstablecimiento.getString(cursorEstablecimiento.getColumnIndexOrThrow(dbHelper_Evento_Establecimiento.EE_nom_cliente));
         switch (tipoDocumento1){
-            case factura:
+            case Factura:
                 i_tipoDocumento = 1;
                 erp_stringTipoDocumento="FV";
                 serie = dbHelperAgente.getSerieFacturaByIdAgente(id_agente_venta,idLiquidacion );
@@ -1646,7 +1646,7 @@ Instantiate and pass a callback
                 session.deleteVariable(10);
                 session.createTempSession(10,numero_documento+1);
                 break;
-            case boleta:
+            case Boleta:
                 i_tipoDocumento = 2;
                 erp_stringTipoDocumento="BV";
                 serie = dbHelperAgente.getSerieBoletaByIdAgente(id_agente_venta, idLiquidacion);
@@ -1656,7 +1656,7 @@ Instantiate and pass a callback
                 session.createTempSession(11,numero_documento+1);
                 Log.d("CODIGO ERP ", codigo_erp);
                 break;
-            case ficha:
+            case Ficha:
                 Log.d("CODIGO ERP ", codigo_erp);
                 break;
         }
@@ -1969,7 +1969,7 @@ Instantiate and pass a callback
     }
 
     public enum TipoDocumento{
-        factura, boleta, ficha, Seleccionar
+        Factura, Boleta, Ficha, Seleccionar
     }
     private void displayHistorialComprobanteAnterior() {
 

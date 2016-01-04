@@ -335,7 +335,6 @@ public class VMovil_Modificar_Estab extends AppCompatActivity {
         if (estado > 0) {
 
             if (conectadoWifi() || conectadoRedMovil()) {
-
                 Toast.makeText(VMovil_Modificar_Estab.this, "Inicio Task", Toast.LENGTH_SHORT).show();
                 new ModificarEstablecimiento(this).execute();
 

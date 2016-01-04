@@ -179,17 +179,21 @@ public class VMovil_Venta_Cabecera_PlanPagos extends Activity implements Adapter
                 adapterCuotas = ArrayAdapter.createFromResource(this, R.array.nCuota1, android.R.layout.simple_spinner_item);
                 numeroCuotas = 1;
                 break;
+            //NÚMERO DE CUOTAS II
             case 15:
-                adapterCuotas = ArrayAdapter.createFromResource(this, R.array.nCuota2, android.R.layout.simple_spinner_item);
-                numeroCuotas = 2;
+                adapterCuotas = ArrayAdapter.createFromResource(this, R.array.nCuota1, android.R.layout.simple_spinner_item);
+                //numeroCuotas = 2;
+                numeroCuotas = 1;
                 break;
             case 30:
-                adapterCuotas = ArrayAdapter.createFromResource(this, R.array.nCuota4, android.R.layout.simple_spinner_item);
-                numeroCuotas = 4;
+                adapterCuotas = ArrayAdapter.createFromResource(this, R.array.nCuota1, android.R.layout.simple_spinner_item);
+                //numeroCuotas = 4;
+                numeroCuotas = 1;
                 break;
             case 31:
-                adapterCuotas = ArrayAdapter.createFromResource(this, R.array.nCuota4, android.R.layout.simple_spinner_item);
-                numeroCuotas = 4;
+                adapterCuotas = ArrayAdapter.createFromResource(this, R.array.nCuota1, android.R.layout.simple_spinner_item);
+                //numeroCuotas = 4;
+                numeroCuotas = 1;
                 break;
 
             default:

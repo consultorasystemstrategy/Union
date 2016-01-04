@@ -420,12 +420,12 @@ public class Print {
                     posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + lineas + LF );
                 switch (idFormaPago){
                     case Constants.FORMA_DE_PAGO_CONTADO:
-                        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + "CONTADO" + LF);
+                        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + "VENTA AL CONTADO" + LF);
                         break;
                     case Constants.FORMA_DE_PAGO_CREDITO:
-                        /*String credito = ESC + "|lA" + String.format("%-18s", "CREDITO") + String.format("%-21s", "S/.") + String.format("%1$9s", df.format(precio_venta)) + LF;
-                        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, credito);*/
-                        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + "CREDITO"+ LF + LF);
+                        String credito = ESC + "|lA" + String.format("%-18s", "VENTA AL CREDITO: ") + String.format("%1$9s", df.format(precio_venta))+ String.format("%1$21s", "") + LF;
+                        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, credito);
+                        /*posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + "VENTA AL CREDITO"+ LF + LF);*/
                         Cursor cursorCredito = dbAdapter_comprob_cobro.fetchComprobCobrosByIdComprobante(idComprobante);
                         if (cursorCredito.getCount()>0){
                             cursorCredito.moveToFirst();
@@ -433,14 +433,17 @@ public class Print {
                             /*for (cursorCredito.moveToFirst(); !cursorCredito.isAfterLast() ; cursorCredito.moveToNext()){*/
                                 String primeraFechaCobro = cursorCredito.getString(cursorCredito.getColumnIndexOrThrow(DbAdapter_Comprob_Cobro.CC_fecha_programada));
                                 Double monto_Pagar = cursorCredito.getDouble(cursorCredito.getColumnIndexOrThrow(DbAdapter_Comprob_Cobro.CC_monto_a_pagar));
-                                String cuotaDetalle = ESC + "|lA" + String.format("%-17s", "Fecha de Pago") + String.format("%-14s", Utils.format(primeraFechaCobro)) + String.format("%1$17s", df.format(monto_Pagar))  + LF;
-                                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, cuotaDetalle);
-                            /*}*/
+                            String cuotaDetalle = ESC + "|lA" + String.format("%-16s", "Fecha de Pago: ") + String.format("%1$11s", Utils.format(primeraFechaCobro)) + String.format("%1$21s", "__________________")+ LF;
+                            String firma = ESC + "|lA" +  String.format("%1$41s", "Firma")+  String.format("%1$7s", "")+ LF;
+                            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, cuotaDetalle);
+                            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, firma);
 
+                            /*}*/
+/*
                             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + "" + LF);
                             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + "____________________" + LF);
                             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + "Firma del cliente" + LF + LF);
-
+*/
 
 
                         }

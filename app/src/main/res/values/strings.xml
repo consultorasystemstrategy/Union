@@ -102,20 +102,20 @@
     </string-array>
     <string-array name="tipoDocumento">
         <item>Seleccionar</item>
-        <item>factura</item>
-        <item>boleta</item>
-        <item>ficha</item>
+        <item>Factura</item>
+        <item>Boleta</item>
+        <item>Ficha</item>
     </string-array>
     <string-array name="tipoDocumentoFactura">
         <item>factura</item>
     </string-array>
     <string-array name="tipoDocumentoFacturaBoleta">
         <item>Seleccionar</item>
-        <item>factura</item>
-        <item>boleta</item>
+        <item>Factura</item>
+        <item>Boleta</item>
     </string-array>
     <string-array name="tipoDocumentoBoleta">
-        <item>boleta</item>
+        <item>Boleta</item>
     </string-array>
     <string-array name="tipoDocumentoCombustiblePlanta">
         <item>ficha</item>
