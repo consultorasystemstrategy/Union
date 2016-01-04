@@ -44,6 +44,7 @@ import union.union_vr1.Sqlite.DbAdapter_Tipo_Persona;
 import union.union_vr1.Utils.TabsAdapter;
 
 public class VMovil_Crear_Establecimiento extends AppCompatActivity {
+
     private Fragment fragmentMapa;
     private Fragment fragmentCliente;
     private Fragment fragmentEstablecimiento;
@@ -104,7 +105,8 @@ public class VMovil_Crear_Establecimiento extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_agregar_establecimiento);
-        //..........
+
+
 
 
         dbAdapter_agente = new DbAdapter_Agente(this);

@@ -2,8 +2,8 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <EditTextPreference android:title="Username"
         android:key="username"
-        android:defaultValue="emerson.f"
-        android:summary="Por favor, ingrese username de la aplicación.">emerson.f</EditTextPreference>
+        android:defaultValue=""
+        android:summary="Por favor, ingrese username de la aplicación."></EditTextPreference>
     <EditTextPreference android:title="Impresora Nombre"
         android:key="impresoraNombre"
         android:defaultValue="mobile printer"

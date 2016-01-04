@@ -146,11 +146,8 @@ public class VMovil_Menu_Establec extends Activity implements View.OnClickListen
         if (cursorAgente.getCount() > 0) {
             nombreRuta = cursorAgente.getString(cursorAgente.getColumnIndexOrThrow(dbAdapter_agente.AG_nombre_ruta));
             numeroEstablecimientoxRuta = cursorAgente.getInt(cursorAgente.getColumnIndexOrThrow(dbAdapter_agente.AG_nro_bodegas));
-
         }
         textViewNombreRuta.setText("Ruta : " + nombreRuta);
-
-
         //Generate ListView from SQLite Database
         displayListView();
 

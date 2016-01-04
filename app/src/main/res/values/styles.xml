@@ -159,10 +159,11 @@
     </style>
 
     <!--hkjgfhshjug-->
-    <style name="MyDarkToolbarStyle" parent="ThemeOverlay.AppCompat.Light">
-        <item name="android:colorBackground">@color/Blanco</item>
-        <item name="android:textColor">@color/material_grey_800</item>
+    <style name="MaterialSpinner" parent="Widget.AppCompat.Light.Spinner.DropDown.ActionBar">
+        <item name="android:background">?android:selectableItemBackground</item>
+        <item name="android:dropDownSelector">?android:selectableItemBackground</item>
+        <item name="android:divider">@null</item>
+        <item name="android:textColor">@color/azul</item>
+
     </style>
-
-
 </resources>

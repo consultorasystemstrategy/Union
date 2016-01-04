@@ -78,7 +78,8 @@ public class FEstablecimientoRegistrar extends Fragment {
                 DbAdapter_Tipo_Establecimiento.tipo_Establecimiento_Descripcion
 
         };
-        simpleCursorAdapter = new SimpleCursorAdapter(getActivity().getApplicationContext(),android.R.layout.simple_dropdown_item_1line,cr,columns,to,0);
+        simpleCursorAdapter = new SimpleCursorAdapter(getActivity().getApplicationContext(),R.layout.toolbar_spinner_item_actionbar,cr,columns,to,0);
+        simpleCursorAdapter.setDropDownViewResource(R.layout.toolbar_spinner_item_dropdown);
         spinnerTipoEstablecimeinto.setAdapter(simpleCursorAdapter);
     }
 
@@ -94,7 +95,8 @@ public class FEstablecimientoRegistrar extends Fragment {
                 DbAdapter_Categoria_Establecimiento.cat_Establec_Descripcion,
 
         };
-        simpleCursorAdapter = new SimpleCursorAdapter(getActivity().getApplicationContext(),android.R.layout.simple_dropdown_item_1line,cr,columns,to,0);
+        simpleCursorAdapter = new SimpleCursorAdapter(getActivity().getApplicationContext(),R.layout.toolbar_spinner_item_actionbar,cr,columns,to,0);
+        simpleCursorAdapter.setDropDownViewResource(R.layout.toolbar_spinner_item_dropdown);
         spinnerCategoriaEstablecimeinto.setAdapter(simpleCursorAdapter);
     }
 

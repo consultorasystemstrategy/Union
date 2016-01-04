@@ -15,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
+import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.FilterQueryProvider;
 import android.widget.SimpleCursorAdapter;
@@ -277,15 +278,14 @@ public class FClienteRegistrar extends Fragment {
         SimpleCursorAdapter simpleCursorAdapter ;
         int[] to = new int[]{
                 android.R.id.text1,
-
         };
 
         String[] columns = new String[]{
                 DbAdapter_Tipo_Doc_Identidad.tipo_Doc_Descripcion,
 
         };
-        simpleCursorAdapter = new SimpleCursorAdapter(getActivity().getApplicationContext(),R.layout.layout_item_spinner,cr,columns,to,0);
-        simpleCursorAdapter.setDropDownViewResource(R.layout.layout_item_spinner);
+        simpleCursorAdapter = new SimpleCursorAdapter(getActivity().getApplicationContext(),R.layout.toolbar_spinner_item_actionbar,cr,columns,to, 0);
+        simpleCursorAdapter.setDropDownViewResource(R.layout.toolbar_spinner_item_dropdown);
         spinnerTipoDocumento.setAdapter(simpleCursorAdapter);
     }
 
@@ -301,8 +301,8 @@ public class FClienteRegistrar extends Fragment {
                 DbAdapter_Tipo_Persona.tipo_Persona_Descripcion,
 
         };
-        simpleCursorAdapter = new SimpleCursorAdapter(getActivity().getApplicationContext(),R.layout.layout_item_spinner,cr,columns,to,0);
-        simpleCursorAdapter.setDropDownViewResource(R.layout.layout_item_spinner);
+        simpleCursorAdapter = new SimpleCursorAdapter(getActivity().getApplicationContext(),R.layout.toolbar_spinner_item_actionbar,cr,columns,to,0);
+        simpleCursorAdapter.setDropDownViewResource(R.layout.toolbar_spinner_item_dropdown);
         spinnerTipoPesona.setAdapter(simpleCursorAdapter);
     }
 

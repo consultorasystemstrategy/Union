@@ -40,15 +40,15 @@
                         android:paddingTop="4dp"
                         android:text="Categoria Establecimiento"
                         android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:textColor="@color/ColorPUSecundario"
+                        android:textColor="@color/Dark1"
                         android:textStyle="italic|bold" />
 
                     <Spinner
                         android:id="@+id/spinnerCategoriaEstablecimiento"
                         android:layout_width="fill_parent"
                         android:layout_gravity="center_horizontal"
-                        android:layout_height="80dp"
-                        android:popupBackground="#607D8B"
+                        android:layout_height="wrap_content"
+                        style="@style/MaterialSpinner"
                         android:inputType="number" />
 
 
@@ -70,15 +70,15 @@
                         android:paddingTop="4dp"
                         android:text="Tipo de Establecimiento"
                         android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:textColor="@color/ColorPUSecundario"
+                        android:textColor="@color/Dark1"
                         android:textStyle="italic|bold" />
 
                     <Spinner
                         android:id="@+id/spinnerTipoEstablecimiento"
                         android:layout_width="fill_parent"
                         android:layout_gravity="center_horizontal"
-                        android:layout_height="80dp"
-                        android:popupBackground="#607D8B"
+                        android:layout_height="wrap_content"
+                        style="@style/MaterialSpinner"
                         android:inputType="number" />
 
 
@@ -101,7 +101,7 @@
                         android:paddingTop="4dp"
                         android:text="Nombre Establecimiento"
                         android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:textColor="@color/ColorPUSecundario"
+                        android:textColor="@color/Dark1"
                         android:textStyle="italic|bold" />
 
                     <EditText
@@ -132,7 +132,7 @@
                         android:paddingTop="4dp"
                         android:text="Numero Telefono Fijo"
                         android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:textColor="@color/ColorPUSecundario"
+                        android:textColor="@color/Dark1"
                         android:textStyle="italic|bold" />
 
                     <EditText
@@ -163,7 +163,7 @@
                         android:paddingTop="4dp"
                         android:text="Numero Celular"
                         android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:textColor="@color/ColorPUSecundario"
+                        android:textColor="@color/Dark1"
                         android:textStyle="italic|bold" />
 
                     <EditText
