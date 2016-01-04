@@ -137,7 +137,7 @@
                         android:textColor="@color/Dark1"
                         android:textStyle="bold" />
 
-                    <EditText
+                    <com.rengwuxian.materialedittext.MaterialEditText
                         android:id="@+id/editNombre"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -168,7 +168,7 @@
                         android:textColor="@color/Dark1"
                         android:textStyle="bold" />
 
-                    <EditText
+                    <com.rengwuxian.materialedittext.MaterialEditText
                         android:id="@+id/editApPaterno"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -200,7 +200,7 @@
                         android:textColor="@color/Dark1"
                         android:textStyle="bold" />
 
-                    <EditText
+                    <com.rengwuxian.materialedittext.MaterialEditText
                         android:id="@+id/editApMaterno"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -232,7 +232,7 @@
                         android:textColor="@color/Dark1"
                         android:textStyle="bold" />
 
-                    <EditText
+                    <com.rengwuxian.materialedittext.MaterialEditText
                         android:id="@+id/editNroCelular"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -264,7 +264,7 @@
                         android:textColor="@color/Dark1"
                         android:textStyle="bold" />
 
-                    <EditText
+                    <com.rengwuxian.materialedittext.MaterialEditText
                         android:id="@+id/editCorreo"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

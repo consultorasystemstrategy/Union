@@ -44,7 +44,7 @@
                         android:textColor="@color/Dark1"
                         android:textStyle="bold" />
 
-                    <EditText
+                    <com.rengwuxian.materialedittext.MaterialEditText
                         android:id="@+id/map_descripcion"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -82,7 +82,7 @@
                         android:textColor="@color/Dark1"
                         android:textStyle="bold" />
 
-                    <EditText
+                    <com.rengwuxian.materialedittext.MaterialEditText
                         android:id="@+id/map_direccion_fiscal"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

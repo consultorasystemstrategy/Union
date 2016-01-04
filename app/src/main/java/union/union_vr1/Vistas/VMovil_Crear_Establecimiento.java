@@ -20,6 +20,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.Spinner;
 
 import org.json.JSONArray;
@@ -92,7 +93,7 @@ public class VMovil_Crear_Establecimiento extends AppCompatActivity {
     private EditText editTextTelMovil2;
 
     //DATA FOR DIRECCION
-
+    FrameLayout container;
     String direccionEs = "";
     String direccionFiscalEs = "";
 
@@ -133,7 +134,6 @@ public class VMovil_Crear_Establecimiento extends AppCompatActivity {
         tabLayout = (TabLayout) findViewById(R.id.tablayout);
 
         tabLayout.setupWithViewPager(viewPager);
-
         actualizar();
         //getData();
 
@@ -161,6 +161,9 @@ public class VMovil_Crear_Establecimiento extends AppCompatActivity {
                     case 0:
                         // Log.d("DEVUELVE", validaMapa() + "");
                         item.setVisible(false);
+
+                        viewPager.setCurrentItem(0);
+
 
                         break;
                     case 1:

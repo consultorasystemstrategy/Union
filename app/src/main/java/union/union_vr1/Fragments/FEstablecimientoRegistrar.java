@@ -17,6 +17,8 @@ import android.widget.EditText;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 
+import com.rengwuxian.materialedittext.MaterialEditText;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,9 +36,9 @@ import union.union_vr1.Sqlite.DbAdapter_Tipo_Establecimiento;
 public class FEstablecimientoRegistrar extends Fragment {
     private Spinner spinnerTipoEstablecimeinto;
     private Spinner spinnerCategoriaEstablecimeinto;
-    private EditText editTextNombre;
-    private EditText editTextTelFijo;
-    private EditText editTextTelMovil2;
+    private MaterialEditText editTextNombre;
+    private MaterialEditText editTextTelFijo;
+    private MaterialEditText editTextTelMovil2;
     private View v;
 
     private DbAdapter_Categoria_Establecimiento dbAdapter_categoria_establecimiento;
@@ -53,9 +55,9 @@ public class FEstablecimientoRegistrar extends Fragment {
         dbAdapter_tipo_establecimiento.open();
         spinnerTipoEstablecimeinto = (Spinner) v.findViewById(R.id.spinnerTipoEstablecimiento);
         spinnerCategoriaEstablecimeinto = (Spinner) v.findViewById(R.id.spinnerCategoriaEstablecimiento);
-        editTextNombre = (EditText)v.findViewById(R.id.editDescripcion);
-        editTextTelFijo = (EditText)v.findViewById(R.id.editTelFijo);
-        editTextTelMovil2 = (EditText)v.findViewById(R.id.editNumero2);
+        editTextNombre = (MaterialEditText)v.findViewById(R.id.editDescripcion);
+        editTextTelFijo = (MaterialEditText)v.findViewById(R.id.editTelFijo);
+        editTextTelMovil2 = (MaterialEditText)v.findViewById(R.id.editNumero2);
 
       callmehod();
 
