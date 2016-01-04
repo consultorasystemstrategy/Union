@@ -104,7 +104,7 @@
                         android:textColor="@color/Dark1"
                         android:textStyle="bold" />
 
-                    <EditText
+                    <com.rengwuxian.materialedittext.MaterialEditText
                         android:id="@+id/editDescripcion"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -135,7 +135,7 @@
                         android:textColor="@color/Dark1"
                         android:textStyle="bold" />
 
-                    <EditText
+                    <com.rengwuxian.materialedittext.MaterialEditText
                         android:id="@+id/editTelFijo"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -166,7 +166,7 @@
                         android:textColor="@color/Dark1"
                         android:textStyle="bold" />
 
-                    <EditText
+                    <com.rengwuxian.materialedittext.MaterialEditText
                         android:id="@+id/editNumero2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

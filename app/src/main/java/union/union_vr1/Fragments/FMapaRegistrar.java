@@ -27,6 +27,8 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
+import com.rengwuxian.materialedittext.MaterialEditText;
+
 import union.union_vr1.R;
 
 /**
@@ -41,8 +43,8 @@ public class FMapaRegistrar extends Fragment {
     // private MapView mapView;
     // private GoogleMap map;
     private boolean estadoDF;
-    private EditText editTextDescripcion;
-    private EditText editTextDireccionFiscal;
+    private MaterialEditText editTextDescripcion;
+    private MaterialEditText editTextDireccionFiscal;
     private Button btnActualizarP;
     private CheckBox checkBoxDF;
     private WebView webViewMap;
@@ -64,8 +66,8 @@ public class FMapaRegistrar extends Fragment {
         mapView.onCreate(savedInstanceState);
         mapView.onResume();*/
         btnActualizarP = (Button) v.findViewById(R.id.btnActualizarP);
-        editTextDescripcion = (EditText) v.findViewById(R.id.map_descripcion);
-        editTextDireccionFiscal = (EditText) v.findViewById(R.id.map_direccion_fiscal);
+        editTextDescripcion = (MaterialEditText) v.findViewById(R.id.map_descripcion);
+        editTextDireccionFiscal = (MaterialEditText) v.findViewById(R.id.map_direccion_fiscal);
         checkBoxDF = (CheckBox) v.findViewById(R.id.checkBoxAviableDF);
         webViewMap = (WebView) v.findViewById(R.id.webViewMap);
 
@@ -115,6 +117,7 @@ public class FMapaRegistrar extends Fragment {
 
         mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000,
                 0, mLocaction);
+
     }
 
     private final LocationListener mLocaction = new LocationListener() {
