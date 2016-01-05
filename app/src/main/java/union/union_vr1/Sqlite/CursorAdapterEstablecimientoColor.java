@@ -211,6 +211,26 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter {
 
             //CUANDO YA ESTÁ AUTORIZADO, OCULTO LA OPCIÓN DE MODIFICAR
             switch (estado_autorizado){
+                case 1:
+                    imageButtonOp.setActivated(true);
+                    imageButtonOp.setClickable(true);
+                    imageButtonOp.setAlpha((float) 1.0);
+                    break;
+                case 4:
+                    imageButtonOp.setActivated(true);
+                    imageButtonOp.setClickable(true);
+                    imageButtonOp.setAlpha((float) 1.0);
+                    break;
+                case 5:
+                    imageButtonOp.setActivated(true);
+                    imageButtonOp.setClickable(true);
+                    imageButtonOp.setAlpha((float) 1.0);
+                    break;
+                case 8:
+                    imageButtonOp.setActivated(true);
+                    imageButtonOp.setClickable(true);
+                    imageButtonOp.setAlpha((float) 1.0);
+                    break;
                 case 3:
                     imageButtonOp.setActivated(false);
                     imageButtonOp.setClickable(false);
