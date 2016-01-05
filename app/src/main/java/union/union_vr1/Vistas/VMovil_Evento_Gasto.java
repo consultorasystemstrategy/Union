@@ -472,7 +472,7 @@ public class VMovil_Evento_Gasto extends Activity implements View.OnClickListene
 }
 
     private enum TipoDocumento {
-        factura, ficha, boleta;
+        factura, ficha,TipodeComprobante, boleta;
     }
 
     private enum ProcedenciaGasto {

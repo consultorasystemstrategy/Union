@@ -44,10 +44,11 @@
                         android:textColor="@color/Dark1"
                         android:textStyle="bold" />
 
-                    <com.rengwuxian.materialedittext.MaterialEditText
+                    <EditText
                         android:id="@+id/map_descripcion"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+
                         android:layout_gravity="center_horizontal"
                         android:ems="10"
                         android:inputType="text" />
@@ -82,7 +83,7 @@
                         android:textColor="@color/Dark1"
                         android:textStyle="bold" />
 
-                    <com.rengwuxian.materialedittext.MaterialEditText
+                    <EditText
                         android:id="@+id/map_direccion_fiscal"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -90,6 +91,77 @@
                         android:ems="10"
                         android:hint=""
                         android:inputType="text" />
+
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/Blanco"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/Geolocalizacion"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left"
+                        android:paddingLeft="10dp"
+                        android:paddingBottom="4dp"
+                        android:paddingTop="4dp"
+                        android:text="Geolocalizacion"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="@color/Dark1"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textView13"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="10dp"
+                        android:paddingBottom="4dp"
+                        android:paddingTop="4dp"
+                        android:text="LATITUD"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="@color/Dark1"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textLon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="10dp"
+                        android:paddingBottom="4dp"
+                        android:paddingTop="4dp"
+                        android:text="Obteniendo..."
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="@color/Dark1"
+                         />
+
+                    <TextView
+                        android:id="@+id/textView14"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="10dp"
+                        android:paddingBottom="4dp"
+                        android:paddingTop="4dp"
+                        android:text="LONGITUD"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="@color/Dark1"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textLat"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="10dp"
+                        android:paddingBottom="4dp"
+                        android:paddingTop="4dp"
+                        android:text="Obteniendo..."
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="@color/Dark1" />
 
 
                 </LinearLayout>
@@ -115,6 +187,9 @@
 
 
                 </LinearLayout>
+
+
+                
 
 
             </LinearLayout>

@@ -11,10 +11,10 @@ import union.union_vr1.Conexion.DbHelper;
 /**
  * Created by Usuario on 06/02/2015.
  */
-public class DbAdapter_Temp_Establecimiento {
+public class DbAdapter_Establecimeinto_Historial {
 
-    public static final String establec_id = "_id";
-    public static final String establec_id_remoto = "establec_id_remoto";
+    public static final String establec_histo_id = "_id";
+    public static final String establec_id_remoto = "establec_histo_remoto_id";
     public static final String establec_usuario_accion = "establec_usuario_accion";
     public static final String establec_telefono_fijo = "establec_telefono_fijo";
     public static final String establec_celular_one = "establec_celular_one";
@@ -40,12 +40,12 @@ public class DbAdapter_Temp_Establecimiento {
     private DbHelper mDbHelper;
     private SQLiteDatabase mDb;
 
-    private static final String SQLITE_TABLE_Temp_Establec = "m_temp_establec_data";
+    private static final String SQLITE_TABLE_ESTABLECIMIENTO_HISTORIAL = "m_establecimiento_historial";
     private final Context mCtx;
 
-    public static final String CREATE_TABLE_TEMP_ESTABLEC =
-            "create table if not exists " + SQLITE_TABLE_Temp_Establec + " ("
-                    + establec_id + " integer primary key,"
+    public static final String CREATE_ESTABLECIMIENTO_HISTORIAL =
+            "create table if not exists " + SQLITE_TABLE_ESTABLECIMIENTO_HISTORIAL + " ("
+                    + establec_histo_id + " integer primary key,"
                     + establec_id_remoto + " integer, "
                     + establec_usuario_accion + " integer, "
                     + establec_telefono_fijo + " text, "
@@ -69,13 +69,13 @@ public class DbAdapter_Temp_Establecimiento {
                     + establec_descripcion_establecimiento + " text,"
                     + Constants._SINCRONIZAR + " integer );";
 
-    public static final String DELETE_TABLE_Temp_Establec = "DROP TABLE IF EXISTS " + SQLITE_TABLE_Temp_Establec;
+    public static final String DELETE_ESTABLECIMIENTO_TEMPORAL = "DROP TABLE IF EXISTS " + SQLITE_TABLE_ESTABLECIMIENTO_HISTORIAL;
 
-    public DbAdapter_Temp_Establecimiento(Context ctx) {
+    public DbAdapter_Establecimeinto_Historial(Context ctx) {
         this.mCtx = ctx;
     }
 
-    public DbAdapter_Temp_Establecimiento open() throws SQLException {
+    public DbAdapter_Establecimeinto_Historial open() throws SQLException {
         mDbHelper = new DbHelper(mCtx);
         mDb = mDbHelper.getWritableDatabase();
         return this;
@@ -86,6 +86,7 @@ public class DbAdapter_Temp_Establecimiento {
             mDbHelper.close();
         }
     }
+
 
     public long createTempEstablec(
             int _id_remoto,
@@ -134,7 +135,7 @@ public class DbAdapter_Temp_Establecimiento {
         initialValues.put(establec_editado, _estadoEditado);
         initialValues.put(Constants._SINCRONIZAR, _ESTADO);
 
-        return mDb.insert(SQLITE_TABLE_Temp_Establec, null, initialValues);
+        return mDb.insert(SQLITE_TABLE_ESTABLECIMIENTO_HISTORIAL, null, initialValues);
     }
 
 
@@ -146,8 +147,8 @@ public class DbAdapter_Temp_Establecimiento {
         initialValues.put(establec_longitud, lon);
         initialValues.put(establec_descripcion, direccion);
         initialValues.put(establec_direccion_fiscal, direccion_fiscal);
-        return mDb.update(SQLITE_TABLE_Temp_Establec, initialValues,
-                establec_id + "=?", new String[]{id + ""});
+        return mDb.update(SQLITE_TABLE_ESTABLECIMIENTO_HISTORIAL, initialValues,
+                establec_histo_id + "=?", new String[]{id + ""});
     }
 
     public long updateTempEstablecEstabl(
@@ -167,8 +168,8 @@ public class DbAdapter_Temp_Establecimiento {
         initialValues.put(establec_telefono_fijo, nro_fijo);
         initialValues.put(establec_celular_two, celular_two);
         initialValues.put(establec_editado, 0);
-        return mDb.update(SQLITE_TABLE_Temp_Establec, initialValues,
-                establec_id + "=?", new String[]{id + ""});
+        return mDb.update(SQLITE_TABLE_ESTABLECIMIENTO_HISTORIAL, initialValues,
+                establec_histo_id + "=?", new String[]{id + ""});
     }
 
     public long updateTempEstablecCliente(
@@ -197,8 +198,8 @@ public class DbAdapter_Temp_Establecimiento {
         initialValues.put(establec_nro_documento, _nro_documento);
         initialValues.put(establec_estado_guardado, _estado_guardado);
         initialValues.put(establec_correo, _correo);
-        return mDb.update(SQLITE_TABLE_Temp_Establec, initialValues,
-                establec_id + "=?", new String[]{id + ""});
+        return mDb.update(SQLITE_TABLE_ESTABLECIMIENTO_HISTORIAL, initialValues,
+                establec_histo_id + "=?", new String[]{id + ""});
     }
 
 
@@ -246,31 +247,31 @@ public class DbAdapter_Temp_Establecimiento {
         initialValues.put(establec_tipo_establecimiento, _tipo_establecimiento);
         initialValues.put(establec_descripcion_establecimiento, _descripcion_establecimiento);
         initialValues.put(establec_editado, _estadoEditado);
-        return mDb.update(SQLITE_TABLE_Temp_Establec, initialValues,
-                establec_id + "=?", new String[]{id + ""});
+        return mDb.update(SQLITE_TABLE_ESTABLECIMIENTO_HISTORIAL, initialValues,
+                establec_histo_id + "=?", new String[]{id + ""});
     }
 
     public long update(int _id_remoto, int estado) {
 
         ContentValues initialValues = new ContentValues();
         initialValues.put(establec_editado, estado);
-        return mDb.update(SQLITE_TABLE_Temp_Establec, initialValues,
+        return mDb.update(SQLITE_TABLE_ESTABLECIMIENTO_HISTORIAL, initialValues,
                 establec_id_remoto + "=?", new String[]{_id_remoto + ""});
 
     }
 
     public Cursor fetchTemEstablec() {
-        Cursor cursor = mDb.rawQuery("select * from " + SQLITE_TABLE_Temp_Establec + " ", null);
+        Cursor cursor = mDb.rawQuery("select * from " + SQLITE_TABLE_ESTABLECIMIENTO_HISTORIAL + " where " + establec_editado + "='0' and " + Constants._SINCRONIZAR + "='" + Constants._CREADO + "' order by " + establec_histo_id + " asc", null);
         return cursor;
     }
 
     public Cursor fetchTemEstablecEdit() {
-        Cursor cursor = mDb.rawQuery("select * from " + SQLITE_TABLE_Temp_Establec + " where " + establec_editado + "='1' AND " + Constants._SINCRONIZAR + "='" + Constants._ACTUALIZADO + "' order by " + establec_id + " asc", null);
+        Cursor cursor = mDb.rawQuery("select * from " + SQLITE_TABLE_ESTABLECIMIENTO_HISTORIAL + " where " + establec_editado + "='1' AND " + Constants._SINCRONIZAR + "='" + Constants._ACTUALIZADO + "' order by " + establec_histo_id + " asc", null);
         return cursor;
     }
 
     public Cursor fetchTemEstablecById(String id) {
-        Cursor cursor = mDb.rawQuery("select * from " + SQLITE_TABLE_Temp_Establec + " where  " + establec_id_remoto + "='" + id + "'", null);
+        Cursor cursor = mDb.rawQuery("select * from " + SQLITE_TABLE_ESTABLECIMIENTO_HISTORIAL + " where  " + establec_id_remoto + "='" + id + "'", null);
         return cursor;
     }
 
@@ -278,7 +279,7 @@ public class DbAdapter_Temp_Establecimiento {
     public boolean deleteAll() {
 
         int doneDelete = 0;
-        doneDelete = mDb.delete(SQLITE_TABLE_Temp_Establec, null, null);
+        doneDelete = mDb.delete(SQLITE_TABLE_ESTABLECIMIENTO_HISTORIAL, null, null);
         return doneDelete > 0;
 
     }
@@ -289,7 +290,7 @@ public class DbAdapter_Temp_Establecimiento {
         ContentValues initialValues = new ContentValues();
         initialValues.put(establec_id_remoto, idRemoto);
         initialValues.put(Constants._SINCRONIZAR, estado_actualizacion);
-        return mDb.update(SQLITE_TABLE_Temp_Establec, initialValues,
-                establec_id + "=?", new String[]{id + ""});
+        return mDb.update(SQLITE_TABLE_ESTABLECIMIENTO_HISTORIAL, initialValues,
+                establec_histo_id + "=?", new String[]{id + ""});
     }
 }

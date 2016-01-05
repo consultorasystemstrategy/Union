@@ -256,6 +256,7 @@
             android:name=".Vistas.Bluetooth_Printer"
             android:label="@string/title_activity_bluetooth__printer" />
 
+
         <service
             android:name=".Servicios.ServiceImport"
             android:exported="false" />

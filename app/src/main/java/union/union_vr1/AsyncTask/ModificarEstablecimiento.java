@@ -82,7 +82,6 @@ public class ModificarEstablecimiento extends AsyncTask<String, String, String> 
 
                 if (isSuccesfulExport(jsonObjectCreated)) {
                     int idRemoto = jsonObjectCreated.getInt("Value");
-                   // dbAdapter_temp_establecimiento.updateTempEstablecById(cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_id)), idRemoto, Constants._ACTUALIZADO);
                 }
 
                 Log.e("EDIT ESTAB ESTABLECIMIENTO", "" + 1);

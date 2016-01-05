@@ -2,86 +2,118 @@ package union.union_vr1.Fragments;
 
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.CheckBox;
-import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.FilterQueryProvider;
+import android.widget.LinearLayout;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
+import com.mobsandgeeks.saripaar.Rule;
+import com.mobsandgeeks.saripaar.Validator;
+import com.mobsandgeeks.saripaar.annotation.Email;
+import com.mobsandgeeks.saripaar.annotation.Required;
 
 import union.union_vr1.R;
 import union.union_vr1.Sqlite.DBAdapter_Cliente_Ruta;
-import union.union_vr1.Sqlite.DbAdapter_Categoria_Establecimiento;
-import union.union_vr1.Sqlite.DbAdapter_Temp_DatosSpinner;
+import union.union_vr1.Sqlite.DbAdapter_Agente;
+import union.union_vr1.Sqlite.DbAdapter_Temp_Establecimiento;
 import union.union_vr1.Sqlite.DbAdapter_Tipo_Doc_Identidad;
-import union.union_vr1.Sqlite.DbAdapter_Tipo_Establecimiento;
 import union.union_vr1.Sqlite.DbAdapter_Tipo_Persona;
+import union.union_vr1.Utils.Utils;
 
 /**
  * Created by Kelvin on 04/11/2015.
  */
-public class FClienteRegistrar extends Fragment {
-    private Spinner spinnerTipoDocumento;
-    private Spinner spinnerTipoPesona;
+public class FClienteRegistrar extends Fragment implements Validator.ValidationListener {
+
     private DBAdapter_Cliente_Ruta dbAdapter_cliente_ruta;
     private int tipoDoc;
+
+    //VALIDACION DE LOS WIDGETS
+    private Spinner spinnerTipoDocumento;
+    private Spinner spinnerTipoPesona;
+
+    @Required(order = 1, messageResId = R.string.requerido_input)
     private EditText editTextNombre;
+
+
     private EditText editTextApPaterno;
     private EditText editTextApMaterno;
+
+    @Required(order = 2, messageResId = R.string.requerido_input)
     private AutoCompleteTextView autoNroDocumento;
+
     private EditText editTextNroCelular;
+
+    @Email(order = 3, messageResId = R.string.requerido_correo)
     private EditText editTextCorreo;
+
+
     Toast toastBucsando;
     Toast toast;
+    private ViewPager viewPager;
+    private TextView textViewDoc;
+    private TextView textCliente;
 
+    private LinearLayout linearLayoutPadre;
+    private LinearLayout linearLayoutMadre;
 
     private View v;
     private DbAdapter_Tipo_Doc_Identidad dbAdapter_tipo_doc_identidad;
     private DbAdapter_Tipo_Persona dbAdapter_tipo_persona;
+    private DbAdapter_Temp_Establecimiento dbAdapter_temp_establecimiento;
+    private DbAdapter_Agente dbAdapter_agente;
+    private Validator validator;
+
+    String idEstablecimiento;
+    int idusuario;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_cliente, container, false);
-        v.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return true;
-            }
-        });
-        toastBucsando= Toast.makeText(getActivity().getApplicationContext(), "Buscando...", 1000);
+        setHasOptionsMenu(false);
+        idEstablecimiento = getArguments().getString("idEstablecimiento");
+        toastBucsando = Toast.makeText(getActivity().getApplicationContext(), "Buscando...", 1000);
         toast = Toast.makeText(getActivity().getApplicationContext(), "Encontrado", Toast.LENGTH_SHORT);
         toast.getView().setBackgroundColor(getActivity().getResources().getColor(R.color.verde));
         toast.setGravity(Gravity.TOP | Gravity.LEFT, 0, 0);
         TextView vz = (TextView) toast.getView().findViewById(android.R.id.message);
         vz.setTextColor(getActivity().getResources().getColor(R.color.Blanco));
+        viewPager = (ViewPager) getActivity().findViewById(R.id.viewpager);
 
         //...........
+        //VALIDATOR INTANCE
+        validator = new Validator(this);
+        validator.setValidationListener(this);
+        //--------------
 
 
         dbAdapter_tipo_doc_identidad = new DbAdapter_Tipo_Doc_Identidad(getActivity());
         dbAdapter_tipo_persona = new DbAdapter_Tipo_Persona(getActivity());
         dbAdapter_tipo_doc_identidad.open();
         dbAdapter_tipo_persona.open();
+        dbAdapter_temp_establecimiento = new DbAdapter_Temp_Establecimiento(getActivity());
+        dbAdapter_temp_establecimiento.open();
+        dbAdapter_agente = new DbAdapter_Agente(getActivity());
+        dbAdapter_agente.open();
+        idusuario = dbAdapter_agente.getIdUsuario();
         //-.....
         toastBucsando.getView().setBackgroundColor(getActivity().getResources().getColor(R.color.amarillo));
         toastBucsando.setGravity(Gravity.TOP | Gravity.LEFT, 0, 0);
@@ -97,14 +129,33 @@ public class FClienteRegistrar extends Fragment {
         autoNroDocumento = (AutoCompleteTextView) v.findViewById(R.id.editNroDocumento);
         editTextNroCelular = (EditText) v.findViewById(R.id.editNroCelular);
         editTextCorreo = (EditText) v.findViewById(R.id.editCorreo);
+        textViewDoc = (TextView) v.findViewById(R.id.textDocumento);
+        textCliente = (TextView) v.findViewById(R.id.textViewNombreCliente);
 
+        linearLayoutMadre = (LinearLayout) v.findViewById(R.id.layoutMaterno);
+        linearLayoutPadre = (LinearLayout) v.findViewById(R.id.layoutPaterno);
 
         callmethod();
+        actualizar();
+
         spinnerTipoDocumento.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                Cursor cursor = (Cursor)adapterView.getItemAtPosition(i);
-                tipoDoc=cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Tipo_Doc_Identidad.tipo_Doc_IdentidadId));
+                Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
+                tipoDoc = cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Tipo_Doc_Identidad.tipo_Doc_IdentidadId));
+
+                Log.d("TIPO DOC", "" + tipoDoc);
+                String tipo = "";
+                switch (tipoDoc) {
+                    case 1:
+                        tipo = "DNI";
+                        break;
+                    case 2:
+                        tipo = "RUC";
+                        break;
+                }
+                textViewDoc.setText("Nro de " + tipo);
+
             }
 
             @Override
@@ -112,8 +163,76 @@ public class FClienteRegistrar extends Fragment {
 
             }
         });
+
+        spinnerTipoPesona.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Cursor cursor = (Cursor) parent.getItemAtPosition(position);
+                int tipoCliente = cursor.getInt(cursor.getColumnIndex(dbAdapter_tipo_persona.tipo_Persona_PersonaId));
+                Log.d("TIPO CLIENTE", "" + tipoCliente);
+                hideWifgets(tipoCliente);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
         autoComplete();
         return v;
+    }
+
+
+    private void hideWifgets(int tipo) {
+
+        switch (tipo) {
+            case 1:
+                setAdapterTipoDocIdentidad(-1);
+                textCliente.setText("Nombres");
+                linearLayoutMadre.setVisibility(View.VISIBLE);
+                linearLayoutPadre.setVisibility(View.VISIBLE);
+                break;
+            case 2:
+                setAdapterTipoDocIdentidad(2);
+                textCliente.setText("Razon Social");
+                linearLayoutMadre.setVisibility(View.GONE);
+                linearLayoutPadre.setVisibility(View.GONE);
+                break;
+
+        }
+
+    }
+
+    private void actualizar() {
+       /* if (conectadoWifi() || conectadoRedMovil()) {*/
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                Log.d("SELECTED", ": " + position);
+                switch (position) {
+                    case 0:
+
+                        break;
+                    case 1:
+                        validator.validate();
+
+                        break;
+                    case 2:
+                        break;
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
     }
 
     private void autoComplete() {
@@ -121,7 +240,6 @@ public class FClienteRegistrar extends Fragment {
 
         final SimpleCursorAdapter adapter;
         Cursor cr = dbAdapter_cliente_ruta.listarDocumentoClientexRuta("", tipoDoc);
-
 
 
         String[] columnas = new String[]{
@@ -145,44 +263,26 @@ public class FClienteRegistrar extends Fragment {
 
 
         autoNroDocumento.setAdapter(adapter);
+
         autoNroDocumento.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
             }
 
             @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-                if(charSequence.toString().equals("")){
-                   // toastBucsando.cancel();
-                  //  toast.show();
-                    spinnerTipoDocumento.setEnabled(true);
-                    enableWidgets();
-                    setAdapterTipoDocIdentidad();
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                Log.d("CONTAR", "" + count);
+                enableWidgets();
+                if (count == 0) {
+                    setAdapterTipoDocIdentidad(-1);
                     setAdapterTipoPersona(-1);
 
                 }
-                Boolean estado = dbAdapter_cliente_ruta.existeClienteRuta(charSequence.toString(), tipoDoc);
-                Log.d("ESTADOEXISTERUTA", "" + estado);
-                if (estado) {
-                    // toastBucsando.cancel();
-                    // toast.show();
-                    spinnerTipoDocumento.setEnabled(false);
-                    disableWidgets();
-
-                } else {
-
-                    // toast.cancel();
-                    // toastBucsando.show();
-                    spinnerTipoDocumento.setEnabled(true);
-                    enableWidgets();
-                }
             }
 
             @Override
-            public void afterTextChanged(Editable editable) {
-
-
+            public void afterTextChanged(Editable s) {
 
             }
         });
@@ -236,9 +336,6 @@ public class FClienteRegistrar extends Fragment {
         editTextApMaterno.setEnabled(true);
         editTextNroCelular.setEnabled(true);
         editTextCorreo.setEnabled(true);
-
-
-
         editTextNombre.setText("");
         editTextApPaterno.setText("");
         editTextApMaterno.setText("");
@@ -269,13 +366,14 @@ public class FClienteRegistrar extends Fragment {
     }
 
     private void callmethod() {
-        setAdapterTipoDocIdentidad();
+        setAdapterTipoDocIdentidad(-1);
         setAdapterTipoPersona(-1);
 
     }
-    private void setAdapterTipoDocIdentidad(){
-        Cursor cr = dbAdapter_tipo_doc_identidad.fetchTipoDocIden();
-        SimpleCursorAdapter simpleCursorAdapter ;
+
+    private void setAdapterTipoDocIdentidad(int id) {
+        Cursor cr = dbAdapter_tipo_doc_identidad.fetchTipoDocIden(id);
+        SimpleCursorAdapter simpleCursorAdapter;
         int[] to = new int[]{
                 R.id.textSpinner,
         };
@@ -284,14 +382,14 @@ public class FClienteRegistrar extends Fragment {
                 DbAdapter_Tipo_Doc_Identidad.tipo_Doc_Descripcion,
 
         };
-        simpleCursorAdapter = new SimpleCursorAdapter(getActivity().getApplicationContext(),R.layout.toolbar_spinner_item_actionbar,cr,columns,to, 0);
+        simpleCursorAdapter = new SimpleCursorAdapter(getActivity().getApplicationContext(), R.layout.toolbar_spinner_item_actionbar, cr, columns, to, 0);
         simpleCursorAdapter.setDropDownViewResource(R.layout.toolbar_spinner_item_dropdown);
         spinnerTipoDocumento.setAdapter(simpleCursorAdapter);
     }
 
-    private void setAdapterTipoPersona(int id){
+    private void setAdapterTipoPersona(int id) {
         Cursor cr = dbAdapter_tipo_persona.fetchTipoPersona(id);
-        SimpleCursorAdapter simpleCursorAdapter ;
+        SimpleCursorAdapter simpleCursorAdapter;
         int[] to = new int[]{
                 R.id.textSpinner,
 
@@ -301,20 +399,63 @@ public class FClienteRegistrar extends Fragment {
                 DbAdapter_Tipo_Persona.tipo_Persona_Descripcion,
 
         };
-        simpleCursorAdapter = new SimpleCursorAdapter(getActivity().getApplicationContext(),R.layout.toolbar_spinner_item_actionbar,cr,columns,to,0);
+        simpleCursorAdapter = new SimpleCursorAdapter(getActivity().getApplicationContext(), R.layout.toolbar_spinner_item_actionbar, cr, columns, to, 0);
         simpleCursorAdapter.setDropDownViewResource(R.layout.toolbar_spinner_item_dropdown);
         spinnerTipoPesona.setAdapter(simpleCursorAdapter);
     }
 
 
+    @Override
+    public void onValidationSucceeded() {
+
+        String celular_one = "";
+        celular_one = editTextNroCelular.getText().toString();
+        String nombre = "";
+        nombre = editTextNombre.getText().toString();
+        String ap_paterno = "";
+        ap_paterno = editTextApPaterno.getText().toString();
+        String ap_materno = "";
+        ap_materno = editTextApMaterno.getText().toString();
+        String correo = "";
+        correo = editTextApMaterno.getText().toString();
+        String nroDocumento = "";
+        nroDocumento = autoNroDocumento.getText().toString();
+
+        int tipo_doc = 0;
+        int tipo_cliente = 0;
+
+        Cursor crDoc = (Cursor) spinnerTipoDocumento.getItemAtPosition(spinnerTipoDocumento.getSelectedItemPosition());
+        Cursor crCli = (Cursor) spinnerTipoPesona.getItemAtPosition(spinnerTipoPesona.getSelectedItemPosition());
+
+        tipo_doc = crDoc.getInt(crDoc.getColumnIndex(dbAdapter_tipo_doc_identidad.tipo_Doc_IdentidadId));
+        tipo_cliente = crCli.getInt(crCli.getColumnIndex(dbAdapter_tipo_persona.tipo_Persona_PersonaId));
 
 
+        long estado = dbAdapter_temp_establecimiento.updateTempEstablecCliente(idEstablecimiento + "", idusuario + "",celular_one,tipo_cliente+"",nombre,ap_paterno,ap_materno,tipo_doc+"",nroDocumento,1+"",correo);
+        if (estado > 0) {
+            viewPager.setCurrentItem(1);
+        } else {
+            Utils.setToast(getActivity(), "Ocurrio un error, por favor sal y vuelve a Intentarlo", R.color.rojo);
+        }
 
+    }
 
+    @Override
+    public void onValidationFailed(View failedView, Rule<?> failedRule) {
+        viewPager.setCurrentItem(0);
 
+        String message = failedRule.getFailureMessage();
+        Log.d("VALIDACION", "" + message + "****" + failedView.getId());
+        if (failedView instanceof EditText) {
+            ((EditText) failedView).setError(message);
+            Utils.setToast(getActivity().getApplicationContext(), "Revise los campos", R.color.rojo);
+        }
+    }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_activity_agregar_establecimiento, menu);
+        setHasOptionsMenu(false);
 
-
-
-
+    }
 }

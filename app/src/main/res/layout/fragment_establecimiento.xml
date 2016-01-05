@@ -10,13 +10,13 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_weight="1"
-        android:padding="8dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="8dp">
 
         <ScrollView
             android:id="@+id/scrollView6"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent" >
+            android:layout_height="fill_parent">
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -26,8 +26,8 @@
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/Blanco"
                     android:layout_marginTop="5dp"
+                    android:background="@color/Blanco"
                     android:orientation="vertical">
 
                     <TextView
@@ -35,8 +35,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="left"
-                        android:paddingLeft="10dp"
                         android:paddingBottom="4dp"
+                        android:paddingLeft="10dp"
                         android:paddingTop="4dp"
                         android:text="Categoria Establecimiento"
                         android:textAppearance="?android:attr/textAppearanceMedium"
@@ -45,19 +45,20 @@
 
                     <Spinner
                         android:id="@+id/spinnerCategoriaEstablecimiento"
-                        android:layout_width="fill_parent"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_height="wrap_content"
                         style="@style/MaterialSpinner"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
                         android:inputType="number" />
 
 
                 </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/Blanco"
                     android:layout_marginTop="5dp"
+                    android:background="@color/Blanco"
                     android:orientation="vertical">
 
                     <TextView
@@ -65,8 +66,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="left"
-                        android:paddingLeft="10dp"
                         android:paddingBottom="4dp"
+                        android:paddingLeft="10dp"
                         android:paddingTop="4dp"
                         android:text="Tipo de Establecimiento"
                         android:textAppearance="?android:attr/textAppearanceMedium"
@@ -75,10 +76,10 @@
 
                     <Spinner
                         android:id="@+id/spinnerTipoEstablecimiento"
-                        android:layout_width="fill_parent"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_height="wrap_content"
                         style="@style/MaterialSpinner"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
                         android:inputType="number" />
 
 
@@ -87,8 +88,8 @@
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/Blanco"
                     android:layout_marginTop="5dp"
+                    android:background="@color/Blanco"
                     android:orientation="vertical">
 
                     <TextView
@@ -96,15 +97,15 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="left"
-                        android:paddingLeft="10dp"
                         android:paddingBottom="4dp"
+                        android:paddingLeft="10dp"
                         android:paddingTop="4dp"
                         android:text="Nombre Establecimiento"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:textColor="@color/Dark1"
                         android:textStyle="bold" />
 
-                    <com.rengwuxian.materialedittext.MaterialEditText
+                    <EditText
                         android:id="@+id/editDescripcion"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -115,11 +116,12 @@
 
 
                 </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/Blanco"
                     android:layout_marginTop="5dp"
+                    android:background="@color/Blanco"
                     android:orientation="vertical">
 
                     <TextView
@@ -127,15 +129,15 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="left"
-                        android:paddingLeft="10dp"
                         android:paddingBottom="4dp"
+                        android:paddingLeft="10dp"
                         android:paddingTop="4dp"
                         android:text="Numero Telefono Fijo"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:textColor="@color/Dark1"
                         android:textStyle="bold" />
 
-                    <com.rengwuxian.materialedittext.MaterialEditText
+                    <EditText
                         android:id="@+id/editTelFijo"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -146,11 +148,12 @@
 
 
                 </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/Blanco"
                     android:layout_marginTop="5dp"
+                    android:background="@color/Blanco"
                     android:orientation="vertical">
 
                     <TextView
@@ -158,15 +161,20 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="left"
-                        android:paddingLeft="10dp"
                         android:paddingBottom="4dp"
+                        android:paddingLeft="10dp"
                         android:paddingTop="4dp"
                         android:text="Numero Celular"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:textColor="@color/Dark1"
                         android:textStyle="bold" />
 
-                    <com.rengwuxian.materialedittext.MaterialEditText
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"></LinearLayout>
+
+                    <EditText
                         android:id="@+id/editNumero2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -178,14 +186,16 @@
 
                 </LinearLayout>
 
-
+                <Button
+                    android:id="@+id/buttonGuardar"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Guardar" />
 
 
             </LinearLayout>
         </ScrollView>
     </LinearLayout>
-
-
 
 
 </LinearLayout>

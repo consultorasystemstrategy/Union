@@ -56,8 +56,16 @@ public class DbAdapter_Tipo_Doc_Identidad {
     }
 
 
-    public Cursor fetchTipoDocIden() {
-        Cursor cursor = mDb.rawQuery("select * from "+ SQLITE_TABLE_TIPO_DOC_IDENTIDAD +" order by "+ tipo_Doc_IdentidadId +" asc",null);
+    public Cursor fetchTipoDocIden(int id) {
+        Cursor cursor=null;
+        if(id==-1){
+            cursor = mDb.rawQuery("select * from "+ SQLITE_TABLE_TIPO_DOC_IDENTIDAD +" order by "+ tipo_Doc_IdentidadId +" asc",null);
+
+        }else{
+            cursor = mDb.rawQuery("select * from "+ SQLITE_TABLE_TIPO_DOC_IDENTIDAD +" where "+ tipo_Doc_IdentidadId +" ='"+id+"'",null);
+
+        }
+
         return cursor;
     }
 

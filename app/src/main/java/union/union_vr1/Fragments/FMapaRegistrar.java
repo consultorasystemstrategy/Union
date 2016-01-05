@@ -13,10 +13,14 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
@@ -26,15 +30,24 @@ import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
-import com.rengwuxian.materialedittext.MaterialEditText;
+
+import com.mobsandgeeks.saripaar.Rule;
+import com.mobsandgeeks.saripaar.Validator;
+import com.mobsandgeeks.saripaar.annotation.Required;
+
+import org.w3c.dom.Text;
 
 import union.union_vr1.R;
+import union.union_vr1.Sqlite.DbAdapter_Temp_Establecimiento;
+import union.union_vr1.Utils.Utils;
 
 /**
  * Created by Kelvin on 04/11/2015.
  */
-public class FMapaRegistrar extends Fragment {
+public class FMapaRegistrar extends Fragment implements Validator.ValidationListener {
 
     // private RadioButton buttonHibrido;
     // private RadioButton buttonNormal;
@@ -43,33 +56,54 @@ public class FMapaRegistrar extends Fragment {
     // private MapView mapView;
     // private GoogleMap map;
     private boolean estadoDF;
-    private MaterialEditText editTextDescripcion;
-    private MaterialEditText editTextDireccionFiscal;
+    @Required(order = 1, messageResId = R.string.requerido_input)
+    private EditText editTextDescripcion;
+    @Required(order = 2, messageResId = R.string.requerido_input)
+    private EditText editTextDireccionFiscal;
     private Button btnActualizarP;
     private CheckBox checkBoxDF;
     private WebView webViewMap;
     LocationManager mLocationManager;
     Location myLocation;
+    private Validator validator;
+    private ViewPager viewPager;
     String idEstablecimiento;
 
+    private TextView textLat;
+
+    private TextView textLon;
 
 
+    private DbAdapter_Temp_Establecimiento dbAdapter_temp_establecimiento;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_map, container, false);
+
         estadoDF = true;
         myLocation = null;
         //MapsInitializer.initialize(getActivity());
        /* mapView = (MapView) v.findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);
         mapView.onResume();*/
+        idEstablecimiento = getArguments().getString("idEstablecimiento");
+
+        dbAdapter_temp_establecimiento = new DbAdapter_Temp_Establecimiento(getActivity());
+        dbAdapter_temp_establecimiento.open();
+
+
+        validator = new Validator(this);
+        validator.setValidationListener(this);
+
+        viewPager = (ViewPager) getActivity().findViewById(R.id.viewpager);
         btnActualizarP = (Button) v.findViewById(R.id.btnActualizarP);
-        editTextDescripcion = (MaterialEditText) v.findViewById(R.id.map_descripcion);
-        editTextDireccionFiscal = (MaterialEditText) v.findViewById(R.id.map_direccion_fiscal);
+        editTextDescripcion = (EditText) v.findViewById(R.id.map_descripcion);
+        editTextDireccionFiscal = (EditText) v.findViewById(R.id.map_direccion_fiscal);
         checkBoxDF = (CheckBox) v.findViewById(R.id.checkBoxAviableDF);
         webViewMap = (WebView) v.findViewById(R.id.webViewMap);
+        textLat = (TextView) v.findViewById(R.id.textLat);
+        textLon = (TextView) v.findViewById(R.id.textLon);
 
 
         webViewMap.getSettings().setAppCachePath(getActivity().getApplicationContext().getCacheDir().getAbsolutePath() + "/cache");
@@ -109,6 +143,7 @@ public class FMapaRegistrar extends Fragment {
         // displayTouchLayout();
         display();
         displatLocation();
+        actualizar();
         return v;
     }
 
@@ -120,6 +155,39 @@ public class FMapaRegistrar extends Fragment {
 
     }
 
+    private void actualizar() {
+       /* if (conectadoWifi() || conectadoRedMovil()) {*/
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                Log.d("SELECTED", ": " + position);
+                switch (position) {
+                    case 0:
+
+                        break;
+                    case 1:
+
+
+                        break;
+                    case 2:
+                        validator.validate();
+                        break;
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
+    }
+
     private final LocationListener mLocaction = new LocationListener() {
 
         @Override
@@ -127,15 +195,13 @@ public class FMapaRegistrar extends Fragment {
             myLocation = location;
             Log.e("MYLOCATION", "LAT: " + location.getLatitude() + " - LON: " + location.getLongitude());
             if (estadoPosicion) {
-                SharedPreferences.Editor editor =getActivity().getSharedPreferences("GPS", Context.MODE_PRIVATE).edit();
-                editor.putString("LATITUD", ""+location.getLatitude());
-                editor.putString("LONGITUD", "" + location.getLongitude());
-                editor.commit();
-                estadoPosicion=false;
-                String urlMap="http://maps.google.com/maps/api/staticmap?center="+location.getLatitude()+","+location.getLongitude()+",&zoom=17&markers=icon:http://www.myiconfinder.com/uploads/iconsets/256-256-a5485b563efc4511e0cd8bd04ad0fe9e.png|"+location.getLatitude()+","+location.getLongitude()+"&path=color:0x0000FF80|weight:5|"+location.getLatitude()+","+location.getLongitude()+"&size=400x300";//
+                estadoPosicion = false;
+                String urlMap = "http://maps.google.com/maps/api/staticmap?center=" + location.getLatitude() + "," + location.getLongitude() + ",&zoom=17&markers=icon:http://www.myiconfinder.com/uploads/iconsets/256-256-a5485b563efc4511e0cd8bd04ad0fe9e.png|" + location.getLatitude() + "," + location.getLongitude() + "&path=color:0x0000FF80|weight:5|" + location.getLatitude() + "," + location.getLongitude() + "&size=400x300";//
                 webViewMap.loadUrl(urlMap);
 
             }
+            textLat.setText(""+location.getLatitude() + "");
+            textLon.setText(""+location.getLongitude() + "");
         }
 
         @Override
@@ -155,7 +221,7 @@ public class FMapaRegistrar extends Fragment {
     };
 
     private void display() {
-       // editTextDireccionFiscal.setEnabled(false);
+        // editTextDireccionFiscal.setEnabled(false);
         editTextDescripcion.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -188,11 +254,11 @@ public class FMapaRegistrar extends Fragment {
             @Override
             public void onClick(View v) {
                 if (!estadoDF) {
-                   // editTextDireccionFiscal.setEnabled(true);
+                    // editTextDireccionFiscal.setEnabled(true);
                     editTextDireccionFiscal.setText("");
                     estadoDF = true;
                 } else {
-                   // editTextDireccionFiscal.setEnabled(false);
+                    // editTextDireccionFiscal.setEnabled(false);
                     editTextDireccionFiscal.setText(editTextDescripcion.getText().toString());
                     estadoDF = false;
                 }
@@ -202,35 +268,63 @@ public class FMapaRegistrar extends Fragment {
         btnActualizarP.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                estadoPosicion=true;
+                estadoPosicion = true;
             }
         });
 
     }
 
-    /*
-        @Override
-        public void onPause() {
-            super.onPause();
-            Log.d("EVENTOS  ", "PAUSA");
-            try {
-                SharedPreferences.Editor editor = getActivity().getSharedPreferences("INFORMACION_MAPA", Context.MODE_PRIVATE).edit();
-                editor.putString("descripcion", editTextDescripcion.getText().toString());
-                editor.putString("direccion_fiscal", editTextDireccionFiscal.getText().toString());
-                editor.putString("latitud", markerEstablecimeinto.getPosition().latitude + "");
-                editor.putString("longitud", markerEstablecimeinto.getPosition().longitude+"");
-                editor.commit();
-            }catch (NullPointerException e){
-           //   setMyLocation();
-            }
-     }
-    */
+
     @Override
     public void onResume() {
         super.onResume();
 
 
     }
+
+
+    @Override
+    public void onValidationSucceeded() {
+        String lat = "", lon = "", direccion = "", direccion_fiscal = "";
+
+        lat = textLat.getText().toString();
+        lon = textLon.getText().toString();
+        direccion = editTextDescripcion.getText().toString();
+        direccion_fiscal = editTextDireccionFiscal.getText().toString();
+
+
+        long estado = dbAdapter_temp_establecimiento.updateTempEstablecDireccion(idEstablecimiento + "",lat,lon,direccion,direccion_fiscal );
+        if (estado > 0) {
+            viewPager.setCurrentItem(2);
+        } else {
+            Utils.setToast(getActivity(), "Ocurrio un error, por favor sal y vuelve a Intentarlo", R.color.rojo);
+        }
+
+    }
+
+    @Override
+    public void onValidationFailed(View failedView, Rule<?> failedRule) {
+
+        viewPager.setCurrentItem(1);
+
+        String message = failedRule.getFailureMessage();
+        Log.d("VALIDACION", "" + message + "****" + failedView.getId());
+        if (failedView instanceof EditText) {
+            ((EditText) failedView).setError(message);
+        }
+    }
+
+
+    //----------------------
+
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_activity_agregar_establecimiento, menu);
+        setHasOptionsMenu(false);
+
+    }
+
 
 
 }
