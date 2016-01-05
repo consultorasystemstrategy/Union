@@ -22,6 +22,9 @@
     <string name="VCPP">Nùmero de Cuotas</string>
     <string name="VCPPD">Número de Documento</string>
 
+    <string name="requerido_input">Campo requerido</string>
+    <string name="requerido_correo">Formato incorrecto</string>
+
     <string-array name="country_arrays">
         <item>Malaysia</item>
         <item>United States</item>
