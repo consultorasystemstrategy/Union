@@ -6,6 +6,9 @@
     android:orientation="vertical"
     android:background="@color/Blanco">
 
+
+
+    <include layout="@layout/header_establecimiento"/>
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -61,87 +64,6 @@
                                 android:orientation="vertical"
                                 android:layout_width="fill_parent"
                                 android:layout_height="fill_parent"
-                                android:layout_weight="3">
-                                <TableLayout
-                                    android:id="@+id/tableLayoutcabecera"
-                                    android:layout_width="fill_parent"
-                                    android:layout_height="wrap_content"
-                                    android:shrinkColumns="*"
-                                    android:stretchColumns="*" >
-                                    <TableRow
-                                        android:layout_height="fill_parent"
-                                        android:layout_width="fill_parent"
-
-                                        android:gravity="center_horizontal">
-                                        <TextView
-                                            android:id="@+id/TextView11"
-                                            android:padding="2dp"
-                                            android:textSize="11dp"
-                                            android:text="Cliente:"
-                                            android:background="#b0b0b0"
-                                            android:textColor="#000000"
-                                            android:gravity="left"/>
-
-                                        <TextView
-                                            android:id="@+id/textClienteCanje"
-                                            android:text="SERNA YAURE YDA FRANCISCA"
-                                            android:padding="2dp"
-                                            android:textSize="11dp"
-                                            android:background="#a09f9f"
-                                            android:textColor="#000000"
-                                            android:gravity="left"/>
-                                    </TableRow>
-                                    <TableRow
-                                        android:layout_height="fill_parent"
-                                        android:layout_width="fill_parent"
-                                        android:gravity="center_horizontal">
-                                        <TextView
-                                            android:id="@+id/TextRow13"
-                                            android:text="Fecha de Emision:"
-                                            android:padding="2dp"
-                                            android:textSize="11dp"
-                                            android:background="#b0b0b0"
-                                            android:textColor="#000000"
-                                            android:gravity="left"/>
-
-                                        <TextView
-                                            android:id="@+id/textfechaEmisionCanje"
-                                            android:text="05/10/2015"
-                                            android:background="#a09f9f"
-                                            android:padding="2dp"
-                                            android:textSize="11dp"
-                                            android:textColor="#000000"
-                                            android:gravity="left"/>
-                                    </TableRow>
-                                    <TableRow
-                                        android:layout_height="fill_parent"
-                                        android:layout_width="fill_parent"
-                                        android:gravity="center_horizontal">
-                                        <TextView
-                                            android:id="@+id/TextRow15"
-                                            android:text="Documento:"
-                                            android:padding="2dp"
-                                            android:background="#b0b0b0"
-                                            android:textSize="11dp"
-                                            android:textColor="#000000"
-                                            android:gravity="left"/>
-
-                                        <TextView
-                                            android:id="@+id/textDocumentoCanje"
-                                            android:text="10090135762"
-                                            android:padding="2dp"
-                                            android:textSize="11dp"
-                                            android:background="#a09f9f"
-                                            android:textColor="#000000"
-                                            android:gravity="left"/>
-                                    </TableRow>
-                                </TableLayout>
-                                </LinearLayout>
-
-                            <LinearLayout
-                                android:orientation="vertical"
-                                android:layout_width="fill_parent"
-                                android:layout_height="fill_parent"
                                 android:layout_weight="1">
 
                                 <ListView
@@ -154,14 +76,18 @@
                                 android:orientation="vertical"
                                 android:layout_width="fill_parent"
                                 android:layout_height="fill_parent"
-                                android:layout_weight="3">
+                                android:layout_weight="3"
+                                android:gravity="right"
+                                android:background="@color/material_grey_50">
 
                                 <TableLayout
                                     android:id="@+id/tableLayoutcanjes"
                                     android:layout_width="fill_parent"
                                     android:layout_height="fill_parent"
                                     android:shrinkColumns="*"
-                                    android:stretchColumns="*" >
+                                    android:stretchColumns="*"
+                                    android:gravity="bottom|right"
+                                    android:background="#f4f4f4">
                                     <TableRow
                                         android:layout_height="fill_parent"
                                         android:layout_width="fill_parent"
@@ -170,20 +96,21 @@
                                         <TextView
                                             android:id="@+id/TextView5"
                                             android:padding="2dp"
-                                            android:textSize="11dp"
+                                            android:textSize="14dp"
                                             android:text="Total:"
-                                            android:background="#b0b0b0"
                                             android:textColor="#000000"
-                                            android:gravity="left"/>
+                                            android:gravity="left"
+                                            android:textStyle="italic" />
 
                                         <TextView
                                             android:id="@+id/TextViewTotalCanje"
                                             android:text="0.0"
                                             android:padding="2dp"
-                                            android:background="#a09f9f"
-                                            android:textSize="11dp"
+                                            android:textSize="14dp"
                                             android:textColor="#000000"
-                                            android:gravity="center"/>
+                                            android:gravity="center|right"
+                                            android:textStyle="bold|italic"
+                                            android:layout_marginRight="4dp" />
                                     </TableRow>
                                     <TableRow
                                         android:layout_height="fill_parent"
@@ -193,19 +120,20 @@
                                             android:id="@+id/TextRow1"
                                             android:text="Base Imponible:"
                                             android:padding="2dp"
-                                            android:textSize="11dp"
-                                            android:background="#b0b0b0"
+                                            android:textSize="14dp"
                                             android:textColor="#000000"
-                                             android:gravity="left"/>
+                                             android:gravity="left"
+                                            android:textStyle="italic" />
 
                                         <TextView
                                             android:id="@+id/TextViewBaseCanje"
                                             android:text="0.0"
-                                            android:background="#a09f9f"
                                             android:padding="2dp"
-                                            android:textSize="11dp"
+                                            android:textSize="14dp"
                                             android:textColor="#000000"
-                                            android:gravity="center"/>
+                                            android:gravity="center|right"
+                                            android:textStyle="bold|italic"
+                                            android:layout_marginRight="4dp" />
                                     </TableRow>
                                     <TableRow
                                         android:layout_height="fill_parent"
@@ -215,19 +143,20 @@
                                             android:id="@+id/TextRow3"
                                             android:text="IGV:"
                                             android:padding="2dp"
-                                            android:background="#b0b0b0"
                                             android:textColor="#000000"
-                                            android:textSize="11dp"
-                                            android:gravity="left"/>
+                                            android:textSize="14dp"
+                                            android:gravity="left"
+                                            android:textStyle="italic" />
 
                                         <TextView
                                             android:id="@+id/TextViewIgvCanje"
                                             android:text="0.0"
-                                            android:textSize="11dp"
+                                            android:textSize="14dp"
                                             android:padding="2dp"
-                                            android:background="#a09f9f"
                                             android:textColor="#000000"
-                                             android:gravity="center"/>
+                                             android:gravity="center|right"
+                                            android:textStyle="bold|italic"
+                                            android:layout_marginRight="4dp" />
                                     </TableRow>
                                 </TableLayout>
                             </LinearLayout>
@@ -245,87 +174,6 @@
                             android:orientation="vertical"
                             android:layout_width="fill_parent"
                             android:layout_height="fill_parent">
-
-                            <LinearLayout
-                                android:orientation="vertical"
-                                android:layout_width="fill_parent"
-                                android:layout_height="fill_parent"
-                                android:layout_weight="3">
-                                <TableLayout
-                                    android:id="@+id/tableLayoutcabeceradevoluciones"
-                                    android:layout_width="fill_parent"
-                                    android:layout_height="wrap_content"
-                                    android:shrinkColumns="*"
-                                    android:stretchColumns="*" >
-                                    <TableRow
-                                        android:layout_height="fill_parent"
-                                        android:layout_width="fill_parent"
-
-                                        android:gravity="center_horizontal">
-                                        <TextView
-                                            android:id="@+id/TextView100"
-                                            android:padding="2dp"
-                                            android:textSize="11dp"
-                                            android:text="Cliente:"
-                                            android:background="#b0b0b0"
-                                            android:textColor="#000000"
-                                            android:gravity="left"/>
-
-                                        <TextView
-                                            android:id="@+id/textClienteDevolucion"
-                                            android:text="SERNA YAURE YDA FRANCISCA"
-                                            android:padding="2dp"
-                                            android:textSize="11dp"
-                                            android:background="#a09f9f"
-                                            android:textColor="#000000"
-                                            android:gravity="left"/>
-                                    </TableRow>
-                                    <TableRow
-                                        android:layout_height="fill_parent"
-                                        android:layout_width="fill_parent"
-                                        android:gravity="center_horizontal">
-                                        <TextView
-                                            android:id="@+id/TextRow102"
-                                            android:text="Fecha de Emision:"
-                                            android:padding="2dp"
-                                            android:textSize="11dp"
-                                            android:background="#b0b0b0"
-                                            android:textColor="#000000"
-                                            android:gravity="left"/>
-
-                                        <TextView
-                                            android:id="@+id/textfechaEmisionDevolucion"
-                                            android:text="05/10/2015"
-                                            android:background="#a09f9f"
-                                            android:padding="2dp"
-                                            android:textSize="11dp"
-                                            android:textColor="#000000"
-                                            android:gravity="left"/>
-                                    </TableRow>
-                                    <TableRow
-                                        android:layout_height="fill_parent"
-                                        android:layout_width="fill_parent"
-                                        android:gravity="center_horizontal">
-                                        <TextView
-                                            android:id="@+id/TextRow103"
-                                            android:text="Documento:"
-                                            android:padding="2dp"
-                                            android:textSize="11dp"
-                                            android:background="#b0b0b0"
-                                            android:textColor="#000000"
-                                            android:gravity="left"/>
-
-                                        <TextView
-                                            android:id="@+id/textDocumentoDevolucion"
-                                            android:text="10090135762"
-                                            android:padding="2dp"
-                                            android:textSize="11dp"
-                                            android:background="#a09f9f"
-                                            android:textColor="#000000"
-                                            android:gravity="left"/>
-                                    </TableRow>
-                                </TableLayout>
-                            </LinearLayout>
 
                             <LinearLayout
                                 android:orientation="vertical"
@@ -350,73 +198,95 @@
                                     android:layout_width="fill_parent"
                                     android:layout_height="fill_parent"
                                     android:shrinkColumns="*"
-                                    android:stretchColumns="*" >
+                                    android:stretchColumns="*"
+                                    android:gravity="bottom|right"
+                                    android:background="#f4f4f4" >
+
                                     <TableRow
                                         android:layout_height="fill_parent"
                                         android:layout_width="fill_parent"
+                                        android:gravity="center_horizontal" >
 
-                                        android:gravity="center_horizontal">
                                         <TextView
-                                            android:id="@+id/TextView31"
+                                            android:id="@+id/textView13"
                                             android:padding="2dp"
-                                            android:textSize="11dp"
+                                            android:textSize="14dp"
                                             android:text="Total:"
-                                            android:background="#b0b0b0"
                                             android:textColor="#000000"
-                                            android:gravity="left"/>
+                                            android:gravity="left"
+                                            android:textStyle="italic"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content" />
 
                                         <TextView
                                             android:id="@+id/TextViewTotalDevolucion"
                                             android:text="0.0"
                                             android:padding="2dp"
-                                            android:textSize="11dp"
-                                            android:background="#a09f9f"
+                                            android:textSize="14dp"
                                             android:textColor="#000000"
-                                            android:gravity="center"/>
+                                            android:gravity="center|right"
+                                            android:textStyle="bold|italic"
+                                            android:layout_marginRight="4dp"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content" />
                                     </TableRow>
+
                                     <TableRow
                                         android:layout_height="fill_parent"
                                         android:layout_width="fill_parent"
-                                        android:gravity="center_horizontal">
+                                        android:gravity="center_horizontal" >
+
                                         <TextView
-                                            android:id="@+id/TextRow46"
+                                            android:id="@+id/textView15"
                                             android:text="Base Imponible:"
                                             android:padding="2dp"
-                                            android:textSize="11dp"
-                                            android:background="#b0b0b0"
+                                            android:textSize="14dp"
                                             android:textColor="#000000"
-                                            android:gravity="left"/>
+                                            android:gravity="left"
+                                            android:textStyle="italic"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content" />
 
                                         <TextView
                                             android:id="@+id/TextViewBaseDevolucion"
                                             android:text="0.0"
-                                            android:background="#a09f9f"
                                             android:padding="2dp"
-                                            android:textSize="11dp"
+                                            android:textSize="14dp"
                                             android:textColor="#000000"
-                                            android:gravity="center"/>
+                                            android:gravity="center|right"
+                                            android:textStyle="bold|italic"
+                                            android:layout_marginRight="4dp"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content" />
                                     </TableRow>
+
                                     <TableRow
                                         android:layout_height="fill_parent"
                                         android:layout_width="fill_parent"
-                                        android:gravity="center_horizontal">
+                                        android:gravity="center_horizontal" >
+
                                         <TextView
-                                            android:id="@+id/TextRow48"
+                                            android:id="@+id/textView17"
                                             android:text="IGV:"
                                             android:padding="2dp"
-                                            android:textSize="11dp"
-                                            android:background="#b0b0b0"
                                             android:textColor="#000000"
-                                            android:gravity="left"/>
+                                            android:textSize="14dp"
+                                            android:gravity="left"
+                                            android:textStyle="italic"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content" />
 
                                         <TextView
                                             android:id="@+id/TextViewIgvDevolucion"
                                             android:text="0.0"
+                                            android:textSize="14dp"
                                             android:padding="2dp"
-                                            android:textSize="11dp"
-                                            android:background="#a09f9f"
                                             android:textColor="#000000"
-                                            android:gravity="center"/>
+                                            android:gravity="center|right"
+                                            android:textStyle="bold|italic"
+                                            android:layout_marginRight="4dp"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content" />
                                     </TableRow>
                                 </TableLayout>
                             </LinearLayout>

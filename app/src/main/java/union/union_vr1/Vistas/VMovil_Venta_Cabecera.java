@@ -1295,7 +1295,14 @@ Instantiate and pass a callback
 
 
         final EditText editTextCantidadCredito = ((EditText) layout.findViewById(R.id.VCSC_editText_CantidadCredito));
-        editTextCantidadCredito.setText(Utils.replaceComa(df.format(totalFooter)));
+
+        String cantidadSugeridad = Utils.replaceComa(df.format(totalFooter));
+        if (cantidadSugeridad.equals("0.00")){
+            editTextCantidadCredito.setText("100.00");
+        }else{
+            editTextCantidadCredito.setText(cantidadSugeridad);
+        }
+
 
 
         spinnerDiasCredito = ((Spinner) layout.findViewById(R.id.VCSC_spinner_DiasCredito));

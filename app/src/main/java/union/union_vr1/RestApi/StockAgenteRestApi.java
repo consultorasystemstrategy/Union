@@ -33,12 +33,11 @@ public class StockAgenteRestApi {
     private final String urlStringLocal = "http://192.168.0.158/RestFull/StockAgente.ashx";
     //SERVIDOR REMOTO
         private final String urlStringRemoto = "http://190.81.172.113/RestFull/StockAgente.ashx";
-
     /*private final String urlStringRedInterna = "http://192.168.13.31/RestFull/StockAgente.ashx";*/
-    private final String urlStringRedInterna = "https://sidim.upeu.edu.pe/ServiciosAndroid/StockAgente.ashx";
+    private final String urlStringPU= "https://sidim.upeu.edu.pe/ServiciosAndroid/StockAgente.ashx";
+    private final String urlInternaPU= "http://sidim.upeu.edu.pe/ServiciosAndroid/StockAgente.ashx";
+
     private String urlString = "http://192.168.0.158/RestFull/StockAgente.ashx";
-
-
     private Context contexto;
     private int servidorTipo=1;
 
@@ -57,7 +56,11 @@ public class StockAgenteRestApi {
                 urlString = urlStringRemoto;
                 break;
             case 3:
-                urlString = urlStringRedInterna;
+                urlString = urlStringPU;
+                break;
+            case 4:
+                urlString = urlInternaPU;
+                break;
             default:
                 break;
         }

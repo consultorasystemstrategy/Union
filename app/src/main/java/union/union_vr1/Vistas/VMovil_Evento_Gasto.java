@@ -200,15 +200,12 @@ public class VMovil_Evento_Gasto extends Activity implements View.OnClickListene
 
                 if (tipoGasto.equals("Combustible")) {
                     String itemProcedenciaGasto = (String) spinnerProcedenciaGasto.getSelectedItem();
-                    ProcedenciaGasto procedenciaGasto = ProcedenciaGasto.valueOf(itemProcedenciaGasto);
-                    switch (procedenciaGasto) {
-                        case planta:
-                            addItemsTipoDocumento_CombustiblePlanta();
-                            break;
-                        case ruta:
-                            addItemsTipoDocumento_CombustibleRuta();
-                            break;
+                    if (itemProcedenciaGasto.toLowerCase().equals("planta")){
+                        addItemsTipoDocumento_CombustiblePlanta();
+                    }else if (itemProcedenciaGasto.toLowerCase().equals("ruta")){
+                        addItemsTipoDocumento_CombustibleRuta();
                     }
+
                 }else{
                     addItemsTipoDocumento();
                 }
@@ -228,22 +225,15 @@ public class VMovil_Evento_Gasto extends Activity implements View.OnClickListene
 
 
                 String procedenciaSeleccionada = (String) adapterView.getItemAtPosition(i);
-                ProcedenciaGasto procedenciaGasto = ProcedenciaGasto.valueOf(procedenciaSeleccionada);
 
                 if (tipoGasto.equals("Combustible")) {
-                    switch (procedenciaGasto) {
-                        case planta:
-                            addItemsTipoDocumento_CombustiblePlanta();
-                            break;
-                        case ruta:
-                            addItemsTipoDocumento_CombustibleRuta();
-                            break;
-
+                    if (procedenciaSeleccionada.toLowerCase().equals("planta")){
+                        addItemsTipoDocumento_CombustiblePlanta();
+                    }else if (procedenciaSeleccionada.toLowerCase().equals("ruta")){
+                        addItemsTipoDocumento_CombustibleRuta();
                     }
-
-                } else {
-
                 }
+
             }
 
             @Override
@@ -395,13 +385,24 @@ public class VMovil_Evento_Gasto extends Activity implements View.OnClickListene
         spinnerTipoDocumento.setAdapter(adapterTipoDocumento);
     }
 
+    public void validateTipoDocumento(String tipoDoc){
+        if(tipoDoc.equals(Constants._SPINNER_DEFAULT_COMPROBANTE)) {
+            Toast.makeText(VMovil_Evento_Gasto.this, "Seleccionar Tipo de Comprobante", Toast.LENGTH_SHORT).show();
+            return;
+        }
+    }
+
+
 
     public void agegarGastos(View v) {
+
+
         String tipoGasto = spinnerTipoGasto.getItemAtPosition(spinnerTipoGasto.getSelectedItemPosition()).toString();
         String procedenciaGasto = spinnerProcedenciaGasto.getItemAtPosition(spinnerProcedenciaGasto.getSelectedItemPosition()).toString();
         String tipoDoc = spinnerTipoDocumento.getItemAtPosition(spinnerTipoDocumento.getSelectedItemPosition()).toString();
 
 
+        validateTipoDocumento(tipoDoc);
 
          Cursor cursorTipoGasto = dbHelperTipoGasto.fetchTipoGastosByName(tipoGasto);
         int positionTipoGasto = 0;
@@ -435,33 +436,31 @@ public class VMovil_Evento_Gasto extends Activity implements View.OnClickListene
 
         String nombreDocumento = (String) spinnerTipoDocumento.getSelectedItem();
 
-        TipoDocumento tipoDocumento = TipoDocumento.valueOf(nombreDocumento);
+        /*TipoDocumento tipoDocumento = TipoDocumento.valueOf(nombreDocumento);*/
 
         Double igv = 0.0;
         Double subtotal = 0.0;
         int estado = 0;
 
         long idRegistroGastoInsertado = 0;
-        switch (tipoDocumento) {
-            case factura:
-                igv = IGV * total / 100;
-                subtotal = total - igv;
-                positionTipoDocumento = 1;
-                idRegistroGastoInsertado = dbHelperInformeGasto.createInformeGastos(positionTipoGasto, positionProcedenciaGasto, positionTipoDocumento, tipoGasto, subtotal, igv, total, getDatePhone(), null, estado, referencia, agente, Constants._CREADO);
-                Log.d("TIPO DOCUMENTO", "FACTURA");
-                break;
-            case boleta:
-                positionTipoDocumento = 2;
-                idRegistroGastoInsertado = dbHelperInformeGasto.createInformeGastos(positionTipoGasto, positionProcedenciaGasto, positionTipoDocumento, tipoGasto, subtotal, igv, total, getDatePhone(), null, estado, referencia, agente, Constants._CREADO);
-                Log.d("TIPO DOCUMENTO", "BOLETA");
-                break;
-            case ficha:
-                positionTipoDocumento = 4;
-                idRegistroGastoInsertado = dbHelperInformeGasto.createInformeGastos(positionTipoGasto, positionProcedenciaGasto, positionTipoDocumento, tipoGasto, subtotal, igv, total, getDatePhone(), null, estado, referencia, agente, Constants._CREADO);
-                Log.d("TIPO DOCUMENTO", "FICHA");
-                break;
-        }
 
+        if (tipoDoc.equals(Constants._FACTURA)){
+            igv = IGV * total / 100;
+            subtotal = total - igv;
+            positionTipoDocumento = 1;
+            idRegistroGastoInsertado = dbHelperInformeGasto.createInformeGastos(positionTipoGasto, positionProcedenciaGasto, positionTipoDocumento, tipoGasto, subtotal, igv, total, getDatePhone(), null, estado, referencia, agente, Constants._CREADO);
+            Log.d("TIPO DOCUMENTO", "FACTURA");
+        }else if (tipoDoc.equals(Constants._BOLETA)){
+            positionTipoDocumento = 2;
+            idRegistroGastoInsertado = dbHelperInformeGasto.createInformeGastos(positionTipoGasto, positionProcedenciaGasto, positionTipoDocumento, tipoGasto, subtotal, igv, total, getDatePhone(), null, estado, referencia, agente, Constants._CREADO);
+            Log.d("TIPO DOCUMENTO", "BOLETA");
+        }else if (tipoDoc.equals("ficha"))
+        {
+            positionTipoDocumento = 4;
+            idRegistroGastoInsertado = dbHelperInformeGasto.createInformeGastos(positionTipoGasto, positionProcedenciaGasto, positionTipoDocumento, tipoGasto, subtotal, igv, total, getDatePhone(), null, estado, referencia, agente, Constants._CREADO);
+            Log.d("TIPO DOCUMENTO", "FICHA");
+            //DO NOTHING
+        }
 
         editTextTotal.setText("");
         editTextTotal.setError(null);
@@ -471,13 +470,14 @@ public class VMovil_Evento_Gasto extends Activity implements View.OnClickListene
         Toast.makeText(getApplicationContext(), "Gasto Agregado", Toast.LENGTH_SHORT).show();
 }
 
-    private enum TipoDocumento {
+    /*private enum TipoDocumento {
         factura, ficha,TipodeComprobante, boleta;
     }
 
     private enum ProcedenciaGasto {
         planta, ruta
     }
+    */
 
     private enum TipoDeGasto {
         Combustible, Comida, Departamento, Viaje, Nuevo

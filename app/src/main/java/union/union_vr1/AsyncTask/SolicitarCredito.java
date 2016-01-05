@@ -81,6 +81,7 @@ public class SolicitarCredito extends AsyncTask<String, String, String> {
                 int idAgente = Integer.parseInt(strings[0]);
                 int idEstablecimiento = Integer.parseInt(strings[1]);
                 Double montoCredito = Double.parseDouble(strings[2]);
+                montoCredito = montoCredito +1;
                 int diasCredito =Integer.parseInt(strings[3]) ;
                 Log.d("DATOS SOLICITUD CREDITO ", idAgente + " - "+idEstablecimiento + " - "+montoCredito + " - "+diasCredito);
 

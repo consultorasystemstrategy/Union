@@ -91,7 +91,7 @@ public class FClienteEditar extends Fragment implements Validator.ValidationList
         v = inflater.inflate(R.layout.fragment_cliente, container, false);
         setHasOptionsMenu(false);
         idEstablecimiento = getArguments().getString("idEstablecimiento");
-        toastBucsando = Toast.makeText(getActivity().getApplicationContext(), "Buscando...", 1000);
+        toastBucsando = Toast.makeText(getActivity().getApplicationContext(), "Buscando...", Toast.LENGTH_SHORT);
         toast = Toast.makeText(getActivity().getApplicationContext(), "Encontrado", Toast.LENGTH_SHORT);
         toast.getView().setBackgroundColor(getActivity().getResources().getColor(R.color.verde));
         toast.setGravity(Gravity.TOP | Gravity.LEFT, 0, 0);

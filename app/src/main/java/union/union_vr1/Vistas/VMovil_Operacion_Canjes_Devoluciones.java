@@ -41,12 +41,15 @@ import union.union_vr1.Sqlite.DBAdapter_Temp_Canjes_Devoluciones;
 import union.union_vr1.Sqlite.DbAdapter_Histo_Venta_Detalle;
 import union.union_vr1.Sqlite.DbAdapter_Stock_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
+import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
+import union.union_vr1.Utils.RoundedLetterView;
 import union.union_vr1.Utils.Utils;
 
 public class VMovil_Operacion_Canjes_Devoluciones extends TabActivity {
     private DBAdapter_Temp_Canjes_Devoluciones dbAdapter_temp_canjes_devoluciones;
     private DbAdapter_Temp_Session session;
     private DbAdapter_Histo_Venta_Detalle dbAdapter_histo_venta_detalle;
+    private DbAdaptert_Evento_Establec dbAdaptert_evento_establec;
     private DbAdapter_Stock_Agente dbHelper_Stock;
     private AutoCompleteTextView autoComple;
     private TabHost tabHost;
@@ -58,12 +61,12 @@ public class VMovil_Operacion_Canjes_Devoluciones extends TabActivity {
     private TextView textViewTotalDevolucion;
     private TextView textViewBaseDevolucion;
     private TextView textViewigvDevolucion;
-    private TextView textViewNombreClienteCanje;
+/*    private TextView textViewNombreClienteCanje;
     private TextView textViewFechaEmisionCanje;
-    private TextView textViewDocumentoCanje;
-    private TextView textViewNombreClienteDevolucion;
+    private TextView textViewDocumentoCanje;*/
+/*    private TextView textViewNombreClienteDevolucion;
     private TextView textViewFechaEmisionDevolucion;
-    private TextView textViewDocumentoDevolucion;
+    private TextView textViewDocumentoDevolucion;*/
     private Button buttonSave;
     private SimpleCursorAdapter adapter;
     private String establec;
@@ -82,6 +85,8 @@ public class VMovil_Operacion_Canjes_Devoluciones extends TabActivity {
         session.open();
         dbAdapter_temp_canjes_devoluciones = new DBAdapter_Temp_Canjes_Devoluciones(this);
         dbAdapter_temp_canjes_devoluciones.open();
+        dbAdaptert_evento_establec = new DbAdaptert_Evento_Establec(this);
+        dbAdaptert_evento_establec.open();
         liquidacion = session.fetchVarible(3);
         dbHelper_Stock = new DbAdapter_Stock_Agente(this);
         dbHelper_Stock.open();
@@ -101,12 +106,12 @@ public class VMovil_Operacion_Canjes_Devoluciones extends TabActivity {
         textViewBaseDevolucion = (TextView) findViewById(R.id.TextViewBaseDevolucion);
         textViewigvDevolucion = (TextView) findViewById(R.id.TextViewIgvDevolucion);
         textViewTotalCanje = (TextView) findViewById(R.id.TextViewTotalCanje);
-        textViewNombreClienteCanje = (TextView) findViewById(R.id.textClienteCanje);
-        textViewFechaEmisionCanje = (TextView) findViewById(R.id.textfechaEmisionCanje);
-        textViewDocumentoCanje = (TextView) findViewById(R.id.textDocumentoCanje);
-        textViewNombreClienteDevolucion = (TextView) findViewById(R.id.textClienteDevolucion);
+//        textViewNombreClienteCanje = (TextView) findViewById(R.id.textClienteCanje);
+//        textViewFechaEmisionCanje = (TextView) findViewById(R.id.textfechaEmisionCanje);
+//        textViewDocumentoCanje = (TextView) findViewById(R.id.textDocumentoCanje);
+/*        textViewNombreClienteDevolucion = (TextView) findViewById(R.id.textClienteDevolucion);
         textViewFechaEmisionDevolucion = (TextView) findViewById(R.id.textfechaEmisionDevolucion);
-        textViewDocumentoDevolucion = (TextView) findViewById(R.id.textDocumentoDevolucion);
+        textViewDocumentoDevolucion = (TextView) findViewById(R.id.textDocumentoDevolucion);*/
         buttonSave = (Button)findViewById(R.id.button_save);
         autoComplete();
 
@@ -135,6 +140,27 @@ public class VMovil_Operacion_Canjes_Devoluciones extends TabActivity {
 
             }
         });
+        showHeader();
+    }
+
+    private void showHeader(){
+        TextView textViewNombreEstablecimiento = (TextView) findViewById(R.id.completeName);
+        RoundedLetterView letter = (RoundedLetterView) findViewById(R.id.letter);
+
+
+
+        Cursor cursorEstablecimiento = dbAdaptert_evento_establec.fetchEstablecsById(""+establec);
+        cursorEstablecimiento.moveToFirst();
+        String nombreEstablecimiento = "";
+        if (cursorEstablecimiento.getCount()>0) {
+            nombreEstablecimiento = cursorEstablecimiento.getString(cursorEstablecimiento.getColumnIndexOrThrow(dbAdaptert_evento_establec.EE_nom_establec));
+        }
+        textViewNombreEstablecimiento.setText(nombreEstablecimiento);
+        if(nombreEstablecimiento.length() == 0){
+            letter.setTitleText("A");
+        }else{
+            letter.setTitleText(nombreEstablecimiento.substring(0, 1).toUpperCase());
+        }
     }
     private void setMessageforSave(){
 
@@ -200,9 +226,9 @@ public class VMovil_Operacion_Canjes_Devoluciones extends TabActivity {
 
     private void listar_canjes() {
         //Listar Informacion Cliente
-        textViewNombreClienteCanje.setText(datosHeader[0]);
+/*        textViewNombreClienteCanje.setText(datosHeader[0]);
         textViewFechaEmisionCanje.setText(getDatePhone());
-        textViewDocumentoCanje.setText(datosHeader[1]);
+        textViewDocumentoCanje.setText(datosHeader[1]);*/
         mostrarItemsCanjes();
         listarTotalCanjes();
     }
@@ -266,9 +292,9 @@ public class VMovil_Operacion_Canjes_Devoluciones extends TabActivity {
 
     private void listar_devoluciones() {
 
-        textViewNombreClienteDevolucion.setText(datosHeader[0]);
+/*        textViewNombreClienteDevolucion.setText(datosHeader[0]);
         textViewFechaEmisionDevolucion.setText(getDatePhone());
-        textViewDocumentoDevolucion.setText(datosHeader[1]);
+        textViewDocumentoDevolucion.setText(datosHeader[1]);*/
         mostrarItemsDevoluciones();
         listarTotalDevoluciones();
 

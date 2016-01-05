@@ -147,24 +147,24 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter {
 
             switch (estado_autorizado){
                 case 1: //editar
-                    linearLayout.setAlpha((float) 0.5);
+                    linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.Dark1));
                     break;
                 case 2://nada
                     break;
                 case 3:
                     break;
                 case 4://editar
-                    linearLayout.setAlpha((float)0.5);
+                    linearLayout.setBackgroundColor(context.getResources().getColor(R.color.Dark1));
                     break;
                 case 5://editar
-                    linearLayout.setAlpha((float)0.5);
+                    linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.Dark1));
                     break;
                 case 6://nada
                     break;
                 case 7:
                     break;
                 case 8://editar
-                    linearLayout.setAlpha((float)0.5);
+                    linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.Dark1));
                     break;
                 default:
                     break;
