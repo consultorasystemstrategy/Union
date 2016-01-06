@@ -248,13 +248,13 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter {
             imageButtonOp.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    setActionOperacion(id_establecimiento);
+                    setActionOperacion(id_establecimiento, estado_autorizado);
                 }
             });
         }
     }
 
-    private void setActionOperacion(final String idEstablec) {
+    private void setActionOperacion(final String idEstablec, final int estado_autorizado) {
 
         String[] items = new String[]{};
         Integer[] icons = new Integer[]{};
@@ -262,7 +262,7 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter {
 
         //SWITCH
 
-        switch (estado_au) {
+        switch (estado_autorizado) {
             case 1: //editar
                 Utils.setToast(context, "No esta autorizado para la venta", R.color.rojo);
                 items = new String[]{"Editar", "Refrescar"};
@@ -307,7 +307,7 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter {
                 messageDialog(adapter, idEstablec);
                 break;
             default:
-                Utils.setToast(context, "Ya está autorizado.", R.color.verde);
+
                 break;
         }
 
