@@ -53,6 +53,8 @@ import union.union_vr1.Utils.Utils;
 public class ServiceImport extends IntentService {
 
 
+
+
     Handler mHandler;
     private DbAdapter_Temp_Session session;
     private Context context;
@@ -349,7 +351,7 @@ public class ServiceImport extends IntentService {
                 }
             }
 
-
+            //PerIEmpresaId
             //ACTUALIZAR LOS CRÉDITOS DE LOS ESTABLECIMIENTOS
 /*
             Cursor cursorEstablecimiento = dbAdaptert_evento_establec.fetchAllEstablecs();

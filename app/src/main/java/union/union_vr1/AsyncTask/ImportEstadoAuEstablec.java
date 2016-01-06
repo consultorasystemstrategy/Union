@@ -34,6 +34,7 @@ import union.union_vr1.Utils.Utils;
 public class ImportEstadoAuEstablec extends AsyncTask<String, String, String> {
 
     private DbAdapter_Temp_Session session;
+    private DbAdaptert_Evento_Establec dbAdaptert_evento_establec;
     private Activity mainActivity;
     private ProgressDialog progressDialog;
     private int idAgente;
@@ -42,7 +43,8 @@ public class ImportEstadoAuEstablec extends AsyncTask<String, String, String> {
 
     public ImportEstadoAuEstablec(Activity mainActivity) {
         this.mainActivity = mainActivity;
-
+        dbAdaptert_evento_establec = new DbAdaptert_Evento_Establec(mainActivity);
+        dbAdaptert_evento_establec.open();
         session = new DbAdapter_Temp_Session(mainActivity);
         session.open();
         idAgente = session.fetchVarible(1);
@@ -63,7 +65,14 @@ public class ImportEstadoAuEstablec extends AsyncTask<String, String, String> {
             if(Utils.isSuccesful(jsonObject)){
                 int inserto = jsonObject.getInt("Value");
                 if(inserto>0){
-                    new ImportMain(mainActivity).execute();
+
+
+                    long es = dbAdaptert_evento_establec.updateEstablecsEstadoId(idEstablecimiento);
+                    if(es>0){
+                        Log.d("ESTADO INSERTO",""+es);
+                    }
+
+
                 }else{
 
                 }
@@ -99,7 +108,7 @@ public class ImportEstadoAuEstablec extends AsyncTask<String, String, String> {
 
             progressDialog.setProgress(100);
 
-            Utils.setToast(mainActivity,"Actualizando datos", R.color.verde);
+
 
         }
         super.onPostExecute(s);
@@ -153,7 +162,10 @@ public class ImportEstadoAuEstablec extends AsyncTask<String, String, String> {
     private void dismissProgressDialog() {
         if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();
+
         }
+
+
     }
 
 }

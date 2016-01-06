@@ -913,6 +913,21 @@ public class StockAgenteRestApi {
         result = new JSONObject(r);
         return result;
     }
+
+    public JSONObject fsel_MotivoDevolucion(int vint_AgenteId) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","RestAPI");
+        o.put("method", "fsel_MotivoDevolucion");
+        p.put("vint_AgenteId",mapObject(vint_AgenteId));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+
     public JSONObject fupd_EstadoClienteEstablecimiento(int vint_ClienteId,int vint_EstablecimientoId,int vint_AgenteId) throws Exception {
         JSONObject result = null;
         JSONObject o = new JSONObject();

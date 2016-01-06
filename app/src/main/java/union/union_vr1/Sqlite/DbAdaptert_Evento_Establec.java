@@ -175,7 +175,7 @@ public class DbAdaptert_Evento_Establec {
 
 
         mDb.update(SQLITE_TABLE_Evento_Establec, initialValues,
-                EE_id_establec+"=?",new String[]{""+establecimiento.getIdEstablecimiento()});
+                EE_id_establec + "=?", new String[]{"" + establecimiento.getIdEstablecimiento()});
     }
 
     public boolean existeEstablecsById(int idEstablec) throws SQLException {
@@ -230,6 +230,14 @@ public class DbAdaptert_Evento_Establec {
         initialValues.put(EE_dias_credito, diasCredito);
         initialValues.put(Constants._SINCRONIZAR, Constants._ACTUALIZADO);
 
+        return mDb.update(SQLITE_TABLE_Evento_Establec, initialValues,
+                EE_id_establec+"=?",new String[]{""+idEstablecimiento});
+    }
+
+    public int updateEstablecsEstadoId(int idEstablecimiento){
+
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(EE_estado_autorizado, "2");
         return mDb.update(SQLITE_TABLE_Evento_Establec, initialValues,
                 EE_id_establec+"=?",new String[]{""+idEstablecimiento});
     }

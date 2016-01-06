@@ -38,12 +38,14 @@ import union.union_vr1.Objects.Agente;
 import union.union_vr1.RestApi.StockAgenteRestApi;
 import union.union_vr1.Sqlite.DbAdapter_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Agente_Login;
+import union.union_vr1.Sqlite.DbAdapter_Motivo_Dev;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 import union.union_vr1.Utils.Utils;
 import union.union_vr1.Vistas.AppPreferences;
 import union.union_vr1.Vistas.VMovil_Abrir_Caja;
 import union.union_vr1.Vistas.VMovil_Evento_Indice;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
@@ -83,7 +85,6 @@ public class Login extends Activity implements OnClickListener {
     public static String token = "";
 
     private boolean addNewAccount = false;*/
-
 
 
     // private DbAdapter_Temp_Session session;
@@ -202,18 +203,17 @@ public class Login extends Activity implements OnClickListener {
 */
 
 
-
         session = new DbAdapter_Temp_Session(this);
         session.open();
 
         isCajaOpened = session.fetchVarible(9);
         Log.d("IS CAJA OPENED", "" + isCajaOpened);
-        if (isCajaOpened==0){
+        if (isCajaOpened == 0) {
             // QUEDARSE AQUÍ, LA CAJA ESTÁ CERRADA.
-        }else if (isCajaOpened==1){
+        } else if (isCajaOpened == 1) {
             //LA CAJA ESTÁ ABIERTA
             redireccionarPrincipal();
-        }else{
+        } else {
             redireccionarPrincipal();
         }
 
@@ -275,17 +275,14 @@ public class Login extends Activity implements OnClickListener {
     /**
      * Set up Bluetooth.
      */
-    private void bluetoothSetup()
-    {
+    private void bluetoothSetup() {
         // Initialize
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        if (mBluetoothAdapter == null)
-        {
+        if (mBluetoothAdapter == null) {
             // Device does not support Bluetooth
         }
         assert mBluetoothAdapter != null;
-        if (!mBluetoothAdapter.isEnabled())
-        {
+        if (!mBluetoothAdapter.isEnabled()) {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
 
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
@@ -295,7 +292,7 @@ public class Login extends Activity implements OnClickListener {
     @Override
     protected void onResume() {
         super.onResume();
-        if (mainActivity==null) {
+        if (mainActivity == null) {
             mainActivity = this;
         }
 
@@ -307,7 +304,7 @@ public class Login extends Activity implements OnClickListener {
 
     }
 
-    public void redireccionarPrincipal(){
+    public void redireccionarPrincipal() {
         dbAdapter_agente = new DbAdapter_Agente(this);
         dbAdapter_agente.open();
 
@@ -318,28 +315,28 @@ public class Login extends Activity implements OnClickListener {
 
         isCajaActual = false;
 
-        Cursor cursorAgenteCajaActual = dbAdapter_agente.fetchAgentesByIds(idAgente,idLiquidacion);
+        Cursor cursorAgenteCajaActual = dbAdapter_agente.fetchAgentesByIds(idAgente, idLiquidacion);
         cursorAgenteCajaActual.moveToFirst();
         String fechaCaja = null;
-        if (cursorAgenteCajaActual.getCount()>0) {
-            isCajaActual=true;
+        if (cursorAgenteCajaActual.getCount() > 0) {
+            isCajaActual = true;
             fechaCaja = cursorAgenteCajaActual.getString(cursorAgenteCajaActual.getColumnIndexOrThrow(dbAdapter_agente.AG_fecha));
 
-            if (getDatePhone().equals(fechaCaja)){
-                isCajaActual=true;
-            }else{
+            if (getDatePhone().equals(fechaCaja)) {
+                isCajaActual = true;
+            } else {
                 //LA CAAJA ESTÁ ABIERTA PERO NO CON LA FECHA ACTUAL
                 Toast.makeText(getApplicationContext(), "Debe Abrir Caja", Toast.LENGTH_LONG).show();
-                isCajaActual=false;
+                isCajaActual = false;
             }
         }
 
 
-        if(cursorAgenteCajaActual.getCount()==0){
-            isCajaActual=false;
+        if (cursorAgenteCajaActual.getCount() == 0) {
+            isCajaActual = false;
         }
 
-        if (isCajaActual){
+        if (isCajaActual) {
                 /*
                 ((MyApplication) loginClass.getApplication()).setIdAgente(mCursorAgente.getInt(mCursorAgente.getColumnIndexOrThrow(dbAdapter_agente.AG_id_agente_venta)));
                 ((MyApplication) loginClass.getApplication()).setIdLiquidacion(mCursorAgente.getInt(mCursorAgente.getColumnIndexOrThrow(dbAdapter_agente.AG_liquidacion)));
@@ -353,15 +350,15 @@ public class Login extends Activity implements OnClickListener {
             session.deleteVariable(4);
             session.deleteVariable(6);
 
-            session.createTempSession(1,cursorAgenteCajaActual.getInt(cursorAgenteCajaActual.getColumnIndexOrThrow(dbAdapter_agente.AG_id_agente_venta)));
-            session.createTempSession(3,cursorAgenteCajaActual.getInt(cursorAgenteCajaActual.getColumnIndexOrThrow(dbAdapter_agente.AG_liquidacion)));
-            session.createTempSession(4,cursorAgenteCajaActual.getInt(cursorAgenteCajaActual.getColumnIndexOrThrow(dbAdapter_agente.AG_id_usuario)));
-            session.createTempSession(6,0);
+            session.createTempSession(1, cursorAgenteCajaActual.getInt(cursorAgenteCajaActual.getColumnIndexOrThrow(dbAdapter_agente.AG_id_agente_venta)));
+            session.createTempSession(3, cursorAgenteCajaActual.getInt(cursorAgenteCajaActual.getColumnIndexOrThrow(dbAdapter_agente.AG_liquidacion)));
+            session.createTempSession(4, cursorAgenteCajaActual.getInt(cursorAgenteCajaActual.getColumnIndexOrThrow(dbAdapter_agente.AG_id_usuario)));
+            session.createTempSession(6, 0);
 
             Intent i = new Intent(mainActivity, VMovil_Evento_Indice.class);
             finish();
             startActivity(i);
-        }else{
+        } else {
             //LA CAJA ESTÁ ABIERTA PERO NO CON LA FECHA ACTUAL, ENTONCES TIENE QUE ABRIR CAJA
             //PERO PRIMER TIENE QUE INICIAR SESIÓN, ASÍ QUE LO DEJAMOS AQÚI.
 
@@ -414,7 +411,7 @@ public class Login extends Activity implements OnClickListener {
             return true;
         } else {
             if (conectadoRedMovil()) {
-              //  user.setText("Conexion a Movil");
+                //  user.setText("Conexion a Movil");
                 return true;
             } else {
                 //user.setText("No Tiene Conexion a Internet");
@@ -531,10 +528,15 @@ public class Login extends Activity implements OnClickListener {
     class LoginRest extends AsyncTask<String, String, String> {
         private String usuario;
         private String clave;
+        private DbAdapter_Motivo_Dev dbAdapter_motivo_dev;
 
         @Override
         protected String doInBackground(String... strings) {
             StockAgenteRestApi api = new StockAgenteRestApi(mainActivity);
+            dbAdapter_motivo_dev = new DbAdapter_Motivo_Dev(mainActivity);
+            dbAdapter_motivo_dev.open();
+            dbAdapter_motivo_dev.deleteMotDev();
+            JSONObject jsonObjectMotivo = null;
             ArrayList<Agente> agenteLista = null;
             JSONObject jsonObjAgente = null;
 
@@ -560,7 +562,7 @@ public class Login extends Activity implements OnClickListener {
                 usuario = user.getText().toString();
                 clave = pass.getText().toString();
                 for (int i = 0; i < agenteLista.size(); i++) {
-                    Log.d(TAG,"Agente : " + i +" , Nombre : " + agenteLista.get(i).getNombreAgente() + ", MAC CIPHERLAB: "+agenteLista.get(i).getMAC2());
+                    Log.d(TAG, "Agente : " + i + " , Nombre : " + agenteLista.get(i).getNombreAgente() + ", MAC CIPHERLAB: " + agenteLista.get(i).getMAC2());
                     session.deleteVariable(777);
                     session.createTempSession(777, agenteLista.get(i).getRutaId());
                     /*
@@ -598,16 +600,31 @@ public class Login extends Activity implements OnClickListener {
                     WifiInfo info = manager.getConnectionInfo();
                     String address = info.getMacAddress().toUpperCase();
 */
-                    String address =  Utils.getBluetoothMacAddress();
-                    Log.d(TAG, "MAC ADRESS : "+ address);
+                    String address = Utils.getBluetoothMacAddress();
+                    Log.d(TAG, "MAC ADRESS : " + address);
 
-                    if (address.equals(agenteLista.get(i).getMAC2())){
+                    if (address.equals(agenteLista.get(i).getMAC2())) {
                         succesMACDevice = true;
                     }
 
                     agenteLista.get(i).getIdAgenteVenta();
                     boolean existe = dbAdapter_agente_login.existeAgentesById(agenteLista.get(i).getIdAgenteVenta());
                     Log.d("EXISTE ", "" + existe + "LIQUIDACION : " + agenteLista.get(i).getIdAgenteVenta());
+                    try {
+                        jsonObjectMotivo = api.fsel_MotivoDevolucion(agenteLista.get(i).getIdAgenteVenta());
+                        Log.d("JSONOBJECTMOTIVO",""+jsonObjectMotivo.toString());
+                        if (Utils.isSuccesful(jsonObjectMotivo)) {
+                            JSONArray jsonArray = jsonObjectMotivo.getJSONArray("Value");
+                            for (int u = 0; u < jsonArray.length(); u++) {
+                                JSONObject json = jsonArray.getJSONObject(u);
+                                long a = dbAdapter_motivo_dev.createMotDev(json.getInt("Id"),json.getString("Descripcion"));
+                                Log.d("ESTAD GUARDO: ",a+"");
+                            }
+                            Log.d("", "");
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     if (existe) {
                         dbAdapter_agente_login.updateAgente(agenteLista.get(i), getDatePhone(), usuario, clave);
                     } else {
@@ -649,12 +666,12 @@ public class Login extends Activity implements OnClickListener {
 
                     agregarCuenta();
                 }*/
-                if (succesMACDevice){
+                if (succesMACDevice) {
                     Toast.makeText(getApplicationContext(), "Login correcto", Toast.LENGTH_SHORT).show();
                     Intent i = new Intent(Login.this, VMovil_Abrir_Caja.class);
                     finish();
                     startActivity(i);
-                }else {
+                } else {
                     Toast.makeText(getApplicationContext(), "USUARIO NO AUTORIZADO EN ESTE DISPOSITIVO.", Toast.LENGTH_SHORT).show();
                 }
 
@@ -682,7 +699,7 @@ public class Login extends Activity implements OnClickListener {
                 mAccountManager.setAuthToken(account, AccountAuthenticator.AUTHTOKEN_TYPE, user.getText().toString()+"."+pass.getText().toString());
     }*/
 /*
-	class AttemptLogin extends AsyncTask<String, String, String> {
+    class AttemptLogin extends AsyncTask<String, String, String> {
 
 		 /**
          * Before starting background thread Show Progress Dialog

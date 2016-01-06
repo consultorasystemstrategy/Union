@@ -1602,7 +1602,7 @@ Instantiate and pass a callback
                 session.createTempSession(6,0);
                 session.deleteVariable(5);
                 session.createTempSession(5,0);
-                Intent idh1 = new Intent(this, VMovil_Evento_Canjes_Dev.class);
+                Intent idh1 = new Intent(this, VMovil_Operacion_Canjes_Devoluciones.class);
                 idh1.putExtra("idEstabX", ""+slideIdEstablecimiento);
                 idh1.putExtra("idAgente", ""+slideIdAgente);
                 finish();

@@ -514,7 +514,7 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
                 startActivity(im1);
                 break;
             case R.id.slideVentas_textviewCanjesDevoluciones:
-                Intent idh1 = new Intent(this, VMovil_Evento_Canjes_Dev.class);
+                Intent idh1 = new Intent(this, VMovil_Operacion_Canjes_Devoluciones.class);
                 idh1.putExtra("idEstabX", valIdEstab);
                 idh1.putExtra("idAgente", idAgente);
                 finish();

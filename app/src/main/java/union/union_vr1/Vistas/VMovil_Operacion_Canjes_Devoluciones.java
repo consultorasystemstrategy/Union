@@ -40,6 +40,7 @@ import union.union_vr1.Sqlite.CursorAdapterFacturas;
 import union.union_vr1.Sqlite.DBAdapter_Temp_Canjes_Devoluciones;
 import union.union_vr1.Sqlite.DbAdapter_Histo_Venta_Detalle;
 import union.union_vr1.Sqlite.DbAdapter_Stock_Agente;
+import union.union_vr1.Sqlite.DbAdapter_Temp_Establecimiento;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 import union.union_vr1.Utils.RoundedLetterView;
@@ -272,11 +273,12 @@ public class VMovil_Operacion_Canjes_Devoluciones extends TabActivity {
                 int cantidad = cr.getInt(cr.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_cantidad));
                 int idProducto = cr.getInt(cr.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_id_producto));
                 int idforDelete = cr.getInt(cr.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_id_canjes_devoluciones));
+                int estadoProducto = cr.getInt(cr.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_estado_producto));
                 int liquidacion =  session.fetchVarible(3);
                 int estado = cr.getInt(cr.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_estado));
                 String iddetale = cr.getString(cr.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_id_detalle));
                 Log.d("DATOS RESTART",cantidad+"-"+idProducto+"-"+idforDelete);
-                setMessageForDeleteById(idforDelete,2,cantidad,idProducto,liquidacion,estado,iddetale);
+                setMessageForDeleteById(idforDelete,2,cantidad,idProducto,liquidacion,estado,iddetale,estadoProducto);
                 return false;
             }
         });
@@ -313,10 +315,11 @@ public class VMovil_Operacion_Canjes_Devoluciones extends TabActivity {
                 int idProducto = cr.getInt(cr.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_id_producto));
                 int idforDelete = cr.getInt(cr.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_id_canjes_devoluciones));
                 int liquidacion = session.fetchVarible(3);
+                int estadoProducto = cr.getInt(cr.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_estado_producto));
                 int estado = cr.getInt(cr.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_estado));
                 String iddetale = cr.getString(cr.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_id_detalle));
                 Log.d("DATOS RESTART", cantidad + "-" + idProducto + "-" + idforDelete);
-                setMessageForDeleteById(idforDelete, 1, cantidad, idProducto, liquidacion, estado, iddetale);
+                setMessageForDeleteById(idforDelete, 1, cantidad, idProducto, liquidacion, estado, iddetale,estadoProducto);
                 return false;
             }
         });
@@ -495,7 +498,7 @@ public class VMovil_Operacion_Canjes_Devoluciones extends TabActivity {
         //super.onBackPressed();
     }
 
-    private void setMessageForDeleteById(final int id,final int opera,final int cantidad, final  int idProducto, final int liquidacion12, final int estadoOperacion, final String idDetalle) {
+    private void setMessageForDeleteById(final int id,final int opera,final int cantidad, final  int idProducto, final int liquidacion12, final int estadoOperacion, final String idDetalle, final int estadoProducto) {
 
         final AlertDialog.Builder dialogo = new AlertDialog.Builder(this);
         dialogo.setTitle("¿Esta seguro de eliminar?");
@@ -513,7 +516,7 @@ public class VMovil_Operacion_Canjes_Devoluciones extends TabActivity {
                 Log.d("LIQUIDACION",""+liquidacion12);
                 if (estado > 0) {
                     if(opera ==2){
-                        int e =dbHelper_Stock.restartstockCanjes(cantidad,idProducto+"",liquidacion12+"");
+                        int e =dbHelper_Stock.restartstockCanjes(cantidad,idProducto+"",liquidacion12+"",estadoProducto);
                        if(estadoOperacion==4){
                            int c = dbAdapter_histo_venta_detalle.restarupdateHistoVentaDetalleCanje(idDetalle,cantidad);
                        }
@@ -521,7 +524,7 @@ public class VMovil_Operacion_Canjes_Devoluciones extends TabActivity {
                         Log.d("CANJES",cantidad+"-"+idProducto+"-"+e);
                     }else{
 
-                        int e= dbHelper_Stock.restartstockDevoluciones(cantidad,idProducto+"",liquidacion12+"");
+                        int e= dbHelper_Stock.restartstockDevoluciones(cantidad,idProducto+"",liquidacion12+"",estadoProducto);
                         if(estadoOperacion==4){
                             int c = dbAdapter_histo_venta_detalle.restarupdateHistoVentaDetalleCanje(idDetalle,cantidad);
                         }
@@ -544,17 +547,18 @@ public class VMovil_Operacion_Canjes_Devoluciones extends TabActivity {
 
     private void setMessageForDelete() {
         final AlertDialog.Builder dialogo = new AlertDialog.Builder(this);
-        dialogo.setTitle("¿Esta Seguro?");
-        dialogo.setMessage("Al retroceder eliminara los canjes y devoluciones.");
+        dialogo.setTitle("¿Desea Salir?");
+        dialogo.setMessage("Guarde o Elimine las operaciones");
         dialogo.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int liquidacion) {
                 dialogInterface.cancel();
             }
         });
-        dialogo.setPositiveButton("Continuar e Eliminar", new DialogInterface.OnClickListener() {
+        /*dialogo.setPositiveButton("Continuar y Eliminar", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int liquidacion) {
+
                 int estado = dbAdapter_temp_canjes_devoluciones.truncateCanjesDevoluciones();
                 if (estado > 0) {
                     Toast.makeText(getApplicationContext(), "Eliminado", Toast.LENGTH_SHORT).show();
@@ -567,7 +571,7 @@ public class VMovil_Operacion_Canjes_Devoluciones extends TabActivity {
                 }
 
             }
-        });
+        });*/
         dialogo.create();
         dialogo.show();
     }

@@ -55,7 +55,8 @@
             android:id="@+id/can_dev_categoria_registrado"
             android:paddingTop="16dp"
             android:paddingBottom="16dp"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            />
 
         <Spinner
             android:layout_width="match_parent"

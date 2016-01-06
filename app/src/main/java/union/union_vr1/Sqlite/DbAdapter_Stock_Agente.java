@@ -192,20 +192,33 @@ public class DbAdapter_Stock_Agente {
         Log.w(TAG, Integer.toString(doneDelete));
         return doneDelete > 0;
     }
-    public int restartstockCanjes(int cantidad, String idProducto,String liquidacion) {
+    public int restartstockCanjes(int cantidad, String idProducto,String liquidacion,int estadoAgente) {
         int sFisico = 0;
         int sDisponible = 0;
         //Obtener Canje
+
         int cCanje=0;
+
+        int malo=0,bueno=0;
+
         //Obtener fisico
         Cursor cr = mDb.rawQuery("select * from " + SQLITE_TABLE_Stock_Agente + " where "+ST_id_producto+"='"+idProducto+"';", null);
         if (cr.moveToFirst()) {
+            bueno =cr.getInt(cr.getColumnIndexOrThrow(ST_buenos));
+            malo = cr.getInt(cr.getColumnIndexOrThrow(ST_malos));
             sFisico = cr.getInt(cr.getColumnIndexOrThrow(ST_fisico))-cantidad;
             sDisponible = cr.getInt(cr.getColumnIndexOrThrow(ST_disponible))+cantidad;
             cCanje = cr.getInt(cr.getColumnIndexOrThrow(ST_canjes))-cantidad;
         }
 
         ContentValues initialValues = new ContentValues();
+        if(estadoAgente==1){
+            initialValues.put(ST_buenos, bueno);
+        }else{
+            initialValues.put(ST_buenos, malo);
+        }
+
+
         initialValues.put(ST_final, sFisico);
         initialValues.put(ST_disponible, sDisponible);
         initialValues.put(ST_fisico, sFisico);
@@ -217,17 +230,21 @@ public class DbAdapter_Stock_Agente {
     }
 
 
-    public int stockCanjes(int cantidad, String idProducto,String liquidacion) {
+    public int stockCanjes(int cantidad, String idProducto,String liquidacion,int tipo) {
         int sFisico = 0;
         int sDisponible = 0;
         //Obtener Canje
         int cCanje=0;
+
+        int malo=0,bueno=0;
         //Obtener fisico
         Cursor cr = mDb.rawQuery("select * from " + SQLITE_TABLE_Stock_Agente + " where "+ST_id_producto+"='"+idProducto+"';", null);
         if (cr.moveToFirst()) {
             sFisico = cr.getInt(cr.getColumnIndexOrThrow(ST_fisico))+cantidad;
             sDisponible = cr.getInt(cr.getColumnIndexOrThrow(ST_disponible))-cantidad;
             cCanje = cr.getInt(cr.getColumnIndexOrThrow(ST_canjes))+cantidad;
+            malo = cr.getInt(cr.getColumnIndexOrThrow(ST_malos))+cantidad;
+            bueno = cr.getInt(cr.getColumnIndexOrThrow(ST_buenos))+cantidad;
         }
 
         ContentValues initialValues = new ContentValues();
@@ -235,23 +252,39 @@ public class DbAdapter_Stock_Agente {
         initialValues.put(ST_disponible, sDisponible);
         initialValues.put(ST_fisico, sFisico);
         initialValues.put(ST_canjes, cCanje);
+        if (tipo==1){
+            initialValues.put(ST_buenos, bueno);
+        }else{
+            initialValues.put(ST_malos, malo);
+        }
+
+
         return mDb.update(SQLITE_TABLE_Stock_Agente, initialValues,
                 ST_id_producto + "=? AND " + ST_liquidacion + " = ? ", new String[]{"" + idProducto, "" + liquidacion});
 
 
     }
-    public int stockDevoluciones(int cantidad, String idProducto,String liquidacion) {
+    public int stockDevoluciones(int cantidad, String idProducto,String liquidacion,int tipo) {
         int sFisico = 0;
         //Obtener Canje
         int cDevoluciones=0;
         //Obtener fisico
+        int bueno=0,malo=0;
         Cursor cr = mDb.rawQuery("select * from " + SQLITE_TABLE_Stock_Agente + " where "+ST_id_producto+"='"+idProducto+"';", null);
         if (cr.moveToFirst()) {
             sFisico = cr.getInt(cr.getColumnIndexOrThrow(ST_fisico))+cantidad;
             cDevoluciones = cr.getInt(cr.getColumnIndexOrThrow(ST_devoluciones))+cantidad;
+            bueno = cr.getInt(cr.getColumnIndex(ST_buenos));
+            malo = cr.getInt(cr.getColumnIndex(ST_malos));
+        }
+        ContentValues initialValues = new ContentValues();
+        if(tipo==1){
+            initialValues.put(ST_buenos, bueno);
+        }else{
+            initialValues.put(ST_malos, malo);
         }
 
-        ContentValues initialValues = new ContentValues();
+
         initialValues.put(ST_final, sFisico);
         initialValues.put(ST_fisico, sFisico);
         initialValues.put(ST_devoluciones, cDevoluciones);
@@ -260,18 +293,27 @@ public class DbAdapter_Stock_Agente {
 
 
     }
-    public int restartstockDevoluciones(int cantidad, String idProducto,String liquidacion) {
+    public int restartstockDevoluciones(int cantidad, String idProducto,String liquidacion,int estadoProducto) {
         int sFisico = 0;
         //Obtener Canje
         int cDevoluciones=0;
+
+        int bueno=0,malo=0;
         //Obtener fisico
         Cursor cr = mDb.rawQuery("select * from " + SQLITE_TABLE_Stock_Agente + " where "+ST_id_producto+"='"+idProducto+"';", null);
         if (cr.moveToFirst()) {
+            bueno = cr.getInt(cr.getColumnIndexOrThrow(ST_buenos))-cantidad;
+            malo = cr.getInt(cr.getColumnIndexOrThrow(ST_malos))-cantidad;
             sFisico = cr.getInt(cr.getColumnIndexOrThrow(ST_fisico))-cantidad;
             cDevoluciones = cr.getInt(cr.getColumnIndexOrThrow(ST_canjes))-cantidad;
         }
-
         ContentValues initialValues = new ContentValues();
+        if(estadoProducto==1){
+            initialValues.put(ST_buenos, bueno);
+        }else{
+            initialValues.put(ST_malos, malo);
+        }
+
         initialValues.put(ST_final, sFisico);
         initialValues.put(ST_fisico, sFisico);
         initialValues.put(ST_canjes, cDevoluciones);

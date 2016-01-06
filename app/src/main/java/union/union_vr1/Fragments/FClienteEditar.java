@@ -2,23 +2,18 @@ package union.union_vr1.Fragments;
 
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
-import android.widget.FilterQueryProvider;
 import android.widget.LinearLayout;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
@@ -34,7 +29,6 @@ import union.union_vr1.R;
 import union.union_vr1.Sqlite.DBAdapter_Cliente_Ruta;
 import union.union_vr1.Sqlite.DbAdapter_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Establecimeinto_Historial;
-import union.union_vr1.Sqlite.DbAdapter_Temp_Establecimiento;
 import union.union_vr1.Sqlite.DbAdapter_Tipo_Doc_Identidad;
 import union.union_vr1.Sqlite.DbAdapter_Tipo_Persona;
 import union.union_vr1.Utils.Utils;
@@ -79,7 +73,7 @@ public class FClienteEditar extends Fragment implements Validator.ValidationList
     private View v;
     private DbAdapter_Tipo_Doc_Identidad dbAdapter_tipo_doc_identidad;
     private DbAdapter_Tipo_Persona dbAdapter_tipo_persona;
-    private DbAdapter_Establecimeinto_Historial dbAdapter_temp_establecimiento;
+    private DbAdapter_Establecimeinto_Historial db_adapter_historial_establecimient;
     private DbAdapter_Agente dbAdapter_agente;
     private Validator validator;
 
@@ -91,7 +85,10 @@ public class FClienteEditar extends Fragment implements Validator.ValidationList
         v = inflater.inflate(R.layout.fragment_cliente, container, false);
         setHasOptionsMenu(false);
         idEstablecimiento = getArguments().getString("idEstablecimiento");
-        toastBucsando = Toast.makeText(getActivity().getApplicationContext(), "Buscando...", Toast.LENGTH_SHORT);
+
+        Log.d("ESTABLECIMIENTO CLIENTE REGISTRAR", "" + idEstablecimiento);
+
+        toastBucsando = Toast.makeText(getActivity().getApplicationContext(), "Buscando...", 1000);
         toast = Toast.makeText(getActivity().getApplicationContext(), "Encontrado", Toast.LENGTH_SHORT);
         toast.getView().setBackgroundColor(getActivity().getResources().getColor(R.color.verde));
         toast.setGravity(Gravity.TOP | Gravity.LEFT, 0, 0);
@@ -110,8 +107,8 @@ public class FClienteEditar extends Fragment implements Validator.ValidationList
         dbAdapter_tipo_persona = new DbAdapter_Tipo_Persona(getActivity());
         dbAdapter_tipo_doc_identidad.open();
         dbAdapter_tipo_persona.open();
-        dbAdapter_temp_establecimiento = new DbAdapter_Establecimeinto_Historial(getActivity());
-        dbAdapter_temp_establecimiento.open();
+        db_adapter_historial_establecimient = new DbAdapter_Establecimeinto_Historial(getActivity());
+        db_adapter_historial_establecimient.open();
         dbAdapter_agente = new DbAdapter_Agente(getActivity());
         dbAdapter_agente.open();
         idusuario = dbAdapter_agente.getIdUsuario();
@@ -184,16 +181,16 @@ public class FClienteEditar extends Fragment implements Validator.ValidationList
         return v;
     }
     private void display() {
-        Cursor cr = dbAdapter_temp_establecimiento.fetchTemEstablecById(idEstablecimiento);
+        Cursor cr = db_adapter_historial_establecimient.fetchTemEstablecById(idEstablecimiento);
+        Log.d("DATOS",""+cr.getCount());
         if(cr.moveToFirst()){
-            //spinnerTipoPesona.setEnabled(false);
 
-            editTextNombre.setText(cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_nombres)));
-            autoNroDocumento.setText(cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_nro_documento)));
-            editTextApPaterno.setText(cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_apPaterno)));
-            editTextApMaterno.setText(cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_apMaterno)));
-            editTextNroCelular.setText(cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_celular_one)));
-            editTextCorreo.setText(cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_correo)));
+            editTextNombre.setText(cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_nombres)));
+            autoNroDocumento.setText(cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_nro_documento)));
+            editTextApPaterno.setText(cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_apPaterno)));
+            editTextApMaterno.setText(cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_apMaterno)));
+            editTextNroCelular.setText(cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_celular_one)));
+            editTextCorreo.setText(cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_correo)));
 
         }
 
@@ -276,27 +273,6 @@ public class FClienteEditar extends Fragment implements Validator.ValidationList
         editTextCorreo.setText("");
     }
 
-    private void setValueForm(Cursor cr) {
-        cr.moveToFirst();
-        int tipoPersona = cr.getInt(cr.getColumnIndexOrThrow(DBAdapter_Cliente_Ruta.cliente_ruta_tipo_PerIdentidad));
-        setAdapterTipoPersona(tipoPersona);
-        String nombres = cr.getString(cr.getColumnIndexOrThrow(DBAdapter_Cliente_Ruta.cliente_ruta_nombres));
-        String apPaterno = cr.getString(cr.getColumnIndexOrThrow(DBAdapter_Cliente_Ruta.cliente_ruta_apPaterno));
-        String apMaterno = cr.getString(cr.getColumnIndexOrThrow(DBAdapter_Cliente_Ruta.cliente_ruta_apMaterno));
-        String celular = cr.getString(cr.getColumnIndexOrThrow(DBAdapter_Cliente_Ruta.cliente_ruta_celular));
-        Log.d("CELULAR", "" + celular);
-        String correo = cr.getString(cr.getColumnIndexOrThrow(DBAdapter_Cliente_Ruta.cliente_ruta_email));
-
-
-        editTextNombre.setText(nombres);
-        editTextApPaterno.setText(apPaterno);
-        editTextApMaterno.setText(apMaterno);
-        editTextNroCelular.setText(celular);
-        editTextCorreo.setText(correo);
-        disableWidgets();
-
-
-    }
 
     private void callmethod() {
         setAdapterTipoDocIdentidad(-1);
@@ -350,7 +326,7 @@ public class FClienteEditar extends Fragment implements Validator.ValidationList
         String ap_materno = "";
         ap_materno = editTextApMaterno.getText().toString();
         String correo = "";
-        correo = editTextApMaterno.getText().toString();
+        correo = editTextCorreo.getText().toString();
         String nroDocumento = "";
         nroDocumento = autoNroDocumento.getText().toString();
 
@@ -364,7 +340,7 @@ public class FClienteEditar extends Fragment implements Validator.ValidationList
         tipo_cliente = crCli.getInt(crCli.getColumnIndex(dbAdapter_tipo_persona.tipo_Persona_PersonaId));
 
 
-        long estado = dbAdapter_temp_establecimiento.updateTempEstablecCliente(idEstablecimiento + "", idusuario + "",celular_one,tipo_cliente+"",nombre,ap_paterno,ap_materno,tipo_doc+"",nroDocumento,1+"",correo);
+        long estado = db_adapter_historial_establecimient.updateTempEstablecCliente(idEstablecimiento + "", idusuario + "",celular_one,tipo_cliente+"",nombre,ap_paterno,ap_materno,tipo_doc+"",nroDocumento,1+"",correo);
         if (estado > 0) {
             viewPager.setCurrentItem(1);
         } else {

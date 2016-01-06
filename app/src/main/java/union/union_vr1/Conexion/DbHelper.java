@@ -18,6 +18,7 @@ import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
 import union.union_vr1.Sqlite.DbAdapter_Establecimeinto_Historial;
 import union.union_vr1.Sqlite.DbAdapter_Exportacion_Comprobantes;
 import union.union_vr1.Sqlite.DbAdapter_Histo_Comprob_Anterior;
+import union.union_vr1.Sqlite.DbAdapter_Motivo_Dev;
 import union.union_vr1.Sqlite.DbAdapter_Resumen_Caja;
 import union.union_vr1.Sqlite.DbAdapter_Ruta_Distribucion;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Barcode_Scanner;
@@ -43,7 +44,7 @@ import union.union_vr1.Sqlite.DbAdapter_Histo_Venta_Detalle;
  */
 public class DbHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 21;
+    private static final int DATABASE_VERSION = 22;
     private static final String DATABASE_NAME = "ProdUniondb.sqlite";
 
     public DbHelper(Context context) {
@@ -106,6 +107,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(DbAdapter_Tipo_Persona.CREATE_TABLE_TIPO_PERSONA);
 
         db.execSQL(DbAdapter_Establecimeinto_Historial.CREATE_ESTABLECIMIENTO_HISTORIAL);
+        db.execSQL(DbAdapter_Motivo_Dev.CREATE_TABLE_MOT_DEV);
 
 
 
@@ -157,6 +159,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(DbAdapter_Tipo_Persona.DELETE_TABLE_TIPO_PERSONA);
 
         db.execSQL(DbAdapter_Establecimeinto_Historial.DELETE_ESTABLECIMIENTO_TEMPORAL);
+        db.execSQL(DbAdapter_Motivo_Dev.DELETE_TABLE_MOT_DEV);
 
         onCreate(db);
     }

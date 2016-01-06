@@ -417,7 +417,7 @@ public class FClienteRegistrar extends Fragment implements Validator.ValidationL
         String ap_materno = "";
         ap_materno = editTextApMaterno.getText().toString();
         String correo = "";
-        correo = editTextApMaterno.getText().toString();
+        correo = editTextCorreo.getText().toString();
         String nroDocumento = "";
         nroDocumento = autoNroDocumento.getText().toString();
 

@@ -3,7 +3,7 @@
     tools:context="union.union_vr1.Vistas.VMovil_Menu_Establec" >
     <item android:id="@+id/actionagrgar"
         android:title="Agregar"
-        android:icon="@drawable/add198"
+        android:icon="@mipmap/ic_add_establec"
         android:orderInCategory="1"
         android:showAsAction="always" />
 </menu>

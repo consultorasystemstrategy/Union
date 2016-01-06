@@ -1,7 +1,9 @@
 package union.union_vr1.AsyncTask;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.ContentUris;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -11,11 +13,14 @@ import org.json.JSONObject;
 
 import union.union_vr1.R;
 import union.union_vr1.RestApi.StockAgenteRestApi;
+import union.union_vr1.Servicios.ServiceImport;
 import union.union_vr1.Sqlite.Constants;
 import union.union_vr1.Sqlite.DbAdapter_Establecimeinto_Historial;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Establecimiento;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 import union.union_vr1.Utils.Utils;
+import union.union_vr1.Vistas.VMovil_Menu_Establec;
+import union.union_vr1.Vistas.VMovil_Online_Pumovil;
 
 /**
  * Created by Kelvin on 08/12/2015.
@@ -23,11 +28,36 @@ import union.union_vr1.Utils.Utils;
 public class CrearEstablecimiento extends AsyncTask<String, String, String> {
     private Activity mainActivity;
     private JSONObject jsonObjectCreated = null;
+    private ProgressDialog progressDialog;
     private StockAgenteRestApi stockAgenteRestApi = null;
     private DbAdapter_Temp_Establecimiento dbAdapter_temp_establecimiento;
     private DbAdapter_Establecimeinto_Historial dbAdapter_establecimeinto_historial;
     private DbAdapter_Temp_Session dbAdapter_temp_session;
 
+    public void dismissProgressDialog() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+        Intent intent = new Intent(mainActivity, ServiceImport.class);
+        intent.setAction(Constants.ACTION_IMPORT_SERVICE);
+        mainActivity.startService(intent);
+
+    }
+    public void createProgressDialog(){
+        progressDialog = new ProgressDialog(mainActivity);
+        progressDialog.setMessage("Solicitando ...");
+        progressDialog.setIndeterminate(false);
+        progressDialog.setMax(100);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+    }
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+        createProgressDialog();
+    }
 
     public CrearEstablecimiento(Activity activity) {
         mainActivity = activity;
@@ -35,6 +65,10 @@ public class CrearEstablecimiento extends AsyncTask<String, String, String> {
 
     @Override
     protected String doInBackground(String... strings) {
+
+
+
+        publishProgress(""+25);
         stockAgenteRestApi = new StockAgenteRestApi(mainActivity);
         dbAdapter_temp_establecimiento = new DbAdapter_Temp_Establecimiento(mainActivity);
         dbAdapter_temp_establecimiento.open();
@@ -122,7 +156,7 @@ public class CrearEstablecimiento extends AsyncTask<String, String, String> {
                         cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_direccion_fiscal))
 
                 );
-
+                publishProgress(""+50);
                 //----------------------------
                 Log.d("JSONJSON CJSON EST", ""+jsonObjectCreated.toString());
 
@@ -132,7 +166,7 @@ public class CrearEstablecimiento extends AsyncTask<String, String, String> {
                     Log.d("ESTADO",""+a+"--"+idRemoto);
                     if(a>0){
                         long inserto = dbAdapter_establecimeinto_historial.createTempEstablec(
-                                cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_id_remoto)),
+                                idRemoto,
                                 cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_usuario_accion)),
                                 cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_telefono_fijo)),
                                 cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_celular_one)),
@@ -166,6 +200,7 @@ public class CrearEstablecimiento extends AsyncTask<String, String, String> {
             e.printStackTrace();
             Log.d("GUARDAR ESTABLECIMIENTO", "" + e.getMessage());
         }
+        publishProgress(""+90);
         return null;
     }
 
@@ -183,7 +218,22 @@ public class CrearEstablecimiento extends AsyncTask<String, String, String> {
 
     @Override
     protected void onPostExecute(String s) {
-        Utils.setToast(mainActivity, "Guardado Correctamente", R.color.verde);
+
+        if(mainActivity.isFinishing()){
+            //dismissProgressDialog();
+            progressDialog.dismiss();
+            return;
+        }else {
+
+
+            progressDialog.setProgress(100);
+            dismissProgressDialog();
+        }
+
+        mainActivity.startActivity(new Intent(mainActivity, VMovil_Menu_Establec.class));
+        mainActivity.finish();
+
         super.onPostExecute(s);
+
     }
 }

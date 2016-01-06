@@ -208,8 +208,8 @@ public class FMapaEditar extends Fragment implements Validator.ValidationListene
                 webViewMap.loadUrl(urlMap);
 
             }
-            textLat.setText("LAT: "+location.getLatitude() + "");
-            textLon.setText("LONG: "+location.getLongitude() + "");
+            textLat.setText(location.getLatitude() + "");
+            textLon.setText(location.getLongitude() + "");
         }
 
         @Override

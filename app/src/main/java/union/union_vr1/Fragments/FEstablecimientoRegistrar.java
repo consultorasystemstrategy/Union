@@ -37,6 +37,7 @@ import java.util.ArrayList;
 
 import union.union_vr1.AsyncTask.CrearEstablecimiento;
 import union.union_vr1.AsyncTask.ImportMain;
+import union.union_vr1.AsyncTask.ModificarEstablecimiento;
 import union.union_vr1.R;
 import union.union_vr1.Sqlite.Constants;
 import union.union_vr1.Sqlite.DbAdapter_Categoria_Establecimiento;
@@ -101,12 +102,12 @@ public class FEstablecimientoRegistrar extends Fragment implements Validator.Val
         Cursor cr = (Cursor) spinnerTipoEstablecimeinto.getItemAtPosition(0);
         idTipo_establec = cr.getInt(cr.getColumnIndexOrThrow(DbAdapter_Tipo_Establecimiento.tipo_Establecimiento_EstablecimientoId));
 
-
+        btnGuardar.setVisibility(View.GONE);
         //----------
         btnGuardar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                validator.validate();
+               // validator.validate();
             }
         });
 
@@ -217,11 +218,9 @@ public class FEstablecimientoRegistrar extends Fragment implements Validator.Val
     @Override
     public void onValidationSucceeded() {
         String cat_est = "", tipo_esta = "", nomb_estb = "", fijo = "", two = "";
-        Cursor crCat = (Cursor) spinnerCategoriaEstablecimeinto.getItemAtPosition(spinnerCategoriaEstablecimeinto.getSelectedItemPosition());
-        Cursor crTipoEs = (Cursor) spinnerCategoriaEstablecimeinto.getItemAtPosition(spinnerCategoriaEstablecimeinto.getSelectedItemPosition());
 
-        cat_est = idcat_establec+"";
-        tipo_esta = idTipo_establec+"";
+        cat_est = idcat_establec + "";
+        tipo_esta = idTipo_establec + "";
         nomb_estb = editTextNombre.getText().toString();
         fijo = editTextTelFijo.getText().toString();
         two = editTextTelMovil2.getText().toString();
@@ -229,7 +228,7 @@ public class FEstablecimientoRegistrar extends Fragment implements Validator.Val
         long estado = dbAdapter_temp_establecimiento.updateTempEstablecEstabl(idEstablecimiento + "", cat_est, tipo_esta, nomb_estb, fijo, two);
         if (estado > 0) {
 
-            new CrearEstablecimiento(getActivity()).execute();
+           alertConfirmar();
 
         } else {
             Utils.setToast(getActivity(), "Ocurrio un error, por favor sal y vuelve a Intentarlo", R.color.rojo);
@@ -256,6 +255,7 @@ public class FEstablecimientoRegistrar extends Fragment implements Validator.Val
                 .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
+                       new CrearEstablecimiento(getActivity()).execute();
 
                     }
 
@@ -281,7 +281,7 @@ public class FEstablecimientoRegistrar extends Fragment implements Validator.Val
 
         switch (item.getItemId()) {
             case R.id.menu_establec:
-                Toast.makeText(getActivity(), "Genial", Toast.LENGTH_SHORT).show();
+                validator.validate();
                 break;
         }
 

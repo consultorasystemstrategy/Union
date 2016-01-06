@@ -146,6 +146,22 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter {
             estado_autorizado = cursor.getInt(cursor.getColumnIndexOrThrow(DbAdaptert_Evento_Establec.EE_estado_autorizado));
 
             switch (estado_autorizado){
+                case 5: //Puede editar o enviar
+                    linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.Dark1));
+                    break;
+                case 6: //No puede hacer nada
+                    linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.Dark1));
+                    break;
+                case 7: //Normal
+                    linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.azul));
+                    break;
+                case 8://Puede editar y enviar
+                    linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.Dark1));
+                    break;
+
+            }
+
+            /*switch (estado_autorizado) {
                 case 1: //editar
                     linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.Dark1));
                     break;
@@ -168,14 +184,32 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter {
                     break;
                 default:
                     break;
-            }
+            }*/
+
+            imgeButtonView(estado_autorizado,imageButtonOp);
             linearLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
+                    switch (estado_autorizado) {
+                        case 5: //Puede editar o enviar
+                            Utils.setToast(context, "No autorizado", R.color.rojo);
+                            break;
+                        case 6: //No puede hacer nada
+                            Utils.setToast(context, "No autorizado", R.color.rojo);
+                            break;
+                        case 7: //Normal
+                            eleccion(id_establecimiento);
+                            break;
+                        case 8: //Puede editar y enviar
+                            Utils.setToast(context, "No autorizado", R.color.rojo);
+                            break;
+
+                    }
+
 
                     Log.d(TAG, "ESTADO : " + "" + estado_autorizado + id_establecimiento);
-
+                    /*
                     switch (estado_autorizado) {
                         case 1: //editar
                             Utils.setToast(context, "No esta autorizado para la venta", R.color.rojo);
@@ -204,46 +238,12 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter {
                         default:
                             Utils.setToast(context, "No esta autorizado para la venta", R.color.rojo);
                             break;
-                    }
+                    }*/
                 }
             });
 
 
-            //CUANDO YA ESTÁ AUTORIZADO, OCULTO LA OPCIÓN DE MODIFICAR
-            switch (estado_autorizado){
-                case 1:
-                    imageButtonOp.setActivated(true);
-                    imageButtonOp.setClickable(true);
-                    imageButtonOp.setAlpha((float) 1.0);
-                    break;
-                case 4:
-                    imageButtonOp.setActivated(true);
-                    imageButtonOp.setClickable(true);
-                    imageButtonOp.setAlpha((float) 1.0);
-                    break;
-                case 5:
-                    imageButtonOp.setActivated(true);
-                    imageButtonOp.setClickable(true);
-                    imageButtonOp.setAlpha((float) 1.0);
-                    break;
-                case 8:
-                    imageButtonOp.setActivated(true);
-                    imageButtonOp.setClickable(true);
-                    imageButtonOp.setAlpha((float) 1.0);
-                    break;
-                case 3:
-                    imageButtonOp.setActivated(false);
-                    imageButtonOp.setClickable(false);
-                    imageButtonOp.setAlpha((float) 0.0);
-                    break;
-                case 7:
-                    imageButtonOp.setActivated(false);
-                    imageButtonOp.setClickable(false);
-                    imageButtonOp.setAlpha((float) 0.0);
-                    break;
-                default:
-                    break;
-            }
+
 
             imageButtonOp.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -254,17 +254,70 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter {
         }
     }
 
+    private void imgeButtonView(int estadoAu, ImageButton imageButton){
+
+        switch (estadoAu) {
+            case 5: //Puede editar o enviar
+                imageButton.setActivated(true);
+                imageButton.setClickable(true);
+                imageButton.setAlpha((float) 1.0);
+
+                break;
+            case 6: //No puede hacer nada
+                imageButton.setVisibility(View.INVISIBLE);
+                break;
+            case 7: //Normal
+                imageButton.setVisibility(View.INVISIBLE);
+                break;
+            case 8: //Puede editar y enviar
+                imageButton.setActivated(true);
+                imageButton.setClickable(true);
+                imageButton.setAlpha((float) 1.0);
+
+                break;
+
+        }
+
+    }
+
     private void setActionOperacion(final String idEstablec, final int estado_autorizado) {
 
         String[] items = new String[]{};
         Integer[] icons = new Integer[]{};
         ListAdapter adapter = null;
 
-        //SWITCH
+        switch (estado_autorizado) {
+            case 5: //Puede editar o enviar
+                items = new String[]{"Editar", "Refrescar"};
+                icons = new Integer[]{android.R.drawable.ic_menu_edit,
+                        android.R.drawable.ic_menu_upload};
 
+                adapter = new ArrayAdapterWithIcon(context, items, icons);
+                messageDialog(adapter, idEstablec);
+
+                break;
+            case 6: //No puede hacer nada
+
+                break;
+            case 7: //Normal
+
+                break;
+            case 8: //Puede editar y enviar
+                items = new String[]{"Editar", "Refrescar"};
+                icons = new Integer[]{android.R.drawable.ic_menu_edit,
+                        android.R.drawable.ic_menu_upload};
+
+                adapter = new ArrayAdapterWithIcon(context, items, icons);
+                messageDialog(adapter, idEstablec);
+
+                break;
+
+        }
+
+/*
         switch (estado_autorizado) {
             case 1: //editar
-                Utils.setToast(context, "No esta autorizado para la venta", R.color.rojo);
+
                 items = new String[]{"Editar", "Refrescar"};
                 icons = new Integer[]{android.R.drawable.ic_menu_edit,
                         android.R.drawable.ic_menu_upload};
@@ -307,9 +360,9 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter {
                 messageDialog(adapter, idEstablec);
                 break;
             default:
-
                 break;
         }
+        */
 
 
     }
@@ -324,7 +377,7 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter {
 
                         switch (itemString) {
                             case "Editar":
-                               context.startActivity(new Intent(context, VMovil_Modificar_Estab.class).putExtra("idEstab",""+idEstablec));
+                                context.startActivity(new Intent(context, VMovil_Modificar_Estab.class).putExtra("idEstab", "" + idEstablec));
                                 break;
                             case "Refrescar":
                                 new ImportEstadoAuEstablec((Activity) context).execute("0", idEstablec);
