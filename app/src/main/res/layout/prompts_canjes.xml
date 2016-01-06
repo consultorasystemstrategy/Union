@@ -53,8 +53,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/can_dev_categoria_registrado"
-            android:paddingTop="16dp"
-            android:paddingBottom="16dp"
+            style="@style/MaterialSpinner"
             android:layout_weight="1"
             />
 

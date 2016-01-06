@@ -5,9 +5,9 @@
         android:title="Venta RRPP"
         android:orderInCategory="100"
         android:showAsAction="never" />-->
-    <item android:id="@+id/ventaNormal"
+    <!--<item android:id="@+id/ventaNormal"
         android:title="Venta Normal"
         android:orderInCategory="100"
-        android:showAsAction="never" />
+        android:showAsAction="never" />-->
 
 </menu>

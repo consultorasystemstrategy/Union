@@ -400,17 +400,17 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
 
         // the XML defined views which the data will be bound to
         int[] to = new int[]{
-                R.id.texview,
+                R.id.textSpinner,
 
         };
         adapterCategoria = new SimpleCursorAdapter(getApplicationContext(),
-                R.layout.layout_spinner_item,
+                R.layout.spinner_item,
                 cr,
                 columnas,
                 to,
                 0);
         //Añadimos el layout para el TIPO DE OPERACIÓN //CANJE  O DEVOLUCIÓN
-        adapterCategoria.setDropDownViewResource(R.layout.layout_spinner_down);
+        adapterCategoria.setDropDownViewResource(R.layout.spinner_item_dropdown);
         //Le indicamos al spinner el adaptador a usar
         spinnerCategoria.setAdapter(adapterCategoria);
 
@@ -554,17 +554,17 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
 
         // the XML defined views which the data will be bound to
         int[] to = new int[]{
-                R.id.texview,
+                R.id.textSpinner,
 
         };
         adapterCategoria = new SimpleCursorAdapter(getApplicationContext(),
-                R.layout.layout_spinner_item,
+                R.layout.spinner_item,
                 cr,
                 columnas,
                 to,
                 0);
         //Añadimos el layout para el TIPO DE OPERACIÓN //CANJE  O DEVOLUCIÓN
-        adapterCategoria.setDropDownViewResource(R.layout.layout_spinner_down);
+        adapterCategoria.setDropDownViewResource(R.layout.spinner_item_dropdown);
         //Le indicamos al spinner el adaptador a usar
         spinnerCategoria.setAdapter(adapterCategoria);
 
@@ -958,17 +958,17 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
 
         // the XML defined views which the data will be bound to
         int[] to = new int[]{
-                R.id.texview,
+                R.id.textSpinner,
 
         };
         adapterCategoria = new SimpleCursorAdapter(getApplicationContext(),
-               R.layout.layout_spinner_item,
+                R.layout.spinner_item,
                 cr,
                 columnas,
                 to,
                 0);
         //Añadimos el layout para el TIPO DE OPERACIÓN //CANJE  O DEVOLUCIÓN
-        adapterCategoria.setDropDownViewResource(R.layout.layout_spinner_down);
+        adapterCategoria.setDropDownViewResource(R.layout.spinner_item_dropdown);
         //Le indicamos al spinner el adaptador a usar
         spinnerCategoria.setAdapter(adapterCategoria);
 

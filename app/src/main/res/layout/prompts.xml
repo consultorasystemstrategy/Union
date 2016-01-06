@@ -120,7 +120,8 @@
             android:layout_weight="1"
             android:gravity="center"
             android:paddingTop="16dp"
-            android:paddingBottom="16dp" />
+            android:paddingBottom="16dp"
+            />
 
         <Spinner
             android:layout_width="fill_parent"

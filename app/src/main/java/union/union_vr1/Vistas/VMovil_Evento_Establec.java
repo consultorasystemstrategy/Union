@@ -326,11 +326,6 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         switch (id){
-/*
-            case R.id.buttonImportCredito:
-                //new ImportMain(mainActivity).execute();
-                new ImportCredito(mainActivity).execute();
-                break;*/
             case R.id.buttonImport:
                 //new ImportMain(mainActivity).execute();
                 new ImportCredito(mainActivity).execute();
@@ -349,13 +344,9 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
                 finish();
                 startActivity(intent);
                 break;
-            /*case R.id.buttonImportCredito:
-                //new ImportCredito(mainActivity).execute();
-                break;*/
             default:
                 //ON ITEM SELECTED DEFAULT
                 break;
-
         }
         return super.onOptionsItemSelected(item);
     }

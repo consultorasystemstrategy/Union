@@ -128,20 +128,6 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter {
             direccion.setText(dir);
             ratingBar.setRating(4);
 
-            switch (id_estado_atencion) {
-                case 1:
-                    linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.azul));
-                    break;
-                case 2:
-                    linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.verde));
-                    break;
-                case 3:
-                    linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.rojo));
-                    break;
-                case 4:
-                    linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.amarillo));
-                    break;
-            }
 
             estado_autorizado = cursor.getInt(cursor.getColumnIndexOrThrow(DbAdaptert_Evento_Establec.EE_estado_autorizado));
 
@@ -159,6 +145,21 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter {
                     linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.Dark1));
                     break;
 
+            }
+
+            switch (id_estado_atencion) {
+                case 1:
+                    linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.azul));
+                    break;
+                case 2:
+                    linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.verde));
+                    break;
+                case 3:
+                    linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.rojo));
+                    break;
+                case 4:
+                    linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.amarillo));
+                    break;
             }
 
             /*switch (estado_autorizado) {
@@ -273,7 +274,6 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter {
                 imageButton.setActivated(true);
                 imageButton.setClickable(true);
                 imageButton.setAlpha((float) 1.0);
-
                 break;
 
         }

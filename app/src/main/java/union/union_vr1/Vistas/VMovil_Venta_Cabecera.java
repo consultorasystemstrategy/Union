@@ -1006,14 +1006,14 @@ Instantiate and pass a callback
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
+/*
         switch (item.getItemId()) {
-            /*case R.id.ventaRRPP:
+            *//*case R.id.ventaRRPP:
 
                 ventaRRPP =1;
                 setTitle("Venta RR.PP.");
-                *//*IntentIntegrator intentIntegrator = new IntentIntegrator(mainActivity);
-                intentIntegrator.initiateScan();*//*
+                *//**//*IntentIntegrator intentIntegrator = new IntentIntegrator(mainActivity);
+                intentIntegrator.initiateScan();*//**//*
                 Toast.makeText(contexto, "VENTA RRPP", Toast.LENGTH_LONG).show();
 
                 //DOCUMENTO SÓLO BOLETA
@@ -1033,15 +1033,15 @@ Instantiate and pass a callback
 
                 //SE DEBERÁ MANDAR UN PARÁMETRO A IMPRESIÓN, Y A GENERACIÓN DEL FIRMADO QUE ES RR PP
 
-                break;*/
-            case R.id.ventaNormal:
+                break;*//*
+            *//*case R.id.ventaNormal:
                 ventaRRPP = -1;
                 setTitle("Venta de Productos");
                 Toast.makeText(VMovil_Venta_Cabecera.this, "Venta Nueva", Toast.LENGTH_SHORT).show();
                 dbHelper_temp_venta.deleteAllTempVentaDetalle();
                 mostrarProductosParaVender();
-                break;
-        }
+                break;*//*
+        }*/
         return true;
     }
 

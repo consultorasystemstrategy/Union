@@ -261,11 +261,6 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
                 Intent intentExportService = new Intent(mainActivity, ServiceExport.class);
                 intentExportService.setAction(Constants.ACTION_EXPORT_SERVICE);
                 mainActivity.startService(intentExportService);
-
-                Intent intentExportERP = new Intent(mainActivity, ExportService.class);
-                intentExportERP.setAction(Constants.ACTION_EXPORT_SERVICE);
-                mainActivity.startService(intentExportERP);
-
                 break;
 
             default:
