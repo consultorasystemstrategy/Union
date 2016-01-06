@@ -7,6 +7,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -58,11 +60,13 @@ public class VMovil_Modificar_Estab extends AppCompatActivity {
         setContentView(R.layout.activity_agregar_establecimiento);
 
         idEstablecimiento = getIntent().getExtras().getString("idEstab");
-        Log.d("ESTABLECIMIENTO",""+idEstablecimiento);
+        Log.d("ESTABLECIMIENTO", "" + idEstablecimiento);
         dbAdapter_agente = new DbAdapter_Agente(this);
         dbAdapter_agente.open();
         idusuario = dbAdapter_agente.getIdUsuario();
 
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#19262F")));
+        getSupportActionBar().setIcon(R.drawable.ic_launcher);
         //
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         //getSupportActionBar().setDisplayShowHomeEnabled(true);
