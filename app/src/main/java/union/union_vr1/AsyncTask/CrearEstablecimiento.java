@@ -197,7 +197,7 @@ public class CrearEstablecimiento extends AsyncTask<String, String, String> {
                     }
                 }
 
-                Log.d("GUARDAR ESTABLECIMIENTO", "" + 1);
+                Log.d("GUARDAR ESTABLECIMIENTO", "" + 1+""+ruta);
             }
             Log.d("GUARDAR ESTABLECIMIENTO", "" + jsonObjectCreated);
         } catch (Exception e) {

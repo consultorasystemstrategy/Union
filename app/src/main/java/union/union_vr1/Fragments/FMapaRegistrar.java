@@ -70,11 +70,11 @@ public class FMapaRegistrar extends Fragment implements Validator.ValidationList
     private Validator validator;
     private ViewPager viewPager;
     String idEstablecimiento;
-
-    @NumberRule(order = 3,type = NumberRule.NumberType.DOUBLE, messageResId = R.string.requerido_input)
-    private EditText textLat;
-
+    @Required(order = 3, messageResId = R.string.requerido_input)
     @NumberRule(order = 4,type = NumberRule.NumberType.DOUBLE, messageResId = R.string.requerido_input)
+    private EditText textLat;
+    @Required(order = 5, messageResId = R.string.requerido_input)
+    @NumberRule(order = 6,type = NumberRule.NumberType.DOUBLE, messageResId = R.string.requerido_input)
     private EditText textLon;
 
 
@@ -176,7 +176,7 @@ public class FMapaRegistrar extends Fragment implements Validator.ValidationList
                         break;
                     case 1:
 
-
+                        displatLocation();
                         break;
                     case 2:
                         validator.validate();
@@ -281,6 +281,7 @@ public class FMapaRegistrar extends Fragment implements Validator.ValidationList
 
     @Override
     public void onResume() {
+        displatLocation();
         super.onResume();
 
 
@@ -300,6 +301,8 @@ public class FMapaRegistrar extends Fragment implements Validator.ValidationList
         long estado = dbAdapter_temp_establecimiento.updateTempEstablecDireccion(idEstablecimiento + "",lat,lon,direccion,direccion_fiscal );
         if (estado > 0) {
             viewPager.setCurrentItem(2);
+            mLocationManager.removeUpdates(mLocaction);
+
         } else {
             Utils.setToast(getActivity(), "Ocurrio un error, por favor sal y vuelve a Intentarlo", R.color.rojo);
         }
@@ -333,6 +336,7 @@ public class FMapaRegistrar extends Fragment implements Validator.ValidationList
         // TODO Add your menu entries here
         super.onCreateOptionsMenu(menu, inflater);
     }
+
 
 
 
