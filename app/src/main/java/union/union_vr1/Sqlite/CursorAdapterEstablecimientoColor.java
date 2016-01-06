@@ -131,21 +131,6 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter {
 
             estado_autorizado = cursor.getInt(cursor.getColumnIndexOrThrow(DbAdaptert_Evento_Establec.EE_estado_autorizado));
 
-            switch (estado_autorizado){
-                case 5: //Puede editar o enviar
-                    linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.Dark1));
-                    break;
-                case 6: //No puede hacer nada
-                    linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.Dark1));
-                    break;
-                case 7: //Normal
-                    linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.azul));
-                    break;
-                case 8://Puede editar y enviar
-                    linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.Dark1));
-                    break;
-
-            }
 
             switch (id_estado_atencion) {
                 case 1:
@@ -162,6 +147,21 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter {
                     break;
             }
 
+            switch (estado_autorizado){
+                case 5: //Puede editar o enviar
+                    linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.Dark1));
+                    break;
+                case 6: //No puede hacer nada
+                    linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.Dark1));
+                    break;
+                case 7: //Normal
+                    //DO NOTHING, QUE TOME EL COLOR ANTERIOR
+                    break;
+                case 8://Puede editar y enviar
+                    linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.Dark1));
+                    break;
+
+            }
             /*switch (estado_autorizado) {
                 case 1: //editar
                     linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.Dark1));

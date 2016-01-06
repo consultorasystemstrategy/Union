@@ -34,6 +34,9 @@ public class CrearEstablecimiento extends AsyncTask<String, String, String> {
     private DbAdapter_Establecimeinto_Historial dbAdapter_establecimeinto_historial;
     private DbAdapter_Temp_Session dbAdapter_temp_session;
 
+    private static final String TAG = CrearEstablecimiento.class.getSimpleName();
+
+
     public void dismissProgressDialog() {
         if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();
@@ -77,6 +80,7 @@ public class CrearEstablecimiento extends AsyncTask<String, String, String> {
         dbAdapter_temp_session = new DbAdapter_Temp_Session(mainActivity);
         dbAdapter_temp_session.open();
         int ruta = dbAdapter_temp_session.fetchVarible(777);
+        Log.d(TAG, "RUTA :"+ruta);
         Cursor cursor = dbAdapter_temp_establecimiento.fetchTemEstablec();
         try {
             int idAgente = dbAdapter_temp_session.fetchVarible(1);
