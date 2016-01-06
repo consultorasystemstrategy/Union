@@ -189,6 +189,32 @@ public class VMovil_Evento_Gasto extends Activity implements View.OnClickListene
             }
         });
 
+        editTextReferencia.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                Log.d("BEFORE TEXT CHANGE", "ON");
+                if (editTextReferencia.getText().toString().trim() != "") {
+                    editTextReferencia.setError(null);
+                }
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                Log.d("AFTER TEXT CHANGE", "ON");
+                if (editTextReferencia.getText().toString().trim().equals("")) {
+                    editTextReferencia.setError("Es Requerido");
+                } else {
+                    editTextReferencia.setError(null);
+
+                }
+            }
+        });
+
         addItemsOnSpinners();
 
 
@@ -403,7 +429,10 @@ public class VMovil_Evento_Gasto extends Activity implements View.OnClickListene
 
 
         validateTipoDocumento(tipoDoc);
-
+        if(editTextReferencia.getText().toString().equals("")){
+            Toast.makeText(VMovil_Evento_Gasto.this, "Debe agregar un documento de referencia.", Toast.LENGTH_SHORT).show();
+            return;
+        }
          Cursor cursorTipoGasto = dbHelperTipoGasto.fetchTipoGastosByName(tipoGasto);
         int positionTipoGasto = 0;
         int positionProcedenciaGasto = 0;
@@ -422,6 +451,8 @@ public class VMovil_Evento_Gasto extends Activity implements View.OnClickListene
         }
 
         Double total = 0.0;
+
+
 
         if (editTextTotal.getText().toString().equals("")){
             Toast.makeText(VMovil_Evento_Gasto.this, "Debe agregar un monto.", Toast.LENGTH_SHORT).show();
@@ -464,7 +495,6 @@ public class VMovil_Evento_Gasto extends Activity implements View.OnClickListene
 
         editTextTotal.setText("");
         editTextTotal.setError(null);
-        editTextReferencia.setText("Referencia");
 
         displayListViewVEG();
         Toast.makeText(getApplicationContext(), "Gasto Agregado", Toast.LENGTH_SHORT).show();

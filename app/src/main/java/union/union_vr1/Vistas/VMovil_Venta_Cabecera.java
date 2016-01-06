@@ -307,6 +307,8 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
     private int ventaRRPP = -1;
 
 
+    ArrayAdapter<CharSequence> adapterFormaPago ;
+
     Utils df = new Utils();
 
     private static String TAG = VMovil_Venta_Cabecera.class.getSimpleName();
@@ -470,7 +472,7 @@ Instantiate and pass a callback
         id_agente_venta = session.fetchVarible(1);
         idLiquidacion = session.fetchVarible(3);
 
-
+        adapterFormaPago = ArrayAdapter.createFromResource(this, R.array.forma_pago, android.R.layout.simple_spinner_item);
 
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
@@ -509,7 +511,6 @@ Instantiate and pass a callback
 
 
         spinnerFormaPago = (Spinner) findViewById(R.id.VC_spinnerFormaPago);
-        final ArrayAdapter<CharSequence> adapterFormaPago = ArrayAdapter.createFromResource(this,R.array.forma_pago,android.R.layout.simple_spinner_item);
         adapterFormaPago.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerFormaPago.setPrompt("Seleccionar Forma de Pago");
         spinnerFormaPago.setAdapter(adapterFormaPago);
@@ -1319,6 +1320,7 @@ Instantiate and pass a callback
                 diasCredito = spinnerDiasCredito.getSelectedItem().toString();
 
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
@@ -1328,17 +1330,23 @@ Instantiate and pass a callback
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Cantidad a Solicitar");
+        builder.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                spinnerFormaPago.setAdapter(adapterFormaPago);
+            }
+        });
         builder.setPositiveButton("OK", new Dialog.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
 
 
                 String cantidad = Utils.replaceComa(editTextCantidadCredito.getText().toString().trim());
-                if (cantidad.length()>0 && cantidad.length()<10){
+                if (cantidad.length() > 0 && cantidad.length() < 10) {
                     Double cantidadCredito = Double.parseDouble(cantidad);
 
-                    new SolicitarCredito(mainActivity).execute(""+id_agente_venta,""+idEstablecimiento,""+cantidadCredito,""+diasCredito);
+                    new SolicitarCredito(mainActivity).execute("" + id_agente_venta, "" + idEstablecimiento, "" + cantidadCredito, "" + diasCredito);
 
-                    Toast toast = Toast.makeText(mContext.getApplicationContext(), "Crédito solicitado esperar...",Toast.LENGTH_SHORT);
+                    Toast toast = Toast.makeText(mContext.getApplicationContext(), "Crédito solicitado esperar...", Toast.LENGTH_SHORT);
                     toast.getView().setBackgroundColor(mainActivity.getResources().getColor(R.color.verde));
                     TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
                     v.setTextColor(mainActivity.getResources().getColor(R.color.Blanco));
@@ -1346,12 +1354,12 @@ Instantiate and pass a callback
                     Intent intent = new Intent(mContext, VMovil_Evento_Establec.class);
                     startActivity(intent);
                     finish();
-                }else
-                {
+                } else {
                     Toast.makeText(VMovil_Venta_Cabecera.this, "Número invalido, intente de nuevo", Toast.LENGTH_SHORT).show();
                 }
             }
         });
+        builder.setCancelable(false);
         builder.setView(layout);
         return builder.create();
     }

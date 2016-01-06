@@ -55,7 +55,7 @@
                         android:layout_height="fill_parent"
                         android:id="@+id/editText_VEG_referencia"
                         android:layout_weight="1"
-                        android:text="Referencia - 001" />
+                        android:hint="Comprobante" />
 
                 </LinearLayout>
 

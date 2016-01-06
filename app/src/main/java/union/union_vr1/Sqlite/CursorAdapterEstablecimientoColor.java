@@ -205,7 +205,6 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter {
                         case 8: //Puede editar y enviar
                             Utils.setToast(context, "No autorizado", R.color.rojo);
                             break;
-
                     }
 
 

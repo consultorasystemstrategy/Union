@@ -92,7 +92,7 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
     private View viewResumenGastos;
     private ListView listViewResumenGastos;
     private TextView textViewResumenGastosTotalRuta;
-    private TextView textViewResumenGastosTotalPlanta;
+    /*private TextView textViewResumenGastosTotalPlanta;*/
     private View viewlayoutFooterGastos;
     private TextView textViewResumenGastoNombre;
     private TextView textViewSlideCargar;
@@ -417,7 +417,7 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
         listView.addHeaderView(viewResumen);
 
 
-        listView.addHeaderView(getLayoutInflater().inflate(R.layout.resumen_informe_ingresos_cabecera,null));
+        listView.addHeaderView(getLayoutInflater().inflate(R.layout.resumen_informe_ingresos_cabecera, null));
 
         listView.setAdapter(dataAdapterRC);
         //listView.setAdapter(cursorAdapter);
@@ -434,7 +434,7 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
         viewlayoutFooterGastos = getLayoutInflater().inflate(R.layout.resumen_informe_gastos, null);
         listViewResumenGastos.addFooterView(viewlayoutFooterGastos);
         textViewResumenGastoNombre      = (TextView) viewlayoutFooterGastos.findViewById(R.id.textviewNombre);
-        textViewResumenGastosTotalPlanta = (TextView) viewlayoutFooterGastos.findViewById(R.id.textViewGastoPlanta);
+        /*textViewResumenGastosTotalPlanta = (TextView) viewlayoutFooterGastos.findViewById(R.id.textViewGastoPlanta);*/
         textViewResumenGastosTotalRuta = (TextView) viewlayoutFooterGastos.findViewById(R.id.textViewGastoRuta);
 
 
@@ -445,13 +445,13 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
 
         String[] de = {
                 "tg_te_nom_tipo_gasto",
-                "RUTA",
-                "PLANTA"
+                "RUTA"
+                /*,"PLANTA"*/
         };
         int[] para = {
                 R.id.textviewNombre,
-                R.id.textViewGastoRuta,
-                R.id.textViewGastoPlanta
+                R.id.textViewGastoRuta
+                /*,R.id.textViewGastoPlanta*/
 
         };
 
@@ -460,7 +460,8 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
                 R.layout.resumen_informe_gastos,
                 cursorGastos,
                 de,
-                para
+                para,
+                0
         );
         listViewResumenGastos.setAdapter(simpleCursorAdapter);
         Cursor cursorTotalGastos = cursorGastos;
@@ -476,8 +477,8 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
         textViewResumenGastoNombre.setText("Total");
         textViewResumenGastoNombre.setTypeface(null, Typeface.BOLD);
 
-        textViewResumenGastosTotalPlanta.setText("S/. " + df.format(totalPlanta));
-        textViewResumenGastosTotalPlanta.setTypeface(null, Typeface.BOLD);
+        /*textViewResumenGastosTotalPlanta.setText("S/. " + df.format(totalPlanta));
+        textViewResumenGastosTotalPlanta.setTypeface(null, Typeface.BOLD);*/
 
         textViewResumenGastosTotalRuta.setText("S/. " + df.format(totalRuta));
         textViewResumenGastosTotalRuta.setTypeface(null, Typeface.BOLD);

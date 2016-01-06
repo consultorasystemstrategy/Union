@@ -36,21 +36,12 @@
             android:text="Ruta"
             android:id="@+id/textViewGastoRuta"
             android:layout_weight="2"
-            android:gravity="left|center"
             android:textColor="@color/PersonalizadoSteve4"
             android:textSize="14dp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:gravity="center" />
 
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="24dp"
-            android:text="Planta"
-            android:id="@+id/textViewGastoPlanta"
-            android:layout_weight="2"
-            android:gravity="left|center"
-            android:textColor="@color/PersonalizadoSteve4"
-            android:textSize="14dp"
-            android:textStyle="bold" />
+
     </LinearLayout>
 
     <ListView
