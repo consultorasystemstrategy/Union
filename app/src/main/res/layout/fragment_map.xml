@@ -127,18 +127,18 @@
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:textColor="@color/Dark1"
                         android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/textLon"
-                        android:layout_width="wrap_content"
+                    <EditText
+                        android:id="@+id/textLat"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:paddingLeft="10dp"
                         android:paddingBottom="4dp"
                         android:paddingTop="4dp"
+                        android:editable="false"
                         android:text="Obteniendo..."
                         android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:textColor="@color/Dark1"
-                         />
+                        android:textColor="@color/Dark1" />
+
 
                     <TextView
                         android:id="@+id/textView14"
@@ -152,16 +152,20 @@
                         android:textColor="@color/Dark1"
                         android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/textLat"
-                        android:layout_width="wrap_content"
+                    <EditText
+                        android:id="@+id/textLon"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:paddingLeft="10dp"
                         android:paddingBottom="4dp"
                         android:paddingTop="4dp"
+                        android:editable="false"
                         android:text="Obteniendo..."
                         android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:textColor="@color/Dark1" />
+                        android:textColor="@color/Dark1"
+                        />
+
+
 
 
                 </LinearLayout>

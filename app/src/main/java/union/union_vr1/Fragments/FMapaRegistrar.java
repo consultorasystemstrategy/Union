@@ -11,6 +11,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -36,6 +37,7 @@ import android.widget.Toast;
 
 import com.mobsandgeeks.saripaar.Rule;
 import com.mobsandgeeks.saripaar.Validator;
+import com.mobsandgeeks.saripaar.annotation.NumberRule;
 import com.mobsandgeeks.saripaar.annotation.Required;
 
 import org.w3c.dom.Text;
@@ -69,9 +71,11 @@ public class FMapaRegistrar extends Fragment implements Validator.ValidationList
     private ViewPager viewPager;
     String idEstablecimiento;
 
-    private TextView textLat;
+    @NumberRule(order = 3,type = NumberRule.NumberType.DOUBLE, messageResId = R.string.requerido_input)
+    private EditText textLat;
 
-    private TextView textLon;
+    @NumberRule(order = 4,type = NumberRule.NumberType.DOUBLE, messageResId = R.string.requerido_input)
+    private EditText textLon;
 
 
     private DbAdapter_Temp_Establecimiento dbAdapter_temp_establecimiento;
@@ -102,8 +106,8 @@ public class FMapaRegistrar extends Fragment implements Validator.ValidationList
         editTextDireccionFiscal = (EditText) v.findViewById(R.id.map_direccion_fiscal);
         checkBoxDF = (CheckBox) v.findViewById(R.id.checkBoxAviableDF);
         webViewMap = (WebView) v.findViewById(R.id.webViewMap);
-        textLat = (TextView) v.findViewById(R.id.textLat);
-        textLon = (TextView) v.findViewById(R.id.textLon);
+        textLat = (EditText) v.findViewById(R.id.textLat);
+        textLon = (EditText) v.findViewById(R.id.textLon);
 
 
         webViewMap.getSettings().setAppCachePath(getActivity().getApplicationContext().getCacheDir().getAbsolutePath() + "/cache");

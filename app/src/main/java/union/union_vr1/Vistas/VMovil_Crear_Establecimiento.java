@@ -69,8 +69,8 @@ public class VMovil_Crear_Establecimiento extends AppCompatActivity {
 
 
         //
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getSupportActionBar().setDisplayShowHomeEnabled(true);
         dbAdapter_temp_datosSpinner = new DbAdapter_Temp_DatosSpinner(this);
         dbAdapter_temp_datosSpinner.open();
         //..........

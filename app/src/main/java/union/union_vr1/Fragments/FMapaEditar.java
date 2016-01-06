@@ -37,6 +37,7 @@ import android.widget.Toast;
 
 import com.mobsandgeeks.saripaar.Rule;
 import com.mobsandgeeks.saripaar.Validator;
+import com.mobsandgeeks.saripaar.annotation.NumberRule;
 import com.mobsandgeeks.saripaar.annotation.Required;
 
 import org.w3c.dom.Text;
@@ -70,10 +71,10 @@ public class FMapaEditar extends Fragment implements Validator.ValidationListene
     private Validator validator;
     private ViewPager viewPager;
     String idEstablecimiento;
-
-    private TextView textLat;
-
-    private TextView textLon;
+    @NumberRule(order = 3,type = NumberRule.NumberType.DOUBLE, messageResId = R.string.requerido_input)
+    private EditText textLat;
+    @NumberRule(order = 4,type = NumberRule.NumberType.DOUBLE, messageResId = R.string.requerido_input)
+    private EditText textLon;
 
 
     private DbAdapter_Establecimeinto_Historial dbAdapter_temp_establecimiento;
@@ -104,8 +105,8 @@ public class FMapaEditar extends Fragment implements Validator.ValidationListene
         editTextDireccionFiscal = (EditText) v.findViewById(R.id.map_direccion_fiscal);
         checkBoxDF = (CheckBox) v.findViewById(R.id.checkBoxAviableDF);
         webViewMap = (WebView) v.findViewById(R.id.webViewMap);
-        textLat = (TextView) v.findViewById(R.id.textLat);
-        textLon = (TextView) v.findViewById(R.id.textLon);
+        textLat = (EditText) v.findViewById(R.id.textLat);
+        textLon = (EditText) v.findViewById(R.id.textLon);
 
 
         webViewMap.getSettings().setAppCachePath(getActivity().getApplicationContext().getCacheDir().getAbsolutePath() + "/cache");

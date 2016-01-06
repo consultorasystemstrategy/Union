@@ -64,8 +64,8 @@ public class VMovil_Modificar_Estab extends AppCompatActivity {
         idusuario = dbAdapter_agente.getIdUsuario();
 
         //
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getSupportActionBar().setDisplayShowHomeEnabled(true);
         dbAdapter_temp_datosSpinner = new DbAdapter_Temp_DatosSpinner(this);
         dbAdapter_temp_datosSpinner.open();
         //..........
