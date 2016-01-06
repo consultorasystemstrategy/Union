@@ -30,6 +30,8 @@ public class DbAdaptert_Evento_Establec {
     public static final String EE_direccion = "ee_in_direccion";
     public static final String EE_direccion_principal = "ee_in_direccion_principal";
     public static final String EE_time_atencion = "ee_in_time_atencion";
+    public static final String EE_Latitud = "ee_in_latitud";
+    public static final String EE_Longitud = "ee_in_longitud";
     //Estado creado
     public static  final String EE_estado_autorizado = "ee_in_estado_autorizado";
 
@@ -77,6 +79,8 @@ public class DbAdaptert_Evento_Establec {
                     +EE_estado_no_atencion_comentario+" text,"
                     +EE_id_agente+" integer, "
                     +EE_id_liquidacion+" integer, "
+                    +EE_Latitud+" text, "//lat
+                    +EE_Longitud+" text, "//long
                     +EE_estado_autorizado+" integer, " +
                     estado_sincronizacion+" integer);";
 
@@ -148,6 +152,9 @@ public class DbAdaptert_Evento_Establec {
         initialValues.put(EE_direccion_principal,establecimiento.getDireccionPrincipal());
         initialValues.put(EE_estado_autorizado,establecimiento.getEstadoAutorizado());
 
+        initialValues.put(EE_Latitud,establecimiento.getLatitud());
+        initialValues.put(EE_Longitud,establecimiento.getLongitud());
+
         return mDb.insert(SQLITE_TABLE_Evento_Establec, null, initialValues);
     }
     public void updateEstablecimientos(EventoEstablecimiento establecimiento, int id_agente, int id_liquidacion){
@@ -172,6 +179,9 @@ public class DbAdaptert_Evento_Establec {
         initialValues.put(EE_direccion,establecimiento.getDireccion());
         initialValues.put(EE_direccion_principal,establecimiento.getDireccionPrincipal());
         initialValues.put(EE_estado_autorizado,establecimiento.getEstadoAutorizado());
+
+        initialValues.put(EE_Latitud,establecimiento.getLatitud());
+        initialValues.put(EE_Longitud,establecimiento.getLongitud());
 
 
         mDb.update(SQLITE_TABLE_Evento_Establec, initialValues,
@@ -242,6 +252,15 @@ public class DbAdaptert_Evento_Establec {
                 EE_id_establec+"=?",new String[]{""+idEstablecimiento});
     }
 
+    public int updateEstabLatLong(int idEstablecimiento,String lat , String lon){
+
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(EE_Latitud, lat);
+        initialValues.put(EE_Longitud, lon);
+        return mDb.update(SQLITE_TABLE_Evento_Establec, initialValues,
+                EE_id_establec+"=?",new String[]{""+idEstablecimiento});
+    }
+
 
 
     public void changeEstadoToExport(String[] ids, int estadoSincronizacion){
@@ -264,16 +283,16 @@ public class DbAdaptert_Evento_Establec {
                 EE_id_evt_establec+"= "+ signosInterrogacion,ids);
 
 
-        Log.d("REGISTROS ACTUALIZADO ", ""+cantidadRegistros);
+        Log.d("REGISTROS ACTUALIZADO ", "" + cantidadRegistros);
     }
 
 
     public void updateEstablecs1(String id, int aten, int naten){
         ContentValues initialValues = new ContentValues();
         initialValues.put(EE_id_estado_atencion,aten);
-        initialValues.put(EE_id_estado_no_atencion,naten);
+        initialValues.put(EE_id_estado_no_atencion, naten);
         mDb.update(SQLITE_TABLE_Evento_Establec, initialValues,
-                EE_id_establec+"=?",new String[]{id});
+                EE_id_establec + "=?", new String[]{id});
     }
 
     public boolean deleteAllEstablecs() {
@@ -376,7 +395,7 @@ public class DbAdaptert_Evento_Establec {
         return mCursor;
     }
     public String getNameCliente(int establec){
-        Cursor cursor = mDb.rawQuery("select * from "+SQLITE_TABLE_Evento_Establec+" where "+EE_id_establec+"='"+establec+"'",null);
+        Cursor cursor = mDb.rawQuery("select * from " + SQLITE_TABLE_Evento_Establec + " where " + EE_id_establec + "='" + establec + "'", null);
         cursor.moveToFirst();
         return cursor.getString(cursor.getColumnIndexOrThrow(EE_nom_cliente));
     }
@@ -432,24 +451,24 @@ public class DbAdaptert_Evento_Establec {
                 "LEFT OUTER JOIN m_comprob_cobro cc\n" +
                 "ON ee.ee_in_id_establec = cc.cc_in_id_establec \n" +
                 "WHERE cc_in_estado_cobro = 1 \n" +
-                "AND ee_in_id_liquidacion = '"+idLiquidacion+"' \n" +
+                "AND ee_in_id_liquidacion = '" + idLiquidacion + "' \n" +
                 "GROUP BY  ee.ee_in_id_establec, cc_in_estado_cobro\n" +
                 "UNION \n" +
                 "SELECT ee.*,  SUM(cc.cc_re_monto_a_pagar) as cc_re_monto_a_pagar\n" +
                 "FROM m_evento_establec ee\n" +
                 "LEFT OUTER JOIN m_comprob_cobro cc\n" +
                 "ON ee.ee_in_id_establec = cc.cc_in_id_establec \n" +
-                "WHERE  ee_in_id_liquidacion = '"+idLiquidacion+"' AND cc_in_estado_cobro IS NULL\n" +
+                "WHERE  ee_in_id_liquidacion = '" + idLiquidacion + "' AND cc_in_estado_cobro IS NULL\n" +
                 "GROUP BY  ee.ee_in_id_establec, cc_in_estado_cobro\n" +
                 "UNION\n" +
                 "select ee.*,  SUM(0) as cc_re_monto_a_pagar\n" +
                 "from m_comprob_cobro cc,\n" +
                 "m_evento_establec ee \n" +
                 "where ee.ee_in_id_establec = cc.cc_in_id_establec \n" +
-                "AND ee_in_id_liquidacion = '"+idLiquidacion+"'\n" +
+                "AND ee_in_id_liquidacion = '" + idLiquidacion + "'\n" +
                 "GROUP BY  ee.ee_in_id_establec \n" +
                 "having sum(cc.cc_in_estado_cobro)=0 " +
-                "ORDER BY ee_in_id_estado_atencion ASC",null);
+                "ORDER BY ee_in_id_estado_atencion ASC", null);
         return mCursor;
     }
 
@@ -491,6 +510,23 @@ public class DbAdaptert_Evento_Establec {
                 "ORDER BY ee_in_id_estado_atencion ASC",null);
 
         return mCursor;
+    }
+
+    public boolean getLatLongStatus(int establecimiento){
+        boolean estado=true;
+        Cursor cr = mDb.rawQuery("select * from "+SQLITE_TABLE_Evento_Establec+" where "+EE_id_establec+" = '"+establecimiento+"' ",null);
+        while(cr.moveToFirst()){
+            String lat,lon;
+            lat = cr.getString(cr.getColumnIndexOrThrow(EE_Latitud));
+            lon = cr.getString(cr.getColumnIndexOrThrow(EE_Longitud));
+
+            Log.d("EXPORTLATLONG",""+lat+"--"+lon);
+
+            if(lat.equals("") || lon.equals("") || lat ==null || lon ==null){
+                estado = false;
+            }
+        }
+        return estado;
     }
 
 

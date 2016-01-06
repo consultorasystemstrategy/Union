@@ -497,6 +497,9 @@ public class ImportMain extends AsyncTask<String, String, String> {
 
     @Override
     protected void onPostExecute(String s) {
+
+
+
         if (mainActivity.isFinishing()) {
             //dismissProgressDialog();
             progressDialog.dismiss();

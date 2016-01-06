@@ -57,6 +57,8 @@ public class VMovil_Crear_Establecimiento extends AppCompatActivity {
 
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#19262F")));
         getSupportActionBar().setIcon(R.drawable.ic_launcher);
+        getSupportActionBar().setLogo(R.drawable.ic_launcher);
+
         dbAdapter_agente = new DbAdapter_Agente(this);
         dbAdapter_agente.open();
         idusuario = dbAdapter_agente.getIdUsuario();

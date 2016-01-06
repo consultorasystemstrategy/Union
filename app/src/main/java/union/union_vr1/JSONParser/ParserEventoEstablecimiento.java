@@ -72,7 +72,9 @@ public class ParserEventoEstablecimiento {
                         jsonObj.getString("EstVCodigoBarra"),
                         jsonObj.getString("Direccion"),
                         jsonObj.getInt("EstadoId"),
-                        jsonObj.getString("DireccionPrincipal")
+                        jsonObj.getString("DireccionPrincipal"),
+                        jsonObj.getString("Latitud"),
+                        jsonObj.getString("Longitud")
                         ));
             }
 

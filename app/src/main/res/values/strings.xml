@@ -48,7 +48,7 @@
     </string-array>
     <string-array name="tipo_devolucion">
         <item>Canje</item>
-        <item>Devolucion</item>
+       <!-- <item>Devolucion</item>-->
     </string-array>
     <string-array name="tipo_cobros_manuales">
         <item>Cobro Total</item>

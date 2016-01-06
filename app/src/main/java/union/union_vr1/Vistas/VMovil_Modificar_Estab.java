@@ -65,6 +65,14 @@ public class VMovil_Modificar_Estab extends AppCompatActivity {
         dbAdapter_agente.open();
         idusuario = dbAdapter_agente.getIdUsuario();
 
+        //------------------
+
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#19262F")));
+        getSupportActionBar().setIcon(R.drawable.ic_launcher);
+        getSupportActionBar().setLogo(R.drawable.ic_launcher);
+
+        //------------------
+
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#19262F")));
         getSupportActionBar().setIcon(R.drawable.ic_launcher);
         //

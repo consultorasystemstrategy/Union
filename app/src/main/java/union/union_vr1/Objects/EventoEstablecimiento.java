@@ -24,12 +24,12 @@ public class EventoEstablecimiento {
     private String codigoBarras;
     private String direccion;
     private String direccionPrincipal;
-
-
+    private String latitud;
+    private String longitud;
 
     private int estadoAutorizado;
 
-    public EventoEstablecimiento(int idEstablecimiento, int idCategoriaEstablecimiento, int tipoDocCliente, int estadoAtencion, String nombreEstablecimiento, String nombreCliente, String docCliente, int orden, int surtidoStockAnterior, int surtidoVentaAnterior, Double montoCredito, int diasCredito, int idEstadoNoAtencion, String estadoNoAtencionComentario, int idAgente, int estadoSincronizacion, String codigoBarras, String direccion ,int  estadoAutorizado, String direccionPrincipal) {
+    public EventoEstablecimiento(int idEstablecimiento, int idCategoriaEstablecimiento, int tipoDocCliente, int estadoAtencion, String nombreEstablecimiento, String nombreCliente, String docCliente, int orden, int surtidoStockAnterior, int surtidoVentaAnterior, Double montoCredito, int diasCredito, int idEstadoNoAtencion, String estadoNoAtencionComentario, int idAgente, int estadoSincronizacion, String codigoBarras, String direccion ,int  estadoAutorizado, String direccionPrincipal,String latitud,String longitud) {
         this.idEstablecimiento = idEstablecimiento;
         this.idCategoriaEstablecimiento = idCategoriaEstablecimiento;
         this.tipoDocCliente = tipoDocCliente;
@@ -50,6 +50,8 @@ public class EventoEstablecimiento {
         this. direccion = direccion;
         this.direccionPrincipal = direccionPrincipal;
         this.estadoAutorizado = estadoAutorizado;
+        this.latitud = latitud;
+        this.longitud = longitud;
     }
 
 
@@ -209,5 +211,21 @@ public class EventoEstablecimiento {
 
     public void setEstadoAutorizado(int estadoAutorizado) {
         this.estadoAutorizado = estadoAutorizado;
+    }
+
+    public String getLatitud() {
+        return latitud;
+    }
+
+    public void setLatitud(String latitud) {
+        this.latitud = latitud;
+    }
+
+    public String getLongitud() {
+        return longitud;
+    }
+
+    public void setLongitud(String longitud) {
+        this.longitud = longitud;
     }
 }
