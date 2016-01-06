@@ -248,9 +248,9 @@ public class FEstablecimientoRegistrar extends Fragment implements Validator.Val
 
     public void alertConfirmar() {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
-        alertDialogBuilder.setTitle("Seguro de Guardar");
+        alertDialogBuilder.setTitle("¿Seguro de Guardar?");
         AlertDialog.Builder builder = alertDialogBuilder
-                .setMessage("Operacion:")
+                .setMessage("")
                 .setCancelable(false)
                 .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {

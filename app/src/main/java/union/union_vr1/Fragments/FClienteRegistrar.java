@@ -451,11 +451,17 @@ public class FClienteRegistrar extends Fragment implements Validator.ValidationL
             Utils.setToast(getActivity().getApplicationContext(), "Revise los campos", R.color.rojo);
         }
     }
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(false);
+    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_activity_agregar_establecimiento, menu);
-        setHasOptionsMenu(false);
-
+        // TODO Add your menu entries here
+        super.onCreateOptionsMenu(menu, inflater);
     }
+
+
 }
