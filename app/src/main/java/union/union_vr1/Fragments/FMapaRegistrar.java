@@ -319,10 +319,15 @@ public class FMapaRegistrar extends Fragment implements Validator.ValidationList
 
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_activity_agregar_establecimiento, menu);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setHasOptionsMenu(false);
+    }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        // TODO Add your menu entries here
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
 

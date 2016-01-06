@@ -262,11 +262,11 @@ public class FEstablecimientoEditar extends Fragment implements Validator.Valida
 
     public void alertConfirmar() {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
-        alertDialogBuilder.setTitle("Seguro de Guardar");
+        alertDialogBuilder.setTitle("¿Seguro de Guardar?");
         AlertDialog.Builder builder = alertDialogBuilder
-                .setMessage("Operacion:")
+                .setMessage("")
                 .setCancelable(false)
-                .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                .setPositiveButton("SI", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
                         new ModificarEstablecimiento(getActivity()).execute(idEstablecimiento);
@@ -274,7 +274,7 @@ public class FEstablecimientoEditar extends Fragment implements Validator.Valida
                     }
 
                 })
-                .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                .setNegativeButton("NO", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                     }

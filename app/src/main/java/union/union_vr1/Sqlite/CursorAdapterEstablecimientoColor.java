@@ -186,7 +186,7 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter {
                     break;
             }*/
 
-            imgeButtonView(estado_autorizado,imageButtonOp);
+
             linearLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -251,6 +251,7 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter {
                     setActionOperacion(id_establecimiento, estado_autorizado);
                 }
             });
+          //  imgeButtonView(estado_autorizado,imageButtonOp);
         }
     }
 
