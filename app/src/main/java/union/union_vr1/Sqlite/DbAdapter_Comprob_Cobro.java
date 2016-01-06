@@ -515,6 +515,17 @@ public class DbAdapter_Comprob_Cobro {
         return mCursor;
     }
 
+    public int fetchComprobCobrosById(String id_comprob) {
+        int id = 0;
+        Cursor mCursor = mDb.rawQuery("select * from " + SQLITE_TABLE_Comprob_Cobro + " where _id='" + id_comprob + "'", null);
+
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+            id = mCursor.getInt(mCursor.getColumnIndexOrThrow(CC_id_comprobante_cobro));
+        }
+        return id;
+    }
+
     public Cursor fetchNormal() {
         return mDb.rawQuery("select * from " + SQLITE_TABLE_Comprob_Cobro + " where " + CC_estado_flex + "='" + Constants.POR_EXPORTAR_FLEX + "'", null);
     }
@@ -590,15 +601,15 @@ public class DbAdapter_Comprob_Cobro {
     }
 
     public Cursor listarComprobantesToCobrosMante(String idEstablec) {
-        Cursor mCursor = mDb.rawQuery("SELECT mc._id as _id, mc.cc_te_doc as cc_te_doc,me.ee_te_nom_cliente as ee_te_nom_cliente ,mc.cc_te_fecha_cobro as cc_te_fecha_cobro,mc.cc_te_hora_cobro as cc_te_hora_cobro, mc.cc_re_monto_cobrado as cc_re_monto_cobrado, case when mc.cc_in_estado_cobro=0 then 'Cobrado' else 'Anulado' end as estado  from m_comprob_cobro mc,m_evento_establec me where mc.cc_in_id_establec=me.ee_in_id_establec and mc.cc_te_hora_cobro !=\"\" and me.ee_in_id_establec='" + idEstablec + "'" +
-                " union select _id as _id, " + DbAdapter_Cobros_Manuales.CM_Numero + " as cc_te_doc, " + DbAdapter_Cobros_Manuales.CM_Nombre_Cliente + " as ee_te_nom_cliente, " + DbAdapter_Cobros_Manuales.CM_Fecha + " as cc_te_fecha_cobro," +
+        Cursor mCursor = mDb.rawQuery("SELECT mc._id as _id,1 as tipo, mc.cc_te_doc as cc_te_doc,me.ee_te_nom_cliente as ee_te_nom_cliente ,mc.cc_te_fecha_cobro as cc_te_fecha_cobro,mc.cc_te_hora_cobro as cc_te_hora_cobro, mc.cc_re_monto_cobrado as cc_re_monto_cobrado, case when mc.cc_in_estado_cobro=0 then 'Cobrado' else 'Anulado' end as estado  from m_comprob_cobro mc,m_evento_establec me where mc.cc_in_id_establec=me.ee_in_id_establec and mc.cc_te_hora_cobro !=\"\" and me.ee_in_id_establec='" + idEstablec + "'" +
+                " union select _id as _id,2 as tipo, " + DbAdapter_Cobros_Manuales.CM_Numero + " as cc_te_doc, " + DbAdapter_Cobros_Manuales.CM_Nombre_Cliente + " as ee_te_nom_cliente, " + DbAdapter_Cobros_Manuales.CM_Fecha + " as cc_te_fecha_cobro," +
                 " " + DbAdapter_Cobros_Manuales.CM_Hora + " as cc_te_hora_cobro, " + DbAdapter_Cobros_Manuales.CM_Importe + " as cc_re_monto_cobrado, " + DbAdapter_Cobros_Manuales.CM_Estado + " as estado from " + DbAdapter_Cobros_Manuales.SQLITE_TABLE_Cobros_Manuales + " where " + DbAdapter_Cobros_Manuales.CM_Id_Establecimiento + "='" + idEstablec + "' and " + Constants._SINCRONIZAR + "='" + Constants._EXPORTADO + "' ", null);
         return mCursor;
     }
 
     public Cursor printCabecera(String comprobante) {
         Cursor cr = mDb.rawQuery("select mc._id,mc.cc_in_id_comprobante_cobro,mc.cc_te_doc,me.ee_te_nom_cliente,ma.ag_te_nombre_agente from m_comprob_cobro mc,m_evento_establec me,m_agente ma" +
-                " where mc.cc_in_id_establec=me.ee_in_id_establec and mc.cc_in_id_agente = ma.ag_in_id_agente_venta and mc._id='"+comprobante+"' ", null);
+                " where mc.cc_in_id_establec=me.ee_in_id_establec and mc.cc_in_id_agente = ma.ag_in_id_agente_venta and mc._id='" + comprobante + "' ", null);
         return cr;
     }
 }

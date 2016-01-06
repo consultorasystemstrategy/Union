@@ -166,4 +166,11 @@
         <item name="android:textColor">@color/azul</item>
 
     </style>
+
+    <style name="MyTheme" parent="@style/Theme.AppCompat.Light">
+        <item name="android:actionBarStyle">@style/ActionBarDark</item>
+    </style>
+
+
+
 </resources>

@@ -3,7 +3,7 @@
     tools:context="union.union_vr1.Vistas.VMovil_Cobro_Credito" >
     <item android:id="@+id/action_cobros"
         android:title="Cobros Manuales"
-        android:icon="@android:drawable/ic_input_add"
+        android:icon="@mipmap/ic_add_document"
         android:orderInCategory="1"
         android:showAsAction="always" />
 </menu>

@@ -78,6 +78,10 @@ public class DbAdapter_Cobros_Manuales {
             mDbHelper.close();
         }
     }
+    public Cursor printCabecera(String idComprobante){
+        Cursor cr = mDb.rawQuery("select * from " + SQLITE_TABLE_Cobros_Manuales +" where "+CM_id_Cobros_Manuales+" = '"+idComprobante+"'",null);
+        return  cr;
+    }
 
 
     public long createCobrosManuales(int categoriaMovimiento, Double importe, String fechaHora, String referencia, int usuario, String serie, int numero,String nombreCliente, int idEtablecimiento,String fecha, String hora) {

@@ -22,6 +22,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.FilterQueryProvider;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TabHost;
@@ -39,6 +40,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import union.union_vr1.R;
+import union.union_vr1.Sqlite.ArrayAdapterWithIcon;
 import union.union_vr1.Sqlite.CursorAdapterComprobanteVenta;
 import union.union_vr1.Sqlite.CursorAdapterFacturas;
 import union.union_vr1.Sqlite.CursorAdapter_Autorizacion_Cobros;
@@ -65,7 +67,7 @@ import union.union_vr1.VMovil_BluetoothImprimir;
 import static union.union_vr1.R.layout.prompts_cobros;
 import static union.union_vr1.R.layout.prompts_cobros_fecha;
 
-public class VMovil_Venta_Comprob extends Activity implements View.OnClickListener{
+public class VMovil_Venta_Comprob extends Activity implements View.OnClickListener {
 
     private DBAdapter_Temp_Canjes_Devoluciones dbAdapter_temp_canjes_devoluciones;
     private DbAdapter_Temp_Session session;
@@ -89,7 +91,6 @@ public class VMovil_Venta_Comprob extends Activity implements View.OnClickListen
     private DbAdapter_Agente dbHelperAgente;
 
 
-
     SlidingMenu menu;
     View layoutSlideMenu;
     TextView textViewSlidePrincipal;
@@ -108,7 +109,6 @@ public class VMovil_Venta_Comprob extends Activity implements View.OnClickListen
     int slideIdLiquidacion = 0;
 
 
-
     String slideNombreRuta = "";
     int slideNumeroEstablecimientoxRuta = 0;
     String slideNombreAgente = "";
@@ -117,7 +117,7 @@ public class VMovil_Venta_Comprob extends Activity implements View.OnClickListen
     Double slide_pagadoTotal = 0.0;
     Double slide_cobradoTotal = 0.0;
 
-    Double slide_totalRuta =0.0;
+    Double slide_totalRuta = 0.0;
     Double slide_totalPlanta = 0.0;
     Double slide_ingresosTotales = 0.0;
     Double slide_gastosTotales = 0.0;
@@ -171,7 +171,6 @@ public class VMovil_Venta_Comprob extends Activity implements View.OnClickListen
         dbAutorizaciones.open();
 
 
-
         dbHelper = new DbAdapter_Comprob_Venta(this);
         dbHelper.open();
         dbHelper_Comp_Venta_Detalle = new DbAdapter_Comprob_Venta_Detalle(this);
@@ -194,7 +193,7 @@ public class VMovil_Venta_Comprob extends Activity implements View.OnClickListen
         tH.setup();
         //idEstablec = ((MyApplication) this.getApplication()).getIdEstablecimiento();
 
-        idEstablec =session.fetchVarible(2);
+        idEstablec = session.fetchVarible(2);
 
         //Item1
         TabHost.TabSpec spec = tH.newTabSpec("1");
@@ -229,31 +228,30 @@ public class VMovil_Venta_Comprob extends Activity implements View.OnClickListen
 
     }
 
-    private void showHeader(){
+    private void showHeader() {
         TextView textViewNombreEstablecimiento = (TextView) findViewById(R.id.completeName);
         RoundedLetterView letter = (RoundedLetterView) findViewById(R.id.letter);
 
 
-
-        Cursor cursorEstablecimiento = dbAdaptert_evento_establec.fetchEstablecsById(""+idEstablec);
+        Cursor cursorEstablecimiento = dbAdaptert_evento_establec.fetchEstablecsById("" + idEstablec);
         cursorEstablecimiento.moveToFirst();
         String nombreEstablecimiento = "";
-        if (cursorEstablecimiento.getCount()>0) {
+        if (cursorEstablecimiento.getCount() > 0) {
             nombreEstablecimiento = cursorEstablecimiento.getString(cursorEstablecimiento.getColumnIndexOrThrow(dbAdaptert_evento_establec
                     .EE_nom_establec));
         }
         textViewNombreEstablecimiento.setText(nombreEstablecimiento);
-        if(nombreEstablecimiento.length() == 0){
+        if (nombreEstablecimiento.length() == 0) {
             letter.setTitleText("A");
-        }else{
+        } else {
             letter.setTitleText(nombreEstablecimiento.substring(0, 1).toUpperCase());
         }
     }
 
-    private  void mostrarItemsDevoluciones(int establec){
+    private void mostrarItemsDevoluciones(int establec) {
         //listar devoluciones
-   ListView listaCanjes_Dev = (ListView) findViewById(R.id.listarCanjDev);
-        Cursor cursor = dbAdapter_temp_canjes_devoluciones.listarDevolucionesMantenimiento(establec+"");
+        ListView listaCanjes_Dev = (ListView) findViewById(R.id.listarCanjDev);
+        Cursor cursor = dbAdapter_temp_canjes_devoluciones.listarDevolucionesMantenimiento(establec + "");
         cursor.moveToFirst();
         CursorAdapter_Man_Can_Dev adapter = new CursorAdapter_Man_Can_Dev(getApplicationContext(), cursor);
         listaCanjes_Dev.setAdapter(adapter);
@@ -266,26 +264,69 @@ public class VMovil_Venta_Comprob extends Activity implements View.OnClickListen
         final ListView listCbrz = (ListView) findViewById(R.id.VVCO_cbrz);
         listCbrz.setAdapter(cAdapter_Cbrz_Man);
 
-/*
         listCbrz.setOnItemClickListener(new OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Cursor cr2 = (Cursor) listCbrz.getItemAtPosition(i);
-                if (cr2.getString(7).equals("Cobrado")) {
-                    String idCompro = cr2.getString(0);
-                    String factura = cr2.getString(1);
-                    String hora = cr2.getString(5);
-                    String fecha = cr2.getString(9);
-                    Double monto = Double.parseDouble(cr2.getString(6));
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Cursor cursor = (Cursor) parent.getItemAtPosition(position);
+                int tipo = cursor.getInt(cursor.getColumnIndexOrThrow("tipo"));
+                String _id = cursor.getString(cursor.getColumnIndexOrThrow("_id"));
+                String monto = cursor.getString(cursor.getColumnIndexOrThrow("cc_re_monto_cobrado"));
+                if(tipo==1){//normal
+                  // int idCompo = dbHelper_Comprob_Cobro.fetchComprobCobrosById(_id);
+                    dialogItemCobros(tipo,_id+"",monto);
+                }else{//manual
 
-                    dialog(idCompro, factura, hora, fecha, monto);
-                } else {
-                    Toast.makeText(getApplicationContext(), "Ya se Encuentra Anulado", Toast.LENGTH_SHORT).show();
+
+                    dialogItemCobros(tipo,_id,monto);
                 }
-
             }
-        });*/
+        });
+
     }
+
+    public void dialogItemCobros(final int tipoCobro,final String idcomprobante,final String monto) {
+
+        String[] items = new String[]{};
+        Integer[] icons = new Integer[]{};
+
+        items = new String[]{"Imprimir"};
+        icons = new Integer[]{R.mipmap.ic_print_black};
+
+
+
+        final ListAdapter adapter = new ArrayAdapterWithIcon(getApplicationContext(), items, icons);
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+
+        // set title
+        alertDialogBuilder.setTitle("¿Desea Imprimir?");
+
+        // set dialog message
+        AlertDialog.Builder builder = alertDialogBuilder;
+        alertDialogBuilder.setAdapter(adapter, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                if (tipoCobro == 1) {//Cobro Normal
+                    startActivity(new Intent(getApplicationContext(),VMovil_BluetoothImpCobros.class).putExtra("idComprobante",""+idcomprobante).putExtra("importe",""+monto));
+
+                } else {//Cobro Manual
+                    startActivity(new Intent(getApplicationContext(),VMovil_BluetoothImpCobrosManuales.class).putExtra("idComprobante",""+idcomprobante));
+
+                }
+            }
+        })
+                .setCancelable(false);
+
+
+        // create alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+
+        // show it
+        alertDialog.show();
+
+    }
+
 
     public void dialog(final String idCompro, String factura, final String hora, final String fecha, final Double monto) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
@@ -305,7 +346,7 @@ public class VMovil_Venta_Comprob extends Activity implements View.OnClickListen
                                 "Actualizado", Toast.LENGTH_SHORT).show();
 
                         Intent w = new Intent(getApplicationContext(), VMovil_Evento_Establec.class);
-                        w.putExtra("idEstab", ""+idEstablec);
+                        w.putExtra("idEstab", "" + idEstablec);
                         w.putExtra("idAgente", idAgente);
 
                         startActivity(w);
@@ -327,44 +368,47 @@ public class VMovil_Venta_Comprob extends Activity implements View.OnClickListen
         alertDialog.show();
 
     }
-    private void displayAutorizaciones(){
+
+    private void displayAutorizaciones() {
 
         Cursor cursor = dbAutorizaciones.listarAutorizaciones(idEstablec);
-        CursorAdapter_Autorizacion_Cobros adapterAutorizacion = new CursorAdapter_Autorizacion_Cobros(getApplicationContext(),cursor);
+        CursorAdapter_Autorizacion_Cobros adapterAutorizacion = new CursorAdapter_Autorizacion_Cobros(getApplicationContext(), cursor);
         ListView listAuCobros = (ListView) findViewById(R.id.listAutorizacionCobros);
         listAuCobros.setAdapter(adapterAutorizacion);
         listAuCobros.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Cursor crCobros = (Cursor)adapterView.getItemAtPosition(i);
+                Cursor crCobros = (Cursor) adapterView.getItemAtPosition(i);
                 crCobros.moveToPosition(i);
                 String id = crCobros.getString(crCobros.getColumnIndexOrThrow(DBAdapter_Temp_Autorizacion_Cobro.temp_autorizacion_cobro));
                 String estado = crCobros.getString(crCobros.getColumnIndexOrThrow(DBAdapter_Temp_Autorizacion_Cobro.temp_id_estado_solicitud));
                 String idDetalleCobro = crCobros.getString(crCobros.getColumnIndexOrThrow(DBAdapter_Temp_Autorizacion_Cobro.temp_montoCredito));
                 String idComprobante = crCobros.getString(crCobros.getColumnIndexOrThrow(DBAdapter_Temp_Autorizacion_Cobro.temp_id_comprobante));
                 String fecha = crCobros.getString(crCobros.getColumnIndexOrThrow(DBAdapter_Temp_Autorizacion_Cobro.temp_fechaLimite));
-                if(estado.equals("1")){
+                if (estado.equals("1")) {
 
-                    Toast.makeText(getApplicationContext(),"Solicitud Aun por Aprobarse",Toast.LENGTH_SHORT).show();
-                }if(estado.equals("2")){
-                    select(crCobros,fecha);
+                    Toast.makeText(getApplicationContext(), "Solicitud Aun por Aprobarse", Toast.LENGTH_SHORT).show();
+                }
+                if (estado.equals("2")) {
+                    select(crCobros, fecha);
 
-                }if(estado.equals("4")){
-                    selectEliminar(id,idDetalleCobro,idComprobante);
+                }
+                if (estado.equals("4")) {
+                    selectEliminar(id, idDetalleCobro, idComprobante);
                     //Toast.makeText(getApplicationContext(),"Solicitud Anulada",Toast.LENGTH_SHORT).show();
 
-                }if(estado.equals("5")){
+                }
+                if (estado.equals("5")) {
 
-                    Toast.makeText(getApplicationContext(),"Ya Ejecutada"+id+"-"+idDetalleCobro+"",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Ya Ejecutada" + id + "-" + idDetalleCobro + "", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
 
-
-
     }
-    public void selectEliminar(final String idAutorizacion, final String idDetalleCobro, final String idComprobante){
+
+    public void selectEliminar(final String idAutorizacion, final String idDetalleCobro, final String idComprobante) {
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
 
@@ -377,7 +421,7 @@ public class VMovil_Venta_Comprob extends Activity implements View.OnClickListen
                 .setCancelable(false)
                 .setPositiveButton("Anular", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                       // boolean up = dbAutorizaciones.anularAutorizacion(idAutorizacion, idDetalleCobro, idComprobante);
+                        // boolean up = dbAutorizaciones.anularAutorizacion(idAutorizacion, idDetalleCobro, idComprobante);
                         if (true) {
                             back();
                             Toast.makeText(getApplicationContext(), "Anulado Correctamente", Toast.LENGTH_SHORT).show();
@@ -397,6 +441,7 @@ public class VMovil_Venta_Comprob extends Activity implements View.OnClickListen
         alertDialog.show();
 
     }
+
     private String getDatePhone() {
         Calendar cal = new GregorianCalendar();
         Date date = cal.getTime();
@@ -404,25 +449,27 @@ public class VMovil_Venta_Comprob extends Activity implements View.OnClickListen
         String formatteDate = df.format(date);
         return formatteDate;
     }
-    public long calcularFecha(String fecha){
-        long startDate=0;
-        Log.d("FECHA","  fecha:"+fecha);
+
+    public long calcularFecha(String fecha) {
+        long startDate = 0;
+        Log.d("FECHA", "  fecha:" + fecha);
         try {
             String dateString = fecha;
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
             Date date = sdf.parse(dateString);
             startDate = date.getTime();
-            Log.d("FECHA","lon:"+startDate+"  fecha:"+fecha);
+            Log.d("FECHA", "lon:" + startDate + "  fecha:" + fecha);
 
         } catch (ParseException e) {
             e.printStackTrace();
         }
 
 
-        return  startDate;
+        return startDate;
     }
-    public long calcularFechaHoy(){
-        long startDate=0;
+
+    public long calcularFechaHoy() {
+        long startDate = 0;
 
         try {
             String dateString = getDatePhone();
@@ -435,10 +482,10 @@ public class VMovil_Venta_Comprob extends Activity implements View.OnClickListen
         }
 
 
-        return  startDate;
+        return startDate;
     }
 
-    public void cambiarFecha(Cursor cr, final String fecha){
+    public void cambiarFecha(Cursor cr, final String fecha) {
         final int idAutorizacion = cr.getInt(cr.getColumnIndexOrThrow(DBAdapter_Temp_Autorizacion_Cobro.temp_id_autorizacion_cobro));
         final int idAEstablecimiento = cr.getInt(cr.getColumnIndexOrThrow(DBAdapter_Temp_Autorizacion_Cobro.temp_establec));
         final String idComprobanteCobro = cr.getString(cr.getColumnIndexOrThrow(DBAdapter_Temp_Autorizacion_Cobro.temp_id_comprobante));
@@ -449,24 +496,24 @@ public class VMovil_Venta_Comprob extends Activity implements View.OnClickListen
         LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View layout_cobros = inflater.inflate(prompts_cobros_fecha, null);
         final DatePicker dp = (DatePicker) layout_cobros.findViewById(R.id.fechakel);
-        Log.d("PARAMS",""+idComprobanteCobro+"-"+montoCredito);
+        Log.d("PARAMS", "" + idComprobanteCobro + "-" + montoCredito);
         dp.setMaxDate(calcularFecha(fecha));
         dp.setMinDate(calcularFechaHoy());
         alertDialogBuilder.setView(layout_cobros);
         // set dialog message
         AlertDialog.Builder builder = alertDialogBuilder
-                .setMessage("La Feha Limite es: "+fecha)
+                .setMessage("La Feha Limite es: " + fecha)
                 .setCancelable(false)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         int day = dp.getDayOfMonth();
-                        int month = dp.getMonth()+1;
+                        int month = dp.getMonth() + 1;
                         int year = dp.getYear();
                         String fechaRenovada = day + "/" + month + "/" + year;
                         int aut = dbAutorizaciones.updateAutorizacionCobro_Au(idAutorizacion, 5, idAEstablecimiento, fecha);
                         int cobr = dbHelper_Comprob_Cobro.updateComprobCobros_Auto(idComprobanteCobro, montoCredito, fechaRenovada);
 
-                        if (cobr == 1 && aut==1) {
+                        if (cobr == 1 && aut == 1) {
                             Toast.makeText(getApplicationContext(), "Inserto Correctamente", Toast.LENGTH_SHORT).show();
                             back();
 
@@ -492,47 +539,48 @@ public class VMovil_Venta_Comprob extends Activity implements View.OnClickListen
         alertDialog.show();
 
     }
-    public void select(final Cursor cr,final String fecha){
 
-            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+    public void select(final Cursor cr, final String fecha) {
 
-            // set title
-            alertDialogBuilder.setTitle("Confirmar Prologa de Pagos");
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
 
-            // set dialog message
-            AlertDialog.Builder builder = alertDialogBuilder
-                    .setMessage("Aprobado, la Fecha Limite para el cobro es: " + fecha + "")
-                    .setCancelable(false)
-                    .setPositiveButton("Ir", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            // boolean up = dbAutorizaciones.updateAutorizacionAprobado(idAutorizacion, idDetalleCobro);
-                            if (true) {
-                                cambiarFecha(cr,fecha);
-                                Toast.makeText(getApplicationContext(), "Guardado Correctamente", Toast.LENGTH_SHORT).show();
+        // set title
+        alertDialogBuilder.setTitle("Confirmar Prologa de Pagos");
 
-                            } else {
-                                Toast.makeText(getApplicationContext(), "Ocurrio un Error", Toast.LENGTH_SHORT).show();
-                            }
+        // set dialog message
+        AlertDialog.Builder builder = alertDialogBuilder
+                .setMessage("Aprobado, la Fecha Limite para el cobro es: " + fecha + "")
+                .setCancelable(false)
+                .setPositiveButton("Ir", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // boolean up = dbAutorizaciones.updateAutorizacionAprobado(idAutorizacion, idDetalleCobro);
+                        if (true) {
+                            cambiarFecha(cr, fecha);
+                            Toast.makeText(getApplicationContext(), "Guardado Correctamente", Toast.LENGTH_SHORT).show();
+
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Ocurrio un Error", Toast.LENGTH_SHORT).show();
                         }
+                    }
 
-                    });
+                });
 
 
-            // create alert dialog
-            AlertDialog alertDialog = alertDialogBuilder.create();
+        // create alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
 
-            // show it
-            alertDialog.show();
+        // show it
+        alertDialog.show();
 
     }
 
-private void back(){
-    Intent w = new Intent(getApplicationContext(), VMovil_Evento_Establec.class);
-    w.putExtra("idEstab", ""+idEstablec);
-    w.putExtra("idAgente", idAgente);
+    private void back() {
+        Intent w = new Intent(getApplicationContext(), VMovil_Evento_Establec.class);
+        w.putExtra("idEstab", "" + idEstablec);
+        w.putExtra("idAgente", idAgente);
 
-    startActivity(w);
-}
+        startActivity(w);
+    }
 
 
     private void displayListView() {
@@ -594,7 +642,7 @@ private void back(){
 
         cursorAdapterComprobanteVenta.setFilterQueryProvider(new FilterQueryProvider() {
             public Cursor runQuery(CharSequence constraint) {
-                return dbHelper.fetchAllComprobVentaByName(idEstablec, liquidacion,constraint.toString());
+                return dbHelper.fetchAllComprobVentaByName(idEstablec, liquidacion, constraint.toString());
             }
         });
 
@@ -603,16 +651,16 @@ private void back(){
 
     public void dialogAcciones(final int idComprobante) {
 
-        final String[] items = {"Imprimir","Anular"};
+        final String[] items = {"Imprimir", "Anular"};
         AlertDialog.Builder dialogo = new AlertDialog.Builder(this);
         dialogo.setTitle("Seleccionar una acción");
         dialogo.setItems(items, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
 
-                switch (item){
+                switch (item) {
                     case 0:
-                        Intent intent= new Intent(contexto, VMovil_BluetoothImprimir.class);
-                        intent.putExtra("idComprobante",idComprobante);
+                        Intent intent = new Intent(contexto, VMovil_BluetoothImprimir.class);
+                        intent.putExtra("idComprobante", idComprobante);
                         finish();
                         startActivity(intent);
                         break;
@@ -661,10 +709,10 @@ private void back(){
 
 
     //SLIDING MENU
-    public void showSlideMenu(Activity activity){
+    public void showSlideMenu(Activity activity) {
         layoutSlideMenu = View.inflate(activity, R.layout.slide_menu_ventas, null);
         // configure the SlidingMenu
-        menu =  new SlidingMenu(activity);
+        menu = new SlidingMenu(activity);
         menu.setMode(SlidingMenu.LEFT);
         menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
         menu.setShadowWidthRes(R.dimen.space_slide);
@@ -674,29 +722,27 @@ private void back(){
         menu.attachToActivity(activity, SlidingMenu.SLIDING_CONTENT);
         menu.setMenu(layoutSlideMenu);
 
-        textViewSlideNombreAgente = (TextView)findViewById(R.id.slide_textViewNombreAgente);
-        textViewSlideNombreRuta = (TextView)findViewById(R.id.slide_textViewNombreRuta);
+        textViewSlideNombreAgente = (TextView) findViewById(R.id.slide_textViewNombreAgente);
+        textViewSlideNombreRuta = (TextView) findViewById(R.id.slide_textViewNombreRuta);
         buttonSlideNroEstablecimiento = (Button) findViewById(R.id.slide_buttonNroEstablecimiento);
 
-        textViewSlidePrincipal = (TextView)findViewById(R.id.slide_textviewPrincipal);
-        textViewSlideCliente = (TextView)findViewById(R.id.slide_textViewClientes);
-        textviewSlideCobranzas = (TextView)findViewById(R.id.slide_textViewCobranza);
-        textviewSlideGastos = (TextView)findViewById(R.id.slide_TextViewGastos);
-        textviewSlideResumen = (TextView)findViewById(R.id.slide_textViewResumen);
-        textviewSlideARendir = (TextView)findViewById(R.id.slide_textViewARendir);
+        textViewSlidePrincipal = (TextView) findViewById(R.id.slide_textviewPrincipal);
+        textViewSlideCliente = (TextView) findViewById(R.id.slide_textViewClientes);
+        textviewSlideCobranzas = (TextView) findViewById(R.id.slide_textViewCobranza);
+        textviewSlideGastos = (TextView) findViewById(R.id.slide_TextViewGastos);
+        textviewSlideResumen = (TextView) findViewById(R.id.slide_textViewResumen);
+        textviewSlideARendir = (TextView) findViewById(R.id.slide_textViewARendir);
 
 
-        textViewSlideNombreEstablecimiento = (TextView)findViewById(R.id.slideVentas_textViewCliente);
-        buttonSlideVentaDeHoy  = (Button)findViewById(R.id.slideVentas_buttonVentaCosto);
-        buttonSlideDeudaHoy = (Button)findViewById(R.id.slideVentas_buttonDeudas);
-        textViewSlideVenta = (TextView)findViewById(R.id.slideVentas_textViewVenta);
+        textViewSlideNombreEstablecimiento = (TextView) findViewById(R.id.slideVentas_textViewCliente);
+        buttonSlideVentaDeHoy = (Button) findViewById(R.id.slideVentas_buttonVentaCosto);
+        buttonSlideDeudaHoy = (Button) findViewById(R.id.slideVentas_buttonDeudas);
+        textViewSlideVenta = (TextView) findViewById(R.id.slideVentas_textViewVenta);
         //COBRAR
-        textViewSlideMantenimiento = (TextView)findViewById(R.id.slideVentas_textViewMantenimiento);
-        textViewSlideCanjesDevoluciones  = (TextView)findViewById(R.id.slideVentas_textviewCanjesDevoluciones);
-        textViewSlideCargar = (TextView)findViewById(R.id.slide_textViewCargarInventario);
+        textViewSlideMantenimiento = (TextView) findViewById(R.id.slideVentas_textViewMantenimiento);
+        textViewSlideCanjesDevoluciones = (TextView) findViewById(R.id.slideVentas_textviewCanjesDevoluciones);
+        textViewSlideCargar = (TextView) findViewById(R.id.slide_textViewCargarInventario);
         textViewSlideCargar.setOnClickListener(this);
-
-
 
 
         textViewSlidePrincipal.setOnClickListener(this);
@@ -715,7 +761,7 @@ private void back(){
         textViewSlideNombreEstablecimiento.setOnClickListener(this);
 
         slideIdAgente = session.fetchVarible(1);
-        slideIdLiquidacion  = session.fetchVarible(3);
+        slideIdLiquidacion = session.fetchVarible(3);
         slideIdEstablecimiento = session.fetchVarible(2);
 
 
@@ -725,7 +771,7 @@ private void back(){
     }
 
     //SLIDING MENU
-    public void changeDataSlideMenu(){
+    public void changeDataSlideMenu() {
 
         //INICIALIZAMOS OTRA VEZ LAS VARIABLES
         slide_emitidoTotal = 0.0;
@@ -741,7 +787,7 @@ private void back(){
         Cursor cursorAgente = dbHelperAgente.fetchAgentesByIds(slideIdAgente, slideIdLiquidacion);
         cursorAgente.moveToFirst();
 
-        if (cursorAgente.getCount()>0){
+        if (cursorAgente.getCount() > 0) {
             slideNombreRuta = cursorAgente.getString(cursorAgente.getColumnIndexOrThrow(dbHelperAgente.AG_nombre_ruta));
             slideNumeroEstablecimientoxRuta = cursorAgente.getInt(cursorAgente.getColumnIndexOrThrow(dbHelperAgente.AG_nro_bodegas));
             slideNombreAgente = cursorAgente.getString(cursorAgente.getColumnIndexOrThrow(dbHelperAgente.AG_nombre_agente));
@@ -762,9 +808,9 @@ private void back(){
         }
         //GASTOS
         Utils utils = new Utils();
-        Cursor cursorTotalGastos =dbAdapter_informe_gastos.resumenInformeGastos(utils.getDayPhone());
+        Cursor cursorTotalGastos = dbAdapter_informe_gastos.resumenInformeGastos(utils.getDayPhone());
 
-        for (cursorTotalGastos.moveToFirst(); !cursorTotalGastos.isAfterLast(); cursorTotalGastos.moveToNext()){
+        for (cursorTotalGastos.moveToFirst(); !cursorTotalGastos.isAfterLast(); cursorTotalGastos.moveToNext()) {
             Double rutaGasto = cursorTotalGastos.getDouble(cursorTotalGastos.getColumnIndexOrThrow("RUTA"));
             Double plantaGasto = cursorTotalGastos.getDouble(cursorTotalGastos.getColumnIndexOrThrow("PLANTA"));
 
@@ -774,15 +820,14 @@ private void back(){
 
         slide_ingresosTotales = slide_cobradoTotal + slide_pagadoTotal;
         slide_gastosTotales = slide_totalRuta;
-        slide_aRendir = slide_ingresosTotales-slide_gastosTotales;
-
+        slide_aRendir = slide_ingresosTotales - slide_gastosTotales;
 
 
         //MOSTRAMOS EN EL SLIDE LOS DATOS OBTENIDOS
         DecimalFormat df = new DecimalFormat("#.00");
-        textViewSlideNombreAgente.setText(""+slideNombreAgente);
-        textViewSlideNombreRuta.setText(""+slideNombreRuta);
-        buttonSlideNroEstablecimiento.setText(""+slideNumeroEstablecimientoxRuta);
+        textViewSlideNombreAgente.setText("" + slideNombreAgente);
+        textViewSlideNombreRuta.setText("" + slideNombreRuta);
+        buttonSlideNroEstablecimiento.setText("" + slideNumeroEstablecimientoxRuta);
         textviewSlideARendir.setText("Efectivo a Rendir S/. " + df.format(slide_aRendir));
 
 
@@ -791,23 +836,23 @@ private void back(){
 
         cursorEstablecimiento.moveToFirst();
 
-        if (cursorEstablecimiento.getCount()>0){
+        if (cursorEstablecimiento.getCount() > 0) {
 
             String nombre_establecimiento = cursorEstablecimiento.getString(cursorEstablecimiento.getColumnIndex(dbAdaptert_evento_establec.EE_nom_establec));
             String nombre_cliente = cursorEstablecimiento.getString(cursorEstablecimiento.getColumnIndex(dbAdaptert_evento_establec.EE_nom_cliente));
             int id_estado_atencion = Integer.parseInt(cursorEstablecimiento.getString(cursorEstablecimiento.getColumnIndex(dbAdaptert_evento_establec.EE_id_estado_atencion)));
-            double deudaTotal = cursorEstablecimiento.getDouble(cursorEstablecimiento.getColumnIndexOrThrow("cc_re_monto_a_pagar")) ;
+            double deudaTotal = cursorEstablecimiento.getDouble(cursorEstablecimiento.getColumnIndexOrThrow("cc_re_monto_a_pagar"));
 
 
-            textViewSlideNombreEstablecimiento.setText(""+nombre_establecimiento);
-            buttonSlideDeudaHoy.setText(""+df.format(deudaTotal));
+            textViewSlideNombreEstablecimiento.setText("" + nombre_establecimiento);
+            buttonSlideDeudaHoy.setText("" + df.format(deudaTotal));
         }
 
         Cursor cursorVentasTotales = dbAdapter_comprob_venta.getTotalVentaByIdEstablecimientoAndLiquidacion(slideIdEstablecimiento, slideIdLiquidacion);
         cursorVentasTotales.moveToFirst();
-        if (cursorVentasTotales.getCount()>0){
+        if (cursorVentasTotales.getCount() > 0) {
             Double total = cursorVentasTotales.getDouble(cursorVentasTotales.getColumnIndexOrThrow("total"));
-            buttonSlideVentaDeHoy.setText(""+df.format(total));
+            buttonSlideVentaDeHoy.setText("" + df.format(total));
         }
     }
 
@@ -860,14 +905,14 @@ private void back(){
                 break;
             case R.id.slideVentas_buttonDeudas:
                 Intent id1 = new Intent(this, VMovil_Cobro_Credito.class);
-                id1.putExtra("idEstabX", ""+slideIdEstablecimiento);
+                id1.putExtra("idEstabX", "" + slideIdEstablecimiento);
                 finish();
                 startActivity(id1);
                 break;
             case R.id.slideVentas_textViewVenta:
                 Intent iv1 = new Intent(this, VMovil_Venta_Cabecera.class);
                 finish();
-                iv1.putExtra("idEstabX", ""+slideIdEstablecimiento);
+                iv1.putExtra("idEstabX", "" + slideIdEstablecimiento);
                 startActivity(iv1);
                 break;
             case R.id.slideVentas_textViewMantenimiento:
@@ -875,7 +920,7 @@ private void back(){
                 break;
             case R.id.slideVentas_textviewCanjesDevoluciones:
                 Intent idh1 = new Intent(this, VMovil_Operacion_Canjes_Devoluciones.class);
-                idh1.putExtra("idEstabX", ""+slideIdEstablecimiento);
+                idh1.putExtra("idEstabX", "" + slideIdEstablecimiento);
                 idh1.putExtra("idAgente", idAgente);
                 finish();
                 startActivity(idh1);

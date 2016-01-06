@@ -175,7 +175,6 @@ public class FMapaRegistrar extends Fragment implements Validator.ValidationList
 
                         break;
                     case 1:
-
                         displatLocation();
                         break;
                     case 2:

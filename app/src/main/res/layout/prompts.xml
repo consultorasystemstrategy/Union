@@ -16,6 +16,7 @@
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="fill_parent"
+            android:visibility="gone"
             android:layout_height="fill_parent"
             android:layout_weight="1">
             <TextView
@@ -28,6 +29,7 @@
                 android:textColor="@color/Dark1"
                 android:textSize="12sp"
                 android:layout_marginLeft="8dp"/>
+
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -37,58 +39,43 @@
 
             </LinearLayout>
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Comprobante"
-                android:id="@+id/textViewEstablecimientoNombre"
-                android:layout_gravity="left|center_horizontal"
-                android:textColor="@color/Dark1"
-                android:textSize="12sp"
-                android:layout_marginLeft="8dp"/>
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/comprob_clave_dev_can"
-                android:layout_gravity="center_horizontal" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Nro Lote"
-                android:id="@+id/textView2"
-                android:layout_gravity="left"
-                android:textColor="@color/Dark1"
-                android:textSize="12sp"
-                android:layout_marginLeft="8dp" />
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/lote_can_dev"
-                android:layout_gravity="center_horizontal"
-                />
-
-        </LinearLayout>
 
     </LinearLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Comprobante"
+        android:id="@+id/textViewd3hhh"
+        android:layout_gravity="center_horizontal"
+        android:textColor="@color/azul"
+        android:textStyle="italic" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:ems="10"
+        android:id="@+id/comprob_clave_dev_can"
+        android:layout_gravity="center_horizontal" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Nro Lote"
+        android:id="@+id/textView3hhh"
+        android:layout_gravity="center_horizontal"
+        android:textColor="@color/azul"
+        android:textStyle="italic" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:ems="10"
+        android:id="@+id/lote_can_dev"
+        android:layout_gravity="center_horizontal" />
 
     <TextView
         android:layout_width="wrap_content"

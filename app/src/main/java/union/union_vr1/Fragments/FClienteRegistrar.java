@@ -26,9 +26,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mobsandgeeks.saripaar.Rule;
+import com.mobsandgeeks.saripaar.Rules;
 import com.mobsandgeeks.saripaar.Validator;
 import com.mobsandgeeks.saripaar.annotation.Email;
+import com.mobsandgeeks.saripaar.annotation.NumberRule;
 import com.mobsandgeeks.saripaar.annotation.Required;
+import com.mobsandgeeks.saripaar.annotation.TextRule;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import union.union_vr1.R;
 import union.union_vr1.Sqlite.DBAdapter_Cliente_Ruta;
@@ -57,12 +63,12 @@ public class FClienteRegistrar extends Fragment implements Validator.ValidationL
     private EditText editTextApPaterno;
     private EditText editTextApMaterno;
 
-    @Required(order = 2, messageResId = R.string.requerido_input)
+    //@Required(order = 2, messageResId = R.string.requerido_input)
     private AutoCompleteTextView autoNroDocumento;
 
     private EditText editTextNroCelular;
 
-    @Email(order = 3, messageResId = R.string.requerido_correo)
+    @Email(order = 4, messageResId = R.string.requerido_correo)
     private EditText editTextCorreo;
 
 
@@ -102,6 +108,7 @@ public class FClienteRegistrar extends Fragment implements Validator.ValidationL
         //VALIDATOR INTANCE
         validator = new Validator(this);
         validator.setValidationListener(this);
+
         //--------------
 
 
@@ -143,15 +150,25 @@ public class FClienteRegistrar extends Fragment implements Validator.ValidationL
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
                 tipoDoc = cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Tipo_Doc_Identidad.tipo_Doc_IdentidadId));
-
+                List<Rule<?>> nro = new ArrayList<Rule<?>>(3);
                 Log.d("TIPO DOC", "" + tipoDoc);
                 String tipo = "";
                 switch (tipoDoc) {
                     case 1:
                         tipo = "DNI";
+                        validator.removeRulesFor(autoNroDocumento);
+                        nro.add(Rules.required("Requerido",true));
+                        nro.add(Rules.minLength("Formato incorrecto", 8, true));
+                        nro.add(Rules.maxLength("Formato incorrecto",8,true));
+                        validator.put(autoNroDocumento,nro);
                         break;
                     case 2:
                         tipo = "RUC";
+                        validator.removeRulesFor(autoNroDocumento);
+                        nro.add(Rules.required("Requerido",true));
+                        nro.add(Rules.minLength("Formato incorrecto", 11, true));
+                        nro.add(Rules.maxLength("Formato incorrecto",11,true));
+                        validator.put(autoNroDocumento,nro);
                         break;
                 }
                 textViewDoc.setText("Nro de " + tipo);

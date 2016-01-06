@@ -7,6 +7,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -53,6 +55,7 @@ public class VMovil_Crear_Establecimiento extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_agregar_establecimiento);
 
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#19262F")));
 
         dbAdapter_agente = new DbAdapter_Agente(this);
         dbAdapter_agente.open();

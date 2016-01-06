@@ -66,6 +66,10 @@
             android:label="Venta de Productos"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".Vistas.VMovil_BluetoothImpCobrosManuales"
+            android:label="Imprimir Cobros Manuales"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".Vistas.VMovil_Evento_Establec"
             android:label="Cliente"
             android:screenOrientation="portrait" />
@@ -197,7 +201,8 @@
             android:label="@string/title_activity_imprimir_arqueo_caja" />
         <activity
             android:name=".Vistas.VMovil_Crear_Establecimiento"
-            android:theme="@style/Theme.AppCompat.Light"
+            android:theme="@style/MyTheme"
+            android:icon="@drawable/ic_launcher"
             android:label="@string/title_activity_vmovil__crear__establecimiento" />
         <activity
             android:name=".Vistas.VMovil_Modificar_Estab"

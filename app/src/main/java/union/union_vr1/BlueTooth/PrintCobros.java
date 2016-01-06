@@ -76,9 +76,9 @@ public class PrintCobros {
         this.posPtr = posPtr;
     }
 
-    public void printDocumento(String idDocumento,String IMPORTE,String COMPROBANTE,String CLIENTE, String AGENTE) throws JposException {
+    public void printDocumento(String idDocumento,String IMPORTE,String COMPROBANTE,String CLIENTE, String AGENTE,int TIPO) throws JposException {
 
-        imprimircomprobante(idDocumento, 3, IMPORTE, COMPROBANTE, CLIENTE, AGENTE);
+        imprimircomprobante(idDocumento, 3, IMPORTE, COMPROBANTE, CLIENTE, AGENTE,TIPO);
 
     }
 
@@ -105,7 +105,7 @@ public class PrintCobros {
 
 
 
-    private void imprimircomprobante(String idComprobante, int pulgadas, String IMPORTE,String COMPROBANTE,String CLIENTE, String AGENTE) throws JposException {
+    private void imprimircomprobante(String idComprobante, int pulgadas, String IMPORTE,String COMPROBANTE,String CLIENTE, String AGENTE,int tipo) throws JposException {
         DecimalFormatSymbols simbolos = DecimalFormatSymbols.getInstance(Locale.ENGLISH);
         DecimalFormat df = new DecimalFormat("0.00", simbolos);
 
@@ -118,6 +118,11 @@ public class PrintCobros {
         posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "CLIENTE : " + CLIENTE + LF);
         posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "AGENTE : " + AGENTE + LF );
         posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "GLOSARIO : Contado" + LF + LF);
+        if(tipo==1){
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "TIPO COBRO : Normal" + LF + LF);
+        }else{
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "TIPO COBRO : Manual" + LF + LF);
+        }
 
         printLineas();
         String cabecera= ESC + "|lA" + String.format("%-31s","COMPROBANTE ") +  String.format("%1$8s","IMPORTE DE COBRO")+ LF;

@@ -183,6 +183,16 @@ public class DbAdapter_Agente_Login {
         return  valor;
     }
 
+    public String fetchNameAgente(){
+        String valor="";
+        Cursor cursor = mDb.rawQuery("select * from "+SQLITE_TABLE_Agente+" ;",null);
+        if(cursor.moveToFirst()){
+            valor = cursor.getString(cursor.getColumnIndexOrThrow(AG_nombre_agente));
+        }
+        Log.d("VALOR",""+valor);
+        return  valor;
+    }
+
 
 
     private String M_id_agente_venta;

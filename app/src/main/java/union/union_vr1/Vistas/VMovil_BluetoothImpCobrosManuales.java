@@ -26,14 +26,13 @@ import java.util.Vector;
 
 import jpos.JposException;
 import union.union_vr1.BlueTooth.AlertView;
-import union.union_vr1.BlueTooth.Print;
 import union.union_vr1.BlueTooth.PrintCobros;
 import union.union_vr1.R;
 import union.union_vr1.Sqlite.Constants;
 import union.union_vr1.Sqlite.DbAdapter_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Agente_Login;
+import union.union_vr1.Sqlite.DbAdapter_Cobros_Manuales;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
-import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta_Detalle;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
@@ -42,7 +41,7 @@ import union.union_vr1.Utils.Utils;
 /**
  * Created by Kelvin on 02/01/2016.
  */
-public class VMovil_BluetoothImpCobros extends Activity implements View.OnClickListener {
+public class VMovil_BluetoothImpCobrosManuales extends Activity implements View.OnClickListener {
 
     private String nameImpresora = "";
     private String defaultNameImpresora = "mobile printer";
@@ -75,9 +74,8 @@ public class VMovil_BluetoothImpCobros extends Activity implements View.OnClickL
 
     private boolean enabledBluetooth = false;
 
-    private DbAdapter_Comprob_Cobro dbAdapter_comprob_cobro;
+    private DbAdapter_Cobros_Manuales dbAdapter_comprob_cobro;
     private DbAdapter_Agente_Login dbAdapter_agente_login;
-    private DbAdapter_Comprob_Venta_Detalle dbHelperComprobanteVentaDetalle;
     private DbAdapter_Temp_Session session;
     private int pulgadasImpresora = 0;
 
@@ -115,7 +113,7 @@ public class VMovil_BluetoothImpCobros extends Activity implements View.OnClickL
     private BluetoothPort bp;
 
     Utils df = new Utils();
-    private static String TAG = VMovil_BluetoothImpCobros.class.getSimpleName();
+    private static String TAG = VMovil_BluetoothImpCobrosManuales.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,15 +121,12 @@ public class VMovil_BluetoothImpCobros extends Activity implements View.OnClickL
         setContentView(R.layout.layout_imprimir_cobros);
         contexto = this;
         bluetoothSetup();
-        dbAdapter_comprob_cobro = new DbAdapter_Comprob_Cobro(this);
-        dbHelperComprobanteVentaDetalle = new DbAdapter_Comprob_Venta_Detalle(this);
-        dbAdapter_comprob_cobro.open();
-        dbHelperComprobanteVentaDetalle.open();
-        dbAdapter_agente_login = new DbAdapter_Agente_Login(this);
+       dbAdapter_agente_login = new DbAdapter_Agente_Login(this);
         dbAdapter_agente_login.open();
+
         session = new DbAdapter_Temp_Session(this);
         session.open();
-        dbAdapter_comprob_cobro = new DbAdapter_Comprob_Cobro(this);
+        dbAdapter_comprob_cobro = new DbAdapter_Cobros_Manuales(this);
         dbAdapter_comprob_cobro.open();
         idLiquidacion = session.fetchVarible(3);
 
@@ -152,7 +147,7 @@ public class VMovil_BluetoothImpCobros extends Activity implements View.OnClickL
         textViewVentaCabecera = (TextView) findViewById(R.id.textViewVentaCabecera);
 
         idComprobante = getIntent().getExtras().getString("idComprobante");
-        importePagado = getIntent().getExtras().getString("importe");
+
         Log.d(TAG, "ID_COMPROBANTE : " + idComprobante);
         textoImpresion = generarTextoImpresion(idComprobante, pulgadasImpresora);
 
@@ -216,10 +211,11 @@ public class VMovil_BluetoothImpCobros extends Activity implements View.OnClickL
 
         if (cursorCabecera.getCount() > 0) {
             cursorCabecera.moveToFirst();
-            Log.d(TAG, "IdComprobante" + cursorCabecera.getString(cursorCabecera.getColumnIndexOrThrow(DbAdapter_Comprob_Cobro.CC_id_comprobante_cobro)));
-            comprobante = cursorCabecera.getString(cursorCabecera.getColumnIndexOrThrow(DbAdapter_Comprob_Cobro.CC_doc));
-            cliente = cursorCabecera.getString(cursorCabecera.getColumnIndexOrThrow(DbAdaptert_Evento_Establec.EE_nom_cliente));
-            agente = cursorCabecera.getString(cursorCabecera.getColumnIndexOrThrow(DbAdapter_Agente.AG_nombre_agente));
+            Log.d(TAG, "IdComprobante" + cursorCabecera.getString(cursorCabecera.getColumnIndexOrThrow(DbAdapter_Cobros_Manuales.CM_Numero)));
+            comprobante = cursorCabecera.getString(cursorCabecera.getColumnIndexOrThrow(DbAdapter_Cobros_Manuales.CM_Numero));
+            cliente = cursorCabecera.getString(cursorCabecera.getColumnIndexOrThrow(DbAdapter_Cobros_Manuales.CM_Nombre_Cliente));
+            importePagado = cursorCabecera.getString(cursorCabecera.getColumnIndexOrThrow(DbAdapter_Cobros_Manuales.CM_Importe));
+            agente = dbAdapter_agente_login.fetchNameAgente();
 
             ventaCabecera += "F. RECIBO  : " + Utils.getDatePhone() + "\n";
             ventaCabecera += "F. EMISION   : " + Utils.getDatePhone() + " " + Utils.getTimePhone() + "  \n";
@@ -301,7 +297,7 @@ public class VMovil_BluetoothImpCobros extends Activity implements View.OnClickL
                 PrintCobros print = new PrintCobros(contexto);
 
                 try {
-                    print.printDocumento(idComprobante,IMPORTE,COMPROBANTE,CLIENTE,AGENTE,1);
+                    print.printDocumento(idComprobante,IMPORTE,COMPROBANTE,CLIENTE,AGENTE,2);
                 } catch (JposException e) {
                     e.printStackTrace();
                     AlertView.showAlert(e.getMessage(), contexto);
@@ -332,7 +328,7 @@ public class VMovil_BluetoothImpCobros extends Activity implements View.OnClickL
     }
 
     public class connTask extends AsyncTask<BluetoothDevice, Void, Integer> {
-        private final ProgressDialog dialog = new ProgressDialog(VMovil_BluetoothImpCobros.this);
+        private final ProgressDialog dialog = new ProgressDialog(VMovil_BluetoothImpCobrosManuales.this);
 //		private BluetoothPort bp;
 
         @Override

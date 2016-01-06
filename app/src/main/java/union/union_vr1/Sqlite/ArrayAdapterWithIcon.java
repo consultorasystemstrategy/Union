@@ -1,6 +1,7 @@
 package union.union_vr1.Sqlite;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +32,7 @@ public class ArrayAdapterWithIcon extends ArrayAdapter<String> {
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = super.getView(position, convertView, parent);
         TextView textView = (TextView) view.findViewById(android.R.id.text1);
+        textView.setTextColor(Color.parseColor("#000000"));
         textView.setCompoundDrawablesWithIntrinsicBounds(images.get(position), 0, 0, 0);
         textView.setCompoundDrawablePadding(
                 (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 12, getContext().getResources().getDisplayMetrics()));
