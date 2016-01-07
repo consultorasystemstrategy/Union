@@ -27,6 +27,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 
+import union.union_vr1.AsyncTask.SetPositionEstablecimiento;
 import union.union_vr1.R;
 import union.union_vr1.Sqlite.CursorAdapterEstablecimientoColor;
 import union.union_vr1.Sqlite.DbAdapter_Agente;
@@ -108,6 +109,7 @@ public class VMovil_Menu_Establec extends Activity implements View.OnClickListen
         setContentView(R.layout.princ_menu_establec);
 
 
+
         mainActivity = this;
 
         session = new DbAdapter_Temp_Session(this);
@@ -121,6 +123,11 @@ public class VMovil_Menu_Establec extends Activity implements View.OnClickListen
         dbAdapter_agente.open();
         dbHelper = new DbAdaptert_Evento_Establec(this);
         dbHelper.open();
+
+
+
+
+
         dbAdapter_temp_barcode_scanner = new DbAdapter_Temp_Barcode_Scanner(this);
         dbAdapter_temp_barcode_scanner.open();
 
@@ -526,7 +533,7 @@ public class VMovil_Menu_Establec extends Activity implements View.OnClickListen
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.actionagrgar) {
-            startActivity(new Intent(getApplicationContext(),VMovil_Crear_Establecimiento.class));
+            startActivity(new Intent(getApplicationContext(), VMovil_Crear_Establecimiento.class));
         }
 
         return super.onOptionsItemSelected(item);

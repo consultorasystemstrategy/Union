@@ -27,6 +27,7 @@ import union.union_vr1.Sqlite.DbAdapter_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 import union.union_vr1.Utils.Utils;
+import union.union_vr1.Vistas.VMovil_Evento_Indice;
 
 /**
  * Created by Kelvin on 28/08/2015.
@@ -164,6 +165,9 @@ public class ImportEstadoAuEstablec extends AsyncTask<String, String, String> {
             progressDialog.dismiss();
 
         }
+
+        mainActivity.startActivity(new Intent(mainActivity, VMovil_Evento_Indice.class));
+        mainActivity.finish();
 
 
     }

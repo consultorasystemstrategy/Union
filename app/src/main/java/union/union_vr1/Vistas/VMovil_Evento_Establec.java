@@ -9,8 +9,12 @@ import android.database.Cursor;
 import android.graphics.LightingColorFilter;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.LayerDrawable;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,6 +37,7 @@ import java.util.GregorianCalendar;
 import union.union_vr1.AsyncTask.ExportMain;
 import union.union_vr1.AsyncTask.ImportCredito;
 import union.union_vr1.AsyncTask.ImportMain;
+import union.union_vr1.AsyncTask.SetPositionEstablecimiento;
 import union.union_vr1.R;
 import union.union_vr1.Servicios.ServiceExport;
 import union.union_vr1.Servicios.ServiceImport;
@@ -54,7 +59,7 @@ import union.union_vr1.Utils.Utils;
 public class VMovil_Evento_Establec extends Activity implements View.OnClickListener {
 
     private DbAdapter_Temp_Session session;
-
+    private boolean statusLocation = false;
     private Cursor cursor;
     private DbAdaptert_Evento_Establec dbHelper;
     private DbAdapter_Comprob_Cobro dbHelper44;
@@ -64,12 +69,10 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
     private ImageButton estadoAtencion;
     private VMovil_Evento_Establec mainActivity;
     private int idLiquidacion;
-
     //SLIDING MENU VENTAS
     private DbGastos_Ingresos dbGastosIngresos;
     private DbAdapter_Informe_Gastos dbAdapter_informe_gastos;
     private DbAdapter_Agente dbHelperAgente;
-
 
 
     SlidingMenu menu;
@@ -89,7 +92,6 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
     int slideIdLiquidacion = 0;
 
 
-
     String slideNombreRuta = "";
     int slideNumeroEstablecimientoxRuta = 0;
     String slideNombreAgente = "";
@@ -98,7 +100,7 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
     Double slide_pagadoTotal = 0.0;
     Double slide_cobradoTotal = 0.0;
 
-    Double slide_totalRuta =0.0;
+    Double slide_totalRuta = 0.0;
     Double slide_totalPlanta = 0.0;
     Double slide_ingresosTotales = 0.0;
     Double slide_gastosTotales = 0.0;
@@ -117,16 +119,17 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
     int slideIdEstablecimiento;
 
 
-
     private DbAdaptert_Evento_Establec dbAdaptert_evento_establec;
     private DbAdapter_Comprob_Venta dbAdapter_comprob_venta;
 
 
     Utils df = new Utils();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.princ_evento_establec);
+
 
         mainActivity = this;
 
@@ -154,12 +157,14 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
 
 
         session.deleteVariable(6);
-        session.createTempSession(6,0);
-
+        session.createTempSession(6, 0);
 
 
         dbHelper = new DbAdaptert_Evento_Establec(this);
         dbHelper.open();
+
+
+
 
         mCobros = (Button) findViewById(R.id.VEE_BTNcobros);
         mCanDev = (Button) findViewById(R.id.VEE_BTNcandev);
@@ -174,14 +179,13 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
         mManten.setOnClickListener(this);
         estadoAtencion.setOnClickListener(this);
         session.deleteVariable(6);
-        session.createTempSession(6,0);
+        session.createTempSession(6, 0);
 
         idLiquidacion = session.fetchVarible(3);
 
 
-
-        valIdEstab = ""+session.fetchVarible(2);
-        idAgente  = session.fetchVarible(1);
+        valIdEstab = "" + session.fetchVarible(2);
+        idAgente = session.fetchVarible(1);
 
 
         dbHelper44 = new DbAdapter_Comprob_Cobro(this);
@@ -193,7 +197,7 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
 
 
         TextView nombreEstablecimiento = (TextView) findViewById(R.id.textViewEstablecimientoNombre);
-        TextView nombreCliente = (TextView)findViewById(R.id.textViewEstablecimientoCliente);
+        TextView nombreCliente = (TextView) findViewById(R.id.textViewEstablecimientoCliente);
         TextView deuda = (TextView) findViewById(R.id.textViewEstablecimientoDeuda);
         LinearLayout linearLayoutColor = (LinearLayout) findViewById(R.id.linearLayoutEstablecimientoColor);
 
@@ -208,28 +212,26 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
 
         cursorEstablecimiento.moveToFirst();
 
-        if (cursorEstablecimiento.getCount()>0){
+        if (cursorEstablecimiento.getCount() > 0) {
 
             String id_establecimiento = cursorEstablecimiento.getString(cursorEstablecimiento.getColumnIndex(dbHelper.EE_id_establec));
             String nombre_establecimiento = cursorEstablecimiento.getString(cursorEstablecimiento.getColumnIndex(dbHelper.EE_nom_establec));
             String nombre_cliente = cursorEstablecimiento.getString(cursorEstablecimiento.getColumnIndex(dbHelper.EE_nom_cliente));
             int id_estado_atencion = Integer.parseInt(cursorEstablecimiento.getString(cursorEstablecimiento.getColumnIndex(dbHelper.EE_id_estado_atencion)));
             int numeroOrden = cursorEstablecimiento.getInt(cursorEstablecimiento.getColumnIndexOrThrow(dbHelper.EE_orden));
-            double deudaTotal = cursorEstablecimiento.getDouble(cursorEstablecimiento.getColumnIndexOrThrow("cc_re_monto_a_pagar")) ;
-
+            double deudaTotal = cursorEstablecimiento.getDouble(cursorEstablecimiento.getColumnIndexOrThrow("cc_re_monto_a_pagar"));
 
 
 //            DecimalFormat df= new DecimalFormat("#0.00");
 
 
-
-            nombreEstablecimiento.setText(numeroOrden + ". " +nombre_establecimiento);
+            nombreEstablecimiento.setText(numeroOrden + ". " + nombre_establecimiento);
             nombreEstablecimiento.setSingleLine(false);
             nombreCliente.setText(nombre_cliente);
-            deuda.setText("S/. "+df.format(deudaTotal));
+            deuda.setText("S/. " + df.format(deudaTotal));
             ratingBar.setRating(4);
 
-            switch (id_estado_atencion){
+            switch (id_estado_atencion) {
                 case 1:
                     linearLayoutColor.setBackgroundColor(getApplication().getResources().getColor(R.color.azul));
                     break;
@@ -245,8 +247,6 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
 
             }
         }
-
-
 
 
         Cursor cursor = dbHelper44.listaComprobantes(idEstab);
@@ -304,6 +304,8 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
         //SLIDING MENU
         showSlideMenu(mainActivity);
 
+
+
     }
 
     @Override
@@ -325,7 +327,7 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        switch (id){
+        switch (id) {
             case R.id.buttonImport:
                 //new ImportMain(mainActivity).execute();
                 new ImportCredito(mainActivity).execute();
@@ -372,12 +374,12 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
         dialogo.setItems(items, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
                 int idmotivoNoAtencion = ++item;
-                dbHelper.updateEstadoNoAtendido(idEstabl, 3, idmotivoNoAtencion, items[item-1], getDatePhone());
+                dbHelper.updateEstadoNoAtendido(idEstabl, 3, idmotivoNoAtencion, items[item - 1], getDatePhone());
                 Intent intent2 = new Intent(getApplicationContext(), VMovil_Menu_Establec.class);
                 finish();
                 startActivity(intent2);
 
-                Toast.makeText(getApplicationContext(), "No atendio por : " + items[item-1], Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "No atendio por : " + items[item - 1], Toast.LENGTH_LONG).show();
             }
         });
         dialogo.create();
@@ -519,10 +521,10 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
     }
 
     //SLIDING MENU
-    public void showSlideMenu(Activity activity){
+    public void showSlideMenu(Activity activity) {
         layoutSlideMenu = View.inflate(activity, R.layout.slide_menu_ventas, null);
         // configure the SlidingMenu
-        menu =  new SlidingMenu(activity);
+        menu = new SlidingMenu(activity);
         menu.setMode(SlidingMenu.LEFT);
         menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
         menu.setShadowWidthRes(R.dimen.space_slide);
@@ -532,29 +534,26 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
         menu.attachToActivity(activity, SlidingMenu.SLIDING_CONTENT);
         menu.setMenu(layoutSlideMenu);
 
-        textViewSlideNombreAgente = (TextView)findViewById(R.id.slide_textViewNombreAgente);
-        textViewSlideNombreRuta = (TextView)findViewById(R.id.slide_textViewNombreRuta);
+        textViewSlideNombreAgente = (TextView) findViewById(R.id.slide_textViewNombreAgente);
+        textViewSlideNombreRuta = (TextView) findViewById(R.id.slide_textViewNombreRuta);
         buttonSlideNroEstablecimiento = (Button) findViewById(R.id.slide_buttonNroEstablecimiento);
 
-        textViewSlidePrincipal = (TextView)findViewById(R.id.slide_textviewPrincipal);
-        textViewSlideCliente = (TextView)findViewById(R.id.slide_textViewClientes);
-        textviewSlideCobranzas = (TextView)findViewById(R.id.slide_textViewCobranza);
-        textviewSlideGastos = (TextView)findViewById(R.id.slide_TextViewGastos);
-        textviewSlideResumen = (TextView)findViewById(R.id.slide_textViewResumen);
-        textviewSlideARendir = (TextView)findViewById(R.id.slide_textViewARendir);
-        textViewSlideCargar = (TextView)findViewById(R.id.slide_textViewCargarInventario);
+        textViewSlidePrincipal = (TextView) findViewById(R.id.slide_textviewPrincipal);
+        textViewSlideCliente = (TextView) findViewById(R.id.slide_textViewClientes);
+        textviewSlideCobranzas = (TextView) findViewById(R.id.slide_textViewCobranza);
+        textviewSlideGastos = (TextView) findViewById(R.id.slide_TextViewGastos);
+        textviewSlideResumen = (TextView) findViewById(R.id.slide_textViewResumen);
+        textviewSlideARendir = (TextView) findViewById(R.id.slide_textViewARendir);
+        textViewSlideCargar = (TextView) findViewById(R.id.slide_textViewCargarInventario);
         textViewSlideCargar.setOnClickListener(this);
 
-        textViewSlideNombreEstablecimiento = (TextView)findViewById(R.id.slideVentas_textViewCliente);
-        buttonSlideVentaDeHoy  = (Button)findViewById(R.id.slideVentas_buttonVentaCosto);
-        buttonSlideDeudaHoy = (Button)findViewById(R.id.slideVentas_buttonDeudas);
-        textViewSlideVenta = (TextView)findViewById(R.id.slideVentas_textViewVenta);
-         //COBRAR
-        textViewSlideMantenimiento = (TextView)findViewById(R.id.slideVentas_textViewMantenimiento);
-        textViewSlideCanjesDevoluciones  = (TextView)findViewById(R.id.slideVentas_textviewCanjesDevoluciones);
-
-
-
+        textViewSlideNombreEstablecimiento = (TextView) findViewById(R.id.slideVentas_textViewCliente);
+        buttonSlideVentaDeHoy = (Button) findViewById(R.id.slideVentas_buttonVentaCosto);
+        buttonSlideDeudaHoy = (Button) findViewById(R.id.slideVentas_buttonDeudas);
+        textViewSlideVenta = (TextView) findViewById(R.id.slideVentas_textViewVenta);
+        //COBRAR
+        textViewSlideMantenimiento = (TextView) findViewById(R.id.slideVentas_textViewMantenimiento);
+        textViewSlideCanjesDevoluciones = (TextView) findViewById(R.id.slideVentas_textviewCanjesDevoluciones);
 
 
         textViewSlidePrincipal.setOnClickListener(this);
@@ -573,7 +572,7 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
         textViewSlideNombreEstablecimiento.setOnClickListener(this);
 
         slideIdAgente = session.fetchVarible(1);
-        slideIdLiquidacion  = session.fetchVarible(3);
+        slideIdLiquidacion = session.fetchVarible(3);
         slideIdEstablecimiento = session.fetchVarible(2);
 
 
@@ -583,7 +582,7 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
     }
 
     //SLIDING MENU
-    public void changeDataSlideMenu(){
+    public void changeDataSlideMenu() {
 
         //INICIALIZAMOS OTRA VEZ LAS VARIABLES
         slide_emitidoTotal = 0.0;
@@ -599,7 +598,7 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
         Cursor cursorAgente = dbHelperAgente.fetchAgentesByIds(slideIdAgente, slideIdLiquidacion);
         cursorAgente.moveToFirst();
 
-        if (cursorAgente.getCount()>0){
+        if (cursorAgente.getCount() > 0) {
             slideNombreRuta = cursorAgente.getString(cursorAgente.getColumnIndexOrThrow(dbHelperAgente.AG_nombre_ruta));
             slideNumeroEstablecimientoxRuta = cursorAgente.getInt(cursorAgente.getColumnIndexOrThrow(dbHelperAgente.AG_nro_bodegas));
             slideNombreAgente = cursorAgente.getString(cursorAgente.getColumnIndexOrThrow(dbHelperAgente.AG_nombre_agente));
@@ -620,9 +619,9 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
         }
         //GASTOS
         Utils utils = new Utils();
-        Cursor cursorTotalGastos =dbAdapter_informe_gastos.resumenInformeGastos(utils.getDayPhone());
+        Cursor cursorTotalGastos = dbAdapter_informe_gastos.resumenInformeGastos(utils.getDayPhone());
 
-        for (cursorTotalGastos.moveToFirst(); !cursorTotalGastos.isAfterLast(); cursorTotalGastos.moveToNext()){
+        for (cursorTotalGastos.moveToFirst(); !cursorTotalGastos.isAfterLast(); cursorTotalGastos.moveToNext()) {
             Double rutaGasto = cursorTotalGastos.getDouble(cursorTotalGastos.getColumnIndexOrThrow("RUTA"));
             Double plantaGasto = cursorTotalGastos.getDouble(cursorTotalGastos.getColumnIndexOrThrow("PLANTA"));
 
@@ -632,15 +631,14 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
 
         slide_ingresosTotales = slide_cobradoTotal + slide_pagadoTotal;
         slide_gastosTotales = slide_totalRuta;
-        slide_aRendir = slide_ingresosTotales-slide_gastosTotales;
-
+        slide_aRendir = slide_ingresosTotales - slide_gastosTotales;
 
 
         //MOSTRAMOS EN EL SLIDE LOS DATOS OBTENIDOS
 //        DecimalFormat df = new DecimalFormat("#.00");
-        textViewSlideNombreAgente.setText(""+slideNombreAgente);
-        textViewSlideNombreRuta.setText(""+slideNombreRuta);
-        buttonSlideNroEstablecimiento.setText(""+slideNumeroEstablecimientoxRuta);
+        textViewSlideNombreAgente.setText("" + slideNombreAgente);
+        textViewSlideNombreRuta.setText("" + slideNombreRuta);
+        buttonSlideNroEstablecimiento.setText("" + slideNumeroEstablecimientoxRuta);
         textviewSlideARendir.setText("Efectivo a Rendir S/. " + df.format(slide_aRendir));
 
 
@@ -649,31 +647,36 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
 
         cursorEstablecimiento.moveToFirst();
 
-        if (cursorEstablecimiento.getCount()>0){
+        if (cursorEstablecimiento.getCount() > 0) {
 
             String nombre_establecimiento = cursorEstablecimiento.getString(cursorEstablecimiento.getColumnIndex(dbHelper.EE_nom_establec));
             String nombre_cliente = cursorEstablecimiento.getString(cursorEstablecimiento.getColumnIndex(dbHelper.EE_nom_cliente));
             int id_estado_atencion = Integer.parseInt(cursorEstablecimiento.getString(cursorEstablecimiento.getColumnIndex(dbHelper.EE_id_estado_atencion)));
-            double deudaTotal = cursorEstablecimiento.getDouble(cursorEstablecimiento.getColumnIndexOrThrow("cc_re_monto_a_pagar")) ;
+            double deudaTotal = cursorEstablecimiento.getDouble(cursorEstablecimiento.getColumnIndexOrThrow("cc_re_monto_a_pagar"));
 
 
-            textViewSlideNombreEstablecimiento.setText(""+nombre_establecimiento);
-            buttonSlideDeudaHoy.setText(""+df.format(deudaTotal));
+            textViewSlideNombreEstablecimiento.setText("" + nombre_establecimiento);
+            buttonSlideDeudaHoy.setText("" + df.format(deudaTotal));
         }
 
         Cursor cursorVentasTotales = dbAdapter_comprob_venta.getTotalVentaByIdEstablecimientoAndLiquidacion(slideIdEstablecimiento, slideIdLiquidacion);
         cursorVentasTotales.moveToFirst();
-        if (cursorVentasTotales.getCount()>0){
+        if (cursorVentasTotales.getCount() > 0) {
             Double total = cursorVentasTotales.getDouble(cursorVentasTotales.getColumnIndexOrThrow("total"));
-            buttonSlideVentaDeHoy.setText(""+df.format(total));
+            buttonSlideVentaDeHoy.setText("" + df.format(total));
         }
     }
 
-    public String getDatePhone()
-    {
+    public String getDatePhone() {
         Calendar cal = new GregorianCalendar();
         Date date = cal.getTime();
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         return df.format(date);
     }
+
+    ///Methos for get location
+
+
+
+
 }

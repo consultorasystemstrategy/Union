@@ -709,7 +709,7 @@ public class StockAgenteRestApi {
         p.put("CliIModalidadCreditoId",mapObject(CliIModalidadCreditoId));
         //p.put("CliDTFechaLimiteCredito",mapObject(CliDTFechaLimiteCredito));
         p.put("DirVDescripcion",mapObject(DirVDescripcion));
-        p.put("DirVDescripcionFiscal",mapObject(DirBDireccionFiscal));
+        p.put("DirVDescripcionFiscal",mapObject(direccionFiscal));
         p.put("DirBEstado",mapObject(DirBEstado));
         p.put("DirIDistritoId",mapObject(DirIDistritoId));
         p.put("DirVTelefonoFijo",mapObject(DirVTelefonoFijo));

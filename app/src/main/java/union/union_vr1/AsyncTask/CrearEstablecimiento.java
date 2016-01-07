@@ -19,6 +19,7 @@ import union.union_vr1.Sqlite.DbAdapter_Establecimeinto_Historial;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Establecimiento;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 import union.union_vr1.Utils.Utils;
+import union.union_vr1.Vistas.VMovil_Evento_Indice;
 import union.union_vr1.Vistas.VMovil_Menu_Establec;
 import union.union_vr1.Vistas.VMovil_Online_Pumovil;
 
@@ -112,7 +113,8 @@ public class CrearEstablecimiento extends AsyncTask<String, String, String> {
                         + "-" + cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_usuario_accion)));
 
 
-                jsonObjectCreated = stockAgenteRestApi.InsClienteEstablecimiento(cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_nombres)),
+                jsonObjectCreated = stockAgenteRestApi.InsClienteEstablecimiento(
+                        cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_nombres)),
                         cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_apPaterno)),
                         cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_apMaterno)),
                         cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_nro_documento)),
@@ -234,7 +236,7 @@ public class CrearEstablecimiento extends AsyncTask<String, String, String> {
             dismissProgressDialog();
         }
 
-        mainActivity.startActivity(new Intent(mainActivity, VMovil_Menu_Establec.class));
+        mainActivity.startActivity(new Intent(mainActivity, VMovil_Evento_Indice.class));
         mainActivity.finish();
 
         super.onPostExecute(s);
