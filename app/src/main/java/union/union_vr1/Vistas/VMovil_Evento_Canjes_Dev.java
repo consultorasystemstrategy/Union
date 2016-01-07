@@ -349,7 +349,7 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity implements View.OnClic
             AlertDialog.Builder builder = alertDialogBuilder
                     .setMessage("¿Desea Anular?")
                     .setCancelable(false)
-                    .setPositiveButton("Quitar", new DialogInterface.OnClickListener() {
+                    .setPositiveButton(R.string.si, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             boolean estado =false;
                             if (idOperacion.equals("2")) {//cannjeggggg
@@ -376,7 +376,7 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity implements View.OnClic
                         }
 
                     })
-                    .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                    .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             dialog.cancel();
                         }
@@ -573,7 +573,7 @@ public class VMovil_Evento_Canjes_Dev extends TabActivity implements View.OnClic
 
 
         //MOSTRAMOS EN EL SLIDE LOS DATOS OBTENIDOS
-        DecimalFormat df = new DecimalFormat("#.00");
+        DecimalFormat df = new DecimalFormat("0.00");
         textViewSlideNombreAgente.setText(""+slideNombreAgente);
         textViewSlideNombreRuta.setText(""+slideNombreRuta);
         buttonSlideNroEstablecimiento.setText(""+slideNumeroEstablecimientoxRuta);

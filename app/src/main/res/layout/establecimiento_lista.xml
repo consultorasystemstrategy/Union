@@ -11,7 +11,9 @@
         android:id="@+id/layoutenter"
         android:layout_marginLeft="12dp"
         android:layout_marginTop="12dp"
-        android:layout_marginRight="12dp">
+        android:layout_marginRight="12dp"
+        android:background="@drawable/list_selector"
+        >
 
         <LinearLayout
             android:orientation="horizontal"

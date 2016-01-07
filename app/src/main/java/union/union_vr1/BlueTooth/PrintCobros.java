@@ -128,7 +128,7 @@ public class PrintCobros {
         String cabecera= ESC + "|lA" + String.format("%-31s","COMPROBANTE ") +  String.format("%1$8s","IMPORTE DE COBRO")+ LF;
         posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, cabecera);
         printLineas();
-        String detalle = ESC + "|lA" + String.format("%-31s", COMPROBANTE)  + String.format("%1$8s", IMPORTE) + LF;
+        String detalle = ESC + "|lA" + String.format("%-30s", COMPROBANTE)  + String.format("%1$18s", IMPORTE) + LF;
         posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, detalle);
         printLineas();
         posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + (NumberToLetterConverter.convertNumberToLetter(df.format(Double.parseDouble(Utils.replaceComa(IMPORTE))))).toUpperCase() + LF+ LF);

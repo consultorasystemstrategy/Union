@@ -43,7 +43,9 @@ import union.union_vr1.Vistas.VMovil_Modificar_Estab;
  * Created by Usuario on 08/12/2014.
  */
 public class CursorAdapterEstablecimientoColor extends CursorAdapter {
-    int estado_autorizado = -1;
+
+    private String _id_establecimiento_selected = "";
+    private int estado_autorizado = -1;
     Context context;
     Cursor cursor = null;
     int estado_au = 0;
@@ -68,7 +70,6 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter {
                 Context.LAYOUT_INFLATER_SERVICE);
 
     }
-
  /*   @Override
     public View getView(int position, View view, ViewGroup parent) {
 
@@ -85,7 +86,6 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter {
         final View view = inflater.inflate(R.layout.establecimiento_lista, viewGroup,false);
         return view;*/
         return cursorInflater.inflate(R.layout.establecimiento_lista, viewGroup, false);
-
     }
 
 
@@ -111,8 +111,8 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter {
 
         if (cursor.getCount() > 0) {
             estado_au = cursor.getInt(cursor.getColumnIndexOrThrow(DbAdaptert_Evento_Establec.EE_estado_autorizado));
-            final String id_establecimiento = cursor.getString(cursor.getColumnIndex(dbHelper.EE_id_establec));
-            final String nombre_establecimiento = cursor.getString(cursor.getColumnIndex(dbHelper.EE_nom_establec));
+            String id_establecimiento = cursor.getString(cursor.getColumnIndex(dbHelper.EE_id_establec));
+            String nombre_establecimiento = cursor.getString(cursor.getColumnIndex(dbHelper.EE_nom_establec));
             String nombre_cliente = cursor.getString(cursor.getColumnIndex(dbHelper.EE_nom_cliente));
             int id_estado_atencion = Integer.parseInt(cursor.getString(cursor.getColumnIndex(dbHelper.EE_id_estado_atencion)));
             int numeroOrden = cursor.getInt(cursor.getColumnIndexOrThrow(dbHelper.EE_orden));
@@ -129,7 +129,7 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter {
             ratingBar.setRating(4);
 
 
-            estado_autorizado = cursor.getInt(cursor.getColumnIndexOrThrow(DbAdaptert_Evento_Establec.EE_estado_autorizado));
+            int estado_autorizado_esta = cursor.getInt(cursor.getColumnIndexOrThrow(DbAdaptert_Evento_Establec.EE_estado_autorizado));
 
 
             switch (id_estado_atencion) {
@@ -147,20 +147,23 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter {
                     break;
             }
 
-            switch (estado_autorizado){
+            switch (estado_autorizado_esta){
                 case 5: //Puede editar o enviar
+                    imageButtonOp.setBackgroundColor(context.getResources().getColor(R.color.Dark3));
                     linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.Dark1));
                     break;
                 case 6: //No puede hacer nada
                     linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.Dark1));
+                    imageButtonOp.setBackgroundColor(context.getResources().getColor(R.color.Blanco));
                     break;
                 case 7: //Normal
                     //DO NOTHING, QUE TOME EL COLOR ANTERIOR
+                    imageButtonOp.setBackgroundColor(context.getResources().getColor(R.color.Blanco));
                     break;
                 case 8://Puede editar y enviar
+                    imageButtonOp.setBackgroundColor(context.getResources().getColor(R.color.Dark3));
                     linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.Dark1));
                     break;
-
             }
             /*switch (estado_autorizado) {
                 case 1: //editar
@@ -187,11 +190,14 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter {
                     break;
             }*/
 
-
+            final String final_id = id_establecimiento;
+            final int f_estado_autorizado = estado_autorizado_esta;
             linearLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
+                    _id_establecimiento_selected = final_id;
+                    estado_autorizado = f_estado_autorizado;
                     switch (estado_autorizado) {
                         case 5: //Puede editar o enviar
                             Utils.setToast(context, "No autorizado", R.color.rojo);
@@ -200,7 +206,7 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter {
                             Utils.setToast(context, "No autorizado", R.color.rojo);
                             break;
                         case 7: //Normal
-                            eleccion(id_establecimiento);
+                            eleccion(_id_establecimiento_selected);
                             break;
                         case 8: //Puede editar y enviar
                             Utils.setToast(context, "No autorizado", R.color.rojo);
@@ -208,7 +214,7 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter {
                     }
 
 
-                    Log.d(TAG, "ESTADO : " + "" + estado_autorizado + id_establecimiento);
+                    Log.d(TAG, "ESTADO : " + "" + estado_autorizado + _id_establecimiento_selected);
                     /*
                     switch (estado_autorizado) {
                         case 1: //editar
@@ -238,9 +244,14 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter {
                         default:
                             Utils.setToast(context, "No esta autorizado para la venta", R.color.rojo);
                             break;
-                    }*/
+                    }
+                }*/
                 }
             });
+
+
+
+
 
 
 
@@ -248,12 +259,16 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter {
             imageButtonOp.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    setActionOperacion(id_establecimiento, estado_autorizado);
+                    _id_establecimiento_selected = final_id;
+                    estado_autorizado = f_estado_autorizado;
+                    setActionOperacion(_id_establecimiento_selected, estado_autorizado);
                 }
             });
           //  imgeButtonView(estado_autorizado,imageButtonOp);
+
         }
     }
+
 
     private void imgeButtonView(int estadoAu, ImageButton imageButton){
 

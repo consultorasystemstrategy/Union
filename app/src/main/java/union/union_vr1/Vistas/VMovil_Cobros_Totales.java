@@ -173,12 +173,12 @@ public class VMovil_Cobros_Totales extends Activity implements View.OnClickListe
 
         alertDialogBuilder.setTitle("Cobro de Credito");
 
-        DecimalFormat df = new DecimalFormat("#.00");
+        DecimalFormat df = new DecimalFormat("0.00");
 
         AlertDialog.Builder builder = alertDialogBuilder
                 .setMessage("Pago de Deuda para el Establecimiento: " + establec + ", con Dueño: " + cliente + " :. Deuda: " + df.format(deuda) + " ")
                 .setCancelable(false)
-                .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.si, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
                         cCobro.open();
@@ -208,7 +208,7 @@ public class VMovil_Cobros_Totales extends Activity implements View.OnClickListe
                     }
 
                 })
-                .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         Toast.makeText(getApplicationContext(),
                                 "Cancelo ", Toast.LENGTH_SHORT).show();
@@ -411,7 +411,7 @@ public class VMovil_Cobros_Totales extends Activity implements View.OnClickListe
 
 
         //MOSTRAMOS EN EL SLIDE LOS DATOS OBTENIDOS
-        DecimalFormat df = new DecimalFormat("#.00");
+        DecimalFormat df = new DecimalFormat("0.00");
         textViewSlideNombreAgente.setText(""+slideNombreAgente);
         textViewSlideNombreRuta.setText(""+slideNombreRuta);
         buttonSlideNroEstablecimiento.setText(""+slideNumeroEstablecimientoxRuta);

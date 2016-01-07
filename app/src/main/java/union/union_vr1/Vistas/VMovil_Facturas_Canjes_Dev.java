@@ -41,6 +41,8 @@ import union.union_vr1.Sqlite.DbAdapter_Motivo_Dev;
 import union.union_vr1.Sqlite.DbAdapter_Precio;
 import union.union_vr1.Sqlite.DbAdapter_Stock_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
+import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
+import union.union_vr1.Utils.RoundedLetterView;
 
 import static union.union_vr1.R.layout.*;
 
@@ -65,13 +67,14 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
     private DbAdapter_Temp_Session dbAdapter_temp_session;
     private DbAdapter_Precio dbAdapter_precio;
     private DbAdapter_Motivo_Dev dbAdapter_motivo_dev;
+    private DbAdaptert_Evento_Establec dbAdaptert_evento_establec;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(princ_facturas_canjes_dev);
+        setContentView(R.layout.princ_facturas_canjes_dev);
         ctx=this;
         dbAdapter_temp_session = new DbAdapter_Temp_Session(ctx);
         dbAdapter_temp_session.open();
@@ -87,7 +90,9 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
         dbHelperCanjes_Dev = new DbAdapter_Canjes_Devoluciones(this);
         dbHelperCanjes_Dev.open();
         dbHelperStockAgente = new DbAdapter_Stock_Agente(this);
-        dbHelperStockAgente.open();
+        dbHelperStockAgente.open();//VENTAS
+        dbAdaptert_evento_establec = new DbAdaptert_Evento_Establec(this);
+        dbAdaptert_evento_establec.open();
 
         listaFacturas = (ListView) findViewById(R.id.facturasbyid);
 
@@ -103,6 +108,28 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
         idCategoriaEstablec = cr.getInt(3);
         imprimeStock(idProducto);
         listarFacturas_Productos(idProducto, idAgente, idEstablec, nomProducto);
+
+        showHeader();
+    }
+
+    private void showHeader() {
+        TextView textViewNombreEstablecimiento = (TextView) findViewById(R.id.completeName);
+        RoundedLetterView letter = (RoundedLetterView) findViewById(R.id.letter);
+
+
+        Cursor cursorEstablecimiento = dbAdaptert_evento_establec.fetchEstablecsById("" + idEstablec);
+        cursorEstablecimiento.moveToFirst();
+        String nombreEstablecimiento = "";
+        if (cursorEstablecimiento.getCount() > 0) {
+            nombreEstablecimiento = cursorEstablecimiento.getString(cursorEstablecimiento.getColumnIndexOrThrow(dbAdaptert_evento_establec
+                    .EE_nom_establec));
+        }
+        textViewNombreEstablecimiento.setText(nombreEstablecimiento);
+        if (nombreEstablecimiento.length() == 0) {
+            letter.setTitleText("A");
+        } else {
+            letter.setTitleText(nombreEstablecimiento.substring(0, 1).toUpperCase());
+        }
     }
 
     private void imprimeStock(int producto) {
@@ -334,7 +361,7 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
 
         builder.setView(layout_spinners);
         builder.setCancelable(true);
-        builder.setPositiveButton("OK",
+        builder.setPositiveButton(R.string.ok,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         String lote = "";
@@ -499,7 +526,7 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
 
         builder.setView(layout_spinners);
         builder.setCancelable(true);
-        builder.setPositiveButton("OK",
+        builder.setPositiveButton(R.string.ok,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         String lote = editTextLote.getText().toString();
@@ -881,7 +908,7 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
 
         builder.setView(layout_spinners);
         builder.setCancelable(true);
-        builder.setPositiveButton("OK",
+        builder.setPositiveButton(R.string.ok,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         String compro = nroCompro.getText().toString();
@@ -1063,7 +1090,7 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
         alertDialogBuilder.setTitle("Guardado Correctamente");
         AlertDialog.Builder builder = alertDialogBuilder
                 .setCancelable(false)
-                .setPositiveButton("Regresar", new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         Intent back = new Intent(getApplicationContext(), VMovil_Operacion_Canjes_Devoluciones.class);
                         back.putExtra("idEstabX", idEstablec);

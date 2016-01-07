@@ -68,6 +68,7 @@ public class ConsultarInventarioAnterior extends AsyncTask<String, String, Strin
 
         } catch (Exception e) {
             Log.d("AysncImport : ", e.getMessage());
+            e.printStackTrace();
         }
         return null;
     }

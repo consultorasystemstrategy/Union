@@ -108,8 +108,8 @@ public class Bluetooth_Printer extends Activity {
         return new AlertDialog.Builder(main)
                 .setTitle(mensaje)
                 .setMessage("¿Está seguro que desea salir?")
-                .setNegativeButton(android.R.string.no, null)
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.no, null)
+                .setPositiveButton(R.string.si, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // FIRE ZE MISSILES!
                         finish();

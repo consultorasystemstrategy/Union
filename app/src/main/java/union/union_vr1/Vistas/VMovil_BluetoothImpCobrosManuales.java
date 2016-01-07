@@ -56,7 +56,7 @@ public class VMovil_BluetoothImpCobrosManuales extends Activity implements View.
 
 
     private int idLiquidacion;
-    private String importePagado;
+    private Double importePagado;
     private String textoImpresion = "";
     private String textoImpresionCabecera = "";
     private String textoVentaImpresion = "";
@@ -68,7 +68,7 @@ public class VMovil_BluetoothImpCobrosManuales extends Activity implements View.
     private int countImpresion = 0;
     private String idComprobante = "";
     private String COMPROBANTE;
-    private String IMPORTE;
+    private Double IMPORTE;
     private String CLIENTE;
     private String AGENTE;
 
@@ -214,7 +214,7 @@ public class VMovil_BluetoothImpCobrosManuales extends Activity implements View.
             Log.d(TAG, "IdComprobante" + cursorCabecera.getString(cursorCabecera.getColumnIndexOrThrow(DbAdapter_Cobros_Manuales.CM_Numero)));
             comprobante = cursorCabecera.getString(cursorCabecera.getColumnIndexOrThrow(DbAdapter_Cobros_Manuales.CM_Numero));
             cliente = cursorCabecera.getString(cursorCabecera.getColumnIndexOrThrow(DbAdapter_Cobros_Manuales.CM_Nombre_Cliente));
-            importePagado = cursorCabecera.getString(cursorCabecera.getColumnIndexOrThrow(DbAdapter_Cobros_Manuales.CM_Importe));
+            importePagado = cursorCabecera.getDouble(cursorCabecera.getColumnIndexOrThrow(DbAdapter_Cobros_Manuales.CM_Importe));
             agente = dbAdapter_agente_login.fetchNameAgente();
 
             ventaCabecera += "F. RECIBO  : " + Utils.getDatePhone() + "\n";
@@ -230,7 +230,7 @@ public class VMovil_BluetoothImpCobrosManuales extends Activity implements View.
             AGENTE = agente;
             //ventaDetalle+=String.format("%-4s",cantidad) + String.format("%-31s",nombreProducto)+String.format("%1$5s"  ,df.format(precioUnitario)) +String.format("%1$8s"  ,df.format(importe)) + "\n";
             textoImpresionContenidoLeft += String.format("%-5s", comprobante + "\n");
-            textoImpresionContenidoRight += String.format("%-5s", df.format(Double.parseDouble(Utils.replaceComa(importePagado)))) + "\n";
+            textoImpresionContenidoRight += String.format("%-5s", Utils.replaceComa(df.format(importePagado))) + "\n";
 
 
             //texto += "\n";
@@ -297,7 +297,7 @@ public class VMovil_BluetoothImpCobrosManuales extends Activity implements View.
                 PrintCobros print = new PrintCobros(contexto);
 
                 try {
-                    print.printDocumento(idComprobante,IMPORTE,COMPROBANTE,CLIENTE,AGENTE,2);
+                    print.printDocumento(idComprobante,Utils.replaceComa(df.format(IMPORTE)),COMPROBANTE,CLIENTE,AGENTE,2);
                 } catch (JposException e) {
                     e.printStackTrace();
                     AlertView.showAlert(e.getMessage(), contexto);

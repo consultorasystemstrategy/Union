@@ -338,7 +338,7 @@ public class VMovil_Venta_Comprob extends Activity implements View.OnClickListen
         AlertDialog.Builder builder = alertDialogBuilder
                 .setMessage("¿Desea Anular?")
                 .setCancelable(false)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.si, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
                         dbHelper_Comprob_Cobro.updateComprobCobrosMan(idCompro, fecha, hora, monto, "1");
@@ -353,7 +353,7 @@ public class VMovil_Venta_Comprob extends Activity implements View.OnClickListen
                     }
 
                 })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         Toast.makeText(getApplicationContext(),
                                 "Cancelo", Toast.LENGTH_SHORT).show();
@@ -419,7 +419,7 @@ public class VMovil_Venta_Comprob extends Activity implements View.OnClickListen
         AlertDialog.Builder builder = alertDialogBuilder
                 .setMessage("Se ha Negado la Prologa de Credito, tiene que Anular el Proceso.")
                 .setCancelable(false)
-                .setPositiveButton("Anular", new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // boolean up = dbAutorizaciones.anularAutorizacion(idAutorizacion, idDetalleCobro, idComprobante);
                         if (true) {
@@ -504,7 +504,7 @@ public class VMovil_Venta_Comprob extends Activity implements View.OnClickListen
         AlertDialog.Builder builder = alertDialogBuilder
                 .setMessage("La Feha Limite es: " + fecha)
                 .setCancelable(false)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.si, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         int day = dp.getDayOfMonth();
                         int month = dp.getMonth() + 1;
@@ -524,7 +524,7 @@ public class VMovil_Venta_Comprob extends Activity implements View.OnClickListen
                     }
 
                 })
-                .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         Toast.makeText(getApplicationContext(),
                                 "Cancelo", Toast.LENGTH_SHORT).show();
@@ -551,7 +551,7 @@ public class VMovil_Venta_Comprob extends Activity implements View.OnClickListen
         AlertDialog.Builder builder = alertDialogBuilder
                 .setMessage("Aprobado, la Fecha Limite para el cobro es: " + fecha + "")
                 .setCancelable(false)
-                .setPositiveButton("Ir", new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.si, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // boolean up = dbAutorizaciones.updateAutorizacionAprobado(idAutorizacion, idDetalleCobro);
                         if (true) {
@@ -651,7 +651,9 @@ public class VMovil_Venta_Comprob extends Activity implements View.OnClickListen
 
     public void dialogAcciones(final int idComprobante) {
 
-        final String[] items = {"Imprimir", "Anular"};
+        //NO SE PODRÁ ANULAR, POR EL MOMENTO.
+        //final String[] items = {"Imprimir", "Anular"};
+        final String[] items = {"Imprimir"};
         AlertDialog.Builder dialogo = new AlertDialog.Builder(this);
         dialogo.setTitle("Seleccionar una acción");
         dialogo.setItems(items, new DialogInterface.OnClickListener() {
@@ -824,7 +826,7 @@ public class VMovil_Venta_Comprob extends Activity implements View.OnClickListen
 
 
         //MOSTRAMOS EN EL SLIDE LOS DATOS OBTENIDOS
-        DecimalFormat df = new DecimalFormat("#.00");
+        DecimalFormat df = new DecimalFormat("0.00");
         textViewSlideNombreAgente.setText("" + slideNombreAgente);
         textViewSlideNombreRuta.setText("" + slideNombreRuta);
         buttonSlideNroEstablecimiento.setText("" + slideNumeroEstablecimientoxRuta);

@@ -221,9 +221,9 @@ public class VMovil_Venta_Cabecera_PlanPagos extends Activity implements Adapter
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Crédito Insuficiente");
-        builder.setMessage("Monto de Crédito : " + df.format(monto_credito) + "\n" + " < " +
-                "Venta : " + df.format(total));
-        builder.setPositiveButton("OK", new Dialog.OnClickListener() {
+        builder.setMessage("Su monto de Crédito : " + df.format(monto_credito) + "\n" + ", es menor que el monto de venta : " +
+                "" + df.format(total));
+        builder.setPositiveButton(R.string.ok, new Dialog.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 Intent intent = new Intent(context, VMovil_Venta_Cabecera.class);
                 finish();
@@ -544,7 +544,7 @@ public class VMovil_Venta_Cabecera_PlanPagos extends Activity implements Adapter
     }
 
     double formatDecimal(double d) {
-        DecimalFormat df = new DecimalFormat("#,00");
+        DecimalFormat df = new DecimalFormat("0,00");
         return Double.valueOf(df.format(d));
     }
 

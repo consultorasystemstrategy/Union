@@ -169,7 +169,7 @@ public class mostrar_can_dev_facturas extends TabActivity {
         }
             if (precio.moveToFirst()) {
 
-                DecimalFormat df = new DecimalFormat("#.00");
+                DecimalFormat df = new DecimalFormat("0.00");
 
                 textViewFooterText.setText("Total :\n" +
                         "Base imponible :\n" +
@@ -219,7 +219,7 @@ public class mostrar_can_dev_facturas extends TabActivity {
         if (precio.moveToFirst()) {
 
 
-            DecimalFormat df = new DecimalFormat("#.00");
+            DecimalFormat df = new DecimalFormat("0.00");
 
             textViewFooterText.setText("Total :\n" +
                     "Base imponible :\n" +
@@ -254,7 +254,7 @@ public class mostrar_can_dev_facturas extends TabActivity {
         AlertDialog.Builder builder = alertDialogBuilder
                 .setMessage("Operacion: " + op + "")
                 .setCancelable(false)
-                .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.si, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         String idGuia = dbHelper_CanDev.guardarCabecera(idAgente,establecimiento);
                         if (operacion == 1) {
@@ -278,7 +278,7 @@ public class mostrar_can_dev_facturas extends TabActivity {
                     }
 
                 })
-                .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                     }
@@ -295,7 +295,7 @@ public class mostrar_can_dev_facturas extends TabActivity {
         AlertDialog.Builder builder = alertDialogBuilder
                 .setMessage("Operacion: " + op + "")
                 .setCancelable(false)
-                .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.si, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         if (op.equals("Canjes")) {
                             //3
@@ -320,7 +320,7 @@ public class mostrar_can_dev_facturas extends TabActivity {
                     }
 
                 })
-                .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                     }
@@ -381,7 +381,7 @@ public class mostrar_can_dev_facturas extends TabActivity {
         AlertDialog.Builder builder = alertDialogBuilder
                 .setMessage("Guardado Correctamente")
                 .setCancelable(false)
-                .setPositiveButton("Regresar", new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         Intent in = new Intent(getApplicationContext(), VMovil_Evento_Canjes_Dev.class);
                         in.putExtra("idEstabX", idEstablec);
@@ -410,7 +410,7 @@ public class mostrar_can_dev_facturas extends TabActivity {
         AlertDialog.Builder builder = alertDialogBuilder
                 .setMessage("Debe guardar los Canjes/Devoluciones.")
                 .setCancelable(false)
-                .setPositiveButton("Regresar", new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.si, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         Intent in = new Intent(getApplicationContext(), VMovil_Menu_Establec.class);
                        // in.putExtra("idEstabX", idEstablec);
@@ -420,7 +420,7 @@ public class mostrar_can_dev_facturas extends TabActivity {
                     }
 
                 })
-                .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                     }
@@ -477,7 +477,7 @@ public class mostrar_can_dev_facturas extends TabActivity {
     }
     private String rigth(){
 
-        DecimalFormat df= new DecimalFormat("#0.00");
+        DecimalFormat df= new DecimalFormat("0.00");
 
         Cursor cr = dbHelper_CanDev.obtener_facturas_dev2(1,idEstablec);
 

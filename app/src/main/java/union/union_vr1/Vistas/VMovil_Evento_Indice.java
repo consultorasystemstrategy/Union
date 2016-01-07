@@ -340,7 +340,7 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
                 .setTitle("GPS")
                 .setCancelable(false)
                 .setMessage("Usted tiene que activar el GPS")
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.si, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         // continue with delete
                         Intent gpsOptionsIntent = new Intent(

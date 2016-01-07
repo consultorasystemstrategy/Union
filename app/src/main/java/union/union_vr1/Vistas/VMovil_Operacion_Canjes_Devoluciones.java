@@ -35,6 +35,7 @@ import union.union_vr1.AsyncTask.ExportCanjesDevoluciones;
 import union.union_vr1.AsyncTask.ExportCanjesDevolucionesLater;
 import union.union_vr1.AsyncTask.ExportMain;
 import union.union_vr1.R;
+import union.union_vr1.Servicios.ServiceExport;
 import union.union_vr1.Sqlite.Constants;
 import union.union_vr1.Sqlite.CursorAdapterFacturas;
 import union.union_vr1.Sqlite.DBAdapter_Temp_Canjes_Devoluciones;
@@ -76,11 +77,19 @@ public class VMovil_Operacion_Canjes_Devoluciones extends TabActivity {
     private int liquidacion;
     private String [] datosHeader;
     TabActivity activity;
+    private ExportMain exportMain;
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vmovil__operacion__canjes__devoluciones);
+
         activity=this;
         session = new DbAdapter_Temp_Session(this);
         session.open();
@@ -169,13 +178,13 @@ public class VMovil_Operacion_Canjes_Devoluciones extends TabActivity {
         dialogo.setTitle("¿Esta seguro?");
         dialogo.setCancelable(false);
         dialogo.setMessage("Guardara Canjes y Devoluciones");
-        dialogo.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+        dialogo.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int liquidacion) {
                 dialogInterface.cancel();
             }
         });
-        dialogo.setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
+        dialogo.setPositiveButton(R.string.si, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int liquidacion) {
                     saveAndExportLast();
@@ -209,7 +218,9 @@ public class VMovil_Operacion_Canjes_Devoluciones extends TabActivity {
         dialogo.show();*/
 
         if(conectadoWifi() || conectadoRedMovil()){
-            new ExportMain(this).execute();
+            Intent intent = new Intent(this, ServiceExport.class);
+            intent.setAction(Constants.ACTION_EXPORT_SERVICE);
+            startService(intent);
           }
 
         startActivity(new Intent(getApplicationContext(), VMovil_Evento_Establec.class));
@@ -502,13 +513,13 @@ public class VMovil_Operacion_Canjes_Devoluciones extends TabActivity {
 
         final AlertDialog.Builder dialogo = new AlertDialog.Builder(this);
         dialogo.setTitle("¿Esta seguro de eliminar?");
-        dialogo.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+        dialogo.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int liquidacion) {
                 dialogInterface.cancel();
             }
         });
-        dialogo.setPositiveButton("Eliminar", new DialogInterface.OnClickListener() {
+        dialogo.setPositiveButton(R.string.si, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int liquidacion) {
 
@@ -548,8 +559,8 @@ public class VMovil_Operacion_Canjes_Devoluciones extends TabActivity {
     private void setMessageForDelete() {
         final AlertDialog.Builder dialogo = new AlertDialog.Builder(this);
         dialogo.setTitle("¿Desea Salir?");
-        dialogo.setMessage("Guarde o Elimine las operaciones");
-        dialogo.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+        dialogo.setMessage("Para salir debe guardar o eliminar los items.");
+        dialogo.setNegativeButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int liquidacion) {
                 dialogInterface.cancel();

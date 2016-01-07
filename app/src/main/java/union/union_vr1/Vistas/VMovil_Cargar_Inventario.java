@@ -141,7 +141,7 @@ public class VMovil_Cargar_Inventario extends Activity implements View.OnClickLi
             dialogo1.setTitle("Importante");
             dialogo1.setMessage("¿ Esta seguro de agregar la guia ?");
             dialogo1.setCancelable(false);
-            dialogo1.setPositiveButton("Seguro", new DialogInterface.OnClickListener() {
+            dialogo1.setPositiveButton(R.string.si, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialogo1, int id) {
                     cargarInventario = new CargarInventario(mainActivity);
                     Log.e("DATOS CARGAR INVENTARIO",""+slideIdAgente+"+++"+nroGuia);
@@ -149,7 +149,7 @@ public class VMovil_Cargar_Inventario extends Activity implements View.OnClickLi
                     nroAgregados = nroAgregados+1;
                 }
             });
-            dialogo1.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+            dialogo1.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialogo1, int id) {
 
                 }
@@ -258,7 +258,7 @@ public class VMovil_Cargar_Inventario extends Activity implements View.OnClickLi
 
 
         //MOSTRAMOS EN EL SLIDE LOS DATOS OBTENIDOS
-        DecimalFormat df = new DecimalFormat("#.00");
+        DecimalFormat df = new DecimalFormat("0.00");
         textViewSlideNombreAgente.setText("" + slideNombreAgente);
         textViewSlideNombreRuta.setText("" + slideNombreRuta);
         buttonSlideNroEstablecimiento.setText("" + slideNumeroEstablecimientoxRuta);

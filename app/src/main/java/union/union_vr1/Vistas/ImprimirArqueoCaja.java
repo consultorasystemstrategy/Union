@@ -195,7 +195,7 @@ public class ImprimirArqueoCaja extends Activity implements View.OnClickListener
     public void showComprobantesList(){
 
         DecimalFormatSymbols simbolos = DecimalFormatSymbols.getInstance(Locale.ENGLISH);
-        DecimalFormat df = new DecimalFormat("#.00", simbolos);
+        DecimalFormat df = new DecimalFormat("0.00", simbolos);
 
         Cursor cursorResumen = dbHelperGastosIngr.listarIngresosGastos(idLiquidacion);
 
@@ -285,7 +285,7 @@ public class ImprimirArqueoCaja extends Activity implements View.OnClickListener
 
     public String generarTextoImpresionResumen(int pulgadasImpresora) {
         DecimalFormatSymbols simbolos = DecimalFormatSymbols.getInstance(Locale.ENGLISH);
-        DecimalFormat df = new DecimalFormat("#.00", simbolos);
+        DecimalFormat df = new DecimalFormat("0.00", simbolos);
 
         String texto = ".\n";
 

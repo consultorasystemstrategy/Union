@@ -224,7 +224,7 @@ public class VMovil_Venta_Credito extends Activity implements OnClickListener {
 
 
     double roundTwoDecimals(double d) {
-        DecimalFormat twoDForm = new DecimalFormat("#.##");
+        DecimalFormat twoDForm = new DecimalFormat("0.00");
         return Double.valueOf(twoDForm.format(d));
     }
 

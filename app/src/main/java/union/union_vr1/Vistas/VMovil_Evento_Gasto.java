@@ -574,8 +574,8 @@ public class VMovil_Evento_Gasto extends Activity implements View.OnClickListene
                                         new AlertDialog.Builder(activity)
                                                 .setTitle("Eliminar")
                                                 .setMessage("¿Está seguro que desea eliminar este gasto?")
-                                                .setNegativeButton(android.R.string.no, null)
-                                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                                .setNegativeButton(R.string.no, null)
+                                                .setPositiveButton(R.string.si, new DialogInterface.OnClickListener() {
                                                     public void onClick(DialogInterface dialog, int id) {
                                                         // FIRE ZE MISSILES!
                                                         boolean succesful = dbHelperInformeGasto.deleteGastoById((int) id_gasto);
@@ -644,7 +644,7 @@ public class VMovil_Evento_Gasto extends Activity implements View.OnClickListene
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Cambiar Costo");
-        builder.setPositiveButton("OK", new Dialog.OnClickListener() {
+        builder.setPositiveButton(R.string.ok, new Dialog.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 String texto = null;
                 if (editText.getText().toString().trim().equals("")) {
@@ -813,7 +813,7 @@ public class VMovil_Evento_Gasto extends Activity implements View.OnClickListene
 
 
         //MOSTRAMOS EN EL SLIDE LOS DATOS OBTENIDOS
-        DecimalFormat df = new DecimalFormat("#.00");
+        DecimalFormat df = new DecimalFormat("0.00");
         textViewSlideNombreAgente.setText(""+slideNombreAgente);
         textViewSlideNombreRuta.setText(""+slideNombreRuta);
         buttonSlideNroEstablecimiento.setText(""+slideNumeroEstablecimientoxRuta);

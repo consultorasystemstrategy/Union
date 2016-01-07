@@ -332,8 +332,8 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
        return new AlertDialog.Builder(main)
                .setTitle("No ha vendido nada")
                .setMessage("¿Está seguro que desea salir?")
-               .setNegativeButton(android.R.string.no, null)
-               .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+               .setNegativeButton(R.string.no, null)
+               .setPositiveButton(R.string.si, new DialogInterface.OnClickListener() {
                    public void onClick(DialogInterface dialog, int id) {
                        // FIRE ZE MISSILES!
 
@@ -602,13 +602,13 @@ Instantiate and pass a callback
                                             .setTitle("Ops, No cuenta con crédito")
                                             .setMessage("" +
                                                     "¿Desea solicitar crédito?")
-                                            .setNegativeButton(android.R.string.no,new DialogInterface.OnClickListener() {
+                                            .setNegativeButton(R.string.no,new DialogInterface.OnClickListener() {
                                                 @Override
                                                 public void onClick(DialogInterface dialogInterface, int i) {
                                                     spinnerFormaPago.setAdapter(adapterFormaPago);
                                                 }
                                             })
-                                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                            .setPositiveButton(R.string.si, new DialogInterface.OnClickListener() {
                                                 public void onClick(DialogInterface dialog, int id) {
                                                     dialogSolicitarCredito().show();
                                                 }
@@ -642,13 +642,13 @@ Instantiate and pass a callback
                                         .setTitle("Está seguro que es toda su venta")
                                         .setMessage("Si define las cuotas ya no podrá agregar productos a la venta, ni eliminarlos\n" +
                                                 "¿Está seguro que está todo listo?")
-                                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                        .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialogInterface, int i) {
                                                 spinnerFormaPago.setAdapter(adapterFormaPago);
                                             }
                                         })
-                                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                        .setPositiveButton(R.string.si, new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int id) {
                                                 Intent intent = new Intent(getApplicationContext(), VMovil_Venta_Cabecera_PlanPagos.class);
                                                 intent.putExtra("total", totalFooter);
@@ -695,7 +695,7 @@ Instantiate and pass a callback
                 }
 
 /*                TipoDocumento tipoDocumento1 = TipoDocumento.valueOf(tipoDocumento);
-//                DecimalFormat df = new DecimalFormat("#.00");
+//                DecimalFormat df = new DecimalFormat("0.00");
 
                 switch (tipoDocumento1){
                     case Factura:
@@ -918,15 +918,11 @@ Instantiate and pass a callback
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-
                 int numeroViews =  adapterView.getCount();
-                numeroViews--;
-                if (adapterView.getPositionForView(view) != 1 && adapterView.getPositionForView(view) != numeroViews) {
+                if (adapterView.getPositionForView(view) != numeroViews) {
 
                     Log.d("POSITION SELECTED", adapterView.getPositionForView(view)+" - " + adapterView.getCount());
                     Log.d("POSITION ", i +" - " + adapterView.getCount());
-
 
                     //Aquí obtengo el cursor posicionado en la fila que ha seleccionado/clickeado
 
@@ -946,8 +942,8 @@ Instantiate and pass a callback
                                             new AlertDialog.Builder(mContext)
                                                     .setTitle("Eliminar")
                                                     .setMessage("¿Está seguro que desea eliminar este producto de la venta?")
-                                                    .setNegativeButton(android.R.string.no, null)
-                                                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                                    .setNegativeButton(R.string.no, null)
+                                                    .setPositiveButton(R.string.si, new DialogInterface.OnClickListener() {
                                                         public void onClick(DialogInterface dialog, int id) {
                                                             // FIRE ZE MISSILES!
                                                             boolean succesful = dbHelper_temp_venta.deleteTempVentaDetalleById(id_tem_detalle);
@@ -1102,7 +1098,7 @@ Instantiate and pass a callback
         String nombreP = null;
         final View layout = View.inflate(this, R.layout.dialog_cantidad_productos, null);
 
-//        DecimalFormat df = new DecimalFormat("#.00");
+//        DecimalFormat df = new DecimalFormat("0.00");
         final EditText savedText = ((EditText) layout.findViewById(R.id.VCAP_editTextCantidad));
         final TextView nombreProducto = ((TextView) layout.findViewById(R.id.VCPA_textView2NombreProducto));
         final TextView precio = ((TextView) layout.findViewById(R.id.VCPA_textViewPrecio));
@@ -1123,7 +1119,7 @@ Instantiate and pass a callback
         builder.setTitle("Cantidad");
         final int finalIdProducto = idProducto;
         final String finalNombreP = nombreP;
-        builder.setPositiveButton("OK", new Dialog.OnClickListener() {
+        builder.setPositiveButton(R.string.si, new Dialog.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 String texto = savedText.getText().toString().trim();
                 if(texto.equals("")){
@@ -1165,7 +1161,7 @@ Instantiate and pass a callback
     private Dialog scannerDialogValorUnidad(){
             final View layout = View.inflate(this, R.layout.dialog_cantidad_productos_valor_unidad, null);
 
-//            DecimalFormat df = new DecimalFormat("#.00");
+//            DecimalFormat df = new DecimalFormat("0.00");
             final EditText savedText = ((EditText) layout.findViewById(R.id.VCAP_editTextCantidad));
             final TextView nombreProducto = ((TextView) layout.findViewById(R.id.VCPA_textView2NombreProducto));
             final TextView precio = ((TextView) layout.findViewById(R.id.VCPA_textViewPrecio));
@@ -1201,7 +1197,7 @@ Instantiate and pass a callback
                     }
                     precio_unitario[0] = mCursorPrecioUnitarioGeneral.getDouble(mCursorPrecioUnitarioGeneral.getColumnIndexOrThrow(DbAdapter_Precio.PR_precio_unit));
                     valor_unidad = mCursorPrecioUnitarioGeneral.getInt(mCursorPrecioUnitarioGeneral.getColumnIndexOrThrow(DbAdapter_Precio.PR_valor_unidad));
-//                    DecimalFormat df = new DecimalFormat("#.00");
+//                    DecimalFormat df = new DecimalFormat("0.00");
                     precio.setText("Precio : S/. " + df.format(precio_unitario[0]));
                     valorUnidad.setText("Unidad : " + valor_unidad);
 
@@ -1225,7 +1221,7 @@ Instantiate and pass a callback
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Cantidad");
             final int finalMaximoValor = maximoValor;
-            builder.setPositiveButton("OK", new Dialog.OnClickListener() {
+            builder.setPositiveButton(R.string.ok, new Dialog.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
                     String texto = savedText.getText().toString().trim();
                     if(texto.equals("")){
@@ -1330,13 +1326,13 @@ Instantiate and pass a callback
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Cantidad a Solicitar");
-        builder.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 spinnerFormaPago.setAdapter(adapterFormaPago);
             }
         });
-        builder.setPositiveButton("OK", new Dialog.OnClickListener() {
+        builder.setPositiveButton(R.string.si, new Dialog.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
 
 
@@ -1344,7 +1340,7 @@ Instantiate and pass a callback
                 if (cantidad.length() > 0 && cantidad.length() < 10) {
                     Double cantidadCredito = Double.parseDouble(cantidad);
 
-                    new SolicitarCredito(mainActivity).execute("" + id_agente_venta, "" + idEstablecimiento, "" + cantidadCredito, "" + diasCredito);
+                    solicitarCredito.execute("" + id_agente_venta, "" + idEstablecimiento, "" + cantidadCredito, "" + diasCredito);
 
                     Toast toast = Toast.makeText(mContext.getApplicationContext(), "Crédito solicitado esperar...", Toast.LENGTH_SHORT);
                     toast.getView().setBackgroundColor(mainActivity.getResources().getColor(R.color.verde));
@@ -1443,7 +1439,7 @@ Instantiate and pass a callback
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Stock ("+maximoValor+")");
         final Double finalPrecio_unitario = precio_unitario;
-        builder.setPositiveButton("OK", new Dialog.OnClickListener() {
+        builder.setPositiveButton(R.string.ok, new Dialog.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 String texto = null;
                 if (savedText.getText().toString().trim().equals("")) {
@@ -1531,8 +1527,8 @@ Instantiate and pass a callback
                 new AlertDialog.Builder(VMovil_Venta_Cabecera.this)
                         .setTitle("Confirmación")
                         .setMessage("¿Está seguro de generar el comprobante electrónico?")
-                        .setNegativeButton(android.R.string.no, null)
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        .setNegativeButton(R.string.no, null)
+                        .setPositiveButton(R.string.si, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 // FIRE ZE MISSILES!
                                 vender();
@@ -1854,7 +1850,7 @@ Instantiate and pass a callback
                 }
 
 
-//                DecimalFormat df = new DecimalFormat("#.00");
+//                DecimalFormat df = new DecimalFormat("0.00");
                 //star micronics, 3pg
                 //textoImpresion+=String.format("%-6s",cantidad) + String.format("%-34s",nombre_producto) +String.format("%-5s",df.format(importe)) + "\n";
 
@@ -2294,7 +2290,7 @@ Instantiate and pass a callback
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Stock "+"("+maximoValor+")");
         final int finalMaximoValor = maximoValor;
-        builder.setPositiveButton("OK", new Dialog.OnClickListener() {
+        builder.setPositiveButton(R.string.ok, new Dialog.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
 
                 String texto = savedText.getText().toString().trim();
@@ -2363,7 +2359,7 @@ Instantiate and pass a callback
     private Dialog myTextDialogValorUnidad() {
         final View layout = View.inflate(this, R.layout.dialog_cantidad_productos_valor_unidad, null);
 
-//        DecimalFormat df = new DecimalFormat("#.00");
+//        DecimalFormat df = new DecimalFormat("0.00");
         final EditText savedText = ((EditText) layout.findViewById(R.id.VCAP_editTextCantidad));
         final TextView nombreProducto = ((TextView) layout.findViewById(R.id.VCPA_textView2NombreProducto));
         final TextView precio = ((TextView) layout.findViewById(R.id.VCPA_textViewPrecio));
@@ -2434,7 +2430,7 @@ Instantiate and pass a callback
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Stock "+"("+maximoValor+")");
         final int finalMaximoValor = maximoValor;
-        builder.setPositiveButton("OK", new Dialog.OnClickListener() {
+        builder.setPositiveButton(R.string.ok, new Dialog.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 String texto = savedText.getText().toString().trim();
                 if(texto.equals("")){
@@ -2505,7 +2501,7 @@ Instantiate and pass a callback
 
     double formatDecimal(double d)
     {
-//        DecimalFormat df = new DecimalFormat("#,00");
+//        DecimalFormat df = new DecimalFormat("0,00");
         return Double.valueOf(df.format(d));
     }
 
@@ -2660,7 +2656,7 @@ Instantiate and pass a callback
 
 
         //MOSTRAMOS EN EL SLIDE LOS DATOS OBTENIDOS
-        //DecimalFormat df = new DecimalFormat("#.00");
+        //DecimalFormat df = new DecimalFormat("0.00");
         textViewSlideNombreAgente.setText(""+slideNombreAgente);
         textViewSlideNombreRuta.setText(""+slideNombreRuta);
         buttonSlideNroEstablecimiento.setText(""+slideNumeroEstablecimientoxRuta);

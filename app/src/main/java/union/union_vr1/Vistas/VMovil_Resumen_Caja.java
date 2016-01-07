@@ -514,13 +514,13 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
                             .setTitle("Cerrar caja")
                             .setMessage("" +
                                     "¿Está seguro que desea cerrar caja?")
-                            .setNegativeButton(android.R.string.no,new DialogInterface.OnClickListener() {
+                            .setNegativeButton(R.string.no,new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
 
                                 }
                             })
-                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            .setPositiveButton(R.string.si, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
                                     int registrosEnCola = 11;
                                     registrosEnCola  = validarExport();
@@ -639,7 +639,7 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Ingrese Km Final");
-        builder.setPositiveButton("OK", new Dialog.OnClickListener() {
+        builder.setPositiveButton(R.string.ok, new Dialog.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
 
                 String kmFinal = editTextKmFinal.getText().toString().trim();

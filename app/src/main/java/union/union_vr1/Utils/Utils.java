@@ -37,7 +37,7 @@ public class Utils {
 
     public String format(Double value) {
         DecimalFormat df = new DecimalFormat("0.00");
-        return df.format(value);
+        return replaceComa(df.format(value));
     }
 
     public static String getDatePhone() {

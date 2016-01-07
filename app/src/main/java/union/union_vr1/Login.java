@@ -245,7 +245,7 @@ public class Login extends Activity implements OnClickListener {
         pass = (EditText) findViewById(R.id.password);
 
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        nombreUsuario = SP.getString("username", "emerson.f");
+        nombreUsuario = SP.getString("username", "");
 
         user.setText("" + nombreUsuario);
 

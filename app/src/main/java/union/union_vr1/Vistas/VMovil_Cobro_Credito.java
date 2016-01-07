@@ -283,7 +283,7 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener, V
 
 
                 Cursor cursor = (Cursor) listView.getItemAtPosition(position);
-                DecimalFormat df = new DecimalFormat("#.00");
+                DecimalFormat df = new DecimalFormat("0.00");
                 // Get the state's capital from this row in the database.
                 idEstado = cursor.getString(cursor.getColumnIndexOrThrow("cc_in_estado_cobro"));
                 idCobro = cursor.getString(cursor.getColumnIndexOrThrow("_id"));
@@ -356,7 +356,7 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener, V
         AlertDialog.Builder builder = alertDialogBuilder
                 .setMessage("¿Esta Seguro de Realizar el Cobro?")
                 .setCancelable(false)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.si, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         Double suma = (Double.parseDouble(Utils.replaceComa(mSPNcredit.getText().toString())) + idVal2);
                         // idValNew = Double.parseDouble(mSPNcredit.getText().toString()) + idVal2;
@@ -379,7 +379,7 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener, V
                     }
 
                 })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         Toast.makeText(getApplicationContext(),
                                 "Cancelo ", Toast.LENGTH_SHORT).show();
@@ -466,7 +466,7 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener, V
                         cantidadHoy.setText("");
                     } else {
                         cantidadProrroga.setError(null);
-                        DecimalFormat df = new DecimalFormat("#.00");
+                        DecimalFormat df = new DecimalFormat("0.00");
                         cantidadProrroga.setText(df.format(valorProrroga[0]));
                     }
 
@@ -477,12 +477,12 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener, V
         });
         builder.setView(layout_cobros);
         builder.setCancelable(false);
-        builder.setPositiveButton("Guardar",
+        builder.setPositiveButton(R.string.si,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         validator.validate();
                         if (estado) {
-                            DecimalFormat df = new DecimalFormat("#.00");
+                            DecimalFormat df = new DecimalFormat("0.00");
                             double valorPago = Double.parseDouble(Utils.replaceComa(cantidadHoy.getText().toString()));
                             double valorCobrar = Double.parseDouble(Utils.replaceComa(cantidadProrroga.getText().toString()));
 
@@ -511,7 +511,7 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener, V
 
                     }
                 })
-                .setNegativeButton("Cancelar",
+                .setNegativeButton(R.string.no,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 dialog.cancel();
@@ -528,7 +528,7 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener, V
             case R.id.VCCR_BTNactualiz:
 
                 if (idEstado != null) {
-                    DecimalFormat df = new DecimalFormat("#.00");
+                    DecimalFormat df = new DecimalFormat("0.00");
 
                     if (idEstado.equals("1")) {
                         if (mSPNcredit.getText().equals("") || idCobro.equals("-1")) {
@@ -621,7 +621,7 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener, V
     }
 
     double roundTwoDecimals(double d) {
-        DecimalFormat twoDForm = new DecimalFormat("#.##");
+        DecimalFormat twoDForm = new DecimalFormat("0.00");
         return Double.valueOf(twoDForm.format(d));
     }
 
@@ -764,7 +764,7 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener, V
 
 
         //MOSTRAMOS EN EL SLIDE LOS DATOS OBTENIDOS
-        DecimalFormat df = new DecimalFormat("#.00");
+        DecimalFormat df = new DecimalFormat("0.00");
         textViewSlideNombreAgente.setText("" + slideNombreAgente);
         textViewSlideNombreRuta.setText("" + slideNombreRuta);
         buttonSlideNroEstablecimiento.setText("" + slideNumeroEstablecimientoxRuta);
@@ -841,9 +841,9 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener, V
         AlertDialog.Builder builder = alertDialogBuilder
                 .setView(layout_Cobros_Manuales)
                 .setCancelable(false)
-                .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.si, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        NumberFormat formatter = new DecimalFormat("#0.00");
+                        NumberFormat formatter = new DecimalFormat("0.00");
                         //Posicion 0 == cobro total, 1 == Parcial
                         Log.d("ITEMSELECTED", spinnerTipoCobro.getSelectedItemPosition() + "");
                         int itemTipo = spinnerTipoCobro.getSelectedItemPosition();
@@ -862,7 +862,7 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener, V
                     }
 
                 })
-                .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         Toast.makeText(getApplicationContext(),
                                 "Cancelo ", Toast.LENGTH_SHORT).show();
@@ -896,7 +896,7 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener, V
         AlertDialog.Builder builder = alertDialogBuilder
                 .setMessage("¿Esta seguro de cobrar: S/  " + importe + " ?")
                 .setCancelable(false)
-                .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.si, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         String cateMovimiento = "";
                         if (tipoCobro > 0) {
@@ -919,7 +919,7 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener, V
                     }
 
                 })
-                .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         Toast.makeText(getApplicationContext(),
                                 "Cancelo ", Toast.LENGTH_SHORT).show();

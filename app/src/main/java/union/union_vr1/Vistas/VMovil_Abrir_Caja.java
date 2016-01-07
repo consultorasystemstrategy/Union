@@ -98,7 +98,7 @@ public class VMovil_Abrir_Caja extends Activity implements View.OnClickListener 
         AlertDialog.Builder builder = alertDialogBuilder
                 .setMessage("Ingrese Kilometraje")
                 .setCancelable(false)
-                .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.si, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         if (editKm.getText().toString().equals("")) {
                             editKm.setError("Ingrese Kilometraje");
@@ -111,7 +111,7 @@ public class VMovil_Abrir_Caja extends Activity implements View.OnClickListener 
                     }
 
                 })
-                .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                     }

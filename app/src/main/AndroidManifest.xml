@@ -189,7 +189,8 @@
         <activity
             android:name=".Vistas.VMovil_Consultar_Inventario"
             android:label="Consultar Inventario"
-            android:windowSoftInputMode="stateVisible|adjustPan" />
+            android:windowSoftInputMode="stateVisible|adjustPan"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".Vistas.VMovil_Cargar_Inventario"
