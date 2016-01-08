@@ -149,19 +149,15 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter {
 
             switch (estado_autorizado_esta){
                 case 5: //Puede editar o enviar
-                    imageButtonOp.setBackgroundColor(context.getResources().getColor(R.color.Dark3));
                     linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.Dark1));
                     break;
                 case 6: //No puede hacer nada
                     linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.Dark1));
-                    imageButtonOp.setBackgroundColor(context.getResources().getColor(R.color.Blanco));
                     break;
                 case 7: //Normal
                     //DO NOTHING, QUE TOME EL COLOR ANTERIOR
-                    imageButtonOp.setBackgroundColor(context.getResources().getColor(R.color.Blanco));
                     break;
                 case 8://Puede editar y enviar
-                    imageButtonOp.setBackgroundColor(context.getResources().getColor(R.color.Dark3));
                     linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.Dark1));
                     break;
             }

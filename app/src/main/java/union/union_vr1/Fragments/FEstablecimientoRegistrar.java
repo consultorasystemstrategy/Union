@@ -252,7 +252,7 @@ public class FEstablecimientoRegistrar extends Fragment implements Validator.Val
         AlertDialog.Builder builder = alertDialogBuilder
                 .setMessage("")
                 .setCancelable(false)
-                .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.si, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
                        new CrearEstablecimiento(getActivity()).execute();
@@ -260,7 +260,7 @@ public class FEstablecimientoRegistrar extends Fragment implements Validator.Val
                     }
 
                 })
-                .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                     }

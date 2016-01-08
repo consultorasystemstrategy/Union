@@ -189,7 +189,7 @@ public class VMovil_Crear_Establecimiento extends AppCompatActivity {
         AlertDialog.Builder builder = alertDialogBuilder
                 .setMessage("Realmente ¿Desea salir?")
                 .setCancelable(false)
-                .setPositiveButton(R.string.no, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.si, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dbAdapter_temp_establecimiento.deleteAll();
                         startActivity(new Intent(getApplicationContext(), VMovil_Menu_Establec.class));
@@ -197,7 +197,7 @@ public class VMovil_Crear_Establecimiento extends AppCompatActivity {
                     }
 
                 })
-                .setNegativeButton(R.string.si, new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                     }

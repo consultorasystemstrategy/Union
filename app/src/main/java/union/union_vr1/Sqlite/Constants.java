@@ -58,6 +58,15 @@ public class Constants {
     public static final String _CONTADO = "Contado";
     public static final String _CREDITO = "Credito";
 
+    public static final String _APP_ROOT_FIREBASE = "https://productosunion.firebaseio.com/app";
+    public static final String _CHILD_CREDITO = "credito";
+
+
+    public static final int SEMAFORO_AMBAR = 1;
+    public static final int SEMAFORO_ROJO = 2;
+    public static final int SEMAFORO_VERDE = 3;
+
+
 
 
 

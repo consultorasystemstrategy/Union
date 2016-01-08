@@ -46,6 +46,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.client.ChildEventListener;
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.Query;
+import com.firebase.client.ValueEventListener;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 import org.json.JSONObject;
@@ -92,6 +98,7 @@ import union.union_vr1.FacturacionElectronica.DigitalSignature;
 import union.union_vr1.FacturacionElectronica.Signature;
 import union.union_vr1.FacturacionElectronica.SimpleXMLAndroid;
 import union.union_vr1.InputFilterMinMax;
+import union.union_vr1.Objects.Credito;
 import union.union_vr1.R;
 import union.union_vr1.RestApi.StockAgenteRestApi;
 import union.union_vr1.Servicios.ServiceExport;
@@ -230,7 +237,6 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
     private boolean isEstablecidasCuotas;
 
     private ExportMain exportMain;
-    private SolicitarCredito solicitarCredito;
 
     //KEYBOARD SOFT
     RelativeLayout mainLayout;
@@ -311,11 +317,19 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
 
     Utils df = new Utils();
 
+
+    //FIREBASE
+    private Firebase rootRef = null;
+    private Firebase creditoRef = null;
+
     private static String TAG = VMovil_Venta_Cabecera.class.getSimpleName();
+
+
+    private MenuItem menuSemaforo ;
+    private int statusSemaforo = -1;
     @Override
     protected void onDestroy() {
         exportMain.dismissProgressDialog();
-        solicitarCredito.dismissProgressDialog();
         Log.d("ON DESTROY", "DISMISS PROGRESS DIALOG");
         super.onDestroy();
 
@@ -355,60 +369,17 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-
-
-//        Keyboard autoCompleteKeyboardLayout = new Keyboard(this, null);
-
-        //ViewGroup viewGroup = (ViewGroup) autoCompleteKeyboardLayout.getRootView();
-        //layoutSpinner = (LinearLayout) findViewById(R.id.layoutSpinner);
-        //layoutButton = (LinearLayout) findViewById(R.id.layoutButton);
-        //mainLayout = (RelativeLayout) findViewById(R.id.softKeyboardMain); // You must use the layout root
-        //im = (InputMethodManager) getSystemService(Service.INPUT_METHOD_SERVICE);
-
-/*
-Instantiate and pass a callback
-*/
         setContentView(R.layout.princ_venta_cabecera);
+
+        Firebase.setAndroidContext(this);
         contexto = getApplicationContext();
 
 
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         anchoImpresora= Integer.parseInt(SP.getString("impresoraAncho", "3"));
-        //setContentView(viewGroup);
 
-/*
-        softKeyboard = new SoftKeyboard(viewGroup, im, layoutButton, layoutSpinner);
-        softKeyboard.setSoftKeyboardCallback(new SoftKeyboard.SoftKeyboardChanged()
-        {
-
-            @Override
-            public void onSoftKeyboardHide()
-            {
-                // Code here
-                Log.d("KEYBOARD","HIDE");
-                mainActivity.runOnUiThread(new Runnable() {
-                public void run() {
-                    mainActivity.findViewById(R.id.layoutButton).setVisibility(View.VISIBLE);
-                    mainActivity.findViewById(R.id.layoutSpinner).setVisibility(View.VISIBLE);
-                }
-            });
-            }
-
-            @Override
-            public void onSoftKeyboardShow()
-            {
-                // Code here
-                Log.d("KEYBOARD","SHOW");
-                mainActivity.runOnUiThread(new Runnable() {
-                    public void run() {
-                        mainActivity.findViewById(R.id.layoutButton).setVisibility(View.GONE);
-                        mainActivity.findViewById(R.id.layoutSpinner).setVisibility(View.GONE);
-                    }
-                });
-            }
-        });
-*/
+        rootRef = new Firebase(Constants._APP_ROOT_FIREBASE);
+        creditoRef = rootRef.child(Constants._CHILD_CREDITO);
 
         //SLIDING MENU
         dbGastosIngresos = new DbGastos_Ingresos(this);
@@ -433,7 +404,6 @@ Instantiate and pass a callback
 
         mainActivity = this;
         exportMain = new ExportMain(mainActivity);
-        solicitarCredito = new SolicitarCredito(mainActivity);
 
         mContext = this;
         dbHelper_Histo_comprob_anterior = new DbAdapter_Histo_Comprob_Anterior(this);
@@ -757,14 +727,14 @@ Instantiate and pass a callback
         autoCompleteTextView.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-                Log.d("BEFORE TEXTCHANGED",""+charSequence.toString()+","+i+","+i2+","+i3);
+                Log.d("BEFORE TEXTCHANGED", "" + charSequence.toString() + "," + i + "," + i2 + "," + i3);
             }
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
 
-                Log.d("ON TEXTCHANGED",""+charSequence.toString()+","+i+","+i2+","+i3);
-                if (i==0 && i2==0 && i3>=10){
+                Log.d("ON TEXTCHANGED", "" + charSequence.toString() + "," + i + "," + i2 + "," + i3);
+                if (i == 0 && i2 == 0 && i3 >= 10) {
                     Log.d("ON TEXTCHANGED", "HA ESCANEADO UN PRODUCTO");
                     Cursor cursor = dbHelper_Stock_Agente.fetchStockAgenteByIdEstablecimientoandName(id_categoria_establecimiento, charSequence.toString(), idLiquidacion);
 
@@ -772,7 +742,7 @@ Instantiate and pass a callback
                     autoCompleteTextView.setText("");
 
                     //Log.d("TEXTCHANGED COUNT CURSOR",""+cursor.getCount());
-                    if (cursor.getCount()>=1) {
+                    if (cursor.getCount() >= 1) {
                         cursor.moveToFirst();
                         //El item seleccionado tenía sólo 2 columnas visibles, pero en el cursos se encuentran todas las columnas
                         //Aquí podemos obtener las otras columnas para los que querramos hacer con ellas
@@ -783,26 +753,25 @@ Instantiate and pass a callback
                         valor_unidad = cursor.getInt(cursor.getColumnIndex(DbAdapter_Precio.PR_valor_unidad));
 
                         Cursor cursorExistProductoTemp = dbHelper_temp_venta.fetchTempVentaByIDProducto(id_producto);
-                        if (cursorExistProductoTemp.getCount()>0){
-                            Toast toast = Toast.makeText(mainActivity,"YA EXISTE",Toast.LENGTH_SHORT);
+                        if (cursorExistProductoTemp.getCount() > 0) {
+                            Toast toast = Toast.makeText(mainActivity, "YA EXISTE", Toast.LENGTH_SHORT);
                             toast.getView().setBackgroundColor(mainActivity.getResources().getColor(R.color.verde));
                             TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
                             v.setTextColor(mainActivity.getResources().getColor(R.color.Blanco));
                             toast.show();
-                        }else{
-                            if (disponible>0){
+                        } else {
+                            if (disponible > 0) {
 
 
+                                Cursor mCursorPrecioUnitarioGeneral = dbHelper_Precio.fetchAllPrecioByIdProductoAndCategoeria(id_producto, id_categoria_establecimiento);
 
-                                Cursor mCursorPrecioUnitarioGeneral = dbHelper_Precio.fetchAllPrecioByIdProductoAndCategoeria(id_producto,id_categoria_establecimiento);
-
-                                if (mCursorPrecioUnitarioGeneral.getCount()>1){
+                                if (mCursorPrecioUnitarioGeneral.getCount() > 1) {
                                     myTextDialogValorUnidad().show();
                                     //Toast.makeText(getApplicationContext(), "Hay "+mCursorPrecioUnitarioGeneral.getCount() + " valores unidades para este producto", Toast.LENGTH_SHORT).show();
-                                }else{
+                                } else {
                                     myTextDialog().show();
                                 }
-                            }else{
+                            } else {
                                 Toast toast = Toast.makeText(mainActivity, "No hay Stock", Toast.LENGTH_SHORT);
                                 toast.getView().setBackgroundColor(mainActivity.getResources().getColor(R.color.verde));
                                 TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
@@ -810,7 +779,7 @@ Instantiate and pass a callback
                                 toast.show();
                             }
                         }
-                    }else{
+                    } else {
                         Toast toast = Toast.makeText(mainActivity, "No encontrado en almacén", Toast.LENGTH_SHORT);
                         toast.getView().setBackgroundColor(mainActivity.getResources().getColor(R.color.verde));
                         TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
@@ -819,14 +788,14 @@ Instantiate and pass a callback
                     }
 
 
-                }else{
+                } else {
                     adapterProductos.getFilter().filter(charSequence.toString());
                 }
             }
 
             @Override
             public void afterTextChanged(Editable editable) {
-                Log.d("AFTER TEXTCHANGED",""+editable.toString());
+                Log.d("AFTER TEXTCHANGED", "" + editable.toString());
             }
 
 
@@ -861,25 +830,25 @@ Instantiate and pass a callback
                 valor_unidad = cursor.getInt(cursor.getColumnIndex(DbAdapter_Precio.PR_valor_unidad));
 
                 Cursor cursorExistProductoTemp = dbHelper_temp_venta.fetchTempVentaByIDProducto(id_producto);
-                if (cursorExistProductoTemp.getCount()>0){
-                    Toast toast = Toast.makeText(mainActivity,"YA EXISTE",Toast.LENGTH_SHORT);
+                if (cursorExistProductoTemp.getCount() > 0) {
+                    Toast toast = Toast.makeText(mainActivity, "YA EXISTE", Toast.LENGTH_SHORT);
                     toast.getView().setBackgroundColor(mainActivity.getResources().getColor(R.color.verde));
                     TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
                     v.setTextColor(mainActivity.getResources().getColor(R.color.Blanco));
                     toast.show();
 
-                }else{
-                    if (disponible>0){
+                } else {
+                    if (disponible > 0) {
 
-                        Cursor mCursorPrecioUnitarioGeneral = dbHelper_Precio.fetchAllPrecioByIdProductoAndCategoeria(id_producto,id_categoria_establecimiento);
+                        Cursor mCursorPrecioUnitarioGeneral = dbHelper_Precio.fetchAllPrecioByIdProductoAndCategoeria(id_producto, id_categoria_establecimiento);
 
-                        if (mCursorPrecioUnitarioGeneral.getCount()>1){
+                        if (mCursorPrecioUnitarioGeneral.getCount() > 1) {
                             myTextDialogValorUnidad().show();
                             //Toast.makeText(getApplicationContext(), "Hay "+mCursorPrecioUnitarioGeneral.getCount() + " valores unidades para este producto", Toast.LENGTH_SHORT).show();
-                        }else{
+                        } else {
                             myTextDialog().show();
                         }
-                    }else{
+                    } else {
                         Toast toast = Toast.makeText(mainActivity, "No hay Stock", Toast.LENGTH_SHORT);
                         toast.getView().setBackgroundColor(mainActivity.getResources().getColor(R.color.verde));
                         TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
@@ -918,11 +887,11 @@ Instantiate and pass a callback
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                int numeroViews =  adapterView.getCount();
+                int numeroViews = adapterView.getCount();
                 if (adapterView.getPositionForView(view) != numeroViews) {
 
-                    Log.d("POSITION SELECTED", adapterView.getPositionForView(view)+" - " + adapterView.getCount());
-                    Log.d("POSITION ", i +" - " + adapterView.getCount());
+                    Log.d("POSITION SELECTED", adapterView.getPositionForView(view) + " - " + adapterView.getCount());
+                    Log.d("POSITION ", i + " - " + adapterView.getCount());
 
                     //Aquí obtengo el cursor posicionado en la fila que ha seleccionado/clickeado
 
@@ -982,8 +951,8 @@ Instantiate and pass a callback
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                Log.d("POSITION SELECTED", parent.getPositionForView(view)+" - " + parent.getCount());
-                Log.d("POSITION ", position +" - " + parent.getCount());
+                Log.d("POSITION SELECTED", parent.getPositionForView(view) + " - " + parent.getCount());
+                Log.d("POSITION ", position + " - " + parent.getCount());
                 //Aquí obtengo el cursor posicionado en la fila que ha seleccionado/clickeado
                 Cursor cursor = (Cursor) parent.getItemAtPosition(position);
                 final long id_tem_detalle = cursor.getLong(cursor.getColumnIndex(DBAdapter_Temp_Venta.temp_venta_detalle));
@@ -993,13 +962,97 @@ Instantiate and pass a callback
         });
         //SLIDING MENU
         showSlideMenu(this);
+        Query queryRef = creditoRef.orderByChild("idEstablecimiento").equalTo(idEstablecimiento);
+        queryRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Log.d(TAG, "ADDED dataSnapshot : " + dataSnapshot.getValue());
+                Credito credito = dataSnapshot.getValue(Credito.class);
+                Log.d(TAG, "ADDED Monto : " + credito.getMontoCredito());
+                Log.d(TAG, "ADDED Estado: " + credito.isEstado());
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                Log.d(TAG, "CHANGED dataSnapshot : " + dataSnapshot.getValue());
+                Credito credito = dataSnapshot.getValue(Credito.class);
+
+                if (credito.isEstado() && (credito.getIdAgente() == id_agente_venta) && credito.getIdEstablecimiento() == idEstablecimiento){
+                    Log.d(TAG, "CRÉDITO APROBADO : " +credito.getIdEstablecimiento() + ", "+credito.getIdAgente());
+                    Log.d(TAG, "CHANGED Monto : " + credito.getMontoCredito());
+                    Log.d(TAG, "CHANGED Estado: " + credito.isEstado());
+                    //actualizar el registro de la db here!
+                    updateSemaforoStatus(Constants.SEMAFORO_VERDE);
+                }else{
+                    updateSemaforoStatus(Constants.SEMAFORO_ROJO);
+                }
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
+/*        creditoRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d(TAG, "There are " + dataSnapshot.getChildrenCount() + " CREDITOS");
+                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+                    Credito credito = postSnapshot.getValue(Credito.class);
+                    Log.d(TAG, "Monto : " + credito.getMontoCredito());
+                    Log.d(TAG, "Estado: " + credito.isEstado());
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });*/
+
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.princ_venta_principal, menu);
+        menuSemaforo = menu.findItem(R.id.bandera);
+        updateSemaforoStatus(statusSemaforo);
         return true;
+    }
+
+    private void updateSemaforoStatus(int status){
+        statusSemaforo = status;
+        switch (statusSemaforo){
+            //AMBAR
+            case 1:
+                menuSemaforo.setIcon(R.mipmap.ic_ambar).setVisible(true);
+                break;
+            //ROJO
+            case 2:
+                menuSemaforo.setIcon(R.mipmap.ic_redc).setVisible(true);
+                break;
+            //VERDE
+            case 3:
+                menuSemaforo.setIcon(R.mipmap.ic_green).setVisible(true);
+                break;
+
+            default:
+                menuSemaforo.setIcon(R.mipmap.ic_green).setVisible(false);
+                break;
+        }
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -1340,16 +1393,17 @@ Instantiate and pass a callback
                 if (cantidad.length() > 0 && cantidad.length() < 10) {
                     Double cantidadCredito = Double.parseDouble(cantidad);
 
-                    solicitarCredito.execute("" + id_agente_venta, "" + idEstablecimiento, "" + cantidadCredito, "" + diasCredito);
+                    new SolicitarCredito(mainActivity).execute("" + id_agente_venta, "" + idEstablecimiento, "" + cantidadCredito, "" + diasCredito);
+                    Credito credito = new Credito(id_agente_venta, idEstablecimiento, cantidadCredito, Integer.parseInt(diasCredito), false);
+                    creditoRef.push().setValue(credito);
 
-                    Toast toast = Toast.makeText(mContext.getApplicationContext(), "Crédito solicitado esperar...", Toast.LENGTH_SHORT);
+                    Toast toast = Toast.makeText(mContext.getApplicationContext(), "CREDITO SOLICITADO, ESPERAR...", Toast.LENGTH_SHORT);
                     toast.getView().setBackgroundColor(mainActivity.getResources().getColor(R.color.verde));
                     TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
                     v.setTextColor(mainActivity.getResources().getColor(R.color.Blanco));
                     toast.show();
-                    Intent intent = new Intent(mContext, VMovil_Evento_Establec.class);
-                    startActivity(intent);
-                    finish();
+                    //PINTAR
+                    updateSemaforoStatus(Constants.SEMAFORO_ROJO);
                 } else {
                     Toast.makeText(VMovil_Venta_Cabecera.this, "Número invalido, intente de nuevo", Toast.LENGTH_SHORT).show();
                 }

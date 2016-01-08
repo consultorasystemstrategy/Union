@@ -663,7 +663,6 @@ public class Login extends Activity implements OnClickListener {
             if (succesLogin) {
 
 /*                if (addNewAccount){
-
                     agregarCuenta();
                 }*/
                 if (succesMACDevice) {

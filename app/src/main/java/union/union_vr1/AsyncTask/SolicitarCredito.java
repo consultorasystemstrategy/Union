@@ -57,7 +57,6 @@ public class SolicitarCredito extends AsyncTask<String, String, String> {
     private DbAdapter_Temp_Session session;
 
     private Activity mainActivity;
-    private ProgressDialog progressDialog;
     private DbAdaptert_Evento_Establec dbAdaptert_evento_establec;
     JSONObject jsonObject = null;
 
@@ -76,8 +75,6 @@ public class SolicitarCredito extends AsyncTask<String, String, String> {
 
         StockAgenteRestApi api = new StockAgenteRestApi(mainActivity);
             try {
-                publishProgress(""+25);
-
                 int idAgente = Integer.parseInt(strings[0]);
                 int idEstablecimiento = Integer.parseInt(strings[1]);
                 Double montoCredito = Double.parseDouble(strings[2]);
@@ -99,7 +96,6 @@ public class SolicitarCredito extends AsyncTask<String, String, String> {
                 );
                 Log.d("JSON SOLICTTUD CRÉDITO", jsonObject.toString());
 
-            publishProgress(""+50);
 
         }catch (Exception e){
             Log.d("AysncImport : ", e.getMessage());
@@ -111,51 +107,20 @@ public class SolicitarCredito extends AsyncTask<String, String, String> {
     @Override
      protected void onPreExecute() {
         super.onPreExecute();
-        createProgressDialog();
     }
 
     @Override
     protected void onPostExecute(String s) {
 
-        if(mainActivity.isFinishing()){
-            //dismissProgressDialog();
-            progressDialog.dismiss();
-            return;
-        }else {
-            Log.d("JSON SOLICTTUD CRÉDITO", jsonObject.toString());
 
-            progressDialog.setProgress(100);
-            dismissProgressDialog();
-        }
+        Log.d("JSON SOLICTTUD CRÉDITO", jsonObject.toString());
 
         super.onPostExecute(s);
-        Intent intent = new Intent(mainActivity, VMovil_Online_Pumovil.class);
-        mainActivity.finish();
-        mainActivity.startActivity(intent);
+
     }
 
     @Override
     protected void onProgressUpdate(String... values) {
         super.onProgressUpdate(values);
-        progressDialog.setProgress(Integer.parseInt(values[0]));
     }
-
-    public void createProgressDialog(){
-        progressDialog = new ProgressDialog(mainActivity);
-        progressDialog.setMessage("Solicitando ...");
-        progressDialog.setIndeterminate(false);
-        progressDialog.setMax(100);
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        progressDialog.setCancelable(false);
-        progressDialog.show();
-
-    }
-
-    public void dismissProgressDialog() {
-        if (progressDialog != null && progressDialog.isShowing()) {
-            progressDialog.dismiss();
-        }
-    }
-
-
 }

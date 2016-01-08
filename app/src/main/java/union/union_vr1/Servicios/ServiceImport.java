@@ -258,15 +258,15 @@ public class ServiceImport extends IntentService {
             }
 
 
-            Log.d("IMPORTANDO ", "INICIANDO ...");
+            Log.d(TAG, "IMPORTANDO, INICIANDO ...");
             for (int i = 0; i < stockAgentes.size(); i++) {
-                Log.d("Stock Agente" + i, "Nombre : " + stockAgentes.get(i).getNombre());
-                Log.d("Stock Agente" + i, "CÓDIGO DE BARRAS : " + stockAgentes.get(i).getCodigoBarras());
-                Log.d("Stock Agente" + i, "CÓDIGO DE producto : " + stockAgentes.get(i).getCodigo());
+                Log.d(TAG, "Stock Agente : " + i+ ", Nombre : " + stockAgentes.get(i).getNombre());
+                Log.d(TAG, "Stock Agente : " + i+ ", CÓDIGO DE BARRAS : " + stockAgentes.get(i).getCodigoBarras());
+                Log.d(TAG, "Stock Agente : " + i+ ", CÓDIGO DE producto : " + stockAgentes.get(i).getCodigo());
 
 
                 boolean existe = dbAdapter_stock_agente.existsStockAgenteByIdProd(stockAgentes.get(i).getIdProducto(), idLiquidacion);
-                Log.d("EXISTE ", "" + existe);
+                Log.d(TAG, "EXISTE : "+ existe);
                 if (existe) {
                     dbAdapter_stock_agente.updateStockAgentes(stockAgentes.get(i), idAgente, idLiquidacion);
                 } else {

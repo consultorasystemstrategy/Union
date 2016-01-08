@@ -648,13 +648,10 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
         cursorEstablecimiento.moveToFirst();
 
         if (cursorEstablecimiento.getCount() > 0) {
-
             String nombre_establecimiento = cursorEstablecimiento.getString(cursorEstablecimiento.getColumnIndex(dbHelper.EE_nom_establec));
             String nombre_cliente = cursorEstablecimiento.getString(cursorEstablecimiento.getColumnIndex(dbHelper.EE_nom_cliente));
             int id_estado_atencion = Integer.parseInt(cursorEstablecimiento.getString(cursorEstablecimiento.getColumnIndex(dbHelper.EE_id_estado_atencion)));
             double deudaTotal = cursorEstablecimiento.getDouble(cursorEstablecimiento.getColumnIndexOrThrow("cc_re_monto_a_pagar"));
-
-
             textViewSlideNombreEstablecimiento.setText("" + nombre_establecimiento);
             buttonSlideDeudaHoy.setText("" + df.format(deudaTotal));
         }

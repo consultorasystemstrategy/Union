@@ -495,6 +495,7 @@ public class VMovil_Evento_Gasto extends Activity implements View.OnClickListene
 
         editTextTotal.setText("");
         editTextTotal.setError(null);
+        editTextReferencia.setText("");
 
         displayListViewVEG();
         Toast.makeText(getApplicationContext(), "Gasto Agregado", Toast.LENGTH_SHORT).show();
