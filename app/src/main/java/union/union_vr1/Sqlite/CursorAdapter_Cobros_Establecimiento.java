@@ -2,11 +2,9 @@ package union.union_vr1.Sqlite;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.CursorAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -63,7 +61,7 @@ public class CursorAdapter_Cobros_Establecimiento extends CursorAdapter {
             String fecha = cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Comprob_Cobro.CC_fecha_programada));
             double monto = cursor.getDouble(cursor.getColumnIndexOrThrow(DbAdapter_Comprob_Cobro.CC_monto_a_pagar));
             double montoCobrado = cursor.getDouble(cursor.getColumnIndexOrThrow(DbAdapter_Comprob_Cobro.CC_monto_cobrado));
-            String estado = cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Comprob_Cobro.CC_estado_prologa));
+            String estado = cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Comprob_Cobro.CC_estado_prorroga));
             String nomEstablec = cursor.getString(cursor.getColumnIndexOrThrow("ee_te_nom_establec"));
             monto=monto-montoCobrado;
 

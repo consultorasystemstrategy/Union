@@ -142,10 +142,10 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
 
             if (stock < 0) {
                 stock = 0;
-                stockView.setText("Stock Disponible: " + stock);
+                stockView.setText("Stock Disponible " + stock +" de "+nomProducto);
             } else {
 
-                stockView.setText("Stock Disponible: " + stock);
+                stockView.setText("Stock Disponible " + stock +" de "+nomProducto);
             }
 
         } else {
@@ -306,7 +306,7 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
         final String importe = datos[3];
         //-----------------------------------------
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Devolucion \n" + nomProducto + "");
+        builder.setTitle("" + nomProducto + " ("+stock+")");
 
         final View layout_spinners = View.inflate(this, R.layout.prompts_canjes, null);
         final EditText cantidadText = (EditText) layout_spinners.findViewById(R.id.cantidad_can_dev_registrado);
@@ -467,7 +467,7 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
         //-----------------------------------------
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-        builder.setTitle("" + nomProducto + "");
+        builder.setTitle("" + nomProducto + " ("+stock+")");
 
         final View layout_spinners = View.inflate(this, R.layout.prompts_canjes, null);
         final EditText cantidadText = (EditText) layout_spinners.findViewById(R.id.cantidad_can_dev_registrado);
@@ -777,7 +777,7 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
         }
         int liquidacion = dbAdapter_temp_session.fetchVarible(3);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("" + nomProducto + "");
+        builder.setTitle("" + nomProducto + " ("+stock+")");
         final View layout_spinners = View.inflate(this, R.layout.prompts, null);
         final EditText vUnidad = (EditText) layout_spinners.findViewById(R.id.EditUnidadValor);
         final EditText nroCompro = (EditText) layout_spinners.findViewById(R.id.comprob_clave_dev_can);
@@ -1084,8 +1084,11 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
     }
 
     public void confirmar() {
+
+
         //Instancia para poder volver
 
+        /*
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ctx);
         alertDialogBuilder.setTitle("Guardado Correctamente");
         AlertDialog.Builder builder = alertDialogBuilder
@@ -1102,7 +1105,13 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
 
                 });
         AlertDialog alertDialog = alertDialogBuilder.create();
-        alertDialog.show();
+        alertDialog.show();*/
+        Intent back = new Intent(getApplicationContext(), VMovil_Operacion_Canjes_Devoluciones.class);
+        back.putExtra("idEstabX", idEstablec);
+        back.putExtra("idAgente", idAgente);
+        startActivity(back);
+        finish();
+
 
     }
 

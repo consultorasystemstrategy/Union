@@ -40,7 +40,7 @@
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:text="No encontrado"
+                android:text="No encontrado comprobante para el canje y devolucion"
                 android:id="@+id/textViewListaTitulo"
                 android:textSize="16dp"
                 android:textStyle="normal|bold"

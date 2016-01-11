@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -35,6 +36,7 @@ import com.mobsandgeeks.saripaar.Rule;
 import com.mobsandgeeks.saripaar.Validator;
 import com.mobsandgeeks.saripaar.annotation.NumberRule;
 import com.mobsandgeeks.saripaar.annotation.Required;
+import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -63,7 +65,7 @@ import union.union_vr1.Utils.Utils;
 
 import static union.union_vr1.R.layout.prompts_cobros;
 
-public class VMovil_Cobro_Credito extends Activity implements OnClickListener, Validator.ValidationListener {
+public class VMovil_Cobro_Credito extends Activity implements OnClickListener, Validator.ValidationListener, DatePickerDialog.OnDateSetListener {
 
     private DbAdapter_Temp_Session session;
 
@@ -77,7 +79,7 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener, V
     private String estabX;
     private double valCredito;
     private int pase = 0;
-
+    private TextView textViewFecha;
 
     int idPlanPago;
     int idPlanPagoDetalle;
@@ -433,13 +435,29 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener, V
         idDeuda = idVal1 - idVal2;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View layout_cobros = inflater.inflate(prompts_cobros, null);
+        View layout_cobros = inflater.inflate(R.layout.prompts_cobros, null);
         //Iniciando y Parseando Widgets
         final TextView descripcion = (TextView) layout_cobros.findViewById(R.id.textOperacionSol);
-        descripcion.setText("Solicitud  de prorroga para la deuda: " + idVal1 + "");
+        descripcion.setText("Solicitud  de prorroga para la deuda: " + Utils.formatDouble(idVal1)  + "");
 
         cantidadHoy = (EditText) layout_cobros.findViewById(R.id.cantidadHoy);
         final TextView cantidadProrroga = (TextView) layout_cobros.findViewById(R.id.montoProrroga);
+        textViewFecha = (TextView)layout_cobros.findViewById(R.id.textFecha);
+        textViewFecha.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Calendar now = Calendar.getInstance();
+                DatePickerDialog dpd = DatePickerDialog.newInstance(
+                        VMovil_Cobro_Credito.this,
+                        now.get(Calendar.YEAR),
+                        now.get(Calendar.MONTH),
+                        now.get(Calendar.DAY_OF_MONTH)
+                );
+                dpd.setTitle("DatePicker Title");
+                dpd.show(getFragmentManager(), "Datepickerdialog");
+
+            }
+        });
         cantidadProrroga.setEnabled(false);
         //Calculando el monto Prorroga.
         cantidadHoy.addTextChangedListener(new TextWatcher() {
@@ -485,28 +503,29 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener, V
                             DecimalFormat df = new DecimalFormat("0.00");
                             double valorPago = Double.parseDouble(Utils.replaceComa(cantidadHoy.getText().toString()));
                             double valorCobrar = Double.parseDouble(Utils.replaceComa(cantidadProrroga.getText().toString()));
-
+                            String fechaProgramada = textViewFecha.getText().toString();
                             if (valorPago != 0.0 && valorCobrar != 0.0) {
 
                                 int idAgente = session.fetchVarible(1);
                                 Log.e("DATOSENVIADOS", "" + idAgente + "-" + 4 + "-" + 1 + "-" + comprobanteVenta + "-" + valorCobrar + "-" + valorPago + "-" + Integer.parseInt(estabX) + "-" + Constants._CREADO + "-" + idComprobante + "-" + nombreEstablec);
-                                SolicitarAutorizacionCobros solicitarAutorizacionCobros = new SolicitarAutorizacionCobros(getApplicationContext());
-                                solicitarAutorizacionCobros.execute(idAgente + "", 4 + "", 1 + "", comprobanteVenta + "", valorCobrar + "", valorPago + "", estabX, Constants._CREADO + "", idComprobante + "", nombreEstablec + "");
-                                long idAutorizacion = dbAutorizacionCobro.createTempAutorizacionPago(idAgente, 4, 1, comprobanteVenta, valorCobrar, valorPago, Integer.parseInt(estabX), Constants._EXPORTADO, idComprobante, nombreEstablec);
-                                if (idAutorizacion > 0) {
+                                //long idAutorizacion = dbAutorizacionCobro.createTempAutorizacionPago(idAgente, 4, 1, comprobanteVenta, valorCobrar, valorPago, Integer.parseInt(estabX), Constants._CREADO, idComprobante, nombreEstablec);
+
+                               int estad = dbComprobanteCobro.updateComprobCobrosSN(idComprobante,fechaProgramada,valorPago,valorCobrar);
+                                if (estad > 0) {
+                                    //new  SolicitarAutorizacionCobros(getApplicationContext()).execute(idAgente + "", 4 + "", 1 + "", comprobanteVenta + "", valorCobrar + "", valorPago + "", estabX, Constants._CREADO + "", idComprobante + "", nombreEstablec + "",idAutorizacion+"");
                                     Back();
                                 } else {
-                                    Toast.makeText(getApplicationContext(), "Ocurrio un error", Toast.LENGTH_SHORT).show();
+                                    Utils.setToast(getApplicationContext(),"Ocurrio un error",R.color.rojo);
                                 }
 
 
                             } else {
-                                Toast.makeText(getApplicationContext(), "Por favor Ingrese Todos los Campos", Toast.LENGTH_SHORT).show();
+                                Utils.setToast(getApplicationContext(), "Por favor Ingrese Todos los Campos", R.color.rojo);
                             }
                         }
                         else{
 
-                            Utils.setToast(getApplicationContext(),"Ingrese todos los campos",R.color.rojo);
+                            Utils.setToast(getApplicationContext(),"Por favor Ingrese Todos los Campos",R.color.rojo);
                         }
 
                     }
@@ -973,5 +992,11 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener, V
             ((EditText) failedView).setError(message);
             Utils.setToast(getApplicationContext(), "Revise los campos", R.color.rojo);
         }
+    }
+
+    @Override
+    public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
+        int mont = monthOfYear+1;
+        textViewFecha.setText(year+"/"+mont+"/"+dayOfMonth);
     }
 }

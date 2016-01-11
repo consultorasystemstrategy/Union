@@ -10,7 +10,6 @@ import android.util.Log;
 import java.text.SimpleDateFormat;
 
 import union.union_vr1.Conexion.DbHelper;
-import union.union_vr1.Objects.ComprobanteVentaDetalle;
 
 /**
  * Created by Usuario on 15/12/2014.
@@ -97,6 +96,7 @@ public class DBAdapter_Temp_Autorizacion_Cobro {
         initialValues.put(estado_sincronizacion, sincronizacion);
         initialValues.put(temp_id_comprobante, idComprobante);
         initialValues.put(temp_nom_establec, nombreEstablec);
+        initialValues.put(temp_fechaLimite, nombreEstablec);
         initialValues.put(temp_id_autorizacion_cobro, incrementable());
         return mDb.insert(SQLITE_TABLE_Temp_Autorizacion_Cobro, null, initialValues);
     }
@@ -192,7 +192,7 @@ public class DBAdapter_Temp_Autorizacion_Cobro {
         initialValues.put(Constants._SINCRONIZAR, Constants._IMPORTADO);
         initialValues.put(temp_fechaLimite, fechaLimite);
 
-        mDb.execSQL("update " + DbAdapter_Comprob_Cobro.SQLITE_TABLE_Comprob_Cobro + " set " + DbAdapter_Comprob_Cobro.CC_estado_prologa + "='2' where " + DbAdapter_Comprob_Cobro.CC_id_comprobante_cobro + "='" + SolReferenciaIdComprobante + "'");
+        mDb.execSQL("update " + DbAdapter_Comprob_Cobro.SQLITE_TABLE_Comprob_Cobro + " set " + DbAdapter_Comprob_Cobro.CC_estado_prorroga + "='2' where " + DbAdapter_Comprob_Cobro.CC_id_comprobante_cobro + "='" + SolReferenciaIdComprobante + "'");
 
         return mDb.update(SQLITE_TABLE_Temp_Autorizacion_Cobro, initialValues,
                 temp_id_comprobante + "=? AND " + temp_establec + " = ?", new String[]{"" + SolReferenciaIdComprobante, "" + idEstablecimiento});

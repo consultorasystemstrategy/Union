@@ -185,6 +185,19 @@ public class FClienteEditar extends Fragment implements Validator.ValidationList
         Log.d("DATOS",""+cr.getCount());
         if(cr.moveToFirst()){
 
+            int tipoPersona = cr.getInt(cr.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_tipo_persona));
+            int tipoDoc = cr.getInt(cr.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_tipo_documento));
+            setAdapterTipoPersona(tipoPersona);
+            setAdapterTipoDocIdentidad(tipoDoc);
+            if(tipoPersona>2){
+
+                textCliente.setText("Razon Social");
+                linearLayoutMadre.setVisibility(View.GONE);
+                linearLayoutPadre.setVisibility(View.GONE);
+
+            }
+
+
             editTextNombre.setText(cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_nombres)));
             autoNroDocumento.setText(cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_nro_documento)));
             editTextApPaterno.setText(cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_apPaterno)));

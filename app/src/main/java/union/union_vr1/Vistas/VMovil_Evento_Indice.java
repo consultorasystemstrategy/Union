@@ -511,7 +511,7 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
                 intentIntegrator.initiateScan();
                 break;
             case R.id.buttonImport:
-                new ImportCredito(mainActivity).execute();
+               // new ImportCredito(mainActivity).execute();
                 //new ImportMain(mainActivity).execute();
                 Intent intentImportService = new Intent(mainActivity, ServiceImport.class);
                 intentImportService.setAction(Constants.ACTION_IMPORT_SERVICE);

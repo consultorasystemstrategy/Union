@@ -330,7 +330,7 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
         switch (id) {
             case R.id.buttonImport:
                 //new ImportMain(mainActivity).execute();
-                new ImportCredito(mainActivity).execute();
+               // new ImportCredito(mainActivity).execute();
                 Intent intentImportService = new Intent(mainActivity, ServiceImport.class);
                 intentImportService.setAction(Constants.ACTION_IMPORT_SERVICE);
                 mainActivity.startService(intentImportService);

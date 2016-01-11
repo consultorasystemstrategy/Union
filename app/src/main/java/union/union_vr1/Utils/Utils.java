@@ -39,6 +39,10 @@ public class Utils {
         DecimalFormat df = new DecimalFormat("0.00");
         return replaceComa(df.format(value));
     }
+    public static String formatDouble(Double value) {
+        DecimalFormat df = new DecimalFormat("0.00");
+        return replaceComa(df.format(value));
+    }
 
     public static String getDatePhone() {
         Calendar cal = new GregorianCalendar();

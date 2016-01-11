@@ -42,7 +42,7 @@ public class DbAdapter_Comprob_Cobro {
     public static final String CC_id_forma_cobro = "cc_id_forma_cobro";
     public static final String CC_lugar_registro = "cc_lugar_registro";
     public static final String CC_id_autorizacion = "cc_idAutorizacion";
-    public static final String CC_estado_prologa = "cc_estado_prologa";
+    public static final String CC_estado_prorroga = "cc_estado_prologa";
     public static final String CC_liquidacion = "id_liquidacion";
     public static final String CC_estado_flex = "cc_estado_flex";
     public static final String CC_id_flex = "CC_id_flex";
@@ -80,7 +80,8 @@ public class DbAdapter_Comprob_Cobro {
                     + estado_sincronizacion + " integer,"
                     + CC_id_autorizacion + " integer,"
                     + CC_liquidacion + " integer, "
-                    + CC_estado_prologa + " text );";
+
+                    + CC_estado_prorroga + " text );";
 
     public static final String DELETE_TABLE_COMPROB_COBRO = "DROP TABLE IF EXISTS " + SQLITE_TABLE_Comprob_Cobro;
 
@@ -131,7 +132,7 @@ public class DbAdapter_Comprob_Cobro {
         initialValues.put(CC_id_forma_cobro, id_forma_cobro);
         initialValues.put(CC_lugar_registro, lugar_registro);
         initialValues.put(CC_liquidacion, liquidacion);
-        initialValues.put(CC_estado_prologa, estadoProrroga);
+        initialValues.put(CC_estado_prorroga, estadoProrroga);
         initialValues.put(Constants._SINCRONIZAR, Constants._CREADO);
         return mDb.insert(SQLITE_TABLE_Comprob_Cobro, null, initialValues);
     }
@@ -202,14 +203,14 @@ public class DbAdapter_Comprob_Cobro {
     }
 
     public void updateEstadoEnviado(int idComprobanteCobro, int estado, String idAutorizacion) {
-        mDb.execSQL("update " + SQLITE_TABLE_Comprob_Cobro + " set " + CC_estado_prologa + "='" + estado + "'," + CC_id_autorizacion + "='" + idAutorizacion + "' where " + CC_id_comprobante_cobro + "='" + idComprobanteCobro + "';");
+        mDb.execSQL("update " + SQLITE_TABLE_Comprob_Cobro + " set " + CC_estado_prorroga + "='" + estado + "'," + CC_id_autorizacion + "='" + idAutorizacion + "' where " + CC_id_comprobante_cobro + "='" + idComprobanteCobro + "';");
     }
 
     public int verProceso(String idComprobanteCobro) {
         int e = 0;
-        Cursor cr = mDb.rawQuery("select * from " + DBAdapter_Temp_Autorizacion_Cobro.SQLITE_TABLE_Temp_Autorizacion_Cobro + " where " + DBAdapter_Temp_Autorizacion_Cobro.temp_id_comprobante + "='" + idComprobanteCobro + "';", null);
+        Cursor cr = mDb.rawQuery("select * from " + SQLITE_TABLE_Comprob_Cobro+ " where " +CC_id_comprobante_cobro + "='" + idComprobanteCobro + "';", null);
         if (cr.moveToFirst()) {
-            e = cr.getInt(cr.getColumnIndexOrThrow(DBAdapter_Temp_Autorizacion_Cobro.temp_id_estado_solicitud));
+            e = cr.getInt(cr.getColumnIndexOrThrow(CC_estado_prorroga));
         }
 
         return e;
@@ -221,6 +222,37 @@ public class DbAdapter_Comprob_Cobro {
         SimpleDateFormat df = new SimpleDateFormat("hh:mm:ss");
         String formatteTime = df.format(date);
         return formatteTime;
+    }
+
+    public int updateComprobCobrosExport(String id) {
+
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(estado_sincronizacion, Constants._ACTUALIZADO);
+        return mDb.update(SQLITE_TABLE_Comprob_Cobro, initialValues,
+                CC_id_comprobante_cobro + " = ?",
+                new String[]{
+                        "" + id
+                });
+    }
+    public int updateComprobCobrosSN(String idcomprobante,String fechaProgramada,double montopagado,double  montodeuda ) {
+
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(CC_fecha_programada, fechaProgramada);
+        initialValues.put(CC_monto_a_pagar, montodeuda);
+        //
+        initialValues.put(CC_estado_prorroga,5);
+        initialValues.put(CC_fecha_cobro, getDatePhone());
+        initialValues.put(CC_hora_cobro, getTimePhone());
+        initialValues.put(CC_monto_cobrado, montopagado);
+        //
+        initialValues.put(estado_sincronizacion, Constants._ACTUALIZADO);
+
+
+        return mDb.update(SQLITE_TABLE_Comprob_Cobro, initialValues,
+                CC_id_comprobante_cobro + " = ?",
+                new String[]{
+                        "" + idcomprobante
+                });
     }
 
     public int updateComprobCobrosAutorizacion(int estado, double montopagado, String idcomprobante) {
@@ -559,7 +591,7 @@ public class DbAdapter_Comprob_Cobro {
         mCursor = mDb.query(true, SQLITE_TABLE_Comprob_Cobro, new String[]{CC_id_comprobante_cobro, CC_id_cob_historial,
                         CC_id_establec, CC_id_comprob, CC_id_plan_pago, CC_id_plan_pago_detalle,
                         CC_desc_tipo_doc, CC_doc, CC_fecha_programada, CC_monto_a_pagar,
-                        CC_fecha_cobro, CC_monto_cobrado, CC_estado_cobro, CC_estado_prologa, CC_id_autorizacion},
+                        CC_fecha_cobro, CC_monto_cobrado, CC_estado_cobro, , CC_id_autorizacion},
                 CC_id_establec + " = " + inputText + " and cc_in_estado_cobro ='1' and cc_in_id_comprobante_cobro is not null  order by cc_te_fecha_programada desc", null,
                 null, null, null, null);
         if (mCursor != null) {

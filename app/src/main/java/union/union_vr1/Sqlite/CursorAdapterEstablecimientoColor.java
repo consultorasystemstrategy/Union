@@ -260,7 +260,7 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter {
                     setActionOperacion(_id_establecimiento_selected, estado_autorizado);
                 }
             });
-          //  imgeButtonView(estado_autorizado,imageButtonOp);
+            imgeButtonView(estado_autorizado, imageButtonOp);
 
         }
     }
@@ -270,21 +270,23 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter {
 
         switch (estadoAu) {
             case 5: //Puede editar o enviar
+                /*imageButton.setVisibility(View.VISIBLE);
                 imageButton.setActivated(true);
                 imageButton.setClickable(true);
-                imageButton.setAlpha((float) 1.0);
+                imageButton.setAlpha((float) 1.0);*/
 
                 break;
             case 6: //No puede hacer nada
-                imageButton.setVisibility(View.INVISIBLE);
+                //imageButton.setVisibility(View.INVISIBLE);
                 break;
             case 7: //Normal
-                imageButton.setVisibility(View.INVISIBLE);
+                //imageButton.setVisibility(View.INVISIBLE);
                 break;
             case 8: //Puede editar y enviar
+                /*imageButton.setVisibility(View.VISIBLE);
                 imageButton.setActivated(true);
                 imageButton.setClickable(true);
-                imageButton.setAlpha((float) 1.0);
+                imageButton.setAlpha((float) 1.0);*/
                 break;
 
         }

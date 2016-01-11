@@ -73,8 +73,7 @@ public class VMovil_Modificar_Estab extends AppCompatActivity {
 
         //------------------
 
-        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#19262F")));
-        getSupportActionBar().setIcon(R.drawable.ic_launcher);
+
         //
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         //getSupportActionBar().setDisplayShowHomeEnabled(true);
