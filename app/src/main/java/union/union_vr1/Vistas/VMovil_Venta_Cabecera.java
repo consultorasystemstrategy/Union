@@ -17,6 +17,7 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -98,7 +99,9 @@ import union.union_vr1.FacturacionElectronica.DigitalSignature;
 import union.union_vr1.FacturacionElectronica.Signature;
 import union.union_vr1.FacturacionElectronica.SimpleXMLAndroid;
 import union.union_vr1.InputFilterMinMax;
+import union.union_vr1.JSONParser.ParserEventoEstablecimiento;
 import union.union_vr1.Objects.Credito;
+import union.union_vr1.Objects.EventoEstablecimiento;
 import union.union_vr1.R;
 import union.union_vr1.RestApi.StockAgenteRestApi;
 import union.union_vr1.Servicios.ServiceExport;
@@ -117,6 +120,7 @@ import union.union_vr1.Sqlite.DbAdapter_Temp_Comprob_Cobro;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 import union.union_vr1.Sqlite.DbGastos_Ingresos;
+import union.union_vr1.Utils.DisplayToast;
 import union.union_vr1.Utils.RoundedLetterView;
 import union.union_vr1.Utils.SoftKeyboard;
 import union.union_vr1.Utils.Utils;
@@ -124,10 +128,7 @@ import union.union_vr1.VMovil_BluetoothImprimir;
 
 public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
 
-
-
     private DbAdapter_Temp_Session session;
-
     private DbAdapter_Histo_Comprob_Anterior dbHelper_Histo_comprob_anterior;
     private DBAdapter_Temp_Venta dbHelper_temp_venta;
     private DbAdapter_Comprob_Venta dbHelper_Comprob_Venta;
@@ -149,6 +150,8 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
     private String nombreCliente = null;
     private String documentoCliente = null;
     int i_tipoDocumento = 0;
+
+    private String nombreEstablecimiento = null ;
 
 
     //VARIABLES AGREGAR PRODUCTOS
@@ -314,6 +317,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
 
 
     ArrayAdapter<CharSequence> adapterFormaPago ;
+    ArrayAdapter<CharSequence> adapterFormaPagoCredito ;
 
     Utils df = new Utils();
 
@@ -344,7 +348,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
 
    public Dialog backPressedDialog(final Activity main, final Class clase){
        return new AlertDialog.Builder(main)
-               .setTitle("No ha vendido nada")
+               .setTitle("No terminó la venta")
                .setMessage("¿Está seguro que desea salir?")
                .setNegativeButton(R.string.no, null)
                .setPositiveButton(R.string.si, new DialogInterface.OnClickListener() {
@@ -443,6 +447,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
         idLiquidacion = session.fetchVarible(3);
 
         adapterFormaPago = ArrayAdapter.createFromResource(this, R.array.forma_pago, android.R.layout.simple_spinner_item);
+        adapterFormaPagoCredito = ArrayAdapter.createFromResource(this,R.array.forma_pago_credito,android.R.layout.simple_spinner_item);
 
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
@@ -546,96 +551,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
                 String formaPago = adapterView.getItemAtPosition(i).toString();
-
-                if(formaPago.equals(Constants._CONTADO)){
-                        //DO NOTHING
-                }else if(formaPago.equals(Constants._CREDITO)){
-
-
-                    if (isEstablecidasCuotas){
-
-                    }
-                    else {
-
-                        Cursor cursorEstablecimientoCredito = dbHelper_Evento_Establecimiento.fetchEstablecsById(""+idEstablecimiento);
-                        cursorEstablecimiento.moveToFirst();
-                        int montoCredito = -1;
-                        montoCredito = cursorEstablecimientoCredito.getInt(cursorEstablecimientoCredito.getColumnIndexOrThrow(dbHelper_Evento_Establecimiento.EE_monto_credito));
-                        switch (montoCredito){
-                            case -1:
-
-                                break;
-                            case 0:
-
-                                if (conectadoWifi()||conectadoRedMovil()) {
-                                    new AlertDialog.Builder(mContext)
-                                            .setTitle("Ops, No cuenta con crédito")
-                                            .setMessage("" +
-                                                    "¿Desea solicitar crédito?")
-                                            .setNegativeButton(R.string.no,new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialogInterface, int i) {
-                                                    spinnerFormaPago.setAdapter(adapterFormaPago);
-                                                }
-                                            })
-                                            .setPositiveButton(R.string.si, new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int id) {
-                                                    dialogSolicitarCredito().show();
-                                                }
-                                            })
-                                            .setCancelable(false)
-                                            .create().show();
-
-                                }else{
-                                    Toast toast = Toast.makeText(mContext, "Sin crédito y sin conexión", Toast.LENGTH_SHORT);
-                                    toast.getView().setBackgroundColor(mainActivity.getResources().getColor(R.color.verde));
-                                    TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
-                                    v.setTextColor(mainActivity.getResources().getColor(R.color.Blanco));
-                                    toast.show();
-                                }
-
-                                break;
-                            default:
-                                if (simpleCursorAdapter.getCursor().getCount()<=0){
-
-                                    Toast toast = Toast.makeText(mContext, "AGREGAR PRODUCTOS A LA VENTA", Toast.LENGTH_SHORT);
-                                    toast.getView().setBackgroundColor(mainActivity.getResources().getColor(R.color.verde));
-                                    TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
-                                    v.setTextColor(mainActivity.getResources().getColor(R.color.Blanco));
-                                    toast.show();
-
-                                    spinnerFormaPago.setAdapter(adapterFormaPago);
-
-                                    break;
-                                }
-                                new AlertDialog.Builder(mContext)
-                                        .setTitle("Está seguro que es toda su venta")
-                                        .setMessage("Si define las cuotas ya no podrá agregar productos a la venta, ni eliminarlos\n" +
-                                                "¿Está seguro que está todo listo?")
-                                        .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialogInterface, int i) {
-                                                spinnerFormaPago.setAdapter(adapterFormaPago);
-                                            }
-                                        })
-                                        .setPositiveButton(R.string.si, new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int id) {
-                                                Intent intent = new Intent(getApplicationContext(), VMovil_Venta_Cabecera_PlanPagos.class);
-                                                intent.putExtra("total", totalFooter);
-                                                finish();
-                                                startActivity(intent);
-                                            }
-                                        })
-                                        .setCancelable(false)
-                                        .create().show();
-
-                                break;
-                        }
-
-                    }
-
-                }
-
+                formaPagoSelected(formaPago);
             }
 
             @Override
@@ -805,7 +721,6 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
             @Override
             public Cursor runQuery(CharSequence charSequence) {
                 return dbHelper_Stock_Agente.fetchStockAgenteByIdEstablecimientoandName(id_categoria_establecimiento, charSequence.toString(), idLiquidacion);
-
             }
         });
 
@@ -969,7 +884,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
                 Log.d(TAG, "ADDED dataSnapshot : " + dataSnapshot.getValue());
                 Credito credito = dataSnapshot.getValue(Credito.class);
                 Log.d(TAG, "ADDED Monto : " + credito.getMontoCredito());
-                Log.d(TAG, "ADDED Estado: " + credito.isEstado());
+                Log.d(TAG, "ADDED Estado: " + credito.getEstado());
 
             }
 
@@ -978,12 +893,54 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
                 Log.d(TAG, "CHANGED dataSnapshot : " + dataSnapshot.getValue());
                 Credito credito = dataSnapshot.getValue(Credito.class);
 
-                if (credito.isEstado() && (credito.getIdAgente() == id_agente_venta) && credito.getIdEstablecimiento() == idEstablecimiento){
-                    Log.d(TAG, "CRÉDITO APROBADO : " +credito.getIdEstablecimiento() + ", "+credito.getIdAgente());
-                    Log.d(TAG, "CHANGED Monto : " + credito.getMontoCredito());
-                    Log.d(TAG, "CHANGED Estado: " + credito.isEstado());
-                    //actualizar el registro de la db here!
-                    updateSemaforoStatus(Constants.SEMAFORO_VERDE);
+                if ((credito.getIdAgente() == id_agente_venta) && credito.getIdEstablecimiento() == idEstablecimiento){
+
+                    switch (credito.getEstado()){
+                        case Constants._CREDITO_APROBADO:
+                            Log.d(TAG, "CRÉDITO APROBADO : " +credito.getIdEstablecimiento() + ", "+credito.getIdAgente());
+                            Log.d(TAG, "CHANGED Monto : " + credito.getMontoCredito());
+                            Log.d(TAG, "CHANGED Estado: " + credito.getEstado());
+                            //HABILITO EL BOTÓN
+                            buttonVender.setEnabled(true);
+                            buttonVender.setBackgroundColor(R.color.Dark1);
+                            //EL SPINNER FORMA DE PAGO AL CRÉDITO
+                            //spinnerFormaPago.setAdapter(adapterFormaPagoCredito);
+                            //actualizar el registro de la db here!
+                            new ActualizarEstablecimiento().execute();
+                            //SEMÁFORO STATUS = VERDE
+                            updateSemaforoStatus(Constants.SEMAFORO_VERDE);
+                            break;
+                        case Constants._CREDITO_RECHAZADO:
+                            Log.d(TAG, "CRÉDITO RECHAZADO : " +credito.getIdEstablecimiento() + ", "+credito.getIdAgente());
+                            Log.d(TAG, "CHANGED Monto : " + credito.getMontoCredito());
+                            Log.d(TAG, "CHANGED Estado: " + credito.getEstado());
+
+
+                            spinnerFormaPago.setAdapter(adapterFormaPago);
+                            updateSemaforoStatus(Constants.NO_ASIGNADO);
+                            buttonVender.setBackgroundColor(R.color.Dark1);
+                            buttonVender.setEnabled(true);
+
+                            new AlertDialog.Builder(mContext)
+                                    .setTitle("CREDITO RECHAZADO")
+                                    .setMessage("" + credito.getObservacion())
+                                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            //DO NOTHING
+                                        }
+                                    })
+                                    .setCancelable(false)
+                                    .create().show();
+
+
+                            break;
+                        case Constants._CREDITO_PENDIENTE:
+                            break;
+                        default:
+                            break;
+                    }
+
+
                 }else{
                     updateSemaforoStatus(Constants.SEMAFORO_ROJO);
                 }
@@ -1022,6 +979,193 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
             }
         });*/
 
+    }
+
+    class ActualizarEstablecimiento extends AsyncTask<String, String, String>{
+
+        private String TAG  = ActualizarEstablecimiento.class.getSimpleName();
+        StockAgenteRestApi api = null;
+        Handler mHandler;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mHandler = new Handler();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            ArrayList<EventoEstablecimiento> eventoEstablecimientos = null;
+            api = new StockAgenteRestApi(mainActivity);
+            try {
+                JSONObject jsonObjectEventoEstablecimiento = api.GetEstablecimeintoXRuta(idLiquidacion, Utils.getDatePhone(), id_agente_venta);
+                Log.d(TAG,"JSON OBJECT EVENTO ESTABLECIMIENTO : "+ jsonObjectEventoEstablecimiento.toString());
+                ParserEventoEstablecimiento parserEventoEstablecimiento = new ParserEventoEstablecimiento();
+                eventoEstablecimientos = parserEventoEstablecimiento.parserEventoEstablecimiento(jsonObjectEventoEstablecimiento);
+
+
+                for (int i = 0; i < eventoEstablecimientos.size(); i++) {
+                    Log.d(TAG, "ESTABLECIMIENTOS X RUTAS: " + i+ " Nombre Establecimiento : " + eventoEstablecimientos.get(i).getNombreEstablecimiento() + ", orden : " + eventoEstablecimientos.get(i).getOrden() + ", MONTO CRÉDITO: " + eventoEstablecimientos.get(i).getMontoCredito());
+                    boolean existe = dbAdaptert_evento_establec.existeEstablecsById(eventoEstablecimientos.get(i).getIdEstablecimiento());
+
+                    Log.d("EXISTE ESTABLECIMIENTO", "" + existe);
+                    if (existe) {
+                        //dbAdapter_comprob_cobro.updateComprobCobros(comprobanteCobros.get(i));
+                        dbAdaptert_evento_establec.updateEstablecimientos(eventoEstablecimientos.get(i), id_agente_venta, idLiquidacion);
+                    } else {
+                        //NO EXISTE ENTONCES CREEMOS UNO NUEVO
+                        long id = dbAdaptert_evento_establec.createEstablecimientos(eventoEstablecimientos.get(i), id_agente_venta, idLiquidacion);
+
+                        Log.d(TAG, "IMPORT INSERT ESTABLECIMIENTO id : " + id);
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            mHandler.post(new DisplayToast(mainActivity, "CRÉDITO ACEPTADO PARA : " + nombreEstablecimiento + "."));
+            formaPagoSelected(Constants._CREDITO);
+
+        }
+    }
+
+    public void formaPagoSelected(String formaPago){
+        if(formaPago.equals(Constants._CONTADO)){
+            //DO NOTHING
+            updateSemaforoStatus(Constants.NO_ASIGNADO);
+            buttonVender.setEnabled(true);
+            buttonVender.setBackgroundColor(R.color.Dark1);
+
+        }else if(formaPago.equals(Constants._CREDITO)){
+
+            if (isEstablecidasCuotas){
+
+            }
+            else {
+
+                Cursor cursorEstablecimientoCredito = dbHelper_Evento_Establecimiento.fetchEstablecsById(""+idEstablecimiento);
+                cursorEstablecimientoCredito.moveToFirst();
+                int montoCredito = -1;
+                Double montoCreditoDouble = 0.0;
+                montoCredito = cursorEstablecimientoCredito.getInt(cursorEstablecimientoCredito.getColumnIndexOrThrow(dbHelper_Evento_Establecimiento.EE_monto_credito));
+                montoCreditoDouble = cursorEstablecimientoCredito.getDouble(cursorEstablecimientoCredito.getColumnIndexOrThrow(dbHelper_Evento_Establecimiento.EE_monto_credito));
+
+                switch (montoCredito) {
+                    case -1:
+
+                        break;
+                    case 0:
+
+                        if (conectadoWifi() || conectadoRedMovil()) {
+                            new AlertDialog.Builder(mContext)
+                                    .setTitle("Ops, No cuenta con crédito")
+                                    .setMessage("" +
+                                            "¿Desea solicitar crédito?")
+                                    .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            spinnerFormaPago.setAdapter(adapterFormaPago);
+                                        }
+                                    })
+                                    .setPositiveButton(R.string.si, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dialogSolicitarCredito(totalFooter).show();
+                                        }
+                                    })
+                                    .setCancelable(false)
+                                    .create().show();
+
+                        } else {
+                            Toast toast = Toast.makeText(mContext, "Sin crédito y sin conexión", Toast.LENGTH_SHORT);
+                            toast.getView().setBackgroundColor(mainActivity.getResources().getColor(R.color.verde));
+                            TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
+                            v.setTextColor(mainActivity.getResources().getColor(R.color.Blanco));
+                            toast.show();
+                        }
+
+                        break;
+                    default:
+                        if (simpleCursorAdapter.getCursor().getCount() <= 0) {
+
+                            Toast toast = Toast.makeText(mContext, "AGREGAR PRODUCTOS A LA VENTA", Toast.LENGTH_SHORT);
+                            toast.getView().setBackgroundColor(mainActivity.getResources().getColor(R.color.verde));
+                            TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
+                            v.setTextColor(mainActivity.getResources().getColor(R.color.Blanco));
+                            toast.show();
+
+                            spinnerFormaPago.setAdapter(adapterFormaPago);
+
+                            break;
+                        }
+
+                        //TENER EL MONTO DE CRÉDITO DEL ESTABLECIMIENTO
+
+                        //TENER EL MONTO DE LA VENTA ACTUAL.
+
+                        if(totalFooter <= montoCredito){
+                            new AlertDialog.Builder(mContext)
+                                    .setTitle("Crédito Aceptado")
+                                    .setMessage("¿Desea continuar?")
+                                    .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            spinnerFormaPago.setAdapter(adapterFormaPago);
+
+                                            updateSemaforoStatus(Constants.NO_ASIGNADO);
+                                            buttonVender.setEnabled(true);
+                                            buttonVender.setBackgroundColor(R.color.Dark1);
+                                        }
+                                    })
+                                    .setPositiveButton(R.string.si, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            Intent intent = new Intent(getApplicationContext(), VMovil_Venta_Cabecera_PlanPagos.class);
+                                            intent.putExtra("total", totalFooter);
+                                            finish();
+                                            startActivity(intent);
+                                        }
+                                    })
+                                    .setCancelable(false)
+                                    .create().show();
+                        }else{
+                            final int finalMontoCredito = montoCredito;
+                            new AlertDialog.Builder(mContext)
+                                    .setTitle("Solicitar incremento de crédito")
+                                    .setMessage("Total venta : " + df.format(totalFooter)+"\n" +
+                                            "Monto de crédito : "+df.format(montoCreditoDouble))
+                                    .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            spinnerFormaPago.setAdapter(adapterFormaPago);
+
+                                            updateSemaforoStatus(Constants.NO_ASIGNADO);
+                                            buttonVender.setEnabled(true);
+                                            buttonVender.setBackgroundColor(R.color.Dark1);
+                                        }
+                                    })
+                                    .setPositiveButton(R.string.si, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dialogSolicitarCredito(totalFooter - finalMontoCredito).show();
+                                            //MANDAR EL NUEVO CRÉDITO
+                                        }
+                                    })
+                                    .setCancelable(false)
+                                    .create().show();
+                        }
+
+
+
+                        break;
+                }
+
+            }
+
+        }
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -1338,7 +1482,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
 
     }
 
-    private Dialog dialogSolicitarCredito() {
+    private Dialog dialogSolicitarCredito(Double total) {
 
         final View layout = View.inflate(this, R.layout.dialog_solicitar_credito, null);
 
@@ -1346,7 +1490,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
 
         final EditText editTextCantidadCredito = ((EditText) layout.findViewById(R.id.VCSC_editText_CantidadCredito));
 
-        String cantidadSugeridad = Utils.replaceComa(df.format(totalFooter));
+        String cantidadSugeridad = Utils.replaceComa(df.format(total));
         if (cantidadSugeridad.equals("0.00")){
             editTextCantidadCredito.setText("100.00");
         }else{
@@ -1392,18 +1536,21 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
                 String cantidad = Utils.replaceComa(editTextCantidadCredito.getText().toString().trim());
                 if (cantidad.length() > 0 && cantidad.length() < 10) {
                     Double cantidadCredito = Double.parseDouble(cantidad);
+                    Credito credito = new Credito(id_agente_venta, idEstablecimiento, cantidadCredito, Integer.parseInt(diasCredito), Constants._CREDITO_PENDIENTE, Constants._CREDITO);
+                    Firebase newCreditoRef = creditoRef.push();
+                    newCreditoRef.setValue(credito);
 
-                    new SolicitarCredito(mainActivity).execute("" + id_agente_venta, "" + idEstablecimiento, "" + cantidadCredito, "" + diasCredito);
-                    Credito credito = new Credito(id_agente_venta, idEstablecimiento, cantidadCredito, Integer.parseInt(diasCredito), false);
-                    creditoRef.push().setValue(credito);
+                    //GET UNIQUE ID, TIMESTAMP BASED
+                    String postId = newCreditoRef.getKey();
+                    Log.d(TAG, "GET KEY : " + postId);
 
-                    Toast toast = Toast.makeText(mContext.getApplicationContext(), "CREDITO SOLICITADO, ESPERAR...", Toast.LENGTH_SHORT);
-                    toast.getView().setBackgroundColor(mainActivity.getResources().getColor(R.color.verde));
-                    TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
-                    v.setTextColor(mainActivity.getResources().getColor(R.color.Blanco));
-                    toast.show();
+                    new SolicitarCredito(mainActivity).execute("" + id_agente_venta, "" + idEstablecimiento, "" + cantidadCredito, "" + diasCredito, postId);
+
                     //PINTAR
                     updateSemaforoStatus(Constants.SEMAFORO_ROJO);
+                    //DESACTIVAR EL BOTON
+                    buttonVender.setEnabled(false);
+                    buttonVender.setBackgroundColor(R.color.Dark3);
                 } else {
                     Toast.makeText(VMovil_Venta_Cabecera.this, "Número invalido, intente de nuevo", Toast.LENGTH_SHORT).show();
                 }
@@ -1551,47 +1698,50 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
             case R.id.VC_buttonVender:
                 //((MyApplication)this.getApplication()).setDisplayedHistorialComprobanteAnterior(false);
 
+                if (buttonVender.isEnabled()){
 
-                Cursor cursorTemp = simpleCursorAdapter.getCursor();
+                    Cursor cursorTemp = simpleCursorAdapter.getCursor();
 
-                if (cursorTemp.getCount() <= 0) {
-                    Log.d("CT VC", cursorTemp.getCount() + "");
-                    Toast toast = Toast.makeText(mainActivity, "AGREGAR PRODUCTOS A LA VENTA", Toast.LENGTH_LONG);
-                    toast.getView().setBackgroundColor(mainActivity.getResources().getColor(R.color.verde));
-                    TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
-                    v.setTextColor(mainActivity.getResources().getColor(R.color.Blanco));
-                    toast.show();
-                    return;
+                    if (cursorTemp.getCount() <= 0) {
+                        Log.d("CT VC", cursorTemp.getCount() + "");
+                        Toast toast = Toast.makeText(mainActivity, "AGREGAR PRODUCTOS A LA VENTA", Toast.LENGTH_LONG);
+                        toast.getView().setBackgroundColor(mainActivity.getResources().getColor(R.color.verde));
+                        TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
+                        v.setTextColor(mainActivity.getResources().getColor(R.color.Blanco));
+                        toast.show();
+                        return;
+                    }
+
+                    String formaPago = spinnerFormaPago.getSelectedItem().toString();
+                    String tipoDocumento = spinnerTipoDocumento.getSelectedItem().toString();
+
+                    if (formaPago.equals(Constants._SPINNER_DEFAULT_COMPROBANTE) && tipoDocumento.equals(Constants._SPINNER_DEFAULT_PAGO)){
+                        Toast.makeText(VMovil_Venta_Cabecera.this, "Seleccionar Tipo de Documento, y Forma de pago", Toast.LENGTH_SHORT).show();
+                        return;
+                    }else if (formaPago.equals(Constants._SPINNER_DEFAULT_PAGO)){
+                        Toast.makeText(VMovil_Venta_Cabecera.this, "Seleccionar Forma de pago", Toast.LENGTH_SHORT).show();
+                        return;
+                    }else if(tipoDocumento.equals(Constants._SPINNER_DEFAULT_COMPROBANTE)) {
+                        Toast.makeText(VMovil_Venta_Cabecera.this, "Seleccionar Tipo de Documento", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    new AlertDialog.Builder(VMovil_Venta_Cabecera.this)
+                            .setTitle("Confirmación")
+                            .setMessage("¿Está seguro de generar el comprobante electrónico?")
+                            .setNegativeButton(R.string.no, null)
+                            .setPositiveButton(R.string.si, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    // FIRE ZE MISSILES!
+                                    vender();
+                                    session.deleteVariable(6);
+                                    session.createTempSession(6,0);
+                                }
+                            })
+                            .create().show();
+                }else{
+                    Toast.makeText(VMovil_Venta_Cabecera.this, "Esperando Crédito.", Toast.LENGTH_SHORT).show();
                 }
-
-                String formaPago = spinnerFormaPago.getSelectedItem().toString();
-                String tipoDocumento = spinnerTipoDocumento.getSelectedItem().toString();
-
-                if (formaPago.equals(Constants._SPINNER_DEFAULT_COMPROBANTE) && tipoDocumento.equals(Constants._SPINNER_DEFAULT_PAGO)){
-                    Toast.makeText(VMovil_Venta_Cabecera.this, "Seleccionar Tipo de Documento, y Forma de pago", Toast.LENGTH_SHORT).show();
-                    return;
-                }else if (formaPago.equals(Constants._SPINNER_DEFAULT_PAGO)){
-                    Toast.makeText(VMovil_Venta_Cabecera.this, "Seleccionar Forma de pago", Toast.LENGTH_SHORT).show();
-                    return;
-                }else if(tipoDocumento.equals(Constants._SPINNER_DEFAULT_COMPROBANTE)) {
-                    Toast.makeText(VMovil_Venta_Cabecera.this, "Seleccionar Tipo de Documento", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                new AlertDialog.Builder(VMovil_Venta_Cabecera.this)
-                        .setTitle("Confirmación")
-                        .setMessage("¿Está seguro de generar el comprobante electrónico?")
-                        .setNegativeButton(R.string.no, null)
-                        .setPositiveButton(R.string.si, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                // FIRE ZE MISSILES!
-                                vender();
-                                session.deleteVariable(6);
-                                session.createTempSession(6,0);
-                            }
-                        })
-                        .create().show();
-
                 break;
 
                 //SLIDING MENU
@@ -1866,6 +2016,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
 
             for (cursorTemp.moveToFirst(); !cursorTemp.isAfterLast(); cursorTemp.moveToNext()) {
 
+
                 int _id = cursorTemp.getInt(cursorTemp.getColumnIndex(DBAdapter_Temp_Venta.temp_venta_detalle));
                 int id_producto = cursorTemp.getInt(cursorTemp.getColumnIndex(DBAdapter_Temp_Venta.temp_id_producto));
                 String nombre_producto = cursorTemp.getString(cursorTemp.getColumnIndex(DBAdapter_Temp_Venta.temp_nom_producto));
@@ -2136,7 +2287,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
 
         Cursor cursorEstablecimiento = dbHelper_Evento_Establecimiento.fetchEstablecsById(""+idEstablecimiento);
         cursorEstablecimiento.moveToFirst();
-        String nombreEstablecimiento = "";
+        nombreEstablecimiento = "";
         if (cursorEstablecimiento.getCount()>0) {
             nombreEstablecimiento = cursorEstablecimiento.getString(cursorEstablecimiento.getColumnIndexOrThrow(dbHelper_Evento_Establecimiento.EE_nom_establec));
         }

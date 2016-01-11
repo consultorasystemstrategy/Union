@@ -1001,4 +1001,27 @@ public class StockAgenteRestApi {
         result = new JSONObject(r);
         return result;
     }
+
+    public JSONObject CreateSolicitudAutorizacionCredito(int idAgente,String idMotivoSolicitud,int idEstablecimiento,int estadoSolicitud,String observacion,String referencia,int idUsuario,double montoCredito,int vigenciaCredito,String vstr_KeyFireBase) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","RestAPI");
+        o.put("method", "CreateSolicitudAutorizacionCredito");
+        p.put("idAgente",mapObject(idAgente));
+        p.put("idMotivoSolicitud",mapObject(idMotivoSolicitud));
+        p.put("idEstablecimiento",mapObject(idEstablecimiento));
+        p.put("estadoSolicitud",mapObject(estadoSolicitud));
+        p.put("observacion",mapObject(observacion));
+        p.put("referencia",mapObject(referencia));
+        p.put("idUsuario",mapObject(idUsuario));
+        p.put("montoCredito",mapObject(montoCredito));
+        p.put("vigenciaCredito",mapObject(vigenciaCredito));
+        p.put("vstr_KeyFireBase",mapObject(vstr_KeyFireBase));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
 }

@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.util.Log;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
@@ -42,7 +43,9 @@ import union.union_vr1.Sqlite.DbAdapter_Stock_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 import union.union_vr1.Sqlite.DbAdapter_Tipo_Gasto;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
+import union.union_vr1.Utils.DisplayToast;
 import union.union_vr1.Utils.MyApplication;
+import union.union_vr1.Utils.Utils;
 import union.union_vr1.Vistas.VMovil_Evento_Indice;
 import union.union_vr1.Vistas.VMovil_Online_Pumovil;
 import union.union_vr1.Vistas.VMovil_Venta_Cabecera;
@@ -59,10 +62,13 @@ public class SolicitarCredito extends AsyncTask<String, String, String> {
     private Activity mainActivity;
     private DbAdaptert_Evento_Establec dbAdaptert_evento_establec;
     JSONObject jsonObject = null;
+    private static String TAG = SolicitarCredito.class.getSimpleName();
+    Handler mHandler;
 
 
     public SolicitarCredito(Activity mainActivity) {
         this.mainActivity = mainActivity;
+        mHandler = new Handler();
         dbAdaptert_evento_establec = new DbAdaptert_Evento_Establec(mainActivity);
         dbAdaptert_evento_establec.open();
 
@@ -80,9 +86,11 @@ public class SolicitarCredito extends AsyncTask<String, String, String> {
                 Double montoCredito = Double.parseDouble(strings[2]);
                 montoCredito = montoCredito +1;
                 int diasCredito =Integer.parseInt(strings[3]) ;
-                Log.d("DATOS SOLICITUD CREDITO ", idAgente + " - "+idEstablecimiento + " - "+montoCredito + " - "+diasCredito);
+                String keyFirebase = strings[4] ;
 
-                jsonObject = api.CreateSolicitudAutorizacionCreditoExp(
+                Log.d(TAG, idAgente + " - "+idEstablecimiento + " - "+montoCredito + " - "+diasCredito + ", " +keyFirebase);
+
+                jsonObject = api.CreateSolicitudAutorizacionCredito(
                         idAgente,
                         "1",
                         idEstablecimiento,
@@ -92,9 +100,17 @@ public class SolicitarCredito extends AsyncTask<String, String, String> {
 //                        ((MyApplication)mainActivity.getApplication()).getIdUsuario(),
                         session.fetchVarible(4),
                         montoCredito,
-                        diasCredito
+                        diasCredito,
+                        keyFirebase
                 );
-                Log.d("JSON SOLICTTUD CRÉDITO", jsonObject.toString());
+
+                int result = Utils.JSONResult(jsonObject);
+                if (result >0){
+                    mHandler.post(new DisplayToast(mainActivity, "CRÉDITO SOLICITADO, ESPERAR."));
+                }else{
+                    mHandler.post(new DisplayToast(mainActivity, "OCURRIÓ UN ERROR INTENTE DE NUEVO."));
+                }
+                Log.d(TAG, jsonObject.toString());
 
 
         }catch (Exception e){
@@ -113,7 +129,10 @@ public class SolicitarCredito extends AsyncTask<String, String, String> {
     protected void onPostExecute(String s) {
 
 
-        Log.d("JSON SOLICTTUD CRÉDITO", jsonObject.toString());
+        if (jsonObject==null){
+            Log.d("JSON SOLICTTUD CRÉDITO", jsonObject.toString());
+            mHandler.post(new DisplayToast(mainActivity, "OCURRIÓ UN ERROR INTENTE DE NUEVO..."));
+        }
 
         super.onPostExecute(s);
 

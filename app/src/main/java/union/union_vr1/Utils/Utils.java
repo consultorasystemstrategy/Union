@@ -7,6 +7,7 @@ import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -176,4 +177,15 @@ public class Utils {
         return mBluetoothAdapter.getAddress();
     }
 
+    public static  int JSONResult(JSONObject jsonObj) {
+        int idRespuesta = -1;
+        try {
+            Log.d("CADENA A PARSEAR ", jsonObj.toString());
+            idRespuesta = jsonObj.getInt("Value");
+        } catch (JSONException e) {
+            // TODO Auto-generated catch block
+            Log.d("JSONPARSER ERROR", e.getMessage());
+        }
+        return idRespuesta;
+    }
 }
