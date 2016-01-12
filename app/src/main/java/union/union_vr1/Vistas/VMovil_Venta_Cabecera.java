@@ -114,10 +114,12 @@ import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta_Detalle;
 import union.union_vr1.Sqlite.DbAdapter_Histo_Comprob_Anterior;
 import union.union_vr1.Sqlite.DbAdapter_Histo_Venta_Detalle;
 import union.union_vr1.Sqlite.DbAdapter_Informe_Gastos;
+import union.union_vr1.Sqlite.DbAdapter_ModalidadCredito;
 import union.union_vr1.Sqlite.DbAdapter_Precio;
 import union.union_vr1.Sqlite.DbAdapter_Stock_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Comprob_Cobro;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
+import union.union_vr1.Sqlite.DbAdapter_Tipo_Doc_Identidad;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 import union.union_vr1.Sqlite.DbGastos_Ingresos;
 import union.union_vr1.Utils.DisplayToast;
@@ -138,6 +140,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
     private DbAdapter_Comprob_Cobro dbHelper_Comprob_Cobros;
     private DbAdapter_Stock_Agente dbHelper_Stock_Agente;
     private DbAdaptert_Evento_Establec dbHelper_Evento_Establecimiento;
+    private DbAdapter_ModalidadCredito dbAdapter_modalidadCredito;
     private EditText savedText;
     private String SERIE_DOCUMENTO;
 
@@ -439,6 +442,9 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
 
         dbHelper_Evento_Establecimiento = new DbAdaptert_Evento_Establec(this);
         dbHelper_Evento_Establecimiento.open();
+        dbAdapter_modalidadCredito = new DbAdapter_ModalidadCredito(this);
+        dbAdapter_modalidadCredito.open();
+
 
 
         idEstablecimiento = session.fetchVarible(2);
@@ -877,7 +883,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
         });
         //SLIDING MENU
         showSlideMenu(this);
-        Query queryRef = creditoRef.orderByChild("idEstablecimiento").equalTo(idEstablecimiento);
+        Query queryRef = creditoRef.orderByChild("fecha").equalTo(Utils.getDatePhone());
         queryRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -901,8 +907,6 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
                             Log.d(TAG, "CHANGED Monto : " + credito.getMontoCredito());
                             Log.d(TAG, "CHANGED Estado: " + credito.getEstado());
                             //HABILITO EL BOTÓN
-                            buttonVender.setEnabled(true);
-                            buttonVender.setBackgroundColor(R.color.Dark1);
                             //EL SPINNER FORMA DE PAGO AL CRÉDITO
                             //spinnerFormaPago.setAdapter(adapterFormaPagoCredito);
                             //actualizar el registro de la db here!
@@ -918,7 +922,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
 
                             spinnerFormaPago.setAdapter(adapterFormaPago);
                             updateSemaforoStatus(Constants.NO_ASIGNADO);
-                            buttonVender.setBackgroundColor(R.color.Dark1);
+                            buttonVender.setBackgroundResource(R.color.Dark5);
                             buttonVender.setEnabled(true);
 
                             new AlertDialog.Builder(mContext)
@@ -1030,7 +1034,16 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
             super.onPostExecute(s);
 
             mHandler.post(new DisplayToast(mainActivity, "CRÉDITO ACEPTADO PARA : " + nombreEstablecimiento + "."));
-            formaPagoSelected(Constants._CREDITO);
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+
+                    formaPagoSelected(Constants._CREDITO);
+                    buttonVender.setEnabled(true);
+                    buttonVender.setBackgroundResource(R.color.Dark5);
+                }
+            });
 
         }
     }
@@ -1040,7 +1053,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
             //DO NOTHING
             updateSemaforoStatus(Constants.NO_ASIGNADO);
             buttonVender.setEnabled(true);
-            buttonVender.setBackgroundColor(R.color.Dark1);
+            buttonVender.setBackgroundResource(R.color.Dark5);
 
         }else if(formaPago.equals(Constants._CREDITO)){
 
@@ -1063,7 +1076,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
                     case 0:
 
                         if (conectadoWifi() || conectadoRedMovil()) {
-                            new AlertDialog.Builder(mContext)
+                            new AlertDialog.Builder(VMovil_Venta_Cabecera.this)
                                     .setTitle("Ops, No cuenta con crédito")
                                     .setMessage("" +
                                             "¿Desea solicitar crédito?")
@@ -1108,7 +1121,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
 
                         //TENER EL MONTO DE LA VENTA ACTUAL.
 
-                        if(totalFooter <= montoCredito){
+                        if(totalFooter <= montoCreditoDouble){
                             new AlertDialog.Builder(mContext)
                                     .setTitle("Crédito Aceptado")
                                     .setMessage("¿Desea continuar?")
@@ -1119,7 +1132,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
 
                                             updateSemaforoStatus(Constants.NO_ASIGNADO);
                                             buttonVender.setEnabled(true);
-                                            buttonVender.setBackgroundColor(R.color.Dark1);
+                                            buttonVender.setBackgroundResource(R.color.Dark5);
                                         }
                                     })
                                     .setPositiveButton(R.string.si, new DialogInterface.OnClickListener() {
@@ -1145,7 +1158,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
 
                                             updateSemaforoStatus(Constants.NO_ASIGNADO);
                                             buttonVender.setEnabled(true);
-                                            buttonVender.setBackgroundColor(R.color.Dark1);
+                                            buttonVender.setBackgroundResource(R.color.Dark5);
                                         }
                                     })
                                     .setPositiveButton(R.string.si, new DialogInterface.OnClickListener() {
@@ -1502,15 +1515,32 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
         spinnerDiasCredito = ((Spinner) layout.findViewById(R.id.VCSC_spinner_DiasCredito));
 
 
-        final ArrayAdapter<CharSequence> adapterDiasCredito = ArrayAdapter.createFromResource(this,R.array.dias_credito,android.R.layout.simple_spinner_item);
-        adapterDiasCredito.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerDiasCredito.setAdapter(adapterDiasCredito);
+        Cursor cr = dbAdapter_modalidadCredito.fetchAllModalidadCreditos();
+        SimpleCursorAdapter simpleCursorAdapter;
+        int[] to = new int[]{
+                R.id.textSpinner,
+        };
+
+        String[] columns = new String[]{
+                DbAdapter_ModalidadCredito.TM_descripcion,
+
+        };
+        simpleCursorAdapter = new SimpleCursorAdapter(VMovil_Venta_Cabecera.this, R.layout.toolbar_spinner_item_actionbar, cr, columns, to, 0);
+        simpleCursorAdapter.setDropDownViewResource(R.layout.toolbar_spinner_item_dropdown);
+        spinnerDiasCredito.setAdapter(simpleCursorAdapter);
 
 
         spinnerDiasCredito.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                diasCredito = spinnerDiasCredito.getSelectedItem().toString();
+
+                Cursor cursor = dbAdapter_modalidadCredito.fetchModalidadCreditoByID(id);
+                if (cursor.getCount() > 0) {
+                    diasCredito = cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_ModalidadCredito.TM_dias_credito));
+                }else{
+                    diasCredito = "7";
+                    Log.d(TAG, "SPINNER DIAS DE CRÉDITO NOT WORKING WELL.");
+                }
 
             }
 
@@ -1536,7 +1566,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
                 String cantidad = Utils.replaceComa(editTextCantidadCredito.getText().toString().trim());
                 if (cantidad.length() > 0 && cantidad.length() < 10) {
                     Double cantidadCredito = Double.parseDouble(cantidad);
-                    Credito credito = new Credito(id_agente_venta, idEstablecimiento, cantidadCredito, Integer.parseInt(diasCredito), Constants._CREDITO_PENDIENTE, Constants._CREDITO);
+                    Credito credito = new Credito(id_agente_venta, idEstablecimiento, cantidadCredito, Integer.parseInt(diasCredito), Constants._CREDITO_PENDIENTE, Constants._CREDITO, Utils.getDatePhone());
                     Firebase newCreditoRef = creditoRef.push();
                     newCreditoRef.setValue(credito);
 

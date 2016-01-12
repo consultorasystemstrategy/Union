@@ -20,6 +20,7 @@ import union.union_vr1.JSONParser.ParserComprobanteCobro;
 import union.union_vr1.JSONParser.ParserComprobanteVentaDetalle;
 import union.union_vr1.JSONParser.ParserEventoEstablecimiento;
 import union.union_vr1.JSONParser.ParserHistorialVentaDetalles;
+import union.union_vr1.JSONParser.ParserModalidadCredito;
 import union.union_vr1.JSONParser.ParserPrecio;
 import union.union_vr1.JSONParser.ParserStockAgente;
 import union.union_vr1.JSONParser.ParserTipoGasto;
@@ -27,6 +28,7 @@ import union.union_vr1.Objects.ComprobanteCobro;
 import union.union_vr1.Objects.ComprobanteVentaDetalle;
 import union.union_vr1.Objects.EventoEstablecimiento;
 import union.union_vr1.Objects.HistorialVentaDetalles;
+import union.union_vr1.Objects.ModalidadCredito;
 import union.union_vr1.Objects.Precio;
 import union.union_vr1.Objects.StockAgente;
 import union.union_vr1.Objects.TipoGasto;
@@ -37,6 +39,7 @@ import union.union_vr1.Sqlite.DbAdapter_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
 import union.union_vr1.Sqlite.DbAdapter_Histo_Comprob_Anterior;
 import union.union_vr1.Sqlite.DbAdapter_Histo_Venta_Detalle;
+import union.union_vr1.Sqlite.DbAdapter_ModalidadCredito;
 import union.union_vr1.Sqlite.DbAdapter_Precio;
 import union.union_vr1.Sqlite.DbAdapter_Ruta_Distribucion;
 import union.union_vr1.Sqlite.DbAdapter_Stock_Agente;
@@ -52,9 +55,6 @@ import union.union_vr1.Utils.Utils;
 
 public class ServiceImport extends IntentService {
 
-
-
-
     Handler mHandler;
     private DbAdapter_Temp_Session session;
     private Context context;
@@ -64,6 +64,7 @@ public class ServiceImport extends IntentService {
     private DbAdapter_Precio dbAdapter_precio;
     private DbAdaptert_Evento_Establec dbAdaptert_evento_establec;
     private DbAdapter_Tipo_Gasto dbAdapter_tipo_gasto;
+    private DbAdapter_ModalidadCredito dbAdapter_modalidadCredito;
     private DbAdapter_Comprob_Cobro dbAdapter_comprob_cobro;
     private DbAdapter_Histo_Venta_Detalle dbAdapter_histo_venta_detalle;
     private DbAdapter_Histo_Comprob_Anterior dbAdapter_histo_comprob_anterior;
@@ -107,6 +108,8 @@ public class ServiceImport extends IntentService {
         dbAdaptert_evento_establec.open();
         dbAdapter_tipo_gasto = new DbAdapter_Tipo_Gasto(context);
         dbAdapter_tipo_gasto.open();
+        dbAdapter_modalidadCredito = new DbAdapter_ModalidadCredito(context);
+        dbAdapter_modalidadCredito.open();
         dbAdapter_comprob_cobro = new DbAdapter_Comprob_Cobro(context);
         dbAdapter_comprob_cobro.open();
         dbAdapter_histo_venta_detalle = new DbAdapter_Histo_Venta_Detalle(context);
@@ -156,6 +159,7 @@ public class ServiceImport extends IntentService {
 
         ArrayList<StockAgente> stockAgentes = null;
         ArrayList<TipoGasto> tipoGastos = null;
+        ArrayList<ModalidadCredito> modalidadCreditos = null;
         ArrayList<Precio> precios = null;
         ArrayList<EventoEstablecimiento> eventoEstablecimientos = null;
         ArrayList<ComprobanteCobro> comprobanteCobros = null;
@@ -182,6 +186,7 @@ public class ServiceImport extends IntentService {
             builder.setProgress(_MAX, 2, false);
             startForeground(1, builder.build());
             JSONObject jsonObjectTipoGasto = api.GetTipoGasto();
+            JSONObject jsonObjectModalidadCredito = api.fsel_ModalidadCredito(idAgente);
 
             JSONObject jsonObjectPrecio = api.GetPrecioCategoria(idLiquidacion, idAgente);
 
@@ -202,6 +207,7 @@ public class ServiceImport extends IntentService {
             Log.d(TAG,"JSON OBJECT STOCK AGENTE : "+ jsonObjectStockAgente.toString());
             Log.d(TAG,"JSON OBJECT PRECIO : "+ jsonObjectPrecio.toString());
             Log.d(TAG,"JSON OBJECT TIPO GASTO : "+ jsonObjectTipoGasto.toString());
+            Log.d(TAG,"JSON MODALIDAD CREDITO : "+ jsonObjectModalidadCredito.toString());
             Log.d(TAG,"JSON OBJECT EVENTO ESTABLECIMIENTO : "+ jsonObjectEventoEstablecimiento.toString());
             Log.d(TAG,"JSON OBJECT COMPROBANTE COBRO : "+ jsonObjectComprobanteCobro.toString());
             Log.d(TAG,"JSON OBJECT HISTORIAL VENTA DETALLE : "+ jsonObjectHistorialVentaDetalle.toString());
@@ -211,6 +217,7 @@ public class ServiceImport extends IntentService {
 
             ParserStockAgente parserStockAgente = new ParserStockAgente();
             ParserTipoGasto parserTipoGasto = new ParserTipoGasto();
+            ParserModalidadCredito parserModalidadCredito= new ParserModalidadCredito();
             ParserPrecio parserPrecio = new ParserPrecio(idAgente);
             ParserEventoEstablecimiento parserEventoEstablecimiento = new ParserEventoEstablecimiento();
             ParserComprobanteCobro parserComprobanteCobro = new ParserComprobanteCobro();
@@ -219,6 +226,7 @@ public class ServiceImport extends IntentService {
 
             stockAgentes = parserStockAgente.parserStockAgente(jsonObjectStockAgente);
             tipoGastos = parserTipoGasto.parserTipoGasto(jsonObjectTipoGasto);
+            modalidadCreditos = parserModalidadCredito.parserModalidadCredito(jsonObjectModalidadCredito);
             precios = parserPrecio.parserPrecio(jsonObjectPrecio);
             eventoEstablecimientos = parserEventoEstablecimiento.parserEventoEstablecimiento(jsonObjectEventoEstablecimiento);
             comprobanteCobros = parserComprobanteCobro.parserComprobanteCobro(jsonObjectComprobanteCobro);
@@ -289,6 +297,22 @@ public class ServiceImport extends IntentService {
                     dbAdapter_tipo_gasto.createTipoGasto(tipoGastos.get(i));
                 }
             }
+
+            for (int i = 0; i < modalidadCreditos.size(); i++) {
+                Log.d("MODALIDAD DE CRÉDITOS" + i, "ID : " + modalidadCreditos.get(i).getId()+ ", descripcion : "+modalidadCreditos.get(i).getDescripcion() + ", DIAS CRÉDITO :"+modalidadCreditos.get(i).getDiasCredito());
+
+                boolean existe = dbAdapter_modalidadCredito.existeModalidadCreditos(modalidadCreditos.get(i).getId());
+                Log.d(TAG, "EXISTE MODALIDAD CREDITO " + existe);
+
+                if (existe) {
+                    dbAdapter_modalidadCredito.updateModalidadCredito(modalidadCreditos.get(i));
+                } else {
+                    //NO EXISTE ENTONCES CREEMOS UNO NUEVO
+
+                    dbAdapter_modalidadCredito.createModalidadCreditos(modalidadCreditos.get(i));
+                }
+            }
+
 
             for (int i = 0; i < precios.size(); i++) {
                 Log.d("PRECIO CATEGORÌA : " + i, "Nombre producto : " + precios.get(i).getNombreProducto());

@@ -64,6 +64,7 @@ public class SolicitarCredito extends AsyncTask<String, String, String> {
     JSONObject jsonObject = null;
     private static String TAG = SolicitarCredito.class.getSimpleName();
     Handler mHandler;
+    private int result = -1;
 
 
     public SolicitarCredito(Activity mainActivity) {
@@ -104,12 +105,8 @@ public class SolicitarCredito extends AsyncTask<String, String, String> {
                         keyFirebase
                 );
 
-                int result = Utils.JSONResult(jsonObject);
-                if (result >0){
-                    mHandler.post(new DisplayToast(mainActivity, "CRÉDITO SOLICITADO, ESPERAR."));
-                }else{
-                    mHandler.post(new DisplayToast(mainActivity, "OCURRIÓ UN ERROR INTENTE DE NUEVO."));
-                }
+                result = Utils.JSONResult(jsonObject);
+
                 Log.d(TAG, jsonObject.toString());
 
 
@@ -128,12 +125,11 @@ public class SolicitarCredito extends AsyncTask<String, String, String> {
     @Override
     protected void onPostExecute(String s) {
 
-
-        if (jsonObject==null){
-            Log.d("JSON SOLICTTUD CRÉDITO", jsonObject.toString());
-            mHandler.post(new DisplayToast(mainActivity, "OCURRIÓ UN ERROR INTENTE DE NUEVO..."));
+        if (result >0){
+            mHandler.post(new DisplayToast(mainActivity, "CRÉDITO SOLICITADO, ESPERAR."));
+        }else{
+            mHandler.post(new DisplayToast(mainActivity, "OCURRIÓ UN ERROR INTENTE DE NUEVO."));
         }
-
         super.onPostExecute(s);
 
     }

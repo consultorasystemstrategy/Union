@@ -10,17 +10,19 @@ public class Credito {
     int diasCredito;
     int estado;
     private String observacion;
+    private String fecha;
 
     public Credito() {
     }
 
-    public Credito(int idAgente, int idEstablecimiento, double montoCredito, int diasCredito, int estado, String observacion) {
+    public Credito(int idAgente, int idEstablecimiento, double montoCredito, int diasCredito, int estado, String observacion, String fecha) {
         this.idAgente = idAgente;
         this.idEstablecimiento = idEstablecimiento;
         this.montoCredito = montoCredito;
         this.diasCredito = diasCredito;
         this.estado = estado;
         this.observacion = observacion;
+        this.fecha = fecha;
     }
 
 
@@ -71,5 +73,13 @@ public class Credito {
 
     public void setObservacion(String observacion) {
         this.observacion = observacion;
+    }
+
+    public String getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(String fecha) {
+        this.fecha = fecha;
     }
 }
