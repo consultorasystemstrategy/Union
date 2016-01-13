@@ -9,6 +9,8 @@ import android.util.Log;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.firebase.client.Firebase;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -18,6 +20,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import union.union_vr1.Objects.NuevoEstablecimiento;
 import union.union_vr1.R;
 import union.union_vr1.RestApi.StockAgenteRestApi;
 import union.union_vr1.Servicios.ServiceImport;
@@ -46,6 +49,13 @@ public class ImportEstadoAuEstablec extends AsyncTask<String, String, String> {
     private JSONObject jsonObjectCreated;
     private int idRemoto;
 
+    //FIREBASE
+    private Firebase rootRef = null;
+    private Firebase nuevoEstablecimientoRef = null;
+
+    private final static String TAG = ImportEstadoAuEstablec.class.getSimpleName();
+
+
 
     public ImportEstadoAuEstablec(Activity mainActivity) {
         this.mainActivity = mainActivity;
@@ -58,6 +68,8 @@ public class ImportEstadoAuEstablec extends AsyncTask<String, String, String> {
         dbAdapter_establecimeinto_historial = new DbAdapter_Establecimeinto_Historial(mainActivity);
         dbAdapter_establecimeinto_historial.open();
 
+        rootRef = new Firebase(Constants._APP_ROOT_FIREBASE);
+        nuevoEstablecimientoRef = rootRef.child(Constants._CHILD_ESTABLECIMIENTO_NUEVO);
     }
 
     @Override
@@ -77,6 +89,15 @@ public class ImportEstadoAuEstablec extends AsyncTask<String, String, String> {
                 Log.d("IMPORTESTADOESTABLEC", "" + cursor.getCount());
 
                 while (cursor.moveToNext()) {
+
+                    NuevoEstablecimiento nuevoEstablecimiento = new NuevoEstablecimiento(cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_nro_documento)), Utils.getDatePhone(), Constants.REGISTRO_INTERNET);
+                    Firebase newEstaclmientoRef = nuevoEstablecimientoRef.push();
+                    newEstaclmientoRef.setValue(nuevoEstablecimiento);
+
+                    //GET UNIQUE ID, TIMESTAMP BASED
+                    String postId = newEstaclmientoRef.getKey();
+                    Log.d(TAG, "GET KEY : " + postId);
+
                     jsonObjectCreated = api.InsClienteEstablecimiento(
                             cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_nombres)),
                             cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_apPaterno)),

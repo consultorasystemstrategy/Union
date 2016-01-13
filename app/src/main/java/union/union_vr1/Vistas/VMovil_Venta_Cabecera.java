@@ -1018,7 +1018,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
                         dbAdaptert_evento_establec.updateEstablecimientos(eventoEstablecimientos.get(i), id_agente_venta, idLiquidacion);
                     } else {
                         //NO EXISTE ENTONCES CREEMOS UNO NUEVO
-                        long id = dbAdaptert_evento_establec.createEstablecimientos(eventoEstablecimientos.get(i), id_agente_venta, idLiquidacion);
+                        long id = dbAdaptert_evento_establec.createEstablecimientos(eventoEstablecimientos.get(i), id_agente_venta, idLiquidacion, -1);
 
                         Log.d(TAG, "IMPORT INSERT ESTABLECIMIENTO id : " + id);
                     }
@@ -1398,7 +1398,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
                 @Override
                 public void onClick(View v) {
                     int position = mCursorPrecioUnitarioGeneral.getPosition();
-                    //Toast.makeText(getApplicationContext(), "Position del cursor Valor Unidad "+position, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getApplicationContext(), "Position del cursor Valor Unidad "+position, Toa   st.LENGTH_SHORT).show();
 
                     if (mCursorPrecioUnitarioGeneral.isLast()) {
                         mCursorPrecioUnitarioGeneral.moveToFirst();
@@ -1525,6 +1525,8 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
                 DbAdapter_ModalidadCredito.TM_descripcion,
 
         };
+
+
         simpleCursorAdapter = new SimpleCursorAdapter(VMovil_Venta_Cabecera.this, R.layout.toolbar_spinner_item_actionbar, cr, columns, to, 0);
         simpleCursorAdapter.setDropDownViewResource(R.layout.toolbar_spinner_item_dropdown);
         spinnerDiasCredito.setAdapter(simpleCursorAdapter);

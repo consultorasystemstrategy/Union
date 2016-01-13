@@ -23,6 +23,7 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 
 
+import com.firebase.client.Firebase;
 import com.mobsandgeeks.saripaar.Rule;
 import com.mobsandgeeks.saripaar.Validator;
 import com.mobsandgeeks.saripaar.annotation.Required;
@@ -31,6 +32,7 @@ import com.mobsandgeeks.saripaar.annotation.Required;
 
 import union.union_vr1.AsyncTask.CrearEstablecimiento;
 import union.union_vr1.Objects.EventoEstablecimiento;
+import union.union_vr1.Objects.NuevoEstablecimiento;
 import union.union_vr1.R;
 import union.union_vr1.Sqlite.Constants;
 import union.union_vr1.Sqlite.DbAdapter_Categoria_Establecimiento;
@@ -67,6 +69,10 @@ public class FEstablecimientoRegistrar extends Fragment implements Validator.Val
     int idcat_establec = 0;
     int idTipo_establec = 0;
 
+    //FIREBASE
+    private Firebase rootRef = null;
+    private Firebase nuevoEstablecimientoRef = null;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_establecimiento, container, false);
@@ -74,6 +80,9 @@ public class FEstablecimientoRegistrar extends Fragment implements Validator.Val
         idEstablecimiento = getArguments().getString("idEstablecimiento");
         validator = new Validator(this);
         validator.setValidationListener(this);
+
+        rootRef = new Firebase(Constants._APP_ROOT_FIREBASE);
+        nuevoEstablecimientoRef = rootRef.child(Constants._CHILD_ESTABLECIMIENTO_NUEVO);
 
         dbAdapter_temp_establecimiento = new DbAdapter_Temp_Establecimiento(getActivity());
         dbAdapter_temp_establecimiento.open();
@@ -355,6 +364,7 @@ public class FEstablecimientoRegistrar extends Fragment implements Validator.Val
                     cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_categoria_estable)),
                     Constants._CREADO,
                     0);
+
 
 
             //Evento por extablecimiemto

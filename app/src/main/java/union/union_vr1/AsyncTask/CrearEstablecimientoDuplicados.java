@@ -42,6 +42,8 @@ public class CrearEstablecimientoDuplicados extends AsyncTask<String, String, St
 
     private static final String TAG = CrearEstablecimientoDuplicados.class.getSimpleName();
 
+
+
     public CrearEstablecimientoDuplicados(Activity activity) {
         mainActivity = activity;
     }
