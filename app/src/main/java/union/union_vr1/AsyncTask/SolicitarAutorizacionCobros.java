@@ -7,16 +7,22 @@ import android.widget.Toast;
 
 import org.json.JSONObject;
 
+import union.union_vr1.R;
 import union.union_vr1.RestApi.StockAgenteRestApi;
+import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
+import union.union_vr1.Utils.Utils;
 
 /**
  * Created by Kelvin on 21/09/2015.
  */
 public class SolicitarAutorizacionCobros extends AsyncTask<String, String, String> {
-    Context context;
+    private int actualizacion;
+    private Context context;
+    private DbAdapter_Comprob_Cobro dbAdapter_comprob_cobro;
 
     public SolicitarAutorizacionCobros(Context ctx) {
-
+        dbAdapter_comprob_cobro = new DbAdapter_Comprob_Cobro(context);
+        dbAdapter_comprob_cobro.open();
         context = ctx;
 
     }
@@ -36,14 +42,23 @@ public class SolicitarAutorizacionCobros extends AsyncTask<String, String, Strin
             double pagado = Double.parseDouble(strings[5]);
             int idEstablec = Integer.parseInt(strings[6]);
             int sincronizacion = Integer.parseInt(strings[7]);
-            String  idComprobante = strings[8];
+            String idComprobante = strings[8];
             String nombreEstablec = strings[9];
+            String idActualizar = strings[10];
 
             Log.d("DATOS DE ARRAY", "" + strings.toString());
 
 
-          jsonObject = api.CreateSolicitudAutorizacionCreditoExp(idAgente,motivoSolicitud,idEstablec,estadoSolicitud,referencia,idComprobante,idAgente,aPagar,0);
+            jsonObject = api.CreateSolicitudAutorizacionCreditoExp(idAgente, motivoSolicitud, idEstablec, estadoSolicitud, referencia, idComprobante, idAgente, aPagar, 0);
             Log.d("LATLONG", jsonObject.toString());
+
+            if (Utils.isSuccesful(jsonObject)) {
+                int estado = jsonObject.getInt("");
+                if (estado > 0) {
+                    actualizacion = dbAdapter_comprob_cobro.updateComprobCobrosExport(idActualizar);
+                    Log.d("ACTUALIZO",""+actualizacion);
+                }
+            }
 
             publishProgress("" + 50);
 
@@ -55,7 +70,12 @@ public class SolicitarAutorizacionCobros extends AsyncTask<String, String, Strin
 
     @Override
     protected void onPostExecute(String s) {
-        Toast.makeText(context,"Solicitud enviada correctamente",Toast.LENGTH_LONG).show();
+        if(actualizacion<0){
+            Utils.setToast(context, "Solicitud enviada correctamente", R.color.rojo);
+        }else{
+            Utils.setToast(context,"Solicitud enviada correctamente", R.color.verde);
+        }
+
         super.onPostExecute(s);
     }
 }

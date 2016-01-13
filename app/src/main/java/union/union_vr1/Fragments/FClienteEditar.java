@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.SimpleCursorAdapter;
@@ -44,6 +45,7 @@ public class FClienteEditar extends Fragment implements Validator.ValidationList
     //VALIDACION DE LOS WIDGETS
     private Spinner spinnerTipoDocumento;
     private Spinner spinnerTipoPesona;
+    private Button btn;
 
     @Required(order = 1, messageResId = R.string.requerido_input)
     private EditText editTextNombre;
@@ -95,7 +97,8 @@ public class FClienteEditar extends Fragment implements Validator.ValidationList
         TextView vz = (TextView) toast.getView().findViewById(android.R.id.message);
         vz.setTextColor(getActivity().getResources().getColor(R.color.Blanco));
         viewPager = (ViewPager) getActivity().findViewById(R.id.viewpager);
-
+        btn = (Button)v.findViewById(R.id.btnValidarCliente);
+        btn.setVisibility(View.GONE);
         //...........
         //VALIDATOR INTANCE
         validator = new Validator(this);

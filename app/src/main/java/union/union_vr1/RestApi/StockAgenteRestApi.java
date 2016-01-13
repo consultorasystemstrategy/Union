@@ -1038,4 +1038,51 @@ public class StockAgenteRestApi {
         result = new JSONObject(r);
         return result;
     }
+
+    public JSONObject validarClienteExistente(String documento) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","RestAPI");
+        o.put("method", "validarClienteExistente");
+        p.put("documento",mapObject(documento));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+
+    public JSONObject fins_ClienteTemporal(String Nombres,String ApellidoMaterno,String ApellidoPaterno,int CategoriaEstablecimientoId,String CelularCliente,String CelularEstablecimiento,String DescripcionEstablecimiento,String DireccionEstablecimiento,String DireccionFiscal,int DistritoDireccionId,int DistritoFiscalId,String DocIdentidad,String Email,String Latitude,String Longitude,String TelefonoEstablecimiento,int TipoDocIdentidadId,int TipoNegocio,int TipoPersonaId,int UsuarioId) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","RestAPI");
+        o.put("method", "fins_ClienteTemporal");
+        p.put("Nombres",mapObject(Nombres));
+        p.put("ApellidoMaterno",mapObject(ApellidoMaterno));
+        p.put("ApellidoPaterno",mapObject(ApellidoPaterno));
+        p.put("CategoriaEstablecimientoId",mapObject(CategoriaEstablecimientoId));
+        p.put("CelularCliente",mapObject(CelularCliente));
+        p.put("CelularEstablecimiento",mapObject(CelularEstablecimiento));
+        p.put("DescripcionEstablecimiento",mapObject(DescripcionEstablecimiento));
+        p.put("DireccionEstablecimiento",mapObject(DireccionEstablecimiento));
+        p.put("DireccionFiscal",mapObject(DireccionFiscal));
+        p.put("DistritoDireccionId",mapObject(DistritoDireccionId));
+        p.put("DistritoFiscalId",mapObject(DistritoFiscalId));
+        p.put("DocIdentidad",mapObject(DocIdentidad));
+        p.put("Email",mapObject(Email));
+        p.put("Latitude",mapObject(Latitude));
+        p.put("Longitude",mapObject(Longitude));
+        p.put("TelefonoEstablecimiento",mapObject(TelefonoEstablecimiento));
+        p.put("TipoDocIdentidadId",mapObject(TipoDocIdentidadId));
+        p.put("TipoNegocio",mapObject(TipoNegocio));
+        p.put("TipoPersonaId",mapObject(TipoPersonaId));
+        p.put("UsuarioId",mapObject(UsuarioId));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
 }

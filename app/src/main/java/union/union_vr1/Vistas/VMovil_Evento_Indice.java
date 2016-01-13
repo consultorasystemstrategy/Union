@@ -517,9 +517,12 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
                 intentImportService.setAction(Constants.ACTION_IMPORT_SERVICE);
                 mainActivity.startService(intentImportService);
 
-                new GetDataSpinnerRegistrar(mainActivity).execute();
-                new GetClienteRuta(mainActivity).execute(slideIdAgente+"");
-                new GetDataSpinnerRegistrar(mainActivity).execute();
+                if(conectadoRedMovil() || conectadoWifi()){
+                    new GetDataSpinnerRegistrar(mainActivity).execute();
+                    new GetClienteRuta(mainActivity).execute(slideIdAgente+"");
+                }
+
+
 
                 break;
             case R.id.buttonExportar:

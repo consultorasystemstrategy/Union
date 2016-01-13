@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
@@ -16,12 +15,8 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -54,6 +49,8 @@ public class VMovil_Crear_Establecimiento extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_agregar_establecimiento);
+
+
 
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#19262F")));
         getSupportActionBar().setIcon(R.drawable.ic_launcher);
@@ -192,6 +189,9 @@ public class VMovil_Crear_Establecimiento extends AppCompatActivity {
                 .setPositiveButton(R.string.si, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dbAdapter_temp_establecimiento.deleteAll();
+                        SharedPreferences.Editor editor = getSharedPreferences("DIRECCION_FISCAL", Context.MODE_PRIVATE).edit();
+                        editor.putString("fiscal", null);
+                        editor.commit();
                         startActivity(new Intent(getApplicationContext(), VMovil_Menu_Establec.class));
                         finish();
                     }

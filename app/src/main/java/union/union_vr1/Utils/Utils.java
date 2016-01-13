@@ -177,6 +177,37 @@ public class Utils {
         return mBluetoothAdapter.getAddress();
     }
 
+    public static String sumarRestarDiasFecha(Date fecha, int dias) {
+
+        Calendar calendar = Calendar.getInstance();
+
+        calendar.setTime(fecha); // Configuramos la fecha que se recibe
+
+        calendar.add(Calendar.DAY_OF_YEAR, dias);  // numero de días a añadir, o restar en caso de días<0
+        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+
+        return df.format(calendar.getTime()); // Devuelve el objeto Date con los nuevos días añadidos
+
+    }
+
+    public static Date getDateConvert(String fecha) {
+        Calendar cal = new GregorianCalendar();
+
+        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        cal.set(2016, 01, 11);
+        Date date = cal.getTime();
+        try {
+            date = df.parse(fecha);
+        } catch (ParseException ex) {
+           Log.e(TAG,""+ex.getMessage());
+        }
+        return date;
+
+    }
+
+
+
+
     public static  int JSONResult(JSONObject jsonObj) {
         int idRespuesta = -1;
         try {

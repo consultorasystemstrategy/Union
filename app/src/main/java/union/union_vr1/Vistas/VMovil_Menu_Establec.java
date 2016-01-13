@@ -180,6 +180,8 @@ public class VMovil_Menu_Establec extends Activity implements View.OnClickListen
     private void displayListView() {
 
         Cursor cursor = dbHelper.listarEstablecimientos(idLiquidacion);
+        Cursor cr = dbHelper.fectchLiq(idLiquidacion);
+        Log.d("NROCOUNT",""+cr.getCount());
 
         /*
         // The desired columns to be bound

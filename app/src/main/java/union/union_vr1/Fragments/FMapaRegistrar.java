@@ -10,6 +10,8 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -71,10 +73,10 @@ public class FMapaRegistrar extends Fragment implements Validator.ValidationList
     private ViewPager viewPager;
     String idEstablecimiento;
     @Required(order = 3, messageResId = R.string.requerido_input)
-    @NumberRule(order = 4,type = NumberRule.NumberType.DOUBLE, messageResId = R.string.requerido_input)
+    @NumberRule(order = 4, type = NumberRule.NumberType.DOUBLE, messageResId = R.string.requerido_input)
     private EditText textLat;
     @Required(order = 5, messageResId = R.string.requerido_input)
-    @NumberRule(order = 6,type = NumberRule.NumberType.DOUBLE, messageResId = R.string.requerido_input)
+    @NumberRule(order = 6, type = NumberRule.NumberType.DOUBLE, messageResId = R.string.requerido_input)
     private EditText textLon;
 
 
@@ -145,6 +147,7 @@ public class FMapaRegistrar extends Fragment implements Validator.ValidationList
 
 
         // displayTouchLayout();
+        setDirFiscal();
         display();
         displatLocation();
         actualizar();
@@ -203,8 +206,8 @@ public class FMapaRegistrar extends Fragment implements Validator.ValidationList
                 webViewMap.loadUrl(urlMap);
 
             }
-            textLat.setText(""+location.getLatitude() + "");
-            textLon.setText(""+location.getLongitude() + "");
+            textLat.setText("" + location.getLatitude() + "");
+            textLon.setText("" + location.getLongitude() + "");
         }
 
         @Override
@@ -222,9 +225,24 @@ public class FMapaRegistrar extends Fragment implements Validator.ValidationList
 
         }
     };
+private void setDirFiscal(){
+    if (conectadoRedMovil() || conectadoWifi()) {
+        SharedPreferences prefs = getActivity().getSharedPreferences("DIRECCION_FISCAL", Context.MODE_PRIVATE);
+        String fiscal = prefs.getString("fiscal", null);
 
+        if(fiscal !=null){
+            editTextDireccionFiscal.setText(fiscal);
+            editTextDireccionFiscal.setEnabled(false);
+        }
+
+
+    }
+}
     private void display() {
-        // editTextDireccionFiscal.setEnabled(false);
+
+
+
+
         editTextDescripcion.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -236,12 +254,13 @@ public class FMapaRegistrar extends Fragment implements Validator.ValidationList
 
                 if (!estadoDF) {
 
+                  //  editTextDireccionFiscal.setText(editTextDescripcion.getText().toString());
 
-                    editTextDireccionFiscal.setText(editTextDescripcion.getText().toString());
 
                 } else {
+                   // editTextDireccionFiscal.setText("");
 
-                    editTextDireccionFiscal.setText("");
+
 
                 }
 
@@ -257,12 +276,13 @@ public class FMapaRegistrar extends Fragment implements Validator.ValidationList
             @Override
             public void onClick(View v) {
                 if (!estadoDF) {
-                    // editTextDireccionFiscal.setEnabled(true);
-                    editTextDireccionFiscal.setText("");
+                    editTextDireccionFiscal.setEnabled(true);
+                    //editTextDireccionFiscal.setText("");
+                    setDirFiscal();
                     estadoDF = true;
                 } else {
-                    // editTextDireccionFiscal.setEnabled(false);
-                    editTextDireccionFiscal.setText(editTextDescripcion.getText().toString());
+                    editTextDireccionFiscal.setEnabled(true);
+                   // editTextDireccionFiscal.setText(editTextDescripcion.getText().toString());
                     estadoDF = false;
                 }
             }
@@ -297,7 +317,7 @@ public class FMapaRegistrar extends Fragment implements Validator.ValidationList
         direccion_fiscal = editTextDireccionFiscal.getText().toString();
 
 
-        long estado = dbAdapter_temp_establecimiento.updateTempEstablecDireccion(idEstablecimiento + "",lat,lon,direccion,direccion_fiscal );
+        long estado = dbAdapter_temp_establecimiento.updateTempEstablecDireccion(idEstablecimiento + "", lat, lon, direccion, direccion_fiscal);
         if (estado > 0) {
             viewPager.setCurrentItem(2);
             mLocationManager.removeUpdates(mLocaction);
@@ -336,7 +356,31 @@ public class FMapaRegistrar extends Fragment implements Validator.ValidationList
         super.onCreateOptionsMenu(menu, inflater);
     }
 
+    protected Boolean conectadoWifi() {
+        ConnectivityManager connectivity = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivity != null) {
+            NetworkInfo info = connectivity.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+            if (info != null) {
+                if (info.isConnected()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
+    protected Boolean conectadoRedMovil() {
+        ConnectivityManager connectivity = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivity != null) {
+            NetworkInfo info = connectivity.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+            if (info != null) {
+                if (info.isConnected()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
 
 }

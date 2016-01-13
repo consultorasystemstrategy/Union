@@ -416,6 +416,9 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener, V
     }
 
     private void autorizacion(Cursor cursor, int p) {
+        Cursor cursorEstablecimiento = dbAdaptert_evento_establec.fetchEstablecsById(estabX);
+        cursorEstablecimiento.moveToFirst();
+
         //Variables Operacion
         final Double[] valorProrroga = {0.0, 0.0};
         //Obteniendo Datos del Cursor
@@ -431,6 +434,9 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener, V
         idCobro = cursor.getString(cursor.getColumnIndexOrThrow("_id"));
         idVal1 = cursor.getDouble(cursor.getColumnIndexOrThrow("cc_re_monto_a_pagar"));
         idVal2 = cursor.getDouble(cursor.getColumnIndexOrThrow("cc_re_monto_cobrado"));
+        String fecha = cursor.getString(cursor.getColumnIndexOrThrow("cc_te_fecha_programada"));
+        int diasCreadito = cursorEstablecimiento.getInt(cursorEstablecimiento.getColumnIndex(DbAdaptert_Evento_Establec.EE_dias_credito));
+
 
         idDeuda = idVal1 - idVal2;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -438,26 +444,13 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener, V
         View layout_cobros = inflater.inflate(R.layout.prompts_cobros, null);
         //Iniciando y Parseando Widgets
         final TextView descripcion = (TextView) layout_cobros.findViewById(R.id.textOperacionSol);
-        descripcion.setText("Solicitud  de prorroga para la deuda: " + Utils.formatDouble(idVal1)  + "");
+        descripcion.setText("Prorroga para la deuda: " + Utils.formatDouble(idVal1)  + "");
 
         cantidadHoy = (EditText) layout_cobros.findViewById(R.id.cantidadHoy);
         final TextView cantidadProrroga = (TextView) layout_cobros.findViewById(R.id.montoProrroga);
         textViewFecha = (TextView)layout_cobros.findViewById(R.id.textFecha);
-        textViewFecha.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Calendar now = Calendar.getInstance();
-                DatePickerDialog dpd = DatePickerDialog.newInstance(
-                        VMovil_Cobro_Credito.this,
-                        now.get(Calendar.YEAR),
-                        now.get(Calendar.MONTH),
-                        now.get(Calendar.DAY_OF_MONTH)
-                );
-                dpd.setTitle("DatePicker Title");
-                dpd.show(getFragmentManager(), "Datepickerdialog");
 
-            }
-        });
+        textViewFecha.setText(Utils.sumarRestarDiasFecha(Utils.getDateConvert(Utils.getDatePhoneConvert(fecha)),diasCreadito));
         cantidadProrroga.setEnabled(false);
         //Calculando el monto Prorroga.
         cantidadHoy.addTextChangedListener(new TextWatcher() {

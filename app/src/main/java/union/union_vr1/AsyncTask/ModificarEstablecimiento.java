@@ -17,6 +17,7 @@ import union.union_vr1.Sqlite.DBAdapter_Temp_Inventario;
 import union.union_vr1.Sqlite.DbAdapter_Establecimeinto_Historial;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Establecimiento;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
+import union.union_vr1.Vistas.VMovil_Evento_Indice;
 import union.union_vr1.Vistas.VMovil_Menu_Establec;
 
 /**
@@ -73,7 +74,7 @@ public class ModificarEstablecimiento extends AsyncTask<String, String, String> 
             dismissProgressDialog();
         }
 
-        mainActivity.startActivity(new Intent(mainActivity, VMovil_Menu_Establec.class));
+        mainActivity.startActivity(new Intent(mainActivity, VMovil_Evento_Indice.class));
         mainActivity.finish();
 
         super.onPostExecute(s);

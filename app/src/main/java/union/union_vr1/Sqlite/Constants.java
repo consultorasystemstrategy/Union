@@ -65,6 +65,8 @@ public class Constants {
     public static final int SEMAFORO_AMBAR = 1;
     public static final int SEMAFORO_ROJO = 2;
     public static final int SEMAFORO_VERDE = 3;
+    public static final int REGISTRO_INTERNET = 5;
+    public static final int REGISTRO_SIN_INTERNET = 10;
 
     public static final int _CREDITO_PENDIENTE = 1;
     public static final int _CREDITO_APROBADO = 2;

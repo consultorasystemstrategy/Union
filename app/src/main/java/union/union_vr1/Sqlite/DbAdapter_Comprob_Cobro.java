@@ -14,6 +14,7 @@ import java.util.GregorianCalendar;
 
 import union.union_vr1.Conexion.DbHelper;
 import union.union_vr1.Objects.ComprobanteCobro;
+import union.union_vr1.Utils.Utils;
 
 public class DbAdapter_Comprob_Cobro {
 
@@ -237,7 +238,7 @@ public class DbAdapter_Comprob_Cobro {
     public int updateComprobCobrosSN(String idcomprobante,String fechaProgramada,double montopagado,double  montodeuda ) {
 
         ContentValues initialValues = new ContentValues();
-        initialValues.put(CC_fecha_programada, fechaProgramada);
+        initialValues.put(CC_fecha_programada, Utils.getDatePhoneConvertFormat(fechaProgramada));
         initialValues.put(CC_monto_a_pagar, montodeuda);
         //
         initialValues.put(CC_estado_prorroga,5);

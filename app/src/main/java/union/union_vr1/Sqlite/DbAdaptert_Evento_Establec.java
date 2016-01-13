@@ -32,6 +32,7 @@ public class DbAdaptert_Evento_Establec {
     public static final String EE_time_atencion = "ee_in_time_atencion";
     public static final String EE_Latitud = "ee_in_latitud";
     public static final String EE_Longitud = "ee_in_longitud";
+    public static  final String EE_id_actualizar = "EE_id_actualizar";
     //Estado creado
     public static  final String EE_estado_autorizado = "ee_in_estado_autorizado";
 
@@ -81,7 +82,8 @@ public class DbAdaptert_Evento_Establec {
                     +EE_id_liquidacion+" integer, "
                     +EE_Latitud+" text, "//lat
                     +EE_Longitud+" text, "//long
-                    +EE_estado_autorizado+" integer, " +
+                    +EE_estado_autorizado+" integer, "
+                    +EE_id_actualizar+" integer, " +
                     estado_sincronizacion+" integer);";
 
     public static final String DELETE_TABLE_EVENTO_ESTABLEC = "DROP TABLE IF EXISTS " + SQLITE_TABLE_Evento_Establec;
@@ -129,10 +131,10 @@ public class DbAdaptert_Evento_Establec {
         return mDb.insert(SQLITE_TABLE_Evento_Establec, null, initialValues);
     }
 
-    public long createEstablecimientos(EventoEstablecimiento establecimiento, int id_agente, int id_liquidacion) {
+    public long createEstablecimientos(EventoEstablecimiento establecimiento, int id_agente, int id_liquidacion,long idEditar) {
 
         ContentValues initialValues = new ContentValues();
-        initialValues.put(EE_id_establec,establecimiento.getIdEstablecimiento());
+        initialValues.put(EE_id_establec, establecimiento.getIdEstablecimiento());
         initialValues.put(EE_id_cat_est,establecimiento.getIdCategoriaEstablecimiento());
         initialValues.put(EE_id_tipo_doc_cliente,establecimiento.getTipoDocCliente());
         initialValues.put(EE_id_estado_atencion, establecimiento.getEstadoAtencion());
@@ -149,13 +151,30 @@ public class DbAdaptert_Evento_Establec {
         initialValues.put(EE_id_liquidacion,id_liquidacion);
         initialValues.put(EE_codigo_barras,establecimiento.getCodigoBarras());
         initialValues.put(EE_direccion,establecimiento.getDireccion());
-        initialValues.put(EE_direccion_principal,establecimiento.getDireccionPrincipal());
+        initialValues.put(EE_direccion_principal, establecimiento.getDireccionPrincipal());
         initialValues.put(EE_estado_autorizado,establecimiento.getEstadoAutorizado());
-
         initialValues.put(EE_Latitud,establecimiento.getLatitud());
         initialValues.put(EE_Longitud,establecimiento.getLongitud());
-
+        initialValues.put(EE_id_actualizar,idEditar);
         return mDb.insert(SQLITE_TABLE_Evento_Establec, null, initialValues);
+    }
+    public int updateEstablecimientosEditar(EventoEstablecimiento establecimiento){
+
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(EE_id_cat_est,establecimiento.getIdCategoriaEstablecimiento());
+        initialValues.put(EE_id_tipo_doc_cliente,establecimiento.getTipoDocCliente());
+        initialValues.put(EE_nom_establec,establecimiento.getNombreEstablecimiento());
+        initialValues.put(EE_nom_cliente,establecimiento.getNombreCliente());
+        initialValues.put(EE_doc_cliente,establecimiento.getDocCliente());
+        initialValues.put(EE_direccion,establecimiento.getDireccion());
+        initialValues.put(EE_direccion_principal,establecimiento.getDireccionPrincipal());
+
+        initialValues.put(EE_Latitud,establecimiento.getLatitud());
+        initialValues.put(EE_Longitud, establecimiento.getLongitud());
+
+
+        return mDb.update(SQLITE_TABLE_Evento_Establec, initialValues,
+                EE_id_establec + "=?", new String[]{"" + establecimiento.getIdEstablecimiento()});
     }
     public void updateEstablecimientos(EventoEstablecimiento establecimiento, int id_agente, int id_liquidacion){
 
@@ -187,7 +206,6 @@ public class DbAdaptert_Evento_Establec {
         mDb.update(SQLITE_TABLE_Evento_Establec, initialValues,
                 EE_id_establec + "=?", new String[]{"" + establecimiento.getIdEstablecimiento()});
     }
-
     public boolean existeEstablecsById(int idEstablec) throws SQLException {
         boolean exists = false;
         Cursor mCursor = null;
@@ -247,7 +265,7 @@ public class DbAdaptert_Evento_Establec {
     public int updateEstablecsEstadoId(int idEstablecimiento){
 
         ContentValues initialValues = new ContentValues();
-        initialValues.put(EE_estado_autorizado, "2");
+        initialValues.put(EE_estado_autorizado, "6");
         return mDb.update(SQLITE_TABLE_Evento_Establec, initialValues,
                 EE_id_establec+"=?",new String[]{""+idEstablecimiento});
     }
@@ -259,6 +277,28 @@ public class DbAdaptert_Evento_Establec {
         initialValues.put(EE_Longitud, lon);
         return mDb.update(SQLITE_TABLE_Evento_Establec, initialValues,
                 EE_id_establec+"=?",new String[]{""+idEstablecimiento});
+    }
+
+    public int updateEstaIdRemoto(int idEstablecimiento,String id){
+
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(EE_id_establec, id);
+        return mDb.update(SQLITE_TABLE_Evento_Establec, initialValues,
+                EE_id_actualizar+"=?",new String[]{""+idEstablecimiento});
+    }
+
+    public int updateEstabEstado(int idEstablecimiento,String estado){
+
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(EE_estado_autorizado, estado);
+        return mDb.update(SQLITE_TABLE_Evento_Establec, initialValues,
+                EE_id_actualizar+"=?",new String[]{""+idEstablecimiento});
+    }
+
+    public int ordern (){
+        Cursor cr = mDb.rawQuery("select max("+EE_orden+")+1 as 'ORDEN' from "+SQLITE_TABLE_Evento_Establec+"", null);
+        cr.moveToFirst();
+        return  cr.getInt(cr.getColumnIndexOrThrow("ORDEN"));
     }
 
 
@@ -280,7 +320,7 @@ public class DbAdaptert_Evento_Establec {
 
         Log.d("SIGNOS INTERROGACIÓN", signosInterrogacion);
         int cantidadRegistros = mDb.update(SQLITE_TABLE_Evento_Establec, initialValues,
-                EE_id_evt_establec+"= "+ signosInterrogacion,ids);
+                EE_id_evt_establec + "= " + signosInterrogacion, ids);
 
 
         Log.d("REGISTROS ACTUALIZADO ", "" + cantidadRegistros);
@@ -379,6 +419,9 @@ public class DbAdaptert_Evento_Establec {
             mCursor.moveToFirst();
         }
         return mCursor;
+    }
+    public Cursor fectchLiq(int liqui){
+        return mDb.rawQuery("select * from "+SQLITE_TABLE_Evento_Establec+"  where "+EE_id_liquidacion+"='"+liqui+"'",null);
     }
 
     public Cursor fetchAllEstablecs() {

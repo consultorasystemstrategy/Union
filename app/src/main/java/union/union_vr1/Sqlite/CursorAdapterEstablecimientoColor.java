@@ -19,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.CursorAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -32,6 +33,7 @@ import android.widget.Toast;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
+import union.union_vr1.AsyncTask.CrearEstablecimientoDuplicados;
 import union.union_vr1.AsyncTask.ImportEstadoAuEstablec;
 import union.union_vr1.Charts.Line;
 import union.union_vr1.R;
@@ -101,6 +103,7 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter {
         LinearLayout linearLayoutColor = (LinearLayout) view.findViewById(R.id.linearLayoutEstablecimientoColor);
         TextView direccion = (TextView) view.findViewById(R.id.textViewDireccion);
         RatingBar ratingBar = (RatingBar) view.findViewById(R.id.rating);
+        Button btnEstado = (Button)view.findViewById(R.id.btnTextEstado);
 
 /*        Drawable progress = ratingBar.getProgressDrawable();
         DrawableCompat.setTint(progress, Color.YELLOW);*/
@@ -111,7 +114,8 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter {
 
         if (cursor.getCount() > 0) {
             estado_au = cursor.getInt(cursor.getColumnIndexOrThrow(DbAdaptert_Evento_Establec.EE_estado_autorizado));
-            String id_establecimiento = cursor.getString(cursor.getColumnIndex(dbHelper.EE_id_establec));
+            String id_establecimiento = cursor.getString(cursor.getColumnIndex(dbHelper.EE_id_actualizar));
+            final String idEstablec = cursor.getString(cursor.getColumnIndex(dbHelper.EE_id_establec));
             String nombre_establecimiento = cursor.getString(cursor.getColumnIndex(dbHelper.EE_nom_establec));
             String nombre_cliente = cursor.getString(cursor.getColumnIndex(dbHelper.EE_nom_cliente));
             int id_estado_atencion = Integer.parseInt(cursor.getString(cursor.getColumnIndex(dbHelper.EE_id_estado_atencion)));
@@ -130,7 +134,30 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter {
 
 
             int estado_autorizado_esta = cursor.getInt(cursor.getColumnIndexOrThrow(DbAdaptert_Evento_Establec.EE_estado_autorizado));
+           //COLOR DEL BOTTON DE ESTADO REGISTRO DE ESTABLECIMIENTO:
 
+            switch (estado_autorizado_esta){
+                case 5: //Registrado solamente puede Editar.
+                    btnEstado.setBackground(context.getResources().getDrawable(R.mipmap.ic_created));
+                    btnEstado.setText("C");
+                    break;
+                case 6://No puede hacer nada su estado esta en pendiente
+                    btnEstado.setBackground(context.getResources().getDrawable(R.mipmap.ic_ambar));
+                    btnEstado.setText("P");
+                    break;
+                case 7:// Puede hacer todas las operaciones
+                    btnEstado.setBackground(context.getResources().getDrawable(R.mipmap.ic_green));
+                    btnEstado.setText("A");
+                    break;
+                case 8: // No puede hacer nada , esta en rechazado
+                    btnEstado.setBackground(context.getResources().getDrawable(R.mipmap.ic_redc));
+                    btnEstado.setText("R");
+                    break;
+                case 10: // No puede hacer nada , esta en rechazado
+                    btnEstado.setBackground(context.getResources().getDrawable(R.mipmap.ic_created));
+                    btnEstado.setText("C");
+                    break;
+            }
 
             switch (id_estado_atencion) {
                 case 1:
@@ -146,7 +173,7 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter {
                     linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.amarillo));
                     break;
             }
-
+/*
             switch (estado_autorizado_esta){
                 case 5: //Puede editar o enviar
                     linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.Dark1));
@@ -160,7 +187,7 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter {
                 case 8://Puede editar y enviar
                     linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.Dark1));
                     break;
-            }
+            }*/
             /*switch (estado_autorizado) {
                 case 1: //editar
                     linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.Dark1));
@@ -202,9 +229,12 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter {
                             Utils.setToast(context, "No autorizado", R.color.rojo);
                             break;
                         case 7: //Normal
-                            eleccion(_id_establecimiento_selected);
+                            eleccion(idEstablec);
                             break;
                         case 8: //Puede editar y enviar
+                            Utils.setToast(context, "No autorizado", R.color.rojo);
+                            break;
+                        case 10: //Puede editar y enviar
                             Utils.setToast(context, "No autorizado", R.color.rojo);
                             break;
                     }
@@ -257,7 +287,7 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter {
                 public void onClick(View v) {
                     _id_establecimiento_selected = final_id;
                     estado_autorizado = f_estado_autorizado;
-                    setActionOperacion(_id_establecimiento_selected, estado_autorizado);
+                    setActionOperacion(_id_establecimiento_selected, estado_autorizado,idEstablec);
                 }
             });
             imgeButtonView(estado_autorizado, imageButtonOp);
@@ -293,7 +323,7 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter {
 
     }
 
-    private void setActionOperacion(final String idEstablec, final int estado_autorizado) {
+    private void setActionOperacion(final String idEstablecEditar, final int estado_autorizado, final  String IdEstablec) {
 
         String[] items = new String[]{};
         Integer[] icons = new Integer[]{};
@@ -301,12 +331,12 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter {
 
         switch (estado_autorizado) {
             case 5: //Puede editar o enviar
-                items = new String[]{"Editar", "Refrescar"};
+                items = new String[]{"Editar", "Enviar"};
                 icons = new Integer[]{android.R.drawable.ic_menu_edit,
                         android.R.drawable.ic_menu_upload};
 
                 adapter = new ArrayAdapterWithIcon(context, items, icons);
-                messageDialog(adapter, idEstablec);
+                messageDialog(adapter, idEstablecEditar,IdEstablec);
 
                 break;
             case 6: //No puede hacer nada
@@ -321,7 +351,18 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter {
                         android.R.drawable.ic_menu_upload};
 
                 adapter = new ArrayAdapterWithIcon(context, items, icons);
-                messageDialog(adapter, idEstablec);
+                messageDialog(adapter, idEstablecEditar,IdEstablec);
+
+
+                break;
+            case 10: //Puede editar y enviar
+                items = new String[]{"Editar", "Enviar"};
+                icons = new Integer[]{android.R.drawable.ic_menu_edit,
+                        android.R.drawable.ic_menu_upload};
+
+                adapter = new ArrayAdapterWithIcon(context, items, icons);
+                messageDialogDuplicado(adapter, idEstablecEditar, IdEstablec);
+
 
                 break;
 
@@ -380,20 +421,50 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter {
 
     }
 
-    private void messageDialog(final ListAdapter adapter, final String idEstablec) {
+    private void messageDialogDuplicado(final ListAdapter adapter, final String idEstablecEditar, final String idEstablec) {
         new AlertDialog.Builder(context).setTitle("Escoge una opcion")
                 .setAdapter(adapter, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
 
                         String itemString = (String) adapter.getItem(item);
-                        Toast.makeText(context, "Item Selected: " + itemString + "---" + idEstablec, Toast.LENGTH_SHORT).show();
+                        //  Toast.makeText(context, "Item Selected: " + itemString + "---" + idEstablec, Toast.LENGTH_SHORT).show();
 
                         switch (itemString) {
                             case "Editar":
-                                context.startActivity(new Intent(context, VMovil_Modificar_Estab.class).putExtra("idEstab", "" + idEstablec));
+                                Log.d("IDSEGUIDO",""+idEstablecEditar);
+                                context.startActivity(new Intent(context, VMovil_Modificar_Estab.class).putExtra("idEstab", "" + idEstablecEditar));
+                                break;
+                            case "Enviar":
+
+                                new CrearEstablecimientoDuplicados((Activity) context).execute("0", idEstablecEditar);
                                 break;
                             case "Refrescar":
-                                new ImportEstadoAuEstablec((Activity) context).execute("0", idEstablec);
+                               // new ImportEstadoAuEstablec((Activity) context).execute("1", idEstablec);
+                                break;
+                        }
+                    }
+                }).show();
+    }
+
+    private void messageDialog(final ListAdapter adapter, final String idEstablecEditar, final String idEstablec) {
+        new AlertDialog.Builder(context).setTitle("Escoge una opcion")
+                .setAdapter(adapter, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int item) {
+
+                        String itemString = (String) adapter.getItem(item);
+                      //  Toast.makeText(context, "Item Selected: " + itemString + "---" + idEstablec, Toast.LENGTH_SHORT).show();
+
+                        switch (itemString) {
+                            case "Editar":
+                                Log.d("IDSEGUIDO",""+idEstablecEditar);
+                                context.startActivity(new Intent(context, VMovil_Modificar_Estab.class).putExtra("idEstab", "" + idEstablecEditar));
+                                break;
+                            case "Enviar":
+
+                                new ImportEstadoAuEstablec((Activity) context).execute("0", idEstablecEditar);
+                                break;
+                            case "Refrescar":
+                                new ImportEstadoAuEstablec((Activity) context).execute("1", idEstablec);
                                 break;
                         }
                     }

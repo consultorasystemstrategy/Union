@@ -94,7 +94,6 @@
                     android:background="@color/Blanco"
                     android:layout_marginTop="5dp"
                     android:orientation="vertical">
-
                     <TextView
                         android:id="@+id/textDocumento"
                         android:layout_width="wrap_content"
@@ -108,15 +107,33 @@
                         android:textColor="@color/Dark1"
                         android:textStyle="bold" />
 
-
-                    <AutoCompleteTextView
-                        android:id="@+id/editNroDocumento"
-                        android:ems="10"
-                        android:hint=""
-                        android:inputType="number"
-                        android:layout_height="wrap_content"
+                    <LinearLayout
                         android:layout_width="fill_parent"
-                        android:text="" />
+                        android:layout_height="wrap_content"
+                        android:background="@color/Blanco"
+                        android:layout_marginTop="5dp"
+                        android:orientation="horizontal">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/editNroDocumento"
+                            android:ems="10"
+                            android:hint=""
+                            android:inputType="number"
+                            android:layout_height="wrap_content"
+                            android:layout_width="fill_parent"
+                            android:layout_weight="1"
+                            android:text="" />
+                        <Button
+                            android:layout_width="105dp"
+                            android:layout_height="fill_parent"
+                            android:background="@mipmap/ic_search"
+                            android:layout_weight="1"
+                            android:id="@+id/btnValidarCliente" />
+
+                        </LinearLayout>
+
+
+
 
 
                 </LinearLayout>
@@ -127,6 +144,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/Blanco"
+                    android:id="@+id/lynom"
                     android:layout_marginTop="5dp"
                     android:padding="5dp"
                     android:orientation="vertical">
@@ -229,6 +247,7 @@
                     android:background="@color/Blanco"
                     android:layout_marginTop="5dp"
                     android:padding="5dp"
+                    android:id="@+id/layoutTel"
                     android:orientation="vertical">
 
                     <TextView
@@ -260,6 +279,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/Blanco"
+                    android:id="@+id/layoutCorreo"
                     android:layout_marginTop="5dp"
                     android:padding="5dp"
                     android:orientation="vertical">

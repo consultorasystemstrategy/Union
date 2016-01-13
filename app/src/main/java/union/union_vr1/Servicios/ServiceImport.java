@@ -338,7 +338,7 @@ public class ServiceImport extends IntentService {
                     dbAdaptert_evento_establec.updateEstablecimientos(eventoEstablecimientos.get(i), idAgente, idLiquidacion);
                 } else {
                     //NO EXISTE ENTONCES CREEMOS UNO NUEVO
-                    long id = dbAdaptert_evento_establec.createEstablecimientos(eventoEstablecimientos.get(i), idAgente, idLiquidacion);
+                    long id = dbAdaptert_evento_establec.createEstablecimientos(eventoEstablecimientos.get(i), idAgente, idLiquidacion,0);
 
                     Log.d(TAG, "IMPORT INSERT ESTABLECIMIENTO id : " + id);
                 }
