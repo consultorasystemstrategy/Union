@@ -34,6 +34,7 @@ import union.union_vr1.AsyncTask.CrearEstablecimiento;
 import union.union_vr1.Objects.EventoEstablecimiento;
 import union.union_vr1.Objects.NuevoEstablecimiento;
 import union.union_vr1.R;
+import union.union_vr1.Servicios.FirebaseBackgroundService;
 import union.union_vr1.Sqlite.Constants;
 import union.union_vr1.Sqlite.DbAdapter_Categoria_Establecimiento;
 import union.union_vr1.Sqlite.DbAdapter_Establecimeinto_Historial;
@@ -81,6 +82,8 @@ public class FEstablecimientoRegistrar extends Fragment implements Validator.Val
         validator = new Validator(this);
         validator.setValidationListener(this);
 
+
+        Firebase.setAndroidContext(getContext());
         rootRef = new Firebase(Constants._APP_ROOT_FIREBASE);
         nuevoEstablecimientoRef = rootRef.child(Constants._CHILD_ESTABLECIMIENTO_NUEVO);
 
@@ -402,6 +405,10 @@ public class FEstablecimientoRegistrar extends Fragment implements Validator.Val
         editor.putString("fiscal", null);
         editor.commit();
         dbAdapter_temp_establecimiento.deleteAll();
+
+
+        // Start the background Firebase activity
+        getContext().startService(new Intent(FirebaseBackgroundService.class.getName()));
         startActivity(new Intent(getActivity().getApplicationContext(), VMovil_Menu_Establec.class));
     }
 

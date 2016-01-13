@@ -68,6 +68,8 @@ public class ImportEstadoAuEstablec extends AsyncTask<String, String, String> {
         dbAdapter_establecimeinto_historial = new DbAdapter_Establecimeinto_Historial(mainActivity);
         dbAdapter_establecimeinto_historial.open();
 
+        Firebase.setAndroidContext(mainActivity
+        );
         rootRef = new Firebase(Constants._APP_ROOT_FIREBASE);
         nuevoEstablecimientoRef = rootRef.child(Constants._CHILD_ESTABLECIMIENTO_NUEVO);
     }
