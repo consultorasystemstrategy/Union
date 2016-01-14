@@ -244,7 +244,7 @@ public class ExportEstadoAuEstablec extends AsyncTask<String, String, String> {
 
     public void createProgressDialog() {
         progressDialog = new ProgressDialog(mainActivity);
-        progressDialog.setMessage("Importando ...");
+        progressDialog.setMessage("Enviando ...");
         progressDialog.setIndeterminate(false);
         progressDialog.setMax(100);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);

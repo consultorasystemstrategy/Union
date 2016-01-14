@@ -17,8 +17,8 @@ import org.json.JSONObject;
 
 import java.util.List;
 
+import union.union_vr1.Objects.EstablecTemp;
 import union.union_vr1.Objects.EventoEstablecimiento;
-import union.union_vr1.Objects.NuevoEstablecimiento;
 import union.union_vr1.R;
 import union.union_vr1.RestApi.StockAgenteRestApi;
 import union.union_vr1.Sqlite.Constants;
@@ -51,8 +51,10 @@ public class CrearEstablecimientoDuplicados extends AsyncTask<String, String, St
 
     public CrearEstablecimientoDuplicados(Activity activity) {
         mainActivity = activity;
+        Firebase.setAndroidContext(mainActivity
+        );
         rootRef = new Firebase(Constants._APP_ROOT_FIREBASE);
-        nuevoEstablecimientoRef = rootRef.child(Constants._CHILD_ESTABLECIMIENTO_NUEVO);
+        nuevoEstablecimientoRef = rootRef.child(Constants._CHILD_ESTABLECIMIENTO_TEMPORAL);
     }
 
     @Override
@@ -75,9 +77,11 @@ public class CrearEstablecimientoDuplicados extends AsyncTask<String, String, St
 
         while (cr.moveToNext()){
 
-            NuevoEstablecimiento nuevoEstablecimiento = new NuevoEstablecimiento(cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_nro_documento)), Utils.getDatePhone(), Constants.REGISTRO_INTERNET);
+            EstablecTemp nuevoEstablecimientoTemp = new EstablecTemp(
+                    cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_histo_id)),
+                    Utils.getDatePhone(),Constants.REGISTRO_CREADO);
             Firebase newEstaclmientoRef = nuevoEstablecimientoRef.push();
-            newEstaclmientoRef.setValue(nuevoEstablecimiento);
+            newEstaclmientoRef.setValue(nuevoEstablecimientoTemp);
 
             //GET UNIQUE ID, TIMESTAMP BASED
             String postId = newEstaclmientoRef.getKey();

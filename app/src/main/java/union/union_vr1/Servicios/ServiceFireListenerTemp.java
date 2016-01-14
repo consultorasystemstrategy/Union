@@ -33,16 +33,16 @@ import union.union_vr1.Vistas.VMovil_Menu_Establec;
 /**
  * Created by Kelvin on 13/01/2016.
  */
-public class ServiceFireListener extends Service {
+public class ServiceFireListenerTemp extends Service {
     private Firebase rootRef = null;
-    private Firebase nuevoEstablecimientoRef = null;
+    private Firebase nuevoEstablecimientoRefTemp = null;
     private DbAdapter_Establecimeinto_Historial dbAdapter_establecimeinto_historial;
     private DbAdaptert_Evento_Establec dbAdaptert_evento_establec;
 
     private Context context;
 
 
-    private static String TAG = ServiceFireListener.class.getSimpleName();
+    private static String TAG = ServiceFireListenerTemp.class.getSimpleName();
 
     @Override
     public void onCreate() {
@@ -64,7 +64,7 @@ public class ServiceFireListener extends Service {
 
         Firebase.setAndroidContext(context);
         rootRef = new Firebase(Constants._APP_ROOT_FIREBASE);
-        nuevoEstablecimientoRef = rootRef.child(Constants._CHILD_ESTABLECIMIENTO_NUEVO);
+        nuevoEstablecimientoRefTemp = rootRef.child(Constants._CHILD_ESTABLECIMIENTO_TEMPORAL);
         dbAdapter_establecimeinto_historial = new DbAdapter_Establecimeinto_Historial(this);
         dbAdapter_establecimeinto_historial.open();
         dbAdaptert_evento_establec = new DbAdaptert_Evento_Establec(this);
@@ -74,10 +74,10 @@ public class ServiceFireListener extends Service {
         //------------------------------------------------------------------------------------------
         //Actualizar Datos de establecimiento cuando hay Internet.
         //------------------------------------------------------------------------------------------
-        Firebase refEstablecimientoNuevo = f.child(Constants._CHILD_ESTABLECIMIENTO_NUEVO);
+        Firebase refEstablecimientoNuevoTemp = f.child(Constants._CHILD_ESTABLECIMIENTO_TEMPORAL);
         ChildEventListener handler;
 
-        Query queryRef = refEstablecimientoNuevo.orderByChild("fecha").equalTo(Utils.getDatePhone());
+        Query queryRef = refEstablecimientoNuevoTemp.orderByChild("fecha").equalTo(Utils.getDatePhone());
         handler = new ChildEventListener() {
 
 
@@ -90,19 +90,19 @@ public class ServiceFireListener extends Service {
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
                 Log.d(TAG, "ADDED dataSnapshot : " + dataSnapshot.getValue());
-                NuevoEstablecimiento nuevoEstablecimiento = null;
-                nuevoEstablecimiento = dataSnapshot.getValue(NuevoEstablecimiento.class);
-                Log.d(TAG, "ADDED NRO DOC : " + nuevoEstablecimiento.getNroDoc());
+                EstablecTemp nuevoEstablecimiento = null;
+                nuevoEstablecimiento = dataSnapshot.getValue(EstablecTemp.class);
+                Log.d(TAG, "ADDED NRO DOC : " + nuevoEstablecimiento.getIdEstablecTemp());
                 Log.d(TAG, "ADDED FECHA : " + nuevoEstablecimiento.getFecha());
                 Log.d(TAG, "ADDED ESTADO: " + nuevoEstablecimiento.getEstado());
 
-                int idParent = dbAdapter_establecimeinto_historial.fetchIdEstablec(nuevoEstablecimiento.getNroDoc());
+                String idParent = nuevoEstablecimiento.getIdEstablecTemp();
                 Log.d(TAG, "ADDED ID ESTABLEC: " + idParent);
-                int estadoInserto = dbAdaptert_evento_establec.updateEstabEstado(idParent, "" + nuevoEstablecimiento.getEstado());
+                int estadoInserto = dbAdaptert_evento_establec.updateEstabEstado(Integer.parseInt(idParent), "" + nuevoEstablecimiento.getEstado());
                 Log.d(TAG, "ADDED ID ESTABLEC: " + estadoInserto);
                 String titulo = "", mensaje = "";
                 int color = 0;
-                mensaje = "C. Doc: " + nuevoEstablecimiento.getNroDoc();
+                mensaje = "C. Doc: " + nuevoEstablecimiento.getIdEstablecTemp();
 
                 switch (nuevoEstablecimiento.getEstado()){
                     case Constants.REGISTRO_APROBADO:
@@ -174,33 +174,7 @@ public class ServiceFireListener extends Service {
         mNotificationManager.notify(Constants.ID_NOTIFICATION_FIREBASE, n);
     }
 
-    private void postNotifTemp(String titulo, String mensaje, int estado) {
 
-        Log.d(TAG, "POST NOTIFICACIÓN ...");
-
-        NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        int icon = R.drawable.ic_launcher;
-
-        Intent intent = new Intent(this, VMovil_Menu_Establec.class);
-        PendingIntent pIntent = PendingIntent.getActivity(this, (int) System.currentTimeMillis(), intent, 0);
-        Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        // build notification
-        // the addAction re-use the same intent to keep the example short
-        Notification n = new Notification.Builder(this)
-                .setContentTitle(titulo)
-                .setContentText(mensaje)
-                .setSmallIcon(icon)
-                .setContentIntent(pIntent)
-                .setAutoCancel(true)
-                .setSound(alarmSound)
-                .setLights(estado, 500, 500)
-                .setVibrate(new long[] { 1000, 1000, 1000, 1000, 1000})
-                .setStyle(new Notification.BigTextStyle().bigText("")).build();
-        //  .addAction(R.drawable.line, "", pIntent).build();
-        n.flags |= Notification.FLAG_AUTO_CANCEL;
-
-        mNotificationManager.notify(Constants.ID_NOTIFICATION_FIREBASE, n);
-    }
 
     @Override
     public void onDestroy() {

@@ -48,6 +48,17 @@
         <service
             android:name=".Servicios.ServiceFireListener"
             android:process=":ListenerFireBase" />
+        <service
+            android:name=".Servicios.ServiceFireListenerTemp"
+            android:process=":ListenerFireBaseTemp" />
+
+        <receiver android:enabled="true" android:name=".Servicios.BroadCastRunFireBaseService"
+            android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
 
         <activity
             android:name=".Vistas.VMovil_Menu_Establec"
