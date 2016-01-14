@@ -25,6 +25,7 @@ import union.union_vr1.Fragments.FClienteRegistrar;
 import union.union_vr1.Fragments.FEstablecimientoRegistrar;
 import union.union_vr1.Fragments.FMapaRegistrar;
 import union.union_vr1.R;
+
 import union.union_vr1.Sqlite.Constants;
 import union.union_vr1.Sqlite.DbAdapter_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Temp_DatosSpinner;

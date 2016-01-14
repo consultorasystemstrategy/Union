@@ -2,43 +2,29 @@ package union.union_vr1.AsyncTask;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.firebase.client.Firebase;
 
-import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
 
 import union.union_vr1.Objects.NuevoEstablecimiento;
 import union.union_vr1.R;
 import union.union_vr1.RestApi.StockAgenteRestApi;
-import union.union_vr1.Servicios.ServiceImport;
 import union.union_vr1.Sqlite.Constants;
 import union.union_vr1.Sqlite.CursorAdapterEstablecimientoColor;
-import union.union_vr1.Sqlite.DBAdapter_Temp_Autorizacion_Cobro;
-import union.union_vr1.Sqlite.DbAdapter_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Establecimeinto_Historial;
-import union.union_vr1.Sqlite.DbAdapter_Temp_Establecimiento;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 import union.union_vr1.Utils.Utils;
-import union.union_vr1.Vistas.VMovil_Evento_Indice;
 
 /**
  * Created by Kelvin on 28/08/2015.
  */
-public class ImportEstadoAuEstablec extends AsyncTask<String, String, String> {
+public class ExportEstadoAuEstablec extends AsyncTask<String, String, String> {
     private DbAdapter_Establecimeinto_Historial dbAdapter_establecimeinto_historial;
     private DbAdapter_Temp_Session session;
     private DbAdaptert_Evento_Establec dbAdaptert_evento_establec;
@@ -53,11 +39,11 @@ public class ImportEstadoAuEstablec extends AsyncTask<String, String, String> {
     private Firebase rootRef = null;
     private Firebase nuevoEstablecimientoRef = null;
 
-    private final static String TAG = ImportEstadoAuEstablec.class.getSimpleName();
+    private final static String TAG = ExportEstadoAuEstablec.class.getSimpleName();
 
 
 
-    public ImportEstadoAuEstablec(Activity mainActivity) {
+    public ExportEstadoAuEstablec(Activity mainActivity) {
         this.mainActivity = mainActivity;
         dbAdaptert_evento_establec = new DbAdaptert_Evento_Establec(mainActivity);
         dbAdaptert_evento_establec.open();
@@ -85,7 +71,8 @@ public class ImportEstadoAuEstablec extends AsyncTask<String, String, String> {
         try {
             //Obteniendo los datos para exportar del establecimiento
 
-            if (existe > 0) {
+
+            if (existe == 0) {
 
                 Cursor cursor = dbAdapter_establecimeinto_historial.fetchTemEstablecEdit(strings[1]);
                 Log.d("IMPORTESTADOESTABLEC", "" + cursor.getCount());
@@ -122,6 +109,7 @@ public class ImportEstadoAuEstablec extends AsyncTask<String, String, String> {
                             0.0, //Minto de credito
                             5,//modalidad de credito
                             cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_descripcion)),
+                            cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_direccion_fiscal)),
                             1,
                             0,//iddistrito
                             cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_telefono_fijo)),
@@ -146,7 +134,7 @@ public class ImportEstadoAuEstablec extends AsyncTask<String, String, String> {
                             idLiquidacion,//Liquidacion
                             4,//Motivo no atewncido
                             0,//RUTAid
-                            cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_direccion_fiscal))
+                            postId
 
                     );
                     Log.d("IMPORTESTADOESTABLEC", "" + jsonObjectCreated);
@@ -180,9 +168,10 @@ public class ImportEstadoAuEstablec extends AsyncTask<String, String, String> {
 
             }else{
                 idRemoto = Integer.parseInt(strings[1]);
+                Log.d("IMPORTESTADOESTABLEC",""+idRemoto);
                 //-------------------Para Pedir la aprobacion del establecimiento.--------------------
                 jsonObject = api.fupd_EstadoClienteEstablecimiento(existe, idRemoto, idAgente);
-                Log.d("JSON AUTO ESTAB", "" + jsonObject.toString());
+                Log.d("IMPORTESTADOESTABLEC", "" + jsonObject.toString());
                 if (Utils.isSuccesful(jsonObject)) {
                     int inserto = jsonObject.getInt("Value");
                     if (inserto > 0) {
@@ -190,7 +179,7 @@ public class ImportEstadoAuEstablec extends AsyncTask<String, String, String> {
 
                         long es = dbAdaptert_evento_establec.updateEstablecsEstadoId(idEstablecimiento);
                         if (es > 0) {
-                            Log.d("ESTADO INSERTO", "" + es);
+                            Log.d("IMPORTESTADOESTABLEC", "" + es);
                         }
 
 

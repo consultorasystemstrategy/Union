@@ -54,6 +54,7 @@ import union.union_vr1.BarcodeScanner.IntentResult;
 import union.union_vr1.R;
 import union.union_vr1.RestApi.StockAgenteRestApi;
 import union.union_vr1.Servicios.ServiceExport;
+import union.union_vr1.Servicios.ServiceFireListener;
 import union.union_vr1.Servicios.ServiceImport;
 import union.union_vr1.Sqlite.Constants;
 import union.union_vr1.Sqlite.DbAdapter_Agente;
@@ -146,7 +147,11 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.princ_evento_indice);
         mainActivity = this;
+        // Start the background Firebase activity
+        Intent intent = new Intent(this,ServiceFireListener.class);
+        startService(intent);
 
+        //
         session = new DbAdapter_Temp_Session(this);
         session.open();
 
@@ -154,8 +159,8 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         //Enable gps android
         enableGps();
         //
-        Intent intent = new Intent(mainActivity, TimerGps.class);
-        startService(intent);
+        Intent intents = new Intent(mainActivity, TimerGps.class);
+        startService(intents);
         //FOR STOP SERVICE, THE CODE IS:
         // Intent intent = new Intent(getApplicationContext(),TimerGps.class);
         // stopService(intent);
