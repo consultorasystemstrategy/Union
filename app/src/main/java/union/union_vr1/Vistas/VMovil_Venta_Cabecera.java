@@ -527,6 +527,12 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
             listView.setEnabled(false);
             listView.setClickable(false);
 
+            //DFESACTIVO EL AUTOCOMPLETE TEXTVIEW PARA QUE NO PUEDAN AGREGAR MÁS PRODUCTOS.
+            autoCompleteTextView.setEnabled(false);
+            autoCompleteTextView.setHint("Crédito Establecido");
+
+
+
 
             ArrayAdapter<CharSequence> adapterFormaPagoCredito = ArrayAdapter.createFromResource(this,R.array.forma_pago_credito,android.R.layout.simple_spinner_item);
             spinnerFormaPago.setAdapter(adapterFormaPagoCredito);
@@ -905,14 +911,31 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
                         case Constants._CREDITO_APROBADO:
                             Log.d(TAG, "CRÉDITO APROBADO : " +credito.getIdEstablecimiento() + ", "+credito.getIdAgente());
                             Log.d(TAG, "CHANGED Monto : " + credito.getMontoCredito());
+                            Log.d(TAG, "CHANGED DÍAS DE CRÉDITO : " + credito.getDiasCredito());
                             Log.d(TAG, "CHANGED Estado: " + credito.getEstado());
                             //HABILITO EL BOTÓN
                             //EL SPINNER FORMA DE PAGO AL CRÉDITO
                             //spinnerFormaPago.setAdapter(adapterFormaPagoCredito);
                             //actualizar el registro de la db here!
-                            new ActualizarEstablecimiento().execute();
-                            //SEMÁFORO STATUS = VERDE
-                            updateSemaforoStatus(Constants.SEMAFORO_VERDE);
+
+                            int nroRegistrosUpdate= dbHelper_Evento_Establecimiento.updateEstablecsCredito(credito.getIdEstablecimiento(), credito.getMontoCredito(), credito.getEstado());
+                            Log.d(TAG, "NRO ESTABLECIMIETNO CRÉDITOS ACTUALIZADOS : " + nroRegistrosUpdate);
+
+                            if (nroRegistrosUpdate>=1){
+                                //SEMÁFORO STATUS = VERDE
+                                updateSemaforoStatus(Constants.SEMAFORO_VERDE);
+                                //FORMA DE PAGO AL CRÉDITO
+                                formaPagoSelected(Constants._CREDITO);
+                                //HABILITO EL BOTÓN DE VENDER
+                                buttonVender.setEnabled(true);
+                                buttonVender.setBackgroundResource(R.color.Dark5);
+
+                                Toast.makeText(VMovil_Venta_Cabecera.this,  "CRÉDITO ACEPTADO PARA : " + nombreEstablecimiento + ".", Toast.LENGTH_SHORT).show();
+                            }else{
+                                //HUBO UN ERROR
+                                Toast.makeText(VMovil_Venta_Cabecera.this,  "HUBO UN ERROR.", Toast.LENGTH_SHORT).show();
+                            }
+
                             break;
                         case Constants._CREDITO_RECHAZADO:
                             Log.d(TAG, "CRÉDITO RECHAZADO : " +credito.getIdEstablecimiento() + ", "+credito.getIdAgente());
@@ -927,7 +950,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
 
                             new AlertDialog.Builder(mContext)
                                     .setTitle("CREDITO RECHAZADO")
-                                    .setMessage("" + credito.getObservacion())
+                                    .setMessage("Observación : " + credito.getObservacion())
                                     .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int id) {
                                             //DO NOTHING
@@ -1122,7 +1145,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
                         //TENER EL MONTO DE LA VENTA ACTUAL.
 
                         if(totalFooter <= montoCreditoDouble){
-                            new AlertDialog.Builder(mContext)
+                            new AlertDialog.Builder(VMovil_Venta_Cabecera.this)
                                     .setTitle("Crédito Aceptado")
                                     .setMessage("¿Desea continuar?")
                                     .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
@@ -1147,10 +1170,12 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
                                     .create().show();
                         }else{
                             final int finalMontoCredito = montoCredito;
-                            new AlertDialog.Builder(mContext)
-                                    .setTitle("Solicitar incremento de crédito")
-                                    .setMessage("Total venta : " + df.format(totalFooter)+"\n" +
-                                            "Monto de crédito : "+df.format(montoCreditoDouble))
+                            final Double finalMontoCreditoDouble = montoCreditoDouble;
+                            new AlertDialog.Builder(VMovil_Venta_Cabecera.this)
+                                    .setTitle("Solicitar Incremento de Crédito")
+                                    .setMessage("Venta total : " + df.format(totalFooter)+"\n" +
+                                            "Crédito actual: "+df.format(montoCreditoDouble)+"\n" +
+                                    "Crédito adicional : " + df.format(totalFooter - finalMontoCreditoDouble))
                                     .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialogInterface, int i) {
@@ -1163,7 +1188,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
                                     })
                                     .setPositiveButton(R.string.si, new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int id) {
-                                            dialogSolicitarCredito(totalFooter - finalMontoCredito).show();
+                                            dialogSolicitarCredito(totalFooter).show();
                                             //MANDAR EL NUEVO CRÉDITO
                                         }
                                     })
@@ -1554,7 +1579,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Cantidad a Solicitar");
+        builder.setTitle("Crédito a Solicitar");
         builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -1576,6 +1601,9 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
                     String postId = newCreditoRef.getKey();
                     Log.d(TAG, "GET KEY : " + postId);
 
+                    //SI ES INCREMENTO Y NO MODIFICÓ, LE MANDO EL INCREMENTO A SULLY
+
+                    //SI ES INCREMENTO Y SÍ MODIFICÓ, LE MANDO LA CANTIDAD MODIFICADA.
                     new SolicitarCredito(mainActivity).execute("" + id_agente_venta, "" + idEstablecimiento, "" + cantidadCredito, "" + diasCredito, postId);
 
                     //PINTAR
