@@ -5,37 +5,24 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.graphics.drawable.DrawableCompat;
-import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CursorAdapter;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.RatingBar;
-import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import java.text.DecimalFormat;
-import java.util.ArrayList;
 
 import union.union_vr1.AsyncTask.CrearEstablecimientoDuplicados;
-import union.union_vr1.AsyncTask.ImportEstadoAuEstablec;
-import union.union_vr1.Charts.Line;
+import union.union_vr1.AsyncTask.ExportEstadoAuEstablec;
 import union.union_vr1.R;
 import union.union_vr1.Utils.Utils;
 import union.union_vr1.Vistas.VMovil_Evento_Establec;
@@ -453,18 +440,16 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter {
 
                         String itemString = (String) adapter.getItem(item);
                       //  Toast.makeText(context, "Item Selected: " + itemString + "---" + idEstablec, Toast.LENGTH_SHORT).show();
-
+                        Log.d("IDSEGUIDO",""+idEstablecEditar);
                         switch (itemString) {
                             case "Editar":
-                                Log.d("IDSEGUIDO",""+idEstablecEditar);
                                 context.startActivity(new Intent(context, VMovil_Modificar_Estab.class).putExtra("idEstab", "" + idEstablecEditar));
                                 break;
                             case "Enviar":
-
-                                new ImportEstadoAuEstablec((Activity) context).execute("0", idEstablecEditar);
+                                new ExportEstadoAuEstablec((Activity) context).execute("0", idEstablecEditar);
                                 break;
                             case "Refrescar":
-                                new ImportEstadoAuEstablec((Activity) context).execute("1", idEstablec);
+                                new ExportEstadoAuEstablec((Activity) context).execute("1", idEstablec);
                                 break;
                         }
                     }

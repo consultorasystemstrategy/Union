@@ -873,6 +873,7 @@ public class ServiceExport extends IntentService {
         }
 
         //-------------------------
+        /*
         Cursor cr = dbAdapter_establecimeinto_historial.fetchTemEstablecEnviar(10);
         JSONObject jsonObject = null;
         Log.d("ESTABLECI",""+cr.getCount());
@@ -918,6 +919,8 @@ public class ServiceExport extends IntentService {
                 e.printStackTrace();
             }
         }
+
+        */
 
 
         builder.setProgress(_MAX, _MAX, false);

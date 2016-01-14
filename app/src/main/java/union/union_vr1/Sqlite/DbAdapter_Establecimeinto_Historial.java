@@ -90,7 +90,7 @@ public class DbAdapter_Establecimeinto_Historial {
     }
 
 
-    public long createTempEstablec(
+    public int createTempEstablec(
             int _id_remoto,
             String _usuario_accion,
             String _telefono_fijo,
@@ -136,13 +136,13 @@ public class DbAdapter_Establecimeinto_Historial {
         initialValues.put(establec_descripcion_establecimiento, _descripcion_establecimiento);
         initialValues.put(establec_editado, _estadoEditado);
         initialValues.put(Constants._SINCRONIZAR, _ESTADO);
+        long a = mDb.insert(SQLITE_TABLE_ESTABLECIMIENTO_HISTORIAL, null, initialValues);
 
-        return mDb.insert(SQLITE_TABLE_ESTABLECIMIENTO_HISTORIAL, null, initialValues);
+        return Integer.parseInt(a + "");
     }
 
 
-
-    public long updateTempEstablecDireccion(String id ,String lat,String lon,String direccion, String direccion_fiscal) {
+    public long updateTempEstablecDireccion(String id, String lat, String lon, String direccion, String direccion_fiscal) {
 
         ContentValues initialValues = new ContentValues();
         initialValues.put(establec_latitud, lat);
@@ -252,7 +252,8 @@ public class DbAdapter_Establecimeinto_Historial {
         return mDb.update(SQLITE_TABLE_ESTABLECIMIENTO_HISTORIAL, initialValues,
                 establec_histo_id + "=?", new String[]{id + ""});
     }
-    public long updateEstado(int _id_remoto, int estado,int idremotoDuplicado) {
+
+    public long updateEstado(int _id_remoto, int estado, int idremotoDuplicado) {
 
         ContentValues initialValues = new ContentValues();
         initialValues.put(Constants._SINCRONIZAR, estado);
@@ -272,7 +273,7 @@ public class DbAdapter_Establecimeinto_Historial {
     }
 
     public Cursor fetchTemEstablecEnviar(int estado) {
-        Cursor cursor = mDb.rawQuery("select * from " + SQLITE_TABLE_ESTABLECIMIENTO_HISTORIAL + " where "+establec_estado_guardado+"='"+Constants.REGISTRO_SIN_INTERNET+"' and "+Constants._SINCRONIZAR+"='"+Constants._CREADO+"' ", null);
+        Cursor cursor = mDb.rawQuery("select * from " + SQLITE_TABLE_ESTABLECIMIENTO_HISTORIAL + " where " + establec_estado_guardado + "='" + Constants.REGISTRO_SIN_INTERNET + "' and " + Constants._SINCRONIZAR + "='" + Constants._CREADO + "' ", null);
         return cursor;
     }
 
@@ -281,8 +282,14 @@ public class DbAdapter_Establecimeinto_Historial {
         return cursor;
     }
 
+    public int fetchIdEstablec(String doc) {
+        Cursor cursor = mDb.rawQuery("select * from " + SQLITE_TABLE_ESTABLECIMIENTO_HISTORIAL + " where " + establec_nro_documento + "='" + doc + "'", null);
+        cursor.moveToFirst();
+        return cursor.getInt(cursor.getColumnIndexOrThrow(establec_histo_id));
+    }
+
     public Cursor fetchTemEstablecEdit(String id) {
-        Cursor cursor = mDb.rawQuery("select * from " + SQLITE_TABLE_ESTABLECIMIENTO_HISTORIAL + " WHERE "+establec_histo_id+"='"+id+"'", null);
+        Cursor cursor = mDb.rawQuery("select * from " + SQLITE_TABLE_ESTABLECIMIENTO_HISTORIAL + " WHERE " + establec_histo_id + "='" + id + "'", null);
         return cursor;
     }
 

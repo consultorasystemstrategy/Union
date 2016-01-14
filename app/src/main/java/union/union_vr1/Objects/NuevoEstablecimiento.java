@@ -9,6 +9,9 @@ public class NuevoEstablecimiento {
     private String fecha;
     private int estado;
 
+    public NuevoEstablecimiento() {
+    }
+
     public NuevoEstablecimiento(String nroDoc, String fecha, int estado) {
         this.nroDoc = nroDoc;
         this.fecha = fecha;

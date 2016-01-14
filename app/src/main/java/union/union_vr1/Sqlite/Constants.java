@@ -69,6 +69,7 @@ public class Constants {
     public static final int SEMAFORO_VERDE = 3;
     public static final int REGISTRO_INTERNET = 5;
     public static final int REGISTRO_APROBADO = 7;
+    public static final int REGISTRO_RECHAZADO = 8;
 
     public static final int REGISTRO_SIN_INTERNET = 10;
 

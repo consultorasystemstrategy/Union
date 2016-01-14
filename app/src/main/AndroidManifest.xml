@@ -45,6 +45,10 @@
             android:name=".AsyncTask.TimerGps"
             android:process=":EnviarGps" />
 
+        <service
+            android:name=".Servicios.ServiceFireListener"
+            android:process=":ListenerFireBase" />
+
         <activity
             android:name=".Vistas.VMovil_Menu_Establec"
             android:label="Seleccionar Cliente"

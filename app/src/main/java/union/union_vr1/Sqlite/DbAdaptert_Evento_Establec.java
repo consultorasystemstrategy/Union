@@ -70,7 +70,7 @@ public class DbAdaptert_Evento_Establec {
                     +EE_direccion_principal+" text,"
                     +EE_nom_cliente+" text,"
                     +EE_time_atencion+" text,"
-                    +EE_doc_cliente         +" text,"
+                    +EE_doc_cliente+" text,"
                     +EE_orden+" integer,"
                     +EE_surtido_stock_ant+" integer,"
                     +EE_surtido_venta_ant+" integer,"
@@ -131,7 +131,7 @@ public class DbAdaptert_Evento_Establec {
         return mDb.insert(SQLITE_TABLE_Evento_Establec, null, initialValues);
     }
 
-    public long createEstablecimientos(EventoEstablecimiento establecimiento, int id_agente, int id_liquidacion,long idEditar) {
+    public long createEstablecimientos(EventoEstablecimiento establecimiento, int id_agente, int id_liquidacion,int idEditar) {
 
         ContentValues initialValues = new ContentValues();
         initialValues.put(EE_id_establec, establecimiento.getIdEstablecimiento());
@@ -261,6 +261,15 @@ public class DbAdaptert_Evento_Establec {
         return mDb.update(SQLITE_TABLE_Evento_Establec, initialValues,
                 EE_id_establec+"=?",new String[]{""+idEstablecimiento});
     }
+
+    public int updateEstablecsEstadoIdUpd(int idEstablecimiento){
+
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(EE_estado_autorizado, "6");
+        return mDb.update(SQLITE_TABLE_Evento_Establec, initialValues,
+                EE_id_establec+"=?",new String[]{""+idEstablecimiento});
+    }
+
 
     public int updateEstablecsEstadoId(int idEstablecimiento){
 
@@ -422,6 +431,12 @@ public class DbAdaptert_Evento_Establec {
     }
     public Cursor fectchLiq(int liqui){
         return mDb.rawQuery("select * from "+SQLITE_TABLE_Evento_Establec+"  where "+EE_id_liquidacion+"='"+liqui+"'",null);
+    }
+    public int getIdParent(String documento){
+        Cursor cursor = mDb.rawQuery("select * from "+SQLITE_TABLE_Evento_Establec+"  where "+EE_doc_cliente+"='"+documento+"'",null);
+cursor.moveToFirst();
+
+        return cursor.getInt(cursor.getColumnIndexOrThrow(EE_id_evt_establec));
     }
 
     public Cursor fetchAllEstablecs() {

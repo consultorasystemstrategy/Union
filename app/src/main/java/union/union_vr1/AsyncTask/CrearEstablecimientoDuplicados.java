@@ -10,12 +10,15 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.ListView;
 
+import com.firebase.client.Firebase;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
 
 import union.union_vr1.Objects.EventoEstablecimiento;
+import union.union_vr1.Objects.NuevoEstablecimiento;
 import union.union_vr1.R;
 import union.union_vr1.RestApi.StockAgenteRestApi;
 import union.union_vr1.Sqlite.Constants;
@@ -42,10 +45,14 @@ public class CrearEstablecimientoDuplicados extends AsyncTask<String, String, St
 
     private static final String TAG = CrearEstablecimientoDuplicados.class.getSimpleName();
 
-
+    //FIREBASE
+    private Firebase rootRef = null;
+    private Firebase nuevoEstablecimientoRef = null;
 
     public CrearEstablecimientoDuplicados(Activity activity) {
         mainActivity = activity;
+        rootRef = new Firebase(Constants._APP_ROOT_FIREBASE);
+        nuevoEstablecimientoRef = rootRef.child(Constants._CHILD_ESTABLECIMIENTO_NUEVO);
     }
 
     @Override
@@ -67,6 +74,15 @@ public class CrearEstablecimientoDuplicados extends AsyncTask<String, String, St
         Log.d(TAG, "RUTA:" + cr.getCount());
 
         while (cr.moveToNext()){
+
+            NuevoEstablecimiento nuevoEstablecimiento = new NuevoEstablecimiento(cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_nro_documento)), Utils.getDatePhone(), Constants.REGISTRO_INTERNET);
+            Firebase newEstaclmientoRef = nuevoEstablecimientoRef.push();
+            newEstaclmientoRef.setValue(nuevoEstablecimiento);
+
+            //GET UNIQUE ID, TIMESTAMP BASED
+            String postId = newEstaclmientoRef.getKey();
+            Log.d(TAG, "GET KEY : " + postId);
+
             try {
                 jsonObjectCreated = stockAgenteRestApi.fins_ClienteTemporal(
                         cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_nombres)),
@@ -88,7 +104,8 @@ public class CrearEstablecimientoDuplicados extends AsyncTask<String, String, St
                         cr.getInt(cr.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_tipo_documento)),
                         cr.getInt(cr.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_tipo_establecimiento)),
                         cr.getInt(cr.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_tipo_persona)),
-                        cr.getInt(cr.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_usuario_accion))
+                        cr.getInt(cr.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_usuario_accion)),
+                        postId
 
                 );
                 Log.d("HHHH", jsonObjectCreated.toString());

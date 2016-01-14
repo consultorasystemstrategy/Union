@@ -120,7 +120,7 @@ public class CrearEstablecimiento extends AsyncTask<String, String, String> {
                         + "-" + cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_latitud))
                         + "-" + cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_usuario_accion)));
 
-
+/*
                 jsonObjectCreated = stockAgenteRestApi.InsClienteEstablecimiento(
                         cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_nombres)),
                         cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_apPaterno)),
@@ -167,15 +167,17 @@ public class CrearEstablecimiento extends AsyncTask<String, String, String> {
                         idLiquidacion,//Liquidacion
                         4,//Motivo no atewncido
                         ruta,//RUTAid
-                        cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_direccion_fiscal))
+                        cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_direccion_fiscal)),""
 
                 );
+
+                */
                 publishProgress("" + 50);
                 //----------------------------
                 Log.d("JSONJSON CJSON EST", "" + jsonObjectCreated.toString());
 
                 if (isSuccesfulExport(jsonObjectCreated)) {
-                    long inserEditar=0;
+                    int inserEditar=0;
                     int idRemoto = jsonObjectCreated.getInt("Value");
                     long a = dbAdapter_temp_establecimiento.updateTempEstablecById(cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_id)), idRemoto, Constants._ACTUALIZADO);
                     Log.d("ESTADO", "" + a + "--" + idRemoto);
