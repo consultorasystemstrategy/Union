@@ -71,7 +71,7 @@ public class CrearEstablecimientoDuplicados extends AsyncTask<String, String, St
         dbAdaptert_evento_establec.open();
         int ruta = dbAdapter_temp_session.fetchVarible(777);
         Log.d(TAG, "RUTA:" + ruta);
-
+        int idAgente = dbAdapter_temp_session.fetchVarible(1);
         Cursor cr = dbAdapter_establecimeinto_historial.fetchTemEstablecEnviar(Constants.REGISTRO_SIN_INTERNET);
         Log.d(TAG, "RUTA:" + cr.getCount());
 
@@ -79,7 +79,7 @@ public class CrearEstablecimientoDuplicados extends AsyncTask<String, String, St
 
             EstablecTemp nuevoEstablecimientoTemp = new EstablecTemp(
                     cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_histo_id)),
-                    Utils.getDatePhone(),Constants.REGISTRO_CREADO);
+                    Utils.getDatePhone(),Constants.REGISTRO_CREADO,idAgente);
             Firebase newEstaclmientoRef = nuevoEstablecimientoRef.push();
             newEstaclmientoRef.setValue(nuevoEstablecimientoTemp);
 

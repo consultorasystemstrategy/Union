@@ -7,11 +7,21 @@ public class EstablecTemp {
     private String idEstablecTemp;
     private String fecha;
     private int estado;
+    private int idAgente;
 
-    public EstablecTemp(String idEstablecTemp, String fecha, int estado) {
+    public int getIdAgente() {
+        return idAgente;
+    }
+
+    public void setIdAgente(int idAgente) {
+        this.idAgente = idAgente;
+    }
+
+    public EstablecTemp(String idEstablecTemp, String fecha, int estado, int idAgente) {
         this.idEstablecTemp = idEstablecTemp;
         this.fecha = fecha;
         this.estado = estado;
+        this.idAgente = idAgente;
     }
 
     public EstablecTemp() {

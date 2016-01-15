@@ -24,6 +24,7 @@ import union.union_vr1.Objects.NuevoEstablecimiento;
 import union.union_vr1.R;
 import union.union_vr1.Sqlite.Constants;
 import union.union_vr1.Sqlite.DbAdapter_Establecimeinto_Historial;
+import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 import union.union_vr1.Utils.Utils;
 import union.union_vr1.Vistas.VMovil_Menu_Establec;
@@ -38,6 +39,7 @@ public class ServiceFireListenerTemp extends Service {
     //private Firebase nuevoEstablecimientoRefTemp = null;
     private DbAdapter_Establecimeinto_Historial dbAdapter_establecimeinto_historial;
     private DbAdaptert_Evento_Establec dbAdaptert_evento_establec;
+    private DbAdapter_Temp_Session dbAdapter_temp_session;
 
     private Context context;
 
@@ -67,9 +69,11 @@ public class ServiceFireListenerTemp extends Service {
         rootRef = new Firebase(Constants._APP_ROOT_FIREBASE);
         nuevoEstablecimientoRefTemp = rootRef.child(Constants._CHILD_ESTABLECIMIENTO_TEMPORAL);
         Log.d(TAG, "" + "onStartCommand"+nuevoEstablecimientoRefTemp.getKey());
-
+        final int idAgente = dbAdapter_temp_session.fetchVarible(1);
         dbAdapter_establecimeinto_historial = new DbAdapter_Establecimeinto_Historial(this);
         dbAdapter_establecimeinto_historial.open();
+        dbAdaptert_evento_establec = new DbAdaptert_Evento_Establec(this);
+        dbAdaptert_evento_establec.open();
         dbAdaptert_evento_establec = new DbAdaptert_Evento_Establec(this);
         dbAdaptert_evento_establec.open();
 
@@ -89,6 +93,8 @@ public class ServiceFireListenerTemp extends Service {
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
+
+
                 Log.d(TAG, "ADDED dataSnapshot : " + dataSnapshot.getValue());
                 EstablecTemp nuevoEstablecimiento = null;
                 nuevoEstablecimiento = dataSnapshot.getValue(EstablecTemp.class);
@@ -104,18 +110,24 @@ public class ServiceFireListenerTemp extends Service {
                 int color = 0;
                 mensaje = "C. Doc: " + nuevoEstablecimiento.getIdEstablecTemp();
 
-                switch (nuevoEstablecimiento.getEstado()){
-                    case Constants.REGISTRO_APROBADO:
-                        titulo = "Establecimiento Aprobado";
-                        color = Color.GREEN;
-                        break;
-                    case Constants.REGISTRO_RECHAZADO:
-                        titulo = "Establecimiento Rechazado";
-                        color = Color.RED;
-                        break;
+
+                if(idAgente==nuevoEstablecimiento.getIdAgente()){
+                    switch (nuevoEstablecimiento.getEstado()){
+                        case Constants.REGISTRO_APROBADO:
+                            titulo = "Establecimiento Aprobado";
+                            color = Color.GREEN;
+                            break;
+                        case Constants.REGISTRO_RECHAZADO:
+                            titulo = "Establecimiento Rechazado";
+                            color = Color.RED;
+                            break;
+                    }
+
+                    postNotif(titulo, mensaje, color);
+
                 }
 
-                postNotif(titulo, mensaje, color);
+
 
             }
 
