@@ -1,8 +1,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="union.union_vr1.Vistas.VMovil_Online_Pumovil" >
-        <item android:id="@+id/buttonExportERP"
+    <item android:id="@+id/buttonExportERP"
         android:title="Exportar a ERP"
         android:orderInCategory="100" />
+    <item android:id="@+id/imprimirDisponible"
+        android:title="Imprimir Stock Disponible"
+        android:orderInCategory="100" />
+
 
 </menu>

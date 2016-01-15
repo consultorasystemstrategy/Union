@@ -31,6 +31,7 @@ import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta_Detalle;
 import union.union_vr1.Sqlite.DbAdapter_Informe_Gastos;
+import union.union_vr1.Sqlite.DbAdapter_Stock_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Transferencias;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 import union.union_vr1.Sqlite.DbGastos_Ingresos;
@@ -61,6 +62,8 @@ public class Print {
     private DbAdapter_Comprob_Cobro dbAdapter_comprob_cobro;
 
     private DbAdapter_Transferencias dbAdapter_transferencias;
+
+    private DbAdapter_Stock_Agente dbAdapter_stock_agente;
 
 
     int nTotal = 0;
@@ -109,7 +112,7 @@ public class Print {
         posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "CAR. CENTRAL KM. 19.5 VILLA UNION-NANA" + LF );
         posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "LIMA - LIMA - LURIGANCHO" + LF);
         posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "RUC: 20138122256" + LF);
-        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "Telf: 6186309-6186310" + LF  + LF);
+        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "Telf: 6186309-6186310" + LF + LF);
 
         switch (tipoDocumento){
             case Constants.DOCUMENTO_FACTURA:
@@ -126,6 +129,9 @@ public class Print {
                 break;
             case Constants.DOCUMENTO_RRPP:
                 posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT,ESC + "|cA" + ESC + "|bC" + ESC + "|2C" + "VENTA RRPP" + LF + LF + LF);
+                break;
+            case Constants.DOCUMENTO_STOCK_DISPONIBLE:
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT,ESC + "|cA" + ESC + "|bC" + ESC + "|2C" + "STOCK DISPONIBLE" + LF + LF + LF);
                 break;
             default:
                 posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT,ESC + "|cA" + ESC + "|bC" + ESC + "|2C" + "PRODUCTOS UNION" + LF + LF + LF);
@@ -497,6 +503,58 @@ public class Print {
 
                 String detalleTransferencia = ESC + "|lA" + String.format("%-3s", ++i) + String.format("%-6s", codigo)+ String.format("%-34s", cleanAcentos(producto)) + String.format("%1$5s", cantidad) + LF;
                 posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, detalleTransferencia);
+            }
+        }
+
+    }
+
+    public void printStockDisponible(int idLiquidacion, String nombreAgente) throws JposException {
+
+
+
+        dbAdapter_stock_agente = new DbAdapter_Stock_Agente(context);
+        dbAdapter_stock_agente.open();
+
+        Cursor cursor = dbAdapter_stock_agente.fetchAllStockAgenteVentas(idLiquidacion);
+
+        cursor.moveToFirst();
+
+
+
+        if (cursor.getCount()>0){
+
+
+
+            printCabecera(Constants.DOCUMENTO_STOCK_DISPONIBLE);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "AGENTE       : " + cleanAcentos(nombreAgente) + LF);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "LIQUIDACION  : " + idLiquidacion + LF);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "FECHA        : " + cleanAcentos(getDateFull()) + LF + LF);
+
+            int i= 0;
+
+
+
+            //STOCK DISPONIBLE TITULO
+            //posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + cleanAcentos(descripcion_transferencia) + LF + LF + LF);
+            //posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT,ESC + "|cA" + ESC + "|bC" + ESC + "|2C" + cleanAcentos(descripcion_transferencia) + LF + LF + LF);
+            String cabeceraVenta = ESC + "|lA" +String.format("%-3s","#")+  String.format("%-6s","COD") + String.format("%-30s","PRODUCTO")+ String.format("%1$9s","CANT") + LF;
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, cabeceraVenta);
+            printLineas();
+
+
+            for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()){
+
+                String codigo = cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Stock_Agente.ST_codigo));
+                String producto = cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Stock_Agente.ST_nombre));
+                int cantidad = cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Stock_Agente.ST_disponible));
+
+                if (producto.length() >= 34) {
+                    producto = producto.substring(0, 32);
+                    producto += "..";
+                }
+
+                String detalleStockDisponible = ESC + "|lA" + String.format("%-3s", ++i) + String.format("%-6s", codigo)+ String.format("%-34s", cleanAcentos(producto)) + String.format("%1$5s", cantidad) + LF;
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, detalleStockDisponible);
             }
         }
 

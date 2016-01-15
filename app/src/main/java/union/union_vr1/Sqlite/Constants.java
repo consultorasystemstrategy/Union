@@ -27,6 +27,8 @@ public class Constants {
     public static final int DOCUMENTO_BOLETA = 2;
     public static final int DOCUMENTO_ARQUEO = 1001;
     public static final int DOCUMENTO_RRPP = 1002;
+    public static final int DOCUMENTO_STOCK_DISPONIBLE = 1003;
+
 
 
 

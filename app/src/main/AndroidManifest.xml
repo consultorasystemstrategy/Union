@@ -44,7 +44,6 @@
         <service
             android:name=".AsyncTask.TimerGps"
             android:process=":EnviarGps" />
-
         <service
             android:name=".Servicios.ServiceFireListener"
             android:process=":ListenerFireBase" />
@@ -64,7 +63,6 @@
             android:name=".Vistas.VMovil_Menu_Establec"
             android:label="Seleccionar Cliente"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".Vistas.VMovil_BluetoothImpCobros"
             android:label="Imprimir Cobros"
@@ -205,9 +203,8 @@
         <activity
             android:name=".Vistas.VMovil_Consultar_Inventario"
             android:label="Consultar Inventario"
-            android:windowSoftInputMode="stateVisible|adjustPan"
-            android:screenOrientation="portrait" />
-
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateVisible|adjustPan" />
         <activity
             android:name=".Vistas.VMovil_Cargar_Inventario"
             android:label="@string/title_activity_vmovil__cargar__inventario"
@@ -218,16 +215,15 @@
             android:label="@string/title_activity_imprimir_arqueo_caja" />
         <activity
             android:name=".Vistas.VMovil_Crear_Establecimiento"
-            android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
-            android:label="@string/title_activity_vmovil__crear__establecimiento" />
+            android:label="@string/title_activity_vmovil__crear__establecimiento"
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
         <activity
             android:name=".Vistas.VMovil_Modificar_Estab"
-            android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
-            android:label="Modificar Establecimiento" />
-
+            android:label="Modificar Establecimiento"
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
         <activity
             android:name=".Vistas.VMovil_Abrir_Caja"
-            android:label="Abrir Caja">
+            android:label="Abrir Caja"
             android:screenOrientation="portrait">
         </activity>
         <activity
@@ -274,29 +270,31 @@
             android:name=".Vistas.Bluetooth_Printer"
             android:label="@string/title_activity_bluetooth__printer" />
 
-
         <service
             android:name=".Servicios.ServiceImport"
             android:exported="false" />
         <service
             android:name=".Servicios.ServiceExport"
-            android:exported="false"></service>
+            android:exported="false" />
         <service
             android:name=".Servicios.FirebaseBackgroundService"
             android:exported="false"
-            android:process=":remote" >
+            android:process=":remote">
             <intent-filter>
                 <action android:name=".Servicios.FirebaseBackgroundService" />
             </intent-filter>
         </service>
 
-<!--
+        <!--
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="@string/google_maps_key" />-->
+            android:value="@string/google_maps_key" />
+        -->
+        <activity android:name=".Vistas.ImprimirStockDisponible"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

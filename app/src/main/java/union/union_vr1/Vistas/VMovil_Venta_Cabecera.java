@@ -531,9 +531,6 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
             autoCompleteTextView.setEnabled(false);
             autoCompleteTextView.setHint("Crédito Establecido");
 
-
-
-
             ArrayAdapter<CharSequence> adapterFormaPagoCredito = ArrayAdapter.createFromResource(this,R.array.forma_pago_credito,android.R.layout.simple_spinner_item);
             spinnerFormaPago.setAdapter(adapterFormaPagoCredito);
 
