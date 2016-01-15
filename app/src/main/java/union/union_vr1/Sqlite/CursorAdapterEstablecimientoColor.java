@@ -147,6 +147,9 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter {
             }
 
             switch (id_estado_atencion) {
+                case 0:
+                    linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.Dark5));
+                    break;
                 case 1:
                     linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.azul));
                     break;

@@ -34,8 +34,8 @@ import union.union_vr1.Vistas.VMovil_Menu_Establec;
  * Created by Kelvin on 13/01/2016.
  */
 public class ServiceFireListenerTemp extends Service {
-    private Firebase rootRef = null;
-    private Firebase nuevoEstablecimientoRefTemp = null;
+    //private Firebase rootRef = null;
+    //private Firebase nuevoEstablecimientoRefTemp = null;
     private DbAdapter_Establecimeinto_Historial dbAdapter_establecimeinto_historial;
     private DbAdaptert_Evento_Establec dbAdaptert_evento_establec;
 
@@ -61,23 +61,23 @@ public class ServiceFireListenerTemp extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(TAG, "" + "onStartCommand");
-
+        Firebase rootRef = null;
+        Firebase nuevoEstablecimientoRefTemp = null;
         Firebase.setAndroidContext(context);
         rootRef = new Firebase(Constants._APP_ROOT_FIREBASE);
         nuevoEstablecimientoRefTemp = rootRef.child(Constants._CHILD_ESTABLECIMIENTO_TEMPORAL);
+        Log.d(TAG, "" + "onStartCommand"+nuevoEstablecimientoRefTemp.getKey());
+
         dbAdapter_establecimeinto_historial = new DbAdapter_Establecimeinto_Historial(this);
         dbAdapter_establecimeinto_historial.open();
         dbAdaptert_evento_establec = new DbAdaptert_Evento_Establec(this);
         dbAdaptert_evento_establec.open();
 
-        Firebase f = new Firebase(Constants._APP_ROOT_FIREBASE);
-        //------------------------------------------------------------------------------------------
-        //Actualizar Datos de establecimiento cuando hay Internet.
-        //------------------------------------------------------------------------------------------
-        Firebase refEstablecimientoNuevoTemp = f.child(Constants._CHILD_ESTABLECIMIENTO_TEMPORAL);
-        ChildEventListener handler;
 
-        Query queryRef = refEstablecimientoNuevoTemp.orderByChild("fecha").equalTo(Utils.getDatePhone());
+
+        Query queryRef = nuevoEstablecimientoRefTemp.orderByChild("fecha").equalTo(Utils.getDatePhone());
+
+        ChildEventListener handler;
         handler = new ChildEventListener() {
 
 

@@ -9,13 +9,24 @@ public class NuevoEstablecimiento {
     private String fecha;
     private int estado;
 
+    public int getIdAgente() {
+        return idAgente;
+    }
+
+    public void setIdAgente(int idAgente) {
+        this.idAgente = idAgente;
+    }
+
+    private int idAgente;
+
     public NuevoEstablecimiento() {
     }
 
-    public NuevoEstablecimiento(String nroDoc, String fecha, int estado) {
+    public NuevoEstablecimiento(String nroDoc, String fecha, int estado, int idAgente) {
         this.nroDoc = nroDoc;
         this.fecha = fecha;
         this.estado = estado;
+        this.idAgente = idAgente;
     }
 
     public String getNroDoc() {

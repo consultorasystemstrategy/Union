@@ -24,6 +24,7 @@ import union.union_vr1.Objects.NuevoEstablecimiento;
 import union.union_vr1.R;
 import union.union_vr1.Sqlite.Constants;
 import union.union_vr1.Sqlite.DbAdapter_Establecimeinto_Historial;
+import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 import union.union_vr1.Utils.Utils;
 import union.union_vr1.Vistas.VMovil_Menu_Establec;
@@ -34,10 +35,11 @@ import union.union_vr1.Vistas.VMovil_Menu_Establec;
  * Created by Kelvin on 13/01/2016.
  */
 public class ServiceFireListener extends Service {
-    private Firebase rootRef = null;
-    private Firebase nuevoEstablecimientoRef = null;
+    //  private Firebase rootRef = null;
+    //  private Firebase nuevoEstablecimientoRef = null;
     private DbAdapter_Establecimeinto_Historial dbAdapter_establecimeinto_historial;
     private DbAdaptert_Evento_Establec dbAdaptert_evento_establec;
+    private DbAdapter_Temp_Session dbAdapter_temp_session;
 
     private Context context;
 
@@ -47,7 +49,7 @@ public class ServiceFireListener extends Service {
     @Override
     public void onCreate() {
         Log.d(TAG, "" + "Created");
-        context=this;
+        context = this;
 
     }
 
@@ -63,12 +65,16 @@ public class ServiceFireListener extends Service {
         Log.d(TAG, "" + "onStartCommand");
 
         Firebase.setAndroidContext(context);
-        rootRef = new Firebase(Constants._APP_ROOT_FIREBASE);
-        nuevoEstablecimientoRef = rootRef.child(Constants._CHILD_ESTABLECIMIENTO_NUEVO);
+        //rootRef = new Firebase(Constants._APP_ROOT_FIREBASE);
+        //nuevoEstablecimientoRef = rootRef.child(Constants._CHILD_ESTABLECIMIENTO_NUEVO);
         dbAdapter_establecimeinto_historial = new DbAdapter_Establecimeinto_Historial(this);
         dbAdapter_establecimeinto_historial.open();
         dbAdaptert_evento_establec = new DbAdaptert_Evento_Establec(this);
         dbAdaptert_evento_establec.open();
+        dbAdapter_temp_session = new DbAdapter_Temp_Session(this);
+        dbAdapter_temp_session.open();
+
+        final int idAgente = dbAdapter_temp_session.fetchVarible(1);
 
         Firebase f = new Firebase(Constants._APP_ROOT_FIREBASE);
         //------------------------------------------------------------------------------------------
@@ -95,27 +101,29 @@ public class ServiceFireListener extends Service {
                 Log.d(TAG, "ADDED NRO DOC : " + nuevoEstablecimiento.getNroDoc());
                 Log.d(TAG, "ADDED FECHA : " + nuevoEstablecimiento.getFecha());
                 Log.d(TAG, "ADDED ESTADO: " + nuevoEstablecimiento.getEstado());
+                if (nuevoEstablecimiento.getIdAgente() == idAgente) {
 
-                int idParent = dbAdapter_establecimeinto_historial.fetchIdEstablec(nuevoEstablecimiento.getNroDoc());
-                Log.d(TAG, "ADDED ID ESTABLEC: " + idParent);
-                int estadoInserto = dbAdaptert_evento_establec.updateEstabEstado(idParent, "" + nuevoEstablecimiento.getEstado());
-                Log.d(TAG, "ADDED ID ESTABLEC: " + estadoInserto);
-                String titulo = "", mensaje = "";
-                int color = 0;
-                mensaje = "C. Doc: " + nuevoEstablecimiento.getNroDoc();
+                    int idParent = dbAdapter_establecimeinto_historial.fetchIdEstablec(nuevoEstablecimiento.getNroDoc());
+                    Log.d(TAG, "ADDED ID ESTABLEC: " + idParent);
+                    int estadoInserto = dbAdaptert_evento_establec.updateEstabEstado(idParent, "" + nuevoEstablecimiento.getEstado());
+                    Log.d(TAG, "ADDED ID ESTABLEC: " + estadoInserto);
+                    String titulo = "", mensaje = "";
+                    int color = 0;
+                    mensaje = "C. Doc: " + nuevoEstablecimiento.getNroDoc();
 
-                switch (nuevoEstablecimiento.getEstado()){
-                    case Constants.REGISTRO_APROBADO:
-                        titulo = "Establecimiento Aprobado";
-                        color = Color.GREEN;
-                        break;
-                    case Constants.REGISTRO_RECHAZADO:
-                        titulo = "Establecimiento Rechazado";
-                        color = Color.RED;
-                        break;
+                    switch (nuevoEstablecimiento.getEstado()) {
+                        case Constants.REGISTRO_APROBADO:
+                            titulo = "Establecimiento Aprobado";
+                            color = Color.GREEN;
+                            break;
+                        case Constants.REGISTRO_RECHAZADO:
+                            titulo = "Establecimiento Rechazado";
+                            color = Color.RED;
+                            break;
+                    }
+
+                    postNotif(titulo, mensaje, color);
                 }
-
-                postNotif(titulo, mensaje, color);
 
             }
 
@@ -136,7 +144,6 @@ public class ServiceFireListener extends Service {
         };
 
         queryRef.addChildEventListener(handler);
-
 
 
         //==========================================================================================
@@ -166,7 +173,7 @@ public class ServiceFireListener extends Service {
                 .setAutoCancel(true)
                 .setSound(alarmSound)
                 .setLights(estado, 500, 500)
-                .setVibrate(new long[] { 1000, 1000, 1000, 1000, 1000})
+                .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
                 .setStyle(new Notification.BigTextStyle().bigText("")).build();
         //  .addAction(R.drawable.line, "", pIntent).build();
         n.flags |= Notification.FLAG_AUTO_CANCEL;
@@ -194,7 +201,7 @@ public class ServiceFireListener extends Service {
                 .setAutoCancel(true)
                 .setSound(alarmSound)
                 .setLights(estado, 500, 500)
-                .setVibrate(new long[] { 1000, 1000, 1000, 1000, 1000})
+                .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
                 .setStyle(new Notification.BigTextStyle().bigText("")).build();
         //  .addAction(R.drawable.line, "", pIntent).build();
         n.flags |= Notification.FLAG_AUTO_CANCEL;
@@ -204,7 +211,7 @@ public class ServiceFireListener extends Service {
 
     @Override
     public void onDestroy() {
-        Log.d(TAG,"Destroy");
+        Log.d(TAG, "Destroy");
         super.onDestroy();
     }
 }
