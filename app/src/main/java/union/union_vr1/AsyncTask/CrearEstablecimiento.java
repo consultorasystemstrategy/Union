@@ -3,7 +3,9 @@ package union.union_vr1.AsyncTask;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ContentUris;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -11,6 +13,7 @@ import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import union.union_vr1.Objects.EventoEstablecimiento;
 import union.union_vr1.R;
 import union.union_vr1.RestApi.StockAgenteRestApi;
 import union.union_vr1.Servicios.ServiceImport;
@@ -18,6 +21,7 @@ import union.union_vr1.Sqlite.Constants;
 import union.union_vr1.Sqlite.DbAdapter_Establecimeinto_Historial;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Establecimiento;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
+import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 import union.union_vr1.Utils.Utils;
 import union.union_vr1.Vistas.VMovil_Evento_Indice;
 import union.union_vr1.Vistas.VMovil_Menu_Establec;
@@ -34,6 +38,7 @@ public class CrearEstablecimiento extends AsyncTask<String, String, String> {
     private DbAdapter_Temp_Establecimiento dbAdapter_temp_establecimiento;
     private DbAdapter_Establecimeinto_Historial dbAdapter_establecimeinto_historial;
     private DbAdapter_Temp_Session dbAdapter_temp_session;
+    private DbAdaptert_Evento_Establec dbAdaptert_evento_establec;
 
     private static final String TAG = CrearEstablecimiento.class.getSimpleName();
 
@@ -42,12 +47,13 @@ public class CrearEstablecimiento extends AsyncTask<String, String, String> {
         if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();
         }
-        Intent intent = new Intent(mainActivity, ServiceImport.class);
+      /*  Intent intent = new Intent(mainActivity, ServiceImport.class);
         intent.setAction(Constants.ACTION_IMPORT_SERVICE);
-        mainActivity.startService(intent);
+        mainActivity.startService(intent);*/
 
     }
-    public void createProgressDialog(){
+
+    public void createProgressDialog() {
         progressDialog = new ProgressDialog(mainActivity);
         progressDialog.setMessage("Solicitando ...");
         progressDialog.setIndeterminate(false);
@@ -57,6 +63,7 @@ public class CrearEstablecimiento extends AsyncTask<String, String, String> {
         progressDialog.show();
 
     }
+
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
@@ -71,8 +78,7 @@ public class CrearEstablecimiento extends AsyncTask<String, String, String> {
     protected String doInBackground(String... strings) {
 
 
-
-        publishProgress(""+25);
+        publishProgress("" + 25);
         stockAgenteRestApi = new StockAgenteRestApi(mainActivity);
         dbAdapter_temp_establecimiento = new DbAdapter_Temp_Establecimiento(mainActivity);
         dbAdapter_temp_establecimiento.open();
@@ -80,8 +86,10 @@ public class CrearEstablecimiento extends AsyncTask<String, String, String> {
         dbAdapter_establecimeinto_historial.open();
         dbAdapter_temp_session = new DbAdapter_Temp_Session(mainActivity);
         dbAdapter_temp_session.open();
+        dbAdaptert_evento_establec = new DbAdaptert_Evento_Establec(mainActivity);
+        dbAdaptert_evento_establec.open();
         int ruta = dbAdapter_temp_session.fetchVarible(777);
-        Log.d(TAG, "RUTA :"+ruta);
+        Log.d(TAG, "RUTA :" + ruta);
         Cursor cursor = dbAdapter_temp_establecimiento.fetchTemEstablec();
         try {
             int idAgente = dbAdapter_temp_session.fetchVarible(1);
@@ -112,7 +120,7 @@ public class CrearEstablecimiento extends AsyncTask<String, String, String> {
                         + "-" + cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_latitud))
                         + "-" + cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_usuario_accion)));
 
-
+/*
                 jsonObjectCreated = stockAgenteRestApi.InsClienteEstablecimiento(
                         cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_nombres)),
                         cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_apPaterno)),
@@ -159,19 +167,22 @@ public class CrearEstablecimiento extends AsyncTask<String, String, String> {
                         idLiquidacion,//Liquidacion
                         4,//Motivo no atewncido
                         ruta,//RUTAid
-                        cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_direccion_fiscal))
+                        cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_direccion_fiscal)),""
 
                 );
-                publishProgress(""+50);
+
+                */
+                publishProgress("" + 50);
                 //----------------------------
-                Log.d("JSONJSON CJSON EST", ""+jsonObjectCreated.toString());
+                Log.d("JSONJSON CJSON EST", "" + jsonObjectCreated.toString());
 
                 if (isSuccesfulExport(jsonObjectCreated)) {
+                    int inserEditar=0;
                     int idRemoto = jsonObjectCreated.getInt("Value");
-                   long a = dbAdapter_temp_establecimiento.updateTempEstablecById(cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_id)), idRemoto, Constants._ACTUALIZADO);
-                    Log.d("ESTADO",""+a+"--"+idRemoto);
-                    if(a>0){
-                        long inserto = dbAdapter_establecimeinto_historial.createTempEstablec(
+                    long a = dbAdapter_temp_establecimiento.updateTempEstablecById(cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_id)), idRemoto, Constants._ACTUALIZADO);
+                    Log.d("ESTADO", "" + a + "--" + idRemoto);
+                    if (a > 0) {
+                         inserEditar = dbAdapter_establecimeinto_historial.createTempEstablec(
                                 idRemoto,
                                 cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_usuario_accion)),
                                 cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_telefono_fijo)),
@@ -187,7 +198,7 @@ public class CrearEstablecimiento extends AsyncTask<String, String, String> {
                                 cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_apMaterno)),
                                 cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_tipo_documento)),
                                 cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_nro_documento)),
-                                1,
+                                10,
                                 cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_correo)),
                                 cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_tipo_establecimiento)),
                                 cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_descripcion_establecimiento)),
@@ -195,18 +206,49 @@ public class CrearEstablecimiento extends AsyncTask<String, String, String> {
                                 Constants._ACTUALIZADO,
                                 0);
 
-                        Log.d("INSERTO EN HISTORIAL",""+inserto);
+                        Log.d("INSERTO EN HISTORIAL", "" + inserEditar);
+                    }
+                    int nroOrder = dbAdaptert_evento_establec.ordern();
+                    EventoEstablecimiento eventoEstablecimiento = new EventoEstablecimiento(
+                            idRemoto,
+                            cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_categoria_estable)),
+                            cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_tipo_documento)),
+                            1,
+                            cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_descripcion_establecimiento
+                            )),
+                            cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_nombres)),
+                            cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_nro_documento)),
+                            nroOrder,
+                            0,
+                            0,
+                            0.0,
+                            0,
+                            0,
+                            "",
+                            idAgente,
+                            Constants._CREADO,
+                            "",
+                            cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_descripcion)),
+                            5,
+                            cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_direccion_fiscal)),
+                            cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_latitud)),
+                            cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_longitud))
+                    );
+
+                    long inset = dbAdaptert_evento_establec.createEstablecimientos(eventoEstablecimiento, idAgente, idLiquidacion,inserEditar);
+                    if (inset > 0) {
+                        Log.d("INSERTO ESTABLECIMIENTO", "" + inset);
                     }
                 }
 
-                Log.d("GUARDAR ESTABLECIMIENTO", "" + 1+""+ruta);
+                Log.d("GUARDAR ESTABLECIMIENTO", "" + 1 + "" + ruta);
             }
             Log.d("GUARDAR ESTABLECIMIENTO", "" + jsonObjectCreated);
         } catch (Exception e) {
             e.printStackTrace();
             Log.d("GUARDAR ESTABLECIMIENTO", "" + e.getMessage());
         }
-        publishProgress(""+90);
+        publishProgress("" + 90);
         return null;
     }
 
@@ -225,18 +267,22 @@ public class CrearEstablecimiento extends AsyncTask<String, String, String> {
     @Override
     protected void onPostExecute(String s) {
 
-        if(mainActivity.isFinishing()){
+        if (mainActivity.isFinishing()) {
             //dismissProgressDialog();
             progressDialog.dismiss();
             return;
-        }else {
+        } else {
 
 
             progressDialog.setProgress(100);
             dismissProgressDialog();
         }
 
-        mainActivity.startActivity(new Intent(mainActivity, VMovil_Evento_Indice.class));
+        SharedPreferences.Editor editor = mainActivity.getSharedPreferences("DIRECCION_FISCAL", Context.MODE_PRIVATE).edit();
+        editor.putString("fiscal", null);
+        editor.commit();
+
+        mainActivity.startActivity(new Intent(mainActivity, VMovil_Menu_Establec.class));
         mainActivity.finish();
 
         super.onPostExecute(s);

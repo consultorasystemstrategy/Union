@@ -26,10 +26,12 @@ import union.union_vr1.Sqlite.DbAdapter_Cobros_Manuales;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta_Detalle;
+import union.union_vr1.Sqlite.DbAdapter_Establecimeinto_Historial;
 import union.union_vr1.Sqlite.DbAdapter_Exportacion_Comprobantes;
 import union.union_vr1.Sqlite.DbAdapter_Histo_Venta;
 import union.union_vr1.Sqlite.DbAdapter_Histo_Venta_Detalle;
 import union.union_vr1.Sqlite.DbAdapter_Informe_Gastos;
+import union.union_vr1.Sqlite.DbAdapter_Temp_Establecimiento;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 import union.union_vr1.Utils.DisplayToast;
@@ -58,11 +60,20 @@ public class ServiceExport extends IntentService {
     private DbAdapter_Histo_Venta dbAdapter_histo_venta;
     private DbAdapter_Comprob_Cobro dbAdapter_comprob_cobro;
     private DbAdapter_Histo_Venta_Detalle dbAdapter_histo_venta_detalle;
-    private DbAdaptert_Evento_Establec dbAdaptert_evento_establec;
+    //private DbAdaptert_Evento_Establec dbAdaptert_evento_establec;
     private DBAdapter_Temp_Autorizacion_Cobro dbAdapter_temp_autorizacion_cobro;
     private DBAdapter_Temp_Canjes_Devoluciones dbAdapter_temp_canjes_devoluciones;
     private DbAdapter_Cobros_Manuales dbAdapter_cobros_manuales;
     private DbAdapter_Exportacion_Comprobantes dbAdapter_exportacion_comprobantes;
+    //----------------------------
+
+
+    private JSONObject jsonObjectCreated = null;
+    private StockAgenteRestApi stockAgenteRestApi = null;
+    private DbAdapter_Temp_Establecimiento dbAdapter_temp_establecimiento;
+    private DbAdapter_Temp_Session dbAdapter_temp_session;
+    private DbAdaptert_Evento_Establec dbAdaptert_evento_establec;
+    private DbAdapter_Establecimeinto_Historial dbAdapter_establecimeinto_historial;
 
     private static String TAG = ServiceExport.class.getSimpleName();
 
@@ -117,6 +128,18 @@ public class ServiceExport extends IntentService {
         dbAdapter_temp_autorizacion_cobro.open();
         dbAdapter_cobros_manuales.open();
         dbAdapter_exportacion_comprobantes.open();
+
+
+        //
+        dbAdapter_temp_establecimiento = new DbAdapter_Temp_Establecimiento(context);
+        dbAdapter_temp_establecimiento.open();
+        dbAdapter_establecimeinto_historial = new DbAdapter_Establecimeinto_Historial(context);
+        dbAdapter_establecimeinto_historial.open();
+        dbAdapter_temp_session = new DbAdapter_Temp_Session(context);
+        dbAdapter_temp_session.open();
+        dbAdaptert_evento_establec = new DbAdaptert_Evento_Establec(context);
+        dbAdaptert_evento_establec.open();
+        int ruta = dbAdapter_temp_session.fetchVarible(777);
     }
 
     @Override
@@ -848,6 +871,57 @@ public class ServiceExport extends IntentService {
         } else {
             Log.d(TAG, "TODOS LOS COMPROBANTES ESTÁN EXPORTADOS AL FLEX");
         }
+
+        //-------------------------
+        /*
+        Cursor cr = dbAdapter_establecimeinto_historial.fetchTemEstablecEnviar(10);
+        JSONObject jsonObject = null;
+        Log.d("ESTABLECI",""+cr.getCount());
+        while (cr.moveToNext()) {
+            try {
+                jsonObject = api.fins_ClienteTemporal(
+                        cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_nombres)),
+                        cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_apMaterno)),
+                        cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_apPaterno)),
+                        cr.getInt(cr.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_categoria_estable)),
+                        cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_celular_one)),
+                        cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_celular_two)),
+                        cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_descripcion)),
+                        cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_descripcion_establecimiento)),
+                        cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_direccion_fiscal)),
+                        0,
+                        0,
+                        cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_nro_documento)),
+                        cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_correo)),
+                        cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_latitud)),
+                        cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_longitud)),
+                        cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_telefono_fijo)),
+                        cr.getInt(cr.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_tipo_documento)),
+                        cr.getInt(cr.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_tipo_establecimiento)),
+                        cr.getInt(cr.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_tipo_persona)),
+                        cr.getInt(cr.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_usuario_accion))
+
+                );
+                Log.d("ESTABLECI",""+jsonObject.toString());
+
+                if (Utils.isSuccesful(jsonObject)) {
+                    int id = jsonObject.getInt("Value");
+                    if (id > 1) {
+                        long a = dbAdapter_establecimeinto_historial.updateTempEstablecById(cr.getInt(cr.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_histo_id)), id, Constants._ACTUALIZADO);
+                        if (a > 0) {
+                            //
+                            dbAdaptert_evento_establec.updateEstabEstado(cr.getInt(cr.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_histo_id)), 6 + "");
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                Log.d("ESTABLECI",""+e.getMessage());
+                e.printStackTrace();
+            }
+        }
+
+        */
+
 
         builder.setProgress(_MAX, _MAX, false);
         startForeground(1, builder.build());

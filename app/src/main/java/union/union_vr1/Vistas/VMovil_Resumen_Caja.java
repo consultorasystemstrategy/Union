@@ -263,6 +263,13 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
                 mainActivity.startService(intentExportService);
                 break;
 
+            case R.id.imprimirDisponible:
+                Intent intentImprimirStock = new Intent(mainActivity, ImprimirStockDisponible.class);
+                startActivity(intentImprimirStock);
+                break;
+
+
+
             default:
                 //ON ITEM SELECTED DEFAULT
                 break;

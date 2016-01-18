@@ -84,7 +84,7 @@
                     android:text="VENDER"
                     android:id="@+id/VC_buttonVender"
                     android:layout_weight="1"
-                    android:background="@color/PersonalizadoSteve4"
+                    android:background="@color/Dark1"
                     android:textStyle="bold"
                     android:textSize="14sp" />
             </LinearLayout>

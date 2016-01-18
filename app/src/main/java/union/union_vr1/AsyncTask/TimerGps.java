@@ -29,6 +29,8 @@ public class TimerGps extends Service {
     Context context;
     DbAdapter_Temp_Session dbAdapter_temp_session;
 
+    private static String TAG = TimerGps.class.getSimpleName();
+
 
 
     @Override
@@ -39,6 +41,7 @@ public class TimerGps extends Service {
 
     @Override
     public void onCreate() {
+        Log.d(TAG,"create");
         lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         li = new MyLocationListener();
         context = this;
@@ -52,15 +55,15 @@ public class TimerGps extends Service {
     @Override
     public int onStartCommand(Intent intent, int floga, int startId) {
         int idAgente = dbAdapter_temp_session.fetchVarible(1);
-        Log.e("ESTABIEN",""+idAgente+"****");
-        Log.i("Empezo el Servicio", "START");
+        Log.e(TAG,""+idAgente+"****");
+        Log.i(TAG, "START");
         lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,300000,0,li);
         return Service.START_STICKY;
     }
 
     @Override
     public void onDestroy() {
-        Log.i("Se destruyo", "xD");
+        Log.i(TAG, "xD SE DESTRUYO");
     }
 
     class MyLocationListener implements LocationListener {
@@ -70,7 +73,7 @@ public class TimerGps extends Service {
 
             if (location != null){
 
-                Log.i("POSITION",""+isNetworkAvailable());
+                Log.i(TAG,""+isNetworkAvailable());
                 if(isNetworkAvailable()){
                     sendPosition(location);
                 }

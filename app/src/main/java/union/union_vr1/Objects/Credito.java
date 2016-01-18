@@ -8,17 +8,21 @@ public class Credito {
     private int idEstablecimiento;
     private double montoCredito;
     int diasCredito;
-    boolean estado;
+    int estado;
+    private String observacion;
+    private String fecha;
 
     public Credito() {
     }
 
-    public Credito(int idAgente, int idEstablecimiento, double montoCredito, int diasCredito, boolean estado) {
+    public Credito(int idAgente, int idEstablecimiento, double montoCredito, int diasCredito, int estado, String observacion, String fecha) {
         this.idAgente = idAgente;
         this.idEstablecimiento = idEstablecimiento;
         this.montoCredito = montoCredito;
         this.diasCredito = diasCredito;
         this.estado = estado;
+        this.observacion = observacion;
+        this.fecha = fecha;
     }
 
 
@@ -54,11 +58,28 @@ public class Credito {
         this.diasCredito = diasCredito;
     }
 
-    public boolean isEstado() {
+
+    public int getEstado() {
         return estado;
     }
 
-    public void setEstado(boolean estado) {
+    public void setEstado(int estado) {
         this.estado = estado;
+    }
+
+    public String getObservacion() {
+        return observacion;
+    }
+
+    public void setObservacion(String observacion) {
+        this.observacion = observacion;
+    }
+
+    public String getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(String fecha) {
+        this.fecha = fecha;
     }
 }

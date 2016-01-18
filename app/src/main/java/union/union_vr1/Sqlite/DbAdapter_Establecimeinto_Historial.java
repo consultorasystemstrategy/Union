@@ -15,6 +15,7 @@ public class DbAdapter_Establecimeinto_Historial {
 
     public static final String establec_histo_id = "_id";
     public static final String establec_id_remoto = "establec_histo_remoto_id";
+    public static final String establec_id_remoto_duplicado = "establec_id_remoto_duplicado";
     public static final String establec_usuario_accion = "establec_usuario_accion";
     public static final String establec_telefono_fijo = "establec_telefono_fijo";
     public static final String establec_celular_one = "establec_celular_one";
@@ -47,6 +48,7 @@ public class DbAdapter_Establecimeinto_Historial {
             "create table if not exists " + SQLITE_TABLE_ESTABLECIMIENTO_HISTORIAL + " ("
                     + establec_histo_id + " integer primary key,"
                     + establec_id_remoto + " integer, "
+                    + establec_id_remoto_duplicado + " integer, "
                     + establec_usuario_accion + " integer, "
                     + establec_telefono_fijo + " text, "
                     + establec_celular_one + " text, "
@@ -88,7 +90,7 @@ public class DbAdapter_Establecimeinto_Historial {
     }
 
 
-    public long createTempEstablec(
+    public int createTempEstablec(
             int _id_remoto,
             String _usuario_accion,
             String _telefono_fijo,
@@ -134,13 +136,13 @@ public class DbAdapter_Establecimeinto_Historial {
         initialValues.put(establec_descripcion_establecimiento, _descripcion_establecimiento);
         initialValues.put(establec_editado, _estadoEditado);
         initialValues.put(Constants._SINCRONIZAR, _ESTADO);
+        long a = mDb.insert(SQLITE_TABLE_ESTABLECIMIENTO_HISTORIAL, null, initialValues);
 
-        return mDb.insert(SQLITE_TABLE_ESTABLECIMIENTO_HISTORIAL, null, initialValues);
+        return Integer.parseInt(a + "");
     }
 
 
-
-    public long updateTempEstablecDireccion(String id ,String lat,String lon,String direccion, String direccion_fiscal) {
+    public long updateTempEstablecDireccion(String id, String lat, String lon, String direccion, String direccion_fiscal) {
 
         ContentValues initialValues = new ContentValues();
         initialValues.put(establec_latitud, lat);
@@ -148,7 +150,7 @@ public class DbAdapter_Establecimeinto_Historial {
         initialValues.put(establec_descripcion, direccion);
         initialValues.put(establec_direccion_fiscal, direccion_fiscal);
         return mDb.update(SQLITE_TABLE_ESTABLECIMIENTO_HISTORIAL, initialValues,
-                establec_id_remoto + "=?", new String[]{id + ""});
+                establec_histo_id + "=?", new String[]{id + ""});
     }
 
     public long updateTempEstablecEstabl(
@@ -169,7 +171,7 @@ public class DbAdapter_Establecimeinto_Historial {
         initialValues.put(establec_celular_two, celular_two);
         initialValues.put(establec_editado, 0);
         return mDb.update(SQLITE_TABLE_ESTABLECIMIENTO_HISTORIAL, initialValues,
-                establec_id_remoto + "=?", new String[]{id + ""});
+                establec_histo_id + "=?", new String[]{id + ""});
     }
 
     public long updateTempEstablecCliente(
@@ -199,7 +201,7 @@ public class DbAdapter_Establecimeinto_Historial {
         initialValues.put(establec_estado_guardado, _estado_guardado);
         initialValues.put(establec_correo, _correo);
         return mDb.update(SQLITE_TABLE_ESTABLECIMIENTO_HISTORIAL, initialValues,
-                establec_id_remoto + "=?", new String[]{id + ""});
+                establec_histo_id + "=?", new String[]{id + ""});
     }
 
 
@@ -251,6 +253,16 @@ public class DbAdapter_Establecimeinto_Historial {
                 establec_histo_id + "=?", new String[]{id + ""});
     }
 
+    public long updateEstado(int _id_remoto, int estado, int idremotoDuplicado) {
+
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(Constants._SINCRONIZAR, estado);
+        initialValues.put(establec_id_remoto_duplicado, idremotoDuplicado);
+        return mDb.update(SQLITE_TABLE_ESTABLECIMIENTO_HISTORIAL, initialValues,
+                establec_histo_id + "=?", new String[]{_id_remoto + ""});
+
+    }
+
     public long update(int _id_remoto, int estado) {
 
         ContentValues initialValues = new ContentValues();
@@ -260,18 +272,29 @@ public class DbAdapter_Establecimeinto_Historial {
 
     }
 
+    public Cursor fetchTemEstablecEnviar(int estado) {
+        Cursor cursor = mDb.rawQuery("select * from " + SQLITE_TABLE_ESTABLECIMIENTO_HISTORIAL + " where " + establec_estado_guardado + "='" + Constants.REGISTRO_SIN_INTERNET + "' and " + Constants._SINCRONIZAR + "='" + Constants._CREADO + "' ", null);
+        return cursor;
+    }
+
     public Cursor fetchTemEstablec() {
         Cursor cursor = mDb.rawQuery("select * from " + SQLITE_TABLE_ESTABLECIMIENTO_HISTORIAL + " where " + establec_editado + "='0' and " + Constants._SINCRONIZAR + "='" + Constants._CREADO + "' order by " + establec_histo_id + " asc", null);
         return cursor;
     }
 
+    public int fetchIdEstablec(String doc) {
+        Cursor cursor = mDb.rawQuery("select * from " + SQLITE_TABLE_ESTABLECIMIENTO_HISTORIAL + " where " + establec_nro_documento + "='" + doc + "'", null);
+        cursor.moveToFirst();
+        return cursor.getInt(cursor.getColumnIndexOrThrow(establec_histo_id));
+    }
+
     public Cursor fetchTemEstablecEdit(String id) {
-        Cursor cursor = mDb.rawQuery("select * from " + SQLITE_TABLE_ESTABLECIMIENTO_HISTORIAL + " WHERE "+establec_id_remoto+"='"+id+"'", null);
+        Cursor cursor = mDb.rawQuery("select * from " + SQLITE_TABLE_ESTABLECIMIENTO_HISTORIAL + " WHERE " + establec_histo_id + "='" + id + "'", null);
         return cursor;
     }
 
     public Cursor fetchTemEstablecById(String id) {
-        Cursor cursor = mDb.rawQuery("select * from " + SQLITE_TABLE_ESTABLECIMIENTO_HISTORIAL + " where  " + establec_id_remoto + "='" + id + "'", null);
+        Cursor cursor = mDb.rawQuery("select * from " + SQLITE_TABLE_ESTABLECIMIENTO_HISTORIAL + " where  " + establec_histo_id + "='" + id + "'", null);
         return cursor;
     }
 

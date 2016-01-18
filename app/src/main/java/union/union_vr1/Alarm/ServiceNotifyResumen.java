@@ -52,16 +52,7 @@ public class ServiceNotifyResumen extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        session = new DbAdapter_Temp_Session(this);
-        session.open();
-        dbAdapter_informe_gastos = new DbAdapter_Informe_Gastos(this);
-        dbAdapter_informe_gastos.open();
-        dbHelperGastosIngr =  new DbGastos_Ingresos(this);
-        dbHelperGastosIngr.open();
 
-        idLiquidacion = session.fetchVarible(3);
-
-        calcularTotalARendir();
     }
 
     @Override
@@ -72,6 +63,19 @@ public class ServiceNotifyResumen extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d("ALARMA SERVICE INICIALIZATED", "OK");
+
+        session = new DbAdapter_Temp_Session(this);
+        session.open();
+        dbAdapter_informe_gastos = new DbAdapter_Informe_Gastos(this);
+        dbAdapter_informe_gastos.open();
+        dbHelperGastosIngr =  new DbGastos_Ingresos(this);
+        dbHelperGastosIngr.open();
+
+        idLiquidacion = session.fetchVarible(3);
+
+
+        calcularTotalARendir();
+
 
         createNotification(df.format(aRendir));
         stopSelf();

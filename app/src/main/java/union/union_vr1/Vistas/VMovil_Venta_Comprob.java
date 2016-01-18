@@ -668,6 +668,7 @@ public class VMovil_Venta_Comprob extends Activity implements View.OnClickListen
                         break;
                     case 1:
 
+                        //ESTE ESTÁ DESHABILITADO
                         Cursor cursorComprobanteVentaDetalle = dbHelper_Comp_Venta_Detalle.fetchAllComprobVentaDetalleByIdComp(idComprobante);
                         cursorComprobanteVentaDetalle.moveToFirst();
 
@@ -682,6 +683,7 @@ public class VMovil_Venta_Comprob extends Activity implements View.OnClickListen
                                 id_producto = cursorComprobanteVentaDetalle.getInt(cursorComprobanteVentaDetalle.getColumnIndex(DbAdapter_Comprob_Venta_Detalle.CD_id_producto));
                                 cantidad = cursorComprobanteVentaDetalle.getInt(cursorComprobanteVentaDetalle.getColumnIndex(DbAdapter_Comprob_Venta_Detalle.CD_cantidad));
 
+                                //FALTÓ MULTIPLICARLO POR EL VALOR UNIDAD.
                                 dbHelper_Stock_Agente.updateStockAgenteCantidad(id_producto, cantidad, liquidacion);
 
                             } while (cursorComprobanteVentaDetalle.moveToNext());

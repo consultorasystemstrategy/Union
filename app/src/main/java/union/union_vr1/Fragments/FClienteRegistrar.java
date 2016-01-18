@@ -1,6 +1,9 @@
 package union.union_vr1.Fragments;
 
+import android.content.Context;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -17,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FilterQueryProvider;
 import android.widget.LinearLayout;
@@ -36,6 +40,7 @@ import com.mobsandgeeks.saripaar.annotation.TextRule;
 import java.util.ArrayList;
 import java.util.List;
 
+import union.union_vr1.AsyncTask.ValidarCliente;
 import union.union_vr1.R;
 import union.union_vr1.Sqlite.DBAdapter_Cliente_Ruta;
 import union.union_vr1.Sqlite.DbAdapter_Agente;
@@ -51,6 +56,7 @@ public class FClienteRegistrar extends Fragment implements Validator.ValidationL
 
     private DBAdapter_Cliente_Ruta dbAdapter_cliente_ruta;
     private int tipoDoc;
+    private boolean estado = false;
 
     //VALIDACION DE LOS WIDGETS
     private Spinner spinnerTipoDocumento;
@@ -58,7 +64,7 @@ public class FClienteRegistrar extends Fragment implements Validator.ValidationL
 
     @Required(order = 1, messageResId = R.string.requerido_input)
     private EditText editTextNombre;
-
+    private Fragment fragment;
 
     private EditText editTextApPaterno;
     private EditText editTextApMaterno;
@@ -87,7 +93,7 @@ public class FClienteRegistrar extends Fragment implements Validator.ValidationL
     private DbAdapter_Temp_Establecimiento dbAdapter_temp_establecimiento;
     private DbAdapter_Agente dbAdapter_agente;
     private Validator validator;
-
+    private Button btnValidarCliente;
     String idEstablecimiento;
     int idusuario;
 
@@ -95,6 +101,7 @@ public class FClienteRegistrar extends Fragment implements Validator.ValidationL
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_cliente, container, false);
         setHasOptionsMenu(false);
+        fragment = this;
         idEstablecimiento = getArguments().getString("idEstablecimiento");
         toastBucsando = Toast.makeText(getActivity().getApplicationContext(), "Buscando...", 1000);
         toast = Toast.makeText(getActivity().getApplicationContext(), "Encontrado", Toast.LENGTH_SHORT);
@@ -103,7 +110,7 @@ public class FClienteRegistrar extends Fragment implements Validator.ValidationL
         TextView vz = (TextView) toast.getView().findViewById(android.R.id.message);
         vz.setTextColor(getActivity().getResources().getColor(R.color.Blanco));
         viewPager = (ViewPager) getActivity().findViewById(R.id.viewpager);
-
+        btnValidarCliente = (Button) v.findViewById(R.id.btnValidarCliente);
         //...........
         //VALIDATOR INTANCE
         validator = new Validator(this);
@@ -157,18 +164,18 @@ public class FClienteRegistrar extends Fragment implements Validator.ValidationL
                     case 1:
                         tipo = "DNI";
                         validator.removeRulesFor(autoNroDocumento);
-                        nro.add(Rules.required("Requerido",true));
+                        nro.add(Rules.required("Requerido", true));
                         nro.add(Rules.minLength("Formato incorrecto", 8, true));
-                        nro.add(Rules.maxLength("Formato incorrecto",8,true));
-                        validator.put(autoNroDocumento,nro);
+                        nro.add(Rules.maxLength("Formato incorrecto", 8, true));
+                        validator.put(autoNroDocumento, nro);
                         break;
                     case 2:
                         tipo = "RUC";
                         validator.removeRulesFor(autoNroDocumento);
-                        nro.add(Rules.required("Requerido",true));
+                        nro.add(Rules.required("Requerido", true));
                         nro.add(Rules.minLength("Formato incorrecto", 11, true));
-                        nro.add(Rules.maxLength("Formato incorrecto",11,true));
-                        validator.put(autoNroDocumento,nro);
+                        nro.add(Rules.maxLength("Formato incorrecto", 11, true));
+                        validator.put(autoNroDocumento, nro);
                         break;
                 }
                 textViewDoc.setText("Nro de " + tipo);
@@ -196,6 +203,32 @@ public class FClienteRegistrar extends Fragment implements Validator.ValidationL
             }
         });
         autoComplete();
+
+
+        btnValidarCliente.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (autoNroDocumento.getText().toString() != null || autoNroDocumento.getText().toString() != "") {
+
+                    if (autoNroDocumento.getText().toString().length() == 8 && tipoDoc == 1) {
+                        estado = true;
+
+                        if (conectadoWifi() || conectadoRedMovil()) {
+                            new ValidarCliente(getActivity(), fragment).execute(autoNroDocumento.getText().toString());
+                        }
+                    }
+                    if (autoNroDocumento.getText().toString().length() == 11 && tipoDoc == 2) {
+                        estado = true;
+                        if (conectadoWifi() || conectadoRedMovil()) {
+                            new ValidarCliente(getActivity(), fragment).execute(autoNroDocumento.getText().toString());
+                        }
+                    }
+                }
+
+            }
+        });
+
         return v;
     }
 
@@ -206,8 +239,8 @@ public class FClienteRegistrar extends Fragment implements Validator.ValidationL
             case 1:
                 setAdapterTipoDocIdentidad(-1);
                 textCliente.setText("Nombres");
-                linearLayoutMadre.setVisibility(View.VISIBLE);
-                linearLayoutPadre.setVisibility(View.VISIBLE);
+                // linearLayoutMadre.setVisibility(View.VISIBLE);
+                // linearLayoutPadre.setVisibility(View.VISIBLE);
                 break;
             case 2:
                 setAdapterTipoDocIdentidad(2);
@@ -255,7 +288,7 @@ public class FClienteRegistrar extends Fragment implements Validator.ValidationL
     private void autoComplete() {
 
 
-        final SimpleCursorAdapter adapter;
+      /*  final SimpleCursorAdapter adapter;
         Cursor cr = dbAdapter_cliente_ruta.listarDocumentoClientexRuta("", tipoDoc);
 
 
@@ -279,7 +312,7 @@ public class FClienteRegistrar extends Fragment implements Validator.ValidationL
                 0);
 
 
-        autoNroDocumento.setAdapter(adapter);
+        autoNroDocumento.setAdapter(adapter);*/
 
         autoNroDocumento.addTextChangedListener(new TextWatcher() {
             @Override
@@ -296,6 +329,12 @@ public class FClienteRegistrar extends Fragment implements Validator.ValidationL
                     setAdapterTipoPersona(-1);
 
                 }
+                if (count == 9 && tipoDoc == 1) {
+                    autoNroDocumento.setError("No permitido");
+                }
+                if (count == 12 && tipoDoc == 2) {
+                    autoNroDocumento.setError("No permitido");
+                }
             }
 
             @Override
@@ -304,13 +343,13 @@ public class FClienteRegistrar extends Fragment implements Validator.ValidationL
             }
         });
 
-        adapter.setFilterQueryProvider(new FilterQueryProvider() {
+     /*   adapter.setFilterQueryProvider(new FilterQueryProvider() {
             @Override
             public Cursor runQuery(CharSequence charSequence) {
                 Cursor cr = dbAdapter_cliente_ruta.listarDocumentoClientexRuta(charSequence.toString(), tipoDoc);
                 return cr;
             }
-        });
+        });*/
 
 
         autoNroDocumento.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -353,11 +392,11 @@ public class FClienteRegistrar extends Fragment implements Validator.ValidationL
         editTextApMaterno.setEnabled(true);
         editTextNroCelular.setEnabled(true);
         editTextCorreo.setEnabled(true);
-        editTextNombre.setText("");
+      /*  editTextNombre.setText("");
         editTextApPaterno.setText("");
         editTextApMaterno.setText("");
         editTextNroCelular.setText("");
-        editTextCorreo.setText("");
+        editTextCorreo.setText("");*/
     }
 
     private void setValueForm(Cursor cr) {
@@ -448,11 +487,16 @@ public class FClienteRegistrar extends Fragment implements Validator.ValidationL
         tipo_cliente = crCli.getInt(crCli.getColumnIndex(dbAdapter_tipo_persona.tipo_Persona_PersonaId));
 
 
-        long estado = dbAdapter_temp_establecimiento.updateTempEstablecCliente(idEstablecimiento + "", idusuario + "",celular_one,tipo_cliente+"",nombre,ap_paterno,ap_materno,tipo_doc+"",nroDocumento,1+"",correo);
-        if (estado > 0) {
+        long estadoIn = dbAdapter_temp_establecimiento.updateTempEstablecCliente(idEstablecimiento + "", idusuario + "", celular_one, tipo_cliente + "", nombre, ap_paterno, ap_materno, tipo_doc + "", nroDocumento, 1 + "", correo);
+        if (estadoIn > 0 && estado == true) {
             viewPager.setCurrentItem(1);
         } else {
-            Utils.setToast(getActivity(), "Ocurrio un error, por favor sal y vuelve a Intentarlo", R.color.rojo);
+
+            if (conectadoRedMovil() || conectadoWifi()) {
+                viewPager.setCurrentItem(0);
+                Utils.setToast(getActivity(), "Ocurrio un error.", R.color.rojo);
+            }
+
         }
 
     }
@@ -468,6 +512,7 @@ public class FClienteRegistrar extends Fragment implements Validator.ValidationL
             Utils.setToast(getActivity().getApplicationContext(), "Revise los campos", R.color.rojo);
         }
     }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -478,6 +523,32 @@ public class FClienteRegistrar extends Fragment implements Validator.ValidationL
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         // TODO Add your menu entries here
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    protected Boolean conectadoWifi() {
+        ConnectivityManager connectivity = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivity != null) {
+            NetworkInfo info = connectivity.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+            if (info != null) {
+                if (info.isConnected()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    protected Boolean conectadoRedMovil() {
+        ConnectivityManager connectivity = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivity != null) {
+            NetworkInfo info = connectivity.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+            if (info != null) {
+                if (info.isConnected()) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
 

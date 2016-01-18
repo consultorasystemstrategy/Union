@@ -248,7 +248,7 @@ public class DbAdapter_Stock_Agente {
         }
 
         ContentValues initialValues = new ContentValues();
-        initialValues.put(ST_final, sFisico);
+        //initialValues.put(ST_final, sFisico);
         initialValues.put(ST_disponible, sDisponible);
         initialValues.put(ST_fisico, sFisico);
         initialValues.put(ST_canjes, cCanje);

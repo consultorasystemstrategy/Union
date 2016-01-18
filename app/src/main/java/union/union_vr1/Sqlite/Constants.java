@@ -27,6 +27,8 @@ public class Constants {
     public static final int DOCUMENTO_BOLETA = 2;
     public static final int DOCUMENTO_ARQUEO = 1001;
     public static final int DOCUMENTO_RRPP = 1002;
+    public static final int DOCUMENTO_STOCK_DISPONIBLE = 1003;
+
 
 
 
@@ -60,11 +62,27 @@ public class Constants {
 
     public static final String _APP_ROOT_FIREBASE = "https://productosunion.firebaseio.com/app";
     public static final String _CHILD_CREDITO = "credito";
+    public static final String _CHILD_ESTABLECIMIENTO_NUEVO = "establecimiento_nuevo";
+    public static final String _CHILD_ESTABLECIMIENTO_TEMPORAL = "establecimiento_temporal";
+
 
 
     public static final int SEMAFORO_AMBAR = 1;
     public static final int SEMAFORO_ROJO = 2;
     public static final int SEMAFORO_VERDE = 3;
+    public static final int REGISTRO_INTERNET = 5;
+    public static final int REGISTRO_CREADO = 5;
+    public static final int REGISTRO_APROBADO = 7;
+    public static final int REGISTRO_RECHAZADO = 8;
+
+    public static final int REGISTRO_SIN_INTERNET = 10;
+
+    public static final int _CREDITO_PENDIENTE = 1;
+    public static final int _CREDITO_APROBADO = 2;
+    public static final int _CREDITO_RECHAZADO = 3;
+
+    public static final int ID_NOTIFICATION_FIREBASE = 4650;
+
 
 
 

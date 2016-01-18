@@ -19,6 +19,7 @@ import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
 import union.union_vr1.Sqlite.DbAdapter_Establecimeinto_Historial;
 import union.union_vr1.Sqlite.DbAdapter_Exportacion_Comprobantes;
 import union.union_vr1.Sqlite.DbAdapter_Histo_Comprob_Anterior;
+import union.union_vr1.Sqlite.DbAdapter_ModalidadCredito;
 import union.union_vr1.Sqlite.DbAdapter_Motivo_Dev;
 import union.union_vr1.Sqlite.DbAdapter_Resumen_Caja;
 import union.union_vr1.Sqlite.DbAdapter_Ruta_Distribucion;
@@ -110,10 +111,10 @@ public class DbHelper extends SQLiteOpenHelper {
 
         db.execSQL(DbAdapter_Establecimeinto_Historial.CREATE_ESTABLECIMIENTO_HISTORIAL);
         db.execSQL(DbAdapter_Motivo_Dev.CREATE_TABLE_MOT_DEV);
+        db.execSQL(DbAdapter_ModalidadCredito.CREATE_TABLE_MODALIDAD_CREDITO);
 
         //CREANDO TABLA TRANFERENCIA DETALLADO
         db.execSQL(DBAdapter_Trans_Detallado.CREATE_TABLE_TEMP_Trans_Detalle);
-
 
 
 
@@ -162,6 +163,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(DbAdapter_Motivo_Dev.DELETE_TABLE_MOT_DEV);
 
 
+        db.execSQL(DbAdapter_ModalidadCredito.DELETE_TABLE_MODALIDAD_CREDITO);
 
         onCreate(db);
     }

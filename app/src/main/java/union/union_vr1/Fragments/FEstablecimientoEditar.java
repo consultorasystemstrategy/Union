@@ -6,45 +6,36 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 
 import com.mobsandgeeks.saripaar.Rule;
 import com.mobsandgeeks.saripaar.Validator;
 import com.mobsandgeeks.saripaar.annotation.Required;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-
-import union.union_vr1.AsyncTask.CrearEstablecimiento;
-import union.union_vr1.AsyncTask.ImportMain;
-import union.union_vr1.AsyncTask.ModificarEstablecimiento;
+import union.union_vr1.Objects.EventoEstablecimiento;
 import union.union_vr1.R;
 import union.union_vr1.Sqlite.Constants;
 import union.union_vr1.Sqlite.DbAdapter_Categoria_Establecimiento;
 import union.union_vr1.Sqlite.DbAdapter_Establecimeinto_Historial;
-import union.union_vr1.Sqlite.DbAdapter_Temp_DatosSpinner;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Establecimiento;
+import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 import union.union_vr1.Sqlite.DbAdapter_Tipo_Establecimiento;
+import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 import union.union_vr1.Utils.Utils;
 import union.union_vr1.Vistas.VMovil_Menu_Establec;
 
@@ -65,8 +56,10 @@ public class FEstablecimientoEditar extends Fragment implements Validator.Valida
     private DbAdapter_Categoria_Establecimiento dbAdapter_categoria_establecimiento;
     private DbAdapter_Tipo_Establecimiento dbAdapter_tipo_establecimiento;
     private ViewPager viewPager;
-    private DbAdapter_Establecimeinto_Historial dbAdapter_temp_establecimiento;
+    private DbAdapter_Establecimeinto_Historial dbAdapter_establecimeinto_historial;
     String idEstablecimiento;
+    private DbAdapter_Temp_Session dbAdapter_temp_session;
+    private DbAdaptert_Evento_Establec dbAdaptert_evento_establec;
     int idcat_establec = 0;
     int idTipo_establec = 0;
 
@@ -77,9 +70,12 @@ public class FEstablecimientoEditar extends Fragment implements Validator.Valida
         idEstablecimiento = getArguments().getString("idEstablecimiento");
         validator = new Validator(this);
         validator.setValidationListener(this);
-
-        dbAdapter_temp_establecimiento = new DbAdapter_Establecimeinto_Historial(getActivity());
-        dbAdapter_temp_establecimiento.open();
+        dbAdapter_temp_session = new DbAdapter_Temp_Session(getActivity());
+        dbAdapter_temp_session.open();
+        dbAdaptert_evento_establec = new DbAdaptert_Evento_Establec(getActivity());
+        dbAdaptert_evento_establec.open();
+        dbAdapter_establecimeinto_historial = new DbAdapter_Establecimeinto_Historial(getActivity());
+        dbAdapter_establecimeinto_historial.open();
         viewPager = (ViewPager) getActivity().findViewById(R.id.viewpager);
         dbAdapter_categoria_establecimiento = new DbAdapter_Categoria_Establecimiento(getActivity());
         dbAdapter_categoria_establecimiento.open();
@@ -146,7 +142,7 @@ public class FEstablecimientoEditar extends Fragment implements Validator.Valida
     }
 
     private void display() {
-        Cursor cr = dbAdapter_temp_establecimiento.fetchTemEstablecById(idEstablecimiento);
+        Cursor cr = dbAdapter_establecimeinto_historial.fetchTemEstablecById(idEstablecimiento);
         if (cr.moveToFirst()) {
             editTextNombre.setText(cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_descripcion_establecimiento)));
             editTextTelFijo.setText(cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_telefono_fijo)));
@@ -239,7 +235,7 @@ public class FEstablecimientoEditar extends Fragment implements Validator.Valida
         fijo = editTextTelFijo.getText().toString();
         two = editTextTelMovil2.getText().toString();
 
-        long estado = dbAdapter_temp_establecimiento.updateTempEstablecEstabl(idEstablecimiento + "", cat_est, tipo_esta, nomb_estb, fijo, two);
+        long estado = dbAdapter_establecimeinto_historial.updateTempEstablecEstabl(idEstablecimiento + "", cat_est, tipo_esta, nomb_estb, fijo, two);
         if (estado > 0) {
 
             alertConfirmar();
@@ -269,7 +265,10 @@ public class FEstablecimientoEditar extends Fragment implements Validator.Valida
                 .setPositiveButton("SI", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
-                        new ModificarEstablecimiento(getActivity()).execute(idEstablecimiento);
+                       // new ModificarEstablecimiento(getActivity()).execute(idEstablecimiento);
+
+                            guardar();
+
 
                     }
 
@@ -300,6 +299,72 @@ public class FEstablecimientoEditar extends Fragment implements Validator.Valida
         }
 
         return false;
+    }
+
+    protected Boolean conectadoWifi() {
+        ConnectivityManager connectivity = (ConnectivityManager)getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivity != null) {
+            NetworkInfo info = connectivity.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+            if (info != null) {
+                if (info.isConnected()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    protected Boolean conectadoRedMovil() {
+        ConnectivityManager connectivity = (ConnectivityManager)getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivity != null) {
+            NetworkInfo info = connectivity.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+            if (info != null) {
+                if (info.isConnected()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private void guardar(){
+        Cursor cursor = dbAdapter_establecimeinto_historial.fetchTemEstablecEdit(idEstablecimiento);
+
+        while(cursor.moveToNext()){
+
+                 EventoEstablecimiento eventoEstablecimiento = new EventoEstablecimiento(
+                Integer.parseInt(idEstablecimiento),
+                cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_categoria_estable)),
+                cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_tipo_documento)),
+                1,
+                cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_descripcion_establecimiento
+                )),
+                cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_nombres))+ " "+
+                cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_apPaterno)) +" "+
+                cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_apMaterno)),
+                cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_nro_documento)),
+                0,
+                0,
+                0,
+                0.0,
+                0,
+                0,
+                "",
+                0,
+                Constants._CREADO,
+                "",
+                cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_descripcion)),
+                Constants.REGISTRO_SIN_INTERNET,
+                cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_direccion_fiscal)),
+                cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_latitud)),
+                cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_longitud))
+        );
+           int upd =  dbAdaptert_evento_establec.updateEstablecimientosEditar(eventoEstablecimiento);
+            Log.d("EDITO",""+upd);
+        }
+
+
+        startActivity(new Intent(getActivity().getApplicationContext(), VMovil_Menu_Establec.class));
     }
 
 

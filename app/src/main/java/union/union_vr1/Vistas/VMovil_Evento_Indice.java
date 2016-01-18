@@ -29,8 +29,7 @@ import android.widget.Toast;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -38,24 +37,17 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.Timer;
 
 
 import union.union_vr1.Alarm.ReceiverAlarmFinishedDay;
-import union.union_vr1.AsyncTask.CrearEstablecimiento;
-import union.union_vr1.AsyncTask.ExportMain;
-import union.union_vr1.AsyncTask.ExportService;
 import union.union_vr1.AsyncTask.GetClienteRuta;
 import union.union_vr1.AsyncTask.GetDataSpinnerRegistrar;
-import union.union_vr1.AsyncTask.ImportCredito;
 import union.union_vr1.AsyncTask.ImportMain;
 import union.union_vr1.AsyncTask.TimerGps;
 import union.union_vr1.BarcodeScanner.IntentIntegrator;
 import union.union_vr1.BarcodeScanner.IntentResult;
 import union.union_vr1.R;
-import union.union_vr1.RestApi.StockAgenteRestApi;
-import union.union_vr1.Servicios.ServiceExport;
-import union.union_vr1.Servicios.ServiceImport;
+import union.union_vr1.Servicios.*;
 import union.union_vr1.Sqlite.Constants;
 import union.union_vr1.Sqlite.DbAdapter_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
@@ -148,7 +140,14 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.princ_evento_indice);
         mainActivity = this;
+        // Start the background Firebase activity
+        Intent intent = new Intent(this,ServiceFireListener.class);
+        startService(intent);
 
+        Intent intentemp = new Intent(this,ServiceFireListenerTemp.class);
+        startService(intentemp);
+
+        //
         session = new DbAdapter_Temp_Session(this);
         session.open();
 
@@ -156,8 +155,8 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         //Enable gps android
         enableGps();
         //
-        Intent intent = new Intent(mainActivity, TimerGps.class);
-        startService(intent);
+        Intent intents = new Intent(mainActivity, TimerGps.class);
+        startService(intents);
         //FOR STOP SERVICE, THE CODE IS:
         // Intent intent = new Intent(getApplicationContext(),TimerGps.class);
         // stopService(intent);
@@ -534,9 +533,12 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
                 intentImportService.setAction(Constants.ACTION_IMPORT_SERVICE);
                 mainActivity.startService(intentImportService);
 
-                new GetDataSpinnerRegistrar(mainActivity).execute();
-                new GetClienteRuta(mainActivity).execute(slideIdAgente+"");
-                new GetDataSpinnerRegistrar(mainActivity).execute();
+                if(conectadoRedMovil() || conectadoWifi()){
+                    new GetDataSpinnerRegistrar(mainActivity).execute();
+                    new GetClienteRuta(mainActivity).execute(slideIdAgente+"");
+                }
+
+
 
                 break;
             case R.id.buttonExportar:
