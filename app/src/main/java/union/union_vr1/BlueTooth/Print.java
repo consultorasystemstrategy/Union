@@ -593,7 +593,6 @@ public class Print {
                 Double rutaGasto = cursorTotalGastos.getDouble(cursorTotalGastos.getColumnIndexOrThrow("RUTA"));
                 Double plantaGasto = cursorTotalGastos.getDouble(cursorTotalGastos.getColumnIndexOrThrow("PLANTA"));
                 String nombreGasto = cursorTotalGastos.getString(cursorTotalGastos.getColumnIndexOrThrow("tg_te_nom_tipo_gasto"));
-
                 totalRuta += rutaGasto;
                 totalPlanta += plantaGasto;
             }

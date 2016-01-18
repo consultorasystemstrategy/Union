@@ -342,14 +342,17 @@ public class VMovil_Abrir_Caja extends Activity implements View.OnClickListener 
         @Override
         protected void onPostExecute(String s) {
             if (succesLogin) {
-                if (succesMACDevice){
+                /*if (succesMACDevice){
+
+                }
+                */
                     Toast.makeText(getApplicationContext(), "ÉXITO", Toast.LENGTH_SHORT).show();
                     Intent i = new Intent(getApplicationContext(), VMovil_Evento_Indice.class);
                     finish();
                     startActivity(i);
-                }else {
+                /*}else {
                     Toast.makeText(getApplicationContext(), "USUARIO NO AUTORIZADO EN ESTE DISPOSITIVO.", Toast.LENGTH_SHORT).show();
-                }
+                }*/
             } else {
                 runOnUiThread(new Runnable() {
                     @Override

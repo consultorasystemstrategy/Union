@@ -111,6 +111,11 @@ public class ServiceFireListener extends Service {
                     int color = 0;
                     mensaje = "C. Doc: " + nuevoEstablecimiento.getNroDoc();
 
+                    if (VMovil_Menu_Establec.isActive) {
+
+                        //RECARGAR EL LISTVIEW.
+
+                    }
                     switch (nuevoEstablecimiento.getEstado()) {
                         case Constants.REGISTRO_APROBADO:
                             titulo = "Establecimiento Aprobado";

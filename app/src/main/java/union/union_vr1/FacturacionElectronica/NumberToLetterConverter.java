@@ -131,9 +131,9 @@ public class NumberToLetterConverter {
                     + "CÉNTIMOS");
         */
         if (centavos<10)
-            converted.append("con "+centavos+"0/100 Nuevos Soles");
+            converted.append("con "+centavos+"0/100 Soles");
         else if(centavos>=10)
-            converted.append("con "+centavos+"/100 Nuevos Soles");
+            converted.append("con "+centavos+"/100 Soles");
         return converted.toString();
     }
 

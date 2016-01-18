@@ -29,6 +29,9 @@ android {
 
 
     packagingOptions{
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE-FIREBASE.txt'
+        exclude 'META-INF/NOTICE'
         exclude 'LICENSE'
         exclude 'NOTICE'
         exclude 'META-INF/MANIFEST.MF'
@@ -56,6 +59,8 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libraries')
     compile files('libs/xmlsec-1.4.7.jar')
+    compile 'com.firebase:firebase-client-android:2.5.0+'
+    compile 'com.mobsandgeeks:android-saripaar:1.0.3'
     compile 'com.android.support:design:23.0.1'
     compile 'com.android.support:appcompat-v7:23.0.1'
     compile 'com.android.support:recyclerview-v7:23.0.1'

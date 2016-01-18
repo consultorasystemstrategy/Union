@@ -36,6 +36,7 @@ import jpos.JposException;
 import jpos.POSPrinterConst;
 import union.union_vr1.BlueTooth.AlertView;
 import union.union_vr1.BlueTooth.Print;
+import union.union_vr1.FacturacionElectronica.NumberToLetterConverter;
 import union.union_vr1.Sqlite.Constants;
 import union.union_vr1.Sqlite.DbAdapter_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Agente_Login;
@@ -44,7 +45,6 @@ import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta_Detalle;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
-import union.union_vr1.Utils.NumberToLetterConverter;
 import union.union_vr1.Utils.Utils;
 import union.union_vr1.Vistas.VMovil_Evento_Establec;
 import union.union_vr1.Vistas.VMovil_Evento_Indice;
@@ -109,7 +109,7 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
     //PANTALLA
 
     private String textoEmpresa = "\n"
-            +"    UNIVERSIDAD PERUANA UNION   \n"
+            +"    UNIVERSIDAD PERUANA UNION   \n\n"
             +"     Cent.aplc. Prod. Union     \n"
             +"   C. Central Km 19 Villa Union \n"
             +" Lurigancho-Chosica Fax: 6186311\n"
@@ -397,9 +397,14 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
 
                }
 
-               textoImpresionContenidoLeft+="SUB TOTAL:\n";
-               textoImpresionContenidoLeft+="IGV:\n";
-               textoImpresionContenidoLeft+="TOTAL:\n";
+               textoImpresionContenidoLeft+="\nOP. GRAVADA      S/.\n";
+               textoImpresionContenidoLeft+="OP. INAFECTA      S/.\n";
+               textoImpresionContenidoLeft+="OP. EXONERADA S/.\n";
+               textoImpresionContenidoLeft+="OP. GRATUITA     S/.\n";
+               textoImpresionContenidoLeft+="DESCUENTOS      S/.\n";
+               textoImpresionContenidoLeft+="IGV                          S/.\n";
+               textoImpresionContenidoLeft+="PRECIO VENTA   " +
+                       "S/.";
 
            }
 
@@ -409,16 +414,23 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
            precio_venta = cursorVentaCabecera.getDouble(cursorVentaCabecera.getColumnIndexOrThrow(DbAdapter_Comprob_Venta.CV_total));
 
 
-           textoImpresionContenidoRight+= "S/" +
-                   ""+ df.format(base_imponible)+"\n";
-           textoImpresionContenidoRight+= "S/"+ df.format(igv)+"\n";
-           textoImpresionContenidoRight+= "S/"+ df.format(precio_venta)+"\n";
+           textoImpresionContenidoRight+= "\n" +df.format(base_imponible)+"\n";
+           textoImpresionContenidoRight+= "0.00"+"\n";
+           textoImpresionContenidoRight+= "0.00"+"\n";
+           textoImpresionContenidoRight+= "0.00"+"\n";
+           textoImpresionContenidoRight+= "0.00"+"\n";
+           textoImpresionContenidoRight+= df.format(igv)+"\n";
+           textoImpresionContenidoRight+= df.format(precio_venta);
+
+
+           textoImpresionContenidoBottom+= NumberToLetterConverter.convertNumberToLetter(precio_venta).toUpperCase() +"\n";
+
            switch (idFormaPago){
                case Constants.FORMA_DE_PAGO_CONTADO:
-                   textoImpresionContenidoBottom+= "CONTADO"+"\n";
+                   textoImpresionContenidoBottom+= "\nVENTA AL CONTADO"+"\n";
                    break;
                case Constants.FORMA_DE_PAGO_CREDITO:
-                   textoImpresionContenidoBottom+= "CREDITO"+"\n\n";
+                   textoImpresionContenidoBottom+= "\nVENTA AL CRÉDITO"+"\n\n";
                    Cursor cursorCredito = dbAdapter_comprob_cobro.fetchComprobCobrosByIdComprobante(idComprobante);
                    if (cursorCredito.getCount()>0){
                        cursorCredito.moveToFirst();
@@ -443,18 +455,19 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
 
            textoImpresionContenidoBottom+= "AGENTE  : "+nombreAgente+"\n\n";
            if (tipoVenta!=2){
-               textoImpresionContenidoBottom+= sha1 +"\n\n";
+               textoImpresionContenidoBottom+= "V. Resumen: " + sha1 +"\n\n";
                if(tipoC.equals("F"))
                {
+                   textoEmpresa+="\n\n" + "BOLETA ELECTRÓNICA"+"\n";
                    textoImpresionContenidoBottom+= Constants.REPRESENTACION_FACTURA+"\n\n";
                }else if(tipoC.equals("B")){
+                   textoEmpresa+="\n\n"+"FACTURA ELECTRÓNICA"+"\n";
                    textoImpresionContenidoBottom+= Constants.REPRESENTACION_BOLETA+"\n\n";
                }
                textoImpresionContenidoBottom+= Constants.PRINT_VISUALICE+"\n";
                textoImpresionContenidoBottom+= Constants.PRINT_URL+"\n";
            }
 
-           ventaCabecera+= "FECHA   : "+ fecha+"\n";
 /*
            texto += "B.I:"+df.format(base_imponible)+"\n";
            texto += "IGV.:"+df.format(igv)+"\n";

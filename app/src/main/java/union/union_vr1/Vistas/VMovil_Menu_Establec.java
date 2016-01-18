@@ -49,7 +49,7 @@ public class VMovil_Menu_Establec extends Activity implements View.OnClickListen
     private DbAdapter_Temp_Session session;
     private DbAdaptert_Evento_Establec dbHelper;
     private SimpleCursorAdapter dataAdapter;
-    private CursorAdapterEstablecimientoColor cursorAdapterEstablecimientoColor;
+    private static CursorAdapterEstablecimientoColor cursorAdapterEstablecimientoColor;
     private DbAdapter_Temp_Barcode_Scanner dbAdapter_temp_barcode_scanner;
     private DbAdapter_Agente dbAdapter_agente;
     private TextView textViewNombreRuta;
@@ -102,6 +102,27 @@ public class VMovil_Menu_Establec extends Activity implements View.OnClickListen
 
 
     Utils df = new Utils();
+
+
+    public static boolean isActive = false;
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        isActive = true;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        isActive = false;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -177,7 +198,9 @@ public class VMovil_Menu_Establec extends Activity implements View.OnClickListen
         startActivity(i);
     }
 
-    private void displayListView() {
+
+
+    public void displayListView() {
 
         Cursor cursor = dbHelper.listarEstablecimientos(idLiquidacion);
         Cursor cr = dbHelper.fectchLiq(idLiquidacion);
@@ -211,6 +234,7 @@ public class VMovil_Menu_Establec extends Activity implements View.OnClickListen
 
 */
         cursorAdapterEstablecimientoColor = new CursorAdapterEstablecimientoColor(this, cursor);
+
 
 
         ListView listView = (ListView) findViewById(R.id.VME_listar);
@@ -329,6 +353,7 @@ public class VMovil_Menu_Establec extends Activity implements View.OnClickListen
         });
 
     }
+
 
     public void bindView(View view, Context context, Cursor cur) {
 

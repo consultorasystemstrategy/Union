@@ -44,9 +44,9 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:background="@drawable/border_bottom"
-                android:gravity="fill_vertical|right"
                 android:layout_gravity="center_vertical"
-                android:paddingBottom="2dp">
+                android:paddingBottom="2dp"
+                android:gravity="right">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -74,14 +74,16 @@
                     android:textStyle="bold"
                     android:textSize="12sp"
                     android:layout_weight="1"
-                    android:paddingRight="48dp"
-                    android:gravity="right" />
+                    android:gravity="right"
+                    android:paddingRight="4dp" />
             </LinearLayout>
 
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:background="@drawable/border_bottom"
+                android:paddingBottom="4dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -101,7 +103,8 @@
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:paddingTop="4dp">
 
 
                 <TextView
