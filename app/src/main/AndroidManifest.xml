@@ -227,6 +227,16 @@
             android:screenOrientation="portrait">
         </activity>
         <activity
+            android:name=".Vistas.VMovil_Agentes_Dias_Semanas"
+            android:label="Dias semanas">
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name=".Vistas.VMovil_Trans_Prod_Detallado"
+            android:label="Transferencia detallado">
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
             android:name=".FacturacionElectronica.SignatureActivity"
             android:label="@string/title_activity_signature">
 

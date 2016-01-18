@@ -280,10 +280,15 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
 
     public void displayListStockVenta() {
 
+
+        //vista
         ListView listView = (ListView) findViewById(R.id.VRC_listarResumenVentas);
         listView.addHeaderView(getLayoutInflater().inflate(R.layout.cabecera_inventario_ventas,null));
 
+        //datos
         Cursor cursor = dbHelper.fetchAllStockAgenteVentas(idLiquidacion);
+
+        //nombre de las columnas
         String[] columns = new String[]{
                 DbAdapter_Stock_Agente.ST_nombre,
                 DbAdapter_Stock_Agente.ST_inicial,
@@ -292,6 +297,8 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
                 DbAdapter_Stock_Agente.ST_canjes
         };
 
+
+        //VISTA
         int[] to = new int[]{
                 R.id.VRC_TXproducto,
                 R.id.VRC_TXinicialFin,

@@ -57,6 +57,9 @@ public class GetClienteRuta extends AsyncTask<String, String, String> {
 
                 jsonObjectCliente = jsonArray.getJSONObject(i);
 
+                //para identificar el error al enviar por json con log
+                Log.d("INSERT",jsonObjectCliente.toString());
+
 
 
                     long inserto = dbAdapter_cliente_ruta.createClienteRuta(
@@ -72,6 +75,9 @@ public class GetClienteRuta extends AsyncTask<String, String, String> {
                             jsonObjectCliente.getString("PerVCodigoERP"),
                             jsonObjectCliente.getInt("PerIEmpresaId"),
                             jsonObjectCliente.getInt("RutIRutaId"),
+                            jsonObjectCliente.getString("PlardVDiaSemana"),
+                            jsonObjectCliente.getString("EstVDescripcion"),
+                            jsonObjectCliente.getString("DirVDescripcion"),
                             Constants._CREADO);
 
                     if (inserto > 0) {

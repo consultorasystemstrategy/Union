@@ -20,6 +20,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
@@ -109,6 +110,7 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
     TextView textViewIngresosTotales;
     TextView textViewGastos;
     TextView textViewAgregarPunto;
+    ListView listaRutaSemanal;
 
     int slideIdAgente = 0;
     int slideIdLiquidacion = 0;
@@ -267,6 +269,7 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         mNombreRuta = (TextView) findViewById(R.id.textViewNombreRuta);
         mNumeroEstablecimientos = (Button) findViewById(R.id.buttonNumeroEstablecimientos);
         mFecha = (TextView) findViewById(R.id.textViewFecha);
+        listaRutaSemanal=(ListView)findViewById(R.id.listViewRutaSemanal);
 
 
 
@@ -325,6 +328,20 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         ListView listView = (ListView) findViewById(R.id.listViewRutaSemanal);
         // Assign adapter to ListView
         listView.setAdapter(simpleCursorAdapter);
+        //lista de ruta semanal
+        listaRutaSemanal.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Cursor cr = (Cursor)parent.getItemAtPosition(position);
+                String dia=cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Ruta_Distribucion.RD_dia_semana));
+                Intent asd = new Intent(getApplicationContext(),VMovil_Agentes_Dias_Semanas.class);
+                asd.putExtra("dia",dia);
+                startActivity(asd);
+
+
+
+            }
+        });
 
 
         //SLIDING MENU

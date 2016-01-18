@@ -10,6 +10,7 @@ import union.union_vr1.Sqlite.DBAdapter_Temp_Autorizacion_Cobro;
 import union.union_vr1.Sqlite.DBAdapter_Temp_Canjes_Devoluciones;
 import union.union_vr1.Sqlite.DBAdapter_Temp_Inventario;
 import union.union_vr1.Sqlite.DBAdapter_Temp_Venta;
+import union.union_vr1.Sqlite.DBAdapter_Trans_Detallado;
 import union.union_vr1.Sqlite.DbAdapter_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Agente_Login;
 import union.union_vr1.Sqlite.DbAdapter_Categoria_Establecimiento;
@@ -45,7 +46,7 @@ import union.union_vr1.Sqlite.DbAdapter_Histo_Venta_Detalle;
  */
 public class DbHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 25;
+    private static final int DATABASE_VERSION = 32;
     private static final String DATABASE_NAME = "ProdUniondb.sqlite";
 
     public DbHelper(Context context) {
@@ -99,6 +100,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(DbAdapter_Transferencias.CREATE_TABLE_TRANSFERENCIAS);
         db.execSQL(DBAdapter_Cliente_Ruta.CREATE_TABLE_CLIENTE_RUTA);
 
+
         db.execSQL(DbAdapter_Categoria_Establecimiento.CREATE_TABLE_CAT_ESTABLECIMIENTO);
 
         db.execSQL(DbAdapter_Tipo_Doc_Identidad.CREATE_TABLE_TIPO_DOC_IDENTIDAD);
@@ -111,6 +113,8 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(DbAdapter_Motivo_Dev.CREATE_TABLE_MOT_DEV);
         db.execSQL(DbAdapter_ModalidadCredito.CREATE_TABLE_MODALIDAD_CREDITO);
 
+        //CREANDO TABLA TRANFERENCIA DETALLADO
+        db.execSQL(DBAdapter_Trans_Detallado.CREATE_TABLE_TEMP_Trans_Detalle);
 
 
 
@@ -148,20 +152,17 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(DbAdapter_Temp_DatosSpinner.DELETE_TABLE_Temp_data_spinner);
         db.execSQL(DbAdapter_Temp_Establecimiento.DELETE_TABLE_Temp_Establec);
         db.execSQL(DbAdapter_Transferencias.DELETE_TABLE_TRANSFERENCIAS);
+        //creando transferencia detallado
+        db.execSQL(DBAdapter_Trans_Detallado.DELETE_TABLE_TEMP_TRANS_DETALLE);
         db.execSQL(DBAdapter_Cliente_Ruta.DELETE_TABLE_CLIENTE_RUTA);
-
-
-
         db.execSQL(DbAdapter_Categoria_Establecimiento.DELETE_TABLE_CATEGORIA_ESTABLECIMIENTO);
-
         db.execSQL(DbAdapter_Tipo_Doc_Identidad.DELETE_TABLE_TIPO_DOC_IDENTIDAD);
-
         db.execSQL(DbAdapter_Tipo_Establecimiento.DELETE_TABLE_TIPO_ESTABLECIMIENTO);
-
         db.execSQL(DbAdapter_Tipo_Persona.DELETE_TABLE_TIPO_PERSONA);
-
         db.execSQL(DbAdapter_Establecimeinto_Historial.DELETE_ESTABLECIMIENTO_TEMPORAL);
         db.execSQL(DbAdapter_Motivo_Dev.DELETE_TABLE_MOT_DEV);
+
+
         db.execSQL(DbAdapter_ModalidadCredito.DELETE_TABLE_MODALIDAD_CREDITO);
 
         onCreate(db);

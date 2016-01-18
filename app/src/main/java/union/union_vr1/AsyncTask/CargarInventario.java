@@ -42,6 +42,7 @@ public class CargarInventario extends AsyncTask<String, String, String> {
         dbAdaptert_evento_establec.open();
         dbAdapter_temp_inventario = new DBAdapter_Temp_Inventario(mainActivity);
         dbAdapter_temp_inventario.open();
+
         session = new DbAdapter_Temp_Session(mainActivity);
         session.open();
 
@@ -61,6 +62,7 @@ public class CargarInventario extends AsyncTask<String, String, String> {
 
 
             jsonObject = api.ObtenerStockAgente(guia, Integer.parseInt(idAgente));
+
             Log.d("JSON CARGAR INVENTARIO", jsonObject.toString());
 
             publishProgress("" + 50);
@@ -79,6 +81,7 @@ public class CargarInventario extends AsyncTask<String, String, String> {
 
     @Override
     protected void onPostExecute(String s) {
+
 
 
         try {
@@ -115,6 +118,7 @@ public class CargarInventario extends AsyncTask<String, String, String> {
                         Mensaje = "La guia ya se inserto";
                         break;
                 }
+                new CargarTransDetallado(mainActivity).execute(GUIA);
 
 
 
