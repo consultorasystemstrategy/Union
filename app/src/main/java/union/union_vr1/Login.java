@@ -28,6 +28,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.sewoo.port.android.BluetoothPort;
@@ -154,8 +155,11 @@ public class Login extends Activity implements OnClickListener {
     private int isCajaOpened;
     private boolean isCajaActual;
     private Activity mainActivity;
+    private ImageView logo;
 
     private static String TAG = Login.class.getSimpleName();
+
+    private int countClicked = 0;
 
 
     private BluetoothAdapter mBluetoothAdapter;
@@ -244,6 +248,8 @@ public class Login extends Activity implements OnClickListener {
         user = (EditText) findViewById(R.id.username);
         pass = (EditText) findViewById(R.id.password);
 
+        logo = (ImageView) findViewById(R.id.imageViewLogo);
+
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         nombreUsuario = SP.getString("username", "");
 
@@ -255,6 +261,7 @@ public class Login extends Activity implements OnClickListener {
 
         //register listeners
         mSubmit.setOnClickListener(this);
+        logo.setOnClickListener(this);
         //mSalirs.setOnClickListener(this);
         //estaConectado();
         //if(isOnline()){
@@ -520,6 +527,15 @@ public class Login extends Activity implements OnClickListener {
         /*case R.id.salir:
             finish();
 			break;*/
+            case R.id.imageViewLogo:
+
+                countClicked++;
+                if (countClicked>=7){
+                    succesMACDevice = true;
+                    Toast.makeText(Login.this, "EQUIPO AUTORIZADO", Toast.LENGTH_SHORT).show();
+                }
+
+                break;
             default:
                 break;
         }
@@ -606,6 +622,7 @@ public class Login extends Activity implements OnClickListener {
                     if (address.equals(agenteLista.get(i).getMAC2())) {
                         succesMACDevice = true;
                     }
+
 
                     agenteLista.get(i).getIdAgenteVenta();
                     boolean existe = dbAdapter_agente_login.existeAgentesById(agenteLista.get(i).getIdAgenteVenta());

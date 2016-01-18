@@ -69,6 +69,8 @@ public class ServiceFireListenerTemp extends Service {
         rootRef = new Firebase(Constants._APP_ROOT_FIREBASE);
         nuevoEstablecimientoRefTemp = rootRef.child(Constants._CHILD_ESTABLECIMIENTO_TEMPORAL);
         Log.d(TAG, "" + "onStartCommand"+nuevoEstablecimientoRefTemp.getKey());
+        dbAdapter_temp_session = new DbAdapter_Temp_Session(this);
+        dbAdapter_temp_session.open();
         final int idAgente = dbAdapter_temp_session.fetchVarible(1);
         dbAdapter_establecimeinto_historial = new DbAdapter_Establecimeinto_Historial(this);
         dbAdapter_establecimeinto_historial.open();
@@ -76,8 +78,6 @@ public class ServiceFireListenerTemp extends Service {
         dbAdaptert_evento_establec.open();
         dbAdaptert_evento_establec = new DbAdaptert_Evento_Establec(this);
         dbAdaptert_evento_establec.open();
-
-
 
         Query queryRef = nuevoEstablecimientoRefTemp.orderByChild("fecha").equalTo(Utils.getDatePhone());
 

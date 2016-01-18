@@ -6,11 +6,15 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="union.union_vr1.Vistas.VMovil_Venta_Cabecera_PlanPagos">
+    tools:context="union.union_vr1.Vistas.VMovil_Venta_Cabecera_PlanPagos"
+    android:background="@color/Blanco">
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
+
+
+        <include layout="@layout/header_establecimiento"/>
 
         <LinearLayout
             android:orientation="horizontal"
@@ -18,29 +22,28 @@
             android:layout_height="fill_parent"
             android:layout_weight="4">
 
+
             <TextView
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="CRÉDITO : "
+                android:id="@+id/textView16"
+                android:layout_weight="1"
+                android:gravity="left|center"
+                android:textStyle="bold"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
                 android:text="S/. 1080.50"
                 android:id="@+id/VCPP_textViewMontoTotal"
                 android:layout_weight="1"
                 android:textStyle="bold|italic"
-                android:textSize="24dp"
+                android:textSize="20dp"
                 android:textIsSelectable="false"
                 android:background="@drawable/background_geometry"
                 android:gravity="center" />
-
-            <Spinner
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:id="@+id/VCPP_spinnerCuotas"
-                android:layout_weight="2"
-                android:prompt="@string/VCPP"
-                android:spinnerMode="dialog"
-                android:focusableInTouchMode="false"
-                android:focusable="false"
-                android:contentDescription="@string/VCPP"
-                />
 
         </LinearLayout>
 
@@ -48,7 +51,38 @@
             android:orientation="horizontal"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:layout_weight="1">
+            android:layout_weight="4"
+            android:gravity="right">
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:text="CUOTAS : "
+                android:id="@+id/textView18"
+                android:layout_weight="1"
+                android:gravity="left|center"
+                android:textStyle="bold"
+                android:textSize="16sp" />
+
+            <Spinner
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:id="@+id/VCPP_spinnerCuotas"
+                android:layout_weight="1"
+                android:prompt="@string/VCPP"
+                android:spinnerMode="dialog"
+                android:focusableInTouchMode="false"
+                android:focusable="false"
+                android:contentDescription="@string/VCPP"
+                android:gravity="right" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="2">
 
             <ListView
                 android:layout_width="fill_parent"
@@ -65,7 +99,7 @@
             <Button
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:text="Establecer Cuotas"
+                android:text="CONTINUAR"
                 android:id="@+id/VCPP_buttonEstablecer"
                 android:layout_weight="1"
                 android:background="@color/PersonalizadoSteve2"
