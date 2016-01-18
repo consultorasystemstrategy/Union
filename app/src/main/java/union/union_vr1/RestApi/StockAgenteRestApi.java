@@ -1001,4 +1001,18 @@ public class StockAgenteRestApi {
         result = new JSONObject(r);
         return result;
     }
+    public JSONObject getTransDetalle(String guiaTrans) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","RestAPI");
+        o.put("method", "getTransDetalle");
+        p.put("guiaTrans",mapObject(guiaTrans));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+
 }

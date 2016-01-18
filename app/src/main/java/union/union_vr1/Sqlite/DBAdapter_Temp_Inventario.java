@@ -76,6 +76,7 @@ public class DBAdapter_Temp_Inventario {
 
     }
 
+
     private String getDatePhone() {
         Calendar cal = new GregorianCalendar();
         Date date = cal.getTime();

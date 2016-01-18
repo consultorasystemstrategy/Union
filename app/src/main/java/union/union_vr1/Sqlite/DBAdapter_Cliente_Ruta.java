@@ -28,6 +28,9 @@ public class DBAdapter_Cliente_Ruta {
     public static final String cliente_ruta_empresaId = "cliente_ruta_empresaId";
     public static final String cliente_ruta_agenteId = "cliente_ruta_agenteId";
     public static final String cliente_ruta_rutaId = "cliente_ruta_rutaId";
+    public static final String cliente_ruta_dia_semana="cliente_ruta_dia_semana";
+    public static final String cliente_ruta_establecimiento="cliente_ruta_establecimiento";
+    public static final String cliente_ruta_direccion = "cliente_ruta_direccion";
 
     public static final String TAG = "M_CLIENTE_RUTA";
 
@@ -54,6 +57,9 @@ public class DBAdapter_Cliente_Ruta {
                     + cliente_ruta_empresaId + " integer,"
                     + cliente_ruta_agenteId + " integer,"
                     + cliente_ruta_rutaId + " integer,"
+                    + cliente_ruta_dia_semana+ " text,"
+                    + cliente_ruta_establecimiento+ " text,"
+                    + cliente_ruta_direccion + " text,"
                     + Constants._SINCRONIZAR + " integer);";
 
     public static final String DELETE_TABLE_CLIENTE_RUTA = "DROP TABLE IF EXISTS " + SQLITE_TABLE_CLIENTE_RUTA;
@@ -81,7 +87,7 @@ public class DBAdapter_Cliente_Ruta {
 
     public long createClienteRuta(
             int idRemoto, String nombres, String apPaterno, String apMaterno, String docIdentidad,
-            int tipo_docIdentidad, int tipo_PerIdentidad, String celular, String email, String codigoERP, int empresaId, int rutaId, int estado_sincronizacion) {
+            int tipo_docIdentidad, int tipo_PerIdentidad, String celular, String email, String codigoERP, int empresaId, int rutaId,String diaSemana,String establecimiento,String direccion,  int estado_sincronizacion) {
 
         ContentValues initialValues = new ContentValues();
         initialValues.put(cliente_ruta_remotoId, idRemoto);
@@ -96,6 +102,9 @@ public class DBAdapter_Cliente_Ruta {
         initialValues.put(cliente_ruta_codigoERP, codigoERP);
         initialValues.put(cliente_ruta_empresaId, empresaId);
         initialValues.put(cliente_ruta_rutaId, rutaId);
+        initialValues.put(cliente_ruta_dia_semana,diaSemana);
+        initialValues.put(cliente_ruta_establecimiento,establecimiento);
+        initialValues.put(cliente_ruta_direccion,direccion);
         initialValues.put(Constants._SINCRONIZAR, estado_sincronizacion);
         return mDb.insert(SQLITE_TABLE_CLIENTE_RUTA, null, initialValues);
     }
@@ -146,6 +155,13 @@ public class DBAdapter_Cliente_Ruta {
             aBoolean =true;
         }
         return aBoolean;
+    }
+    public Cursor listarPorDia(String dia) {
+        Cursor mCursor = mDb.rawQuery("select * from " + SQLITE_TABLE_CLIENTE_RUTA + " WHERE " + cliente_ruta_dia_semana + "='"+dia+"'", null);
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
     }
 
 }

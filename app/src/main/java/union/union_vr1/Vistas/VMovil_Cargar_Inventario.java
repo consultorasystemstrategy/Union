@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -24,9 +25,12 @@ import union.union_vr1.AsyncTask.CargarInventario;
 import union.union_vr1.AsyncTask.GetStockAgente;
 import union.union_vr1.R;
 import union.union_vr1.Sqlite.CursorAdapter_Cargar_Inventario;
+import union.union_vr1.Sqlite.CursorAdapter_Trans_Detallado;
 import union.union_vr1.Sqlite.DBAdapter_Temp_Inventario;
+import union.union_vr1.Sqlite.DBAdapter_Trans_Detallado;
 import union.union_vr1.Sqlite.DbAdapter_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Informe_Gastos;
+import union.union_vr1.Sqlite.DbAdapter_Ruta_Distribucion;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 import union.union_vr1.Sqlite.DbGastos_Ingresos;
 import union.union_vr1.Utils.Utils;
@@ -83,6 +87,11 @@ public class VMovil_Cargar_Inventario extends Activity implements View.OnClickLi
     private Button btnAgregarGuia;
     private ListView listGuias;
     private int nroAgregados=0;
+/*
+    //cargando transferencia detallado
+    private DBAdapter_Trans_Detallado dbAdapter_trans_detallado;
+    private CursorAdapter_Trans_Detallado cursorAdapter_trans_detallado;
+*/
 
 
     @Override
@@ -107,6 +116,10 @@ public class VMovil_Cargar_Inventario extends Activity implements View.OnClickLi
         dbHelperAgente.open();
         dbGastosIngresos = new DbGastos_Ingresos(this);
         dbGastosIngresos.open();
+        //transferencias
+      /*  dbAdapter_trans_detallado = new DBAdapter_Trans_Detallado(this);
+        dbAdapter_trans_detallado.open();*/
+
 
         dbAdapter_informe_gastos = new DbAdapter_Informe_Gastos(this);
         dbAdapter_informe_gastos.open();
@@ -121,6 +134,20 @@ public class VMovil_Cargar_Inventario extends Activity implements View.OnClickLi
         CursorAdapter_Cargar_Inventario cursorAdapter_cargar_inventario = new CursorAdapter_Cargar_Inventario(getApplicationContext(), cursor);
         listGuias.setAdapter(cursorAdapter_cargar_inventario);
 
+        listGuias.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Cursor cr = (Cursor) parent.getItemAtPosition(position);
+
+                String codigo = cr.getString(cr.getColumnIndexOrThrow(DBAdapter_Temp_Inventario.temp_in_id_guia));
+                Intent asd = new Intent(getApplicationContext(), VMovil_Trans_Prod_Detallado.class);
+                asd.putExtra("codigotrans", codigo);
+                startActivity(asd);
+
+
+            }
+        });
+
         ///
         nombreAgente = dbHelperAgente.getNameAgente();
         nroLiquidacion = session.fetchVarible(3);
@@ -133,6 +160,7 @@ public class VMovil_Cargar_Inventario extends Activity implements View.OnClickLi
     private void iniciaCargar() {
 
         final String nroGuia = inputNroGuia.getText().toString();
+
         if (inputNroGuia.getText() == null || inputNroGuia.getText().toString().equals("")) {
             Toast.makeText(getApplicationContext(), "Por favor ingresa la guia", Toast.LENGTH_SHORT).show();
         } else {
@@ -149,6 +177,7 @@ public class VMovil_Cargar_Inventario extends Activity implements View.OnClickLi
                     nroAgregados = nroAgregados+1;
                 }
             });
+
             dialogo1.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialogo1, int id) {
 
@@ -396,4 +425,12 @@ public class VMovil_Cargar_Inventario extends Activity implements View.OnClickLi
         super.onStop();
         ifThisUpdate();
     }
+/*
+    public void consultardia(){
+
+        Cursor cr =dbAdapter_trans_detallado.getAllTrans();
+        cursorAdapter_trans_detallado = new CursorAdapter_Trans_Detallado(this, cr);
+        ListView listView = (ListView) findViewById(R.id.listView);
+        listView.setAdapter(cursorAdapter_trans_detallado);
+    }*/
 }
