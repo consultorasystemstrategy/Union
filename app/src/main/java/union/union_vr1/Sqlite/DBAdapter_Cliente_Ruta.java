@@ -146,7 +146,7 @@ public class DBAdapter_Cliente_Ruta {
         }
         return mCursor;
     }
-
+//
     public Cursor listarDocumentoClientexRutaByNum(String numero) {
 
         Cursor mCursor = mDb.rawQuery("select * from " + SQLITE_TABLE_CLIENTE_RUTA + " WHERE " + cliente_ruta_docIdentidad + " = '" + numero + "' ", null);

@@ -291,7 +291,7 @@ public class FMapaEditar extends Fragment implements Validator.ValidationListene
         }
 
     }
-
+//
     @Override
     public void onValidationFailed(View failedView, Rule<?> failedRule) {
 

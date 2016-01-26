@@ -346,6 +346,7 @@ public class FEstablecimientoRegistrar extends Fragment implements Validator.Val
         }
         return false;
     }
+    //
 
     private void guardar(int estadoAutorizado){
         int idLiquidacion = dbAdapter_temp_session.fetchVarible(3);

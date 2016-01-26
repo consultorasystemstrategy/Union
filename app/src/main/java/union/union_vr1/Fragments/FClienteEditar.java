@@ -38,7 +38,7 @@ import union.union_vr1.Utils.Utils;
  * Created by Kelvin on 04/11/2015.
  */
 public class FClienteEditar extends Fragment implements Validator.ValidationListener {
-
+//
     private DBAdapter_Cliente_Ruta dbAdapter_cliente_ruta;
     private int tipoDoc;
 

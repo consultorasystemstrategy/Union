@@ -42,6 +42,7 @@ import union.union_vr1.Vistas.VMovil_Menu_Establec;
  * Created by Kelvin on 05/11/2015.
  */
 public class FEstablecimientoEditar extends Fragment implements Validator.ValidationListener {
+    //
     private Spinner spinnerTipoEstablecimeinto;
     private Spinner spinnerCategoriaEstablecimeinto;
 
