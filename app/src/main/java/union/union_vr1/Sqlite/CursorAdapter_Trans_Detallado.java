@@ -33,6 +33,7 @@ public class CursorAdapter_Trans_Detallado extends CursorAdapter {
 
         String producto = cursor.getString(cursor.getColumnIndexOrThrow(DBAdapter_Trans_Detallado.pro_v_nombre));
         String numeropro = cursor.getString(cursor.getColumnIndexOrThrow(DBAdapter_Trans_Detallado.guitran_v_numguia_flex));
+
 /*
         textoproducto.setText("Nombre producto" + producto);
         textoproducto.setText("Numero producto"+numeropro);
