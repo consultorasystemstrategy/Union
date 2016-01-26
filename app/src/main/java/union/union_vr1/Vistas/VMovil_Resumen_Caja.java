@@ -32,6 +32,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.firebase.client.ChildEventListener;
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.Query;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 import java.text.SimpleDateFormat;
@@ -42,6 +47,7 @@ import java.util.GregorianCalendar;
 import union.union_vr1.AsyncTask.CerrarCaja;
 import union.union_vr1.AsyncTask.ExportService;
 import union.union_vr1.AsyncTask.SolicitarCredito;
+import union.union_vr1.Objects.DevolucionEstado;
 import union.union_vr1.R;
 import union.union_vr1.Servicios.ServiceExport;
 import union.union_vr1.Sqlite.Constants;
@@ -102,6 +108,7 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
     private TextView textviewSlideConsultarInventario;
     private View viewResumen;
     private Activity mainActivity;
+    private Button button;
 
 
 
@@ -159,6 +166,9 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
 
     //private CerrarCaja cerrarCaja;
     Utils df = new Utils();
+    //FIREBASE
+    private Firebase rootRef = null;
+    private Firebase devolucionRef = null;
 
     private static final String TAG = VMovil_Resumen_Caja.class.getSimpleName();
     @Override
@@ -168,6 +178,12 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
 
         mainActivity = this;
         activity = this;
+
+
+        Firebase.setAndroidContext(this);
+
+        rootRef = new Firebase(Constants._APP_ROOT_FIREBASE);
+        devolucionRef = rootRef.child(Constants._CHILD_DEVOLUCION);
 
         session = new DbAdapter_Temp_Session(this);
         session.open();
@@ -188,6 +204,8 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
         dbHelperAgente = new DbAdapter_Agente(this);
         dbHelperAgente.open();
 
+
+        String fecha = Utils.getDatePhone();
 
         idAgente = session.fetchVarible(1);
         idLiquidacion = session.fetchVarible(3);
@@ -240,6 +258,86 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
 
         //SLIDING MENU
         showSlideMenu(mainActivity);
+
+        validarDevoluciones();
+        //bloquear el botón cerrar caja si hay producdtos malos
+        Log.d(TAG, "FECHA :"+fecha);
+        Query queryRef = devolucionRef.orderByChild("fecha").equalTo(fecha);
+
+        queryRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Log.d(TAG, "ADDED dataSnapshot : " + dataSnapshot.getValue());
+                DevolucionEstado devolucionEstado = dataSnapshot.getValue(DevolucionEstado.class);
+                Log.d(TAG, "ADDED Monto : " + devolucionEstado.getEstado());
+                Log.d(TAG, "ADDED Estado: " + devolucionEstado.getFecha());
+                Log.d(TAG, "ADDED Estado: " + devolucionEstado.getAgenteId());
+
+                if (devolucionEstado.getAgenteId() == idAgente && devolucionEstado.getEstado() == 2) {
+                    //ES EL AGENTE Y ESTÁ APROBADO
+                    session.deleteVariable(Constants.SESSION_ESTADO_DEVOLUCIONES);
+                    session.createTempSession(Constants.SESSION_ESTADO_DEVOLUCIONES, 1);
+                    validarDevoluciones();
+                }
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                Log.d(TAG, "ADDED dataSnapshot : " + dataSnapshot.getValue());
+                DevolucionEstado devolucionEstado = dataSnapshot.getValue(DevolucionEstado.class);
+                Log.d(TAG, "ADDED Monto : " + devolucionEstado.getEstado());
+                Log.d(TAG, "ADDED Estado: " + devolucionEstado.getFecha());
+                Log.d(TAG, "ADDED Estado: " + devolucionEstado.getAgenteId());
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
+
+    }
+
+    private void validarDevoluciones(){
+        Cursor cursor = dbHelper.fetchDevolucionesMalas(idLiquidacion);
+        if (cursor.getCount()>0){
+            //SÍ HAY DEVOLUCIONES
+            int estadoDevoluciones= session.fetchVarible(Constants.SESSION_ESTADO_DEVOLUCIONES);
+            switch (estadoDevoluciones){
+                //ESTÁN BLOQUEADAS
+                case 0:
+                    button.setEnabled(false);
+                    button.setBackgroundColor(mainActivity.getResources().getColor(R.color.Dark4));
+                    break;
+                //YA SE DESBLOQUEARON
+                case 1:
+                    button.setEnabled(true);
+                    button.setBackgroundColor(mainActivity.getResources().getColor(R.color.verde));
+                    break;
+                default:
+                    break;
+
+            }
+
+        }else{
+            //No hay devoluciones, no bloquear el botón
+            button.setEnabled(true);
+            button.setBackgroundColor(mainActivity.getResources().getColor(R.color.verde));
+        }
+
     }
 
     @Override
@@ -268,7 +366,10 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
                 startActivity(intentImprimirStock);
                 break;
 
-
+            case R.id.imprimirDevoluciones:
+                Intent intentImprimirDevoluciones = new Intent(mainActivity, ImprimirDevoluciones.class);
+                startActivity(intentImprimirDevoluciones);
+                break;
 
             default:
                 //ON ITEM SELECTED DEFAULT
@@ -513,7 +614,7 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
 
 
         final View viewCerrarCaja = getLayoutInflater().inflate(R.layout.layout_cerrar_caja, null);
-        Button button = (Button)viewCerrarCaja.findViewById(R.id.buttonCerrarCaja);
+        button = (Button)viewCerrarCaja.findViewById(R.id.buttonCerrarCaja);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

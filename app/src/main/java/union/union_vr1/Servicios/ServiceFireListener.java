@@ -120,6 +120,7 @@ public class ServiceFireListener extends Service {
                         case Constants.REGISTRO_APROBADO:
                             titulo = "Establecimiento Aprobado";
                             color = Color.GREEN;
+                            dbAdaptert_evento_establec.updateEstabEstadoAtencion(idParent, 1);
                             break;
                         case Constants.REGISTRO_RECHAZADO:
                             titulo = "Establecimiento Rechazado";

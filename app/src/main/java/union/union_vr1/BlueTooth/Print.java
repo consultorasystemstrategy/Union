@@ -6,6 +6,7 @@ package union.union_vr1.BlueTooth;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.widget.Toast;
 
 import com.sewoo.jpos.command.CPCL;
 import com.sewoo.jpos.command.CPCLConst;
@@ -105,14 +106,28 @@ public class Print {
         imprimircomprobante(idDocumento, 3);
     }
 
-    public void printCabecera(int tipoDocumento) throws JposException
+    /**
+     * TIPO DOCUMENTO, EN CONSTANTS ESTÁ LA DESCRIPCIÓN
+     * TIPO DE IMPRESIÓN, INTERNO O EXTERNO
+     */
+    public void printCabecera(int tipoDocumento, int tipoImpresion) throws JposException
     {
-        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "UNIVERSIDAD PERUANA UNION" + LF+ LF);
-        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "CENTRO DE APLICACION PRODUCTOS UNION" + LF);
-        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "CAR. CENTRAL KM. 19.5 VILLA UNION-NANA" + LF );
-        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "LIMA - LIMA - LURIGANCHO" + LF);
-        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "RUC: 20138122256" + LF);
-        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "Telf: 6186309-6186310" + LF + LF);
+        switch (tipoImpresion){
+            case Constants.DOCUMENTO_EXTERNO:
+
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "UNIVERSIDAD PERUANA UNION" + LF+ LF);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "CENTRO DE APLICACION PRODUCTOS UNION" + LF);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "CAR. CENTRAL KM. 19.5 VILLA UNION-NANA" + LF );
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "LIMA - LIMA - LURIGANCHO" + LF);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "RUC: 20138122256" + LF);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "Telf: 6186309-6186310" + LF + LF);
+
+                break;
+
+            case Constants.DOCUMENTO_INTERNO:
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + ESC + "|bC" + "CENTRO DE APLICACION PRODUCTOS UNION" + LF + LF);
+                break;
+        }
 
         switch (tipoDocumento){
             case Constants.DOCUMENTO_FACTURA:
@@ -133,6 +148,10 @@ public class Print {
             case Constants.DOCUMENTO_STOCK_DISPONIBLE:
                 posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT,ESC + "|cA" + ESC + "|bC" + ESC + "|2C" + "STOCK DISPONIBLE" + LF + LF + LF);
                 break;
+            case Constants.DOCUMENTO_DEVOLUCIONES_MALAS:
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT,ESC + "|cA" + ESC + "|bC" + ESC + "|2C" + "DEVOLUCIONES" + LF + LF + LF);
+                break;
+
             default:
                 posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT,ESC + "|cA" + ESC + "|bC" + ESC + "|2C" + "PRODUCTOS UNION" + LF + LF + LF);
                 break;
@@ -281,17 +300,17 @@ public class Print {
                 String tipoComprobante="";
                 if(tipoC.equals("F"))
                 {
-                    printCabecera(FACTURA);
+                    printCabecera(FACTURA, Constants.DOCUMENTO_EXTERNO);
                 }
                 else if(tipoC.equals("B"))
                 {
                     if (tipoVenta==1){
-                        printCabecera(BOLETA);
+                        printCabecera(BOLETA, Constants.DOCUMENTO_EXTERNO);
                     }else{
-                        printCabecera(Constants.DOCUMENTO_RRPP);
+                        printCabecera(Constants.DOCUMENTO_RRPP, Constants.DOCUMENTO_EXTERNO);
                     }
                 } else {
-                    printCabecera(BOLETA);
+                    printCabecera(BOLETA , Constants.DOCUMENTO_EXTERNO);
                 }
 
                 // IMPRIMIR DATOS GENERALES DEL CLIENTE Y EL DOCUMETNO
@@ -466,7 +485,7 @@ public class Print {
 
 
 
-            printCabecera(Constants.DOCUMENTO_TRANSFERENCIA);
+            printCabecera(Constants.DOCUMENTO_TRANSFERENCIA, Constants.DOCUMENTO_INTERNO);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "AGENTE       : " + cleanAcentos(nombreAgente) + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "LIQUIDACION  : " + idLiquidacion + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "FECHA        : " + cleanAcentos(getDateFull()) + LF);
@@ -510,8 +529,6 @@ public class Print {
 
     public void printStockDisponible(int idLiquidacion, String nombreAgente) throws JposException {
 
-
-
         dbAdapter_stock_agente = new DbAdapter_Stock_Agente(context);
         dbAdapter_stock_agente.open();
 
@@ -525,7 +542,7 @@ public class Print {
 
 
 
-            printCabecera(Constants.DOCUMENTO_STOCK_DISPONIBLE);
+            printCabecera(Constants.DOCUMENTO_STOCK_DISPONIBLE, Constants.DOCUMENTO_INTERNO);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "AGENTE       : " + cleanAcentos(nombreAgente) + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "LIQUIDACION  : " + idLiquidacion + LF);
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "FECHA        : " + cleanAcentos(getDateFull()) + LF + LF);
@@ -548,14 +565,83 @@ public class Print {
                 String producto = cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Stock_Agente.ST_nombre));
                 int cantidad = cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Stock_Agente.ST_disponible));
 
+                if (producto.length() >= 31) {
+                    producto = producto.substring(0, 29);
+                    producto += "..";
+                }
+
+                String detalleStockDisponible = ESC + "|lA" + String.format("%-3s", ++i) + String.format("%-6s", codigo)+ String.format("%-31s", cleanAcentos(producto)) +  String.format("%1$3s", "___")+ String.format("%1$5s", cantidad) + LF;
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, detalleStockDisponible);
+            }
+
+            String espacio = ESC + "|lA" + String.format("%-48s", "")+ LF+ LF;
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, espacio);
+            String lineasFirma = ESC + "|lA" + String.format("%-4s", "") + String.format("%1$16s", "________________") + String.format("%1$8s", "") +  String.format("%1$16s", "________________") + LF;
+            String letrasFirma = ESC + "|lA" + String.format("%-4s", "") + String.format("%1$16s", "     Agente     ") + String.format("%1$8s", "") +  String.format("%1$16s", "   Coordinador  ") + LF;
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, lineasFirma);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, letrasFirma);
+
+            String finalEspacio = ESC + "|lA" + String.format("%-48s", "")+ LF+ LF;
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, finalEspacio);
+
+        }
+
+    }
+
+
+    public void printDevolucionesMalas(int idLiquidacion, String nombreAgente) throws JposException {
+
+        dbAdapter_stock_agente = new DbAdapter_Stock_Agente(context);
+        dbAdapter_stock_agente.open();
+
+        Cursor cursor = dbAdapter_stock_agente.fetchDevolucionesMalas(idLiquidacion);
+
+        cursor.moveToFirst();
+
+
+
+        if (cursor.getCount()>0){
+
+
+
+            printCabecera(Constants.DOCUMENTO_DEVOLUCIONES_MALAS, Constants.DOCUMENTO_INTERNO);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "AGENTE       : " + cleanAcentos(nombreAgente) + LF);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "LIQUIDACION  : " + idLiquidacion + LF);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "FECHA        : " + cleanAcentos(getDateFull()) + LF + LF);
+
+            int i= 0;
+
+
+
+            //STOCK DISPONIBLE TITULO
+            //posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + cleanAcentos(descripcion_transferencia) + LF + LF + LF);
+            //posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT,ESC + "|cA" + ESC + "|bC" + ESC + "|2C" + cleanAcentos(descripcion_transferencia) + LF + LF + LF);
+            String cabeceraVenta = ESC + "|lA" +String.format("%-3s","#")+  String.format("%-6s","COD") + String.format("%-30s","PRODUCTO")+ String.format("%1$9s","CANT") + LF;
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, cabeceraVenta);
+            printLineas();
+
+
+            for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()){
+
+                String codigo = cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Stock_Agente.ST_codigo));
+                String producto = cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Stock_Agente.ST_nombre));
+                int malos = cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Stock_Agente.ST_malos));
+
                 if (producto.length() >= 34) {
                     producto = producto.substring(0, 32);
                     producto += "..";
                 }
 
-                String detalleStockDisponible = ESC + "|lA" + String.format("%-3s", ++i) + String.format("%-6s", codigo)+ String.format("%-34s", cleanAcentos(producto)) + String.format("%1$5s", cantidad) + LF;
+                String detalleStockDisponible = ESC + "|lA" + String.format("%-3s", ++i) + String.format("%-6s", codigo)+ String.format("%-34s", cleanAcentos(producto)) +  String.format("%1$5s", malos) + LF;
                 posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, detalleStockDisponible);
             }
+
+
+            String finalEspacio = ESC + "|lA" + String.format("%-48s", "")+ LF+ LF;
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, finalEspacio);
+
+        }else{
+            Toast.makeText(context, "NO HAY PRODUCTOS POR DEVOLUCIÓN.", Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -605,7 +691,7 @@ public class Print {
         Double aRendir = ingresosTotales - gastosTotales;
 
 
-        printCabecera(Constants.DOCUMENTO_ARQUEO);
+        printCabecera(Constants.DOCUMENTO_ARQUEO, Constants.DOCUMENTO_INTERNO);
         posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "AGENTE       : " + cleanAcentos(nombreAgente) + LF);
         posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "LIQUIDACION  : " + idLiquidacion + LF);
         posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "FECHA        : " + cleanAcentos(getDateFull()) + LF+ LF+ LF);

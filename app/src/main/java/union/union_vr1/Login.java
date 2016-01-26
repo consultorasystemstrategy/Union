@@ -6,11 +6,14 @@ import android.accounts.AccountManager;
 import android.accounts.AccountManagerCallback;
 import android.accounts.AccountManagerFuture;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -45,6 +48,7 @@ import union.union_vr1.Utils.Utils;
 import union.union_vr1.Vistas.AppPreferences;
 import union.union_vr1.Vistas.VMovil_Abrir_Caja;
 import union.union_vr1.Vistas.VMovil_Evento_Indice;
+import union.union_vr1.Vistas.VMovil_Venta_Cabecera;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -164,6 +168,10 @@ public class Login extends Activity implements OnClickListener {
 
     private BluetoothAdapter mBluetoothAdapter;
     private static final int REQUEST_ENABLE_BT = 2;
+    private boolean fechaCorrecta = false;
+    String fechaServer = "";
+    String fechaDevice = "";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -171,6 +179,8 @@ public class Login extends Activity implements OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
         mainActivity = this;
+
+
 
 
 /*
@@ -205,6 +215,7 @@ public class Login extends Activity implements OnClickListener {
         }
         Log.d(TAG, "ACCOUNTS "+ addNewAccount);
 */
+        new FechaRest().execute();
 
 
         session = new DbAdapter_Temp_Session(this);
@@ -212,6 +223,7 @@ public class Login extends Activity implements OnClickListener {
 
         isCajaOpened = session.fetchVarible(9);
         Log.d("IS CAJA OPENED", "" + isCajaOpened);
+
         if (isCajaOpened == 0) {
             // QUEDARSE AQUÍ, LA CAJA ESTÁ CERRADA.
         } else if (isCajaOpened == 1) {
@@ -269,7 +281,6 @@ public class Login extends Activity implements OnClickListener {
         //}else{
         //    user.setText("error");
         //
-
         bluetoothSetup();
 
         if (!mBluetoothAdapter.isEnabled()) {
@@ -278,6 +289,86 @@ public class Login extends Activity implements OnClickListener {
             startActivityForResult(enableBluetooth, 0);
         }
     }
+
+    private boolean validarFecha(){
+        Log.d(TAG, "FECHA DEVICE CIPHERLAB : "+fechaDevice);
+        Log.d(TAG, "FECHA SERVER :" + fechaServer);
+        if (fechaServer.length()>0&&fechaDevice.length()>0) {
+            if (fechaDevice.equals(fechaServer)){
+                fechaCorrecta = true;
+
+            }else{
+                //OPCIÓN 1, MANDAR UN MENSAJE FECHA INVÁLIDA, Y ENVIAR A LAS CONFIFURACIONES DE FECHA..
+                Utils.dialogCambiarFecha(mainActivity).show();
+                //OPCIÓN 2, ESTABLECER LA FECHA PROGRAMANDO, SIN NINGÚN MENSAJE.
+            }
+        }
+        return fechaCorrecta;
+    }
+
+     class FechaRest extends AsyncTask<String, String, String>{
+
+        private  String TAG = FechaRest.class.getSimpleName();
+
+        @Override
+        protected String doInBackground(String... params) {
+            // CONSUMIR EL PROCEDIMIENTO QUE ME CONSUMA LA FECHA
+
+            fechaDevice = Utils.getDatePhone();
+            StockAgenteRestApi api = new StockAgenteRestApi(mainActivity);
+            try {
+                JSONObject jsonFecha = api.fsel_FechaActual();
+                Log.d(TAG,"jsonFecha : "+ jsonFecha.toString());
+
+                fechaServer = Utils.jsonGetString(jsonFecha);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            // SI LA FECHA ES INVALIDA
+            Log.d(TAG, "FECHA DEVICE CIPHERLAB : "+fechaDevice);
+            Log.d(TAG, "FECHA SERVER :" + fechaServer);
+            /*if (!fechaDevice.equals(fechaServer)){
+                //OPCIÓN 1, MANDAR UN MENSAJE FECHA INVÁLIDA, Y ENVIAR A LAS CONFIFURACIONES DE FECHA..
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        Utils.dialogCambiarFecha(mainActivity).show();
+                    }
+                });
+                //OPCIÓN 2, ESTABLECER LA FECHA PROGRAMANDO, SIN NINGÚN MENSAJE.
+            }else{
+                fechaCorrecta = true;
+            }*/
+            return null;
+        }
+
+         @Override
+         protected void onPostExecute(String s) {
+             Log.d(TAG, "FECHA DEVICE CIPHERLAB : "+fechaDevice);
+             Log.d(TAG, "FECHA SERVER :" + fechaServer);
+             if (fechaServer.length()>0&&fechaDevice.length()>0) {
+                 if (fechaDevice.equals(fechaServer)){
+                     fechaCorrecta = true;
+
+                 }else{
+                     //OPCIÓN 1, MANDAR UN MENSAJE FECHA INVÁLIDA, Y ENVIAR A LAS CONFIFURACIONES DE FECHA..
+                     runOnUiThread(new Runnable() {
+                         @Override
+                         public void run() {
+
+                             Utils.dialogCambiarFecha(mainActivity).show();
+                         }
+                     });
+                     //OPCIÓN 2, ESTABLECER LA FECHA PROGRAMANDO, SIN NINGÚN MENSAJE.
+                 }
+             }
+             super.onPostExecute(s);
+         }
+     }
+
 
     /**
      * Set up Bluetooth.
@@ -303,8 +394,10 @@ public class Login extends Activity implements OnClickListener {
             mainActivity = this;
         }
 
+        fechaDevice = Utils.getDatePhone();
+        Log.d(TAG, "FECHA DEVICE : "+fechaDevice);
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        nombreUsuario = SP.getString("username", "emerson.f");
+        nombreUsuario = SP.getString("username", "");
 
 
         user.setText("" + nombreUsuario);
@@ -517,11 +610,17 @@ public class Login extends Activity implements OnClickListener {
         switch (v.getId()) {
             case R.id.login:
 
-                if (estaConectado()) {
-                    new LoginRest().execute();
-                } else {
-                    cajaAbierta();
+                if (validarFecha()){
+                        if (estaConectado()) {
+                            new LoginRest().execute();
+                        } else {
+                            cajaAbierta();
+                        }
                 }
+
+
+
+
                 //new AttemptLogin().execute();
                 break;
         /*case R.id.salir:
@@ -555,17 +654,16 @@ public class Login extends Activity implements OnClickListener {
             JSONObject jsonObjectMotivo = null;
             ArrayList<Agente> agenteLista = null;
             JSONObject jsonObjAgente = null;
-
-
             publishProgress("" + 10);
+
             try {
 
-                Log.d("LOGIN DATOS , ", "" + user.getText().toString() + " - " + pass.getText().toString() + " - " + getDatePhone());
+                Log.d(TAG, "LOGIN DATOS : " +user.getText().toString() + " - " + pass.getText().toString() + " - " + getDatePhone());
                 jsonObjAgente = api.GetDatosAgente(user.getText().toString(), pass.getText().toString());
-                Log.d("JSON OBJECT AGENTE", "" + jsonObjAgente.toString());
+                Log.d(TAG, "JSON OBJECT AGENTE : " + jsonObjAgente.toString());
             } catch (Exception e) {
                 e.printStackTrace();
-                Log.d("JSON OBJECT AGENTE", "" + e.getMessage());
+                Log.d(TAG, "JSON OBJECT AGENTE" + e.getMessage());
             }
             ParserAgente parserAgente = new ParserAgente();
 

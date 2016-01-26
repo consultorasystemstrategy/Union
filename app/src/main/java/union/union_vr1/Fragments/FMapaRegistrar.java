@@ -208,6 +208,12 @@ public class FMapaRegistrar extends Fragment implements Validator.ValidationList
             }
             textLat.setText("" + location.getLatitude() + "");
             textLon.setText("" + location.getLongitude() + "");
+
+            /*if ( conectadoWifi() || conectadoRedMovil()){
+                webViewMap.setVisibility(View.VISIBLE);
+            }else{
+                webViewMap.setVisibility(View.INVISIBLE);
+            }*/
         }
 
         @Override

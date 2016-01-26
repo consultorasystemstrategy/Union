@@ -651,4 +651,16 @@ public class DbAdapter_Stock_Agente {
         }
         return mCursor;
     }
+    public Cursor fetchDevolucionesMalas(int liquidacion) {
+
+        Cursor mCursor = mDb.query(SQLITE_TABLE_Stock_Agente, new String[]{ST_id_stock_agente,
+                        ST_codigo, ST_nombre, ST_inicial, ST_final, ST_ventas, ST_devoluciones, ST_canjes, ST_buenos, ST_malos, ST_disponible},
+                ST_liquidacion + " = ? AND "+ST_malos +" > 0", new String[]{"" + liquidacion}, null, null, ST_nombre + " ASC");
+
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+    }
+
 }

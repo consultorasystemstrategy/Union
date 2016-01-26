@@ -1588,6 +1588,9 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
                 String cantidad = Utils.replaceComa(editTextCantidadCredito.getText().toString().trim());
                 if (cantidad.length() > 0 && cantidad.length() < 10) {
                     Double cantidadCredito = Double.parseDouble(cantidad);
+                    if (diasCredito==null){
+                        diasCredito = "7";
+                    }
                     Credito credito = new Credito(id_agente_venta, idEstablecimiento, cantidadCredito, Integer.parseInt(diasCredito), Constants._CREDITO_PENDIENTE, Constants._CREDITO, Utils.getDatePhone());
                     Firebase newCreditoRef = creditoRef.push();
                     newCreditoRef.setValue(credito);
@@ -2038,8 +2041,9 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
             NUMERO_DOCUMENTO = numero_documento + "";
             SERIE_DOCUMENTO = serie;
 
+        String fecha = getDatePhone();
             Log.d(TAG, "SERIE : " + serie);
-            id = dbHelper_Comprob_Venta.createComprobVenta(idEstablecimiento, i_tipoDocumento, i_formaPago, tipoVenta, codigo_erp, serie, numero_documento, base_imponible, igv, monto_total, getDatePhone(), null, estado_comprobante, estado_conexion, id_agente_venta, Constants._CREADO, idLiquidacion);
+            id = dbHelper_Comprob_Venta.createComprobVenta(idEstablecimiento, i_tipoDocumento, i_formaPago, tipoVenta, codigo_erp, serie, numero_documento, base_imponible, igv, monto_total, fecha, null, estado_comprobante, estado_conexion, id_agente_venta, Constants._CREADO, idLiquidacion);
 
         Log.d(TAG, "_ID COMPROBANTE DE VENTA : "+id);
             Log.d("Export id CV IGUALES", "" + id);
@@ -2175,7 +2179,8 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
             textoImpresionContenidoRight+= "S/"+ df.format(igv)+"\n";
         textoImpresionContenidoRight+= "S/"+ df.format(monto_total)+"\n";*/
 
-            dbHelper_Evento_Establecimiento.updateEstadoEstablecs("" + idEstablecimiento, 2, getDatePhone());
+
+            dbHelper_Evento_Establecimiento.updateEstadoEstablecs("" + idEstablecimiento, 2, fecha);
 
             Log.d("FORMA DE PAGO", "" + i_formaPago);
             if (i_formaPago == 2) {
