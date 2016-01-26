@@ -155,7 +155,7 @@ public class ImportMain extends AsyncTask<String, String, String> {
         idLiquidacion = 10;
         fecha = "02/02/2015";
 */
-        Log.d("IMPORT DATOS DE PRUEBA ESTABLECIMIENTO X RUTA idAgente, idLiquidacion, Fecha", idAgente + ", " + idLiquidacion + "," + fecha);
+        Log.d(TAG, "IMPORT DATOS DE PRUEBA ESTABLECIMIENTO X RUTA idAgente, idLiquidacion, Fecha : " + idAgente + ", " + idLiquidacion + "," + fecha);
 
         try {
 

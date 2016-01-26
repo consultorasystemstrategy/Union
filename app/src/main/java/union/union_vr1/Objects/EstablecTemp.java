@@ -8,6 +8,7 @@ public class EstablecTemp {
     private String fecha;
     private int estado;
     private int idAgente;
+    private int idEstablecimientoSID;
 
     public int getIdAgente() {
         return idAgente;
@@ -17,11 +18,20 @@ public class EstablecTemp {
         this.idAgente = idAgente;
     }
 
-    public EstablecTemp(String idEstablecTemp, String fecha, int estado, int idAgente) {
+    public int getIdEstablecimientoSID() {
+        return idEstablecimientoSID;
+    }
+
+    public void setIdEstablecimientoSID(int idEstablecimientoSID) {
+        this.idEstablecimientoSID = idEstablecimientoSID;
+    }
+
+    public EstablecTemp(String idEstablecTemp, String fecha, int estado, int idAgente, int idEstablecimientoSID) {
         this.idEstablecTemp = idEstablecTemp;
         this.fecha = fecha;
         this.estado = estado;
         this.idAgente = idAgente;
+        this.idEstablecimientoSID = idEstablecimientoSID;
     }
 
     public EstablecTemp() {

@@ -458,10 +458,10 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
                textoImpresionContenidoBottom+= "V. Resumen: " + sha1 +"\n\n";
                if(tipoC.equals("F"))
                {
-                   textoEmpresa+="\n\n" + "BOLETA ELECTRÓNICA"+"\n";
+                   textoEmpresa+="\n\n" + "FACTURA ELECTRÓNICA"+"\n";
                    textoImpresionContenidoBottom+= Constants.REPRESENTACION_FACTURA+"\n\n";
                }else if(tipoC.equals("B")){
-                   textoEmpresa+="\n\n"+"FACTURA ELECTRÓNICA"+"\n";
+                   textoEmpresa+="\n\n"+"BOLETA ELECTRÓNICA"+"\n";
                    textoImpresionContenidoBottom+= Constants.REPRESENTACION_BOLETA+"\n\n";
                }
                textoImpresionContenidoBottom+= Constants.PRINT_VISUALICE+"\n";

@@ -39,7 +39,7 @@ public class StockAgenteRestApi {
 
     private String urlString = "http://192.168.0.158/RestFull/StockAgente.ashx";
     private Context contexto;
-    private int servidorTipo=1;
+    private int servidorTipo=3;
 
     private static final String TAG = StockAgenteRestApi.class.getSimpleName();
 
@@ -47,7 +47,7 @@ public class StockAgenteRestApi {
 
         this.contexto = contexto;
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(contexto);
-        servidorTipo =  Integer.parseInt(SP.getString("servidorTipo", "1"));
+        servidorTipo =  Integer.parseInt(SP.getString("servidorTipo", "3"));
         switch (servidorTipo){
             case 1:
                 urlString = urlStringLocal;
@@ -67,7 +67,9 @@ public class StockAgenteRestApi {
         Log.d(TAG, urlString);
 
         if (servidorTipo==1){
+
         }else if (servidorTipo==2){
+
         }
     }
 
@@ -679,6 +681,7 @@ public class StockAgenteRestApi {
         result = new JSONObject(r);
         return result;
     }
+
     public JSONObject InsClienteEstablecimiento(String PerVNombres,String PerVApellPaterno,String PerVApellMaterno,String PerVDocIdentidad,String PerVCelular,String PerVEmail,int PerBEstado,int PerITipoDocIdentidadId,int PerITipoPersonaId,int PerIUsuarioId,int PerIEmpresaId,String CliVCodigo,String CliVDocidentidad,int CliBEstado,int CliICategoriaClienteId,int CliIAgenteVentaId,int CliIUsuarioId,int CliBEstadoAtencion,double CliDOMontoCredito,int CliIModalidadCreditoId,String DirVDescripcion,String DirVDescripcionFiscal,int DirBEstado,int DirIDistritoId,String DirVTelefonoFijo,String DirVCelular1,String DirVCelular2,int DirIUsuarioId,int DirBEstablecimientoAsociado,int DirBDireccionFiscal,String EstVDescripcion,int EstBEstado,int EstIUsuarioId,int EstIPorcentajeDevolucion,int EstICatEstablecimientoId,String EstVExhibidor,double EstDOMontoCompra,int EstITipEstId,String LocVLongitude,String LocVLatitude,int LocBEstado,int LocIUsuarioId,int EveeIAtencionEstablecimientoId,int EveeBILiquidacionCajaId,int EveeIMotivoNoAtendidoId,int EveeIRutaId,String EstVKeyFireBase) throws Exception {
         JSONObject result = null;
         JSONObject o = new JSONObject();
@@ -731,12 +734,15 @@ public class StockAgenteRestApi {
         p.put("EveeBILiquidacionCajaId",mapObject(EveeBILiquidacionCajaId));
         p.put("EveeIMotivoNoAtendidoId",mapObject(EveeIMotivoNoAtendidoId));
         p.put("EveeIRutaId",mapObject(EveeIRutaId));
+        p.put("EstVKeyFireBase",mapObject(EstVKeyFireBase));
         o.put("parameters", p);
         String s = o.toString();
         String r = load(s);
         result = new JSONObject(r);
         return result;
     }
+
+
     public JSONObject GetDatosAgente(String vstr_Usuario,String vstr_pass) throws Exception {
         JSONObject result = null;
         JSONObject o = new JSONObject();
@@ -1087,6 +1093,19 @@ public class StockAgenteRestApi {
         o.put("interface","RestAPI");
         o.put("method", "getTransDetalle");
         p.put("guiaTrans",mapObject(guiaTrans));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+
+    public JSONObject fsel_FechaActual() throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","RestAPI");
+        o.put("method", "fsel_FechaActual");
         o.put("parameters", p);
         String s = o.toString();
         String r = load(s);

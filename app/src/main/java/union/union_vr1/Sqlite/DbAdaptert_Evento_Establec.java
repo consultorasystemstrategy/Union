@@ -300,9 +300,29 @@ public class DbAdaptert_Evento_Establec {
 
         ContentValues initialValues = new ContentValues();
         initialValues.put(EE_estado_autorizado, estado);
+
         return mDb.update(SQLITE_TABLE_Evento_Establec, initialValues,
                 EE_id_actualizar+"=?",new String[]{""+idEstablecimiento});
     }
+
+    public int updateEstabEstadoAtencion(int idEstablecimiento, int estadoAtencion){
+
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(EE_id_estado_atencion,estadoAtencion );
+        return mDb.update(SQLITE_TABLE_Evento_Establec, initialValues,
+                EE_id_actualizar+"=?",new String[]{""+idEstablecimiento});
+    }
+
+    public int updateIDSIDEstablecimiento(int idEstablecimientoint, int id_SID_establecimiento){
+
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(EE_id_establec, id_SID_establecimiento);
+
+        return mDb.update(SQLITE_TABLE_Evento_Establec, initialValues,
+                EE_id_actualizar+"=?",new String[]{""+idEstablecimientoint});
+    }
+
+
 
     public int ordern (){
         Cursor cr = mDb.rawQuery("select max("+EE_orden+")+1 as 'ORDEN' from "+SQLITE_TABLE_Evento_Establec+"", null);

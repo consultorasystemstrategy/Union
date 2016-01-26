@@ -24,16 +24,16 @@ import java.util.Vector;
 import jpos.JposException;
 import union.union_vr1.BlueTooth.AlertView;
 import union.union_vr1.BlueTooth.Print;
-import union.union_vr1.Login;
 import union.union_vr1.R;
 import union.union_vr1.Sqlite.Constants;
 import union.union_vr1.Sqlite.DbAdapter_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Agente_Login;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 
-public class ImprimirStockDisponible extends Activity {
+public class ImprimirDevoluciones extends Activity {
 
-    private ToggleButton buttonArqueo;
+
+    private ToggleButton buttonImprimir;
 
 
 
@@ -69,7 +69,7 @@ public class ImprimirStockDisponible extends Activity {
     // BT
     private BluetoothPort bp;
 
-    private final static String TAG = ImprimirStockDisponible.class.getSimpleName();
+    private final static String TAG = ImprimirDevoluciones.class.getSimpleName();
 
     @Override
     protected void onDestroy() {
@@ -81,10 +81,11 @@ public class ImprimirStockDisponible extends Activity {
         }
     }
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_imprimir_stock_disponible);
+        setContentView(R.layout.activity_imprimir_devoluciones);
 
         bluetoothSetup();
         contexto = this;
@@ -119,9 +120,9 @@ public class ImprimirStockDisponible extends Activity {
         defaultAdressImpresora = session.fetchMAC(Constants._ID_SESSION_MAC);
         Log.d(TAG, "ADRESS IMPRESORA : " + defaultAdressImpresora);
 
-        buttonArqueo = (ToggleButton) findViewById(R.id.buttonArqueoCaja);
+        buttonImprimir = (ToggleButton) findViewById(R.id.buttonImprimir);
 
-        buttonArqueo.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        buttonImprimir.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked){
@@ -157,8 +158,8 @@ public class ImprimirStockDisponible extends Activity {
                     Print print = new Print(contexto);
 
                     try {
-                        //AQUÍ IMPRIMIRÉ EL STOCK DISPONIBLE
-                        print.printStockDisponible(idLiquidacion, nombreAgente);
+                        //AQUÍ IMPRIMIRÉ LAS DEVOLUCIONES
+                        print.printDevolucionesMalas(idLiquidacion, nombreAgente);
 
 
                     } catch (JposException e) {
@@ -179,7 +180,6 @@ public class ImprimirStockDisponible extends Activity {
         }
 
     }
-
     /**
      * Set up Bluetooth.
      */
@@ -228,7 +228,7 @@ public class ImprimirStockDisponible extends Activity {
     /** ------------------------------------------------------------------ */
     public class connTask extends AsyncTask<BluetoothDevice, Void, Integer>
     {
-        private final ProgressDialog dialog = new ProgressDialog(ImprimirStockDisponible.this);
+        private final ProgressDialog dialog = new ProgressDialog(ImprimirDevoluciones.this);
 //		private BluetoothPort bp;
 
         @Override
@@ -276,7 +276,7 @@ public class ImprimirStockDisponible extends Activity {
                     @Override
                     public void run() {
                         // UI
-                        buttonArqueo.setChecked(true);
+                        buttonImprimir.setChecked(true);
 
                         //TOAST
                         Toast toast = Toast.makeText(contexto, "SINCRONIZADO", Toast.LENGTH_SHORT);
@@ -324,7 +324,7 @@ public class ImprimirStockDisponible extends Activity {
             hThread.interrupt();
         connected = false;
         // UI
-        buttonArqueo.setChecked(false);
+        buttonImprimir.setChecked(false);
 
     /*list.setEnabled(true);
     editText.setEnabled(true);
