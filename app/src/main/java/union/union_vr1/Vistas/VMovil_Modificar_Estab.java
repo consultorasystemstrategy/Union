@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -58,7 +59,7 @@ public class VMovil_Modificar_Estab extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_agregar_establecimiento);
-
+enableGps();
         idEstablecimiento = getIntent().getExtras().getString("idEstab");
         Log.d("ESTABLECIMIENTO", "" + idEstablecimiento);
         dbAdapter_agente = new DbAdapter_Agente(this);
@@ -113,6 +114,41 @@ public class VMovil_Modificar_Estab extends AppCompatActivity {
         }
 
         //getData();
+
+    }
+
+    public boolean enableGps() {
+        boolean estado = false;
+        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+
+            estado = true;
+        } else {
+            estado = false;
+            enableGPSactiva();
+
+        }
+        return estado;
+    }
+    private void enableGPSactiva() {
+
+
+        new AlertDialog.Builder(this)
+                .setTitle("GPS")
+                .setCancelable(false)
+                .setMessage("Usted tiene que activar el GPS")
+                .setPositiveButton(R.string.si, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // continue with delete
+                        Intent gpsOptionsIntent = new Intent(
+                                android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        startActivity(gpsOptionsIntent);
+                    }
+                })
+
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+
 
     }
 
