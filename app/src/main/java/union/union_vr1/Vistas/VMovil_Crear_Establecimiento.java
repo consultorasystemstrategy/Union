@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -21,6 +22,8 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.Toast;
+
 import union.union_vr1.Fragments.FClienteRegistrar;
 import union.union_vr1.Fragments.FEstablecimientoRegistrar;
 import union.union_vr1.Fragments.FMapaRegistrar;
@@ -51,7 +54,7 @@ public class VMovil_Crear_Establecimiento extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_agregar_establecimiento);
 
-
+        enableGps();
 
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#19262F")));
         getSupportActionBar().setIcon(R.drawable.ic_launcher);
@@ -113,12 +116,44 @@ public class VMovil_Crear_Establecimiento extends AppCompatActivity {
         //getData();
 
     }
+    public boolean enableGps() {
+        boolean estado = false;
+        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
 
+            estado = true;
+        } else {
+            estado = false;
+            enableGPSactiva();
+
+        }
+        return estado;
+    }
+    private void enableGPSactiva() {
+
+
+        new AlertDialog.Builder(this)
+                .setTitle("GPS")
+                .setCancelable(false)
+                .setMessage("Usted tiene que activar el GPS")
+                .setPositiveButton(R.string.si, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // continue with delete
+                        Intent gpsOptionsIntent = new Intent(
+                                android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        startActivityForResult(gpsOptionsIntent,1);
+                    }
+                })
+
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+
+
+    }
     @Override
-    protected void onPause() {
-        super.onPause();
-
-
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        enableGps();
     }
 
     @Override
@@ -207,5 +242,6 @@ public class VMovil_Crear_Establecimiento extends AppCompatActivity {
         alertDialog.show();
 
     }
+
 
 }

@@ -103,19 +103,23 @@ public class ServiceFireListenerTemp extends Service {
                 Log.d(TAG, "ADDED ESTADO: " + nuevoEstablecimiento.getEstado());
 
                 String idParent = nuevoEstablecimiento.getIdEstablecTemp();
+
+                if(idAgente==nuevoEstablecimiento.getIdAgente()){
                 Log.d(TAG, "ADDED ID ESTABLEC: " + idParent);
                 int estadoInserto = dbAdaptert_evento_establec.updateEstabEstado(Integer.parseInt(idParent), "" + nuevoEstablecimiento.getEstado());
+                    //ASOCIAR EL TEMPORAL CON EL SID
+                    dbAdaptert_evento_establec.updateIDSIDEstablecimiento(Integer.parseInt(idParent), nuevoEstablecimiento.getIdEstablecimientoSID());
                 Log.d(TAG, "ADDED ID ESTABLEC: " + estadoInserto);
                 String titulo = "", mensaje = "";
                 int color = 0;
                 mensaje = "C. Doc: " + nuevoEstablecimiento.getIdEstablecTemp();
 
-
-                if(idAgente==nuevoEstablecimiento.getIdAgente()){
                     switch (nuevoEstablecimiento.getEstado()){
                         case Constants.REGISTRO_APROBADO:
                             titulo = "Establecimiento Aprobado";
                             color = Color.GREEN;
+                            dbAdaptert_evento_establec.updateEstabEstadoAtencion(Integer.parseInt(idParent), 1);
+
                             break;
                         case Constants.REGISTRO_RECHAZADO:
                             titulo = "Establecimiento Rechazado";

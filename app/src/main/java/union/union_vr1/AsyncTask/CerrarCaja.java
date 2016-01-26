@@ -14,10 +14,13 @@ import java.util.ArrayList;
 import union.union_vr1.JSONParser.ParserTransferencias;
 import union.union_vr1.Login;
 import union.union_vr1.Objects.Transferencias;
+import union.union_vr1.R;
 import union.union_vr1.RestApi.StockAgenteRestApi;
+import union.union_vr1.Sqlite.Constants;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 import union.union_vr1.Sqlite.DbAdapter_Transferencias;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
+import union.union_vr1.Utils.Utils;
 import union.union_vr1.Vistas.Bluetooth_Printer;
 import union.union_vr1.Vistas.VMovil_Online_Pumovil;
 
@@ -74,8 +77,8 @@ public class CerrarCaja extends AsyncTask<String, String, String> {
             Log.d(TAG, "TRANSFERENCIAS success : "+successTransferencias);
 
 
-            //SÓLO SI ES IGUAL A 1
-            if (successTransferencias==1 || successTransferencias==2){
+
+            if (successTransferencias==1 || successTransferencias ==2){
 
                 JSONObject jsonObjectTransferencias = api.fsel_ObtenerTransferencias(agente, liquidacion);
 
@@ -119,6 +122,11 @@ public class CerrarCaja extends AsyncTask<String, String, String> {
 
                 successCerrarCaja = jsonObject.getInt("Value");
                 Log.d("JSON CERRAR CAJA", jsonObject.toString());
+
+                //TODAVÍA NO SE HA VALIDADO LAS DEVOLUCIONES
+            }else if (successTransferencias== Constants._DEVOLUCIONES_NO_VALIDADAS){
+
+                successCerrarCaja = Constants._DEVOLUCIONES_NO_VALIDADAS;
             }
 
             publishProgress("" + 50);
@@ -171,14 +179,17 @@ public class CerrarCaja extends AsyncTask<String, String, String> {
             mainActivity.finish();
             mainActivity.startActivity(intent);
 
-        }else {
+        }else if (successCerrarCaja ==Constants._DEVOLUCIONES_NO_VALIDADAS){
+
+            Utils.setToast(mainActivity.getApplicationContext(), "LAS DEVOLUCIONES NO SON VÁLIDAS.", R.color.verde);
+
+        }else{
             mainActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     Toast.makeText(mainActivity.getApplicationContext(), "ERROR, INTENTE DE NUEVO.", Toast.LENGTH_SHORT).show();
                 }
             });
-
         }
 
     }

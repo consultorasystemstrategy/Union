@@ -57,7 +57,12 @@ public class DbAdapter_Categoria_Establecimiento {
 
 
     public Cursor fetchCatEstablecimiento() {
-        Cursor cursor = mDb.rawQuery("select * from "+ SQLITE_TABLE_CAT_ESTABLECIMIENTO +" order by "+ cat_Establec_Id +" asc",null);
+        Cursor cursor = mDb.rawQuery(" select -1 as _id,-1 as CateICatEstablecimientoId ,'Seleccione categoria' as CateVDescripcion union select * from "+ SQLITE_TABLE_CAT_ESTABLECIMIENTO +" order by "+ cat_Establec_Id +" asc",null);
+        return cursor;
+    }
+
+    public Cursor fetchCatEstablecimientoById(int id) {
+        Cursor cursor = mDb.rawQuery("select * from "+ SQLITE_TABLE_CAT_ESTABLECIMIENTO +" order by "+ cat_Establec_EstablecId +"='"+id+"' desc",null);
         return cursor;
     }
 

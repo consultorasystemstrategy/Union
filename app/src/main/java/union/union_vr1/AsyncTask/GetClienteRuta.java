@@ -21,6 +21,7 @@ public class GetClienteRuta extends AsyncTask<String, String, String> {
     private DBAdapter_Cliente_Ruta dbAdapter_cliente_ruta;
     private Context context;
 
+    private static String TAG = GetClienteRuta.class.getSimpleName();
     public GetClienteRuta(Context ctx) {
         context = ctx;
         Log.d("OBJECT", "DATO1");
@@ -58,7 +59,7 @@ public class GetClienteRuta extends AsyncTask<String, String, String> {
                 jsonObjectCliente = jsonArray.getJSONObject(i);
 
                 //para identificar el error al enviar por json con log
-                Log.d("INSERT",jsonObjectCliente.toString());
+                Log.d(TAG, "INSERT" +jsonObjectCliente.toString());
 
 
 
@@ -82,10 +83,7 @@ public class GetClienteRuta extends AsyncTask<String, String, String> {
 
                     if (inserto > 0) {
                         Log.d("INSERTO-data", "" + inserto);
-
                     }
-
-
 
             }
 

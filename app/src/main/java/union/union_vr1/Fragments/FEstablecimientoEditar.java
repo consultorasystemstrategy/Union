@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -63,6 +62,8 @@ public class FEstablecimientoEditar extends Fragment implements Validator.Valida
     int idcat_establec = 0;
     int idTipo_establec = 0;
 
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_establecimiento, container, false);
@@ -88,16 +89,11 @@ public class FEstablecimientoEditar extends Fragment implements Validator.Valida
         editTextTelMovil2 = (EditText) v.findViewById(R.id.editNumero2);
         btnGuardar = (Button) v.findViewById(R.id.buttonGuardar);
 
-        callmehod();
+       // callmehod();
         actualizar();
         //--------
 
-        Cursor crCat = (Cursor) spinnerCategoriaEstablecimeinto.getItemAtPosition(0);
-        idcat_establec = crCat.getInt(crCat.getColumnIndexOrThrow(DbAdapter_Categoria_Establecimiento.cat_Establec_EstablecId));
 
-
-        Cursor cr = (Cursor) spinnerTipoEstablecimeinto.getItemAtPosition(0);
-        idTipo_establec = cr.getInt(cr.getColumnIndexOrThrow(DbAdapter_Tipo_Establecimiento.tipo_Establecimiento_EstablecimientoId));
 
         btnGuardar.setVisibility(View.GONE);
         //----------
@@ -136,7 +132,12 @@ public class FEstablecimientoEditar extends Fragment implements Validator.Valida
             }
         });
         display();
+        Cursor crCat = (Cursor) spinnerCategoriaEstablecimeinto.getItemAtPosition(0);
+        idcat_establec = crCat.getInt(crCat.getColumnIndexOrThrow(DbAdapter_Categoria_Establecimiento.cat_Establec_EstablecId));
 
+
+        Cursor cr = (Cursor) spinnerTipoEstablecimeinto.getItemAtPosition(0);
+        idTipo_establec = cr.getInt(cr.getColumnIndexOrThrow(DbAdapter_Tipo_Establecimiento.tipo_Establecimiento_EstablecimientoId));
 
         return v;
     }
@@ -147,16 +148,20 @@ public class FEstablecimientoEditar extends Fragment implements Validator.Valida
             editTextNombre.setText(cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_descripcion_establecimiento)));
             editTextTelFijo.setText(cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_telefono_fijo)));
             editTextTelMovil2.setText(cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_celular_two)));
+
+            int idCat = cr.getInt(cr.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_categoria_estable));
+            int idTipo = cr.getInt(cr.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_tipo_establecimiento));
+            setCatEstablec(idCat);
+            setTipoEstablec(idTipo);
+
+
         }
     }
 
-    private void callmehod() {
-        setTipoEstablec();
-        setCatEstablec();
-    }
 
-    private void setTipoEstablec() {
-        Cursor cr = dbAdapter_tipo_establecimiento.fetchTipoEstablec();
+
+    private void setTipoEstablec(int id) {
+        Cursor cr = dbAdapter_tipo_establecimiento.fetchTipoEstablecById(id);
         SimpleCursorAdapter simpleCursorAdapter;
         int[] to = new int[]{
                 R.id.textSpinner,
@@ -172,8 +177,8 @@ public class FEstablecimientoEditar extends Fragment implements Validator.Valida
         spinnerTipoEstablecimeinto.setAdapter(simpleCursorAdapter);
     }
 
-    private void setCatEstablec() {
-        Cursor cr = dbAdapter_categoria_establecimiento.fetchCatEstablecimiento();
+    private void setCatEstablec(int id) {
+        Cursor cr = dbAdapter_categoria_establecimiento.fetchCatEstablecimientoById(id);
         SimpleCursorAdapter simpleCursorAdapter;
         int[] to = new int[]{
                 R.id.textSpinner,

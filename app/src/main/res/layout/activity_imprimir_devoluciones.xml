@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:id="@+id/bottomPanel"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="50"
+        android:background="@color/azul"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/progress_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-thin"
+            android:text="Imprimir Devoluciones"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/metric_size"
+            android:gravity="center" />
+
+        <ToggleButton
+            android:id="@+id/buttonImprimir"
+            android:layout_width="@dimen/run_button_width"
+            android:layout_height="@dimen/run_button_height"
+            android:layout_gravity="center_horizontal"
+            android:background="@color/Dark5"
+            android:textColor="@color/foreground_material_dark"
+            android:text="New ToggleButton"
+            android:textOff="SINCRONIZAR"
+            android:textOn="IMPRIMIR"
+            android:checked="false" />
+
+    </LinearLayout>
+</LinearLayout>

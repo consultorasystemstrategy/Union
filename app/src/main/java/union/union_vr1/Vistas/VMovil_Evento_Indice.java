@@ -361,7 +361,7 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
                         // continue with delete
                         Intent gpsOptionsIntent = new Intent(
                                 android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                        startActivity(gpsOptionsIntent);
+                        startActivityForResult(gpsOptionsIntent,1);
                     }
                 })
 
@@ -370,6 +370,7 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
 
 
     }
+
 
     public boolean enableGps() {
         boolean estado = false;
@@ -563,6 +564,7 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        enableGps();
         IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
         if (scanResult != null) {
             // handle scan result}
@@ -617,9 +619,9 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         }
         // else continue with any other code you need in the method
         else {
-            Toast toast = Toast.makeText(getApplicationContext(),
+            /*Toast toast = Toast.makeText(getApplicationContext(),
                     "No scan data received!", Toast.LENGTH_SHORT);
-            toast.show();
+            toast.show();*/
         }
     }
 

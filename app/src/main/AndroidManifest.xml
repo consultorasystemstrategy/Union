@@ -51,10 +51,13 @@
             android:name=".Servicios.ServiceFireListenerTemp"
             android:process=":ListenerFireBaseTemp" />
 
-        <receiver android:enabled="true" android:name=".Servicios.BroadCastRunFireBaseService"
+        <receiver
+            android:name=".Servicios.BroadCastRunFireBaseService"
+            android:enabled="true"
             android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
@@ -224,8 +227,7 @@
         <activity
             android:name=".Vistas.VMovil_Abrir_Caja"
             android:label="Abrir Caja"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".Vistas.VMovil_Agentes_Dias_Semanas"
             android:label="Dias semanas">
@@ -303,8 +305,10 @@
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="@string/google_maps_key" />
         -->
-        <activity android:name=".Vistas.ImprimirStockDisponible"
-            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".Vistas.ImprimirStockDisponible"
+            android:screenOrientation="portrait" />
+        <activity android:name=".Vistas.ImprimirDevoluciones"></activity>
     </application>
 
 </manifest>

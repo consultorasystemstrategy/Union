@@ -1,8 +1,12 @@
 package union.union_vr1.Utils;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -218,5 +222,54 @@ public class Utils {
             Log.d("JSONPARSER ERROR", e.getMessage());
         }
         return idRespuesta;
+    }
+
+    public static  String jsonGetString(JSONObject jsonObj) {
+        String stringRespuesta = "";
+        try {
+            Log.d("CADENA A PARSEAR ", jsonObj.toString());
+            stringRespuesta = jsonObj.getString("Value");
+        } catch (JSONException e) {
+            // TODO Auto-generated catch block
+            Log.d("JSONPARSER ERROR", e.getMessage());
+        }
+        return stringRespuesta;
+    }
+
+
+
+    /**
+     * Utils.dialogNoInternet(this).show();
+     */
+    public static Dialog dialogNoInternet(final Context context) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("No se Detectó Conexión a Internet");
+        builder.setMessage("Por favor, conectarse a una red Wifi o habilitar la conexión a datos.");
+        builder.setPositiveButton(R.string.ok, new Dialog.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                context.startActivity(new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS));
+            }
+        });
+        builder.setCancelable(true);
+        return builder.create();
+    }
+
+    /**
+     * Utils.dialogCambiarFecha(this).show();
+     */
+
+    public static Dialog dialogCambiarFecha(final Context context) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Fecha Sin Actualizar");
+        builder.setMessage("Por favor, actualice la fecha del dispositivo.");
+        builder.setPositiveButton(R.string.ok, new Dialog.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                context.startActivity(new Intent(android.provider.Settings.ACTION_DATE_SETTINGS));
+            }
+        });
+        builder.setCancelable(true);
+        return builder.create();
     }
 }

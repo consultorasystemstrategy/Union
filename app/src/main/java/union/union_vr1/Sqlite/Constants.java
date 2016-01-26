@@ -25,9 +25,18 @@ public class Constants {
     public static final int DOCUMENTO_TRANSFERENCIA = 1000;
     public static final int DOCUMENTO_FACTURA = 1;
     public static final int DOCUMENTO_BOLETA = 2;
+
+
     public static final int DOCUMENTO_ARQUEO = 1001;
     public static final int DOCUMENTO_RRPP = 1002;
     public static final int DOCUMENTO_STOCK_DISPONIBLE = 1003;
+    public static final int DOCUMENTO_DEVOLUCIONES_MALAS = 1004;
+
+
+
+
+    public static final int DOCUMENTO_EXTERNO = 700;
+    public static final int DOCUMENTO_INTERNO = 701;
 
 
 
@@ -38,8 +47,6 @@ public class Constants {
     public static final String ACTION_EXPORT_SERVICE = "EXPORT_SERVICE";
     public static final String ACTION_IMPORT_SERVICE = "IMPORT_SERVICE";
 
-    public static final int _ID_SESSION_MAC = 12;
-    public static final int _ID_SESSION_MAC_DEVICE_CIPHER_LAB = 13;
 
     public static final String PRINT_AUTORIZADO_= "AUTORIZADO MEDIANTE RESOLUCION";
     public static final String PRINT_N_RESOLUCION= "N. 0180050000804/SUNAT";
@@ -62,6 +69,8 @@ public class Constants {
 
     public static final String _APP_ROOT_FIREBASE = "https://productosunion.firebaseio.com/app";
     public static final String _CHILD_CREDITO = "credito";
+    public static final String _CHILD_DEVOLUCION = "devolucion";
+
     public static final String _CHILD_ESTABLECIMIENTO_NUEVO = "establecimiento_nuevo";
     public static final String _CHILD_ESTABLECIMIENTO_TEMPORAL = "establecimiento_temporal";
 
@@ -82,6 +91,19 @@ public class Constants {
     public static final int _CREDITO_RECHAZADO = 3;
 
     public static final int ID_NOTIFICATION_FIREBASE = 4650;
+
+
+    public static final int _DEVOLUCIONES_NO_VALIDADAS = -2;
+
+    public static final int _ID_SID_ESTABLECIMIENTO_TEMPORAL = -1;
+
+
+
+    //VARIABLES DE SESSION
+
+    public static final int SESSION_ESTADO_DEVOLUCIONES = 21;
+    public static final int _ID_SESSION_MAC = 12;
+    public static final int _ID_SESSION_MAC_DEVICE_CIPHER_LAB = 13;
 
 
 
