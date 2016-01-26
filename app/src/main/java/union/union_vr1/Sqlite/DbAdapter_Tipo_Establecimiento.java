@@ -57,7 +57,14 @@ public class DbAdapter_Tipo_Establecimiento {
 
 
     public Cursor fetchTipoEstablec() {
-        Cursor cursor = mDb.rawQuery("select * from "+ SQLITE_TABLE_TIPO_ESTABLECIMIENTO +" order by "+tipo_Establecimiento_Id+" asc",null);
+        Cursor cursor = mDb.rawQuery(" select -1 as _id,-1 as TieITipoEstId ,'Seleccione tipo' as TieVDescripcion union  select "+tipo_Establecimiento_Id+","+tipo_Establecimiento_EstablecimientoId+","+tipo_Establecimiento_Descripcion+" from "+ SQLITE_TABLE_TIPO_ESTABLECIMIENTO +" order by "+tipo_Establecimiento_Id+" asc",null);
+        return cursor;
+    }
+
+
+
+    public Cursor fetchTipoEstablecById(int id) {
+        Cursor cursor = mDb.rawQuery("select * from "+ SQLITE_TABLE_TIPO_ESTABLECIMIENTO +" order by "+tipo_Establecimiento_EstablecimientoId+"='"+id+"' desc",null);
         return cursor;
     }
 

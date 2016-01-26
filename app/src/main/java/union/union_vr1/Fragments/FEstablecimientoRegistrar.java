@@ -240,14 +240,24 @@ public class FEstablecimientoRegistrar extends Fragment implements Validator.Val
         fijo = editTextTelFijo.getText().toString();
         two = editTextTelMovil2.getText().toString();
 
-        long estado = dbAdapter_temp_establecimiento.updateTempEstablecEstabl(idEstablecimiento + "", cat_est, tipo_esta, nomb_estb, fijo, two);
-        if (estado > 0) {
+        if(idcat_establec>0 && idTipo_establec>0){
+            long estado = dbAdapter_temp_establecimiento.updateTempEstablecEstabl(idEstablecimiento + "", cat_est, tipo_esta, nomb_estb, fijo, two);
+            if (estado > 0) {
 
-           alertConfirmar();
+                alertConfirmar();
 
-        } else {
-            Utils.setToast(getActivity(), "Ocurrio un error, por favor sal y vuelve a Intentarlo", R.color.rojo);
+            } else {
+                Utils.setToast(getActivity(), "Ocurrio un error, por favor sal y vuelve a Intentarlo", R.color.rojo);
+            }
+        }else{
+            Utils.setToast(getActivity(), "Complete todos los campos", R.color.rojo);
         }
+
+
+
+
+
+
     }
 
     @Override

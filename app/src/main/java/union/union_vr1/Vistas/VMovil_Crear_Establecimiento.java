@@ -22,6 +22,8 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.Toast;
+
 import union.union_vr1.Fragments.FClienteRegistrar;
 import union.union_vr1.Fragments.FEstablecimientoRegistrar;
 import union.union_vr1.Fragments.FMapaRegistrar;
@@ -139,7 +141,7 @@ public class VMovil_Crear_Establecimiento extends AppCompatActivity {
                         // continue with delete
                         Intent gpsOptionsIntent = new Intent(
                                 android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                        startActivity(gpsOptionsIntent);
+                        startActivityForResult(gpsOptionsIntent,1);
                     }
                 })
 
@@ -149,10 +151,9 @@ public class VMovil_Crear_Establecimiento extends AppCompatActivity {
 
     }
     @Override
-    protected void onPause() {
-        super.onPause();
-
-
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        enableGps();
     }
 
     @Override
@@ -241,5 +242,6 @@ public class VMovil_Crear_Establecimiento extends AppCompatActivity {
         alertDialog.show();
 
     }
+
 
 }

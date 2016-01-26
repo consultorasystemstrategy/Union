@@ -142,7 +142,7 @@ enableGps();
                         // continue with delete
                         Intent gpsOptionsIntent = new Intent(
                                 android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                        startActivity(gpsOptionsIntent);
+                        startActivityForResult(gpsOptionsIntent,1);
                     }
                 })
 
@@ -150,6 +150,11 @@ enableGps();
                 .show();
 
 
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        enableGps();
     }
 
     @Override
