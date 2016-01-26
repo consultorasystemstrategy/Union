@@ -35,6 +35,7 @@ import union.union_vr1.R;
 import union.union_vr1.Servicios.FirebaseBackgroundService;
 import union.union_vr1.Servicios.ServiceFireListener;
 import union.union_vr1.Sqlite.Constants;
+import union.union_vr1.Sqlite.DBAdapter_Cliente_Ruta;
 import union.union_vr1.Sqlite.DbAdapter_Categoria_Establecimiento;
 import union.union_vr1.Sqlite.DbAdapter_Establecimeinto_Historial;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Establecimiento;
@@ -50,7 +51,7 @@ import union.union_vr1.Vistas.VMovil_Menu_Establec;
 public class FEstablecimientoRegistrar extends Fragment implements Validator.ValidationListener {
     private Spinner spinnerTipoEstablecimeinto;
     private Spinner spinnerCategoriaEstablecimeinto;
-
+    private DBAdapter_Cliente_Ruta dbAdapter_cliente_ruta;
     @Required(order = 1, messageResId = R.string.requerido_input)
     private EditText editTextNombre;
     private EditText editTextTelFijo;
@@ -88,6 +89,8 @@ public class FEstablecimientoRegistrar extends Fragment implements Validator.Val
 
         dbAdapter_temp_establecimiento = new DbAdapter_Temp_Establecimiento(getActivity());
         dbAdapter_temp_establecimiento.open();
+        dbAdapter_cliente_ruta = new DBAdapter_Cliente_Ruta(getActivity());
+        dbAdapter_cliente_ruta.open();
         viewPager = (ViewPager) getActivity().findViewById(R.id.viewpager);
         dbAdapter_categoria_establecimiento = new DbAdapter_Categoria_Establecimiento(getActivity());
         dbAdapter_categoria_establecimiento.open();
@@ -349,6 +352,22 @@ public class FEstablecimientoRegistrar extends Fragment implements Validator.Val
         int idAgente = dbAdapter_temp_session.fetchVarible(1);
         int nroOrder = dbAdaptert_evento_establec.ordern();
         //Si no hay coneccion el estado autorizacion se guarda en 100
+
+
+        //-------------------------------------------------------
+        int numeroExiste=0;
+        Cursor cur = dbAdapter_temp_establecimiento.fetchTemEstablec();
+        if(cur.moveToFirst()){
+             String num = cur.getString(cur.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_nro_documento));
+            Cursor cr = dbAdapter_cliente_ruta.listarDocumentoClientexRutaByNum(num);
+            if(cr.getCount()>0){
+                numeroExiste=Integer.parseInt(num);
+                estadoAutorizado=Constants.REGISTRO_INTERNET;
+            }
+        }
+        //-------------------------------------------------------
+
+
         Cursor cursor = dbAdapter_temp_establecimiento.fetchTemEstablec();
         while(cursor.moveToNext()){
             //Evento por establecimiento Historial para poder editar

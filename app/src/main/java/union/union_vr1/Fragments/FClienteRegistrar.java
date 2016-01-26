@@ -288,7 +288,7 @@ public class FClienteRegistrar extends Fragment implements Validator.ValidationL
     private void autoComplete() {
 
 
-      /*  final SimpleCursorAdapter adapter;
+       final SimpleCursorAdapter adapter;
         Cursor cr = dbAdapter_cliente_ruta.listarDocumentoClientexRuta("", tipoDoc);
 
 
@@ -312,7 +312,7 @@ public class FClienteRegistrar extends Fragment implements Validator.ValidationL
                 0);
 
 
-        autoNroDocumento.setAdapter(adapter);*/
+        autoNroDocumento.setAdapter(adapter);
 
         autoNroDocumento.addTextChangedListener(new TextWatcher() {
             @Override
@@ -343,13 +343,13 @@ public class FClienteRegistrar extends Fragment implements Validator.ValidationL
             }
         });
 
-     /*   adapter.setFilterQueryProvider(new FilterQueryProvider() {
+        adapter.setFilterQueryProvider(new FilterQueryProvider() {
             @Override
             public Cursor runQuery(CharSequence charSequence) {
                 Cursor cr = dbAdapter_cliente_ruta.listarDocumentoClientexRuta(charSequence.toString(), tipoDoc);
                 return cr;
             }
-        });*/
+        });
 
 
         autoNroDocumento.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -410,7 +410,7 @@ public class FClienteRegistrar extends Fragment implements Validator.ValidationL
         Log.d("CELULAR", "" + celular);
         String correo = cr.getString(cr.getColumnIndexOrThrow(DBAdapter_Cliente_Ruta.cliente_ruta_email));
 
-
+        String numeroDoc= autoNroDocumento.getText().toString();
         editTextNombre.setText(nombres);
         editTextApPaterno.setText(apPaterno);
         editTextApMaterno.setText(apMaterno);

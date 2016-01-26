@@ -147,6 +147,17 @@ public class DBAdapter_Cliente_Ruta {
         return mCursor;
     }
 
+    public Cursor listarDocumentoClientexRutaByNum(String numero) {
+
+        Cursor mCursor = mDb.rawQuery("select * from " + SQLITE_TABLE_CLIENTE_RUTA + " WHERE " + cliente_ruta_docIdentidad + " = '" + numero + "' ", null);
+
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+    }
+
+
     public Boolean existeClienteRuta(String numero, int tipoDoc) {
         Boolean aBoolean = false;
         Cursor mCursor = mDb.rawQuery("select * from " + SQLITE_TABLE_CLIENTE_RUTA + " WHERE " + cliente_ruta_docIdentidad + " like '" + numero + "%' and " + cliente_ruta_tipo_docIdentidad + "='" + tipoDoc + "'; ", null);
