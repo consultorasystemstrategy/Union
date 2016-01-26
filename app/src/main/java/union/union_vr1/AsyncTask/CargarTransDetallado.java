@@ -31,19 +31,19 @@ public class CargarTransDetallado extends AsyncTask<String,String,String> {
 
    public CargarTransDetallado(Context ctx) {
        context = ctx;
-       Log.d(TAG, "OBJECT DATO1");
+       Log.d(TAG, "CARGAR");
    }
     @Override
     protected String doInBackground(String... params) {
         stockAgenteRestApi = new StockAgenteRestApi(context);
         dbAdapter_trans_detallado = new DBAdapter_Trans_Detallado(context);
         dbAdapter_trans_detallado.open();
-        dbAdapter_trans_detallado.truncateClienteRuta();
+        //dbAdapter_trans_detallado.truncateClienteRuta();
         try {
             String guia = params[0];
             GUIA = guia;
             jsonobject = stockAgenteRestApi.getTransDetalle(guia);
-            Log.d(TAG, "OBJECT-CLIENTES" + jsonobject.toString());
+            Log.d(TAG, "OBJECT" + jsonobject.toString());
             parsetransDetallado(jsonobject);
         } catch (Exception e) {
             e.printStackTrace();
@@ -65,13 +65,15 @@ public class CargarTransDetallado extends AsyncTask<String,String,String> {
 
                 long inserto = dbAdapter_trans_detallado.createTransDetallado(
                         jsonObjectCliente.getString("ProVCodigo"),
-                        jsonObjectCliente.getString("GuitranIUsuarioId"),
                         jsonObjectCliente.getString("ProVNombre"),
                         jsonObjectCliente.getString("GuitranVNumGuiaFlex"),
+                        jsonObjectCliente.getString("GuitranIUsuarioId"),
+                        jsonObjectCliente.getString("Cantidad"),
+                        jsonObjectCliente.getString("NFecha"),
                         Constants._CREADO);
 
 
-                    Log.d("INSERTO-data", "" + inserto);
+                    Log.d("INSERTO", "" + inserto);
 
             }
 
