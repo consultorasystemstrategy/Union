@@ -71,9 +71,9 @@ public class FMapaEditar extends Fragment implements Validator.ValidationListene
     private Validator validator;
     private ViewPager viewPager;
     String idEstablecimiento;
-    @NumberRule(order = 3,type = NumberRule.NumberType.DOUBLE, messageResId = R.string.requerido_input)
+    @NumberRule(order = 3, type = NumberRule.NumberType.DOUBLE, messageResId = R.string.requerido_input)
     private EditText textLat;
-    @NumberRule(order = 4,type = NumberRule.NumberType.DOUBLE, messageResId = R.string.requerido_input)
+    @NumberRule(order = 4, type = NumberRule.NumberType.DOUBLE, messageResId = R.string.requerido_input)
     private EditText textLon;
 
 
@@ -192,11 +192,6 @@ public class FMapaEditar extends Fragment implements Validator.ValidationListene
     }
 
 
-
-
-
-
-
     private final LocationListener mLocaction = new LocationListener() {
 
         @Override
@@ -232,15 +227,13 @@ public class FMapaEditar extends Fragment implements Validator.ValidationListene
     private void display() {
         Cursor cr = dbAdapter_temp_establecimiento.fetchTemEstablecById(idEstablecimiento);
 
-        if(cr.moveToFirst()){
-            String urlMap = "http://maps.google.com/maps/api/staticmap?center=" + cr.getDouble(cr.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_latitud))+ "," + cr.getDouble(cr.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_longitud)) + ",&zoom=17&markers=icon:http://www.myiconfinder.com/uploads/iconsets/256-256-a5485b563efc4511e0cd8bd04ad0fe9e.png|" +cr.getDouble(cr.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_latitud)) + "," + cr.getDouble(cr.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_longitud)) + "&path=color:0x0000FF80|weight:5|" + cr.getDouble(cr.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_latitud)) + "," + cr.getDouble(cr.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_longitud)) + "&size=400x300";//
+        if (cr.moveToFirst()) {
+            String urlMap = "http://maps.google.com/maps/api/staticmap?center=" + cr.getDouble(cr.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_latitud)) + "," + cr.getDouble(cr.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_longitud)) + ",&zoom=17&markers=icon:http://www.myiconfinder.com/uploads/iconsets/256-256-a5485b563efc4511e0cd8bd04ad0fe9e.png|" + cr.getDouble(cr.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_latitud)) + "," + cr.getDouble(cr.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_longitud)) + "&path=color:0x0000FF80|weight:5|" + cr.getDouble(cr.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_latitud)) + "," + cr.getDouble(cr.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_longitud)) + "&size=400x300";//
             webViewMap.loadUrl(urlMap);
             editTextDescripcion.setText(cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_descripcion)));
             editTextDireccionFiscal.setText(cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_direccion_fiscal)));
 
         }
-
-
 
 
         checkBoxDF.setOnClickListener(new View.OnClickListener() {
@@ -284,13 +277,17 @@ public class FMapaEditar extends Fragment implements Validator.ValidationListene
         lon = textLon.getText().toString();
         direccion = editTextDescripcion.getText().toString();
         direccion_fiscal = editTextDireccionFiscal.getText().toString();
+        if (!lat.equals("Obteniendo...") || !lon.equals("Obteniendo...")) {
 
+            long estado = dbAdapter_temp_establecimiento.updateTempEstablecDireccion(idEstablecimiento + "", lat, lon, direccion, direccion_fiscal);
+            if (estado > 0) {
+                viewPager.setCurrentItem(2);
+            } else {
+                Utils.setToast(getActivity(), "Ocurrio un error, por favor sal y vuelve a Intentarlo", R.color.rojo);
+            }
 
-        long estado = dbAdapter_temp_establecimiento.updateTempEstablecDireccion(idEstablecimiento + "",lat,lon,direccion,direccion_fiscal );
-        if (estado > 0) {
-            viewPager.setCurrentItem(2);
         } else {
-            Utils.setToast(getActivity(), "Ocurrio un error, por favor sal y vuelve a Intentarlo", R.color.rojo);
+            Utils.setToast(getActivity(), "Por favor espere obteniedno posicion", R.color.rojo);
         }
 
     }
@@ -317,7 +314,6 @@ public class FMapaEditar extends Fragment implements Validator.ValidationListene
         setHasOptionsMenu(false);
 
     }
-
 
 
 }

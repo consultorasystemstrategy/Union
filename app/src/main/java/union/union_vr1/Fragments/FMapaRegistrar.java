@@ -225,22 +225,22 @@ public class FMapaRegistrar extends Fragment implements Validator.ValidationList
 
         }
     };
-private void setDirFiscal(){
-    if (conectadoRedMovil() || conectadoWifi()) {
-        SharedPreferences prefs = getActivity().getSharedPreferences("DIRECCION_FISCAL", Context.MODE_PRIVATE);
-        String fiscal = prefs.getString("fiscal", null);
 
-        if(fiscal !=null){
-            editTextDireccionFiscal.setText(fiscal);
-            editTextDireccionFiscal.setEnabled(false);
+    private void setDirFiscal() {
+        if (conectadoRedMovil() || conectadoWifi()) {
+            SharedPreferences prefs = getActivity().getSharedPreferences("DIRECCION_FISCAL", Context.MODE_PRIVATE);
+            String fiscal = prefs.getString("fiscal", null);
+
+            if (fiscal != null) {
+                editTextDireccionFiscal.setText(fiscal);
+                editTextDireccionFiscal.setEnabled(false);
+            }
+
+
         }
-
-
     }
-}
+
     private void display() {
-
-
 
 
         editTextDescripcion.addTextChangedListener(new TextWatcher() {
@@ -254,12 +254,11 @@ private void setDirFiscal(){
 
                 if (!estadoDF) {
 
-                  //  editTextDireccionFiscal.setText(editTextDescripcion.getText().toString());
+                    //  editTextDireccionFiscal.setText(editTextDescripcion.getText().toString());
 
 
                 } else {
-                   // editTextDireccionFiscal.setText("");
-
+                    // editTextDireccionFiscal.setText("");
 
 
                 }
@@ -282,7 +281,7 @@ private void setDirFiscal(){
                     estadoDF = true;
                 } else {
                     editTextDireccionFiscal.setEnabled(true);
-                   // editTextDireccionFiscal.setText(editTextDescripcion.getText().toString());
+                    // editTextDireccionFiscal.setText(editTextDescripcion.getText().toString());
                     estadoDF = false;
                 }
             }
@@ -316,15 +315,20 @@ private void setDirFiscal(){
         direccion = editTextDescripcion.getText().toString();
         direccion_fiscal = editTextDireccionFiscal.getText().toString();
 
+        if (!lat.equals("Obteniendo...") || !lon.equals("Obteniendo...")) {
+            long estado = dbAdapter_temp_establecimiento.updateTempEstablecDireccion(idEstablecimiento + "", lat, lon, direccion, direccion_fiscal);
+            if (estado > 0) {
+                viewPager.setCurrentItem(2);
+                mLocationManager.removeUpdates(mLocaction);
 
-        long estado = dbAdapter_temp_establecimiento.updateTempEstablecDireccion(idEstablecimiento + "", lat, lon, direccion, direccion_fiscal);
-        if (estado > 0) {
-            viewPager.setCurrentItem(2);
-            mLocationManager.removeUpdates(mLocaction);
+            } else {
+                Utils.setToast(getActivity(), "Ocurrio un error, por favor sal y vuelve a Intentarlo", R.color.rojo);
+            }
 
         } else {
-            Utils.setToast(getActivity(), "Ocurrio un error, por favor sal y vuelve a Intentarlo", R.color.rojo);
+            Utils.setToast(getActivity(), "Por favor espere obteniedno posicion", R.color.rojo);
         }
+
 
     }
 
