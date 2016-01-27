@@ -270,6 +270,7 @@
                         android:layout_gravity="center_horizontal"
                         android:ems="10"
                         android:hint=""
+                        android:maxLength="10"
                         android:inputType="number" />
 
 

@@ -92,11 +92,11 @@ public class GetStockAgente extends AsyncTask<String, String, String> {
 
         try {
                 Log.d("MENSAJE",""+jsonObjectStockAgente.toString());
-                Toast toast = Toast.makeText(mainActivity.getApplicationContext(), "Stock Agente Importado Correctamente", Toast.LENGTH_SHORT);
+               /* Toast toast = Toast.makeText(mainActivity.getApplicationContext(), "Stock Agente Importado Correctamente", Toast.LENGTH_SHORT);
                 toast.getView().setBackgroundColor(mainActivity.getResources().getColor(R.color.verde));
                 TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
                 v.setTextColor(mainActivity.getResources().getColor(R.color.Blanco));
-                toast.show();
+                toast.show();*/
 
             super.onPostExecute(s);
 

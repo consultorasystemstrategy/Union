@@ -42,10 +42,14 @@ import com.mobsandgeeks.saripaar.annotation.Required;
 
 import org.w3c.dom.Text;
 
+import union.union_vr1.Objects.EventoEstablecimiento;
 import union.union_vr1.R;
+import union.union_vr1.Sqlite.Constants;
 import union.union_vr1.Sqlite.DbAdapter_Establecimeinto_Historial;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Establecimiento;
+import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 import union.union_vr1.Utils.Utils;
+import union.union_vr1.Vistas.VMovil_Menu_Establec;
 
 /**
  * Created by Kelvin on 04/11/2015.
@@ -54,8 +58,10 @@ public class FMapaEditar extends Fragment implements Validator.ValidationListene
 
     // private RadioButton buttonHibrido;
     // private RadioButton buttonNormal;
+    private DbAdapter_Establecimeinto_Historial dbAdapter_establecimeinto_historial;
     private View v;
     boolean estadoPosicion = true;
+    private boolean estadoFinalizar = false;
     // private MapView mapView;
     // private GoogleMap map;
     private boolean estadoDF;
@@ -75,6 +81,7 @@ public class FMapaEditar extends Fragment implements Validator.ValidationListene
     private EditText textLat;
     @NumberRule(order = 4, type = NumberRule.NumberType.DOUBLE, messageResId = R.string.requerido_input)
     private EditText textLon;
+    private DbAdaptert_Evento_Establec dbAdaptert_evento_establec;
 
 
     private DbAdapter_Establecimeinto_Historial dbAdapter_temp_establecimiento;
@@ -83,7 +90,7 @@ public class FMapaEditar extends Fragment implements Validator.ValidationListene
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_map, container, false);
-
+        setHasOptionsMenu(true);
         estadoDF = true;
         myLocation = null;
         //MapsInitializer.initialize(getActivity());
@@ -94,7 +101,10 @@ public class FMapaEditar extends Fragment implements Validator.ValidationListene
 
         dbAdapter_temp_establecimiento = new DbAdapter_Establecimeinto_Historial(getActivity());
         dbAdapter_temp_establecimiento.open();
-
+        dbAdapter_establecimeinto_historial = new DbAdapter_Establecimeinto_Historial(getActivity());
+        dbAdapter_establecimeinto_historial.open();
+        dbAdaptert_evento_establec = new DbAdaptert_Evento_Establec(getActivity());
+        dbAdaptert_evento_establec.open();
 
         validator = new Validator(this);
         validator.setValidationListener(this);
@@ -281,7 +291,15 @@ public class FMapaEditar extends Fragment implements Validator.ValidationListene
 
             long estado = dbAdapter_temp_establecimiento.updateTempEstablecDireccion(idEstablecimiento + "", lat, lon, direccion, direccion_fiscal);
             if (estado > 0) {
-                viewPager.setCurrentItem(2);
+                if (estadoFinalizar) {
+
+
+                    guardar();
+                } else {
+                    viewPager.setCurrentItem(2);
+                }
+
+
             } else {
                 Utils.setToast(getActivity(), "Ocurrio un error, por favor sal y vuelve a Intentarlo", R.color.rojo);
             }
@@ -291,7 +309,49 @@ public class FMapaEditar extends Fragment implements Validator.ValidationListene
         }
 
     }
-//
+
+    private void guardar(){
+        Cursor cursor = dbAdapter_establecimeinto_historial.fetchTemEstablecEdit(idEstablecimiento);
+
+        while(cursor.moveToNext()){
+
+            EventoEstablecimiento eventoEstablecimiento = new EventoEstablecimiento(
+                    Integer.parseInt(idEstablecimiento),
+                    cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_categoria_estable)),
+                    cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_tipo_documento)),
+                    1,
+                    cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_descripcion_establecimiento
+                    )),
+                    cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_nombres))+ " "+
+                            cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_apPaterno)) +" "+
+                            cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_apMaterno)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_nro_documento)),
+                    0,
+                    0,
+                    0,
+                    0.0,
+                    0,
+                    0,
+                    "",
+                    0,
+                    Constants._CREADO,
+                    "",
+                    cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_descripcion)),
+                    Constants.REGISTRO_SIN_INTERNET,
+                    cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_direccion_fiscal)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_latitud)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_longitud))
+            );
+            int upd =  dbAdaptert_evento_establec.updateEstablecimientosEditar(eventoEstablecimiento);
+            Log.d("EDITO",""+upd);
+        }
+
+
+        startActivity(new Intent(getActivity().getApplicationContext(), VMovil_Menu_Establec.class));
+        getActivity().finish();
+    }
+
+    //
     @Override
     public void onValidationFailed(View failedView, Rule<?> failedRule) {
 
@@ -308,11 +368,19 @@ public class FMapaEditar extends Fragment implements Validator.ValidationListene
     //----------------------
 
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_activity_agregar_establecimiento, menu);
-        setHasOptionsMenu(false);
 
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.menu_establec:
+                estadoFinalizar = true;
+                validator.validate();
+                break;
+        }
+
+        return false;
     }
 
 

@@ -371,7 +371,10 @@ public class FEstablecimientoEditar extends Fragment implements Validator.Valida
 
 
         startActivity(new Intent(getActivity().getApplicationContext(), VMovil_Menu_Establec.class));
+        getActivity().finish();
     }
+
+
 
 
 }

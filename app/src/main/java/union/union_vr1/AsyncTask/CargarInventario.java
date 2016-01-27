@@ -3,8 +3,10 @@ package union.union_vr1.AsyncTask;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,6 +18,7 @@ import union.union_vr1.RestApi.StockAgenteRestApi;
 import union.union_vr1.Servicios.ServiceExport;
 import union.union_vr1.Servicios.ServiceImport;
 import union.union_vr1.Sqlite.Constants;
+import union.union_vr1.Sqlite.CursorAdapter_Cargar_Inventario;
 import union.union_vr1.Sqlite.DBAdapter_Temp_Inventario;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
@@ -140,9 +143,14 @@ public class CargarInventario extends AsyncTask<String, String, String> {
             }
 
             super.onPostExecute(s);
-            Intent intent = new Intent(mainActivity, VMovil_Cargar_Inventario.class);
-            mainActivity.finish();
-            mainActivity.startActivity(intent);
+
+
+
+            ListView listView = (ListView)mainActivity.findViewById(R.id.listviewGuias);
+            Cursor cursor = dbAdapter_temp_inventario.getAllIvnetario();
+            CursorAdapter_Cargar_Inventario cursorAdapter_cargar_inventario = new CursorAdapter_Cargar_Inventario(mainActivity, cursor);
+            listView.setAdapter(cursorAdapter_cargar_inventario);
+
 
         } catch (NullPointerException e) {
             Log.e("ERROR", e.getMessage() + "");

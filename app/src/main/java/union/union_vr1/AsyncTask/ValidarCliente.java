@@ -45,6 +45,7 @@ public class ValidarCliente extends AsyncTask<String, String, String> {
     private JSONObject jsonObject = null;
     private JSONArray jsonArrayCliente = null;
     private String TAG = "VALIDARCLIENTE";
+    private int lengthDocIdentidad;
 
 
     public ValidarCliente(Activity mainActivity, Fragment fragment) {
@@ -59,13 +60,13 @@ public class ValidarCliente extends AsyncTask<String, String, String> {
         stockAgenteRestApi = new StockAgenteRestApi(mainActivity);
 
         try {
+            lengthDocIdentidad = (strings[0]).length();
             jsonObject = stockAgenteRestApi.validarClienteExistente(strings[0]);
             Log.d(TAG, "" + stockAgenteRestApi.toString());
             if (Utils.isSuccesful(jsonObject)) {
                 jsonArrayCliente = jsonObject.getJSONArray("Value");
                 Log.d("DATOS", "" + jsonArrayCliente.toString());
             }
-
 
 
         } catch (Exception e) {
@@ -92,14 +93,13 @@ public class ValidarCliente extends AsyncTask<String, String, String> {
         if (Utils.isSuccesful(jsonObject)) {
 
 
-                if (jsonArrayCliente.length() > 0) {
-                    setHideWidgets();
-                    dismissProgressDialog();
-                } else {
-                    setShowWidgets();
-                    dismissProgressDialog();
-                }
-
+            if (jsonArrayCliente.length() > 0) {
+                setHideWidgets();
+                dismissProgressDialog();
+            } else {
+                setShowWidgets();
+                dismissProgressDialog();
+            }
 
 
         }
@@ -125,12 +125,16 @@ public class ValidarCliente extends AsyncTask<String, String, String> {
 
             try {
                 jsonValida = jsonArrayCliente.getJSONObject(0);
-                nom.setText(jsonValida.getString("PerVNombres")+"");
-                apPater.setText(jsonValida.getString("PerVApellPaterno"));
-                apMater.setText(jsonValida.getString("PerVApellMaterno"));
+                nom.setText(jsonValida.getString("PerVNombres") + "");
+                if (lengthDocIdentidad == 8) {
+                    apPater.setText(jsonValida.getString("PerVApellPaterno"));
+                    apMater.setText(jsonValida.getString("PerVApellMaterno"));
+                }
+
+
                 cel.setText(jsonValida.getString("PerVCelular"));
                 correro.setText(jsonValida.getString("PerVEmail"));
-               // dirFiscal.setText(jsonValida.getString("DireccionFiscal"));
+                // dirFiscal.setText(jsonValida.getString("DireccionFiscal"));
                 editor.putString("fiscal", jsonValida.getString("DireccionFiscal"));
 
 

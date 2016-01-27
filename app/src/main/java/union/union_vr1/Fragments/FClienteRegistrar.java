@@ -1,6 +1,7 @@
 package union.union_vr1.Fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -15,6 +16,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,15 +50,18 @@ import union.union_vr1.Sqlite.DbAdapter_Temp_Establecimiento;
 import union.union_vr1.Sqlite.DbAdapter_Tipo_Doc_Identidad;
 import union.union_vr1.Sqlite.DbAdapter_Tipo_Persona;
 import union.union_vr1.Utils.Utils;
+import union.union_vr1.Vistas.VMovil_Menu_Establec;
 
 /**
  * Created by Kelvin on 04/11/2015.
  */
 public class FClienteRegistrar extends Fragment implements Validator.ValidationListener {
-//
+    //
     private DBAdapter_Cliente_Ruta dbAdapter_cliente_ruta;
     private int tipoDoc;
     private boolean estado = false;
+
+
 
     //VALIDACION DE LOS WIDGETS
     private Spinner spinnerTipoDocumento;
@@ -103,7 +108,7 @@ public class FClienteRegistrar extends Fragment implements Validator.ValidationL
         setHasOptionsMenu(false);
         fragment = this;
         idEstablecimiento = getArguments().getString("idEstablecimiento");
-        toastBucsando = Toast.makeText(getActivity().getApplicationContext(), "Buscando...", 1000);
+        toastBucsando = Toast.makeText(getActivity().getApplicationContext(), "Buscando...", Toast.LENGTH_SHORT);
         toast = Toast.makeText(getActivity().getApplicationContext(), "Encontrado", Toast.LENGTH_SHORT);
         toast.getView().setBackgroundColor(getActivity().getResources().getColor(R.color.verde));
         toast.setGravity(Gravity.TOP | Gravity.LEFT, 0, 0);
@@ -288,7 +293,7 @@ public class FClienteRegistrar extends Fragment implements Validator.ValidationL
     private void autoComplete() {
 
 
-       final SimpleCursorAdapter adapter;
+        final SimpleCursorAdapter adapter;
         Cursor cr = dbAdapter_cliente_ruta.listarDocumentoClientexRuta("", tipoDoc);
 
 
@@ -410,7 +415,7 @@ public class FClienteRegistrar extends Fragment implements Validator.ValidationL
         Log.d("CELULAR", "" + celular);
         String correo = cr.getString(cr.getColumnIndexOrThrow(DBAdapter_Cliente_Ruta.cliente_ruta_email));
 
-        String numeroDoc= autoNroDocumento.getText().toString();
+        String numeroDoc = autoNroDocumento.getText().toString();
         editTextNombre.setText(nombres);
         editTextApPaterno.setText(apPaterno);
         editTextApMaterno.setText(apMaterno);
@@ -489,12 +494,19 @@ public class FClienteRegistrar extends Fragment implements Validator.ValidationL
 
         long estadoIn = dbAdapter_temp_establecimiento.updateTempEstablecCliente(idEstablecimiento + "", idusuario + "", celular_one, tipo_cliente + "", nombre, ap_paterno, ap_materno, tipo_doc + "", nroDocumento, 1 + "", correo);
         if (estadoIn > 0 && estado == true) {
-            viewPager.setCurrentItem(1);
+
+
+
+                viewPager.setCurrentItem(1);
+
+
+
+
         } else {
 
             if (conectadoRedMovil() || conectadoWifi()) {
                 viewPager.setCurrentItem(0);
-                Utils.setToast(getActivity(), "Ocurrio un error.", R.color.rojo);
+                Utils.setToast(getActivity(), "Verifique  el numero de documento", R.color.rojo);
             }
 
         }
@@ -550,6 +562,8 @@ public class FClienteRegistrar extends Fragment implements Validator.ValidationL
         }
         return false;
     }
+
+
 
 
 }
