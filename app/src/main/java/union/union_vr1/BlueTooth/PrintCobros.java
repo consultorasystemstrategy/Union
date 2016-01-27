@@ -106,6 +106,8 @@ public class PrintCobros {
 
 
     private void imprimircomprobante(String idComprobante, int pulgadas, String IMPORTE,String COMPROBANTE,String CLIENTE, String AGENTE,int tipo) throws JposException {
+
+        String importe = Utils.formatDouble(Double.parseDouble(IMPORTE));
         DecimalFormatSymbols simbolos = DecimalFormatSymbols.getInstance(Locale.ENGLISH);
         DecimalFormat df = new DecimalFormat("0.00", simbolos);
 
@@ -128,10 +130,10 @@ public class PrintCobros {
         String cabecera= ESC + "|lA" + String.format("%-31s","COMPROBANTE ") +  String.format("%1$8s","IMPORTE DE COBRO")+ LF;
         posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, cabecera);
         printLineas();
-        String detalle = ESC + "|lA" + String.format("%-30s", COMPROBANTE)  + String.format("%1$18s", IMPORTE) + LF;
+        String detalle = ESC + "|lA" + String.format("%-30s", COMPROBANTE)  + String.format("%1$18s", importe) + LF;
         posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, detalle);
         printLineas();
-        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + (NumberToLetterConverter.convertNumberToLetter(df.format(Double.parseDouble(Utils.replaceComa(IMPORTE))))).toUpperCase() + LF+ LF);
+        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + (NumberToLetterConverter.convertNumberToLetter(df.format(Double.parseDouble(Utils.replaceComa(importe))))).toUpperCase() + LF+ LF);
         posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + Constants.PRINT_VISUALICE + LF);
         posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + Constants.PRINT_URL + LF + LF + LF );
 

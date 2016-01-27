@@ -59,7 +59,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Venta"
+                    android:text=""
                     android:typeface="monospace"
                     android:gravity="left"
                     android:textStyle="bold"
@@ -69,12 +69,12 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Importe pagado"
+                    android:text="Importe Cobrado"
                     android:typeface="monospace"
                     android:textStyle="bold"
                     android:textSize="12sp"
                     android:layout_weight="1"
-                    android:paddingRight="48dp"
+                    android:paddingRight="5dp"
                     android:gravity="right" />
             </LinearLayout>
 

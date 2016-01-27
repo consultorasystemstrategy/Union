@@ -2,6 +2,7 @@ package union.union_vr1.Sqlite;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,12 +53,12 @@ public class CursorAdapter_Facturas_Canjes_Dev extends CursorAdapter {
             String factura = "";
             String fecha = "";
             String monto = "";
-            String comprobante = cursor.getString(7);
-            String producto = cursor.getString(9);
-            String cantidad = cursor.getString(10);
+            String comprobante = cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Histo_Venta_Detalle.HD_comprobante));
+            String producto = cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Histo_Venta_Detalle.HD_nom_producto));
+            String cantidad = cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Histo_Venta_Detalle.HD_cantidad));
 
-            int canje = cursor.getInt(17);
-            int dev = cursor.getInt(25);
+            int canje = cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Histo_Venta_Detalle.HD_cantidad_ope));
+            int dev = cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Histo_Venta_Detalle.HD_cantidad_ope_dev));
 
             //Cortar el String Comprobante
             System.out.println("con datos");
@@ -65,13 +66,17 @@ public class CursorAdapter_Facturas_Canjes_Dev extends CursorAdapter {
 
             if (datos.length >= 2) {
                 factura = datos[1];
+                String [] com = factura.split("-");
+                int num = Integer.parseInt(com[1]);
+                String compr =com[0] +"-"+ String.format("%08d", num);
                 fecha = datos[2];
                 monto = datos[3];
+                Log.d("FACTURAS DEVOLUCIONES",""+comprobante);
 
                 double total = Double.parseDouble(monto) * Integer.parseInt(cantidad);
 
 
-                textViewTitulo.setText("Factura: " + factura);
+                textViewTitulo.setText("Comprobante: " + compr);
                 textViewSubtitulo.setText("Cantidad: " + cantidad + "\nFecha : " + fecha);
                 textViewComment.setText("Producto: " + producto + "\nCanjes: " + canje + "\nDevoluciones: " + dev);
                 textViewMonto.setText("S/. " + df.format(total));
