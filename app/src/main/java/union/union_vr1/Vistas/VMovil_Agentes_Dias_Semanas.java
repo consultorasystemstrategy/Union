@@ -45,8 +45,8 @@ public class VMovil_Agentes_Dias_Semanas extends Activity {
         busc = (EditText) findViewById(R.id.buscar_dia);
 
         dia = getIntent().getExtras().getString("dia");
-        disem.setText(dia + " " + getDateFull().substring(8));
-        //disem.setText(dia + "Breña" );
+        //disem.setText(dia + " " + getDateFull().substring(8));
+        disem.setText(dia +" "+ "Breña" );
 
         dbAdapter_cliente_ruta = new DBAdapter_Cliente_Ruta(this);
         dbAdapter_cliente_ruta.open();

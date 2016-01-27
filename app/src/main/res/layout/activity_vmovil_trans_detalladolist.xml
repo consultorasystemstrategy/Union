@@ -56,51 +56,51 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="10dp"
+        android:gravity="center">
 
         <TableRow
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:background="@color/ColorPUTercero">
+            android:background="@color/azul"
+            android:layout_gravity="center_vertical">
 
             <TextView
                 android:layout_width="50dp"
-                android:textColor="@color/azul"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
+                android:textColor="@color/Blanco"
+                android:layout_height="fill_parent"
+                android:layout_gravity="center"
                 android:layout_marginBottom="4dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="4dp"
-                android:gravity="center_vertical"
-                android:text="Codigo"
+                android:text="Código"
                 android:textStyle="bold|italic"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView
-                android:layout_width="205dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
+                android:layout_width="235dp"
+                android:layout_height="fill_parent"
+                android:layout_gravity="center"
                 android:layout_marginBottom="4dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="4dp"
-                android:gravity="center_vertical"
-                android:textColor="@color/azul"
+                android:textColor="@color/Blanco"
                 android:text="Producto"
                 android:textStyle="bold|italic"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView
                 android:layout_width="50dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
+                android:layout_height="fill_parent"
+                android:layout_gravity="center"
                 android:layout_marginBottom="4dp"
-                android:layout_marginLeft="18dp"
+                android:layout_marginLeft="12dp"
                 android:layout_marginTop="4dp"
-                android:gravity="center_vertical"
-                android:textColor="@color/azul"
+                android:textColor="@color/Blanco"
                 android:text="Cant"
                 android:textStyle="bold|italic"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:gravity="center_vertical" />
 
 
         </TableRow>

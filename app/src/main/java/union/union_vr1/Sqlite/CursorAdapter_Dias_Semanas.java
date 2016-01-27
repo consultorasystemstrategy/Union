@@ -2,13 +2,18 @@ package union.union_vr1.Sqlite;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.LayerDrawable;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import union.union_vr1.R;
@@ -38,6 +43,14 @@ public class CursorAdapter_Dias_Semanas extends CursorAdapter {
         TextView textViewNombre = (TextView) view.findViewById(R.id.textViewListaNombre);
         //TextView textViewApPaterno = (TextView) view.findViewById(R.id.textViewApPaterno);
         TextView direccion = (TextView) view.findViewById(R.id.textViewApMaterno);
+        RatingBar ratingBar = (RatingBar) view.findViewById(R.id.rating2);
+
+/*        Drawable progress = ratingBar.getProgressDrawable();
+        DrawableCompat.setTint(progress, Color.YELLOW);*/
+
+        LayerDrawable stars = (LayerDrawable) ratingBar.getProgressDrawable();
+        stars.getDrawable(2).setColorFilter(ContextCompat.getColor(context, R.color.Dark3), PorterDuff.Mode.SRC_ATOP);
+
 
 
 //        TextView textViewSubtitulo = (TextView) view.findViewById(R.id.textViewListaSubtitulo2);

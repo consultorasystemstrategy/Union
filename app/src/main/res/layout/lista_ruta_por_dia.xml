@@ -90,7 +90,8 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                >
 
                 <!--                <TextView
                                     android:layout_width="fill_parent"
@@ -102,7 +103,7 @@
                                     android:textStyle="italic"
                                     android:gravity="bottom|end" />-->
                 <RatingBar
-                    android:id="@+id/rating"
+                    android:id="@+id/rating2"
                     style="?android:attr/ratingBarStyleSmall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -110,9 +111,11 @@
                     android:clickable="true"
                     android:isIndicator="true"
                     android:paddingTop="8dp"
-                    android:progressTint="#FDDB39"
+                    android:progressTint="#ffffff"
                     android:rating="1"
-                    android:secondaryProgressTint="#FDDB39" />
+                    android:secondaryProgressTint="#ffffff"
+                    android:foregroundTint="@color/Blanco"
+                    android:indeterminateTint="@color/Blanco" />
 
 
 
