@@ -230,7 +230,7 @@
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".Vistas.VMovil_Agentes_Dias_Semanas"
-            android:label="Dias semanas">
+            android:label="Días Semanales">
             android:screenOrientation="portrait">
         </activity>
         <activity
