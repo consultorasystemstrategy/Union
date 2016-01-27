@@ -226,7 +226,7 @@
             android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
         <activity
             android:name=".Vistas.VMovil_Abrir_Caja"
-            android:label="Abrir Caja"
+            android:label="Abrir Cuenta"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".Vistas.VMovil_Agentes_Dias_Semanas"

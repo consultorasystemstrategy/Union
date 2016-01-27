@@ -47,7 +47,8 @@
                 android:textStyle="italic"
                 android:textSize="12sp"
                 android:textColor="@color/Personalizado4"
-                android:gravity="left" />
+                android:gravity="right"
+                android:layout_marginRight="8dp" />
         </LinearLayout>
 
         <LinearLayout
@@ -76,7 +77,8 @@
                 android:textStyle="italic"
                 android:textSize="12sp"
                 android:textColor="@color/Personalizado4"
-                android:gravity="left" />
+                android:gravity="right"
+                android:layout_marginRight="8dp" />
         </LinearLayout>
 
         <LinearLayout
@@ -106,7 +108,8 @@
                 android:textStyle="italic"
                 android:textSize="12sp"
                 android:textColor="@color/Personalizado4"
-                android:gravity="left" />
+                android:gravity="right"
+                android:layout_marginRight="8dp" />
         </LinearLayout>
 
     </LinearLayout>

@@ -21,9 +21,9 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="Fin"
             android:id="@+id/VRC_TXfinal"
-            android:gravity="center"
             android:textColor="@color/Personalizado4"
-            android:textStyle="bold|italic" />
+            android:textStyle="bold|italic"
+            android:gravity="right" />
 
         <TextView
             android:layout_width="50dp"
@@ -31,9 +31,9 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="Disp"
             android:id="@+id/VRC_TXdisponible"
-            android:gravity="center"
             android:textColor="@color/Personalizado4"
-            android:textStyle="bold|italic" />
+            android:textStyle="bold|italic"
+            android:gravity="right" />
 
         <TextView
             android:layout_width="50dp"
@@ -41,9 +41,9 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="Bueno"
             android:id="@+id/VRC_TXbuenos"
-            android:gravity="center"
             android:textColor="@color/Personalizado4"
-            android:textStyle="bold|italic" />
+            android:textStyle="bold|italic"
+            android:gravity="right" />
 
         <TextView
             android:layout_width="50dp"
@@ -51,9 +51,9 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="Malo"
             android:id="@+id/VRC_TXmalos"
-            android:gravity="center"
             android:textColor="@color/Personalizado4"
-            android:textStyle="bold|italic" />
+            android:textStyle="bold|italic"
+            android:gravity="right" />
     </TableRow>
 
 

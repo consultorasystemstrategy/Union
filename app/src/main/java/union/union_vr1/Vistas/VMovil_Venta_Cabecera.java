@@ -468,22 +468,25 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
         }
 
         spinnerTipoDocumento = (Spinner) findViewById(R.id.VC_spinnerTipoDocumento);
-        if (idTipoDocCliente==1){
-            ArrayAdapter<CharSequence> adapterTipoDocumento = ArrayAdapter.createFromResource(this,R.array.tipoDocumentoBoleta,android.R.layout.simple_spinner_item);
-            adapterTipoDocumento.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            spinnerTipoDocumento.setPrompt("Seleccionar Documento");
-            spinnerTipoDocumento.setAdapter(adapterTipoDocumento);
-        }else if (idTipoDocCliente==2){
-            ArrayAdapter<CharSequence> adapterTipoDocumento = ArrayAdapter.createFromResource(this,R.array.tipoDocumentoFacturaBoleta,android.R.layout.simple_spinner_item);
-            adapterTipoDocumento.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            spinnerTipoDocumento.setPrompt("Seleccionar Documento");
-            spinnerTipoDocumento.setAdapter(adapterTipoDocumento);
-        }else{
-            ArrayAdapter<CharSequence> adapterTipoDocumento = ArrayAdapter.createFromResource(this,R.array.tipoDocumento,android.R.layout.simple_spinner_item);
-            adapterTipoDocumento.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            spinnerTipoDocumento.setPrompt("Seleccionar Documento");
-            spinnerTipoDocumento.setAdapter(adapterTipoDocumento);
+
+        int textArrayID = R.array.tipoDocumentoFacturaBoleta;
+        switch (idTipoDocCliente){
+            case 1:
+                textArrayID = R.array.tipoDocumentoBoleta;
+                break;
+            case 2:
+                textArrayID = R.array.tipoDocumentoFacturaBoleta;
+                break;
+            default:
+                textArrayID = R.array.tipoDocumentoFacturaBoleta;
+                break;
         }
+
+        ArrayAdapter<CharSequence> adapterTipoDocumento = ArrayAdapter.createFromResource(this, textArrayID ,android.R.layout.simple_spinner_item);
+        adapterTipoDocumento.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerTipoDocumento.setPrompt("Seleccionar Documento");
+        spinnerTipoDocumento.setAdapter(adapterTipoDocumento);
+
 
 
 
@@ -533,6 +536,30 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
 
             ArrayAdapter<CharSequence> adapterFormaPagoCredito = ArrayAdapter.createFromResource(this,R.array.forma_pago_credito,android.R.layout.simple_spinner_item);
             spinnerFormaPago.setAdapter(adapterFormaPagoCredito);
+
+            int tipoDocumentoSelectedAnterior = -1;
+            tipoDocumentoSelectedAnterior = session.fetchVarible(Constants.SESSION_DOCUMENTO);
+            switch (tipoDocumentoSelectedAnterior){
+                //seleccionado Factura
+                case 1:
+                    spinnerTipoDocumento.setSelection(adapterTipoDocumento.getPosition(Constants._FACTURA));
+                    break;
+                //seleccionado Boleta
+                case 2:
+                    spinnerTipoDocumento.setSelection(adapterTipoDocumento.getPosition(Constants._BOLETA));
+                    break;
+                //Ninguno SEleccionado
+                default:
+                    spinnerTipoDocumento.setSelection(adapterTipoDocumento.getPosition(Constants._SPINNER_DEFAULT_COMPROBANTE));
+                    break;
+            }
+
+            /*ArrayAdapter<CharSequence> adapterTipoDocumento = ArrayAdapter.createFromResource(this,textArrayID,android.R.layout.simple_spinner_item);
+            adapterTipoDocumento.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinnerTipoDocumento.setPrompt("Seleccionar Documento");
+            spinnerTipoDocumento.setAdapter(adapterTipoDocumento);*/
+
+
 
         }
 
@@ -955,8 +982,6 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
                                     })
                                     .setCancelable(false)
                                     .create().show();
-
-
                             break;
                         case Constants._CREDITO_PENDIENTE:
                             break;
@@ -1080,7 +1105,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
             if (isEstablecidasCuotas){
 
             }
-            else {
+            else if(!((Activity) VMovil_Venta_Cabecera.this).isFinishing() ){
 
                 Cursor cursorEstablecimientoCredito = dbHelper_Evento_Establecimiento.fetchEstablecsById(""+idEstablecimiento);
                 cursorEstablecimientoCredito.moveToFirst();
@@ -1197,9 +1222,9 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
 
                         break;
                 }
-
+            }else {
+                Utils.setToast(contexto, "EL CRÉDITO YA HA SIDO ACEPTADO.", R.color.verde);
             }
-
         }
     }
     @Override
@@ -1521,7 +1546,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
 
         final View layout = View.inflate(this, R.layout.dialog_solicitar_credito, null);
 
-
+        final String tipoDocumento = spinnerTipoDocumento.getSelectedItem().toString();
 
         final EditText editTextCantidadCredito = ((EditText) layout.findViewById(R.id.VCSC_editText_CantidadCredito));
 
@@ -1604,6 +1629,23 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
                     //SI ES INCREMENTO Y SÍ MODIFICÓ, LE MANDO LA CANTIDAD MODIFICADA.
                     new SolicitarCredito(mainActivity).execute("" + id_agente_venta, "" + idEstablecimiento, "" + cantidadCredito, "" + diasCredito, postId);
 
+
+                    //GUARDAR EL TIPO DE DOCUMENTO
+                    int tipoDocumentoSelected = -1;
+                    switch(tipoDocumento){
+                        case Constants._FACTURA:
+                            tipoDocumentoSelected = 1;
+                            break;
+                        case Constants._BOLETA:
+                            tipoDocumentoSelected = 2;
+                            break;
+                        default:
+                            tipoDocumentoSelected = -1;
+                            break;
+                    }
+                    session.deleteVariable(Constants.SESSION_DOCUMENTO);
+                    session.createTempSession(Constants.SESSION_DOCUMENTO, tipoDocumentoSelected);
+
                     //PINTAR
                     updateSemaforoStatus(Constants.SEMAFORO_ROJO);
                     //DESACTIVAR EL BOTON
@@ -1630,6 +1672,23 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
 
 
 
+
+
+        Cursor mCursorTempVenta = dbHelper_temp_venta.fetchAllTempVentaDetalleByID(id_temp_venta_detalle);
+        int id_producto_temp = -1;
+        if (mCursorTempVenta.getCount()>0){
+            id_producto_temp = mCursorTempVenta.getInt(mCursorTempVenta.getColumnIndexOrThrow(dbHelper_temp_venta.temp_id_producto));
+        }
+        Cursor mCursorStock = dbHelper_Stock_Agente.fetchByIdProducto(id_producto_temp,idLiquidacion);
+        int maximoValor = 1;
+        if (mCursorStock.getCount()>0){
+            maximoValor = mCursorStock.getInt(mCursorStock.getColumnIndexOrThrow(dbHelper_Stock_Agente.ST_disponible));
+        }
+
+        ///disponible.setText(""+maximoValor);
+        savedText.setFilters(new InputFilter[]{new InputFilterMinMax(1,maximoValor)});
+
+        final int finalMaximoValor = maximoValor;
         savedText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -1651,24 +1710,15 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
                 if (savedText.getText().toString().trim().equals("")) {
                     savedText.setError("Es Requerido");
                 } else {
+                    /*int cantidad = Integer.parseInt(savedText.getText().toString());
+                    if (cantidad > finalMaximoValor) {
+                        savedText.setError("No Hay Stock Suficiente.");
+                    }else{
+                    }*/
                     savedText.setError(null);
                 }
             }
         });
-
-        Cursor mCursorTempVenta = dbHelper_temp_venta.fetchAllTempVentaDetalleByID(id_temp_venta_detalle);
-        int id_producto_temp = -1;
-        if (mCursorTempVenta.getCount()>0){
-            id_producto_temp = mCursorTempVenta.getInt(mCursorTempVenta.getColumnIndexOrThrow(dbHelper_temp_venta.temp_id_producto));
-        }
-        Cursor mCursorStock = dbHelper_Stock_Agente.fetchByIdProducto(id_producto_temp,idLiquidacion);
-        int maximoValor = 1;
-        if (mCursorStock.getCount()>0){
-            maximoValor = mCursorStock.getInt(mCursorStock.getColumnIndexOrThrow(dbHelper_Stock_Agente.ST_disponible));
-        }
-
-        ///disponible.setText(""+maximoValor);
-        savedText.setFilters(new InputFilter[]{new InputFilterMinMax(1,maximoValor)});
 
 
         String nombre = mCursorTempVenta.getString(mCursorTempVenta.getColumnIndex(DBAdapter_Temp_Venta.temp_nom_producto));
@@ -2112,7 +2162,6 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
                         nombre_producto += "..";
                     }
                 }
-
 
 //                DecimalFormat df = new DecimalFormat("0.00");
                 //star micronics, 3pg

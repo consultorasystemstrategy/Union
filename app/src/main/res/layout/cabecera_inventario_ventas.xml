@@ -29,7 +29,8 @@
                 android:text="Inicio"
                 android:id="@+id/VRC_TXinicialFin"
                 android:textStyle="bold|italic"
-                android:textColor="@color/Personalizado4" />
+                android:textColor="@color/Personalizado4"
+                android:gravity="right" />
 
             <TextView
                 android:layout_width="50dp"
@@ -38,7 +39,8 @@
                 android:text="Venta"
                 android:id="@+id/VRC_TXventa"
                 android:textStyle="bold|italic"
-                android:textColor="@color/Personalizado4" />
+                android:textColor="@color/Personalizado4"
+                android:gravity="right" />
 
             <TextView
                 android:layout_width="50dp"
@@ -47,7 +49,8 @@
                 android:text="Dev"
                 android:id="@+id/VRC_TXdevol"
                 android:textStyle="bold|italic"
-                android:textColor="@color/Personalizado4" />
+                android:textColor="@color/Personalizado4"
+                android:gravity="right" />
 
             <TextView
                 android:layout_width="50dp"
@@ -56,7 +59,8 @@
                 android:text="Can"
                 android:id="@+id/VRC_TXcanjes"
                 android:textStyle="bold|italic"
-                android:textColor="@color/Personalizado4" />
+                android:textColor="@color/Personalizado4"
+                android:gravity="right" />
         </TableRow>
 
     </TableLayout>

@@ -149,6 +149,7 @@ public class Utils {
         toast.show();
     }
 
+
     /**
      * get bluetooth local device name
      * @return device name String

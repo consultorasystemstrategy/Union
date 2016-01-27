@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
@@ -110,6 +111,8 @@ public class VMovil_Evento_Gasto extends Activity implements View.OnClickListene
     Double slide_ingresosTotales = 0.0;
     Double slide_gastosTotales = 0.0;
     Double slide_aRendir = 0.0;
+
+    private final static String TAG = VMovil_Evento_Gasto.class.getSimpleName();
 
 
     @Override
@@ -427,6 +430,10 @@ public class VMovil_Evento_Gasto extends Activity implements View.OnClickListene
         String procedenciaGasto = spinnerProcedenciaGasto.getItemAtPosition(spinnerProcedenciaGasto.getSelectedItemPosition()).toString();
         String tipoDoc = spinnerTipoDocumento.getItemAtPosition(spinnerTipoDocumento.getSelectedItemPosition()).toString();
 
+        Log.d(TAG, "TIPO DE GASTOS SELECTED : "+tipoGasto);
+        Log.d(TAG, "procedenciaGasto SELECTED : "+procedenciaGasto);
+        Log.d(TAG, "tipoDoc SELECTED : "+tipoDoc);
+
 
         validateTipoDocumento(tipoDoc);
         if(editTextReferencia.getText().toString().equals("")){
@@ -439,8 +446,10 @@ public class VMovil_Evento_Gasto extends Activity implements View.OnClickListene
         int positionTipoDocumento = 0;
 
 
+        Log.d(TAG, "COUNT CUROSR TIPO GASTO: "  + cursorTipoGasto.getCount());
 
-        if (cursorTipoGasto!=null) {
+        if (cursorTipoGasto.getCount()>0) {
+            cursorTipoGasto.moveToFirst();
             positionTipoGasto = cursorTipoGasto.getInt(cursorTipoGasto.getColumnIndexOrThrow(dbHelperTipoGasto.TG_id_tgasto));
         }
 
@@ -485,7 +494,7 @@ public class VMovil_Evento_Gasto extends Activity implements View.OnClickListene
             positionTipoDocumento = 2;
             idRegistroGastoInsertado = dbHelperInformeGasto.createInformeGastos(positionTipoGasto, positionProcedenciaGasto, positionTipoDocumento, tipoGasto, subtotal, igv, total, getDatePhone(), null, estado, referencia, agente, Constants._CREADO);
             Log.d("TIPO DOCUMENTO", "BOLETA");
-        }else if (tipoDoc.equals("ficha"))
+        }else if (tipoDoc.equals(Constants._FICHA))
         {
             positionTipoDocumento = 4;
             idRegistroGastoInsertado = dbHelperInformeGasto.createInformeGastos(positionTipoGasto, positionProcedenciaGasto, positionTipoDocumento, tipoGasto, subtotal, igv, total, getDatePhone(), null, estado, referencia, agente, Constants._CREADO);
@@ -496,9 +505,26 @@ public class VMovil_Evento_Gasto extends Activity implements View.OnClickListene
         editTextTotal.setText("");
         editTextTotal.setError(null);
         editTextReferencia.setText("");
+        editTextReferencia.setError(null);
 
         displayListViewVEG();
-        Toast.makeText(getApplicationContext(), "Gasto Agregado", Toast.LENGTH_SHORT).show();
+        Log.d(TAG, "id registro insertado : "+ idRegistroGastoInsertado);
+        if(idRegistroGastoInsertado > 0){
+
+            Toast toast = Toast.makeText(VMovil_Evento_Gasto.this,"Gasto Agregado", Toast.LENGTH_LONG);
+            toast.getView().setBackgroundColor(VMovil_Evento_Gasto.this.getResources().getColor(R.color.verde));
+            TextView textView = (TextView) toast.getView().findViewById(android.R.id.message);
+            textView.setTextColor(VMovil_Evento_Gasto.this.getResources().getColor(R.color.Blanco));
+            toast.setGravity(Gravity.TOP | Gravity.CENTER, 0, 8);
+            toast.show();
+        }else{
+            Toast toast = Toast.makeText(VMovil_Evento_Gasto.this, "Ocurrió un error, Intente de nuevo.", Toast.LENGTH_LONG);
+            toast.getView().setBackgroundColor(VMovil_Evento_Gasto.this.getResources().getColor(R.color.verde));
+            TextView textView = (TextView) toast.getView().findViewById(android.R.id.message);
+            textView.setTextColor(VMovil_Evento_Gasto.this.getResources().getColor(R.color.Blanco));
+            toast.setGravity(Gravity.TOP | Gravity.CENTER, 0, 8);
+            toast.show();
+        }
 }
 
     /*private enum TipoDocumento {
@@ -644,7 +670,7 @@ public class VMovil_Evento_Gasto extends Activity implements View.OnClickListene
 
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Cambiar Costo");
+        builder.setTitle("Editar Gasto");
         builder.setPositiveButton(R.string.ok, new Dialog.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 String texto = null;

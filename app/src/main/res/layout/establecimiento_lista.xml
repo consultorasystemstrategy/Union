@@ -117,7 +117,7 @@
                     android:isIndicator="true"
                     android:paddingTop="8dp"
                     android:progressTint="#FDDB39"
-                    android:rating="3"
+                    android:rating="1"
                     android:secondaryProgressTint="#FDDB39" />
 
                 <TextView

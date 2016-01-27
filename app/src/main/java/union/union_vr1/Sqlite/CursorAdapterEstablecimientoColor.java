@@ -96,7 +96,7 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter {
         DrawableCompat.setTint(progress, Color.YELLOW);*/
 
         LayerDrawable stars = (LayerDrawable) ratingBar.getProgressDrawable();
-        stars.getDrawable(2).setColorFilter(ContextCompat.getColor(context, R.color.accent), PorterDuff.Mode.SRC_ATOP);
+        stars.getDrawable(2).setColorFilter(ContextCompat.getColor(context, R.color.Dark3), PorterDuff.Mode.SRC_ATOP);
 
 
         if (cursor.getCount() > 0) {
@@ -117,7 +117,7 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter {
             nombreCliente.setText(nombre_cliente);
             deuda.setText("S/. " + df.format(deudaTotal));
             direccion.setText(dir);
-            ratingBar.setRating(4);
+            ratingBar.setRating(1);
 
 
             int estado_autorizado_esta = cursor.getInt(cursor.getColumnIndexOrThrow(DbAdaptert_Evento_Establec.EE_estado_autorizado));

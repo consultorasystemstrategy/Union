@@ -508,9 +508,9 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
 
         textViewTotalCobrado.setText("Total");
         textViewTotalN.setText("" + nTotal);
-        textViewTotalEmitido.setText("S/" + df.format(emitidoTotal));
-        textViewTotalPagado.setText("S/" + df.format(pagadoTotal));
-        textViewTotalCobrado.setText("S/" + df.format(cobradoTotal));
+        textViewTotalEmitido.setText(""+df.format(emitidoTotal));
+        textViewTotalPagado.setText(""+df.format(pagadoTotal));
+        textViewTotalCobrado.setText(""+df.format(cobradoTotal));
 
 
         ListView listView = (ListView) findViewById(R.id.VRC_listarResumenCaja);
@@ -587,7 +587,7 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
         /*textViewResumenGastosTotalPlanta.setText("S/. " + df.format(totalPlanta));
         textViewResumenGastosTotalPlanta.setTypeface(null, Typeface.BOLD);*/
 
-        textViewResumenGastosTotalRuta.setText("S/. " + df.format(totalRuta));
+        textViewResumenGastosTotalRuta.setText("" + df.format(totalRuta));
         textViewResumenGastosTotalRuta.setTypeface(null, Typeface.BOLD);
 
         //listViewResumenGastos.addFooterView(viewlayoutFooterGastos);

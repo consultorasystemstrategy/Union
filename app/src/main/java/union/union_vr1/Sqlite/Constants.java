@@ -62,6 +62,8 @@ public class Constants {
     public static final String _SPINNER_DEFAULT_COMPROBANTE = "Tipo de Comprobante";
     public static final String _FACTURA = "Factura";
     public static final String _BOLETA = "Boleta";
+    public static final String _FICHA = "Ficha";
+
 
     public static final String _SPINNER_DEFAULT_PAGO = "Forma de pago";
     public static final String _CONTADO = "Contado";
@@ -102,6 +104,7 @@ public class Constants {
     //VARIABLES DE SESSION
 
     public static final int SESSION_ESTADO_DEVOLUCIONES = 21;
+    public static final int SESSION_DOCUMENTO = 22; //ESTADO -1 = NINGUNO, ESTADO 1 = FACTURA, ESTADO 2 = BOLETA
     public static final int _ID_SESSION_MAC = 12;
     public static final int _ID_SESSION_MAC_DEVICE_CIPHER_LAB = 13;
 

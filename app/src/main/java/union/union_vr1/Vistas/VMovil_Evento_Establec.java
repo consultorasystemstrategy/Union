@@ -207,7 +207,7 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
         DrawableCompat.setTint(progress, Color.YELLOW);*/
 
         LayerDrawable stars = (LayerDrawable) ratingBar.getProgressDrawable();
-        stars.getDrawable(2).setColorFilter(ContextCompat.getColor(mainActivity, R.color.accent), PorterDuff.Mode.SRC_ATOP);
+        stars.getDrawable(2).setColorFilter(ContextCompat.getColor(mainActivity, R.color.Dark3), PorterDuff.Mode.SRC_ATOP);
 
 
         cursorEstablecimiento.moveToFirst();
