@@ -37,6 +37,7 @@ import union.union_vr1.Utils.Utils;
 
 public class VMovil_Cargar_Inventario extends Activity implements View.OnClickListener {
     private CargarInventario cargarInventario;
+    public static String TAG = VMovil_Trans_Prod_Detallado.class.getSimpleName();
     //SLIDING MENU
     private DBAdapter_Temp_Inventario dbAdapter_temp_inventario;
     private DbGastos_Ingresos dbGastosIngresos;
@@ -138,7 +139,6 @@ public class VMovil_Cargar_Inventario extends Activity implements View.OnClickLi
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Cursor cr = (Cursor) parent.getItemAtPosition(position);
-
                 String codigo = cr.getString(cr.getColumnIndexOrThrow(DBAdapter_Temp_Inventario.temp_in_id_guia));
                 Intent asd = new Intent(getApplicationContext(), VMovil_Trans_Prod_Detallado.class);
                 asd.putExtra("codigotrans", codigo);
