@@ -235,7 +235,7 @@
         </activity>
         <activity
             android:name=".Vistas.VMovil_Trans_Prod_Detallado"
-            android:label="Guia de Remisión">
+            android:label="Guia de Remisión"
             android:screenOrientation="portrait">
         </activity>
         <activity
