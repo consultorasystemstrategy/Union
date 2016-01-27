@@ -23,7 +23,7 @@ import union.union_vr1.Sqlite.DBAdapter_Cliente_Ruta;
 /**
  * Created by kike on 11/01/2016.
  */
-public class VMovil_Agentes_Dias_Semanas extends Activity{
+public class VMovil_Agentes_Dias_Semanas extends Activity {
     private String dia;
     private String desp;
     private Button contador;
@@ -36,16 +36,17 @@ public class VMovil_Agentes_Dias_Semanas extends Activity{
     private CursorAdapter_Dias_Semanas cursorAdapterDiasSemanas;
 
     @Override
-    protected void onCreate(Bundle savedInstanceStat){
+    protected void onCreate(Bundle savedInstanceStat) {
         super.onCreate(savedInstanceStat);
         setContentView(R.layout.activity_vmovil_agentes_dia_semana);
-        contador=(Button)findViewById(R.id.botoncontador);
-        disem=(TextView)findViewById(R.id.textodiasemana);
-        lista=(ListView)findViewById(R.id.listView);
-        busc=(EditText)findViewById(R.id.buscar_dia);
+        contador = (Button) findViewById(R.id.botoncontador);
+        disem = (TextView) findViewById(R.id.textodiasemana);
+        lista = (ListView) findViewById(R.id.listView);
+        busc = (EditText) findViewById(R.id.buscar_dia);
 
-        dia=getIntent().getExtras().getString("dia");
-        disem.setText( dia + " " + getDateFull().substring(8));
+        dia = getIntent().getExtras().getString("dia");
+        disem.setText(dia + " " + getDateFull().substring(8));
+        //disem.setText(dia + "Breña" );
 
         dbAdapter_cliente_ruta = new DBAdapter_Cliente_Ruta(this);
         dbAdapter_cliente_ruta.open();
@@ -55,10 +56,9 @@ public class VMovil_Agentes_Dias_Semanas extends Activity{
         buscardisplay();
 
 
-
     }
 
-    public void buscardisplay(){
+    public void buscardisplay() {
         busc.addTextChangedListener(new TextWatcher() {
 
             public void afterTextChanged(Editable s) {
@@ -78,20 +78,21 @@ public class VMovil_Agentes_Dias_Semanas extends Activity{
         cursorAdapterDiasSemanas.setFilterQueryProvider(new FilterQueryProvider() {
             public Cursor runQuery(CharSequence constraint) {
 
-                return dbAdapter_cliente_ruta.listarPorNombre(constraint.toString(),dia);
+                return dbAdapter_cliente_ruta.listarPorNombre(constraint.toString(), dia);
             }
         });
 
     }
 
-    public void consultardia(){
+    public void consultardia() {
 
-        Cursor cr =dbAdapter_cliente_ruta.listarPorDia(dia);
-        contador.setText(cr.getCount()+"");
+        Cursor cr = dbAdapter_cliente_ruta.listarPorDia(dia);
+        contador.setText(cr.getCount() + "");
         cursorAdapterDiasSemanas = new CursorAdapter_Dias_Semanas(this, cr);
         ListView listView = (ListView) findViewById(R.id.listView);
         listView.setAdapter(cursorAdapterDiasSemanas);
     }
+
     private String getDateFull() {
         Calendar cal = new GregorianCalendar();
         Date date = cal.getTime();
