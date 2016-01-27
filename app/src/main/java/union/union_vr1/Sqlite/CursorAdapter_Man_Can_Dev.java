@@ -61,7 +61,7 @@ public class CursorAdapter_Man_Can_Dev extends CursorAdapter {
             imageView.setImageDrawable(context.getApplicationContext().getResources().getDrawable(R.drawable.ic_action_accept));
             String nomForma = "";
             String _id_guia = cursor.getString(cursor.getColumnIndex(DBAdapter_Temp_Canjes_Devoluciones.temp_id_canjes_devoluciones));
-            String comprobante =cursor.getString(cursor.getColumnIndex(DBAdapter_Temp_Canjes_Devoluciones.temp_id_comprob_venta));
+            String comprobante = cursor.getString(cursor.getColumnIndex(DBAdapter_Temp_Canjes_Devoluciones.temp_desc_comprob_venta));
             int forma = cursor.getInt(cursor.getColumnIndex(DBAdapter_Temp_Canjes_Devoluciones.temp_id_forma));
             String importeString = cursor.getString(cursor.getColumnIndex(DBAdapter_Temp_Canjes_Devoluciones.temp_importe));
             Double importe = 0.0;

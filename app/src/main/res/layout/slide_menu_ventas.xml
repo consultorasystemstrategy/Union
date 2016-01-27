@@ -267,7 +267,7 @@
                     android:paddingBottom="8dp"
                     android:gravity="left|center_vertical"
                     android:textColor="@color/Blanco"
-                    android:drawableLeft="@drawable/ic_action_view_as_list"
+                    android:drawableLeft="@mipmap/ic_cargar_inventario"
                     android:drawablePadding="16dp"
                     android:textSize="16dp" />
                 <TextView
@@ -279,7 +279,7 @@
                     android:paddingBottom="8dp"
                     android:gravity="left|center_vertical"
                     android:textColor="@color/Blanco"
-                    android:drawableLeft="@drawable/ic_action_view_as_list"
+                    android:drawableLeft="@mipmap/ic_consultar"
                     android:drawablePadding="16dp"
                     android:textSize="16dp" />
             </LinearLayout>

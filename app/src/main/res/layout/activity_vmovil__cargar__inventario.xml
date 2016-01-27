@@ -81,6 +81,7 @@
                     android:layout_height="wrap_content"
                     android:inputType="number|text"
                     android:ems="10"
+                    android:text="043-"
                     android:id="@+id/editNroGuia" />
             </LinearLayout>
 

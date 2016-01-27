@@ -43,6 +43,7 @@ public class DBAdapter_Temp_Canjes_Devoluciones {
     public static final String temp_id_detalle = "temp_id_detalle";
     public static final String temp_id_guia= "temp_id_guia";
     public static final String temp_id_comprob_venta= "temp_id_comprob_venta";
+    public static final String temp_desc_comprob_venta= "temp_desc_comprob_venta";
     public static final String temp_id_forma= "temp_id_forma";
     public static final String temp_unidad = "temp_unidad";
 
@@ -82,6 +83,7 @@ public class DBAdapter_Temp_Canjes_Devoluciones {
                     + temp_id_comprob_venta + " text,"
                     + temp_id_forma + " text,"
                     + temp_unidad + " text,"
+                    +temp_desc_comprob_venta +" text,"
                     + Constants._SINCRONIZAR+ " text,"
                     + temp_estado + " integer);";
 
@@ -105,7 +107,7 @@ public class DBAdapter_Temp_Canjes_Devoluciones {
     }
 
     public long createTempCanjesDevoluciones(String id_comprob, String id_producto, String nom_producto, String codigo_producto, String cantidad, String precio_unit, String importe, String lote, String fecha_emision, String cliente,
-                                             String id_establecimiento, String id_documento, String id_motivo, String estado_producto, String estado, String liquidacion, String idDetalle, String id_comprobante_venta,String id_forma, String unidad) {
+                                             String id_establecimiento, String id_documento, String id_motivo, String estado_producto, String estado, String liquidacion, String idDetalle, String id_comprobante_venta,String id_forma, String unidad,String compro_descrp) {
 
         ContentValues initialValues = new ContentValues();
         initialValues.put(temp_id_comprob, id_comprob);
@@ -128,6 +130,7 @@ public class DBAdapter_Temp_Canjes_Devoluciones {
         initialValues.put(temp_fecha_emision, getDatePhone());
         initialValues.put(temp_id_comprob_venta, id_comprobante_venta);
         initialValues.put(temp_id_forma, id_forma);
+        initialValues.put(temp_desc_comprob_venta,compro_descrp);
         initialValues.put(Constants._SINCRONIZAR,Constants._CREADO);
         initialValues.put(temp_unidad, unidad);
 

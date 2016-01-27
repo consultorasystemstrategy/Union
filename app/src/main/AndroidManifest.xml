@@ -218,11 +218,13 @@
             android:label="@string/title_activity_imprimir_arqueo_caja" />
         <activity
             android:name=".Vistas.VMovil_Crear_Establecimiento"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_vmovil__crear__establecimiento"
             android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
         <activity
             android:name=".Vistas.VMovil_Modificar_Estab"
             android:label="Modificar Establecimiento"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
         <activity
             android:name=".Vistas.VMovil_Abrir_Caja"

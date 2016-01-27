@@ -132,6 +132,7 @@ public class VMovil_Venta_Comprob extends Activity implements View.OnClickListen
     TextView textViewSlideMantenimiento;
     TextView textViewSlideCanjesDevoluciones;
     private TextView textViewSlideCargar;
+    TextView textConsultar;
     int slideIdEstablecimiento;
 
     private DbAdaptert_Evento_Establec dbAdaptert_evento_establec;
@@ -746,6 +747,8 @@ public class VMovil_Venta_Comprob extends Activity implements View.OnClickListen
         textViewSlideMantenimiento = (TextView) findViewById(R.id.slideVentas_textViewMantenimiento);
         textViewSlideCanjesDevoluciones = (TextView) findViewById(R.id.slideVentas_textviewCanjesDevoluciones);
         textViewSlideCargar = (TextView) findViewById(R.id.slide_textViewCargarInventario);
+        textConsultar = (TextView)findViewById(R.id.slide_textViewConsultarInventario);
+        textConsultar.setOnClickListener(this);
         textViewSlideCargar.setOnClickListener(this);
 
 
@@ -871,6 +874,9 @@ public class VMovil_Venta_Comprob extends Activity implements View.OnClickListen
         // TODO Auto-generated method stub
         switch (v.getId()) {
             //SLIDING MENU
+            case R.id.slide_textViewConsultarInventario:
+                startActivity(new Intent(this,VMovil_Consultar_Inventario.class));
+                break;
             case R.id.slide_textViewCargarInventario:
                 Intent cInventario = new Intent(this, VMovil_Cargar_Inventario.class);
                 startActivity(cInventario);

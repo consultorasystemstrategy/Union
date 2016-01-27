@@ -298,6 +298,8 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
     TextView textViewSlideCobro;
     TextView textViewSlideMantenimiento;
     TextView textViewSlideCanjesDevoluciones;
+    TextView textCargarInventario;
+    TextView textConsultarInventario;
 
 
 
@@ -1799,6 +1801,9 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
                 finish();
                 startActivity(intent);
                 break;*/
+            case R.id.slide_textViewConsultarInventario:
+                startActivity(new Intent(this,VMovil_Consultar_Inventario.class));
+                break;
             case R.id.slide_textViewCargarInventario:
                 Intent cInventario = new Intent(this, VMovil_Cargar_Inventario.class);
                 startActivity(cInventario);
@@ -2886,7 +2891,9 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
         textViewSlideCanjesDevoluciones  = (TextView)findViewById(R.id.slideVentas_textviewCanjesDevoluciones);
 
         textViewSlideCargar = (TextView)findViewById(R.id.slide_textViewCargarInventario);
+        textConsultarInventario = (TextView)findViewById(R.id.slide_textViewConsultarInventario);
         textViewSlideCargar.setOnClickListener(this);
+        textConsultarInventario.setOnClickListener(this);
 
 
 

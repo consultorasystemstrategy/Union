@@ -151,6 +151,9 @@ public class CargarInventario extends AsyncTask<String, String, String> {
             CursorAdapter_Cargar_Inventario cursorAdapter_cargar_inventario = new CursorAdapter_Cargar_Inventario(mainActivity, cursor);
             listView.setAdapter(cursorAdapter_cargar_inventario);
 
+            TextView tx = (TextView)mainActivity.findViewById(R.id.editNroGuia);
+            tx.setText("043-");
+
 
         } catch (NullPointerException e) {
             Log.e("ERROR", e.getMessage() + "");
