@@ -2521,7 +2521,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
                 "S/. "+df.format(igvFooter));
 
 
-        //DATOS DE PRUEBA LOS OBTENDRÈ CUANDO JOSMAR ME PASE ESTOS DATOS
+        //DATOS DE PRUEBA LOS OBTENDRE CUANDO SULLY ME LOS PASE.
         int surtidoStockAnterior = 10;
         int surtidoVentaAnterior = 1;
 
