@@ -53,8 +53,10 @@ public class CursorAdapter_Dias_Semanas extends CursorAdapter {
 
         textViewTitulo.setText(establecimiento);
         //textViewTitulo.setText("Nombres:"+nombres);
-        textViewNombre.setText(apellidospa+"\t"+apellidosma+"\t"+nombres);
-       // textViewApPaterno.setText("Ap_Paterno:"+apellidospa);
+        textViewNombre.setText(apellidospa + " " + apellidosma+ " " +nombres);
+
+        //apellidospa + ". " + apellidosma+ ". " +nombres
+                // textViewApPaterno.setText("Ap_Paterno:"+apellidospa);
          direccion.setText(dirdireccion);
 
     }

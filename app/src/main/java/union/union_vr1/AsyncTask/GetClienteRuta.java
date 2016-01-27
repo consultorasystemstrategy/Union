@@ -62,7 +62,6 @@ public class GetClienteRuta extends AsyncTask<String, String, String> {
                 Log.d(TAG, "INSERT" +jsonObjectCliente.toString());
 
 
-
                     long inserto = dbAdapter_cliente_ruta.createClienteRuta(
                             jsonObjectCliente.getInt("CliIClienteId"),
                             jsonObjectCliente.getString("PerVNombres"),

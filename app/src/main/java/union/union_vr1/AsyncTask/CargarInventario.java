@@ -119,6 +119,7 @@ public class CargarInventario extends AsyncTask<String, String, String> {
                         break;
                 }
                 new CargarTransDetallado(mainActivity).execute(GUIA);
+                //new CargarTest(mainActivity).execute();
 
 
 

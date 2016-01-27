@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import union.union_vr1.Conexion.DbHelper;
 
@@ -174,5 +175,32 @@ public class DBAdapter_Cliente_Ruta {
         }
         return mCursor;
     }
+
+    public Cursor listarPorNombre(String nombre,String dia){
+        Cursor mCursor = mDb.rawQuery("SELECT * FROM " + SQLITE_TABLE_CLIENTE_RUTA
+                + " WHERE ( " + cliente_ruta_dia_semana + "='"+dia+"' ) "
+                + " AND (( " + cliente_ruta_establecimiento  + " LIKE '%" + nombre +"%' ) "
+                + " OR ( " + cliente_ruta_direccion  + " LIKE '%" + nombre +"%' ))", null);
+        //select * from m_cliente_ruta where   cliente_ruta_establecimiento  LIKE  '%ANG%'
+        //AND cliente_ruta_dia_semana ='Mart'
+
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+            Log.d(TAG, "CURSOR COUNT : "+mCursor.getCount());
+        }else{
+            Log.d(TAG, "EL CURSOR ESTÀ VACÌO");
+        }
+
+        return mCursor;
+    }
+
+    public Cursor listarEstablecimientos(int idLiquidacion){
+        Cursor mCursor = mDb.rawQuery("SELECT * FROM " + SQLITE_TABLE_CLIENTE_RUTA + " WHERE   " + cliente_ruta_id + "='"+idLiquidacion+"'; ", null);
+
+        return mCursor;
+
+    }
+
+
 
 }

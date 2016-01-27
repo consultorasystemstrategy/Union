@@ -3,10 +3,18 @@ package union.union_vr1.Vistas;
 import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.util.Log;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.FilterQueryProvider;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import java.text.DateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 import union.union_vr1.R;
 import union.union_vr1.Sqlite.CursorAdapter_Dias_Semanas;
@@ -17,7 +25,12 @@ import union.union_vr1.Sqlite.DBAdapter_Cliente_Ruta;
  */
 public class VMovil_Agentes_Dias_Semanas extends Activity{
     private String dia;
+    private String desp;
     private Button contador;
+    private TextView disem;
+    private int idLiquidacion;
+    private ListView lista;
+    private EditText busc;
 
     private DBAdapter_Cliente_Ruta dbAdapter_cliente_ruta;
     private CursorAdapter_Dias_Semanas cursorAdapterDiasSemanas;
@@ -27,12 +40,48 @@ public class VMovil_Agentes_Dias_Semanas extends Activity{
         super.onCreate(savedInstanceStat);
         setContentView(R.layout.activity_vmovil_agentes_dia_semana);
         contador=(Button)findViewById(R.id.botoncontador);
+        disem=(TextView)findViewById(R.id.textodiasemana);
+        lista=(ListView)findViewById(R.id.listView);
+        busc=(EditText)findViewById(R.id.buscar_dia);
 
         dia=getIntent().getExtras().getString("dia");
+        disem.setText( dia + " " + getDateFull().substring(8));
+
         dbAdapter_cliente_ruta = new DBAdapter_Cliente_Ruta(this);
         dbAdapter_cliente_ruta.open();
+        //consultardia();
 
         consultardia();
+        buscardisplay();
+
+
+
+    }
+
+    public void buscardisplay(){
+        busc.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {
+            }
+
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
+
+            }
+
+            public void onTextChanged(CharSequence s, int start,
+                                      int before, int count) {
+                cursorAdapterDiasSemanas.getFilter().filter(s.toString());
+            }
+
+        });
+        cursorAdapterDiasSemanas.setFilterQueryProvider(new FilterQueryProvider() {
+            public Cursor runQuery(CharSequence constraint) {
+
+                return dbAdapter_cliente_ruta.listarPorNombre(constraint.toString(),dia);
+            }
+        });
+
     }
 
     public void consultardia(){
@@ -43,7 +92,23 @@ public class VMovil_Agentes_Dias_Semanas extends Activity{
         ListView listView = (ListView) findViewById(R.id.listView);
         listView.setAdapter(cursorAdapterDiasSemanas);
     }
+    private String getDateFull() {
+        Calendar cal = new GregorianCalendar();
+        Date date = cal.getTime();
+        DateFormat format = DateFormat.getDateInstance(DateFormat.FULL);
+        String formatteDate = format.format(date);
+        return formatteDate;
+    }
 
+/*
+    private void displayListviewByText(String dep) {
+
+        Cursor cr =dbAdapter_cliente_ruta.listarPorNombre();
+        cursorAdapterDiasSemanas = new CursorAdapter_Dias_Semanas(this, cr);
+
+        ListView listView = (ListView) findViewById(R.id.listView);
+        listView.setAdapter(cursorAdapterDiasSemanas);
+    }*/
 
 
 }
