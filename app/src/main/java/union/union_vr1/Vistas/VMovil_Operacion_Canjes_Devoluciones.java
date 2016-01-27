@@ -298,9 +298,9 @@ public class VMovil_Operacion_Canjes_Devoluciones extends TabActivity {
 
     private void listarTotalCanjes() {
         Double[] infoFooter = dbAdapter_temp_canjes_devoluciones.getInfoCanje(establec);
-        textViewTotalCanje.setText("" + infoFooter[0]);
-        textViewBaseImponibleCanje.setText("" + infoFooter[1]);
-        textViewigvCanje.setText("" + infoFooter[2]);
+        textViewTotalCanje.setText("" + Utils.formatDouble(infoFooter[0]));
+        textViewBaseImponibleCanje.setText("" + Utils.formatDouble(infoFooter[1]));
+        textViewigvCanje.setText("" + Utils.formatDouble(infoFooter[2]));
     }
 
     private void listar_devoluciones() {

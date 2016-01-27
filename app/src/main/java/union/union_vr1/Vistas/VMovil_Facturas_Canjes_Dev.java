@@ -225,7 +225,7 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
                         if (stock == 0) {
 
 
-                            mostrar_alertdialog_spinners_regitrados_dev(cursor, cor[1]);
+                            mostrar_alertdialog_spinners_regitrados(cursor, cor[1]);
                             Toast.makeText(getApplicationContext(), "Tiene Stock 0", Toast.LENGTH_SHORT).show();
                         } else {
                             int canjes = 0;
