@@ -19,8 +19,7 @@
         android:text="0"
         android:id="@+id/resumen_total_n"
         android:textStyle="bold"
-        android:textColor="@color/PersonalizadoSteve2"
-        android:textSize="12dp" />
+        android:textColor="@color/PersonalizadoSteve2" />
 
     <TextView
         android:layout_width="64dp"
@@ -30,7 +29,6 @@
         android:id="@+id/resumen_total_emitido"
         android:textStyle="bold"
         android:textColor="@color/Personalizado4"
-        android:textSize="12dp"
         android:gravity="right" />
 
     <TextView
@@ -41,7 +39,6 @@
         android:id="@+id/resumen_total_pagado"
         android:textStyle="bold"
         android:textColor="@color/Personalizado4"
-        android:textSize="12dp"
         android:gravity="right" />
 
     <TextView
@@ -52,7 +49,6 @@
         android:id="@+id/resumen_total_cobrado"
         android:textStyle="bold"
         android:textColor="@color/Personalizado4"
-        android:textSize="12dp"
         android:gravity="right" />
 
 </LinearLayout>

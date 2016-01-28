@@ -38,6 +38,7 @@ import union.union_vr1.CustomOnItemSelectedListener;
 import union.union_vr1.R;
 import union.union_vr1.Servicios.ServiceExport;
 import union.union_vr1.Sqlite.Constants;
+import union.union_vr1.Sqlite.CursorAdapter_Gastos;
 import union.union_vr1.Sqlite.DBAdapter_Temp_Venta;
 import union.union_vr1.Sqlite.DbAdapter_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Informe_Gastos;
@@ -59,7 +60,7 @@ public class VMovil_Evento_Gasto extends Activity implements View.OnClickListene
     private EditText editTextReferencia;
     private ListView listViewInformeGasto;
 
-    private SimpleCursorAdapter dataAdapter;
+    private CursorAdapter_Gastos cursorAdapterGastos;
     private String[] TipoGasto = new String[20];
     private View header;
     private Activity activity;
@@ -549,7 +550,7 @@ public class VMovil_Evento_Gasto extends Activity implements View.OnClickListene
         Cursor cursor = dbHelperInformeGasto.fetchAllInformeGastos(getDayPhone());
         cursor.moveToFirst();
 
-        // The desired columns to be bound
+        /*// The desired columns to be bound
         String[] columns = new String[]{
                 //DbAdapter_Informe_Gastos.GA_id_gasto,
                 DbAdapter_Tipo_Gasto.TG_nom_tipo_gasto,
@@ -576,10 +577,13 @@ public class VMovil_Evento_Gasto extends Activity implements View.OnClickListene
                 cursor,
                 columns,
                 to,
-                0);
+                0);*/
+
+        cursorAdapterGastos = new CursorAdapter_Gastos(VMovil_Evento_Gasto.this, cursor);
+
 
         // Assign adapter to ListView
-        listViewInformeGasto.setAdapter(dataAdapter);
+        listViewInformeGasto.setAdapter(cursorAdapterGastos);
             listViewInformeGasto.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

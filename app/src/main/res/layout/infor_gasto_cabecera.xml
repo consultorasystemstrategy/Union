@@ -16,7 +16,7 @@
             android:text="Tipo de Gasto"
             android:id="@+id/gastoNombreCabecera"
             android:textSize="20dp"
-            android:textStyle="italic"
+            android:textStyle="bold|italic"
             android:layout_weight="1"
             android:gravity="center_vertical|center_horizontal"
             android:textColor="@color/PersonalizadoSteve4" />
@@ -24,12 +24,13 @@
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:text="Costo"
+            android:text="Monto del Gasto"
             android:id="@+id/gastoImporteCabecera"
             android:layout_weight="1"
-            android:gravity="center_vertical|center"
+            android:gravity="center_vertical|center|center_horizontal"
             android:textColor="@color/PersonalizadoSteve2"
-            android:textSize="16dp" />
+            android:textSize="16dp"
+            android:textStyle="bold" />
 
     </LinearLayout>
 

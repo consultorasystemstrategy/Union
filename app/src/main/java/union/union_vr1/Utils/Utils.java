@@ -273,4 +273,11 @@ public class Utils {
         builder.setCancelable(true);
         return builder.create();
     }
+    public static String getDateFull() {
+        Calendar cal = new GregorianCalendar();
+        Date date = cal.getTime();
+        DateFormat format = DateFormat.getDateInstance(DateFormat.FULL);
+        String formatteDate = format.format(date);
+        return formatteDate.substring(0, 1).toUpperCase() + formatteDate.substring(1);
+    }
 }

@@ -611,11 +611,13 @@ public class Login extends Activity implements OnClickListener {
             case R.id.login:
 
                 if (validarFecha()){
+
                         if (estaConectado()) {
                             new LoginRest().execute();
                         } else {
                             cajaAbierta();
                         }
+
                 }else{
                     if (conectadoWifi()){
                         Utils.setToast(mainActivity, "VALIDANDO FECHA...", R.color.verde);

@@ -974,16 +974,19 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
                             buttonVender.setBackgroundResource(R.color.Dark5);
                             buttonVender.setEnabled(true);
 
-                            new AlertDialog.Builder(mContext)
-                                    .setTitle("CREDITO RECHAZADO")
-                                    .setMessage("Observación : " + credito.getObservacion())
-                                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            //DO NOTHING
-                                        }
-                                    })
-                                    .setCancelable(false)
-                                    .create().show();
+                            if(!((Activity) VMovil_Venta_Cabecera.this).isFinishing() ){
+                                new AlertDialog.Builder(mContext)
+                                        .setTitle("CREDITO RECHAZADO")
+                                        .setMessage("Observación : " + credito.getObservacion())
+                                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                                //DO NOTHING
+                                            }
+                                        })
+                                        .setCancelable(false)
+                                        .create().show();
+                            }
+
                             break;
                         case Constants._CREDITO_PENDIENTE:
                             break;
@@ -1939,7 +1942,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
 
     public void vender()  {
 
-
+        String fecha = getDatePhone();
         //Obtener los datos de las ventas
 
         Toast.makeText(VMovil_Venta_Cabecera.this, "Generando ...", Toast.LENGTH_SHORT).show();
@@ -2096,7 +2099,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
             NUMERO_DOCUMENTO = numero_documento + "";
             SERIE_DOCUMENTO = serie;
 
-        String fecha = getDatePhone();
+
             Log.d(TAG, "SERIE : " + serie);
             id = dbHelper_Comprob_Venta.createComprobVenta(idEstablecimiento, i_tipoDocumento, i_formaPago, tipoVenta, codigo_erp, serie, numero_documento, base_imponible, igv, monto_total, fecha, null, estado_comprobante, estado_conexion, id_agente_venta, Constants._CREADO, idLiquidacion);
 

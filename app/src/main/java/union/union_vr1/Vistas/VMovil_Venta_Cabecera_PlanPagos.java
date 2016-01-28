@@ -43,6 +43,7 @@ import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 import union.union_vr1.Utils.MyApplication;
 import union.union_vr1.Utils.RoundedLetterView;
+import union.union_vr1.Utils.Utils;
 
 
 public class VMovil_Venta_Cabecera_PlanPagos extends Activity implements AdapterView.OnItemSelectedListener {
@@ -55,7 +56,7 @@ public class VMovil_Venta_Cabecera_PlanPagos extends Activity implements Adapter
     //private Button butttonCalcularCuotas;
     public Button buttonEstablecerCuotas;
 
-    DecimalFormat df = new DecimalFormat("0.00");
+    Utils df = new Utils();
 
     private Cursor cursorEstablecimiento;
     private DbAdaptert_Evento_Establec dbHelperEventoEstablecimiento;

@@ -51,6 +51,8 @@ import union.union_vr1.Objects.DevolucionEstado;
 import union.union_vr1.R;
 import union.union_vr1.Servicios.ServiceExport;
 import union.union_vr1.Sqlite.Constants;
+import union.union_vr1.Sqlite.CursorAdapter_ReporteComprobante;
+import union.union_vr1.Sqlite.CursorAdapter_ResumenGastos;
 import union.union_vr1.Sqlite.CursorResumenComprobantes;
 import union.union_vr1.Sqlite.DBAdapter_Temp_Autorizacion_Cobro;
 import union.union_vr1.Sqlite.DBAdapter_Temp_Canjes_Devoluciones;
@@ -80,7 +82,8 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
     private SimpleCursorAdapter dataAdapter;
     private DbAdapter_Resumen_Caja dbHelperRC;
     private DbAdapter_Informe_Gastos dbAdapter_informe_gastos;
-    private SimpleCursorAdapter dataAdapterRC;
+    //private SimpleCursorAdapter dataAdapterRC;
+    private CursorAdapter_ReporteComprobante cursorAdapterReporteComprobante;
     private DbGastos_Ingresos dbHelperGastosIngr;
     private DbAdapter_Agente dbAdapter_agente;
     private DbAdapter_Temp_Session session;
@@ -222,7 +225,7 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
         textViewFecha = (TextView) findViewById(R.id.textViewFecha);
 
         textViewAgente.setText("Ejecutivo : "+nombreAgente);
-        textViewFecha.setText("Fecha : "+ getDatePhone());
+        textViewFecha.setText("Fecha : "+ Utils.getDateFull());
         textViewLiquidacion.setText("Liquidación Nro : "+idLiquidacion);
 
 
@@ -464,7 +467,7 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
         textViewTotalCobrado = (TextView) viewResumenTotal.findViewById(R.id.resumen_total_cobrado);
 
 
-        String[] columns = new String[]{
+        /*String[] columns = new String[]{
                 "comprobante",
                 "n",
                 "emitidas",
@@ -485,11 +488,12 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
                 cursor,
                 columns,
                 to,
-                0);
+                0);*/
+        cursorAdapterReporteComprobante = new CursorAdapter_ReporteComprobante(VMovil_Resumen_Caja.this, cursor);
 
         //CursorAdapter cursorAdapter = new CursorResumenComprobantes(mainActivity,cursor,true);
 
-        Cursor cursorResumen = dataAdapterRC.getCursor();
+        Cursor cursorResumen = cursorAdapterReporteComprobante.getCursor();
         //Cursor cursorResumen = cursorAdapter.getCursor();
         cursorResumen.moveToFirst();
 
@@ -526,7 +530,7 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
 
         listView.addHeaderView(getLayoutInflater().inflate(R.layout.resumen_informe_ingresos_cabecera, null));
 
-        listView.setAdapter(dataAdapterRC);
+        listView.setAdapter(cursorAdapterReporteComprobante);
         //listView.setAdapter(cursorAdapter);
         listView.addFooterView(viewResumenTotal);
 
@@ -550,15 +554,15 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
 
         Cursor cursorGastos =dbAdapter_informe_gastos.resumenInformeGastos(getDayPhone());
 
-        String[] de = {
+        /*String[] de = {
                 "tg_te_nom_tipo_gasto",
                 "RUTA"
-                /*,"PLANTA"*/
+                *//*,"PLANTA"*//*
         };
         int[] para = {
                 R.id.textviewNombre,
                 R.id.textViewGastoRuta
-                /*,R.id.textViewGastoPlanta*/
+                *//*,R.id.textViewGastoPlanta*//*
 
         };
 
@@ -569,8 +573,10 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
                 de,
                 para,
                 0
-        );
-        listViewResumenGastos.setAdapter(simpleCursorAdapter);
+        );*/
+        CursorAdapter_ResumenGastos cursorAdapter_resumenGastos = new CursorAdapter_ResumenGastos(VMovil_Resumen_Caja.this, cursorGastos);
+
+        listViewResumenGastos.setAdapter(cursorAdapter_resumenGastos);
         Cursor cursorTotalGastos = cursorGastos;
         cursorTotalGastos.moveToFirst();
 
@@ -719,9 +725,12 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
         //KELVIN LO REVISARÁ Y ME DIRÁ
         int colaCAnjesDevoluciones = dbAdapter_temp_canjes_devoluciones.getAllOperacionEstablecimiento().getCount();
 
+
+
         int totalRegistrosEnCola= colaInformeGastos + colaComprobanteVenta + colaComprobanteVentaDetalle +
                 colaComprobanteCobro+ colaInsertarCaja+ colaEventoEstablecimiento+ colaHistoVentaCreated + colaHistoVentaDetalleCreated + colaAutorizacionCobro
                 + colaCobrosManuales+ colaExportacionFlex;
+
         Log.d(TAG, "COLA  TOTAL: " +totalRegistrosEnCola);
         Log.d(TAG, "COLA colaInformeGastos : "+colaInformeGastos);
         Log.d(TAG, "COLA colaComprobanteVenta : "+colaComprobanteVenta);
@@ -735,6 +744,7 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
         Log.d(TAG, "COLA colaCobrosManuales : "+colaCobrosManuales);
         Log.d(TAG, "COLA colaExportacionFlex : "+colaExportacionFlex);
         Log.d(TAG, "COLA colaCAnjesDevoluciones : "+colaCAnjesDevoluciones);
+
 
         return totalRegistrosEnCola;
     }

@@ -1,0 +1,52 @@
+package union.union_vr1.Sqlite;
+
+import android.content.Context;
+import android.database.Cursor;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.LayerDrawable;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.CursorAdapter;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.RatingBar;
+import android.widget.TextView;
+
+import union.union_vr1.R;
+import union.union_vr1.Utils.Utils;
+
+/**
+ * Created by Usuario on 28/01/2016.
+ */
+public class CursorAdapter_Gastos extends CursorAdapter{
+    //infla dentro de la actividad
+    private LayoutInflater cursorInflater;
+
+
+    public CursorAdapter_Gastos(Context context, Cursor c) {
+        super(context, c, true);
+        cursorInflater = (LayoutInflater) context.getSystemService(
+                Context.LAYOUT_INFLATER_SERVICE);
+    }
+
+    @Override
+    public View newView(Context context, Cursor cursor, ViewGroup viewGroup) {
+        return cursorInflater.inflate(R.layout.infor_evento_gasto, viewGroup, false);
+    }
+
+    @Override
+    public void bindView(View view, Context context, Cursor cursor) {
+
+
+        TextView textViewGastoNombre = (TextView) view.findViewById(R.id.gastoNombre);
+        TextView textViewGastoImporte = (TextView) view.findViewById(R.id.gastoImporte);
+
+
+        String gastoNombre = cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Tipo_Gasto.TG_nom_tipo_gasto ));
+        Double gastoImporte = cursor.getDouble(cursor.getColumnIndexOrThrow(DbAdapter_Informe_Gastos.GA_total));
+
+        textViewGastoNombre.setText(gastoNombre);
+        textViewGastoImporte.setText(Utils.formatDouble(gastoImporte));
+
+    }
+}

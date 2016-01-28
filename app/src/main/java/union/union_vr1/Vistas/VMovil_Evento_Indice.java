@@ -285,7 +285,7 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         }
         mNombreRuta.setText("" + nombreRuta);
         mNumeroEstablecimientos.setText("" + numeroEstablecimientoxRuta);
-        mFecha.setText("" + getDateFull().substring(0, 1).toUpperCase() + getDateFull().substring(1));
+        mFecha.setText("" + Utils.getDateFull());
 
         mCobroTotal = (Button) findViewById(R.id.VEI_BTNcobrarTodo);
         mClient.setOnClickListener(this);
