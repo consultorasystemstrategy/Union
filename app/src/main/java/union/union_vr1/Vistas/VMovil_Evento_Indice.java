@@ -334,8 +334,10 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Cursor cr = (Cursor)parent.getItemAtPosition(position);
                 String dia=cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Ruta_Distribucion.RD_dia_semana));
+                String ruta=cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Ruta_Distribucion.RD_nombre_ruta));
                 Intent asd = new Intent(getApplicationContext(),VMovil_Agentes_Dias_Semanas.class);
                 asd.putExtra("dia",dia);
+                asd.putExtra("ruta",ruta);
                 startActivity(asd);
 
 

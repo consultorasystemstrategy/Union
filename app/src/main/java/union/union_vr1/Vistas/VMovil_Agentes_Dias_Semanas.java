@@ -19,21 +19,23 @@ import java.util.GregorianCalendar;
 import union.union_vr1.R;
 import union.union_vr1.Sqlite.CursorAdapter_Dias_Semanas;
 import union.union_vr1.Sqlite.DBAdapter_Cliente_Ruta;
+import union.union_vr1.Sqlite.DbAdapter_Agente;
 
 /**
  * Created by kike on 11/01/2016.
  */
 public class VMovil_Agentes_Dias_Semanas extends Activity {
     private String dia;
-    private String desp;
+    private String rutaag;
     private Button contador;
     private TextView disem;
-    private int idLiquidacion;
-    private ListView lista;
+    private TextView rutaa;
     private EditText busc;
 
     private DBAdapter_Cliente_Ruta dbAdapter_cliente_ruta;
     private CursorAdapter_Dias_Semanas cursorAdapterDiasSemanas;
+
+    private DbAdapter_Agente dbAdapter_agente;
 
     @Override
     protected void onCreate(Bundle savedInstanceStat) {
@@ -41,12 +43,18 @@ public class VMovil_Agentes_Dias_Semanas extends Activity {
         setContentView(R.layout.activity_vmovil_agentes_dia_semana);
         contador = (Button) findViewById(R.id.botoncontador);
         disem = (TextView) findViewById(R.id.textodiasemana);
-        lista = (ListView) findViewById(R.id.listView);
+        rutaa = (TextView) findViewById(R.id.ruta);
+        //lista = (ListView) findViewById(R.id.listView);
         busc = (EditText) findViewById(R.id.buscar_dia);
 
+
+
+
         dia = getIntent().getExtras().getString("dia");
+        rutaag = getIntent().getExtras().getString("ruta");
+
         //disem.setText(dia + " " + getDateFull().substring(8));
-        disem.setText(dia +" "+ "Breña" );
+        disem.setText(rutaag);
 
         dbAdapter_cliente_ruta = new DBAdapter_Cliente_Ruta(this);
         dbAdapter_cliente_ruta.open();
@@ -91,6 +99,12 @@ public class VMovil_Agentes_Dias_Semanas extends Activity {
         cursorAdapterDiasSemanas = new CursorAdapter_Dias_Semanas(this, cr);
         ListView listView = (ListView) findViewById(R.id.listView);
         listView.setAdapter(cursorAdapterDiasSemanas);
+
+      //String rutex = cr.getString(cr.getColumnIndexOrThrow(dbAdapter_agente.AG_nombre_ruta));
+      //rutaa.setText("" + rutex);
+
+
+
     }
 
     private String getDateFull() {
