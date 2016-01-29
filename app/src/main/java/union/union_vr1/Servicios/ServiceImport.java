@@ -417,8 +417,8 @@ public class ServiceImport extends IntentService {
                 JSONObject jsonObject = api.GetSolicitudAutorizacionEstablecimiento(idEstablecimiento);
                 JSONObject jsonObjectAutorizacion = api.GetConsultarAutorizacion(idEstablecimiento);
 
-                Log.d("IMPORT SOLICITUDES DE AUTORIZACIÓN ", jsonObject.toString());
-                Log.d("IMPORT AUTORIZACION COBROS  ", jsonObjectAutorizacion.toString());
+                Log.d(TAG, "IMPORT SOLICITUDES DE AUTORIZACIÓN: "+ jsonObject.toString());
+                Log.d(TAG, "IMPORT AUTORIZACION COBROS:  "+ jsonObjectAutorizacion.toString());
 
 
                 if (Utils.isSuccesful(jsonObjectAutorizacion)) {
@@ -436,15 +436,15 @@ public class ServiceImport extends IntentService {
                         String fechaLimite = jsonObj.getString("CliDTFechaLimiteCredito");
                         // String fechaLimite = "02/10/2015";
                         String SolReferenciaIdAndroid = jsonObj.getString("SolReferencia");
-                        Log.d("DATOS", "" + montocredito+"--"+idEstablecimiento1+"--"+estadoSolicitud+"--"+idAutorizacionCobro+"--"+fechaLimite+"--"+SolReferenciaIdAndroid);
+                        Log.d(TAG, "DATOS"+ montocredito+"--"+idEstablecimiento1+"--"+estadoSolicitud+"--"+idAutorizacionCobro+"--"+fechaLimite+"--"+SolReferenciaIdAndroid);
 
                         boolean exists = dbAdapter_temp_autorizacion_cobro.existeAutorizacionCobro(SolReferenciaIdAndroid);
 
-                        Log.d("EXISTEAC", "" + exists);
+                        Log.d(TAG, "EXISTEAC: "+ exists);
                         if (exists) {
                             int isActualizado = dbAdapter_temp_autorizacion_cobro.updateAutorizacionCobro(estadoSolicitud, idEstablecimiento1, fechaLimite, SolReferenciaIdAndroid);
 
-                            Log.d("IMPORT REGISTRO AUTORIZACION COBRO ACTUALIZADO ", "" + isActualizado+"ESTADO SOLICITUD"+estadoSolicitud);
+                            Log.d(TAG, "IMPORT REGISTRO AUTORIZACION COBRO ACTUALIZADO "+ isActualizado+"ESTADO SOLICITUD"+estadoSolicitud);
                             if (estadoSolicitud == 2) {
                                 Log.d("GET CURSOR INDEX","123456");
                                 Cursor cr = dbAdapter_comprob_cobro.getComprobanteCobroById(SolReferenciaIdAndroid);
@@ -502,9 +502,9 @@ public class ServiceImport extends IntentService {
                     for (int i = 0; i < jsonArray.length(); i++) {
                         jsonObj = jsonArray.getJSONObject(i);
                         int idEstablecimiento1 = jsonObj.getInt("EstIEstablecimientoId");
-                        double montoCredito = jsonObj.getInt("SolDOMontoCredito");
+                        double montoCredito = jsonObj.getDouble("SolDOMontoCredito");
                         int diasCredito = jsonObj.getInt("SolIVigenciaCredito");
-                        Log.d("IMPORT SOLICITUDES DATOS", idEstablecimiento + " - " + montoCredito + " - " + diasCredito);
+                        Log.d(TAG, "IMPORT SOLICITUDES DATOS: "+ idEstablecimiento + " - " + montoCredito + " - " + diasCredito);
                         dbAdaptert_evento_establec.updateEstablecsCredito(idEstablecimiento, montoCredito, diasCredito);
                     }
                 }

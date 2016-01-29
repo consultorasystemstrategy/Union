@@ -1655,7 +1655,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
                     updateSemaforoStatus(Constants.SEMAFORO_ROJO);
                     //DESACTIVAR EL BOTON
                     buttonVender.setEnabled(false);
-                    buttonVender.setBackgroundColor(R.color.Dark3);
+                    buttonVender.setBackgroundColor(getResources().getColor(R.color.Dark3));
                 } else {
                     Toast.makeText(VMovil_Venta_Cabecera.this, "Número invalido, intente de nuevo", Toast.LENGTH_SHORT).show();
                 }
