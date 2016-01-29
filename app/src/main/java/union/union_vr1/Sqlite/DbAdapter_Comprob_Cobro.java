@@ -258,6 +258,20 @@ public class DbAdapter_Comprob_Cobro {
                 });
     }
 
+    public int updateIdComprobanteVenta(int id, int idComprobanteVenta) {
+
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(CC_id_comprob,idComprobanteVenta);
+
+
+        return mDb.update(SQLITE_TABLE_Comprob_Cobro, initialValues,
+                CC_id_comprob + " = ?",
+                new String[]{
+                        "" + id
+                });
+    }
+
+
     public int updateComprobCobrosAutorizacion(int estado, double montopagado, String idcomprobante) {
 
         ContentValues initialValues = new ContentValues();

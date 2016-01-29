@@ -192,7 +192,8 @@ public class ServiceImport extends IntentService {
 
             JSONObject jsonObjectEventoEstablecimiento = api.GetEstablecimeintoXRuta(idLiquidacion, fecha, idAgente);
 
-            JSONObject jsonObjectComprobanteCobro = api.GetHistorialCobrosPendientes();
+            JSONObject jsonObjectComprobanteCobro = api.GetHistorialCobrosPendientesXLiquidacion(idLiquidacion, idAgente);
+            Log.d(TAG,"JSON OBJECT COMPROBANTE COBRO : "+ idLiquidacion+"--"+ idAgente);
 
             builder.setProgress(_MAX, 3, false);
             startForeground(1, builder.build());

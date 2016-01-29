@@ -30,6 +30,7 @@ import union.union_vr1.Sqlite.DbAdapter_Establecimeinto_Historial;
 import union.union_vr1.Sqlite.DbAdapter_Exportacion_Comprobantes;
 import union.union_vr1.Sqlite.DbAdapter_Histo_Venta;
 import union.union_vr1.Sqlite.DbAdapter_Histo_Venta_Detalle;
+import union.union_vr1.Sqlite.DbAdapter_Impresion_Cobros;
 import union.union_vr1.Sqlite.DbAdapter_Informe_Gastos;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Establecimiento;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
@@ -52,6 +53,7 @@ public class ServiceExport extends IntentService {
     private int idUsuario;
     private int idAgente;
     private Context context;
+    private DbAdapter_Impresion_Cobros dbAdapter_impresion_cobros;
 
     //DEFINO LAS VARIABLES DE EXPORTACIÓN [TABLAS]
     private DbAdapter_Informe_Gastos dbAdapter_informe_gastos;
@@ -104,6 +106,8 @@ public class ServiceExport extends IntentService {
         dbAdapter_temp_canjes_devoluciones.open();
         session = new DbAdapter_Temp_Session(context);
         session.open();
+        dbAdapter_impresion_cobros = new DbAdapter_Impresion_Cobros(context);
+        dbAdapter_impresion_cobros.open();
 
         dbAdapter_informe_gastos = new DbAdapter_Informe_Gastos(context);
         dbAdapter_comprob_venta = new DbAdapter_Comprob_Venta(context);
@@ -180,10 +184,21 @@ public class ServiceExport extends IntentService {
         Cursor cursorInsertarCajaParcial = dbAdapter_comprob_cobro.filterExportUpdatedAndEstadoCobroParcial();
         Cursor cursorEventoEstablecimiento = dbAdaptert_evento_establec.filterExportUpdated();
 
+
+
+
         //
 
-        Log.d("COBROSNORMALES",""+cursorInsertarCaja.getCount());
-        Log.d("COBROSNORMALES",""+cursorInsertarCajaParcial.getCount());
+        //Cobros
+
+
+        Cursor crCobrosInsrCaja = dbAdapter_impresion_cobros.listarParaExportar();
+
+        //Cobros.......
+
+
+
+        Log.d("COBROSNORMALES",""+crCobrosInsrCaja.getCount());
 
         builder.setProgress(_MAX, 15, false);
         startForeground(1, builder.build());
@@ -282,6 +297,7 @@ public class ServiceExport extends IntentService {
                             Log.d("ID COMP V RETURN", "" + idComprobanteVentaRetornado);
 
                             int registrosActualizados = dbAdapter_comprob_venta_detalle.updateComprobVentaDetalleReal(_id_comp_venta, idComprobanteVentaRetornado);
+
                             Log.d(TAG, "DETALLES ACTUALIZADOS : " + registrosActualizados);
                             long _id_mapeo = -1;
                             _id_mapeo = dbAdapter_exportacion_comprobantes.createRegistroExportacion(_id_comp_venta, idComprobanteVentaRetornado, Constants._CREADO);
@@ -318,7 +334,6 @@ public class ServiceExport extends IntentService {
 
                             int registrosActualizados = dbAdapter_comprob_venta_detalle.updateComprobVentaDetalleReal(cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_comprob)), idComprobanteVentaRetornado);
                             Log.d("CV REGISTROS UP", "" + registrosActualizados);
-
                             //EXPORTO Y SI ES CV AL CRÉDITO ACTUALIZO EL ID CREADO POR ANDROID AL ID CREADO EN SQL SERVER
                             int registrosUpdtCV = dbAdapter_comprob_venta.updateComprobanteIDReal(cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_comprob)), idComprobanteVentaRetornado);
 
@@ -365,7 +380,12 @@ public class ServiceExport extends IntentService {
                                 if (Utils.isSuccesful(jsonObjectSuccess)) {
                                     int estado = dbAdapter_comprob_cobro.updatePlanPagoDetalleCobros(cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_comprob)), jsonObjectSuccess.getInt("Value"));
                                     if (estado > 0) {
-                                        Log.d("IDPLANPAGODETALLE", "INSERTTO: " + estado + " - IDPLANPAGODETALLE: " + jsonObjectSuccess.getInt("Value"));
+                                        Log.d("COBROSNORMALES", "INSERTTO: " + estado + " - IDPLANPAGODETALLE: " + jsonObjectSuccess.getInt("Value"));
+                                        int insComprovanteVenta = dbAdapter_comprob_cobro.updateIdComprobanteVenta(cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_comprob)),idComprobanteVentaRetornado);
+                                        int actualizopIp = dbAdapter_impresion_cobros.updateCobrosIdPlanDetalle(cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_comprob)), idPlan, jsonObjectSuccess.getInt("Value"));
+                                        int estadoActualizo = dbAdapter_impresion_cobros.updateCobrosIdComprobanteVenta(cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_comprob)),idComprobanteVentaRetornado);
+
+                                        Log.d("COBROSNORMALES", ""+actualizopIp+"-"+estadoActualizo+"-"+insComprovanteVenta);
                                     }
 
                                 }
@@ -584,44 +604,54 @@ public class ServiceExport extends IntentService {
         //============================================================================================================
 
 
-        if (cursorInsertarCajaParcial.getCount() > 0) {
+        if (crCobrosInsrCaja.getCount() > 0) {
             existeCobrosManuales = true;
 
-            for (cursorInsertarCajaParcial.moveToFirst(); !cursorInsertarCajaParcial.isAfterLast(); cursorInsertarCajaParcial.moveToNext()) {
+            for (crCobrosInsrCaja.moveToFirst(); !crCobrosInsrCaja.isAfterLast(); crCobrosInsrCaja.moveToNext()) {
                 JSONObject jsonObject = null;
 
 
-                Log.d("EXPORT INSERT C", "" + idLiquidacion + "-" +
-                        2 + "-" +
-                        cursorInsertarCajaParcial.getInt(cursorInsertarCajaParcial.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_monto_cobrado)) + "-" +
-                        cursorInsertarCajaParcial.getInt(cursorInsertarCajaParcial.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_estado_cobro)) + "-" +
-                        cursorInsertarCajaParcial.getString(cursorInsertarCajaParcial.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_fecha_cobro)) + "-" +
-                        String.valueOf(cursorInsertarCajaParcial.getInt(cursorInsertarCajaParcial.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_id_comprobante_cobro))) + "-" +
-                        idUsuario + "-" +
-                        cursorInsertarCajaParcial.getInt(cursorInsertarCajaParcial.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_id_comprob)) + "-" +
-                        cursorInsertarCajaParcial.getInt(cursorInsertarCajaParcial.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_id_plan_pago)) + "-" +
-                        cursorInsertarCajaParcial.getInt(cursorInsertarCajaParcial.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_id_plan_pago_detalle)));
+
                 try {
                     jsonObject = api.CreateInsertarCaja(
                             idLiquidacion,
                             2,
-                            cursorInsertarCajaParcial.getDouble(cursorInsertarCajaParcial.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_monto_cobrado)),
-                            cursorInsertarCajaParcial.getInt(cursorInsertarCajaParcial.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_estado_cobro)),
-                            cursorInsertarCajaParcial.getString(cursorInsertarCajaParcial.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_fecha_cobro)),
-                            String.valueOf(cursorInsertarCajaParcial.getString(cursorInsertarCajaParcial.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_id_comprobante_cobro))),
+                            crCobrosInsrCaja.getDouble(crCobrosInsrCaja.getColumnIndexOrThrow(DbAdapter_Impresion_Cobros.Imprimir_monto)),
+                            crCobrosInsrCaja.getInt(crCobrosInsrCaja.getColumnIndexOrThrow(DbAdapter_Impresion_Cobros.Imprimir_estado_cobrado)),
+                            crCobrosInsrCaja.getString(crCobrosInsrCaja.getColumnIndexOrThrow(DbAdapter_Impresion_Cobros.Imprimir_fecha)),
+                            String.valueOf(crCobrosInsrCaja.getString(crCobrosInsrCaja.getColumnIndexOrThrow(DbAdapter_Impresion_Cobros.Imprimir_referencia))),
                             idUsuario,
-                            cursorInsertarCajaParcial.getInt(cursorInsertarCajaParcial.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_id_comprob)),
-                            cursorInsertarCajaParcial.getInt(cursorInsertarCajaParcial.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_id_plan_pago)),
-                            cursorInsertarCajaParcial.getInt(cursorInsertarCajaParcial.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_id_plan_pago_detalle))
+                            crCobrosInsrCaja.getInt(crCobrosInsrCaja.getColumnIndexOrThrow(DbAdapter_Impresion_Cobros.Imprimir_id_comprobante)),
+                            crCobrosInsrCaja.getInt(crCobrosInsrCaja.getColumnIndexOrThrow(DbAdapter_Impresion_Cobros.Imprimir_id_plan_pago)),
+                            crCobrosInsrCaja.getInt(crCobrosInsrCaja.getColumnIndexOrThrow(DbAdapter_Impresion_Cobros.Imprimir_id_plan_pago_detalle))
                     );
                     Log.d("COBROSNORMALES", jsonObject.toString());
                     Log.d("EXPORT INSERT C", "" + Utils.isSuccesful(jsonObject));
 
                     if (Utils.isSuccesful(jsonObject)) {
-                        int id = jsonObject.getInt("Value");
-                        listidInsertarCaja.add("" + cursorInsertarCajaParcial.getInt(cursorInsertarCajaParcial.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_id_cob_historial)));
-                        int ac = dbAdapter_comprob_cobro.changeEstadoToExportParcial(cursorInsertarCajaParcial.getString(cursorInsertarCajaParcial.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_id_cob_historial)), Constants._EXPORTADO);
-                        if (ac > 0) {
+                        int idImpresionCobro= crCobrosInsrCaja.getInt(crCobrosInsrCaja.getColumnIndexOrThrow(DbAdapter_Impresion_Cobros.Imprimir_id));
+                        int id = jsonObject.getInt("Value");//Para Insertar en Flex registrar cobros en el flex
+                        //listidInsertarCaja.add("" + crCobrosInsrCaja.getInt(crCobrosInsrCaja.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_id_cob_historial)));
+                        int actualizoExport =0;
+                        if(id>0){
+                            actualizoExport = dbAdapter_impresion_cobros.updateCobrosExportado(idImpresionCobro,Constants._EXPORTADO);
+                        }
+                        if(id>0){
+                            JSONObject jsonObjectFlex = null;
+                            jsonObjectFlex = api.InsCobro(id);
+                            int idFlex=0;
+                            if (Utils.isSuccesful(jsonObjectFlex)) {
+                                idFlex = jsonObjectFlex.getInt("Value");
+                                int gu = dbAdapter_impresion_cobros.updateCobrosExportadoFlex(idImpresionCobro,Constants._EXPORTADO,idFlex);
+                                //Actualizar Campo xD sino traer otra vez para exportarlo :c
+
+                            }else{
+                                int gS = dbAdapter_impresion_cobros.updateCobrosExportadoFlex(idImpresionCobro,Constants._CREADO,idFlex);
+                            }
+                            Log.d("COBROSNORMALES", jsonObjectFlex.toString()+"-"+crCobrosInsrCaja.getInt(crCobrosInsrCaja.getColumnIndexOrThrow(DbAdapter_Impresion_Cobros.Imprimir_id_comprobante))+"-"+crCobrosInsrCaja.getString(crCobrosInsrCaja.getColumnIndexOrThrow(DbAdapter_Impresion_Cobros.Imprimir_monto)));
+                        }
+                        //int ac = dbAdapter_comprob_cobro.changeEstadoToExportParcial(crCobrosInsrCaja.getString(crCobrosInsrCaja.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_id_cob_historial)), Constants._EXPORTADO);
+                        /*if (ac > 0) {
                             JSONObject jsonObjectFlex = null;
                             jsonObjectFlex = api.InsCobro(id);
 
@@ -629,11 +659,11 @@ public class ServiceExport extends IntentService {
 
                             if (!Utils.isSuccesful(jsonObjectFlex)) {
                                 int idFlex = jsonObjectFlex.getInt("Value");
-                                int gu = dbAdapter_comprob_cobro.changeEstadoToExportToFlexForId(cursorInsertarCajaParcial.getString(cursorInsertarCajaParcial.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_id_cob_historial)), Constants.POR_EXPORTAR_FLEX, id);
+                                int gu = dbAdapter_comprob_cobro.changeEstadoToExportToFlexForId(crCobrosInsrCaja.getString(crCobrosInsrCaja.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_id_cob_historial)), Constants.POR_EXPORTAR_FLEX, id);
                                 //Actualizar Campo xD sino traer otra vez para exportarlo :c
 
                             }
-                        }
+                        }*/
 
                     }
 
@@ -645,7 +675,7 @@ public class ServiceExport extends IntentService {
 
 
             }
-
+/*
             String[] idCCInsertarCaja = new String[listidInsertarCaja.size()];
             listidInsertarCaja.toArray(idCCInsertarCaja);
             //ID_ACTUALIZAR = idCCInsertarCaja;
@@ -656,7 +686,7 @@ public class ServiceExport extends IntentService {
 
             if (listidInsertarCaja.size() > 0) {
                 dbAdapter_comprob_cobro.changeEstadoToExport(idCCInsertarCaja, Constants._EXPORTADO);
-            }
+            }*/
 
 
         } else {
@@ -668,7 +698,7 @@ public class ServiceExport extends IntentService {
 
 
         String[] ID_ACTUALIZAR = new String[]{};
-
+/*
         builder.setProgress(_MAX, 75, false);
         startForeground(1, builder.build());
 
@@ -750,6 +780,10 @@ public class ServiceExport extends IntentService {
         } else {
             Log.d("EXPORT INSERTAR CAJA", "TODOS LOS REGISTROS INSERTAR CAJA DE COMPROBANTE COBRO ESTÁN EXPORTADOS");
         }
+
+
+        */
+        //======================================================
         builder.setProgress(_MAX, 80, false);
         //Get Important for Flex Manual
         Cursor crManual = dbAdapter_cobros_manuales.filterExportForFlex();

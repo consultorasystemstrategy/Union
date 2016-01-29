@@ -75,7 +75,7 @@ public class CursorAdapterCobrosTotales extends CursorAdapter {
             textViewDocumento.setText("Documento: "+factotales);
 
             DecimalFormat dfd = new DecimalFormat("#.00");
-            textViewDeuda.setText("S/. " + dfd.format(repagar));
+            textViewDeuda.setText("S/. " + Utils.formatDouble(repagar));
 
             SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
             String fecha_Programada = fechpro;

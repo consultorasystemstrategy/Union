@@ -15,6 +15,7 @@ import android.widget.TextView;
 import java.text.DecimalFormat;
 
 import union.union_vr1.R;
+import union.union_vr1.Utils.Utils;
 
 /**
  * Created by Usuario on 18/12/2014.
@@ -79,7 +80,7 @@ public class CursorAdapter_Facturas_Canjes_Dev extends CursorAdapter {
                 textViewTitulo.setText("Comprobante: " + compr);
                 textViewSubtitulo.setText("Cantidad: " + cantidad + "\nFecha : " + fecha);
                 textViewComment.setText("Producto: " + producto + "\nCanjes: " + canje + "\nDevoluciones: " + dev);
-                textViewMonto.setText("S/. " + df.format(total));
+                textViewMonto.setText("S/. " + Utils.formatDouble(total));
             } else {
 
             }

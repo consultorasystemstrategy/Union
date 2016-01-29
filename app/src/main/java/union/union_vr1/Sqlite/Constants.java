@@ -42,6 +42,9 @@ public class Constants {
     public static final int COBRO_PARCIAL = 5;
     public static final int COBRO_PARCIAL_EXPORTADO=10;
 
+    public static final int COBRO_ESTADO_PARCIAL=1;
+    public static final int COBRO_ESTADO_TOTAL=2;
+
 
 
 

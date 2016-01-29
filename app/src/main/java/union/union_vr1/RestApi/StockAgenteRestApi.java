@@ -1127,4 +1127,19 @@ public class StockAgenteRestApi {
         return result;
     }
 
+    public JSONObject GetHistorialCobrosPendientesXLiquidacion(int vint_LiquidacionId,int vint_AgenteId) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","RestAPI");
+        o.put("method", "GetHistorialCobrosPendientesXLiquidacion");
+        p.put("vint_LiquidacionId",mapObject(vint_LiquidacionId));
+        p.put("vint_AgenteId",mapObject(vint_AgenteId));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+
 }

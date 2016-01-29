@@ -14,6 +14,7 @@ import android.widget.TextView;
 import java.text.DecimalFormat;
 
 import union.union_vr1.R;
+import union.union_vr1.Utils.Utils;
 
 /**
  * Created by Usuario on 29/12/2014.
@@ -53,7 +54,7 @@ public class CursorAdapterFacturas extends CursorAdapter {
         textViewCantidadOperacion.setText("Cantidad: "+cantidad);
         textViewPrecioUnitario.setText("Precio Unitario: "+precioUnitario);
         textViewReferencia.setText("Referencia Lote: "+referencia);
-        textViewImporteTotal.setText("Importe: "+df.format(importe)+"");
+        textViewImporteTotal.setText("Importe: "+ Utils.formatDouble(importe)+"");
         if(cursor.getInt(cursor.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_id_motivo))==1){
             imageView.setImageDrawable(null);
             imageView.setBackgroundResource(R.drawable.ic_action_undo);
