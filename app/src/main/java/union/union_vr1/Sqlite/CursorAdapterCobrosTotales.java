@@ -71,7 +71,7 @@ public class CursorAdapterCobrosTotales extends CursorAdapter {
             Double repagar = cursor.getDouble(cursor.getColumnIndexOrThrow("cc_re_monto_a_pagar"));
 
             textViewNombreEstablecimiento.setText(localCobro);
-            textViewFecha.setText(Utils.getDatePhoneConvert(fechpro));
+            textViewFecha.setText((fechpro));
             textViewDocumento.setText("Documento: "+factotales);
 
             DecimalFormat dfd = new DecimalFormat("#.00");
@@ -80,7 +80,7 @@ public class CursorAdapterCobrosTotales extends CursorAdapter {
             SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
             String fecha_Programada = fechpro;
             try {
-                Date dSqlite = df.parse(Utils.getDatePhoneConvert(fecha_Programada));
+                Date dSqlite = df.parse((fecha_Programada));
                 Date dSistema = df.parse(getDatePhone());
                 if(dSqlite.before(dSistema)){
                     linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.rojo));

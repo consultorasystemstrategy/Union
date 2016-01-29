@@ -257,12 +257,13 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
 
         if (cursor.moveToFirst()) {
             for (i = 0; i < 1; i++) {
-                String fecha = cursor.getString(0);
+                String fecha = cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Comprob_Cobro.CC_fecha_programada));
 
                 try {
                     cursor.moveToNext();
                     SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-                    Date dSqlite = df.parse(Utils.getDatePhoneConvert(fecha));
+                    Log.d("VMovil_Evento",""+fecha);
+                    Date dSqlite = df.parse((fecha));
                     Date dSistema = df.parse(fech());
 
                     if (dSqlite.equals(dSistema)) {
@@ -286,7 +287,7 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
 
 
                 } catch (ParseException e) {
-                    e.printStackTrace();
+                    Log.d("VMovil_Evento", "" + e.getMessage());
 
                 }
             }

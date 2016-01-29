@@ -48,6 +48,7 @@ import java.util.GregorianCalendar;
 import union.union_vr1.AsyncTask.ExportMain;
 import union.union_vr1.AsyncTask.SolicitarAutorizacionCobros;
 import union.union_vr1.R;
+import union.union_vr1.Servicios.ServiceExport;
 import union.union_vr1.Sqlite.Constants;
 import union.union_vr1.Sqlite.CursorAdapter_Cobros_Establecimiento;
 import union.union_vr1.Sqlite.DBAdapter_Temp_Autorizacion_Cobro;
@@ -55,6 +56,7 @@ import union.union_vr1.Sqlite.DbAdapter_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Cobros_Manuales;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta;
+import union.union_vr1.Sqlite.DbAdapter_Impresion_Cobros;
 import union.union_vr1.Sqlite.DbAdapter_Informe_Gastos;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
@@ -68,7 +70,7 @@ import static union.union_vr1.R.layout.prompts_cobros;
 public class VMovil_Cobro_Credito extends Activity implements OnClickListener, Validator.ValidationListener, DatePickerDialog.OnDateSetListener {
 
     private DbAdapter_Temp_Session session;
-
+    String COMPROID;
     private Cursor cursor, cursorx;
     private SimpleCursorAdapter dataAdapter;
     final Context context = this;
@@ -160,6 +162,9 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener, V
 
     private boolean estado;
 
+
+    private DbAdapter_Impresion_Cobros dbAdapter_impresion_cobros;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -180,6 +185,8 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener, V
         setContentView(R.layout.princ_cobro_credito);
         dbHelper = new DbAdapter_Comprob_Cobro(this);
         dbHelper.open();
+        dbAdapter_impresion_cobros = new DbAdapter_Impresion_Cobros(this);
+        dbAdapter_impresion_cobros.open();
         //dbHelper.deleteAllComprobCobros();
         //dbHelper.insertSomeComprobCobros();
         mSPNcredit = (TextView) findViewById(R.id.VCCR_SPNcredit);
@@ -292,12 +299,13 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener, V
                 idMontoCancelado = cursor.getString(cursor.getColumnIndexOrThrow("cc_re_monto_cobrado"));
                 idVal1 = cursor.getDouble(cursor.getColumnIndexOrThrow("cc_re_monto_a_pagar"));
                 idVal2 = cursor.getDouble(cursor.getColumnIndexOrThrow("cc_re_monto_cobrado"));
-                idDeuda = idVal1 - idVal2;
+                idDeuda = idVal1;
                 mSPNcredit.setText(df.format(idDeuda));
+//1
+                COMPROID = cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Comprob_Cobro.CC_doc));
 
-
-                if (Integer.parseInt(idEstado) == 1) {
-                    Estado = "Pendiente " + df.format(idDeuda);
+                if (Integer.parseInt(idEstado) == 1 || Integer.parseInt(idEstado) == 2) {
+                    Estado = "Pendiente " + Utils.formatDouble(idDeuda);
                 }
                 if (Integer.parseInt(idEstado) == 0) {
                     Estado = "Cancelado";
@@ -320,26 +328,28 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener, V
 
                 mSPNcredit.setText("");
                 Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
-                String idComprobante = cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Comprob_Cobro.CC_id_comprobante_cobro));
+
+                idVal1 = cursor.getDouble(cursor.getColumnIndexOrThrow("cc_re_monto_a_pagar"));
+                idVal2 = cursor.getDouble(cursor.getColumnIndexOrThrow("cc_re_monto_cobrado"));
+                Log.d("DECIMALES", "" + idVal1 + "-" + idVal2);
+
+                String idComprobante = cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Comprob_Cobro.CC_id_cob_historial));
                 Log.d("IDCOMPROBANTE", "" + idComprobante);
                 int estado = dbComprobanteCobro.verProceso(idComprobante);
-                if (estado == 0) {
-                    autorizacion(cursor, i);
-                }
-                if (estado == 1) {
 
-                    Toast.makeText(getApplicationContext(), "Pendiente de Aprobacion", Toast.LENGTH_SHORT).show();
+                switch (estado){
+                    case 0:
+                        autorizacion(cursor, i);
+                        Toast.makeText(getApplicationContext(), "Ya realizo prorroga para este comprobante", Toast.LENGTH_SHORT).show();
+                        break;
+                    case 5:
+                        Toast.makeText(getApplicationContext(), "Ya realizo prorroga para este comprobante", Toast.LENGTH_SHORT).show();
+                        break;
+                    case 10:
+                        Toast.makeText(getApplicationContext(), "Ya realizo prorroga para este comprobante", Toast.LENGTH_SHORT).show();
+                        break;
                 }
-                if (estado == 2) {
-                    Toast.makeText(getApplicationContext(), "Aprobado", Toast.LENGTH_SHORT).show();
 
-                }
-                if (estado == 4) {
-                    Toast.makeText(getApplicationContext(), "Anulado", Toast.LENGTH_SHORT).show();
-                }
-                if (estado == 5) {
-                    Toast.makeText(getApplicationContext(), "Ya realizo prorroga para este comprobante", Toast.LENGTH_SHORT).show();
-                }
 
 
                 return false;
@@ -347,7 +357,7 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener, V
         });
     }
 
-    public void select(final String estadox) {
+    public void select() {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                 context);
 
@@ -356,18 +366,27 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener, V
 
         // set dialog message
         AlertDialog.Builder builder = alertDialogBuilder
-                .setMessage("¿Esta Seguro de Realizar el Cobro?")
+                .setMessage("¿Esta Seguro de Realizar el cobro?")
                 .setCancelable(false)
                 .setPositiveButton(R.string.si, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        Double suma = (Double.parseDouble(Utils.replaceComa(mSPNcredit.getText().toString())) + idVal2);
+                        Double suma = (Double.parseDouble(Utils.replaceComa(mSPNcredit.getText().toString())));
                         // idValNew = Double.parseDouble(mSPNcredit.getText().toString()) + idVal2;
                         idValNew = suma;
-                        dbHelper.updateComprobCobrosCan(idCobro, getDatePhone(), getTimePhone(), idValNew, estadox);
+                        long h = dbHelper.updateComprobCobrosCan(idCobro, getDatePhone(), getTimePhone(), idValNew,"0");
+                        if (h > 0) {
+                            String esta = dbAdaptert_evento_establec.getNameEstablec(Integer.parseInt(estabX));
+                            long a = dbAdapter_impresion_cobros.createImprimir(Integer.parseInt(idCobro), Integer.parseInt(estabX), idValNew, Constants.COBRO_NORMAL, getDatePhone(), esta, COMPROID, getDatePhone() + " " + getTimePhone());
+                            Log.d("VMovil_Cobor", "" + a);
+                        }
                         Toast.makeText(getApplicationContext(),
                                 "Actualizado", Toast.LENGTH_SHORT).show();
+
+
                         if (conectadoWifi() || conectadoRedMovil()) {
-                            new ExportMain(VMovil_Cobro_Credito.this).execute();
+                            Intent intentExportService = new Intent(mainActivity, ServiceExport.class);
+                            intentExportService.setAction(Constants.ACTION_EXPORT_SERVICE);
+                            startService(intentExportService);
                         }
 
                         startActivity(new Intent(getApplicationContext(), VMovil_BluetoothImpCobros.class).putExtra("idComprobante", "" + idCobro).putExtra("importe", "" + idValNew));
@@ -375,7 +394,6 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener, V
                         //displayListViewVCC();
                         idCobro = "-1";
                         mSPNcredit.setText("0.0");
-                        displayListViewVCC();
                         displayListViewVCC();
 
                     }
@@ -423,7 +441,9 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener, V
         final Double[] valorProrroga = {0.0, 0.0};
         //Obteniendo Datos del Cursor
         cursor.moveToPosition(p);
-        final String idComprobante = cursor.getString(cursor.getColumnIndexOrThrow("cc_in_id_comprobante_cobro"));
+        final int IDHISTOCOBRO = cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Comprob_Cobro.CC_id_cob_historial));
+        final String COMPROBANTE = cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Comprob_Cobro.CC_doc));
+        final String idComprobante = cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Comprob_Cobro.CC_id_comprobante_cobro));
         final String nombreEstablec = cursor.getString(cursor.getColumnIndexOrThrow("ee_te_nom_establec"));
         comprobanteVenta = cursor.getInt(cursor.getColumnIndexOrThrow("cc_in_id_comprob"));
         idPlanPago = cursor.getInt(cursor.getColumnIndexOrThrow("cc_in_id_plan_pago"));
@@ -438,19 +458,20 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener, V
         int diasCreadito = cursorEstablecimiento.getInt(cursorEstablecimiento.getColumnIndex(DbAdaptert_Evento_Establec.EE_dias_credito));
 
 
-        idDeuda = idVal1 - idVal2;
+        idDeuda = idVal1;
+        Log.d("DECIMALES SUMA COBROS", ": " + idVal1 + "-" + idVal2);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View layout_cobros = inflater.inflate(R.layout.prompts_cobros, null);
         //Iniciando y Parseando Widgets
         final TextView descripcion = (TextView) layout_cobros.findViewById(R.id.textOperacionSol);
-        descripcion.setText("Prorroga para la deuda: " + Utils.formatDouble(idVal1)  + "");
+        descripcion.setText("Prorroga para la deuda: " + Utils.formatDouble(idVal1) + "");
 
         cantidadHoy = (EditText) layout_cobros.findViewById(R.id.cantidadHoy);
         final TextView cantidadProrroga = (TextView) layout_cobros.findViewById(R.id.montoProrroga);
-        textViewFecha = (TextView)layout_cobros.findViewById(R.id.textFecha);
+        textViewFecha = (TextView) layout_cobros.findViewById(R.id.textFecha);
 
-        textViewFecha.setText(Utils.sumarRestarDiasFecha(Utils.getDateConvert(Utils.getDatePhoneConvert(fecha)),diasCreadito));
+        textViewFecha.setText(Utils.sumarRestarDiasFecha(Utils.getDateConvert(fecha), diasCreadito));
         cantidadProrroga.setEnabled(false);
         //Calculando el monto Prorroga.
         cantidadHoy.addTextChangedListener(new TextWatcher() {
@@ -468,18 +489,28 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener, V
             public void afterTextChanged(Editable valorHoy) {
                 Log.d("Parametros", "idDeuda" + idDeuda + "Monto a Pagar:" + idVal1 + "Monto Pagado" + idVal2 + "");
 
-                if (valorHoy.length() > 0) {
+                if (valorHoy.toString().length() > 0) {
 
-                    valorProrroga[0] = idDeuda - Double.parseDouble(Utils.replaceComa(valorHoy.toString()));
-                    if (valorProrroga[0] < 0 || valorProrroga[0] >= idDeuda) {
-                        valorProrroga[1] = Double.parseDouble(Utils.replaceComa(valorHoy.toString()));
+
+                    try {
+
+                        valorProrroga[0] = idDeuda - Double.parseDouble(Utils.replaceComa(valorHoy.toString()));
+
+                        if (valorProrroga[0] < 0 || valorProrroga[0] >= idDeuda) {
+                            valorProrroga[1] = Double.parseDouble(Utils.replaceComa(valorHoy.toString()));
+                            cantidadProrroga.setError("Error en Valor");
+                            cantidadHoy.setText("");
+                        } else {
+                            cantidadProrroga.setError(null);
+                            DecimalFormat df = new DecimalFormat("0.00");
+                            cantidadProrroga.setText(df.format(valorProrroga[0]));
+                        }
+
+                    } catch (NumberFormatException e) {
                         cantidadProrroga.setError("Error en Valor");
                         cantidadHoy.setText("");
-                    } else {
-                        cantidadProrroga.setError(null);
-                        DecimalFormat df = new DecimalFormat("0.00");
-                        cantidadProrroga.setText(df.format(valorProrroga[0]));
                     }
+
 
                 } else {
                     cantidadProrroga.setError("Error en Valor");
@@ -503,22 +534,26 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener, V
                                 Log.e("DATOSENVIADOS", "" + idAgente + "-" + 4 + "-" + 1 + "-" + comprobanteVenta + "-" + valorCobrar + "-" + valorPago + "-" + Integer.parseInt(estabX) + "-" + Constants._CREADO + "-" + idComprobante + "-" + nombreEstablec);
                                 //long idAutorizacion = dbAutorizacionCobro.createTempAutorizacionPago(idAgente, 4, 1, comprobanteVenta, valorCobrar, valorPago, Integer.parseInt(estabX), Constants._CREADO, idComprobante, nombreEstablec);
 
-                               int estad = dbComprobanteCobro.updateComprobCobrosSN(idComprobante,fechaProgramada,valorPago,valorCobrar);
+                                int estad = dbComprobanteCobro.updateComprobCobrosSN(idComprobante, fechaProgramada, valorPago, valorCobrar);
                                 if (estad > 0) {
+
+                                    long a = dbAdapter_impresion_cobros.createImprimir(IDHISTOCOBRO, Integer.parseInt(estabX), valorPago, Constants.COBRO_NORMAL, getDatePhone(), nombreEstablec, COMPROBANTE, getDatePhone() + " " + getTimePhone());
                                     //new  SolicitarAutorizacionCobros(getApplicationContext()).execute(idAgente + "", 4 + "", 1 + "", comprobanteVenta + "", valorCobrar + "", valorPago + "", estabX, Constants._CREADO + "", idComprobante + "", nombreEstablec + "",idAutorizacion+"");
-                                    Back();
+                                    //   Back();
+                                    Log.d("VMovil_Cobor", "" + a + "-" + estabX);
+                                    startActivity(new Intent(getApplicationContext(), VMovil_BluetoothImpCobros.class).putExtra("idComprobante", "" + IDHISTOCOBRO).putExtra("importe", "" + valorPago));
+                                    finish();
                                 } else {
-                                    Utils.setToast(getApplicationContext(),"Ocurrio un error",R.color.rojo);
+                                    Utils.setToast(getApplicationContext(), "Ocurrio un error", R.color.rojo);
                                 }
 
 
                             } else {
                                 Utils.setToast(getApplicationContext(), "Por favor Ingrese Todos los Campos", R.color.rojo);
                             }
-                        }
-                        else{
+                        } else {
 
-                            Utils.setToast(getApplicationContext(),"Por favor Ingrese Todos los Campos",R.color.rojo);
+                            Utils.setToast(getApplicationContext(), "Por favor Ingrese Todos los Campos", R.color.rojo);
                         }
 
                     }
@@ -547,10 +582,11 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener, V
                             Toast.makeText(getApplicationContext(), "Tiene que Seleccionar una Deuda", Toast.LENGTH_SHORT).show();
                         }
                         if (Double.parseDouble(Utils.replaceComa(df.format(idDeuda))) == Double.parseDouble(Utils.replaceComa(mSPNcredit.getText().toString()))) {
-                            select("0");
+                            Log.d("VCCR_BTNactualiz", "VCCR_BTNactualiz");
+                            select();
                         } else {
                             if (idDeuda > Double.parseDouble(Utils.replaceComa(mSPNcredit.getText().toString()))) {
-                                select("1");
+
                             }
                             if (idDeuda < Double.parseDouble(Utils.replaceComa(mSPNcredit.getText().toString()))) {
                                 //  Toast.makeText(getApplicationContext(), "El ingreso sobrepasa la deuda", Toast.LENGTH_SHORT).show();
@@ -918,10 +954,13 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener, V
                         }
                         long l = dbAdapter_cobros_manuales.createCobrosManuales(3, importe, getTimeAndDate(), cateMovimiento, slideIdAgente, serie, numero, dbAdaptert_evento_establec.getNameCliente(Integer.parseInt(estabX)), Integer.parseInt(estabX), getDatePhone(), getTimePhone());
                         if (l > 0) {
+
+                            long h = dbAdapter_impresion_cobros.createImprimir(Integer.parseInt(l + ""), slideIdEstablecimiento, importe, Constants.COBRO_MANUAL, getDatePhone(), dbAdaptert_evento_establec.getNameEstablec(Integer.parseInt(estabX)), "" + numero, getDatePhone() + " " + getTimePhone());
+                            Log.d("COBROS", "" + h);
                             if (conectadoRedMovil() || conectadoWifi()) {
                                 new ExportMain(mainActivity).execute();
                                 Toast.makeText(getApplicationContext(), "Se registro correctamente", Toast.LENGTH_SHORT).show();
-                                startActivity(new Intent(getApplicationContext(),VMovil_BluetoothImpCobrosManuales.class).putExtra("idComprobante",""+l));
+                                startActivity(new Intent(getApplicationContext(), VMovil_BluetoothImpCobrosManuales.class).putExtra("idComprobante", "" + l));
                             } else {
                                 Toast.makeText(getApplicationContext(), "Guardado correctamente, se exportara cuando tengas conexion a internet", Toast.LENGTH_SHORT).show();
                             }
@@ -989,7 +1028,7 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener, V
 
     @Override
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
-        int mont = monthOfYear+1;
-        textViewFecha.setText(year+"/"+mont+"/"+dayOfMonth);
+        int mont = monthOfYear + 1;
+        textViewFecha.setText(year + "/" + mont + "/" + dayOfMonth);
     }
 }

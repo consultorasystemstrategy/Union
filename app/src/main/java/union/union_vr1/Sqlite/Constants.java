@@ -37,6 +37,10 @@ public class Constants {
 
     public static final int DOCUMENTO_EXTERNO = 700;
     public static final int DOCUMENTO_INTERNO = 701;
+    public static final int COBRO_NORMAL = 1;
+    public static final int COBRO_MANUAL = 2;
+    public static final int COBRO_PARCIAL = 5;
+    public static final int COBRO_PARCIAL_EXPORTADO=10;
 
 
 

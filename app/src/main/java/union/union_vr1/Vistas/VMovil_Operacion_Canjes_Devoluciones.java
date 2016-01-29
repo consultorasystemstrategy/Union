@@ -560,13 +560,13 @@ public class VMovil_Operacion_Canjes_Devoluciones extends TabActivity {
         final AlertDialog.Builder dialogo = new AlertDialog.Builder(this);
         dialogo.setTitle("¿Desea Salir?");
         dialogo.setMessage("Para salir debe guardar o eliminar los items.");
-        dialogo.setNegativeButton(R.string.si, new DialogInterface.OnClickListener() {
+        dialogo.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int liquidacion) {
                 dialogInterface.cancel();
             }
         });
-        dialogo.setPositiveButton(R.string.no, new DialogInterface.OnClickListener() {
+        dialogo.setPositiveButton(R.string.si, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int liquidacion) {
 

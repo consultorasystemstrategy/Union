@@ -41,6 +41,7 @@ import java.util.GregorianCalendar;
 
 import union.union_vr1.R;
 import union.union_vr1.Sqlite.ArrayAdapterWithIcon;
+import union.union_vr1.Sqlite.Constants;
 import union.union_vr1.Sqlite.CursorAdapterComprobanteVenta;
 import union.union_vr1.Sqlite.CursorAdapterFacturas;
 import union.union_vr1.Sqlite.CursorAdapter_Autorizacion_Cobros;
@@ -54,6 +55,7 @@ import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta_Detalle;
 import union.union_vr1.Sqlite.DbAdapter_Histo_Venta_Detalle;
+import union.union_vr1.Sqlite.DbAdapter_Impresion_Cobros;
 import union.union_vr1.Sqlite.DbAdapter_Informe_Gastos;
 import union.union_vr1.Sqlite.DbAdapter_Stock_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
@@ -132,6 +134,7 @@ public class VMovil_Venta_Comprob extends Activity implements View.OnClickListen
     TextView textViewSlideMantenimiento;
     TextView textViewSlideCanjesDevoluciones;
     private TextView textViewSlideCargar;
+    private DbAdapter_Impresion_Cobros dbAdapter_impresion_cobros;
     TextView textConsultar;
     int slideIdEstablecimiento;
 
@@ -167,6 +170,9 @@ public class VMovil_Venta_Comprob extends Activity implements View.OnClickListen
 
         dbAdapter_comprob_venta = new DbAdapter_Comprob_Venta(this);
         dbAdapter_comprob_venta.open();
+
+        dbAdapter_impresion_cobros = new DbAdapter_Impresion_Cobros(this);
+        dbAdapter_impresion_cobros.open();
 
         dbAutorizaciones = new DBAdapter_Temp_Autorizacion_Cobro(this);
         dbAutorizaciones.open();
@@ -259,9 +265,12 @@ public class VMovil_Venta_Comprob extends Activity implements View.OnClickListen
     }
 
     private void listarCobranzas() {
+
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        Cursor cursor = dbHelper_Comprob_Cobro.listarComprobantesToCobrosMante("" + idEstablec);
-        CursorAdapter_Man_Cbrz cAdapter_Cbrz_Man = new CursorAdapter_Man_Cbrz(this, cursor);
+        //Cursor cursor = dbHelper_Comprob_Cobro.listarComprobantesToCobrosMante("" + idEstablec);
+        Log.d("VENTACOMPRO",""+idEstablec);
+        Cursor cr = dbAdapter_impresion_cobros.listarImprimirCobros(getDatePhone(),idEstablec);
+        CursorAdapter_Man_Cbrz cAdapter_Cbrz_Man = new CursorAdapter_Man_Cbrz(this, cr);
         final ListView listCbrz = (ListView) findViewById(R.id.VVCO_cbrz);
         listCbrz.setAdapter(cAdapter_Cbrz_Man);
 
@@ -269,30 +278,29 @@ public class VMovil_Venta_Comprob extends Activity implements View.OnClickListen
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Cursor cursor = (Cursor) parent.getItemAtPosition(position);
-                int tipo = cursor.getInt(cursor.getColumnIndexOrThrow("tipo"));
-                String _id = cursor.getString(cursor.getColumnIndexOrThrow("_id"));
-                String monto = cursor.getString(cursor.getColumnIndexOrThrow("cc_re_monto_cobrado"));
-                if(tipo==1){//normal
-                  // int idCompo = dbHelper_Comprob_Cobro.fetchComprobCobrosById(_id);
-                    dialogItemCobros(tipo,_id+"",monto);
-                }else{//manual
+                int tipo = cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Impresion_Cobros.Imprimir_tipo));
+                String _id = cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Impresion_Cobros.Imprimir_id_detalle));
+                String monto = cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Impresion_Cobros.Imprimir_monto));
+                if (tipo == Constants.COBRO_NORMAL) {//normal
+                    // int idCompo = dbHelper_Comprob_Cobro.fetchComprobCobrosById(_id);
+                    dialogItemCobros(tipo, _id + "", monto);
+                } else {//manual
 
 
-                    dialogItemCobros(tipo,_id,monto);
+                    dialogItemCobros(tipo, _id, monto);
                 }
             }
         });
 
     }
 
-    public void dialogItemCobros(final int tipoCobro,final String idcomprobante,final String monto) {
+    public void dialogItemCobros(final int tipoCobro, final String idcomprobante, final String monto) {
 
         String[] items = new String[]{};
         Integer[] icons = new Integer[]{};
 
         items = new String[]{"Imprimir"};
         icons = new Integer[]{R.mipmap.ic_print_black};
-
 
 
         final ListAdapter adapter = new ArrayAdapterWithIcon(getApplicationContext(), items, icons);
@@ -309,15 +317,15 @@ public class VMovil_Venta_Comprob extends Activity implements View.OnClickListen
             public void onClick(DialogInterface dialog, int which) {
 
                 if (tipoCobro == 1) {//Cobro Normal
-                    startActivity(new Intent(getApplicationContext(),VMovil_BluetoothImpCobros.class).putExtra("idComprobante",""+idcomprobante).putExtra("importe",""+monto));
+                    startActivity(new Intent(getApplicationContext(), VMovil_BluetoothImpCobros.class).putExtra("idComprobante", "" + idcomprobante).putExtra("importe", "" + monto));
 
                 } else {//Cobro Manual
-                    startActivity(new Intent(getApplicationContext(),VMovil_BluetoothImpCobrosManuales.class).putExtra("idComprobante",""+idcomprobante));
+                    startActivity(new Intent(getApplicationContext(), VMovil_BluetoothImpCobrosManuales.class).putExtra("idComprobante", "" + idcomprobante));
 
                 }
             }
         })
-                .setCancelable(false);
+                .setCancelable(true);
 
 
         // create alert dialog
@@ -747,7 +755,7 @@ public class VMovil_Venta_Comprob extends Activity implements View.OnClickListen
         textViewSlideMantenimiento = (TextView) findViewById(R.id.slideVentas_textViewMantenimiento);
         textViewSlideCanjesDevoluciones = (TextView) findViewById(R.id.slideVentas_textviewCanjesDevoluciones);
         textViewSlideCargar = (TextView) findViewById(R.id.slide_textViewCargarInventario);
-        textConsultar = (TextView)findViewById(R.id.slide_textViewConsultarInventario);
+        textConsultar = (TextView) findViewById(R.id.slide_textViewConsultarInventario);
         textConsultar.setOnClickListener(this);
         textViewSlideCargar.setOnClickListener(this);
 
@@ -875,7 +883,7 @@ public class VMovil_Venta_Comprob extends Activity implements View.OnClickListen
         switch (v.getId()) {
             //SLIDING MENU
             case R.id.slide_textViewConsultarInventario:
-                startActivity(new Intent(this,VMovil_Consultar_Inventario.class));
+                startActivity(new Intent(this, VMovil_Consultar_Inventario.class));
                 break;
             case R.id.slide_textViewCargarInventario:
                 Intent cInventario = new Intent(this, VMovil_Cargar_Inventario.class);

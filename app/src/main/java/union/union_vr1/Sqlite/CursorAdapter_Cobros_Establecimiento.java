@@ -63,7 +63,7 @@ public class CursorAdapter_Cobros_Establecimiento extends CursorAdapter {
             double montoCobrado = cursor.getDouble(cursor.getColumnIndexOrThrow(DbAdapter_Comprob_Cobro.CC_monto_cobrado));
             String estado = cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Comprob_Cobro.CC_estado_prorroga));
             String nomEstablec = cursor.getString(cursor.getColumnIndexOrThrow("ee_te_nom_establec"));
-            monto=monto-montoCobrado;
+
 
 
             DecimalFormat dformat = new DecimalFormat("#.00");
@@ -72,7 +72,7 @@ public class CursorAdapter_Cobros_Establecimiento extends CursorAdapter {
             textViewFecha.setTextColor(context.getApplicationContext().getResources().getColor(R.color.Dark1));
             textViewDocumento.setText("Documento: " + doc);
             textViewDocumento.setTextColor(context.getApplicationContext().getResources().getColor(R.color.Dark1));
-            textViewDeuda.setText("S/. " +dformat.format(monto));
+            textViewDeuda.setText("S/. " +Utils.formatDouble(monto));
             textViewEstado.setText("");
 
 
@@ -80,7 +80,7 @@ public class CursorAdapter_Cobros_Establecimiento extends CursorAdapter {
             SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
             try {
 
-                Date dSqlite = df.parse(Utils.getDatePhoneConvert(fecha));
+                Date dSqlite = df.parse(fecha);
                 Date dSistema = df.parse(getDatePhone());
 
                 if (dSqlite.before(dSistema)) {

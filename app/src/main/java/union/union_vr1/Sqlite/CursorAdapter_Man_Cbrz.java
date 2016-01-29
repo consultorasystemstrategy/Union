@@ -25,7 +25,7 @@ public class CursorAdapter_Man_Cbrz extends CursorAdapter {
 
     private LayoutInflater cursorInflater;
 
-    public CursorAdapter_Man_Cbrz (Context context, Cursor c){
+    public CursorAdapter_Man_Cbrz(Context context, Cursor c) {
         super(context, c);
         dbHelper_Comprob_Cobro = new DbAdapter_Comprob_Cobro(context);
         dbHelper_Comprob_Cobro.open();
@@ -51,38 +51,35 @@ public class CursorAdapter_Man_Cbrz extends CursorAdapter {
         LinearLayout linearLayoutColor = (LinearLayout) view.findViewById(R.id.linearLayoutLista);
         ImageView imageView = (ImageView) view.findViewById(R.id.imageViewLista);
 
-        if (cursor.getCount()>0) {
+        if (cursor.getCount() > 0) {
 
 
-            String man_doc = cursor.getString(cursor.getColumnIndexOrThrow("cc_te_doc"));
-            String man_cliente = cursor.getString(cursor.getColumnIndexOrThrow("ee_te_nom_cliente"));
-            String man_fecha= cursor.getString(cursor.getColumnIndexOrThrow("cc_te_fecha_cobro"));
-            String man_hora= cursor.getString(cursor.getColumnIndexOrThrow("cc_te_hora_cobro"));
-            String man_monto= cursor.getString(cursor.getColumnIndexOrThrow("cc_re_monto_cobrado"));
-            String man_estado= cursor.getString(cursor.getColumnIndexOrThrow("estado"));
+            String man_doc = cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Impresion_Cobros.Imprimir_documento));
+            String man_cliente = cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Impresion_Cobros.Imprimir_cliente));
+            String man_fechaHora = cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Impresion_Cobros.Imprimir_fechaHora));
+            String man_monto = cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Impresion_Cobros.Imprimir_monto));
+            int tipo = cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Impresion_Cobros.Imprimir_tipo));
+            linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.verde));
+            imageView.setImageDrawable(context.getApplicationContext().getResources().getDrawable(R.drawable.ic_action_accept));
+            String tip = "";
 
 
+            if (tipo == Constants.COBRO_NORMAL) {
+                tip = "Normal";
 
-            String estado = man_estado;
-            if (estado.equals("Cobrado")){
 
+            } else {
 
-                linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.verde));
-                imageView.setImageDrawable(context.getApplicationContext().getResources().getDrawable(R.drawable.ic_action_accept));
-            }else{
-
-                linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.rojo));
-                imageView.setImageDrawable(context.getApplicationContext().getResources().getDrawable(R.drawable.ic_action_cancel));
+                tip = "Manual";
 
             }
 
 
-            DecimalFormat df= new DecimalFormat("#0.00");
 
             textViewTitulo.setText(man_cliente);
-            textViewSubtitulo.setText("Documento : "+man_doc);
-            textViewComment.setText( man_fecha + " " + man_hora );
-            textViewMonto.setText("S/. "+ man_monto);
+            textViewSubtitulo.setText("Documento : " + man_doc);
+            textViewComment.setText("Fecha - Hora: " + man_fechaHora + " \nTipo: " +tip);
+            textViewMonto.setText("S/. " + man_monto);
 
 
         }

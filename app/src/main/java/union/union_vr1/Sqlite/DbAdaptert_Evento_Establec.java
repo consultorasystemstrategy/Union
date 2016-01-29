@@ -461,7 +461,7 @@ cursor.moveToFirst();
 
     public Cursor fetchAllEstablecs() {
 
-        Cursor mCursor = mDb.query(SQLITE_TABLE_Evento_Establec, new String[] {EE_id_evt_establec,
+        Cursor mCursor = mDb.query(SQLITE_TABLE_Evento_Establec, new String[]{EE_id_evt_establec,
                         EE_id_establec, EE_id_cat_est, EE_id_tipo_doc_cliente, EE_id_estado_atencion, EE_id_estado_no_atencion,
                         EE_nom_establec, EE_nom_cliente, EE_doc_cliente, EE_orden, EE_surtido_stock_ant,
                         EE_surtido_venta_ant, EE_monto_credito, EE_dias_credito, EE_id_agente, EE_time_atencion, EE_direccion_principal},
@@ -476,6 +476,11 @@ cursor.moveToFirst();
         Cursor cursor = mDb.rawQuery("select * from " + SQLITE_TABLE_Evento_Establec + " where " + EE_id_establec + "='" + establec + "'", null);
         cursor.moveToFirst();
         return cursor.getString(cursor.getColumnIndexOrThrow(EE_nom_cliente));
+    }
+    public String getNameEstablec(int establec){
+        Cursor cursor = mDb.rawQuery("select * from " + SQLITE_TABLE_Evento_Establec + " where " + EE_id_establec + "='" + establec + "'", null);
+        cursor.moveToFirst();
+        return cursor.getString(cursor.getColumnIndexOrThrow(EE_nom_establec));
     }
 
     public Cursor filterExportUpdated() {

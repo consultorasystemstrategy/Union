@@ -300,7 +300,7 @@ public class VMovil_Venta_Cabecera_PlanPagos extends Activity implements Adapter
     }
 
     public static String dateToString(Date date) {
-        SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd");
+        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         return df.format(date);
     }
 
