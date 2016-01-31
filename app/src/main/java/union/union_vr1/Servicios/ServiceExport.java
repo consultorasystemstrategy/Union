@@ -591,15 +591,15 @@ public class ServiceExport extends IntentService {
 
                             if (Utils.isSuccesful(jsonObjectFlex)) {
                                 int idFlex = jsonObjectFlex.getInt("Value");
-                                if(idFlex>0){
-                                    long gu = dbAdapter_cobros_manuales.updateCobrosManualesPorId(Constants.POR_EXPORTAR_FLEX, _id, idReturn);
+                                if(idFlex==1 || idFlex ==2){
+                                    long gu = dbAdapter_cobros_manuales.updateCobrosManualesPorId(Constants._EXPORTADO_FLEX, _id, idReturn);
                                 }else{
-                                    long gu = dbAdapter_cobros_manuales.updateCobrosManualesPorId(Constants.POR_EXPORTAR_FLEX, _id, 0);
+                                    long gu = dbAdapter_cobros_manuales.updateCobrosManualesPorId(Constants.POR_EXPORTAR_FLEX, _id, idReturn);
                                 }
 
                                 //Actualizar Campo xD sino traer otra vez para exportarlo :c
                             }else{
-                                long gu = dbAdapter_cobros_manuales.updateCobrosManualesPorId(Constants.POR_EXPORTAR_FLEX, _id, 0);
+                                long gu = dbAdapter_cobros_manuales.updateCobrosManualesPorId(Constants.POR_EXPORTAR_FLEX, _id, idReturn);
                             }
                         }
                     }
@@ -664,17 +664,18 @@ public class ServiceExport extends IntentService {
                             jsonObjectFlex = api.InsCobro(id);
                             int idFlex=0;
                             if (Utils.isSuccesful(jsonObjectFlex)) {
+                                Log.d(TAG+"COBROS",""+jsonObjectFlex.toString());
                                 idFlex = jsonObjectFlex.getInt("Value");
                                 if(idFlex>0){
                                     int gu = dbAdapter_impresion_cobros.updateCobrosExportadoFlex(idImpresionCobro,Constants._EXPORTADO,id);
                                 }else{
-                                    int gS = dbAdapter_impresion_cobros.updateCobrosExportadoFlex(idImpresionCobro,Constants._CREADO,0);
+                                    int gS = dbAdapter_impresion_cobros.updateCobrosExportadoFlex(idImpresionCobro,Constants._CREADO,id);
                                 }
 
                                 //Actualizar Campo xD sino traer otra vez para exportarlo :c
 
                             }else{
-                                int gS = dbAdapter_impresion_cobros.updateCobrosExportadoFlex(idImpresionCobro,Constants._CREADO,0);
+                                int gS = dbAdapter_impresion_cobros.updateCobrosExportadoFlex(idImpresionCobro,Constants._CREADO,id);
                             }
                             Log.d("COBROSNORMALES", jsonObjectFlex.toString()+"-"+crCobrosInsrCaja.getInt(crCobrosInsrCaja.getColumnIndexOrThrow(DbAdapter_Impresion_Cobros.Imprimir_id_comprobante))+"-"+crCobrosInsrCaja.getString(crCobrosInsrCaja.getColumnIndexOrThrow(DbAdapter_Impresion_Cobros.Imprimir_monto)));
                         }
@@ -725,6 +726,7 @@ public class ServiceExport extends IntentService {
         //============================================================================================================
 
         Cursor crCobrosExpFlex = dbAdapter_impresion_cobros.listarCobrosExpFlex();
+        Log.d(TAG+"COBROSFLEXNO",""+crCobrosExpFlex.getCount());
         for (crCobrosExpFlex.moveToFirst(); !crCobrosExpFlex.isAfterLast(); crCobrosExpFlex.moveToNext()) {
             JSONObject jsonObject = null;
             try {
@@ -737,6 +739,7 @@ public class ServiceExport extends IntentService {
                     }
 
                 }
+                Log.d(TAG+"COBROSFLEXNO",""+jsonObject.toString());
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -848,6 +851,7 @@ public class ServiceExport extends IntentService {
                     }
 
                 }
+                Log.d(TAG+"COBROSFLEXMA",""+jsonObject.toString());
 
             } catch (Exception e) {
                 e.printStackTrace();

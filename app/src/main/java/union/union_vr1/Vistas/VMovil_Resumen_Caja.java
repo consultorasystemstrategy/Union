@@ -730,6 +730,8 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
         int colaAutorizacionCobro = dbAdapter_temp_autorizacion_cobro.filterExport().getCount();
         int colaCobrosManuales = dbAdapter_cobros_manuales.filterExport().getCount();
         int colaExportacionFlex = dbAdapter_exportacion_comprobantes.filterExport().getCount();
+        int colaExportCManuFlex = dbAdapter_cobros_manuales.filterExportForFlex().getCount();
+        int colaExportCNormFlex = dbAdapter_impresion_cobros.listarCobrosExpFlex().getCount();
         //KELVIN LO REVISARÁ Y ME DIRÁ
         int colaCAnjesDevoluciones = dbAdapter_temp_canjes_devoluciones.getAllOperacionEstablecimiento().getCount();
 
@@ -737,7 +739,7 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
 
         int totalRegistrosEnCola= colaInformeGastos + colaComprobanteVenta + colaComprobanteVentaDetalle +
                 colaComprobanteCobro+ colaInsertarCaja+ colaEventoEstablecimiento+ colaHistoVentaCreated + colaHistoVentaDetalleCreated + colaAutorizacionCobro
-                + colaCobrosManuales+ colaExportacionFlex;
+                + colaCobrosManuales+ colaExportacionFlex+colaExportCManuFlex+colaExportCNormFlex;
 
         Log.d(TAG, "COLA  TOTAL: " +totalRegistrosEnCola);
         Log.d(TAG, "COLA colaInformeGastos : "+colaInformeGastos);
