@@ -64,6 +64,7 @@ import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta_Detalle;
 import union.union_vr1.Sqlite.DbAdapter_Exportacion_Comprobantes;
 import union.union_vr1.Sqlite.DbAdapter_Histo_Venta;
 import union.union_vr1.Sqlite.DbAdapter_Histo_Venta_Detalle;
+import union.union_vr1.Sqlite.DbAdapter_Impresion_Cobros;
 import union.union_vr1.Sqlite.DbAdapter_Informe_Gastos;
 import union.union_vr1.Sqlite.DbAdapter_Resumen_Caja;
 import union.union_vr1.Sqlite.DbAdapter_Stock_Agente;
@@ -130,6 +131,8 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
     private DbGastos_Ingresos dbGastosIngresos;
     //private DbAdapter_Informe_Gastos dbAdapter_informe_gastos;
     private DbAdapter_Agente dbHelperAgente;
+    //
+    private DbAdapter_Impresion_Cobros dbAdapter_impresion_cobros;
 
 
 
@@ -190,6 +193,9 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
 
         session = new DbAdapter_Temp_Session(this);
         session.open();
+
+        dbAdapter_impresion_cobros = new DbAdapter_Impresion_Cobros(this);
+        dbAdapter_impresion_cobros.open();
 
         dbAdapter_agente = new DbAdapter_Agente(this);
         dbAdapter_agente.open();
@@ -714,7 +720,9 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
         int colaComprobanteVenta = dbAdapter_comprob_venta.filterExport().getCount();
         int colaComprobanteVentaDetalle = dbAdapter_comprob_venta_detalle.filterExport().getCount();
         int colaComprobanteCobro = dbAdapter_comprob_cobro.filterExport().getCount();
-        int colaInsertarCaja = dbAdapter_comprob_cobro.filterExportUpdatedAndEstadoCobro().getCount();
+        //
+       // int colaInsertarCaja = dbAdapter_comprob_cobro.filterExportUpdatedAndEstadoCobro().getCount();
+        int colaInsertarCaja = dbAdapter_impresion_cobros.listarParaExportar().getCount();
         int colaEventoEstablecimiento = dbAdaptert_evento_establec.filterExportUpdated().getCount();
         //histo venta
         int colaHistoVentaCreated = dbAdapter_histo_venta.filterExport().getCount();

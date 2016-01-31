@@ -122,12 +122,20 @@ public class DbAdapter_Impresion_Cobros {
         return mDb.insert(SQLITE_TABLE_IMPRIMIR_COBRO, null, initialValues);
     }
 
+    public Cursor listarCobrosExpFlex(){
+
+        Cursor cr = mDb.rawQuery("select * from "+SQLITE_TABLE_IMPRIMIR_COBRO+" where "+Imprimir_estado_flex+"='"+Constants._CREADO+"' and "+Imprimir_id_flex+" != '0' ",null);
+
+        return cr;
+    }
+
     public Cursor listarImprimirCobros(String fecha,int idEsta){
 
         Cursor cr = mDb.rawQuery("select * from "+SQLITE_TABLE_IMPRIMIR_COBRO+" where "+Imprimir_fecha+"='"+fecha+"' and "+Imprimir_id_establecimiento+"='"+idEsta+"' ",null);
 
         return cr;
     }
+
     public Cursor listarParaExportar(){
 
         Cursor cr = mDb.rawQuery("select * from "+SQLITE_TABLE_IMPRIMIR_COBRO+" where  "+Constants._SINCRONIZAR+"='"+Constants._ACTUALIZADO+"' ",null);

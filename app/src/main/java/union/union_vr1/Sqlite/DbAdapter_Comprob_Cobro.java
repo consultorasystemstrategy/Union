@@ -449,10 +449,9 @@ public class DbAdapter_Comprob_Cobro {
                         CC_id_establec, CC_id_comprob, CC_id_plan_pago, CC_id_plan_pago_detalle,
                         CC_desc_tipo_doc, CC_doc, CC_fecha_programada, CC_monto_a_pagar,
                         CC_fecha_cobro, CC_monto_cobrado, CC_estado_cobro, Constants._SINCRONIZAR},
-                CC_id_comprob + " =  ? " + " AND " + Constants._SINCRONIZAR + " = ?",
+                CC_id_comprob + " =  ? ",
                 new String[]{
-                        "" + id_comprobante_venta,
-                        "" + Constants._CREADO
+                        "" + id_comprobante_venta
                 }
                 ,
                 null, null, null, null);
@@ -461,7 +460,6 @@ public class DbAdapter_Comprob_Cobro {
             ContentValues initialValues = new ContentValues();
             initialValues.put(CC_id_plan_pago, idPlan);
             initialValues.put(Constants._SINCRONIZAR, Constants._ACTUALIZADO);
-            String[] columnas = new String[]{CC_monto_a_pagar};
             int insert = mDb.update(SQLITE_TABLE_Comprob_Cobro, initialValues,
                     CC_id_comprob + "=?", new String[]{id_comprobante_venta + ""});
 

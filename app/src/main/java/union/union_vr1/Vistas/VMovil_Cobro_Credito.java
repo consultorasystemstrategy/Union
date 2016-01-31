@@ -384,6 +384,7 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener, V
                         long h = dbHelper.updateComprobCobrosCan(idCobro, getDatePhone(), getTimePhone(), idValNew,"0");
                         if (h > 0) {
                             //Cobros totales
+                            Log.d("IDIDCOMPROBANTE",""+IDCOMPROBANTEVENTA);
                             String esta = dbAdaptert_evento_establec.getNameEstablec(Integer.parseInt(estabX));
                             long a = dbAdapter_impresion_cobros.createImprimir(Integer.parseInt(idCobro), Integer.parseInt(estabX), idValNew, Constants.COBRO_NORMAL, getDatePhone(), esta, COMPROID, getDatePhone() + " " + getTimePhone(),slideIdLiquidacion+"",0,"",IDCOMPROBANTEVENTA,PLANPAGO,PLANPAGODETALLE,Constants.COBRO_ESTADO_TOTAL);
                             Log.d("VMovil_Cobor", "" + a);
