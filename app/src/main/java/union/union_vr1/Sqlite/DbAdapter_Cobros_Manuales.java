@@ -106,6 +106,7 @@ public class DbAdapter_Cobros_Manuales {
         initialValues.put(CM_Id_Establecimiento, idEtablecimiento);
         initialValues.put(CM_Fecha, fecha);
         initialValues.put(CM_Hora, hora);
+        initialValues.put(CM_Estado_flex, Constants.POR_EXPORTAR_FLEX);
         initialValues.put(CM_Estado,"Cobrado");
         initialValues.put(Constants._SINCRONIZAR, Constants._CREADO);
         return mDb.insert(SQLITE_TABLE_Cobros_Manuales, null, initialValues);
@@ -117,7 +118,7 @@ public class DbAdapter_Cobros_Manuales {
     }
 
     public Cursor filterExportForFlex() {
-        Cursor cursor = mDb.rawQuery("select * from " + SQLITE_TABLE_Cobros_Manuales + " where " +CM_Estado_flex + "='" + Constants._EXPORTADO_FLEX+ "'", null);
+        Cursor cursor = mDb.rawQuery("select * from " + SQLITE_TABLE_Cobros_Manuales + " where " +CM_Estado_flex + "='" + Constants.POR_EXPORTAR_FLEX+ "' and (("+CM_Estado_flex+"=2) or ("+CM_Estado_flex+"=1) )", null);
         return cursor;
     }
 

@@ -336,7 +336,7 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter {
 
                 break;
             case 8: //Puede editar y enviar
-                items = new String[]{"Editar", "Refrescar"};
+                items = new String[]{"Editar", "Reenviar"};
                 icons = new Integer[]{android.R.drawable.ic_menu_edit,
                         android.R.drawable.ic_menu_upload};
 
@@ -451,7 +451,7 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter {
                             case "Enviar":
                                 new ExportEstadoAuEstablec((Activity) context).execute("0", idEstablecEditar);
                                 break;
-                            case "Refrescar":
+                            case "Reenviar":
                                 new ExportEstadoAuEstablec((Activity) context).execute("1", idEstablec);
                                 break;
                         }

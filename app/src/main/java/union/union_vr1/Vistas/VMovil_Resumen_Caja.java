@@ -76,7 +76,7 @@ import union.union_vr1.Utils.Utils;
 import union.union_vr1.VMovil_BluetoothImprimir;
 
 
-public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickListener{
+public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickListener {
 
     TabHost tabHost;
     private DbAdapter_Stock_Agente dbHelper;
@@ -88,9 +88,10 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
     private DbGastos_Ingresos dbHelperGastosIngr;
     private DbAdapter_Agente dbAdapter_agente;
     private DbAdapter_Temp_Session session;
+    private DbAdaptert_Evento_Establec dbAdaptert_evento_establec;
     private int idLiquidacion;
     private int idAgente;
-    private String nombreAgente =  "Agente 001";
+    private String nombreAgente = "Agente 001";
     private TextView textViewFecha, textViewLiquidacion, textViewAgente;
     private View viewResumenTotal;
     private TextView textViewTotalDescripcion;
@@ -115,7 +116,6 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
     private Button button;
 
 
-
     Double totalRuta = 0.0;
     Double totalPlanta = 0.0;
 
@@ -133,7 +133,6 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
     private DbAdapter_Agente dbHelperAgente;
     //
     private DbAdapter_Impresion_Cobros dbAdapter_impresion_cobros;
-
 
 
     SlidingMenu menu;
@@ -164,7 +163,7 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
     Double slide_pagadoTotal = 0.0;
     Double slide_cobradoTotal = 0.0;
 
-    Double slide_totalRuta =0.0;
+    Double slide_totalRuta = 0.0;
     Double slide_totalPlanta = 0.0;
     Double slide_ingresosTotales = 0.0;
     Double slide_gastosTotales = 0.0;
@@ -177,6 +176,7 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
     private Firebase devolucionRef = null;
 
     private static final String TAG = VMovil_Resumen_Caja.class.getSimpleName();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -200,6 +200,10 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
         dbAdapter_agente = new DbAdapter_Agente(this);
         dbAdapter_agente.open();
 
+
+        dbAdaptert_evento_establec = new DbAdaptert_Evento_Establec(this);
+        dbAdaptert_evento_establec.open();
+
         dbAdapter_informe_gastos = new DbAdapter_Informe_Gastos(this);
         dbAdapter_informe_gastos.open();
         //SLIDING MENU
@@ -221,7 +225,7 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
 
         Cursor cursor = dbAdapter_agente.fetchAgentesByIds(idAgente, idLiquidacion);
         cursor.moveToFirst();
-        if (cursor.getCount()>0){
+        if (cursor.getCount() > 0) {
             nombreAgente = cursor.getString(cursor.getColumnIndexOrThrow(dbAdapter_agente.AG_nombre_agente));
         }
 
@@ -230,12 +234,12 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
         textViewLiquidacion = (TextView) findViewById(R.id.textViewLiquidacionNumero);
         textViewFecha = (TextView) findViewById(R.id.textViewFecha);
 
-        textViewAgente.setText("Ejecutivo : "+nombreAgente);
-        textViewFecha.setText("Fecha : "+ Utils.getDateFull());
-        textViewLiquidacion.setText("Liquidación Nro : "+idLiquidacion);
+        textViewAgente.setText("Ejecutivo : " + nombreAgente);
+        textViewFecha.setText("Fecha : " + Utils.getDateFull());
+        textViewLiquidacion.setText("Liquidación Nro : " + idLiquidacion);
 
 
-        dbHelperGastosIngr =  new DbGastos_Ingresos(this);
+        dbHelperGastosIngr = new DbGastos_Ingresos(this);
         dbHelperGastosIngr.open();
 
         tabHost = (TabHost) findViewById(android.R.id.tabhost);
@@ -270,7 +274,7 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
 
         validarDevoluciones();
         //bloquear el botón cerrar caja si hay producdtos malos
-        Log.d(TAG, "FECHA :"+fecha);
+        Log.d(TAG, "FECHA :" + fecha);
         Query queryRef = devolucionRef.orderByChild("fecha").equalTo(fecha);
 
         queryRef.addChildEventListener(new ChildEventListener() {
@@ -320,12 +324,12 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
 
     }
 
-    private void validarDevoluciones(){
+    private void validarDevoluciones() {
         Cursor cursor = dbHelper.fetchDevolucionesMalas(idLiquidacion);
-        if (cursor.getCount()>0){
+        if (cursor.getCount() > 0) {
             //SÍ HAY DEVOLUCIONES
-            int estadoDevoluciones= session.fetchVarible(Constants.SESSION_ESTADO_DEVOLUCIONES);
-            switch (estadoDevoluciones){
+            int estadoDevoluciones = session.fetchVarible(Constants.SESSION_ESTADO_DEVOLUCIONES);
+            switch (estadoDevoluciones) {
                 //ESTÁN BLOQUEADAS
                 case 0:
                     button.setEnabled(false);
@@ -341,7 +345,7 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
 
             }
 
-        }else{
+        } else {
             //No hay devoluciones, no bloquear el botón
             button.setEnabled(true);
             button.setBackgroundColor(mainActivity.getResources().getColor(R.color.verde));
@@ -391,7 +395,7 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
     public void displayListStockVenta() {
         //vista
         ListView listView = (ListView) findViewById(R.id.VRC_listarResumenVentas);
-        listView.addHeaderView(getLayoutInflater().inflate(R.layout.cabecera_inventario_ventas,null));
+        listView.addHeaderView(getLayoutInflater().inflate(R.layout.cabecera_inventario_ventas, null));
         //datos
         Cursor cursor = dbHelper.fetchAllStockAgenteVentas(idLiquidacion);
         //nombre de las columnas
@@ -429,7 +433,7 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
     public void displayListStockApt() {
         ListView listView = (ListView) findViewById(R.id.VRC_listarResumenAPT);
 
-        listView.addHeaderView(getLayoutInflater().inflate(R.layout.cabecera_inventario_apt,null));
+        listView.addHeaderView(getLayoutInflater().inflate(R.layout.cabecera_inventario_apt, null));
 
         Cursor cursor = dbHelper.fetchAllStockAgenteVentas(idLiquidacion);
         String[] columns = new String[]{
@@ -518,14 +522,14 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
 
         textViewTotalCobrado.setText("Total");
         textViewTotalN.setText("" + nTotal);
-        textViewTotalEmitido.setText(""+df.format(emitidoTotal));
-        textViewTotalPagado.setText(""+df.format(pagadoTotal));
-        textViewTotalCobrado.setText(""+df.format(cobradoTotal));
+        textViewTotalEmitido.setText("" + df.format(emitidoTotal));
+        textViewTotalPagado.setText("" + df.format(pagadoTotal));
+        textViewTotalCobrado.setText("" + df.format(cobradoTotal));
 
 
         ListView listView = (ListView) findViewById(R.id.VRC_listarResumenCaja);
         //RESUMEN CABECERA
-        viewResumen = getLayoutInflater().inflate(R.layout.resumen,null);
+        viewResumen = getLayoutInflater().inflate(R.layout.resumen, null);
 
         textViewResumenIngresos = (TextView) viewResumen.findViewById(R.id.resumenIngresosTotales);
         textViewResumenGastos = (TextView) viewResumen.findViewById(R.id.resumenGastosTotales);
@@ -546,19 +550,14 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
         listViewResumenGastos = (ListView) viewResumenGastos.findViewById(R.id.listViewResumenGastos);
 
 
-
-
         viewlayoutFooterGastos = getLayoutInflater().inflate(R.layout.resumen_informe_gastos, null);
         listViewResumenGastos.addFooterView(viewlayoutFooterGastos);
-        textViewResumenGastoNombre      = (TextView) viewlayoutFooterGastos.findViewById(R.id.textviewNombre);
+        textViewResumenGastoNombre = (TextView) viewlayoutFooterGastos.findViewById(R.id.textviewNombre);
         /*textViewResumenGastosTotalPlanta = (TextView) viewlayoutFooterGastos.findViewById(R.id.textViewGastoPlanta);*/
         textViewResumenGastosTotalRuta = (TextView) viewlayoutFooterGastos.findViewById(R.id.textViewGastoRuta);
 
 
-
-
-
-        Cursor cursorGastos =dbAdapter_informe_gastos.resumenInformeGastos(getDayPhone());
+        Cursor cursorGastos = dbAdapter_informe_gastos.resumenInformeGastos(getDayPhone());
 
         /*String[] de = {
                 "tg_te_nom_tipo_gasto",
@@ -586,7 +585,7 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
         Cursor cursorTotalGastos = cursorGastos;
         cursorTotalGastos.moveToFirst();
 
-        for (cursorTotalGastos.moveToFirst(); !cursorTotalGastos.isAfterLast(); cursorTotalGastos.moveToNext()){
+        for (cursorTotalGastos.moveToFirst(); !cursorTotalGastos.isAfterLast(); cursorTotalGastos.moveToNext()) {
             Double rutaGasto = cursorTotalGastos.getDouble(cursorTotalGastos.getColumnIndexOrThrow("RUTA"));
             Double plantaGasto = cursorTotalGastos.getDouble(cursorTotalGastos.getColumnIndexOrThrow("PLANTA"));
 
@@ -606,19 +605,19 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
 
         Double ingresosTotales = cobradoTotal + pagadoTotal;
         Double gastosTotales = totalRuta;
-        Double aRendir = ingresosTotales-gastosTotales;
+        Double aRendir = ingresosTotales - gastosTotales;
 
 
-        textViewResumenIngresos.setText("S/. "+df.format(ingresosTotales));
-        textViewResumenGastos.setText("S/. "+df.format(gastosTotales));
-        textViewResumenARendir.setText("S/. "+df.format(aRendir));
+        textViewResumenIngresos.setText("S/. " + df.format(ingresosTotales));
+        textViewResumenGastos.setText("S/. " + df.format(gastosTotales));
+        textViewResumenARendir.setText("S/. " + df.format(aRendir));
 
 
         listView.addFooterView(viewResumenGastos);
 
 
         final View viewCerrarCaja = getLayoutInflater().inflate(R.layout.layout_cerrar_caja, null);
-        button = (Button)viewCerrarCaja.findViewById(R.id.buttonCerrarCaja);
+        button = (Button) viewCerrarCaja.findViewById(R.id.buttonCerrarCaja);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -628,12 +627,12 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
                 finish();
                 startActivity(intent);*/
 
-                if (conectadoWifi()||conectadoRedMovil()) {
+                if (conectadoWifi() || conectadoRedMovil()) {
                     new AlertDialog.Builder(mainActivity)
                             .setTitle("Cerrar caja")
                             .setMessage("" +
                                     "¿Está seguro que desea cerrar caja?")
-                            .setNegativeButton(R.string.no,new DialogInterface.OnClickListener() {
+                            .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
 
@@ -642,16 +641,16 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
                             .setPositiveButton(R.string.si, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
                                     int registrosEnCola = 11;
-                                    registrosEnCola  = validarExport();
+                                    registrosEnCola = validarExport();
                                     Toast.makeText(VMovil_Resumen_Caja.this, registrosEnCola + " registros en cola.", Toast.LENGTH_SHORT).show();
-                                    if (registrosEnCola == 0){
+                                    if (registrosEnCola == 0) {
                                         dialogCerrarCaja().show();
                                     }
 
                                 }
                             }).create().show();
 
-                }else{
+                } else {
                     Toast toast = Toast.makeText(mainActivity, "No se puede cerrar caja sin conexión.", Toast.LENGTH_SHORT);
                     toast.getView().setBackgroundColor(mainActivity.getResources().getColor(R.color.verde));
                     TextView view = (TextView) toast.getView().findViewById(android.R.id.message);
@@ -660,26 +659,25 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
                 }
             }
         });
-        listView.addFooterView(viewCerrarCaja,null,true);
+        listView.addFooterView(viewCerrarCaja, null, true);
 
     }
 
-    private int validarExport(){
+    private int validarExport() {
 
 
         //DEFINO LAS VARIABLES A MIS MANEJADORES DE LAS TABLAS
-         DbAdapter_Informe_Gastos dbAdapter_informe_gastos;
-         DbAdapter_Comprob_Venta dbAdapter_comprob_venta;
-         DbAdapter_Comprob_Venta_Detalle dbAdapter_comprob_venta_detalle;
-         DbAdapter_Histo_Venta dbAdapter_histo_venta;
-         DbAdapter_Comprob_Cobro dbAdapter_comprob_cobro;
-         DbAdapter_Histo_Venta_Detalle dbAdapter_histo_venta_detalle;
-         DbAdaptert_Evento_Establec dbAdaptert_evento_establec;
-         DBAdapter_Temp_Autorizacion_Cobro dbAdapter_temp_autorizacion_cobro;
-         DBAdapter_Temp_Canjes_Devoluciones dbAdapter_temp_canjes_devoluciones;
-         DbAdapter_Cobros_Manuales dbAdapter_cobros_manuales;
-         DbAdapter_Exportacion_Comprobantes dbAdapter_exportacion_comprobantes;
-
+        DbAdapter_Informe_Gastos dbAdapter_informe_gastos;
+        DbAdapter_Comprob_Venta dbAdapter_comprob_venta;
+        DbAdapter_Comprob_Venta_Detalle dbAdapter_comprob_venta_detalle;
+        DbAdapter_Histo_Venta dbAdapter_histo_venta;
+        DbAdapter_Comprob_Cobro dbAdapter_comprob_cobro;
+        DbAdapter_Histo_Venta_Detalle dbAdapter_histo_venta_detalle;
+        DbAdaptert_Evento_Establec dbAdaptert_evento_establec;
+        DBAdapter_Temp_Autorizacion_Cobro dbAdapter_temp_autorizacion_cobro;
+        DBAdapter_Temp_Canjes_Devoluciones dbAdapter_temp_canjes_devoluciones;
+        DbAdapter_Cobros_Manuales dbAdapter_cobros_manuales;
+        DbAdapter_Exportacion_Comprobantes dbAdapter_exportacion_comprobantes;
 
 
         //INSTANCIO LAS CLASES DE MIS MANEJADORES DE DB
@@ -721,7 +719,7 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
         int colaComprobanteVentaDetalle = dbAdapter_comprob_venta_detalle.filterExport().getCount();
         int colaComprobanteCobro = dbAdapter_comprob_cobro.filterExport().getCount();
         //
-       // int colaInsertarCaja = dbAdapter_comprob_cobro.filterExportUpdatedAndEstadoCobro().getCount();
+        // int colaInsertarCaja = dbAdapter_comprob_cobro.filterExportUpdatedAndEstadoCobro().getCount();
         int colaInsertarCaja = dbAdapter_impresion_cobros.listarParaExportar().getCount();
         int colaEventoEstablecimiento = dbAdaptert_evento_establec.filterExportUpdated().getCount();
         //histo venta
@@ -732,28 +730,31 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
         int colaExportacionFlex = dbAdapter_exportacion_comprobantes.filterExport().getCount();
         int colaExportCManuFlex = dbAdapter_cobros_manuales.filterExportForFlex().getCount();
         int colaExportCNormFlex = dbAdapter_impresion_cobros.listarCobrosExpFlex().getCount();
+        int colaCliente = dbAdaptert_evento_establec.listarToExport().getCount();
         //KELVIN LO REVISARÁ Y ME DIRÁ
         int colaCAnjesDevoluciones = dbAdapter_temp_canjes_devoluciones.getAllOperacionEstablecimiento().getCount();
 
 
+        int totalRegistrosEnCola = colaInformeGastos + colaComprobanteVenta + colaComprobanteVentaDetalle +
+                colaComprobanteCobro + colaInsertarCaja + colaEventoEstablecimiento + colaHistoVentaCreated + colaHistoVentaDetalleCreated + colaAutorizacionCobro
+                + colaCobrosManuales + colaExportacionFlex + colaExportCManuFlex + colaExportCNormFlex + colaCliente + colaCAnjesDevoluciones;
 
-        int totalRegistrosEnCola= colaInformeGastos + colaComprobanteVenta + colaComprobanteVentaDetalle +
-                colaComprobanteCobro+ colaInsertarCaja+ colaEventoEstablecimiento+ colaHistoVentaCreated + colaHistoVentaDetalleCreated + colaAutorizacionCobro
-                + colaCobrosManuales+ colaExportacionFlex+colaExportCManuFlex+colaExportCNormFlex;
-
-        Log.d(TAG, "COLA  TOTAL: " +totalRegistrosEnCola);
-        Log.d(TAG, "COLA colaInformeGastos : "+colaInformeGastos);
-        Log.d(TAG, "COLA colaComprobanteVenta : "+colaComprobanteVenta);
-        Log.d(TAG, "COLA colaComprobanteVentaDetalle : "+colaComprobanteVentaDetalle);
-        Log.d(TAG, "COLA colaComprobanteCobro : "+colaComprobanteCobro);
-        Log.d(TAG, "COLA colaInsertarCaja : "+colaInsertarCaja);
-        Log.d(TAG, "COLA colaEventoEstablecimiento : "+colaEventoEstablecimiento);
-        Log.d(TAG, "COLA colaHistoVentaCreated : "+colaHistoVentaCreated);
-        Log.d(TAG, "COLA colaHistoVentaDetalleCreated : "+colaHistoVentaDetalleCreated);
-        Log.d(TAG, "COLA colaAutorizacionCobro : "+colaAutorizacionCobro);
-        Log.d(TAG, "COLA colaCobrosManuales : "+colaCobrosManuales);
-        Log.d(TAG, "COLA colaExportacionFlex : "+colaExportacionFlex);
-        Log.d(TAG, "COLA colaCAnjesDevoluciones : "+colaCAnjesDevoluciones);
+        Log.d(TAG, "COLA  TOTAL: " + totalRegistrosEnCola);
+        Log.d(TAG, "COLA colaInformeGastos : " + colaInformeGastos);
+        Log.d(TAG, "COLA colaComprobanteVenta : " + colaComprobanteVenta);
+        Log.d(TAG, "COLA colaComprobanteVentaDetalle : " + colaComprobanteVentaDetalle);
+        Log.d(TAG, "COLA colaComprobanteCobro : " + colaComprobanteCobro);
+        Log.d(TAG, "COLA colaInsertarCaja : " + colaInsertarCaja);
+        Log.d(TAG, "COLA colaEventoEstablecimiento : " + colaEventoEstablecimiento);
+        Log.d(TAG, "COLA colaHistoVentaCreated : " + colaHistoVentaCreated);
+        Log.d(TAG, "COLA colaHistoVentaDetalleCreated : " + colaHistoVentaDetalleCreated);
+        Log.d(TAG, "COLA colaAutorizacionCobro : " + colaAutorizacionCobro);
+        Log.d(TAG, "COLA colaCobrosManuales : " + colaCobrosManuales);
+        Log.d(TAG, "COLA colaExportacionFlex : " + colaExportacionFlex);
+        Log.d(TAG, "COLA colaCAnjesDevoluciones : " + colaCAnjesDevoluciones);
+        Log.d(TAG, "COLA colaExportCNormFlex : " + colaExportCNormFlex);
+        Log.d(TAG, "COLA colaExportCManuFlex : " + colaExportCManuFlex);
+        Log.d(TAG, "COLA colaCliente : " + colaCliente);
 
 
         return totalRegistrosEnCola;
@@ -770,17 +771,17 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
             public void onClick(DialogInterface dialog, int which) {
 
                 String kmFinal = editTextKmFinal.getText().toString().trim();
-                if (kmFinal.length()>0){
+                if (kmFinal.length() > 0) {
                     int kmFinall = Integer.parseInt(kmFinal);
 
-                    Toast toast = Toast.makeText(mainActivity.getApplicationContext(), "CERRANDO CAJA...",Toast.LENGTH_SHORT);
+                    Toast toast = Toast.makeText(mainActivity.getApplicationContext(), "CERRANDO CAJA...", Toast.LENGTH_SHORT);
 
                     toast.getView().setBackgroundColor(mainActivity.getResources().getColor(R.color.verde));
                     TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
                     v.setTextColor(mainActivity.getResources().getColor(R.color.Blanco));
                     toast.show();
-                    Log.d("CERRAR CAJA", ""+idLiquidacion+"-"+slide_ingresosTotales+"-"+slide_gastosTotales+""+slide_aRendir+"-"+kmFinall);
-                    new CerrarCaja(mainActivity).execute(""+idLiquidacion, ""+slide_ingresosTotales,""+slide_gastosTotales,""+slide_aRendir,""+kmFinall, ""+idAgente);
+                    Log.d("CERRAR CAJA", "" + idLiquidacion + "-" + slide_ingresosTotales + "-" + slide_gastosTotales + "" + slide_aRendir + "-" + kmFinall);
+                    new CerrarCaja(mainActivity).execute("" + idLiquidacion, "" + slide_ingresosTotales, "" + slide_gastosTotales, "" + slide_aRendir, "" + kmFinall, "" + idAgente);
                 }
             }
         });
@@ -795,8 +796,8 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
         String formatteDate = df.format(date);
         return formatteDate;
     }
-    public String getDayPhone()
-    {
+
+    public String getDayPhone() {
         Calendar cal = new GregorianCalendar();
         Date date = cal.getTime();
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
@@ -850,10 +851,10 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
 
 
     //SLIDING MENU
-    public void showSlideMenu(Activity activity){
+    public void showSlideMenu(Activity activity) {
         layoutSlideMenu = View.inflate(activity, R.layout.slide_menu, null);
         // configure the SlidingMenu
-        menu =  new SlidingMenu(activity);
+        menu = new SlidingMenu(activity);
         menu.setMode(SlidingMenu.LEFT);
         menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
         menu.setShadowWidthRes(R.dimen.space_slide);
@@ -863,21 +864,21 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
         menu.attachToActivity(activity, SlidingMenu.SLIDING_CONTENT);
         menu.setMenu(layoutSlideMenu);
 
-        textViewSlideNombreAgente = (TextView)findViewById(R.id.slide_textViewNombreAgente);
-        textViewSlideNombreRuta = (TextView)findViewById(R.id.slide_textViewNombreRuta);
+        textViewSlideNombreAgente = (TextView) findViewById(R.id.slide_textViewNombreAgente);
+        textViewSlideNombreRuta = (TextView) findViewById(R.id.slide_textViewNombreRuta);
         buttonSlideNroEstablecimiento = (Button) findViewById(R.id.slide_buttonNroEstablecimiento);
         textviewSlideConsultarInventario = (TextView) findViewById(R.id.slide_textViewConsultarInventario);
-        textViewSlidePrincipal = (TextView)findViewById(R.id.slide_textviewPrincipal);
-        textViewSlideCliente = (TextView)findViewById(R.id.slide_textViewClientes);
-        textviewSlideCobranzas = (TextView)findViewById(R.id.slide_textViewCobranza);
-        textviewSlideGastos = (TextView)findViewById(R.id.slide_TextViewGastos);
-        textviewSlideResumen = (TextView)findViewById(R.id.slide_textViewResumen);
-        textviewSlideARendir = (TextView)findViewById(R.id.slide_textViewARendir);
+        textViewSlidePrincipal = (TextView) findViewById(R.id.slide_textviewPrincipal);
+        textViewSlideCliente = (TextView) findViewById(R.id.slide_textViewClientes);
+        textviewSlideCobranzas = (TextView) findViewById(R.id.slide_textViewCobranza);
+        textviewSlideGastos = (TextView) findViewById(R.id.slide_TextViewGastos);
+        textviewSlideResumen = (TextView) findViewById(R.id.slide_textViewResumen);
+        textviewSlideARendir = (TextView) findViewById(R.id.slide_textViewARendir);
 
         textViewIngresosTotales = (TextView) findViewById(R.id.textView_IngresosTotales);
         textViewGastos = (TextView) findViewById(R.id.textView_Gastos);
 
-        textViewSlideCargar = (TextView)findViewById(R.id.slide_textViewCargarInventario);
+        textViewSlideCargar = (TextView) findViewById(R.id.slide_textViewCargarInventario);
         textViewSlideCargar.setOnClickListener(this);
         textviewSlideConsultarInventario.setOnClickListener(this);
         textViewSlidePrincipal.setOnClickListener(this);
@@ -889,7 +890,7 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
 
 
         slideIdAgente = session.fetchVarible(1);
-        slideIdLiquidacion  = session.fetchVarible(3);
+        slideIdLiquidacion = session.fetchVarible(3);
 
         changeDataSlideMenu();
 
@@ -897,7 +898,7 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
     }
 
     //SLIDING MENU
-    public void changeDataSlideMenu(){
+    public void changeDataSlideMenu() {
 
         //INICIALIZAMOS OTRA VEZ LAS VARIABLES
         slide_emitidoTotal = 0.0;
@@ -913,7 +914,7 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
         Cursor cursorAgente = dbHelperAgente.fetchAgentesByIds(slideIdAgente, slideIdLiquidacion);
         cursorAgente.moveToFirst();
 
-        if (cursorAgente.getCount()>0){
+        if (cursorAgente.getCount() > 0) {
             slideNombreRuta = cursorAgente.getString(cursorAgente.getColumnIndexOrThrow(dbHelperAgente.AG_nombre_ruta));
             slideNumeroEstablecimientoxRuta = cursorAgente.getInt(cursorAgente.getColumnIndexOrThrow(dbHelperAgente.AG_nro_bodegas));
             slideNombreAgente = cursorAgente.getString(cursorAgente.getColumnIndexOrThrow(dbHelperAgente.AG_nombre_agente));
@@ -934,9 +935,9 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
         }
         //GASTOS
         Utils utils = new Utils();
-        Cursor cursorTotalGastos =dbAdapter_informe_gastos.resumenInformeGastos(utils.getDayPhone());
+        Cursor cursorTotalGastos = dbAdapter_informe_gastos.resumenInformeGastos(utils.getDayPhone());
 
-        for (cursorTotalGastos.moveToFirst(); !cursorTotalGastos.isAfterLast(); cursorTotalGastos.moveToNext()){
+        for (cursorTotalGastos.moveToFirst(); !cursorTotalGastos.isAfterLast(); cursorTotalGastos.moveToNext()) {
             Double rutaGasto = cursorTotalGastos.getDouble(cursorTotalGastos.getColumnIndexOrThrow("RUTA"));
             Double plantaGasto = cursorTotalGastos.getDouble(cursorTotalGastos.getColumnIndexOrThrow("PLANTA"));
 
@@ -946,22 +947,21 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
 
         slide_ingresosTotales = slide_cobradoTotal + slide_pagadoTotal;
         slide_gastosTotales = slide_totalRuta;
-        slide_aRendir = slide_ingresosTotales-slide_gastosTotales;
-
+        slide_aRendir = slide_ingresosTotales - slide_gastosTotales;
 
 
         //MOSTRAMOS EN EL SLIDE LOS DATOS OBTENIDOS
-        textViewSlideNombreAgente.setText(""+slideNombreAgente);
-        textViewSlideNombreRuta.setText(""+slideNombreRuta);
-        buttonSlideNroEstablecimiento.setText(""+slideNumeroEstablecimientoxRuta);
+        textViewSlideNombreAgente.setText("" + slideNombreAgente);
+        textViewSlideNombreRuta.setText("" + slideNombreRuta);
+        buttonSlideNroEstablecimiento.setText("" + slideNumeroEstablecimientoxRuta);
         textviewSlideARendir.setText("Efectivo a Rendir S/. " + df.format(slide_aRendir));
 
-        textViewIngresosTotales.setText(""+df.format(slide_ingresosTotales));
-        textViewGastos.setText(""+df.format(slide_gastosTotales));
+        textViewIngresosTotales.setText("" + df.format(slide_ingresosTotales));
+        textViewGastos.setText("" + df.format(slide_gastosTotales));
 
     }
 
-    protected Boolean conectadoWifi(){
+    protected Boolean conectadoWifi() {
         ConnectivityManager connectivity = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivity != null) {
             NetworkInfo info = connectivity.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
@@ -974,7 +974,7 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
         return false;
     }
 
-    protected Boolean conectadoRedMovil(){
+    protected Boolean conectadoRedMovil() {
         ConnectivityManager connectivity = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivity != null) {
             NetworkInfo info = connectivity.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);

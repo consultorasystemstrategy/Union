@@ -165,9 +165,10 @@ public class VMovil_Cobros_Totales extends Activity implements View.OnClickListe
                 int idplanPago = cr2.getInt(cr2.getColumnIndexOrThrow(DbAdapter_Comprob_Cobro.CC_id_plan_pago));
                 int idplanPagoDetalle = cr2.getInt(cr2.getColumnIndexOrThrow(DbAdapter_Comprob_Cobro.CC_id_plan_pago_detalle));
                 int idEstablecimiento = cr2.getInt(cr2.getColumnIndexOrThrow(DbAdapter_Comprob_Cobro.CC_id_establec));
+                String nombre_comprobante = cr2.getString(cr2.getColumnIndexOrThrow(DbAdapter_Comprob_Cobro.CC_desc_tipo_doc));
                 //System.out.println("here"+establec+"-"+idCCobro+"-"+monto+"-"+cliente);
                 //view.setBackgroundColor(0xffcccccc);
-                Dialog(establec, monto, idCCobro, cliente,idComprobanteVenta,idplanPago,idplanPagoDetalle,idEstablecimiento);
+                Dialog(establec, monto, idCCobro, cliente,idComprobanteVenta,idplanPago,idplanPagoDetalle,idEstablecimiento,nombre_comprobante);
 
 
             }
@@ -176,7 +177,7 @@ public class VMovil_Cobros_Totales extends Activity implements View.OnClickListe
 
     }
 
-    public void Dialog(final String establec, final Double deuda, final String idCCobro, String cliente,final int idComprobanteVenta,final  int idPlanPago,final int idPlanPagoDetalle,final int idEstablecimiento) {
+    public void Dialog(final String establec, final Double deuda, final String idCCobro, String cliente,final int idComprobanteVenta,final  int idPlanPago,final int idPlanPagoDetalle,final int idEstablecimiento,final String nombre_documento) {
 
         cCobro = new DbAdapter_Comprob_Cobro(this);
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
@@ -195,7 +196,7 @@ public class VMovil_Cobros_Totales extends Activity implements View.OnClickListe
                         cCobro.open();
 
                         int estado = cCobro.updateComprobCobrosCan2(idCCobro, getDatePhone(), getTimePhone(), deuda, "0");
-                        long a = dbAdapter_impresion_cobros.createImprimir(Integer.parseInt(idCCobro),idEstablecimiento, deuda, Constants.COBRO_NORMAL, getDatePhone(), establec,idComprobanteVenta+"", getDatePhone() + " " + getTimePhone(), slideIdLiquidacion + "", 0, idComprobanteVenta+"",1, idPlanPago, idPlanPagoDetalle, Constants.COBRO_ESTADO_PARCIAL);
+                        long a = dbAdapter_impresion_cobros.createImprimir(Integer.parseInt(idCCobro),idEstablecimiento, deuda, Constants.COBRO_NORMAL, getDatePhone(), establec,idComprobanteVenta+"", getDatePhone() + " " + getTimePhone(), slideIdLiquidacion + "", 0, idComprobanteVenta+"",1, idPlanPago, idPlanPagoDetalle, Constants.COBRO_ESTADO_PARCIAL,nombre_documento);
 
                         Log.e("ESTADO DE COBRANZA", "" + estado + "-" + idCCobro);
                         if (estado > 0) {

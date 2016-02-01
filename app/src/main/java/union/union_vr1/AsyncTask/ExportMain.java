@@ -537,6 +537,8 @@ public class ExportMain extends AsyncTask<String, String, String> {
 
         publishProgress("" + 65);
         //Get
+
+        /*
         publishProgress("" + 70);
         if (cursorCobrosManuales.getCount() > 0) {
             existeCobrosManuales = true;
@@ -572,6 +574,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
         if (existeCobrosManuales) {
 
         }
+        */
         /*
         if (cursorHistoVentaCreated.getCount()>0){
 
@@ -722,7 +725,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
         String[] ID_ACTUALIZAR = new String[]{};
 
         publishProgress("" + 75);
-
+/*
         if (cursorInsertarCaja.getCount() > 0) {
             existeCobrosManuales = true;
 
@@ -765,7 +768,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
                             jsonObjectFlex = api.InsCobro(id);
                         }*/
 
-                    }
+                 /*   }
 
 
                 } catch (Exception e) {
@@ -792,6 +795,8 @@ public class ExportMain extends AsyncTask<String, String, String> {
         } else {
             Log.d("EXPORT INSERTAR CAJA", "TODOS LOS REGISTROS INSERTAR CAJA DE COMPROBANTE COBRO ESTÁN EXPORTADOS");
         }
+
+     */
         publishProgress("" + 80);
 
         if (cursorAutorizacionCobro.getCount() > 0) {

@@ -37,6 +37,7 @@ public class DbAdapter_Impresion_Cobros {
     public static final String Imprimir_estado_parcial  = "Imprimir_estado_parcial";
     public static final String Imprimir_estado_flex = "Imprimir_estado_flex";
     public static final String Imprimir_id_flex = "Imprimir_id_flex";
+    public static final String Imprimir_comprobante_nombre = "Imprimir_comprobante_nombre";
 
 
 
@@ -69,6 +70,7 @@ public class DbAdapter_Impresion_Cobros {
                     +Imprimir_id_plan_pago_detalle+" text,"
                     +Imprimir_fechaHora+" text,"
                     +Imprimir_estado_parcial+" text,"
+                    +Imprimir_comprobante_nombre+" text,"
                     +Constants._SINCRONIZAR+" integer,"
                     +Imprimir_estado_flex +" integer,"
                     +Imprimir_id_flex +" text,"
@@ -95,7 +97,7 @@ public class DbAdapter_Impresion_Cobros {
 
 
     public long createImprimir(int id_detalle,int idEstablecimiento,double monto,int tipo,String fecha,String cliente,String documento, String fechaHora,String liquidacion,int estadoCobro,String refere
-    ,int idComprobante,int idPlan, int idPlanDetalle,int estadoParcial){
+    ,int idComprobante,int idPlan, int idPlanDetalle,int estadoParcial,String nombre_comprobante){
 
         ContentValues initialValues = new ContentValues();
         initialValues.put(Imprimir_id_detalle,id_detalle);
@@ -116,6 +118,7 @@ public class DbAdapter_Impresion_Cobros {
         initialValues.put(Imprimir_id_plan_pago_detalle,idPlanDetalle);
         initialValues.put(Imprimir_estado_parcial,estadoParcial);
         initialValues.put(Imprimir_estado_flex,Constants._CREADO);
+        initialValues.put(Imprimir_comprobante_nombre,nombre_comprobante);
         initialValues.put(Constants._SINCRONIZAR,Constants._ACTUALIZADO);
 
 
@@ -124,7 +127,7 @@ public class DbAdapter_Impresion_Cobros {
 
     public Cursor listarCobrosExpFlex(){
 
-        Cursor cr = mDb.rawQuery("select * from "+SQLITE_TABLE_IMPRIMIR_COBRO+" where "+Imprimir_estado_flex+"='"+Constants._CREADO+"' and "+Imprimir_id_flex+" != '0' ",null);
+        Cursor cr = mDb.rawQuery("select * from "+SQLITE_TABLE_IMPRIMIR_COBRO+" where "+Imprimir_estado_flex+"='"+Constants._CREADO+"' and "+Imprimir_id_flex+" != '0' AND "+Imprimir_tipo+" !='"+Constants.COBRO_MANUAL+"' ",null);
 
         return cr;
     }
@@ -138,7 +141,7 @@ public class DbAdapter_Impresion_Cobros {
 
     public Cursor listarParaExportar(){
 
-        Cursor cr = mDb.rawQuery("select * from "+SQLITE_TABLE_IMPRIMIR_COBRO+" where  "+Constants._SINCRONIZAR+"='"+Constants._ACTUALIZADO+"' ",null);
+        Cursor cr = mDb.rawQuery("select * from "+SQLITE_TABLE_IMPRIMIR_COBRO+" where  "+Constants._SINCRONIZAR+"='"+Constants._ACTUALIZADO+"' and "+Imprimir_tipo+" !='"+Constants.COBRO_MANUAL+"'  ",null);
 
         return cr;
     }

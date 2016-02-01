@@ -226,20 +226,22 @@ public class DbGastos_Ingresos {
                 "UNION \n" +
                 "\n" +
                 "SELECT \t 3 as _id, 'Facturas Cobradas' AS comprobante,\n" +
-                "\t(SELECT COUNT(DISTINCT(cc_in_id_comprob)) FROM m_comprob_cobro WHERE UPPER(cc_te_desc_tipo_doc) like '%FACTURA%' AND  cc_in_estado_cobro='0' AND cc_te_fecha_cobro like '%"+getDatePhone()+"%') AS n,\n" +
+                "\t(SELECT COUNT(DISTINCT(Imprimir_id_comprobante)) FROM imprimir_cobro WHERE UPPER(Imprimir_comprobante_nombre) like '%FACTURA%' AND  Imprimir_estado_cobrado='0' AND Imprimir_fecha like '%"+getDatePhone()+"%') AS n,\n" +
                 "\t0 AS emitidas,\n" +
                 "\t0 AS pagado,\n" +
-                "\t(SELECT ROUND(SUM(cc_re_monto_cobrado),1) FROM m_comprob_cobro WHERE UPPER(cc_te_desc_tipo_doc) like '%FACTURA%' AND cc_in_estado_cobro='0' AND cc_te_fecha_cobro like '%"+getDatePhone()+"%') AS cobrado\n" +
+                "\t(SELECT ROUND(SUM(Imprimir_monto),1) FROM imprimir_cobro WHERE UPPER(Imprimir_comprobante_nombre) like '%FACTURA%' AND Imprimir_estado_cobrado='0' AND Imprimir_fecha like '%"+getDatePhone()+"%') AS cobrado\n" +
                 "\n" +
                 "UNION \n" +
                 "\n" +
                 "SELECT \t 4 as _id, 'Boletas Cobradas' AS comprobante,\n" +
-                "\t(SELECT COUNT(DISTINCT(cc_in_id_comprob)) FROM m_comprob_cobro WHERE UPPER(cc_te_desc_tipo_doc) like '%BOLETA%' AND  cc_in_estado_cobro='0' AND cc_te_fecha_cobro like '%"+getDatePhone()+"%') AS n,\n" +
+                "\t(SELECT COUNT(DISTINCT(Imprimir_id_comprobante)) FROM imprimir_cobro WHERE UPPER(Imprimir_comprobante_nombre) like '%BOLETA%' AND  Imprimir_estado_cobrado='0' AND Imprimir_fecha like '%"+getDatePhone()+"%') AS n,\n" +
                 "\t0 AS emitidas,\n" +
                 "\t0 AS pagado,\n" +
-                "\t(SELECT ROUND(SUM(cc_re_monto_cobrado),1) FROM m_comprob_cobro WHERE UPPER(cc_te_desc_tipo_doc) like '%BOLETA%'  AND cc_in_estado_cobro='0' AND cc_te_fecha_cobro like '%"+getDatePhone()+"%') AS cobrado" +
+                "\t(SELECT ROUND(SUM(Imprimir_monto),1) FROM imprimir_cobro WHERE UPPER(Imprimir_comprobante_nombre) like '%BOLETA%'  AND Imprimir_estado_cobrado='0' AND Imprimir_fecha like '%"+getDatePhone()+"%') AS cobrado" +
                 "\n" +
                 " UNION " +
+                "\n"+
+                ""+
                 "\n" +
                 "SELECT 5 as _id, 'Facturas Anuladas' AS comprobante,\n" +
                 "                COUNT(*) AS n,\n" +
@@ -263,7 +265,15 @@ public class DbGastos_Ingresos {
                 "\t AND cv_in_estado_comp = 0" +
                 "" +
                 ") AS U\n" +
-                "WHERE U.n != 0;\n",null);
+                "WHERE U.n != 0\n"+
+                " UNION "+
+                "SELECT \t 7 as _id, 'Otros' AS comprobante,\n" +
+                "\t(SELECT COUNT(DISTINCT(Imprimir_id_comprobante)) FROM imprimir_cobro WHERE UPPER(Imprimir_comprobante_nombre) like '%OTROS%' AND  Imprimir_estado_cobrado='0' AND Imprimir_fecha like '%"+getDatePhone()+"%') AS n,\n" +
+                "\t0 AS emitidas,\n" +
+                "\t0 AS pagado,\n" +
+                "\t(SELECT ROUND(SUM(Imprimir_monto),1) FROM imprimir_cobro WHERE UPPER(Imprimir_comprobante_nombre) like '%OTROS%'  AND Imprimir_estado_cobrado='0' AND Imprimir_fecha like '%"+getDatePhone()+"%') AS cobrado" +
+                "\n" +
+                "",null);
 
         if (mCursor!=null){
             mCursor.moveToFirst();

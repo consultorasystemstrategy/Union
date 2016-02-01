@@ -332,7 +332,8 @@ public class FMapaRegistrar extends Fragment implements Validator.ValidationList
             }
 
         } else {
-            Utils.setToast(getActivity(), "Por favor espere obteniedno posicion", R.color.rojo);
+            viewPager.setCurrentItem(1);
+            Utils.setToast(getActivity(), "Por favor espere obteniendo posicion", R.color.rojo);
         }
 
 

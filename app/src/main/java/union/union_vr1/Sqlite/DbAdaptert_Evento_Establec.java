@@ -595,6 +595,12 @@ cursor.moveToFirst();
         return mCursor;
     }
 
+
+    public Cursor listarToExport(){
+        Cursor cr = mDb.rawQuery("select * from "+SQLITE_TABLE_Evento_Establec+" where "+EE_estado_autorizado+"='5'",null);
+        return cr;
+    }
+
     public boolean getLatLongStatus(int establecimiento){
         boolean estado=true;
         Cursor cr = mDb.rawQuery("select * from "+SQLITE_TABLE_Evento_Establec+" where "+EE_id_establec+" = '"+establecimiento+"' ",null);
