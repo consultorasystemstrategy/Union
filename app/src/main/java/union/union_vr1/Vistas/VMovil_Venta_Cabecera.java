@@ -161,6 +161,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
     private AutoCompleteTextView autoCompleteTextView;
     private Cursor mCursorStockAgente;
     private int id_categoria_establecimiento;
+    private int diasCreditoPorDefecto;
     private SimpleCursorAdapter adapterProductos;
 
     private DbAdapter_Precio dbHelper_Precio;
@@ -463,6 +464,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
         final Cursor cursorEstablecimiento = dbHelper_Evento_Establecimiento.fetchEstablecsById(""+idEstablecimiento);
         cursorEstablecimiento.moveToFirst();
         id_categoria_establecimiento = cursorEstablecimiento.getInt(cursorEstablecimiento.getColumnIndex(DbAdaptert_Evento_Establec.EE_id_cat_est));
+        diasCreditoPorDefecto = cursorEstablecimiento.getInt(cursorEstablecimiento.getColumnIndex(DbAdaptert_Evento_Establec.EE_dias_credito));
 
         int idTipoDocCliente = 0;
         if (cursorEstablecimiento.getCount()>0) {
@@ -488,6 +490,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
         adapterTipoDocumento.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerTipoDocumento.setPrompt("Seleccionar Documento");
         spinnerTipoDocumento.setAdapter(adapterTipoDocumento);
+
 
 
 
@@ -944,7 +947,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
                             //spinnerFormaPago.setAdapter(adapterFormaPagoCredito);
                             //actualizar el registro de la db here!
 
-                            int nroRegistrosUpdate= dbHelper_Evento_Establecimiento.updateEstablecsCredito(credito.getIdEstablecimiento(), credito.getMontoCredito(), credito.getEstado());
+                            int nroRegistrosUpdate= dbHelper_Evento_Establecimiento.updateEstablecsCredito(credito.getIdEstablecimiento(), credito.getMontoCredito(), credito.getDiasCredito());
                             Log.d(TAG, "NRO ESTABLECIMIETNO CRÉDITOS ACTUALIZADOS : " + nroRegistrosUpdate);
 
                             if (nroRegistrosUpdate>=1){
@@ -1580,6 +1583,20 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
         simpleCursorAdapter = new SimpleCursorAdapter(VMovil_Venta_Cabecera.this, R.layout.toolbar_spinner_item_actionbar, cr, columns, to, 0);
         simpleCursorAdapter.setDropDownViewResource(R.layout.toolbar_spinner_item_dropdown);
         spinnerDiasCredito.setAdapter(simpleCursorAdapter);
+
+
+        for (int i = 0; i < spinnerDiasCredito.getCount(); i++) {
+            Cursor value = (Cursor) spinnerDiasCredito.getItemAtPosition(i);
+            long id = value.getLong(value.getColumnIndex("_id"));
+            int TM_dias_credito = value.getInt(value.getColumnIndex(DbAdapter_ModalidadCredito.TM_dias_credito));
+            if (TM_dias_credito == diasCreditoPorDefecto) {
+                spinnerDiasCredito.setSelection(i);
+            }
+        }
+
+
+/*
+        spinnerDiasCredito.setSelection(simpleCursorAdapter.getItem(simpleCursorAdapter.getCursor().getPosition()));*/
 
 
         spinnerDiasCredito.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -2248,7 +2265,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
                     String NUMERO_COMPROBANTE = String.format("%08d", Integer.parseInt(NUMERO_DOCUMENTO));
                     Log.d(TAG, "RECORRE EL CURSOR TEMP COMPROB COBROS"+ "YES" + "--" + NUMERO_COMPROBANTE); //...
                     //Crear una consulta para añadir un id al comprobante cobro.
-                    Log.d("IDIDCOMPROBANTE",""+id);
+                    Log.d(TAG, "IDIDCOMPROBANTE"+id);
                     long registroInsertado = dbHelper_Comprob_Cobros.createComprobCobros(idEstablecimiento, Integer.parseInt(id + ""), id_plan_pago, id_plan_pago_detalle, tipoDocumento.toUpperCase(), SERIE_DOCUMENTO + "-" + NUMERO_COMPROBANTE,fecha_programada, monto_a_pagar, fecha_cobro, hora_cobro, monto_cobrado, estado_cobro, id_agente_venta, id_forma_cobro, lugar_registro, idLiquidacion, idComprobanteCobro, 0);
                     Log.d(TAG, "COMPROBANTE COBRO _ID : , "+registroInsertado);
                     Log.d(TAG, "CC INSERTADO SATISFACTORIAMENTE "+ "ID : " + idComprobanteCobro + "....." + registroInsertado + "-" + Integer.parseInt(id + ""));

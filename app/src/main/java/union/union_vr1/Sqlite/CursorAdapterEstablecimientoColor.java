@@ -112,6 +112,10 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter {
             //float rating = cursor.getFloat(cursor.getColumnIndexOrThrow(dbHelper.EE_rating));
 
 
+            if(nombre_establecimiento.length()>=36){
+                nombre_establecimiento = nombre_establecimiento.substring(0, 32);
+                nombre_establecimiento += "...";
+            }
             nombreEstablecimiento.setText(numeroOrden + ". " + nombre_establecimiento);
             nombreEstablecimiento.setSingleLine(false);
             nombreCliente.setText(nombre_cliente);

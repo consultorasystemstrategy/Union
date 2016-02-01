@@ -8,7 +8,7 @@
     <LinearLayout
         android:id="@+id/layoutenter"
         android:layout_width="fill_parent"
-        android:layout_height="128dp"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="12dp"
         android:layout_marginRight="12dp"
         android:layout_marginTop="12dp"
@@ -35,7 +35,7 @@
 
         <LinearLayout
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:layout_weight="1"
             android:orientation="vertical">
@@ -49,12 +49,11 @@
                 <TextView
                     android:id="@+id/textViewEstablecimientoNombre"
                     android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="bottom"
-                    android:text="Productos Unión S.A.C"
+                    android:layout_height="fill_parent"
+                    android:text="Productos Unión S.A.CProductos Unión S.A.C12345678"
+                    android:textStyle="normal|bold"
                     android:textSize="16dp"
-                    android:textStyle="normal|bold" />
+                    android:layout_weight="1" />
 
                 <Button
                     android:layout_width="40dp"
@@ -77,8 +76,7 @@
                 android:id="@+id/textViewEstablecimientoCliente"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Productos Unión"
+                android:text="Productos UniónProductos UniónProductos UniónProductos UniónProductos UniónProductos "
                 android:textSize="12dp"
                 android:textStyle="italic" />
 
@@ -86,7 +84,6 @@
                 android:id="@+id/textViewDireccion"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:text="Carretera Central Km. 8"
                 android:textSize="12dp"
                 android:textStyle="italic" />
@@ -95,7 +92,6 @@
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:orientation="horizontal">
 
                 <!--                <TextView
