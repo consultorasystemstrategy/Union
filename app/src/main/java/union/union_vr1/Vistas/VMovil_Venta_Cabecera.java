@@ -1153,6 +1153,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
                             TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
                             v.setTextColor(mainActivity.getResources().getColor(R.color.Blanco));
                             toast.show();
+                            spinnerFormaPago.setAdapter(adapterFormaPago);
                         }
 
                         break;

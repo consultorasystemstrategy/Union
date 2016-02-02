@@ -53,6 +53,7 @@ import union.union_vr1.Sqlite.DbAdapter_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta_Detalle;
+import union.union_vr1.Sqlite.DbAdapter_Exportacion_Comprobantes;
 import union.union_vr1.Sqlite.DbAdapter_Histo_Comprob_Anterior;
 import union.union_vr1.Sqlite.DbAdapter_Histo_Venta_Detalle;
 import union.union_vr1.Sqlite.DbAdapter_Informe_Gastos;
@@ -554,6 +555,21 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
                 Intent intent = new Intent(mainActivity, AppPreferences.class);
                 startActivity(intent);
                 break;
+            /*case R.id.buttonNoExport:
+                DbAdapter_Exportacion_Comprobantes dbAdapter_exportacion_comprobantes = new DbAdapter_Exportacion_Comprobantes(VMovil_Evento_Indice.this);
+                dbAdapter_exportacion_comprobantes.open();
+                //REGISTROS ACTUALIZADOS A NO EXPORT
+                int registrosActualizados = dbAdapter_exportacion_comprobantes.changeEstado(Constants._EXPORTADO);
+                Utils.setToast(VMovil_Evento_Indice.this, "NO EXPORT COUNT :" + registrosActualizados, R.color.rojo);
+                break;
+            case R.id.buttonNoExportOne:
+                DbAdapter_Exportacion_Comprobantes dbAdapter_exportacion_comprobantes1 = new DbAdapter_Exportacion_Comprobantes(VMovil_Evento_Indice.this);
+                dbAdapter_exportacion_comprobantes1.open();
+                //REGISTROS ACTUALIZADOS A NO EXPORT
+                int registrosActualizados1 = dbAdapter_exportacion_comprobantes1.changeEstadoToNoExportOne(2);
+                Utils.setToast(VMovil_Evento_Indice.this, "NO EXPORT ONE COUNT :" +registrosActualizados1, R.color.rojo);
+                break;*/
+
             /*case R.id.buttonImportCredito:
                 new ImportCredito(mainActivity).execute();
                 break;*/

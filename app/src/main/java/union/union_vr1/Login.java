@@ -215,7 +215,7 @@ public class Login extends Activity implements OnClickListener {
         }
         Log.d(TAG, "ACCOUNTS "+ addNewAccount);
 */
-        new FechaRest().execute();
+       // new FechaRest().execute();
 
 
         session = new DbAdapter_Temp_Session(this);

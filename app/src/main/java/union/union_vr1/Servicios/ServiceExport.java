@@ -1026,7 +1026,7 @@ public class ServiceExport extends IntentService {
 
                     Log.d(TAG, "ID RESPUESTA FLEX : " + idRespuestaFlex);
 
-                    if (idRespuestaFlex >= 1) {
+                    if (idRespuestaFlex == 1 || idRespuestaFlex == 2 ) {
                         listIdExportacionFlex.add("" + cursorExportacionFlex.getLong(cursorExportacionFlex.getColumnIndexOrThrow(dbAdapter_exportacion_comprobantes.EC_id)));
                     }
 

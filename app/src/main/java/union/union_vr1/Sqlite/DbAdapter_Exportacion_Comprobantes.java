@@ -115,6 +115,22 @@ public class DbAdapter_Exportacion_Comprobantes {
         return cantidadRegistros;
     }
 
+    public int changeEstado(int estado) {
+
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(Constants._SINCRONIZAR, estado);
+
+        return mDb.update(SQLITE_TABLE_EXPORTACION_COMPROBANTES, initialValues, null, null );
+    }
+    public int changeEstadoToNoExportOne(int id_sid) {
+
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(Constants._SINCRONIZAR, Constants._CREADO);
+
+        return mDb.update(SQLITE_TABLE_EXPORTACION_COMPROBANTES, initialValues, EC_id_sid + "=?", new String[]{""+id_sid} );
+    }
+
+
 /*    public long createTipoGasto(TipoGasto tipoGasto) {
 
         ContentValues initialValues = new ContentValues();

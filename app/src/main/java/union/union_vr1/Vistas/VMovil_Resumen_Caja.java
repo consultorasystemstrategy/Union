@@ -629,7 +629,7 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
 
                 if (conectadoWifi() || conectadoRedMovil()) {
                     new AlertDialog.Builder(mainActivity)
-                            .setTitle("Cerrar caja")
+                            .setTitle("Cerrar cuenta")
                             .setMessage("" +
                                     "¿Está seguro que desea cerrar caja?")
                             .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
@@ -781,7 +781,7 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
                     v.setTextColor(mainActivity.getResources().getColor(R.color.Blanco));
                     toast.show();
                     Log.d("CERRAR CAJA", "" + idLiquidacion + "-" + slide_ingresosTotales + "-" + slide_gastosTotales + "" + slide_aRendir + "-" + kmFinall);
-                    new CerrarCaja(mainActivity).execute("" + idLiquidacion, "" + slide_ingresosTotales, "" + slide_gastosTotales, "" + slide_aRendir, "" + kmFinall, "" + idAgente);
+                    new CerrarCaja(mainActivity).execute("" + idLiquidacion, "" + Utils.formatDouble(slide_ingresosTotales), "" + Utils.formatDouble(slide_gastosTotales), "" + Utils.formatDouble(slide_aRendir), "" + kmFinall, "" + idAgente);
                 }
             }
         });
