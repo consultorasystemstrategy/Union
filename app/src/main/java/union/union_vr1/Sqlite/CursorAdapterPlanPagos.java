@@ -313,13 +313,13 @@ public class CursorAdapterPlanPagos extends CursorAdapter implements DatePickerD
 
     private Calendar getCalendar(String fecha) throws ParseException {
         Calendar cal = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         cal.setTime(sdf.parse(fecha));
         return  cal;
     }
 
     private String getFechaFull(String fecha) throws ParseException {
-        DateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
+        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         Date date = formatter.parse(fecha);
         DateFormat format = DateFormat.getDateInstance(DateFormat.FULL);
         String formatteDate = format.format(date);
@@ -335,7 +335,7 @@ public class CursorAdapterPlanPagos extends CursorAdapter implements DatePickerD
             //VALIDAR QUE NO SEA MAYOR A LA SIGUIENTE FECHA.
 
             //REALIZAR EL UPDATE
-            dbHelper_TempComprobCobro.updateFechaPanPagos("" + _id_plan_pago_selected, year + "/" + (++monthOfYear) + "/" + dayOfMonth);
+            dbHelper_TempComprobCobro.updateFechaPanPagos("" + _id_plan_pago_selected, dayOfMonth + "/" + (++monthOfYear) + "/" + year);
             swapCursor(dbHelper_TempComprobCobro.fetchAllComprobCobros());
         }
     }

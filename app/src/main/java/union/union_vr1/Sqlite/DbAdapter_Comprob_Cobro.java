@@ -261,7 +261,7 @@ public class DbAdapter_Comprob_Cobro {
     public int updateIdComprobanteVenta(int id, int idComprobanteVenta) {
 
         ContentValues initialValues = new ContentValues();
-        initialValues.put(CC_id_comprob,idComprobanteVenta);
+        //initialValues.put(CC_id_comprob,idComprobanteVenta);
 
 
         return mDb.update(SQLITE_TABLE_Comprob_Cobro, initialValues,
@@ -583,7 +583,6 @@ public class DbAdapter_Comprob_Cobro {
                         CC_desc_tipo_doc, CC_doc, CC_fecha_programada, CC_monto_a_pagar,
                         CC_fecha_cobro, CC_monto_cobrado, CC_estado_cobro, Constants._SINCRONIZAR},
                 CC_id_comprob + " = " + id_comprob, null, null, null, CC_fecha_programada + " ASC");
-
         if (mCursor != null) {
             mCursor.moveToFirst();
         }

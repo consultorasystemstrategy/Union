@@ -354,11 +354,11 @@ public class VMovil_Venta_Cabecera_PlanPagos extends Activity implements Adapter
         switch (cuotas) {
             case 1:
                 if (dias_credito == 3) {
-                    Date date = sumaDias(getDatePhone(), 3);
+                    Date date = sumaDias(getDatePhone(), dias_credito);
                     long id = dbHelper_TempComprobCobro.createComprobCobros(idEstablecimiento, id_comprobante, id_plan_pago, id_plan_pago_detalle, tipo_documento, doc, dateToString(date), total, fecha_cobro, hora_cobro, monto_cobrado, estado_cobro, idAgente, id_forma_cobro, lugar_registro);
                     Log.d("PPC  DÍAS", cuotas+"-"+id);
                 } else {
-                    Date date = sumaDias(getDatePhone(), 7);
+                    Date date = sumaDias(getDatePhone(), dias_credito);
                     long id = dbHelper_TempComprobCobro.createComprobCobros(idEstablecimiento, id_comprobante, id_plan_pago, id_plan_pago_detalle, tipo_documento, doc, dateToString(date), total, fecha_cobro, hora_cobro, monto_cobrado, estado_cobro, idAgente, id_forma_cobro, lugar_registro);
                     Log.d("PPC  DÍAS", cuotas+"-"+id);
                 }

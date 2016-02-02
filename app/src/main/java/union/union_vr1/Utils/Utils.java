@@ -116,7 +116,7 @@ public class Utils {
         return fechaR;
     }
     public static String format(String date) {
-        SimpleDateFormat format2 = new SimpleDateFormat("yyyy/mm/dd");
+        SimpleDateFormat format2 = new SimpleDateFormat("dd/mm/yyyy");
         SimpleDateFormat format1 = new SimpleDateFormat("dd/mm/yyyy");
         String fechaR = "";
         try {

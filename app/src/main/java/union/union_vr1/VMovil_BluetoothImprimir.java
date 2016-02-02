@@ -432,13 +432,17 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
                case Constants.FORMA_DE_PAGO_CREDITO:
                    textoImpresionContenidoBottom+= "\nVENTA AL CRÉDITO"+"\n\n";
                    Cursor cursorCredito = dbAdapter_comprob_cobro.fetchComprobCobrosByIdComprobante(idComprobante);
+                   Log.d(TAG, "ID COMPROBANTE : ,"+ idComprobante+",");
+                   Log.d(TAG, "COUNT CURSOR CRÉDITO : " + cursorCredito.getCount());
+
+
                    if (cursorCredito.getCount()>0){
                        cursorCredito.moveToFirst();
                        /*for (cursorCredito.moveToFirst(); !cursorCredito.isAfterLast() ; cursorCredito.moveToNext()){*/
                            String primeraFechaCobro = cursorCredito.getString(cursorCredito.getColumnIndexOrThrow(DbAdapter_Comprob_Cobro.CC_fecha_programada));
                            Double monto_Pagar = cursorCredito.getDouble(cursorCredito.getColumnIndexOrThrow(DbAdapter_Comprob_Cobro.CC_monto_a_pagar));
 
-                           textoImpresionContenidoBottom+= String.format("%-14s", primeraFechaCobro) + String.format("%1$10s", df.format(monto_Pagar)) +"\n";
+                           textoImpresionContenidoBottom+= String.format("%-14s",Utils.format(primeraFechaCobro)) + String.format("%1$10s", df.format(monto_Pagar)) +"\n";
                        /*}*/
 
                        textoImpresionContenidoBottom+= "\n";

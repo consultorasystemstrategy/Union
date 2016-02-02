@@ -1000,7 +1000,6 @@ public class ServiceExport extends IntentService {
 
         Cursor cursorExportacionFlex = dbAdapter_exportacion_comprobantes.filterExport();
 
-
         Log.d(TAG, "COUNT CURSOR_EXPORTACION_FLEX :" + cursorExportacionFlex.getCount());
 
 
