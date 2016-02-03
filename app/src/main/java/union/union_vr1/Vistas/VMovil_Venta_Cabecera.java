@@ -1635,45 +1635,59 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
 
                 String cantidad = Utils.replaceComa(editTextCantidadCredito.getText().toString().trim());
                 if (cantidad.length() > 0 && cantidad.length() < 10) {
-                    Double cantidadCredito = Double.parseDouble(cantidad);
+                    final Double cantidadCredito = Double.parseDouble(cantidad);
                     if (diasCredito==null){
                         diasCredito = "7";
                     }
                     Credito credito = new Credito(id_agente_venta, idEstablecimiento, cantidadCredito, Integer.parseInt(diasCredito), Constants._CREDITO_PENDIENTE, Constants._CREDITO, Utils.getDatePhone());
-                    Firebase newCreditoRef = creditoRef.push();
-                    newCreditoRef.setValue(credito);
+                    final Firebase newCreditoRef = creditoRef.push();
+                    newCreditoRef.setValue(credito, new Firebase.CompletionListener() {
+                        @Override
+                        public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+                            if (firebaseError != null) {
+                                Log.d(TAG, "Data could not be saved. " + firebaseError.getMessage());
+                                spinnerFormaPago.setAdapter(adapterFormaPago);
+                                Utils.setToast(VMovil_Venta_Cabecera.this, "OCURRIÓ UN ERROR INTENTELO DE NUEVO", R.color.verde);
+                            } else {
+                                Log.d(TAG, "Data saved successfully.");
+                                //GET UNIQUE ID, TIMESTAMP BASED
+                                String postId = newCreditoRef.getKey();
+                                Log.d(TAG, "GET KEY : " + postId);
 
-                    //GET UNIQUE ID, TIMESTAMP BASED
-                    String postId = newCreditoRef.getKey();
-                    Log.d(TAG, "GET KEY : " + postId);
 
-                    //SI ES INCREMENTO Y NO MODIFICÓ, LE MANDO EL INCREMENTO A SULLY
+                                //SI ES INCREMENTO Y NO MODIFICÓ, LE MANDO EL INCREMENTO A SULLY
 
-                    //SI ES INCREMENTO Y SÍ MODIFICÓ, LE MANDO LA CANTIDAD MODIFICADA.
-                    new SolicitarCredito(mainActivity).execute("" + id_agente_venta, "" + idEstablecimiento, "" + cantidadCredito, "" + diasCredito, postId);
+                                //SI ES INCREMENTO Y SÍ MODIFICÓ, LE MANDO LA CANTIDAD MODIFICADA.
+                                new SolicitarCredito(mainActivity).execute("" + id_agente_venta, "" + idEstablecimiento, "" + cantidadCredito, "" + diasCredito, postId);
 
 
-                    //GUARDAR EL TIPO DE DOCUMENTO
-                    int tipoDocumentoSelected = -1;
-                    switch(tipoDocumento){
-                        case Constants._FACTURA:
-                            tipoDocumentoSelected = 1;
-                            break;
-                        case Constants._BOLETA:
-                            tipoDocumentoSelected = 2;
-                            break;
-                        default:
-                            tipoDocumentoSelected = -1;
-                            break;
-                    }
-                    session.deleteVariable(Constants.SESSION_DOCUMENTO);
-                    session.createTempSession(Constants.SESSION_DOCUMENTO, tipoDocumentoSelected);
+                                //GUARDAR EL TIPO DE DOCUMENTO
+                                int tipoDocumentoSelected = -1;
+                                switch(tipoDocumento){
+                                    case Constants._FACTURA:
+                                        tipoDocumentoSelected = 1;
+                                        break;
+                                    case Constants._BOLETA:
+                                        tipoDocumentoSelected = 2;
+                                        break;
+                                    default:
+                                        tipoDocumentoSelected = -1;
+                                        break;
+                                }
+                                session.deleteVariable(Constants.SESSION_DOCUMENTO);
+                                session.createTempSession(Constants.SESSION_DOCUMENTO, tipoDocumentoSelected);
 
-                    //PINTAR
-                    updateSemaforoStatus(Constants.SEMAFORO_ROJO);
-                    //DESACTIVAR EL BOTON
-                    buttonVender.setEnabled(false);
-                    buttonVender.setBackgroundColor(getResources().getColor(R.color.Dark3));
+                                //PINTAR
+                                updateSemaforoStatus(Constants.SEMAFORO_ROJO);
+                                //DESACTIVAR EL BOTON
+                                buttonVender.setEnabled(false);
+                                buttonVender.setBackgroundColor(getResources().getColor(R.color.Dark3));
+                            }
+                        }
+                    });
+
+
+
                 } else {
                     Toast.makeText(VMovil_Venta_Cabecera.this, "Número invalido, intente de nuevo", Toast.LENGTH_SHORT).show();
                 }

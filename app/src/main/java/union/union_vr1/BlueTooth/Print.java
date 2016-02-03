@@ -406,7 +406,7 @@ public class Print {
                         String credito = ESC + "|lA" + String.format("%-18s", "VENTA AL CREDITO: ") + String.format("%1$9s", df.format(precio_venta))+ String.format("%1$21s", "") + LF;
                         posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, credito);
                         /*posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|cA" + "VENTA AL CREDITO"+ LF + LF);*/
-                        Cursor cursorCredito = dbAdapter_comprob_cobro.fetchComprobCobrosByIdComprobante(idComprobante);
+                        Cursor cursorCredito = dbAdapter_comprob_cobro.fetchComprobCobrosByIdComprobanteSqlite(idComprobante);
                         if (cursorCredito.getCount()>0){
                             cursorCredito.moveToFirst();
                             //SÓLO IMPRIMIR LA PRIMERA CUOTA

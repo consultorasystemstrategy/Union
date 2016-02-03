@@ -45,6 +45,7 @@ public class DbAdapter_Comprob_Cobro {
     public static final String CC_id_autorizacion = "cc_idAutorizacion";
     public static final String CC_estado_prorroga = "cc_estado_prologa";
     public static final String CC_liquidacion = "id_liquidacion";
+    public static final String CC_id_comp_sqlite = "cc_id_comp_sqlite";
     public static final String CC_estado_flex = "cc_estado_flex";
     public static final String CC_id_flex = "CC_id_flex";
 
@@ -82,7 +83,7 @@ public class DbAdapter_Comprob_Cobro {
                     + estado_sincronizacion + " integer,"
                     + CC_id_autorizacion + " integer,"
                     + CC_liquidacion + " integer, "
-
+                    + CC_id_comp_sqlite + " integer, "
                     + CC_estado_prorroga + " text );";
 
     public static final String DELETE_TABLE_COMPROB_COBRO = "DROP TABLE IF EXISTS " + SQLITE_TABLE_Comprob_Cobro;
@@ -120,6 +121,7 @@ public class DbAdapter_Comprob_Cobro {
         initialValues.put(CC_id_comprobante_cobro, idComprobanteCobro);
         initialValues.put(CC_id_establec, id_establec);
         initialValues.put(CC_id_comprob, id_comprob);
+        initialValues.put(CC_id_comp_sqlite, id_comprob);
         initialValues.put(CC_id_plan_pago, id_plan_pago);
         initialValues.put(CC_id_plan_pago_detalle, id_plan_pago_detalle);
         initialValues.put(CC_desc_tipo_doc, desc_tipo_doc);
@@ -188,6 +190,8 @@ public class DbAdapter_Comprob_Cobro {
         initialValues.put(CC_id_comprobante_cobro, comprobanteCobro.getIdComprobanteCobro());
         initialValues.put(CC_id_establec, comprobanteCobro.getIdEstablecimiento());
         initialValues.put(CC_id_comprob, comprobanteCobro.getIdComprobante());
+        initialValues.put(CC_id_comp_sqlite, comprobanteCobro.getIdComprobante());
+
         initialValues.put(CC_id_plan_pago, comprobanteCobro.getIdPlanPago());
         initialValues.put(CC_id_plan_pago_detalle, comprobanteCobro.getIdPlanPagoDetalle());
         initialValues.put(CC_desc_tipo_doc, comprobanteCobro.getDescTipoDoc());
@@ -263,7 +267,6 @@ public class DbAdapter_Comprob_Cobro {
         ContentValues initialValues = new ContentValues();
         initialValues.put(CC_id_comprob,idComprobanteVenta);
 
-
         return mDb.update(SQLITE_TABLE_Comprob_Cobro, initialValues,
                 CC_id_comprob + " = ?",
                 new String[]{
@@ -295,6 +298,7 @@ public class DbAdapter_Comprob_Cobro {
         initialValues.put(CC_id_comprobante_cobro, comprobanteCobro.getIdComprobanteCobro());
         initialValues.put(CC_id_establec, comprobanteCobro.getIdEstablecimiento());
         initialValues.put(CC_id_comprob, comprobanteCobro.getIdComprobante());
+
         initialValues.put(CC_id_plan_pago, comprobanteCobro.getIdPlanPago());
         initialValues.put(CC_id_plan_pago_detalle, comprobanteCobro.getIdPlanPagoDetalle());
         initialValues.put(CC_desc_tipo_doc, comprobanteCobro.getDescTipoDoc());
@@ -574,7 +578,7 @@ public class DbAdapter_Comprob_Cobro {
         return mCursor;
     }
 
-    public Cursor fetchComprobCobrosByIdComprobante(int id_comprob) {
+    public Cursor fetchComprobCobrosByIdComprobanteSqlite(int id_comprob_sqlite) {
 
         Cursor mCursor = mDb.query(SQLITE_TABLE_Comprob_Cobro, new String[]{
 
@@ -582,7 +586,7 @@ public class DbAdapter_Comprob_Cobro {
                         CC_id_establec, CC_id_comprob, CC_id_plan_pago, CC_id_plan_pago_detalle,
                         CC_desc_tipo_doc, CC_doc, CC_fecha_programada, CC_monto_a_pagar,
                         CC_fecha_cobro, CC_monto_cobrado, CC_estado_cobro, Constants._SINCRONIZAR},
-                CC_id_comprob + " = " + id_comprob, null, null, null, CC_fecha_programada + " ASC");
+                CC_id_comp_sqlite + " = " + id_comprob_sqlite, null, null, null, CC_fecha_programada + " ASC");
         if (mCursor != null) {
             mCursor.moveToFirst();
         }

@@ -431,7 +431,7 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
                    break;
                case Constants.FORMA_DE_PAGO_CREDITO:
                    textoImpresionContenidoBottom+= "\nVENTA AL CRÉDITO"+"\n\n";
-                   Cursor cursorCredito = dbAdapter_comprob_cobro.fetchComprobCobrosByIdComprobante(idComprobante);
+                   Cursor cursorCredito = dbAdapter_comprob_cobro.fetchComprobCobrosByIdComprobanteSqlite(idComprobante);
                    Log.d(TAG, "ID COMPROBANTE : ,"+ idComprobante+",");
                    Log.d(TAG, "COUNT CURSOR CRÉDITO : " + cursorCredito.getCount());
 
