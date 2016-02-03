@@ -330,7 +330,7 @@ public class ServiceImport extends IntentService {
 
 
             for (int i = 0; i < eventoEstablecimientos.size(); i++) {
-                Log.d(TAG, "ESTABLECIMIENTOS X RUTAS: " + i+ " Nombre Establecimiento : " + eventoEstablecimientos.get(i).getNombreEstablecimiento() + ", orden : " + eventoEstablecimientos.get(i).getOrden() + ", BARCODE: " + eventoEstablecimientos.get(i).getCodigoBarras());
+                Log.d(TAG, "ESTABLECIMIENTOS X RUTAS: " + i+ " Nombre Establecimiento : " + eventoEstablecimientos.get(i).getNombreEstablecimiento() + ", orden : " + eventoEstablecimientos.get(i).getOrden() + ", BARCODE: " + eventoEstablecimientos.get(i).getCodigoBarras()+", ID TIPO CLIENTE :"+eventoEstablecimientos.get(i).getTipoDocCliente());
                 boolean existe = dbAdaptert_evento_establec.existeEstablecsById(eventoEstablecimientos.get(i).getIdEstablecimiento());
 
                 Log.d("EXISTE ESTABLECIMIENTO", "" + existe);
