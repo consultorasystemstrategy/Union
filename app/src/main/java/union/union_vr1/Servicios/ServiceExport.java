@@ -383,15 +383,15 @@ public class ServiceExport extends IntentService {
                                     int estado = dbAdapter_comprob_cobro.updatePlanPagoDetalleCobros(cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_comprob)), jsonObjectSuccess.getInt("Value"));
                                     if (estado > 0) {
                                         Log.d("COBROSNORMALESPLANES", ""+idPlan+"-"+ jsonObjectSuccess.getInt("Value"));
-                                        int insComprovanteVenta = dbAdapter_comprob_cobro.updateIdComprobanteVenta(cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_comprob)),idComprobanteVentaRetornado);
+                                       int insComprovanteVenta = dbAdapter_comprob_cobro.updateIdComprobanteVenta(cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_comprob)),idComprobanteVentaRetornado);
                                         int actualizopIp = dbAdapter_impresion_cobros.updateCobrosIdPlanDetalle(cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_comprob)), idPlan, jsonObjectSuccess.getInt("Value"));
                                         int estadoActualizo = dbAdapter_impresion_cobros.updateCobrosIdComprobanteVenta(cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_comprob)),idComprobanteVentaRetornado);
 
-                                        Log.d("COBROSNORMALES", ""+actualizopIp+"-"+estadoActualizo+"-"+insComprovanteVenta);
+                                        Log.d("COBROSNORMALES", ""+actualizopIp+"-"+estadoActualizo+"-");
                                     }
 
                                 }
-                                Log.d("EXPORT JSON PPD S", jsonObjectSuccess.toString());
+                                Log.d("COBROSNORMALES", jsonObjectSuccess.toString());
                             }
 
                             String[] idComprobanteCobro = new String[listIdComprobanteCobro.size()];
@@ -418,6 +418,7 @@ public class ServiceExport extends IntentService {
                     }
                     Log.d(" EXPORT JSON MESSAGE CV", jsonObjectSuccesfull.toString());
                 } catch (Exception e) {
+                    Log.d("COBROSNORMALESPLANES", e.getMessage());
                     e.printStackTrace();
                 }
             }

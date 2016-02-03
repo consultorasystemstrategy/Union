@@ -261,7 +261,7 @@ public class DbAdapter_Comprob_Cobro {
     public int updateIdComprobanteVenta(int id, int idComprobanteVenta) {
 
         ContentValues initialValues = new ContentValues();
-        //initialValues.put(CC_id_comprob,idComprobanteVenta);
+        initialValues.put(CC_id_comprob,idComprobanteVenta);
 
 
         return mDb.update(SQLITE_TABLE_Comprob_Cobro, initialValues,
