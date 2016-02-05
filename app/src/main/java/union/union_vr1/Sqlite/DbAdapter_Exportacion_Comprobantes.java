@@ -26,6 +26,8 @@ public class DbAdapter_Exportacion_Comprobantes {
     private DbHelper mDbHelper;
     private SQLiteDatabase mDb;
 
+    //
+
 
     private static final String SQLITE_TABLE_EXPORTACION_COMPROBANTES= "m_exportacion_comprobantes";
     private final Context mCtx;
