@@ -229,7 +229,7 @@ public class Utils {
     public static boolean validateRespuesta(JSONObject jsonObject){
         boolean success = false;
         int respuesta = getIntJSON(jsonObject);
-
+//Holoa valida respuesta
         return respuesta > Constants._ZERO;
     }
 
