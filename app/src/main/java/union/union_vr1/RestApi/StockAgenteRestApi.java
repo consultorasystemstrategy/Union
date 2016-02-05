@@ -1184,7 +1184,7 @@ public class StockAgenteRestApi {
         result = new JSONObject(r);
         return result;
     }
-
+//
     public JSONObject fupd_ValorResumen(int vint_ComprobanteId,String vstr_SHA) throws Exception {
         JSONObject result = null;
         JSONObject o = new JSONObject();
