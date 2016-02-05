@@ -116,7 +116,7 @@ public class Constants {
     public static final int _ID_SESSION_MAC_DEVICE_CIPHER_LAB = 13;
 
 
-    //RESPUESTA SUCCESSS
+    //RESPUESTA SUCCESSS //
     public static final int _ZERO = 0;
 
 

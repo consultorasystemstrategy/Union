@@ -193,7 +193,7 @@ public class DbAdapter_Comprob_Venta {
         }
         return mCursor;
     }*/
-
+//export
     public Cursor filterToExportSHA1(int liquidacion){
         Cursor cr = mDb.rawQuery("SELECT CV.*, EC.* FROM \n" +
                 "m_comprob_venta CV \n" +
