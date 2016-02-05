@@ -70,6 +70,7 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
     private DbAdapter_Precio dbAdapter_precio;
     private DbAdapter_Motivo_Dev dbAdapter_motivo_dev;
     private DbAdaptert_Evento_Establec dbAdaptert_evento_establec;
+    private static String TAG = "VMovil_Facturas_Canjes_Dev";
 
 
     @Override
@@ -161,11 +162,11 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
 
     private void listarFacturas_Productos(int producto, final int idAgente, final String idEstablec, final String nomProducto) {
         Cursor cr = dbHelperCanjes_Dev.listaFacturasByProducto(producto, idAgente, idEstablec);
-
+        Log.d(TAG, "" + cr.getCount());
 
         layoutNoEncontrado = View.inflate(this, R.layout.info_producto_no_encontrado, null);
         if (cr.moveToFirst()) {
-            if (cr.getString(10) == null || cr.getString(10).equals("")) {
+            if (cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Histo_Venta_Detalle.HD_cantidad)) == null || cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Histo_Venta_Detalle.HD_cantidad)).equals("")) {
 
 
                 ArrayList<String> noEncontrado = new ArrayList<String>();
@@ -293,14 +294,14 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
 
     private void mostrar_alertdialog_spinners_regitrados(final Cursor cursor, final String des_compro) {
 
-        cantidadV = cursor.getInt(10);
-        devueltoV = cursor.getInt(17) + cursor.getInt(25);
-        final int dev = cursor.getInt(25);
-        final int can = cursor.getInt(17);
+        cantidadV = cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Histo_Venta_Detalle.HD_cantidad));
+        devueltoV = cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Histo_Venta_Detalle.HD_cantidad_ope)) + cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Histo_Venta_Detalle.HD_cantidad_ope_dev));
+        final int dev = cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Histo_Venta_Detalle.HD_cantidad_ope_dev));
+        final int can = cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Histo_Venta_Detalle.HD_cantidad_ope));
 
-        String cantidad = cursor.getString(10);
-        final String idDetalle = cursor.getString(1);
-        final String comprobante = cursor.getString(7);
+        String cantidad = cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Histo_Venta_Detalle.HD_cantidad));
+        final String idDetalle = cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Histo_Venta_Detalle.HD_id_detalle));
+        final String comprobante = cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Histo_Venta_Detalle.HD_comprobante));
         final int idProducto = cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Histo_Venta_Detalle.HD_id_producto));
         final String nomProducto = cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Histo_Venta_Detalle.HD_nom_producto));
         // final String lote = cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Histo_Venta_Detalle.HD_lote));
@@ -616,7 +617,13 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
 
     @Override
     public void onBackPressed() {
-        startActivity(new Intent(getApplicationContext(), VMovil_Operacion_Canjes_Devoluciones.class).putExtra("idEstabX",""+idEstablec).putExtra("idAgente",""+idAgente));
+
+        Intent back = new Intent(getApplicationContext(), VMovil_Operacion_Canjes_Devoluciones.class);
+        back.putExtra("idEstabX", idEstablec);
+        back.putExtra("idAgente", idAgente);
+        startActivity(back);
+        finish();
+
         super.onBackPressed();
     }
 
@@ -876,17 +883,17 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
 
             } else {
                 importe = Double.parseDouble(precio);
-                Log.d("ParametrosBP", "" +importe);
+                Log.d("ParametrosBP", "" + importe);
             }
         } else {
             importe = Double.parseDouble(precioUnitario);
-            Log.d("Parametros", "" +importe);
+            Log.d("Parametros", "" + importe);
         }
         if (importe != 0.0) {
             //String precio = dbHelperCanjes_Dev.obtenerPrecio(idProducto, idCategoriaEstablec, ctx, idEstablec);
             //  double importe = Double.parseDouble(precioUnitario.toString());
             double importeTotal = importe * cantidad2;
-            Log.d("TOTAL", "" +importeTotal);
+            Log.d("TOTAL", "" + importeTotal);
             DecimalFormat df = new DecimalFormat("0.00");
             //Evaluando tipo de Operacion:
             Log.d("LIQUIDACION", "" + liquidacion);

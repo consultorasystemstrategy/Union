@@ -121,7 +121,7 @@ public class DbAdapter_Canjes_Devoluciones {
 
 
     public Cursor listaFacturasByProducto(int idProducto, int idAgente, String idEstablec) {
-        Cursor cr = mDb.rawQuery("select * from m_histo_venta_detalle where hd_in_id_producto=" + idProducto + " and hd_in_id_agente=" + idAgente + " and hd_in_id_establec='" + idEstablec + "' and hd_in_estado=1 and hd_in_id_detalle !=''", null);
+        Cursor cr = mDb.rawQuery("select * from m_histo_venta_detalle where hd_in_id_producto=" + idProducto + " and hd_in_id_agente=" + idAgente + " and hd_in_id_establec='" + idEstablec + "' and hd_in_estado=1 and hd_in_id_detalle !='' group by hd_in_id_comprob ", null);
        // Cursor cr = mDb.rawQuery("select * from m_histo_venta_detalle ", null);
         if (cr != null) {
             cr.moveToFirst();
@@ -132,8 +132,8 @@ public class DbAdapter_Canjes_Devoluciones {
     }
 
     public Cursor listaFacturasByProducto2(int idProducto, int idAgente, String idEstablec) {
-        Cursor cr = mDb.rawQuery("select * from m_histo_venta_detalle where hd_in_id_producto=" + idProducto + " and hd_in_id_agente=" + idAgente + " and hd_in_id_establec='" + idEstablec + "' and hd_in_estado=1 and hd_in_id_detalle !='' group by hd_in_id_comprob ", null);
-        return cr;
+    Cursor cr = mDb.rawQuery("select * from m_histo_venta_detalle where hd_in_id_producto=" + idProducto + " and hd_in_id_agente=" + idAgente + " and hd_in_id_establec='" + idEstablec + "' and hd_in_estado=1 and hd_in_id_detalle !='' group by hd_in_id_comprob ", null);
+               return cr;
     }
 
     public boolean insertarCanjes(String idEstablec, int idProducto, int idtipoOpe, String comprobante, String nomEstablec, String nomProducto, int idCategoria, int cantidad, double importe, String lote, int idAgente, int liquidacion, String valorUnidad) {

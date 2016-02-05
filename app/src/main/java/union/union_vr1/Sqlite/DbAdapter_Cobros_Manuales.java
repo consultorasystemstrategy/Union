@@ -93,6 +93,7 @@ public class DbAdapter_Cobros_Manuales {
             String NUMERO_COMPROBANTE = String.format("%08d", numero);
             NUMERO = serie+"-"+NUMERO_COMPROBANTE;
         }
+        Log.d("DBADAPTER",serie+"-"+numero);
         ContentValues initialValues = new ContentValues();
         initialValues.put(CM_Categoria_Movimiento, categoriaMovimiento);// 3
         initialValues.put(CM_Importe, importe);
@@ -119,6 +120,11 @@ public class DbAdapter_Cobros_Manuales {
 
     public Cursor filterExportForFlex() {
         Cursor cursor = mDb.rawQuery("select * from " + SQLITE_TABLE_Cobros_Manuales + " where " +CM_Estado_flex + "='" + Constants.POR_EXPORTAR_FLEX+ "' and (("+CM_Estado_flex+"=2) or ("+CM_Estado_flex+"=1) )", null);
+        return cursor;
+    }
+
+    public Cursor filterExportForFlexId() {
+        Cursor cursor = mDb.rawQuery("select * from " + SQLITE_TABLE_Cobros_Manuales + " where " +CM_Estado_flex + "='" + Constants.POR_EXPORTAR_FLEX+ "'", null);
         return cursor;
     }
 

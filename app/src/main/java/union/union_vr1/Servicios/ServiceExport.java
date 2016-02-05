@@ -579,7 +579,7 @@ public class ServiceExport extends IntentService {
                     int usuario = cursorCobrosManuales.getInt(cursorCobrosManuales.getColumnIndexOrThrow(DbAdapter_Cobros_Manuales.CM_Usuario));
                     String serie = cursorCobrosManuales.getString(cursorCobrosManuales.getColumnIndexOrThrow(DbAdapter_Cobros_Manuales.CM_Serie));
                     int numero = cursorCobrosManuales.getInt(cursorCobrosManuales.getColumnIndexOrThrow(DbAdapter_Cobros_Manuales.CM_Numero_comprobante));
-
+                    Log.d("JSONCOBROSMANUALES",":"+idLiquidacion+"-"+ categoriaMovimiento+"-"+Importe+"-"+fechaHora+"-"+referencia +"-"+usuario+"-"+ serie+"-"+ numero);
 
                     jsonObject = api.InsCobroManual(idLiquidacion, categoriaMovimiento, Importe, fechaHora, referencia, usuario, serie, numero);
                     Log.d("JSONCOBROSMANUALES", jsonObject.toString());
@@ -587,12 +587,12 @@ public class ServiceExport extends IntentService {
                     if (Utils.isSuccesful(jsonObject) && Utils.validateRespuesta(jsonObject)) {
                         int idReturn = jsonObject.getInt("Value");
                         long estadoUpdate = dbAdapter_cobros_manuales.updateCobrosManuales(Constants._EXPORTADO, _id);
-                        if (estadoUpdate > 0) {
+                        if (idReturn > 0) {
                             Log.d("ACTUALIZOCOBROSMANUALES", "" + estadoUpdate);//
                             JSONObject jsonObjectFlex = null;
                             jsonObjectFlex = api.InsCobro(idReturn);
 
-                            Log.d("JSONOBJECTFLEX", "" + jsonObjectFlex.toString());
+                            Log.d("JSONOBJECTFLEX", "" + jsonObjectFlex.toString()+"--"+jsonObject.toString());
 
                             if (Utils.isSuccesful(jsonObjectFlex) && Utils.validateRespuesta(jsonObjectFlex)) {
                                 int idFlex = jsonObjectFlex.getInt("Value");
@@ -842,7 +842,7 @@ public class ServiceExport extends IntentService {
         builder.setProgress(_MAX, 80, false);
         //Get Important for Flex Manual
 
-        Cursor crManual = dbAdapter_cobros_manuales.filterExportForFlex();
+        Cursor crManual = dbAdapter_cobros_manuales.filterExportForFlexId();
         for (crManual.moveToFirst(); !crManual.isAfterLast(); crManual.moveToNext()) {
             JSONObject jsonObject = null;
             try {
@@ -851,7 +851,7 @@ public class ServiceExport extends IntentService {
                 if (Utils.isSuccesful(jsonObject) && Utils.validateRespuesta(jsonObject)) {
                     int idFlex = jsonObject.getInt("Value");
                     if(idFlex==1 || idFlex==2){
-                        long gu = dbAdapter_cobros_manuales.updateCobrosManualesPorId(Constants.POR_EXPORTAR_FLEX, crManual.getInt(crManual.getColumnIndex(DbAdapter_Cobros_Manuales.CM_id_Cobros_Manuales)), idFlex);
+                        long gu = dbAdapter_cobros_manuales.updateCobrosManualesPorId(Constants._EXPORTADO_FLEX, crManual.getInt(crManual.getColumnIndex(DbAdapter_Cobros_Manuales.CM_id_Cobros_Manuales)), idFlex);
 
                     }
 

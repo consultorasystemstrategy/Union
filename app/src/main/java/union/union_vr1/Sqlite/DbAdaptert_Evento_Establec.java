@@ -534,7 +534,7 @@ cursor.moveToFirst();
                 "LEFT OUTER JOIN m_comprob_cobro cc\n" +
                 "ON ee.ee_in_id_establec = cc.cc_in_id_establec \n" +
                 "WHERE cc_in_estado_cobro = 1 \n" +
-                "AND ee_in_id_liquidacion = '" + idLiquidacion + "' \n" +
+                "AND ee_in_id_liquidacion = '" + idLiquidacion + "'   \n" +
                 "GROUP BY  ee.ee_in_id_establec, cc_in_estado_cobro\n" +
                 "UNION \n" +
                 "SELECT ee.*,  SUM(cc.cc_re_monto_a_pagar) as cc_re_monto_a_pagar\n" +
