@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import union.union_vr1.AsyncTask.ExportCanjesDevolucionesLater;
+import union.union_vr1.Conexion.DbHelper;
 import union.union_vr1.RestApi.StockAgenteRestApi;
 import union.union_vr1.Sqlite.Constants;
 import union.union_vr1.Sqlite.DBAdapter_Temp_Autorizacion_Cobro;
@@ -77,13 +78,16 @@ public class ServiceExport extends IntentService {
     private DbAdaptert_Evento_Establec dbAdaptert_evento_establec;
     private DbAdapter_Establecimeinto_Historial dbAdapter_establecimeinto_historial;
 
-    private static String TAG = ServiceExport.class.getSimpleName();
+    public static String TAG = ServiceExport.class.getSimpleName();
 
     Handler mHandler;
     private static int _MAX = 100;
 
     //EXPORTACIÓN FLEX
     List<String> listIdExportacionFlex = new ArrayList<>();
+    //EXPORTACIÓN SHA-1
+    List<String> listIDExportacionSHA1 = new ArrayList<>();
+
 
 
     public ServiceExport() {
@@ -293,7 +297,7 @@ public class ServiceExport extends IntentService {
                                 idUsuario
                         );
 
-                        if (Utils.isSuccesful(jsonObjectSuccesfull)) {
+                        if (Utils.isSuccesful(jsonObjectSuccesfull) && getIdComprobanteVentaRetornado(jsonObjectSuccesfull) > 0) {
                             idComprobanteVentaRetornado = getIdComprobanteVentaRetornado(jsonObjectSuccesfull);
                             Log.d("ID COMP V RETURN", "" + idComprobanteVentaRetornado);
 
@@ -328,7 +332,7 @@ public class ServiceExport extends IntentService {
                                 idUsuario
                         );
                         Log.d("COBROSNORMALESVENTA", "" + jsonObjectSuccesfull.toString());
-                        if (Utils.isSuccesful(jsonObjectSuccesfull)) {
+                        if (Utils.isSuccesful(jsonObjectSuccesfull) && getIdComprobanteVentaRetornado(jsonObjectSuccesfull) > 0 && getidPlanPagoRetornado(jsonObjectSuccesfull) > 0) {
 
                             idComprobanteVentaRetornado = getIdComprobanteVentaRetornado(jsonObjectSuccesfull);
                             Log.d("COBROSNORMALESVENTAID", "" + idComprobanteVentaRetornado);
@@ -350,7 +354,7 @@ public class ServiceExport extends IntentService {
 
 
                             int idPlan = getidPlanPagoRetornado(jsonObjectSuccesfull);
-                            Log.d("COBROSNORMALESVENTAIPLAN", "" + idPlan);
+                            Log.d(TAG, "ID PLAN : " + idPlan);
 
                             Log.d("Export id CV IGUALES", "" + cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_comprob)));
                             Cursor cursorPlanPago = dbAdapter_comprob_cobro.filterExportAndFetchById(cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_comprob)), idPlan);
@@ -374,7 +378,7 @@ public class ServiceExport extends IntentService {
                                         cursorPlanPago.getString(cursorPlanPago.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_fecha_programada))
                                 );
                                 Log.d("COBROSNORMALESIDDETALLE",jsonObjectSuccess.toString() );
-                                if (Utils.isSuccesful(jsonObjectSuccesfull)) {
+                                if (Utils.isSuccesful(jsonObjectSuccesfull) && Utils.validateRespuesta(jsonObjectSuccesfull)) {
                                     listIdComprobanteCobro.add("" + cursorPlanPago.getInt(cursorPlanPago.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_id_cob_historial)));
                                     //Update IdPlanPagoDetalle
 
@@ -451,7 +455,7 @@ public class ServiceExport extends IntentService {
 
                     Log.d("VALOR UNIDAD ", "" + cursorComprobanteVentaDetalle.getInt(cursorComprobanteVentaDetalle.getColumnIndexOrThrow(dbAdapter_comprob_venta_detalle.CD_valor_unidad)));
 
-                    Log.d("DATOS EXPORT CVD ", "" + cursorComprobanteVentaDetalle.getInt(cursorComprobanteVentaDetalle.getColumnIndexOrThrow(dbAdapter_comprob_venta_detalle.CD_id_comprob_real)) + "-" +
+                    Log.d(TAG, "DATOS EXPORT CVD " + cursorComprobanteVentaDetalle.getInt(cursorComprobanteVentaDetalle.getColumnIndexOrThrow(dbAdapter_comprob_venta_detalle.CD_id_comprob_real)) + "-" +
                             cursorComprobanteVentaDetalle.getInt(cursorComprobanteVentaDetalle.getColumnIndexOrThrow(dbAdapter_comprob_venta_detalle.CD_id_producto)) + "-" +
                             cursorComprobanteVentaDetalle.getInt(cursorComprobanteVentaDetalle.getColumnIndexOrThrow(dbAdapter_comprob_venta_detalle.CD_cantidad)) + "-" +
                             cursorComprobanteVentaDetalle.getDouble(cursorComprobanteVentaDetalle.getColumnIndexOrThrow(dbAdapter_comprob_venta_detalle.CD_importe)) + "-" +
@@ -474,7 +478,7 @@ public class ServiceExport extends IntentService {
                     Log.d("SUCCESFULL EXPORT CVD", "" + Utils.isSuccesful(jsonObjectSuccesfull));
                     Log.d("EXPORT CVD MESSAGE ", "" + jsonObjectSuccesfull.toString());
 
-                    if (Utils.isSuccesful(jsonObjectSuccesfull)) {
+                    if (Utils.isSuccesful(jsonObjectSuccesfull) && Utils.validateRespuesta(jsonObjectSuccesfull)) {
                         listIdComprobanteVentaDetalle.add("" + cursorComprobanteVentaDetalle.getInt(cursorComprobanteVentaDetalle.getColumnIndexOrThrow(dbAdapter_comprob_venta_detalle.CD_comp_detalle)));
                     }
 
@@ -534,7 +538,7 @@ public class ServiceExport extends IntentService {
                     Log.d("SUCCES EXPORT GASTOS ", "" + Utils.isSuccesful(jsonObjectSuccesfull));
                     Log.d("SUCCES EXPORT GASTOS", "" + jsonObjectSuccesfull.toString());
 
-                    if (Utils.isSuccesful(jsonObjectSuccesfull)) {
+                    if (Utils.isSuccesful(jsonObjectSuccesfull) && Utils.validateRespuesta(jsonObjectSuccesfull)) {
                         listIdInfomeGastos.add("" + cursorInformeGastos.getInt(cursorInformeGastos.getColumnIndexOrThrow(dbAdapter_informe_gastos.GA_id_gasto)));
                     }
 
@@ -580,7 +584,7 @@ public class ServiceExport extends IntentService {
                     jsonObject = api.InsCobroManual(idLiquidacion, categoriaMovimiento, Importe, fechaHora, referencia, usuario, serie, numero);
                     Log.d("JSONCOBROSMANUALES", jsonObject.toString());
 
-                    if (Utils.isSuccesful(jsonObject)) {
+                    if (Utils.isSuccesful(jsonObject) && Utils.validateRespuesta(jsonObject)) {
                         int idReturn = jsonObject.getInt("Value");
                         long estadoUpdate = dbAdapter_cobros_manuales.updateCobrosManuales(Constants._EXPORTADO, _id);
                         if (estadoUpdate > 0) {
@@ -590,7 +594,7 @@ public class ServiceExport extends IntentService {
 
                             Log.d("JSONOBJECTFLEX", "" + jsonObjectFlex.toString());
 
-                            if (Utils.isSuccesful(jsonObjectFlex)) {
+                            if (Utils.isSuccesful(jsonObjectFlex) && Utils.validateRespuesta(jsonObjectFlex)) {
                                 int idFlex = jsonObjectFlex.getInt("Value");
                                 if(idFlex==1 || idFlex ==2){
                                     long gu = dbAdapter_cobros_manuales.updateCobrosManualesPorId(Constants._EXPORTADO_FLEX, _id, idReturn);
@@ -652,7 +656,7 @@ public class ServiceExport extends IntentService {
                     Log.d("COBROSNORMALESnORMALES", jsonObject.toString());
                     Log.d("EXPORT INSERT C", "" + Utils.isSuccesful(jsonObject));
 
-                    if (Utils.isSuccesful(jsonObject)) {
+                    if (Utils.isSuccesful(jsonObject) && Utils.validateRespuesta(jsonObject)) {
                         int idImpresionCobro= crCobrosInsrCaja.getInt(crCobrosInsrCaja.getColumnIndexOrThrow(DbAdapter_Impresion_Cobros.Imprimir_id));
                         int id = jsonObject.getInt("Value");//Para Insertar en Flex registrar cobros en el flex
                         //listidInsertarCaja.add("" + crCobrosInsrCaja.getInt(crCobrosInsrCaja.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_id_cob_historial)));
@@ -664,7 +668,7 @@ public class ServiceExport extends IntentService {
                             JSONObject jsonObjectFlex = null;
                             jsonObjectFlex = api.InsCobro(id);
                             int idFlex=0;
-                            if (Utils.isSuccesful(jsonObjectFlex)) {
+                            if (Utils.isSuccesful(jsonObjectFlex) && Utils.validateRespuesta(jsonObjectFlex)) {
                                 Log.d(TAG+"COBROS",""+jsonObjectFlex.toString());
                                 idFlex = jsonObjectFlex.getInt("Value");
                                 if(idFlex>0){
@@ -733,7 +737,7 @@ public class ServiceExport extends IntentService {
             try {
                 jsonObject = api.InsCobro(crCobrosExpFlex.getInt(crCobrosExpFlex.getColumnIndex(DbAdapter_Impresion_Cobros.Imprimir_id_flex)));
 
-                if (Utils.isSuccesful(jsonObject)) {
+                if (Utils.isSuccesful(jsonObject) && Utils.validateRespuesta(jsonObject)) {
                     int idFlex = jsonObject.getInt("Value");
                     if(idFlex==1 || idFlex==2){
                         int gu = dbAdapter_impresion_cobros.updateCobrosExportadoFlex(crCobrosExpFlex.getInt(crCobrosExpFlex.getColumnIndex(DbAdapter_Impresion_Cobros.Imprimir_id)),Constants._EXPORTADO,idFlex);
@@ -844,7 +848,7 @@ public class ServiceExport extends IntentService {
             try {
                 jsonObject = api.InsCobro(crManual.getInt(crManual.getColumnIndex(DbAdapter_Cobros_Manuales.CM_id_flex)));
 
-                if (Utils.isSuccesful(jsonObject)) {
+                if (Utils.isSuccesful(jsonObject) && Utils.validateRespuesta(jsonObject)) {
                     int idFlex = jsonObject.getInt("Value");
                     if(idFlex==1 || idFlex==2){
                         long gu = dbAdapter_cobros_manuales.updateCobrosManualesPorId(Constants.POR_EXPORTAR_FLEX, crManual.getInt(crManual.getColumnIndex(DbAdapter_Cobros_Manuales.CM_id_Cobros_Manuales)), idFlex);
@@ -904,7 +908,7 @@ public class ServiceExport extends IntentService {
                     Log.d("EXPORT AUTO COBROS", jsonObject.toString());
                     Log.d("EXPORT AUTO COBROS", "" + Utils.isSuccesful(jsonObject));
 
-                    if (Utils.isSuccesful(jsonObject)) {
+                    if (Utils.isSuccesful(jsonObject) && Utils.validateRespuesta(jsonObject)) {
                         listIdAutorizacionCobro.add("" + cursorAutorizacionCobro.getInt(cursorAutorizacionCobro.getColumnIndexOrThrow(dbAdapter_temp_autorizacion_cobro.temp_autorizacion_cobro)));
                     }
 
@@ -961,7 +965,7 @@ public class ServiceExport extends IntentService {
 
                     Log.d("E M ESTABLECIMIENTO ", jsonObject.toString());
 
-                    if (Utils.isSuccesful(jsonObject)) {
+                    if (Utils.isSuccesful(jsonObject) && Utils.validateRespuesta(jsonObject)) {
                         listIdEstablecimientoUpdated.add("" + cursorEventoEstablecimiento.getInt(cursorEventoEstablecimiento.getColumnIndexOrThrow(dbAdaptert_evento_establec.EE_id_evt_establec)));
                     }
                 } catch (Exception e) {
@@ -1023,7 +1027,7 @@ public class ServiceExport extends IntentService {
                     Log.d(TAG, "SUCCES EXPORTACIÓN FLEX " + Utils.isSuccesful(jsonObjectSuccesfull));
                     Log.d(TAG, "JSON EXPORTACIÓN FLEX " + jsonObjectSuccesfull.toString());
 
-                    int idRespuestaFlex = parserIDRespuestaFlex(jsonObjectSuccesfull);
+                    int idRespuestaFlex = Utils.getIntJSON(jsonObjectSuccesfull);
 
                     Log.d(TAG, "ID RESPUESTA FLEX : " + idRespuestaFlex);
 
@@ -1053,6 +1057,81 @@ public class ServiceExport extends IntentService {
 
         } else {
             Log.d(TAG, "TODOS LOS COMPROBANTES ESTÁN EXPORTADOS AL FLEX");
+        }
+
+
+
+
+        Cursor cursorSHA1 = dbAdapter_comprob_venta.filterToExportSHA1(idLiquidacion);
+        /*Cursor cursorSHA1ALL = dbAdapter_comprob_venta.fetchSHA1(idLiquidacion);
+
+
+        if (cursorSHA1ALL.getCount()>0){
+            for (cursorSHA1ALL.moveToFirst(); !cursorSHA1ALL.isAfterLast(); cursorSHA1ALL.moveToNext()) {
+                JSONObject jsonObjectSuccesfull = null;
+                Log.d(TAG, "COMPROBANTE VENTA, SHA1  :  -->  _ID : " + cursorSHA1ALL.getLong(cursorSHA1ALL.getColumnIndexOrThrow(DbAdapter_Comprob_Venta.CV_id_comprob)) + ", SHA1 : " +
+                                cursorSHA1ALL.getString(cursorSHA1ALL.getColumnIndexOrThrow(DbAdapter_Comprob_Venta.CV_SHA1)) + ", _ID_SQLSERVER : " +
+                                cursorSHA1ALL.getInt(cursorSHA1ALL.getColumnIndexOrThrow(DbAdapter_Comprob_Venta.CV_id_SQL_SERVER_comprob)) + ", estado sincronizacion shs1 : " +
+                                cursorSHA1ALL.getInt(cursorSHA1ALL.getColumnIndexOrThrow(DbAdapter_Comprob_Venta.CV_sincronizacion_sha1))
+                );
+            }
+
+            }*/
+        Log.d(TAG, "LIQUIDACION : "+ idLiquidacion);
+
+        /*Log.d(TAG, "COUNT CURSOR SHA1 ALL: "+ cursorSHA1ALL.getCount());*/
+
+
+        Log.d(TAG, "COUNT CURSOR SHA1 :" + cursorSHA1.getCount());
+        if (cursorSHA1.getCount() > 0) {
+
+            for (cursorSHA1.moveToFirst(); !cursorSHA1.isAfterLast(); cursorSHA1.moveToNext()) {
+                JSONObject jsonObjectSuccesfull = null;
+                Log.d(TAG, "SHA1 COMPROBANTE :  -->  _ID : " + cursorSHA1.getLong(cursorSHA1.getColumnIndexOrThrow(DbAdapter_Comprob_Venta.CV_id_comprob)) + ", SHA1 : " +
+                                cursorSHA1.getString(cursorSHA1.getColumnIndexOrThrow(DbAdapter_Comprob_Venta.CV_SHA1)) + ", _ID_SQLSERVER : " +
+                                cursorSHA1.getInt(cursorSHA1.getColumnIndexOrThrow(DbAdapter_Exportacion_Comprobantes.EC_id_sid)) + ", estado sincronizacion shs1 : " +
+                                cursorSHA1.getInt(cursorSHA1.getColumnIndexOrThrow(DbAdapter_Comprob_Venta.CV_sincronizacion_sha1))
+                );
+
+                try {
+
+
+                    jsonObjectSuccesfull = api.fupd_ValorResumen(cursorSHA1.getInt(cursorSHA1.getColumnIndexOrThrow(DbAdapter_Exportacion_Comprobantes.EC_id_sid)),
+                            cursorSHA1.getString(cursorSHA1.getColumnIndexOrThrow(DbAdapter_Comprob_Venta.CV_SHA1)));
+
+                    Log.d(TAG, "SUCCES EXPORTACIÓN SHA1 " + Utils.isSuccesful(jsonObjectSuccesfull));
+                    Log.d(TAG, "JSON SHA1 UPD " + jsonObjectSuccesfull.toString());
+
+                    int success = Utils.getIntJSON(jsonObjectSuccesfull);
+
+                    Log.d(TAG, " SHA1 SUCCESS : " + success);
+
+                    if (success > 0) {
+                        listIDExportacionSHA1.add("" + cursorSHA1.getLong(cursorSHA1.getColumnIndexOrThrow(DbAdapter_Comprob_Venta.CV_id_comprob)));
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            String[] idExportacionSHA1 = new String[listIDExportacionSHA1.size()];
+            listIDExportacionSHA1.toArray(idExportacionSHA1);
+
+            Log.d(TAG, "NRO REGISTROS EXPORTADOS SATISFACTORIAMENTE SHA1 : " + (idExportacionSHA1.length));
+            for (int i = 0; i < idExportacionSHA1.length; i++) {
+                Log.d(TAG, "_ID EXPORT SATISFACTORIO " + idExportacionSHA1[i]);
+            }
+
+            if (listIDExportacionSHA1.size() > 0) {
+                int nRegistrosExportados = dbAdapter_comprob_venta.changeEstadoSHA1ToExport(idExportacionSHA1, Constants._EXPORTADO);
+                Log.d(TAG, "REGISTROS EXPORTADOS SHA: " + nRegistrosExportados);
+            }
+
+
+        } else {
+            Log.d(TAG, "TODOS LOS REGISTROS  SHA1 ESTÁN EXPORTADOS");
         }
 
         //-------------------------
@@ -1146,15 +1225,4 @@ public class ServiceExport extends IntentService {
         return idPlanPago;
     }
 
-    public int parserIDRespuestaFlex(JSONObject jsonObj) {
-        int idRespuesta = -1;
-        try {
-            Log.d("CADENA A PARSEAR ", jsonObj.toString());
-            idRespuesta = jsonObj.getInt("Value");
-        } catch (JSONException e) {
-            // TODO Auto-generated catch block
-            Log.d("JSONPARSER ERROR", e.getMessage());
-        }
-        return idRespuesta;
-    }
 }
