@@ -176,6 +176,8 @@ public class StockAgenteRestApi {
         result = new JSONObject(r);
         return result;
     }
+
+    //int
     public JSONObject InsCobroManual(int vbint_LiquidacionId,int vint_CategoriaMovimientoId,double vdou_Importe,String vstr_FechaHora,String vstr_Referencia,int vint_UsuarioId,String vstr_Serie,int vint_Numero) throws Exception {
         JSONObject result = null;
         JSONObject o = new JSONObject();
@@ -196,6 +198,9 @@ public class StockAgenteRestApi {
         result = new JSONObject(r);
         return result;
     }
+/**
+ *        DataTable CreateComprobanteVenta
+ * */
 
     public JSONObject CreateComprobanteVenta(String serie,int numDoc,int idFormaPago,String fechaDoc,double baseImponible,double igv,double total,int idTipoCompro,int idAgenteVenta,int anulado,double saldo,int idLiquidacion,int idTipoVenta,String codigoERP,int idEstablec,int idUsuario) throws Exception {
         JSONObject result = null;
@@ -227,6 +232,7 @@ public class StockAgenteRestApi {
     }
 
 
+    //int CreateInsertarCaja
     public JSONObject CreateInsertarCaja(int idLiquidacionCaja,int idCategoriaMovimiento,double importeDecimal,int estado,String fecha,String referencia,int idusuario,int idcomprobante,int idPlanPago,int idPlanPagoDetalle) throws Exception {
         JSONObject result = null;
         JSONObject o = new JSONObject();
@@ -250,6 +256,7 @@ public class StockAgenteRestApi {
         return result;
     }
 
+    //        int CreateComprobanteVentaDetalle
     public JSONObject CreateComprobanteVentaDetalle(int p_ComdBIComprobanteVentaId,int p_ComdIProductoId,int p_ComdICantidad,double p_ComdDOImporte,int p_ComIUsuarioId,double p_ComdDOCostoVenta,double p_ComdDOPrecioUnitario,int p_valor) throws Exception {
         JSONObject result = null;
         JSONObject o = new JSONObject();
@@ -270,6 +277,8 @@ public class StockAgenteRestApi {
         result = new JSONObject(r);
         return result;
     }
+
+    //int CreatePlanPagoDetalleExp
     public JSONObject CreatePlanPagoDetalleExp(int idPlanPago,String fecha,double montoPagar,int idUsuario,String fechaCobro) throws Exception {
         JSONObject result = null;
         JSONObject o = new JSONObject();
@@ -407,6 +416,7 @@ public class StockAgenteRestApi {
         return result;
     }
 
+    //        int CreateInformeGastos
     public JSONObject CreateInformeGastos(int idLiquidacionCaja,double total,String fecha,int idUsuario,int idTipoGasto,double subtotal,double igv,String referencia,int idprocedenciaGasto) throws Exception {
         JSONObject result = null;
         JSONObject o = new JSONObject();
@@ -428,6 +438,7 @@ public class StockAgenteRestApi {
         result = new JSONObject(r);
         return result;
     }
+    //int CreateDetalleOperacionesCD
     public JSONObject CreateDetalleOperacionesCD(int idProducto,int idCategoriaOpe,int idTipoOp,int cantidad,int idEmpresa,int idAgenteVenta,String idGuiaRemision,String referencia,String lote,int idLiquidacion,double total,int idComprobanteVenta,int idTipoDev,int unidad,int idEstablec) throws Exception {
         JSONObject result = null;
         JSONObject o = new JSONObject();
@@ -455,6 +466,9 @@ public class StockAgenteRestApi {
         result = new JSONObject(r);
         return result;
     }
+
+
+    //int
     public JSONObject InsCobro(int vint_ComprobanteId) throws Exception {
         JSONObject result = null;
         JSONObject o = new JSONObject();
@@ -469,6 +483,10 @@ public class StockAgenteRestApi {
         return result;
     }
 
+
+    /**
+     *         int CreateDevoluciones
+     */
     public JSONObject CreateDevoluciones(int idProducto,int idCategoriaOpe,int idTipoOp,int cantidad,int idEmpresa,int idAgenteVenta,int idGuiaRemision,String referencia,String lote,int idLiquidacion,double total,int idComprobanteVenta,int idTipoDev,int unidad,int idEstablec,int cantidadDev,int categoriaDev,double importeDev,String fechaDev,String horaDev) throws Exception {
         JSONObject result = null;
         JSONObject o = new JSONObject();
@@ -519,6 +537,9 @@ public class StockAgenteRestApi {
         return result;
     }
 
+    /**
+     *         int CreateHeaderDevoluciones
+     */
     public JSONObject CreateHeaderDevoluciones(int id,int idEmpresa,int idAgenteVenta,int TipoMovimiento,Double subTotal,String idAndroid) throws Exception {
         JSONObject result = null;
         JSONObject o = new JSONObject();
@@ -552,6 +573,8 @@ public class StockAgenteRestApi {
         return result;
     }
 
+
+    // INT
     public JSONObject CreateSolicitudAutorizacionCreditoExp(int idAgente,String idMotivoSolicitud,int idEstablecimiento,int estadoSolicitud,String observacion,String referencia,int idUsuario,double montoCredito,int vigenciaCredito) throws Exception {
         JSONObject result = null;
         JSONObject o = new JSONObject();
@@ -574,6 +597,7 @@ public class StockAgenteRestApi {
         return result;
     }
 
+    //	int CreateSolicitudAutorizacionCobro
     public JSONObject CreateSolicitudAutorizacionCobro(int idAgente,int motivoSolicitud,int idEStablecimiento,int estadoSolicitud,String referencia,double montoCreditoPagado,double montoCreditoPagar,int usuario,int idAutorizacion) throws Exception {
         JSONObject result = null;
         JSONObject o = new JSONObject();
@@ -621,6 +645,8 @@ public class StockAgenteRestApi {
         result = new JSONObject(r);
         return result;
     }
+
+    //        int ObtenerStockAgente
     public JSONObject ObtenerStockAgente(String numGuia,int AgenteId) throws Exception {
         JSONObject result = null;
         JSONObject o = new JSONObject();
@@ -635,6 +661,8 @@ public class StockAgenteRestApi {
         result = new JSONObject(r);
         return result;
     }
+
+    // int
     public JSONObject InsLocalizacionAgente(int vint_AgenteId,String vstr_Latitud,String vstr_Longitud) throws Exception {
         JSONObject result = null;
         JSONObject o = new JSONObject();
@@ -650,6 +678,8 @@ public class StockAgenteRestApi {
         result = new JSONObject(r);
         return result;
     }
+
+    //int
     public JSONObject UpdateEstadoEstablecimiento2(int idEstablecimiento,int idLiquidacion,int estado,int estadoNoAtencion,String fechahora) throws Exception {
         JSONObject result = null;
         JSONObject o = new JSONObject();
@@ -667,6 +697,8 @@ public class StockAgenteRestApi {
         result = new JSONObject(r);
         return result;
     }
+
+    //DATATABLE READ
     public JSONObject GetInventarioAnterior(int vint_AgentaVentaId,String vstr_fecha) throws Exception {
         JSONObject result = null;
         JSONObject o = new JSONObject();
@@ -682,6 +714,7 @@ public class StockAgenteRestApi {
         return result;
     }
 
+    //INT
     public JSONObject InsClienteEstablecimiento(String PerVNombres,String PerVApellPaterno,String PerVApellMaterno,String PerVDocIdentidad,String PerVCelular,String PerVEmail,int PerBEstado,int PerITipoDocIdentidadId,int PerITipoPersonaId,int PerIUsuarioId,int PerIEmpresaId,String CliVCodigo,String CliVDocidentidad,int CliBEstado,int CliICategoriaClienteId,int CliIAgenteVentaId,int CliIUsuarioId,int CliBEstadoAtencion,double CliDOMontoCredito,int CliIModalidadCreditoId,String DirVDescripcion,String DirVDescripcionFiscal,int DirBEstado,int DirIDistritoId,String DirVTelefonoFijo,String DirVCelular1,String DirVCelular2,int DirIUsuarioId,int DirBEstablecimientoAsociado,int DirBDireccionFiscal,String EstVDescripcion,int EstBEstado,int EstIUsuarioId,int EstIPorcentajeDevolucion,int EstICatEstablecimientoId,String EstVExhibidor,double EstDOMontoCompra,int EstITipEstId,String LocVLongitude,String LocVLatitude,int LocBEstado,int LocIUsuarioId,int EveeIAtencionEstablecimientoId,int EveeBILiquidacionCajaId,int EveeIMotivoNoAtendidoId,int EveeIRutaId,String EstVKeyFireBase) throws Exception {
         JSONObject result = null;
         JSONObject o = new JSONObject();
@@ -773,6 +806,8 @@ public class StockAgenteRestApi {
         return result;
     }
 
+
+    //int
     public JSONObject UpdCerrarCaja(int vint_LiquidacionCajaId,double vdou_LiqDOIngresos,double vdou_LiqDOGastos,double vdou_LiqDOMontoARendir,int vint_KilometrajeFinal) throws Exception {
         JSONObject result = null;
         JSONObject o = new JSONObject();
@@ -842,6 +877,7 @@ public class StockAgenteRestApi {
         return result;
     }
 
+    // int
     public JSONObject InsComprobante(int vint_ComprobanteId) throws Exception {
         JSONObject result = null;
         JSONObject o = new JSONObject();
@@ -870,6 +906,8 @@ public class StockAgenteRestApi {
         return result;
     }
 
+
+    //INT
     public JSONObject InsExportarTransferencias(int IdLiquidacion,int IdAgente) throws Exception {
         JSONObject result = null;
         JSONObject o = new JSONObject();
@@ -928,6 +966,7 @@ public class StockAgenteRestApi {
         return result;
     }
 
+    //int
     public JSONObject fupd_EstadoClienteEstablecimiento(int vint_ClienteId,int vint_EstablecimientoId,int vint_AgenteId) throws Exception {
         JSONObject result = null;
         JSONObject o = new JSONObject();
@@ -985,6 +1024,7 @@ public class StockAgenteRestApi {
         return result;
     }
 
+    //int
     public JSONObject fupd_LocalizacionEstablecimiento(int vint_AgenteId,int vint_EstablecimientoId,String vstr_Latitud,String vstr_Longitud) throws Exception {
         JSONObject result = null;
         JSONObject o = new JSONObject();
@@ -1002,6 +1042,8 @@ public class StockAgenteRestApi {
         return result;
     }
 
+
+    //INT CreateSolicitudAutorizacionCredito
     public JSONObject CreateSolicitudAutorizacionCredito(int idAgente,String idMotivoSolicitud,int idEstablecimiento,int estadoSolicitud,String observacion,String referencia,int idUsuario,double montoCredito,int vigenciaCredito,String vstr_KeyFireBase) throws Exception {
         JSONObject result = null;
         JSONObject o = new JSONObject();
@@ -1053,6 +1095,7 @@ public class StockAgenteRestApi {
         return result;
     }
 
+    //INT
     public JSONObject fins_ClienteTemporal(String Nombres,String ApellidoMaterno,String ApellidoPaterno,int CategoriaEstablecimientoId,String CelularCliente,String CelularEstablecimiento,String DescripcionEstablecimiento,String DireccionEstablecimiento,String DireccionFiscal,int DistritoDireccionId,int DistritoFiscalId,String DocIdentidad,String Email,String Latitude,String Longitude,String TelefonoEstablecimiento,int TipoDocIdentidadId,int TipoNegocio,int TipoPersonaId,int UsuarioId,String KeyFireBase) throws Exception {
         JSONObject result = null;
         JSONObject o = new JSONObject();
@@ -1135,6 +1178,21 @@ public class StockAgenteRestApi {
         o.put("method", "GetHistorialCobrosPendientesXLiquidacion");
         p.put("vint_LiquidacionId",mapObject(vint_LiquidacionId));
         p.put("vint_AgenteId",mapObject(vint_AgenteId));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+
+    public JSONObject fupd_ValorResumen(int vint_ComprobanteId,String vstr_SHA) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","RestAPI");
+        o.put("method", "fupd_ValorResumen");
+        p.put("vint_ComprobanteId",mapObject(vint_ComprobanteId));
+        p.put("vstr_SHA",mapObject(vstr_SHA));
         o.put("parameters", p);
         String s = o.toString();
         String r = load(s);

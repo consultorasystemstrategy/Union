@@ -17,6 +17,7 @@ import union.union_vr1.Sqlite.DBAdapter_Temp_Inventario;
 import union.union_vr1.Sqlite.DbAdapter_Establecimeinto_Historial;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Establecimiento;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
+import union.union_vr1.Utils.Utils;
 import union.union_vr1.Vistas.VMovil_Evento_Indice;
 import union.union_vr1.Vistas.VMovil_Menu_Establec;
 
@@ -138,7 +139,7 @@ public class ModificarEstablecimiento extends AsyncTask<String, String, String> 
                 //----------------------------
                 Log.e("JSON EDIT ESTAB", "" + jsonObjectCreated.toString());
 
-                if (isSuccesfulExport(jsonObjectCreated)) {
+                if (isSuccesfulExport(jsonObjectCreated) && Utils.validateRespuesta(jsonObjectCreated)) {
                     int idRemoto = jsonObjectCreated.getInt("Value");
                 }
 

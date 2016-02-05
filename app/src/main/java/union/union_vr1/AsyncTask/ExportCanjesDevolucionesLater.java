@@ -15,6 +15,7 @@ import org.json.JSONObject;
 import union.union_vr1.RestApi.StockAgenteRestApi;
 import union.union_vr1.Sqlite.DBAdapter_Temp_Canjes_Devoluciones;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
+import union.union_vr1.Utils.Utils;
 
 /**
  * Created by Kelvin on 22/10/2015.
@@ -80,49 +81,53 @@ public class ExportCanjesDevolucionesLater extends AsyncTask<String, String, Str
                     getCabeceraOperacion[3]
             );
             Log.d("EXPORT HV CREATED", jsonObject.toString());
-            int idGuia = parserIdGuiaRetornado(jsonObject);
 
-            while (operacionesDetalleForUpdate.moveToNext()) {
-                Log.d("Actualizo", idGuia + "");
-                int estadoUpdateGuia = dbAdapter_temp_canjes_devoluciones.updateIdDetalle(operacionesDetalleForUpdate.getString(operacionesDetalleForUpdate.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_id_canjes_devoluciones)), idGuia);
-                Log.d("Actualizo", estadoUpdateGuia + "");
-            }
-            JSONObject jsonObjectDetalle = null;
+            if (Utils.isSuccesful(jsonObject) && Utils.validateRespuesta(jsonObject)) {
 
-            Log.d("ESTADO DEL CAMPO", "" + idGuia);
-            while (operacionesDetalle.moveToNext()) {
+                int idGuia = Utils.getIntJSON(jsonObject);
 
-                jsonObjectDetalle = api.CreateDetalleOperacionesCD(operacionesDetalle.getInt(operacionesDetalle.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_id_producto)),
-                        operacionesDetalle.getInt(operacionesDetalle.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_estado_producto)),
-                        operacionesDetalle.getInt(operacionesDetalle.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_id_motivo)),
-                        operacionesDetalle.getInt(operacionesDetalle.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_cantidad)),
-                        1,
-                        idAgente,
-                        operacionesDetalle.getString(operacionesDetalle.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_id_guia)),
-                        operacionesDetalle.getString(operacionesDetalle.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_id_comprob)),
-                        operacionesDetalle.getString(operacionesDetalle.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_lote)),
-                        operacionesDetalle.getInt(operacionesDetalle.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_liquidacion)),
-                        operacionesDetalle.getDouble(operacionesDetalle.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_importe)),
-                        operacionesDetalle.getInt(operacionesDetalle.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_id_comprob_venta)),// Editar por comprobante de venta
-                        operacionesDetalle.getInt(operacionesDetalle.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_id_forma)),//Agregar
-                        operacionesDetalle.getInt(operacionesDetalle.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_unidad)),//Agregar
-                        operacionesDetalle.getInt(operacionesDetalle.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_id_establecimiento))
-
-                );
-
-                Log.d("DETALLE", jsonObjectDetalle.toString());
-
-
-            }
-            if (isSuccesfulExport(jsonObjectDetalle)) {
-                Log.d("TERMINO BIEN", jsonObjectDetalle.toString());
-                while (operacionesDetalleForUpdateFinish.moveToNext()) {
-                    Log.d("ACTUALIZO",  "BIENN");
-                    int estadoEstado = dbAdapter_temp_canjes_devoluciones.updateEstadoExport(operacionesDetalleForUpdateFinish.getString(operacionesDetalleForUpdateFinish.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_id_canjes_devoluciones)));
-                    Log.d("ACTUALIZO", estadoEstado + "");
+                while (operacionesDetalleForUpdate.moveToNext()) {
+                    Log.d("Actualizo", idGuia + "");
+                    int estadoUpdateGuia = dbAdapter_temp_canjes_devoluciones.updateIdDetalle(operacionesDetalleForUpdate.getString(operacionesDetalleForUpdate.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_id_canjes_devoluciones)), idGuia);
+                    Log.d("Actualizo", estadoUpdateGuia + "");
                 }
-            }
+                JSONObject jsonObjectDetalle = null;
 
+                Log.d("ESTADO DEL CAMPO", "" + idGuia);
+                while (operacionesDetalle.moveToNext()) {
+
+                    jsonObjectDetalle = api.CreateDetalleOperacionesCD(operacionesDetalle.getInt(operacionesDetalle.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_id_producto)),
+                            operacionesDetalle.getInt(operacionesDetalle.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_estado_producto)),
+                            operacionesDetalle.getInt(operacionesDetalle.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_id_motivo)),
+                            operacionesDetalle.getInt(operacionesDetalle.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_cantidad)),
+                            1,
+                            idAgente,
+                            operacionesDetalle.getString(operacionesDetalle.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_id_guia)),
+                            operacionesDetalle.getString(operacionesDetalle.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_id_comprob)),
+                            operacionesDetalle.getString(operacionesDetalle.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_lote)),
+                            operacionesDetalle.getInt(operacionesDetalle.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_liquidacion)),
+                            operacionesDetalle.getDouble(operacionesDetalle.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_importe)),
+                            operacionesDetalle.getInt(operacionesDetalle.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_id_comprob_venta)),// Editar por comprobante de venta
+                            operacionesDetalle.getInt(operacionesDetalle.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_id_forma)),//Agregar
+                            operacionesDetalle.getInt(operacionesDetalle.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_unidad)),//Agregar
+                            operacionesDetalle.getInt(operacionesDetalle.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_id_establecimiento))
+
+                    );
+
+                    Log.d("DETALLE", jsonObjectDetalle.toString());
+
+
+                }
+                if (Utils.isSuccesful(jsonObjectDetalle) && Utils.validateRespuesta(jsonObjectDetalle)) {
+                    Log.d("TERMINO BIEN", jsonObjectDetalle.toString());
+                    while (operacionesDetalleForUpdateFinish.moveToNext()) {
+                        Log.d("ACTUALIZO",  "BIENN");
+                        int estadoEstado = dbAdapter_temp_canjes_devoluciones.updateEstadoExport(operacionesDetalleForUpdateFinish.getString(operacionesDetalleForUpdateFinish.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_id_canjes_devoluciones)));
+                        Log.d("ACTUALIZO", estadoEstado + "");
+                    }
+                }
+
+            }
 
 
         } catch (Exception e) {
@@ -154,33 +159,6 @@ public class ExportCanjesDevolucionesLater extends AsyncTask<String, String, Str
 
         }*/
 
-
-        super.onPostExecute(s);
     }
 
-
-
-    public int parserIdGuiaRetornado(JSONObject jsonObj) {
-        int idGuia = -1;
-        try {
-            Log.d("CADENA A PARSEAR ", jsonObj.toString());
-            idGuia = jsonObj.getInt("Value");
-        } catch (JSONException e) {
-            // TODO Auto-generated catch block
-            Log.d("JSONPARSER ERROR", e.getMessage());
-        }
-        return idGuia;
-    }
-
-    public boolean isSuccesfulExport(JSONObject jsonObj) {
-        boolean succesful = false;
-        try {
-            Log.d("CADENA JSON ", jsonObj.toString());
-            succesful = jsonObj.getBoolean("Successful");
-        } catch (JSONException e) {
-            // TODO Auto-generated catch block
-            Log.d("JSON PARSER ERROR", e.getMessage());
-        }
-        return succesful;
-    }
 }

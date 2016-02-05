@@ -57,7 +57,7 @@ public class TimerGps extends Service {
         int idAgente = dbAdapter_temp_session.fetchVarible(1);
         Log.e(TAG,""+idAgente+"****");
         Log.i(TAG, "START");
-        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,300000,0,li);
+        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 300000, 0, li);
         return Service.START_STICKY;
     }
 

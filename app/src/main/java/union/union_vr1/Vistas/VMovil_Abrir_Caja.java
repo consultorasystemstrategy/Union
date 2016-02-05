@@ -245,50 +245,55 @@ public class VMovil_Abrir_Caja extends Activity implements View.OnClickListener 
                 jsonObjAgente = api.InsAbrirCaja(idAgente, kilometraje);
                 Log.d("JSON OBJECT AbrirCaja", "" + jsonObjAgente.toString());
                 int objrturn = -1;
-                objrturn = jsonObjAgente.getInt("Value");
+
+
+
                 Log.d("JSON RETURN INT CAJA", "" + objrturn);
-                if (objrturn > 0) {
 
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(getApplicationContext(), "ABRIENDO CAJA...", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                    jsonObjAgenteDatos = api.GetAgenteVenta(login_usuario, login_clave, getDatePhone());
-                    ParserAgente parserAgente = new ParserAgente();
-                    //agenteLista = parserAgente.parserAgenteDatos(jsonObjAgenteDatos);
-                    agenteLista = parserAgente.parserAgente(jsonObjAgenteDatos, login_usuario, login_clave);
-                    Log.d("JSON OBJECT AGENTE", "" + jsonObjAgenteDatos.toString());
+                if (Utils.isSuccesful(jsonObjAgente) && Utils.validateRespuesta(jsonObjAgente)){
+                    objrturn = jsonObjAgente.getInt("Value");
+                    if (objrturn > 0) {
 
-                    if (agenteLista.size() > 0) {
-                        succesLogin = true;
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(getApplicationContext(), "ABRIENDO CAJA...", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                        jsonObjAgenteDatos = api.GetAgenteVenta(login_usuario, login_clave, getDatePhone());
+                        ParserAgente parserAgente = new ParserAgente();
+                        //agenteLista = parserAgente.parserAgenteDatos(jsonObjAgenteDatos);
+                        agenteLista = parserAgente.parserAgente(jsonObjAgenteDatos, login_usuario, login_clave);
+                        Log.d("JSON OBJECT AGENTE", "" + jsonObjAgenteDatos.toString());
 
-                        for (int i = 0; i < agenteLista.size(); i++) {
-                            Log.d(TAG,"Agente : " + i +  " ,Nombre : " + agenteLista.get(i).getNombreAgente() + ", MAC CIPHERLAB: "+agenteLista.get(i).getMAC2());
-                            session.deleteVariable(1);
-                            session.deleteVariable(3);
-                            session.deleteVariable(4);
-                            session.deleteVariable(6);
-                            session.deleteVariable(9);
-                            session.deleteVariable(10);
-                            session.deleteVariable(11);
-                            session.deleteVariable(12);
-                            session.deleteVariable(13);
-                            session.deleteVariable(Constants.SESSION_ESTADO_DEVOLUCIONES);
+                        if (agenteLista.size() > 0) {
+                            succesLogin = true;
 
-                            session.createTempSession(1, agenteLista.get(i).getIdAgenteVenta());
-                            session.createTempSession(3, agenteLista.get(i).getLiquidacion());
-                            session.createTempSession(4, agenteLista.get(i).getIdUsuario());
-                            session.createTempSession(6, 0);
-                            session.createTempSession(9, 1);
-                            int correlativoFactura = agenteLista.get(i).getCorrelativoFactura() + 1;
-                            int correlativoBoleta = agenteLista.get(i).getCorrelativoBoleta() + 1;
-                            session.createTempSession(10, correlativoFactura);
-                            session.createTempSession(11, correlativoBoleta);
-                            session.createTempSessionString(12, agenteLista.get(i).getMAC());
-                            session.createTempSessionString(13, agenteLista.get(i).getMAC2());
-                            session.createTempSession(Constants.SESSION_ESTADO_DEVOLUCIONES, 0);
+                            for (int i = 0; i < agenteLista.size(); i++) {
+                                Log.d(TAG,"Agente : " + i +  " ,Nombre : " + agenteLista.get(i).getNombreAgente() + ", MAC CIPHERLAB: "+agenteLista.get(i).getMAC2());
+                                session.deleteVariable(1);
+                                session.deleteVariable(3);
+                                session.deleteVariable(4);
+                                session.deleteVariable(6);
+                                session.deleteVariable(9);
+                                session.deleteVariable(10);
+                                session.deleteVariable(11);
+                                session.deleteVariable(12);
+                                session.deleteVariable(13);
+                                session.deleteVariable(Constants.SESSION_ESTADO_DEVOLUCIONES);
+
+                                session.createTempSession(1, agenteLista.get(i).getIdAgenteVenta());
+                                session.createTempSession(3, agenteLista.get(i).getLiquidacion());
+                                session.createTempSession(4, agenteLista.get(i).getIdUsuario());
+                                session.createTempSession(6, 0);
+                                session.createTempSession(9, 1);
+                                int correlativoFactura = agenteLista.get(i).getCorrelativoFactura() + 1;
+                                int correlativoBoleta = agenteLista.get(i).getCorrelativoBoleta() + 1;
+                                session.createTempSession(10, correlativoFactura);
+                                session.createTempSession(11, correlativoBoleta);
+                                session.createTempSessionString(12, agenteLista.get(i).getMAC());
+                                session.createTempSessionString(13, agenteLista.get(i).getMAC2());
+                                session.createTempSession(Constants.SESSION_ESTADO_DEVOLUCIONES, 0);
 /*
                             WifiManager manager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
                             WifiInfo info = manager.getConnectionInfo();
@@ -299,32 +304,33 @@ public class VMovil_Abrir_Caja extends Activity implements View.OnClickListener 
                                 succesMACDevice = true;
                             }*/
 
-                            String address =  Utils.getBluetoothMacAddress();
-                            Log.d(TAG, "MAC ADRESS : "+ address);
+                                String address =  Utils.getBluetoothMacAddress();
+                                Log.d(TAG, "MAC ADRESS : "+ address);
 
-                            if (address.equals(agenteLista.get(i).getMAC2())){
-                                succesMACDevice = true;
-                            }
+                                if (address.equals(agenteLista.get(i).getMAC2())){
+                                    succesMACDevice = true;
+                                }
 
-                            agenteLista.get(i).getIdAgenteVenta();
-                            boolean existe = dbAdapter_agente.existeAgentesById(agenteLista.get(i).getIdAgenteVenta());
-                            Log.d("EXISTE ", "" + existe);
-                            if (existe) {
-                                dbAdapter_agente.updateAgente(agenteLista.get(i), getDatePhone());
-                            } else {
-                                //NO EXISTE ENTONCES CREEMOS UNO NUEVO
-                                dbAdapter_agente.createAgente(agenteLista.get(i), getDatePhone());
+                                agenteLista.get(i).getIdAgenteVenta();
+                                boolean existe = dbAdapter_agente.existeAgentesById(agenteLista.get(i).getIdAgenteVenta());
+                                Log.d("EXISTE ", "" + existe);
+                                if (existe) {
+                                    dbAdapter_agente.updateAgente(agenteLista.get(i), getDatePhone());
+                                } else {
+                                    //NO EXISTE ENTONCES CREEMOS UNO NUEVO
+                                    dbAdapter_agente.createAgente(agenteLista.get(i), getDatePhone());
+                                }
                             }
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(getApplicationContext(), "DATOS ACTUALIZADOS", Toast.LENGTH_SHORT).show();
+                                }
+                            });
                         }
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Toast.makeText(getApplicationContext(), "DATOS ACTUALIZADOS", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    }
 
-                } else {
+                    }
+                }else {
                     if (conectadoRedMovil() || conectadoWifi()) {
 
                     } else {

@@ -44,7 +44,7 @@ public class SetPositionEstablecimiento extends AsyncTask<String, String, String
         try {
             JSONObject jsonObject = stockAgenteRestApi.fupd_LocalizacionEstablecimiento(Integer.parseInt(strings[0]),Integer.parseInt(strings[1]),strings[2],strings[3]);
             Log.d("EXPORTLATLONG",""+jsonObject.toString());
-            if(Utils.isSuccesful(jsonObject)){
+            if(Utils.isSuccesful(jsonObject) && Utils.validateRespuesta(jsonObject)){
                 long s = dbAdaptert_evento_establec.updateEstabLatLong(Integer.parseInt(strings[1]), strings[2], strings[3]);
             }
 

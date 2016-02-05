@@ -52,7 +52,7 @@ public class SolicitarAutorizacionCobros extends AsyncTask<String, String, Strin
             jsonObject = api.CreateSolicitudAutorizacionCreditoExp(idAgente, motivoSolicitud, idEstablec, estadoSolicitud, referencia, idComprobante, idAgente, aPagar, 0);
             Log.d("LATLONG", jsonObject.toString());
 
-            if (Utils.isSuccesful(jsonObject)) {
+            if (Utils.isSuccesful(jsonObject) && Utils.validateRespuesta(jsonObject)) {
                 int estado = jsonObject.getInt("");
                 if (estado > 0) {
                     actualizacion = dbAdapter_comprob_cobro.updateComprobCobrosExport(idActualizar);

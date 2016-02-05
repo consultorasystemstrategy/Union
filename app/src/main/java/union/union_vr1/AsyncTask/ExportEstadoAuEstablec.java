@@ -139,7 +139,7 @@ public class ExportEstadoAuEstablec extends AsyncTask<String, String, String> {
                     );
                     Log.d("IMPORTESTADOESTABLEC", "" + jsonObjectCreated);
 
-                    if (Utils.isSuccesful(jsonObjectCreated)) {
+                    if (Utils.isSuccesful(jsonObjectCreated) && Utils.validateRespuesta(jsonObjectCreated)) {
                         idRemoto = jsonObjectCreated.getInt("Value");
                         long s = dbAdaptert_evento_establec.updateEstaIdRemoto(cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_histo_id)), idRemoto + "");
                         long es = dbAdaptert_evento_establec.updateEstabEstado(cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_histo_id)), 6 + "");
@@ -149,7 +149,7 @@ public class ExportEstadoAuEstablec extends AsyncTask<String, String, String> {
                 //-------------------Para Pedir la aprobacion del establecimiento.--------------------
                 jsonObject = api.fupd_EstadoClienteEstablecimiento(existe, idRemoto, idAgente);
                 Log.d("JSON AUTO ESTAB", "" + jsonObject.toString());
-                if (Utils.isSuccesful(jsonObject)) {
+                if (Utils.isSuccesful(jsonObject) && Utils.validateRespuesta(jsonObject)) {
                     int inserto = jsonObject.getInt("Value");
                     if (inserto > 0) {
 

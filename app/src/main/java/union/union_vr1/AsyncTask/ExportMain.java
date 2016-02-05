@@ -35,6 +35,7 @@ import union.union_vr1.Sqlite.DbAdapter_Informe_Gastos;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 import union.union_vr1.Utils.MyApplication;
+import union.union_vr1.Utils.Utils;
 import union.union_vr1.Vistas.VMovil_Online_Pumovil;
 
 /**
@@ -221,10 +222,13 @@ public class ExportMain extends AsyncTask<String, String, String> {
                                 idUsuario
                         );
 
-                        if (isSuccesfulExport(jsonObjectSuccesfull)) {
+                        if (Utils.isSuccesful(jsonObjectSuccesfull) && getIdComprobanteVentaRetornado(jsonObjectSuccesfull) > 0) {
                             idComprobanteVentaRetornado = getIdComprobanteVentaRetornado(jsonObjectSuccesfull);
                             Log.d("ID COMP V RETURN", "" + idComprobanteVentaRetornado);
 
+                            int registrsActualizadosCV = dbAdapter_comprob_venta.updateComprobanteIDReal(_id_comp_venta,idComprobanteVentaRetornado);
+
+                            Log.d(TAG, "COMPROBANTE VENTA REGISTROS A CTUALIZADOS : "+registrsActualizadosCV);
                             int registrosActualizados = dbAdapter_comprob_venta_detalle.updateComprobVentaDetalleReal( _id_comp_venta, idComprobanteVentaRetornado);
                             Log.d(TAG, "DETALLES ACTUALIZADOS : "+ registrosActualizados);
                             long _id_mapeo = -1;
@@ -255,7 +259,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
                                 idUsuario
                         );
 
-                        if (isSuccesfulExport(jsonObjectSuccesfull)) {
+                        if (Utils.isSuccesful(jsonObjectSuccesfull) && getIdComprobanteVentaRetornado(jsonObjectSuccesfull) > 0 && getidPlanPagoRetornado(jsonObjectSuccesfull) > 0) {
 
                             idComprobanteVentaRetornado = getIdComprobanteVentaRetornado(jsonObjectSuccesfull);
                             Log.d("ID C V RETURN", "" + idComprobanteVentaRetornado);
@@ -301,12 +305,12 @@ public class ExportMain extends AsyncTask<String, String, String> {
                                         cursorPlanPago.getString(cursorPlanPago.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_fecha_programada))
                                 );
 
-                                if (isSuccesfulExport(jsonObjectSuccesfull)) {
+                                if (Utils.isSuccesful(jsonObjectSuccesfull) && Utils.validateRespuesta(jsonObjectSuccesfull)) {
                                     listIdComprobanteCobro.add("" + cursorPlanPago.getInt(cursorPlanPago.getColumnIndexOrThrow(dbAdapter_comprob_cobro.CC_id_cob_historial)));
                                     //Update IdPlanPagoDetalle
 
                                 }
-                                if (isSuccesfulExport(jsonObjectSuccess)) {
+                                if (Utils.isSuccesful(jsonObjectSuccess)) {
                                     int estado = dbAdapter_comprob_cobro.updatePlanPagoDetalleCobros(cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_comprob)), jsonObjectSuccess.getInt("Value"));
                                     if (estado > 0) {
                                         Log.d("IDPLANPAGODETALLE", "INSERTTO: " + estado + " - IDPLANPAGODETALLE: " + jsonObjectSuccess.getInt("Value"));
@@ -333,9 +337,9 @@ public class ExportMain extends AsyncTask<String, String, String> {
 
                     Log.d("JSON INT RETURN ", jsonObjectSuccesfull.toString());
 
-                    Log.d("SUCCESFULL EXPORT CV", "" + isSuccesfulExport(jsonObjectSuccesfull));
+                    Log.d("SUCCESFULL EXPORT CV", "" + Utils.isSuccesful(jsonObjectSuccesfull));
                     Log.d("ID CV RETORNADO", "" + idComprobanteVentaRetornado);
-                    if (isSuccesfulExport(jsonObjectSuccesfull)) {
+                    if (Utils.isSuccesful(jsonObjectSuccesfull)) {
                         listIdComprobantes.add("" + cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_comprob)));
                     }
                     Log.d(" EXPORT JSON MESSAGE CV", jsonObjectSuccesfull.toString());
@@ -390,10 +394,10 @@ public class ExportMain extends AsyncTask<String, String, String> {
                             cursorComprobanteVentaDetalle.getInt(cursorComprobanteVentaDetalle.getColumnIndexOrThrow(dbAdapter_comprob_venta_detalle.CD_valor_unidad))
                     );
 
-                    Log.d("SUCCESFULL EXPORT CVD", "" + isSuccesfulExport(jsonObjectSuccesfull));
+                    Log.d("SUCCESFULL EXPORT CVD", "" + Utils.isSuccesful(jsonObjectSuccesfull));
                     Log.d("EXPORT CVD MESSAGE ", "" + jsonObjectSuccesfull.toString());
 
-                    if (isSuccesfulExport(jsonObjectSuccesfull)) {
+                    if (Utils.isSuccesful(jsonObjectSuccesfull) && Utils.validateRespuesta(jsonObjectSuccesfull)) {
                         listIdComprobanteVentaDetalle.add("" + cursorComprobanteVentaDetalle.getInt(cursorComprobanteVentaDetalle.getColumnIndexOrThrow(dbAdapter_comprob_venta_detalle.CD_comp_detalle)));
                     }
 
@@ -508,10 +512,10 @@ public class ExportMain extends AsyncTask<String, String, String> {
                             cursorInformeGastos.getInt(cursorInformeGastos.getColumnIndexOrThrow(dbAdapter_informe_gastos.GA_id_proced_gasto))
                     );
 
-                    Log.d("SUCCES EXPORT GASTOS ", "" + isSuccesfulExport(jsonObjectSuccesfull));
+                    Log.d("SUCCES EXPORT GASTOS ", "" + Utils.isSuccesful(jsonObjectSuccesfull));
                     Log.d("SUCCES EXPORT GASTOS", "" + jsonObjectSuccesfull.toString());
 
-                    if (isSuccesfulExport(jsonObjectSuccesfull)) {
+                    if (Utils.isSuccesful(jsonObjectSuccesfull) && Utils.validateRespuesta(jsonObjectSuccesfull)) {
                         listIdInfomeGastos.add("" + cursorInformeGastos.getInt(cursorInformeGastos.getColumnIndexOrThrow(dbAdapter_informe_gastos.GA_id_gasto)));
                     }
 
@@ -819,9 +823,9 @@ public class ExportMain extends AsyncTask<String, String, String> {
                             cursorAutorizacionCobro.getInt(cursorAutorizacionCobro.getColumnIndexOrThrow(dbAdapter_temp_autorizacion_cobro.temp_id_autorizacion_cobro))
                     );
                     Log.d("EXPORT AUTO COBROS", jsonObject.toString());
-                    Log.d("EXPORT AUTO COBROS", "" + isSuccesfulExport(jsonObject));
+                    Log.d("EXPORT AUTO COBROS", "" + Utils.isSuccesful(jsonObject));
 
-                    if (isSuccesfulExport(jsonObject)) {
+                    if (Utils.isSuccesful(jsonObject) && Utils.validateRespuesta(jsonObject)) {
                         listIdAutorizacionCobro.add("" + cursorAutorizacionCobro.getInt(cursorAutorizacionCobro.getColumnIndexOrThrow(dbAdapter_temp_autorizacion_cobro.temp_autorizacion_cobro)));
                     }
 
@@ -877,7 +881,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
 
                     Log.d("E M ESTABLECIMIENTO ", jsonObject.toString());
 
-                    if (isSuccesfulExport(jsonObject)) {
+                    if (Utils.isSuccesful(jsonObject) && Utils.validateRespuesta(jsonObject)) {
                         listIdEstablecimientoUpdated.add("" + cursorEventoEstablecimiento.getInt(cursorEventoEstablecimiento.getColumnIndexOrThrow(dbAdaptert_evento_establec.EE_id_evt_establec)));
                     }
                 } catch (Exception e) {
@@ -910,7 +914,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
     @Override
     protected void onProgressUpdate(String... values) {
         super.onProgressUpdate(values);
-            progressDialog.setProgress(Integer.parseInt(values[0]));
+        progressDialog.setProgress(Integer.parseInt(values[0]));
 
     }
 
@@ -954,31 +958,6 @@ public class ExportMain extends AsyncTask<String, String, String> {
 
     }
 
-    public boolean isSuccesfulExport(JSONObject jsonObj) {
-        boolean succesful = false;
-        try {
-            Log.d("CADENA JSON ", jsonObj.toString());
-            succesful = jsonObj.getBoolean("Successful");
-        } catch (JSONException e) {
-            // TODO Auto-generated catch block
-            Log.d("JSON PARSER ERROR", e.getMessage());
-        }
-        return succesful;
-    }
-
-    /*
-    public int  idPlanPagoDetalle(JSONObject jsonObj)
-    {
-        int idPlanPagoDetalle = -1;
-        try {
-            Log.d("CADENA A PARSEAR ", jsonObj.toString());
-            idPlanPagoDetalle= jsonObj.getInt("Value");
-        } catch (JSONException e) {
-            // TODO Auto-generated catch block
-            Log.d("JSONParser => parser Error Message", e.getMessage());
-        }
-        return idPlanPagoDetalle;
-    }*/
     public int getIdComprobanteVentaRetornado(JSONObject object) {
         Log.d(TAG, "JSON PARSER ID_COMPROB_VENTA_RETORNADO : " + object);
         int idComprobante = -1;
@@ -1015,31 +994,6 @@ public class ExportMain extends AsyncTask<String, String, String> {
             progressDialog.dismiss();
         }
     }
-
-    public int parserIdGuiaRetornado(JSONObject jsonObj) {
-        int idGuia = -1;
-        try {
-            Log.d("CADENA A PARSEAR ", jsonObj.toString());
-            idGuia = jsonObj.getInt("Value");
-        } catch (JSONException e) {
-            // TODO Auto-generated catch block
-            Log.d("JSONPARSER ERROR", e.getMessage());
-        }
-        return idGuia;
-    }
-    public int parserIDRespuestaFlex(JSONObject jsonObj) {
-        int idRespuesta = -1;
-        try {
-            Log.d("CADENA A PARSEAR ", jsonObj.toString());
-            idRespuesta = jsonObj.getInt("Value");
-        } catch (JSONException e) {
-            // TODO Auto-generated catch block
-            Log.d("JSONPARSER ERROR", e.getMessage());
-        }
-        return idRespuesta;
-    }
-
-
     private String getDatePhone() {
         Calendar cal = new GregorianCalendar();
         Date date = cal.getTime();

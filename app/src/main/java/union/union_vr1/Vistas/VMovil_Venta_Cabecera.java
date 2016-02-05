@@ -3219,7 +3219,8 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             Log.d("GENERATE DS", "terminó correctamente");
-            dbHelper_Comprob_Venta.updateSHA1(id_comprobante, textoSHA1);
+            int updatedSHA1NRo = dbHelper_Comprob_Venta.updateSHA1(id_comprobante, textoSHA1);
+            Log.d(ServiceExport.TAG, "SHA1: "+textoSHA1 +", id_comprobante : "+ id_comprobante + ", registros actualizados : "+updatedSHA1NRo);
 
             Log.d(TAG, "_ID COMPROBANTE DE VENTA : "+id_comprobante);
             Intent intent= new Intent(contexto, VMovil_BluetoothImprimir.class);

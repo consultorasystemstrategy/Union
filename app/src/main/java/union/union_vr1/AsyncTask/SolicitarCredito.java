@@ -104,7 +104,7 @@ public class SolicitarCredito extends AsyncTask<String, String, String> {
                         keyFirebase
                 );
 
-                result = Utils.JSONResult(jsonObject);
+                result = Utils.getIntJSON(jsonObject);
 
                 Log.d(TAG, jsonObject.toString());
 

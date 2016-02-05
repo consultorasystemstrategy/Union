@@ -79,7 +79,7 @@ public class CursorAdapter_Man_Can_Dev extends CursorAdapter {
             textViewTitulo.setText("COMPROBANTE: " + comprobante +"");
             textViewSubtitulo.setText("ID GUIA: "+_id_guia);
             textViewComment.setText(""+operacion+":  "+nomForma);
-            textViewMonto.setText("S/. "+ df.format(importe));
+            textViewMonto.setText("S/. "+ Utils.formatDouble(importe));
 
         }
 

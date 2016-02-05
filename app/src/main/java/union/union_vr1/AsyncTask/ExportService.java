@@ -18,6 +18,7 @@ import java.util.List;
 import union.union_vr1.RestApi.StockAgenteRestApi;
 import union.union_vr1.Sqlite.Constants;
 import union.union_vr1.Sqlite.DbAdapter_Exportacion_Comprobantes;
+import union.union_vr1.Utils.Utils;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
@@ -102,12 +103,14 @@ public class ExportService extends IntentService {
                     Log.d(TAG, "SUCCES EXPORTACIÓN FLEX " + isSuccesfulExport(jsonObjectSuccesfull));
                     Log.d(TAG, "JSON EXPORTACIÓN FLEX " + jsonObjectSuccesfull.toString());
 
-                    int idRespuestaFlex = parserIDRespuestaFlex(jsonObjectSuccesfull);
+                    if (Utils.isSuccesful(jsonObjectSuccesfull) && Utils.validateRespuesta(jsonObjectSuccesfull)){
+                        int idRespuestaFlex = Utils.getIntJSON(jsonObjectSuccesfull);
 
-                    Log.d(TAG, "ID RESPUESTA FLEX : " + idRespuestaFlex);
+                        Log.d(TAG, "ID RESPUESTA FLEX : " + idRespuestaFlex);
 
-                    if (idRespuestaFlex>=1) {
-                        listIdExportacionFlex.add(""+ cursorExportacionFlex.getLong(cursorExportacionFlex.getColumnIndexOrThrow(dbAdapter_exportacion_comprobantes.EC_id)));
+                        if (idRespuestaFlex>=1) {
+                            listIdExportacionFlex.add(""+ cursorExportacionFlex.getLong(cursorExportacionFlex.getColumnIndexOrThrow(dbAdapter_exportacion_comprobantes.EC_id)));
+                        }
                     }
 
 

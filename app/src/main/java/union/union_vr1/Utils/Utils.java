@@ -25,6 +25,7 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 
 import union.union_vr1.R;
+import union.union_vr1.Sqlite.Constants;
 
 /**
  * Created by Usuario on 26/03/2015.
@@ -213,16 +214,23 @@ public class Utils {
 
 
 
-    public static  int JSONResult(JSONObject jsonObj) {
-        int idRespuesta = -1;
+    public static  int getIntJSON(JSONObject jsonObj) {
+        int success = -1;
         try {
             Log.d("CADENA A PARSEAR ", jsonObj.toString());
-            idRespuesta = jsonObj.getInt("Value");
+            success = jsonObj.getInt("Value");
         } catch (JSONException e) {
             // TODO Auto-generated catch block
             Log.d("JSONPARSER ERROR", e.getMessage());
         }
-        return idRespuesta;
+        return success;
+    }
+
+    public static boolean validateRespuesta(JSONObject jsonObject){
+        boolean success = false;
+        int respuesta = getIntJSON(jsonObject);
+
+        return respuesta > Constants._ZERO;
     }
 
     public static  String jsonGetString(JSONObject jsonObj) {

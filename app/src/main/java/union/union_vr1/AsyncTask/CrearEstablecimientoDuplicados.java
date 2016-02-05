@@ -113,7 +113,7 @@ public class CrearEstablecimientoDuplicados extends AsyncTask<String, String, St
 
                 );
                 Log.d("HHHH", jsonObjectCreated.toString());
-                if (Utils.isSuccesful(jsonObjectCreated)) {
+                if (Utils.isSuccesful(jsonObjectCreated) && Utils.validateRespuesta(jsonObjectCreated)) {
                      idRemotoDuplicado = jsonObjectCreated.getInt("Value");
                     if (idRemotoDuplicado > 0) {
                         long h = dbAdapter_establecimeinto_historial.updateEstado(cr.getInt(

@@ -37,6 +37,8 @@ public class DbAdapter_Comprob_Venta {
     public static final String CV_liquidacion = "id_liquidacion";
     //ID DE LA BASE DE DATOS SQL SERVER
     public static final String CV_id_SQL_SERVER_comprob = "id_sql_server_comprob";
+    public static final String CV_sincronizacion_sha1 = "sincronizacion_sha1";
+
 
     public static final String CV_estado_conexion = "cv_in_estado_conexion";
     public static final String CV_SHA1 = "cv_sha1";
@@ -72,6 +74,7 @@ public class DbAdapter_Comprob_Venta {
                     +CV_id_agente+" integer, "
                     +CV_liquidacion+" integer, "
                     +CV_id_SQL_SERVER_comprob+" integer, "
+                    +CV_sincronizacion_sha1+" integer, "
                     +estado_sincronizacion+" integer);";
 
     public static final String DELETE_TABLE_COMPROB_VENTA = "DROP TABLE IF EXISTS " + SQLITE_TABLE_Comprob_Venta;
@@ -137,7 +140,7 @@ public class DbAdapter_Comprob_Venta {
         initialValues.put(CV_hora_doc,comprobante.getHoraDoc());
         initialValues.put(CV_estado_comp, comprobante.getEstadoComprobante());
         initialValues.put(CV_estado_conexion, comprobante.getEstadoConexion());
-        initialValues.put(CV_id_agente,id_agente);
+        initialValues.put(CV_id_agente, id_agente);
 
         return mDb.insert(SQLITE_TABLE_Comprob_Venta, null, initialValues);
     }
@@ -162,17 +165,63 @@ public class DbAdapter_Comprob_Venta {
         initialValues.put(CV_id_agente,id_agente);
 
         mDb.update(SQLITE_TABLE_Comprob_Venta, initialValues,
-                CV_id_establec+"=?",new String[]{""+comprobante.getIdEstablecimiento()});
+                CV_id_establec + "=?", new String[]{"" + comprobante.getIdEstablecimiento()});
     }
 
-    public void updateSHA1(int _id, String SHA1){
+    public int updateSHA1(int _id, String SHA1){
 
         ContentValues initialValues = new ContentValues();
         initialValues.put(CV_SHA1,SHA1);
+        initialValues.put(CV_sincronizacion_sha1, Constants._ACTUALIZADO);
 
-        mDb.update(SQLITE_TABLE_Comprob_Venta, initialValues,
+        return mDb.update(SQLITE_TABLE_Comprob_Venta, initialValues,
                 CV_id_comprob+"=?",new String[]{""+_id});
     }
+
+/*    public Cursor filterToExportSHA1(int liquidacion) {
+
+        Cursor mCursor = mDb.query(SQLITE_TABLE_Comprob_Venta, new String[] {CV_id_comprob,
+
+                        CV_id_establec, CV_id_tipo_doc, CV_id_forma_pago, CV_id_tipo_venta,
+                        CV_codigo_erp, CV_serie, CV_num_doc, CV_base_imp, CV_igv, CV_total,
+                        CV_fecha_doc, CV_hora_doc, CV_estado_comp, CV_estado_conexion, CV_id_agente, CV_SHA1, CV_sincronizacion_sha1, CV_id_SQL_SERVER_comprob
+                },
+                CV_liquidacion + " = '"+liquidacion+"' AND "+ CV_sincronizacion_sha1 + " != '"+Constants._EXPORTADO+"' AND "+CV_SHA1 + " != '' AND "+CV_id_SQL_SERVER_comprob + " != '';", null, null, null, null);
+
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+    }*/
+
+    public Cursor filterToExportSHA1(int liquidacion){
+        Cursor cr = mDb.rawQuery("SELECT CV.*, EC.* FROM \n" +
+                "m_comprob_venta CV \n" +
+                "INNER JOIN m_exportacion_comprobantes EC \n" +
+                "ON (CV._id = EC._id_sqlite) \n" +
+                "WHERE CV.id_liquidacion = ? \n" +
+                "AND CV.sincronizacion_sha1 != ? \n" +
+                "AND CV.cv_sha1 !='' \n" +
+                "AND EC._id_sid !=''", new String[]{"" + liquidacion, ""+Constants._EXPORTADO});
+        return cr;
+    }
+    public Cursor fetchSHA1(int liquidacion) {
+
+        Cursor mCursor = mDb.query(SQLITE_TABLE_Comprob_Venta, new String[] {CV_id_comprob,
+
+                        CV_id_establec, CV_id_tipo_doc, CV_id_forma_pago, CV_id_tipo_venta,
+                        CV_codigo_erp, CV_serie, CV_num_doc, CV_base_imp, CV_igv, CV_total,
+                        CV_fecha_doc, CV_hora_doc, CV_estado_comp, CV_estado_conexion, CV_id_agente, CV_SHA1, CV_sincronizacion_sha1, CV_id_SQL_SERVER_comprob
+                },
+                CV_liquidacion + " = ? ", new String[]{""+liquidacion}, null, null, null);
+
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+    }
+
+
 
     public boolean existeComprobVentaById(int id) {
         boolean exists = false;
@@ -209,10 +258,10 @@ public class DbAdapter_Comprob_Venta {
         initialValues.put(Constants._SINCRONIZAR,estadoSincronizacion);
 
         mDb.update(SQLITE_TABLE_Comprob_Venta, initialValues,
-                CV_id_comprob+"=?",new String[]{""+id});
+                CV_id_comprob + "=?", new String[]{"" + id});
     }
 
-    public int updateComprobanteIDReal(int id, int idReal){
+    public int updateComprobanteIDReal(long id, int idReal){
         ContentValues initialValues = new ContentValues();
         initialValues.put(CV_id_SQL_SERVER_comprob, idReal);
 
@@ -241,7 +290,31 @@ public class DbAdapter_Comprob_Venta {
                 CV_id_comprob+"= "+ signosInterrogacion,idComprobante);
 
 
+        Log.d("REGISTROS EXPORTADOS ", "" + cantidadRegistros);
+    }
+
+    public int changeEstadoSHA1ToExport(String[] idComprobante, int estadoSincronizacionSHA1){
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(CV_sincronizacion_sha1,estadoSincronizacionSHA1);
+
+        String signosInterrogacion = "";
+        for (int i=0; i<idComprobante.length; i++){
+            if (i==idComprobante.length-1)
+            {
+                signosInterrogacion+= "?";
+            }else {
+                signosInterrogacion+= "? OR ";
+            }
+
+        }
+
+        Log.d("SIGNOS INTERROGACIÓN", signosInterrogacion);
+        int cantidadRegistros = mDb.update(SQLITE_TABLE_Comprob_Venta, initialValues,
+                CV_id_comprob+"= "+ signosInterrogacion,idComprobante);
+
+
         Log.d("REGISTROS EXPORTADOS ", ""+cantidadRegistros);
+        return cantidadRegistros;
     }
 
     public int updateComprobanteMontos(long id, Double total, Double igv, Double base_imponible){
