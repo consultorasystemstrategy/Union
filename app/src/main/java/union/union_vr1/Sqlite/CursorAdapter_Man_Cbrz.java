@@ -14,6 +14,7 @@ import android.widget.TextView;
 import java.text.DecimalFormat;
 
 import union.union_vr1.R;
+import union.union_vr1.Utils.Utils;
 
 
 /**
@@ -57,7 +58,7 @@ public class CursorAdapter_Man_Cbrz extends CursorAdapter {
             String man_doc = cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Impresion_Cobros.Imprimir_documento));
             String man_cliente = cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Impresion_Cobros.Imprimir_cliente));
             String man_fechaHora = cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Impresion_Cobros.Imprimir_fechaHora));
-            String man_monto = cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Impresion_Cobros.Imprimir_monto));
+            Double  man_monto = cursor.getDouble(cursor.getColumnIndexOrThrow(DbAdapter_Impresion_Cobros.Imprimir_monto));
             int tipo = cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Impresion_Cobros.Imprimir_tipo));
             linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.verde));
             imageView.setImageDrawable(context.getApplicationContext().getResources().getDrawable(R.drawable.ic_action_accept));
@@ -79,7 +80,7 @@ public class CursorAdapter_Man_Cbrz extends CursorAdapter {
             textViewTitulo.setText(man_cliente);
             textViewSubtitulo.setText("Documento : " + man_doc);
             textViewComment.setText("Fecha - Hora: " + man_fechaHora + " \nTipo: " +tip);
-            textViewMonto.setText("S/. " + man_monto);
+            textViewMonto.setText("S/. " + Utils.formatDouble(man_monto));
 
 
         }

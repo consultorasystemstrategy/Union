@@ -550,7 +550,7 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener, V
                                 int estad = dbComprobanteCobro.updateComprobCobrosSN(idComprobante, fechaProgramada, valorPago, valorCobrar);
                                 if (estad > 0) {
 //Cobors parciales.
-                                    long a = dbAdapter_impresion_cobros.createImprimir(IDHISTOCOBRO, Integer.parseInt(estabX), valorPago, Constants.COBRO_NORMAL, getDatePhone(), nombreEstablec, idComprobante, getDatePhone() + " " + getTimePhone(), slideIdLiquidacion + "", 0, idComprobante, comprobanteVenta, idPlanPago, idPlanPagoDetalle, Constants.COBRO_ESTADO_PARCIAL,tipoDoc);
+                                    long a = dbAdapter_impresion_cobros.createImprimir(IDHISTOCOBRO, Integer.parseInt(estabX), valorPago, Constants.COBRO_NORMAL, getDatePhone(), nombreEstablec,COMPROBANTE, getDatePhone() + " " + getTimePhone(), slideIdLiquidacion + "", 0, idComprobante, comprobanteVenta, idPlanPago, idPlanPagoDetalle, Constants.COBRO_ESTADO_PARCIAL,tipoDoc);
                                     //new  SolicitarAutorizacionCobros(getApplicationContext()).execute(idAgente + "", 4 + "", 1 + "", comprobanteVenta + "", valorCobrar + "", valorPago + "", estabX, Constants._CREADO + "", idComprobante + "", nombreEstablec + "",idAutorizacion+"");
                                     //   Back();
                                     Log.d("VMovil_Cobor", "" + a + "-" + estabX);
@@ -974,7 +974,15 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener, V
                         long l = dbAdapter_cobros_manuales.createCobrosManuales(3, importe, getTimeAndDate(), cateMovimiento, slideIdAgente, serie, numero, dbAdaptert_evento_establec.getNameCliente(Integer.parseInt(estabX)), Integer.parseInt(estabX), getDatePhone(), getTimePhone());
                         if (l > 0) {
                             //Cobros Manuales
-                            long h = dbAdapter_impresion_cobros.createImprimir(Integer.parseInt(l + ""), slideIdEstablecimiento, importe, Constants.COBRO_MANUAL, getDatePhone(), dbAdaptert_evento_establec.getNameEstablec(Integer.parseInt(estabX)), "" + numero, getDatePhone() + " " + getTimePhone(), slideIdLiquidacion + "", 0, "", numero, 0, 0, 0, "Otros");
+                            String NUMERO = "";
+                            String chater = String.valueOf(numero);
+                            if (chater.length() > 8) {
+                                NUMERO = serie + "-" + numero;
+                            } else {
+                                String NUMERO_COMPROBANTE = String.format("%08d", numero);
+                                NUMERO = serie + "-" + NUMERO_COMPROBANTE;
+                            }
+                            long h = dbAdapter_impresion_cobros.createImprimir(Integer.parseInt(l + ""), slideIdEstablecimiento, importe, Constants.COBRO_MANUAL, getDatePhone(), dbAdaptert_evento_establec.getNameEstablec(Integer.parseInt(estabX)), "" + NUMERO, getDatePhone() + " " + getTimePhone(), slideIdLiquidacion + "", 0, "", numero, 0, 0, 0, "Otros");
                             Log.d("COBROS", "" + h);
                             if (conectadoRedMovil() || conectadoWifi()) {
 

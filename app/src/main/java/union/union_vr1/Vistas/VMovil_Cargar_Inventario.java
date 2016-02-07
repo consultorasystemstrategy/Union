@@ -2,9 +2,12 @@ package union.union_vr1.Vistas;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -362,12 +365,43 @@ public class VMovil_Cargar_Inventario extends Activity implements View.OnClickLi
 
                 break;
             case R.id.btnAgregarGuia:
-                iniciaCargar();
+                if(conectadoRedMovil() || conectadoWifi()){
+                    iniciaCargar();
+                }
+                else{
+                    Utils.setToast(getApplicationContext(),"No cuenta con conexion a intenert",R.color.rojo);
+                }
                 break;
             case R.id.slide_textViewConsultarInventario:
                 startActivity(new Intent(getApplicationContext(), VMovil_Consultar_Inventario.class));
                 break;
         }
+    }
+
+    protected Boolean conectadoWifi() {
+        ConnectivityManager connectivity = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivity != null) {
+            NetworkInfo info = connectivity.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+            if (info != null) {
+                if (info.isConnected()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    protected Boolean conectadoRedMovil() {
+        ConnectivityManager connectivity = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivity != null) {
+            NetworkInfo info = connectivity.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+            if (info != null) {
+                if (info.isConnected()) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     @Override
