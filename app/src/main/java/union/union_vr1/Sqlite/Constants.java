@@ -76,9 +76,12 @@ public class Constants {
     public static final String _CONTADO = "Contado";
     public static final String _CREDITO = "Credito";
 
-    public static final String _APP_ROOT_FIREBASE = "https://productosunion.firebaseio.com/app";
+    //public static final String _APP_ROOT_FIREBASE = "https://productosunion.firebaseio.com/app";
+    public static final String _APP_ROOT_FIREBASE = "https://sidim.firebaseio.com/app";
     public static final String _CHILD_CREDITO = "credito";
     public static final String _CHILD_DEVOLUCION = "devolucion";
+    public static final String _CHILD_EXPORTACIONES = "exportaciones";
+
 
     public static final String _CHILD_ESTABLECIMIENTO_NUEVO = "establecimiento_nuevo";
     public static final String _CHILD_ESTABLECIMIENTO_TEMPORAL = "establecimiento_temporal";

@@ -19,11 +19,14 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.Query;
 
+import union.union_vr1.Objects.DevolucionEstado;
 import union.union_vr1.Objects.EstablecTemp;
+import union.union_vr1.Objects.Exportaciones;
 import union.union_vr1.Objects.NuevoEstablecimiento;
 import union.union_vr1.R;
 import union.union_vr1.Sqlite.Constants;
 import union.union_vr1.Sqlite.DbAdapter_Establecimeinto_Historial;
+import union.union_vr1.Sqlite.DbAdapter_Exportacion_Comprobantes;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 import union.union_vr1.Utils.Utils;
@@ -40,7 +43,7 @@ public class ServiceFireListenerTemp extends Service {
     private DbAdapter_Establecimeinto_Historial dbAdapter_establecimeinto_historial;
     private DbAdaptert_Evento_Establec dbAdaptert_evento_establec;
     private DbAdapter_Temp_Session dbAdapter_temp_session;
-
+    private DbAdapter_Exportacion_Comprobantes dbAdapter_exportacion_comprobantes;
     private Context context;
 
 
@@ -63,15 +66,22 @@ public class ServiceFireListenerTemp extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(TAG, "" + "onStartCommand");
+        String fecha = Utils.getDatePhone();
         Firebase rootRef = null;
         Firebase nuevoEstablecimientoRefTemp = null;
+        Firebase devolucionRef = null;
+        Firebase exportacionesRef = null;
         Firebase.setAndroidContext(context);
         rootRef = new Firebase(Constants._APP_ROOT_FIREBASE);
         nuevoEstablecimientoRefTemp = rootRef.child(Constants._CHILD_ESTABLECIMIENTO_TEMPORAL);
+        exportacionesRef =  rootRef.child(Constants._CHILD_EXPORTACIONES);
+        devolucionRef = rootRef.child(Constants._CHILD_DEVOLUCION);
         Log.d(TAG, "" + "onStartCommand"+nuevoEstablecimientoRefTemp.getKey());
         dbAdapter_temp_session = new DbAdapter_Temp_Session(this);
         dbAdapter_temp_session.open();
         final int idAgente = dbAdapter_temp_session.fetchVarible(1);
+        final int idLiquidacion = dbAdapter_temp_session.fetchVarible(3);
+
         dbAdapter_establecimeinto_historial = new DbAdapter_Establecimeinto_Historial(this);
         dbAdapter_establecimeinto_historial.open();
         dbAdaptert_evento_establec = new DbAdaptert_Evento_Establec(this);
@@ -79,7 +89,16 @@ public class ServiceFireListenerTemp extends Service {
         dbAdaptert_evento_establec = new DbAdaptert_Evento_Establec(this);
         dbAdaptert_evento_establec.open();
 
-        Query queryRef = nuevoEstablecimientoRefTemp.orderByChild("fecha").equalTo(Utils.getDatePhone());
+        dbAdapter_exportacion_comprobantes = new DbAdapter_Exportacion_Comprobantes(this);
+        dbAdapter_exportacion_comprobantes.open();
+
+        Query queryRef = nuevoEstablecimientoRefTemp.orderByChild("fecha").equalTo(fecha);
+        Query queryDevolucionRef = devolucionRef.orderByChild("fecha").equalTo(fecha);
+        Query queryExportaciones = exportacionesRef.orderByChild("fecha").equalTo(fecha);
+
+
+
+
 
         ChildEventListener handler;
         handler = new ChildEventListener() {
@@ -153,7 +172,121 @@ public class ServiceFireListenerTemp extends Service {
 
         queryRef.addChildEventListener(handler);
 
+        ChildEventListener handlerDevoluciones;
 
+        final DbAdapter_Temp_Session session;
+        session = new DbAdapter_Temp_Session(this);
+        session.open();
+         handlerDevoluciones = new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Log.d(TAG, "ADDED dataSnapshot : " + dataSnapshot.getValue());
+                DevolucionEstado devolucionEstado = dataSnapshot.getValue(DevolucionEstado.class);
+                Log.d(TAG, "ADDED Monto : " + devolucionEstado.getEstado());
+                Log.d(TAG, "ADDED Estado: " + devolucionEstado.getFecha());
+                Log.d(TAG, "ADDED Estado: " + devolucionEstado.getAgenteId());
+
+                if (devolucionEstado.getAgenteId() == idAgente && devolucionEstado.getEstado() == 2) {
+                    //ES EL AGENTE Y ESTÁ APROBADO
+
+                    session.deleteVariable(Constants.SESSION_ESTADO_DEVOLUCIONES);
+                    session.createTempSession(Constants.SESSION_ESTADO_DEVOLUCIONES, 1);
+                }
+                if (devolucionEstado.getAgenteId() == idAgente && devolucionEstado.getEstado() == 777) {
+                    //ES EL AGENTE Y ESTÁ APROBADO
+
+                    session.deleteVariable(Constants.SESSION_ESTADO_DEVOLUCIONES);
+                    session.createTempSession(Constants.SESSION_ESTADO_DEVOLUCIONES, 0);
+                }
+
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                Log.d(TAG, "ADDED dataSnapshot : " + dataSnapshot.getValue());
+                DevolucionEstado devolucionEstado = dataSnapshot.getValue(DevolucionEstado.class);
+                Log.d(TAG, "ADDED Monto : " + devolucionEstado.getEstado());
+                Log.d(TAG, "ADDED Estado: " + devolucionEstado.getFecha());
+                Log.d(TAG, "ADDED Estado: " + devolucionEstado.getAgenteId());
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        };
+
+        queryDevolucionRef.addChildEventListener(handlerDevoluciones);
+
+
+
+        ChildEventListener handlerExportaciones;
+
+
+        handlerExportaciones = new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Log.d(TAG, "ADDED dataSnapshot : " + dataSnapshot.getValue());
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                Log.d(TAG, "CHANGED dataSnapshot : " + dataSnapshot.getValue());
+                Exportaciones exportaciones = dataSnapshot.getValue(Exportaciones.class);
+                Log.d(TAG, "CHANGED ESTADO : " + exportaciones.getEstado());
+                Log.d(TAG, "CHANGED AGENTE : " + exportaciones.getAgenteId());
+                Log.d(TAG, "CHANGED id comprobante: " + exportaciones.getIdComprobante());
+                Log.d(TAG, "CHANGED FECHA : " + exportaciones.getFecha());
+                Log.d(TAG, "CHANGED LIQUIDACION: " + exportaciones.getLiquidacion());
+
+
+                if (exportaciones.getAgenteId() == idAgente && exportaciones.getEstado() == 100 && exportaciones.getLiquidacion() == idLiquidacion) {
+                    //VA A PONER COMO NO EXPORTADO TODOS LOS REGISTROS
+
+
+                    //REGISTROS ACTUALIZADOS A NO EXPORT
+                    int registrosActualizados = dbAdapter_exportacion_comprobantes.changeEstado(Constants._CREADO, idLiquidacion);
+                    Log.d(TAG, "REGISTROS ACDTUALIZDOS A NO EXPORT : "+ registrosActualizados);
+                }
+                if (exportaciones.getAgenteId() == idAgente && exportaciones.getEstado() == 777) {
+                    //VA A PONER COMO EXPORTADO UN REGISTRO ESPECÍFICO
+
+                    //REGISTROS ACTUALIZADOS A NO EXPORT
+                    int registrosActualizados1 = dbAdapter_exportacion_comprobantes.changeEstadoToNoExportOne(exportaciones.getIdComprobante());
+                    Log.d(TAG, "REGISTRO SID MAPEO :"+ exportaciones.getIdComprobante()+" ACTUALIZDOS A NO EXPORT COUNT : "+ registrosActualizados1);
+                }
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        };
+
+        queryExportaciones.addChildEventListener(handlerExportaciones);
 
         //==========================================================================================
 

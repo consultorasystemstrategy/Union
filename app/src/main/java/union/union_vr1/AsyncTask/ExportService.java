@@ -75,7 +75,7 @@ public class ExportService extends IntentService {
                 .setContentText("Procesando...");
 
         Log.d(TAG, "EXPORTANDO COMPROBANTES AL FLEX...");
-        Cursor cursorExportacionFlex = dbAdapter_exportacion_comprobantes.filterExport();
+        Cursor cursorExportacionFlex = dbAdapter_exportacion_comprobantes.filterExport(2);
 
 
 

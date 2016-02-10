@@ -124,10 +124,12 @@ public class CerrarCaja extends AsyncTask<String, String, String> {
                 Log.d("JSON CERRAR CAJA", jsonObject.toString());
 
                 //TODAVÍA NO SE HA VALIDADO LAS DEVOLUCIONES
-            }else if (successTransferencias== Constants._DEVOLUCIONES_NO_VALIDADAS){
+            }
+
+          /*  else if (successTransferencias== Constants._DEVOLUCIONES_NO_VALIDADAS){
 
                 successCerrarCaja = Constants._DEVOLUCIONES_NO_VALIDADAS;
-            }
+            }*/
 
             publishProgress("" + 50);
 
@@ -179,11 +181,11 @@ public class CerrarCaja extends AsyncTask<String, String, String> {
             mainActivity.finish();
             mainActivity.startActivity(intent);
 
-        }else if (successCerrarCaja ==Constants._DEVOLUCIONES_NO_VALIDADAS){
+        }/*else if (successCerrarCaja ==Constants._DEVOLUCIONES_NO_VALIDADAS){
 
             Utils.setToast(mainActivity.getApplicationContext(), "LAS DEVOLUCIONES NO SON VÁLIDAS.", R.color.verde);
 
-        }else{
+        }*/else{
             mainActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {

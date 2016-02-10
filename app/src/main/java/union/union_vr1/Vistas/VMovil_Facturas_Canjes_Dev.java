@@ -234,9 +234,7 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
                             if (cursor.getString(cursor.getColumnIndexOrThrow("hd_in_cantidad_ope")) != null) {
                                 canjes = cursor.getInt(cursor.getColumnIndexOrThrow("hd_in_cantidad_ope"));
                             }
-
                             int devoluciones = 0;
-
                             if (cursor.getString(cursor.getColumnIndexOrThrow("hd_in_cantidad_ope_dev")) != null) {
                                 devoluciones = cursor.getInt(cursor.getColumnIndexOrThrow("hd_in_cantidad_ope_dev"));
                             }
@@ -290,7 +288,6 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
 
 
     //cuando hay registros anteriores
-
 
     private void mostrar_alertdialog_spinners_regitrados(final Cursor cursor, final String des_compro) {
 

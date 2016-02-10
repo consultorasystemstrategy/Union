@@ -341,6 +341,8 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
                     button.setBackgroundColor(mainActivity.getResources().getColor(R.color.verde));
                     break;
                 default:
+                    button.setEnabled(true);
+                    button.setBackgroundColor(mainActivity.getResources().getColor(R.color.verde));
                     break;
 
             }
@@ -689,7 +691,7 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
 
         dbAdapter_informe_gastos = new DbAdapter_Informe_Gastos(mainActivity);
         dbAdapter_comprob_venta = new DbAdapter_Comprob_Venta(mainActivity);
-        dbAdapter_comprob_venta_detalle = new DbAdapter_Comprob_Venta_Detalle(mainActivity);
+        //dbAdapter_comprob_venta_detalle = new DbAdapter_Comprob_Venta_Detalle(mainActivity);
         dbAdapter_comprob_cobro = new DbAdapter_Comprob_Cobro(mainActivity);
         dbAdapter_histo_venta_detalle = new DbAdapter_Histo_Venta_Detalle(mainActivity);
         dbAdaptert_evento_establec = new DbAdaptert_Evento_Establec(mainActivity);
@@ -701,7 +703,7 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
         //ABRO LA CONEXIÓN A LA DB
         dbAdapter_informe_gastos.open();
         dbAdapter_comprob_venta.open();
-        dbAdapter_comprob_venta_detalle.open();
+        //dbAdapter_comprob_venta_detalle.open();
         dbAdapter_histo_venta_detalle.open();
         dbAdapter_comprob_cobro.open();
         dbAdapter_histo_venta_detalle.open();
@@ -716,7 +718,7 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
 
         int colaInformeGastos = dbAdapter_informe_gastos.filterExport().getCount();
         int colaComprobanteVenta = dbAdapter_comprob_venta.filterExport().getCount();
-        int colaComprobanteVentaDetalle = dbAdapter_comprob_venta_detalle.filterExport().getCount();
+        //int colaComprobanteVentaDetalle = dbAdapter_comprob_venta_detalle.filterExport().getCount();
         int colaComprobanteCobro = dbAdapter_comprob_cobro.filterExport().getCount();
         //
         // int colaInsertarCaja = dbAdapter_comprob_cobro.filterExportUpdatedAndEstadoCobro().getCount();
@@ -727,7 +729,7 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
         int colaHistoVentaDetalleCreated = dbAdapter_histo_venta_detalle.filterExport(idLiquidacion).getCount();
         int colaAutorizacionCobro = dbAdapter_temp_autorizacion_cobro.filterExport().getCount();
         int colaCobrosManuales = dbAdapter_cobros_manuales.filterExport().getCount();
-        int colaExportacionFlex = dbAdapter_exportacion_comprobantes.filterExport().getCount();
+        int colaExportacionFlex = dbAdapter_exportacion_comprobantes.filterExport(idLiquidacion).getCount();
         int colaExportCManuFlex = dbAdapter_cobros_manuales.filterExportForFlex().getCount();
         int colaExportCNormFlex = dbAdapter_impresion_cobros.listarCobrosExpFlex().getCount();
         int colaCliente = dbAdaptert_evento_establec.listarToExport().getCount();
@@ -735,14 +737,14 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
         int colaCAnjesDevoluciones = dbAdapter_temp_canjes_devoluciones.getAllOperacionEstablecimiento().getCount();
 
 
-        int totalRegistrosEnCola = colaInformeGastos + colaComprobanteVenta + colaComprobanteVentaDetalle +
+        int totalRegistrosEnCola = colaInformeGastos + colaComprobanteVenta +
                 colaComprobanteCobro + colaInsertarCaja + colaEventoEstablecimiento + colaHistoVentaCreated + colaHistoVentaDetalleCreated + colaAutorizacionCobro
                 + colaCobrosManuales + colaExportacionFlex + colaExportCManuFlex + colaExportCNormFlex + colaCliente + colaCAnjesDevoluciones;
 
         Log.d(TAG, "COLA  TOTAL: " + totalRegistrosEnCola);
         Log.d(TAG, "COLA colaInformeGastos : " + colaInformeGastos);
         Log.d(TAG, "COLA colaComprobanteVenta : " + colaComprobanteVenta);
-        Log.d(TAG, "COLA colaComprobanteVentaDetalle : " + colaComprobanteVentaDetalle);
+        //Log.d(TAG, "COLA colaComprobanteVentaDetalle : " + colaComprobanteVentaDetalle);
         Log.d(TAG, "COLA colaComprobanteCobro : " + colaComprobanteCobro);
         Log.d(TAG, "COLA colaInsertarCaja : " + colaInsertarCaja);
         Log.d(TAG, "COLA colaEventoEstablecimiento : " + colaEventoEstablecimiento);

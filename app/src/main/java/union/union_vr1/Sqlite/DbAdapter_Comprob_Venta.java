@@ -9,6 +9,7 @@ import android.util.Log;
 
 import union.union_vr1.Conexion.DbHelper;
 import union.union_vr1.Objects.ComprobanteVenta;
+import union.union_vr1.Servicios.ServiceExport;
 
 public class DbAdapter_Comprob_Venta {
 
@@ -270,9 +271,9 @@ public class DbAdapter_Comprob_Venta {
 
     }
 
-    public void changeEstadoToExport(String[] idComprobante, int estadoSincronizacion){
+    public int changeEstadoToExport(String[] idComprobante, int estadoSincronizacion){
         ContentValues initialValues = new ContentValues();
-        initialValues.put(Constants._SINCRONIZAR,estadoSincronizacion);
+        initialValues.put(Constants._SINCRONIZAR, estadoSincronizacion);
 
         String signosInterrogacion = "";
         for (int i=0; i<idComprobante.length; i++){
@@ -290,7 +291,8 @@ public class DbAdapter_Comprob_Venta {
                 CV_id_comprob+"= "+ signosInterrogacion,idComprobante);
 
 
-        Log.d("REGISTROS EXPORTADOS ", "" + cantidadRegistros);
+        Log.d(ServiceExport.TAG, "REGISTROS EXPORTADOS CV "+ cantidadRegistros);
+        return cantidadRegistros;
     }
 
     public int changeEstadoSHA1ToExport(String[] idComprobante, int estadoSincronizacionSHA1){

@@ -415,10 +415,10 @@ public class ServiceImport extends IntentService {
             for (cursorEstablecimiento.moveToFirst(); !cursorEstablecimiento.isAfterLast(); cursorEstablecimiento.moveToNext()) {
 
                 int idEstablecimiento = cursorEstablecimiento.getInt(cursorEstablecimiento.getColumnIndexOrThrow(dbAdaptert_evento_establec.EE_id_establec));
-                JSONObject jsonObject = api.GetSolicitudAutorizacionEstablecimiento(idEstablecimiento);
+                //JSONObject jsonObject = api.GetSolicitudAutorizacionEstablecimiento(idEstablecimiento);
                 JSONObject jsonObjectAutorizacion = api.GetConsultarAutorizacion(idEstablecimiento);
 
-                Log.d(TAG, "IMPORT SOLICITUDES DE AUTORIZACIÓN: "+ jsonObject.toString());
+                //Log.d(TAG, "IMPORT SOLICITUDES DE AUTORIZACIÓN: "+ jsonObject.toString());
                 Log.d(TAG, "IMPORT AUTORIZACION COBROS:  "+ jsonObjectAutorizacion.toString());
 
 
@@ -495,7 +495,7 @@ public class ServiceImport extends IntentService {
 
                 }
 
-
+/*
                 if (Utils.isSuccesful(jsonObject)) {
 
                     JSONArray jsonArray = jsonObject.getJSONArray("Value");
@@ -506,9 +506,9 @@ public class ServiceImport extends IntentService {
                         double montoCredito = jsonObj.getDouble("SolDOMontoCredito");
                         int diasCredito = jsonObj.getInt("SolIVigenciaCredito");
                         Log.d(TAG, "IMPORT SOLICITUDES DATOS: "+ idEstablecimiento + " - " + montoCredito + " - " + diasCredito);
-                        dbAdaptert_evento_establec.updateEstablecsCredito(idEstablecimiento, montoCredito, diasCredito);
+                        dbAdaptert_evento_establec.updateEstablecsCreditoImport(idEstablecimiento, montoCredito, diasCredito);
                     }
-                }
+                }*/
 
 
             }

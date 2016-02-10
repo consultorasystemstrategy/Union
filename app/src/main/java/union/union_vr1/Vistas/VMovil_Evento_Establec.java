@@ -391,7 +391,12 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
     @Override
     public void onClick(View v) {
         // TODO Auto-generated method stub
+        int estadoDevoluciones = session.fetchVarible(Constants.SESSION_ESTADO_DEVOLUCIONES);
+        boolean shouldBreak = false;
+
         switch (v.getId()) {
+
+
             case R.id.VEE_BTNcobros:
                 Intent i = new Intent(this, VMovil_Cobro_Credito.class);
                 i.putExtra("idEstabX", valIdEstab);
@@ -406,6 +411,23 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
                 break;
             case R.id.VEE_BTNcandev:
 
+                switch (estadoDevoluciones) {
+                    //ESTÁN BLOQUEADAS
+                    case 0:
+                        //SI ESTÁN EN 0, ENTONCES PUEDE HACER VENTAS NORMALES
+                        break;
+                    //YA SE DESBLOQUEARON
+                    case 1:
+                        //  YA SE VALIDARON, NO PUEDE VENDER NI HACER DEVOLUCIONES
+                        shouldBreak = true;
+                        Utils.setToast(mainActivity, "DEVOLUCIONES VALIDADAS, NO PUEDE HACER CANJES/DEVOLUCIONES.", R.color.verde);
+                        break;
+                    default:
+                        break;
+                }
+                if (shouldBreak) break;
+
+
                 Intent idh = new Intent(this, VMovil_Operacion_Canjes_Devoluciones.class);
                 idh.putExtra("idEstabX", valIdEstab);
                 idh.putExtra("idAgente", idAgente);
@@ -413,6 +435,22 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
                 startActivity(idh);
                 break;
             case R.id.VEE_BTNventas:
+
+                switch (estadoDevoluciones) {
+                    //ESTÁN BLOQUEADAS
+                    case 0:
+                        //SI ESTÁN EN 0, ENTONCES PUEDE HACER VENTAS NORMALES
+                        break;
+                    //YA SE DESBLOQUEARON
+                    case 1:
+                        //  YA SE VALIDARON, NO PUEDE VENDER NI HACER DEVOLUCIONES
+                        shouldBreak = true;
+                        Utils.setToast(mainActivity, "DEVOLUCIONES VALIDADAS, NO PUEDE HACER VENTAS.", R.color.verde);
+                        break;
+                    default:
+                        break;
+                }
+                if (shouldBreak) break;
                 Intent id = new Intent(this, VMovil_Venta_Cabecera.class);
                 finish();
                 id.putExtra("idEstabX", valIdEstab);

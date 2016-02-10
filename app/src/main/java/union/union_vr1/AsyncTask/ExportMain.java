@@ -232,7 +232,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
                             int registrosActualizados = dbAdapter_comprob_venta_detalle.updateComprobVentaDetalleReal( _id_comp_venta, idComprobanteVentaRetornado);
                             Log.d(TAG, "DETALLES ACTUALIZADOS : "+ registrosActualizados);
                             long _id_mapeo = -1;
-                            _id_mapeo = dbAdapter_exportacion_comprobantes.createRegistroExportacion(_id_comp_venta, idComprobanteVentaRetornado, Constants._CREADO);
+                            _id_mapeo = dbAdapter_exportacion_comprobantes.createRegistroExportacion(_id_comp_venta, idComprobanteVentaRetornado, Constants._CREADO, idLiquidacion);
 
                             Log.d(TAG, "_ID_MAPEO EXPORTACION COMPROBANTS : "+_id_mapeo);
                             Log.d("CV UPDATE", "" + registrosActualizados);
@@ -273,7 +273,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
                             /**
                              * creo un registro para mapear los _id entre los sistemas
                              * */
-                            long _id_mapeo = dbAdapter_exportacion_comprobantes.createRegistroExportacion(cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_comprob)), idComprobanteVentaRetornado, Constants._CREADO);
+                            long _id_mapeo = dbAdapter_exportacion_comprobantes.createRegistroExportacion(cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_comprob)), idComprobanteVentaRetornado, Constants._CREADO, idLiquidacion);
 
                             Log.d(TAG, "_ID_MAPEO EXPORTACION COMPROBANTS : "+_id_mapeo);
 

@@ -1102,6 +1102,8 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
     }
 
     public void formaPagoSelected(String formaPago){
+
+        final String tipoDocumento = spinnerTipoDocumento.getSelectedItem().toString();
         if(formaPago.equals(Constants._CONTADO)){
             //DO NOTHING
             updateSemaforoStatus(Constants.NO_ASIGNADO);
@@ -1122,10 +1124,11 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
                 montoCredito = cursorEstablecimientoCredito.getInt(cursorEstablecimientoCredito.getColumnIndexOrThrow(dbHelper_Evento_Establecimiento.EE_monto_credito));
                 montoCreditoDouble = cursorEstablecimientoCredito.getDouble(cursorEstablecimientoCredito.getColumnIndexOrThrow(dbHelper_Evento_Establecimiento.EE_monto_credito));
 
-                switch (montoCredito) {
-                    case -1:
+                //VALIDAR QUE EL MONTO DE CRÉDITO NO SEA MENRO A 0
 
-                        break;
+
+                switch (montoCredito) {
+
                     case 0:
 
                         if (conectadoWifi() || conectadoRedMovil()) {
@@ -1175,57 +1178,110 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
 
                         //TENER EL MONTO DE LA VENTA ACTUAL.
 
-                        if(totalFooter <= montoCreditoDouble){
-                            new AlertDialog.Builder(VMovil_Venta_Cabecera.this)
-                                    .setTitle("Crédito Aceptado")
-                                    .setMessage("¿Desea continuar?")
-                                    .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialogInterface, int i) {
-                                            spinnerFormaPago.setAdapter(adapterFormaPago);
 
-                                            updateSemaforoStatus(Constants.NO_ASIGNADO);
-                                            buttonVender.setEnabled(true);
-                                            buttonVender.setBackgroundResource(R.color.Dark5);
-                                        }
-                                    })
-                                    .setPositiveButton(R.string.si, new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            Intent intent = new Intent(getApplicationContext(), VMovil_Venta_Cabecera_PlanPagos.class);
-                                            intent.putExtra("total", totalFooter);
-                                            finish();
-                                            startActivity(intent);
-                                        }
-                                    })
-                                    .setCancelable(false)
-                                    .create().show();
+                        //VALIDAR QUE EL MONTO DE CRÉDITO SEA MAYOR A 0
+                        if (montoCreditoDouble >=0){
+
+                            if(totalFooter <= montoCreditoDouble){
+                                new AlertDialog.Builder(VMovil_Venta_Cabecera.this)
+                                        .setTitle("Crédito Aceptado")
+                                        .setMessage("¿Desea continuar?")
+                                        .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i) {
+                                                spinnerFormaPago.setAdapter(adapterFormaPago);
+
+                                                updateSemaforoStatus(Constants.NO_ASIGNADO);
+                                                buttonVender.setEnabled(true);
+                                                buttonVender.setBackgroundResource(R.color.Dark5);
+                                            }
+                                        })
+                                        .setPositiveButton(R.string.si, new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                                //GUARDAR EL TIPO DE DOCUMENTO
+                                                int tipoDocumentoSelected = -1;
+
+                                                switch(tipoDocumento){
+                                                    case Constants._FACTURA:
+                                                        tipoDocumentoSelected = 1;
+                                                        break;
+                                                    case Constants._BOLETA:
+                                                        tipoDocumentoSelected = 2;
+                                                        break;
+                                                    default:
+                                                        tipoDocumentoSelected = -1;
+                                                        break;
+                                                }
+                                                session.deleteVariable(Constants.SESSION_DOCUMENTO);
+                                                session.createTempSession(Constants.SESSION_DOCUMENTO, tipoDocumentoSelected);
+
+
+                                                Intent intent = new Intent(getApplicationContext(), VMovil_Venta_Cabecera_PlanPagos.class);
+                                                intent.putExtra("total", totalFooter);
+                                                finish();
+                                                startActivity(intent);
+                                            }
+                                        })
+                                        .setCancelable(false)
+                                        .create().show();
+                            }else{
+                                final int finalMontoCredito = montoCredito;
+                                final Double finalMontoCreditoDouble = montoCreditoDouble;
+                                new AlertDialog.Builder(VMovil_Venta_Cabecera.this)
+                                        .setTitle("Solicitar Incremento de Crédito")
+                                        .setMessage("Venta total : " + df.format(totalFooter)+"\n" +
+                                                "Crédito actual: "+df.format(montoCreditoDouble)+"\n" +
+                                                "Crédito adicional : " + df.format(totalFooter - finalMontoCreditoDouble))
+                                        .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i) {
+                                                spinnerFormaPago.setAdapter(adapterFormaPago);
+
+                                                updateSemaforoStatus(Constants.NO_ASIGNADO);
+                                                buttonVender.setEnabled(true);
+                                                buttonVender.setBackgroundResource(R.color.Dark5);
+                                            }
+                                        })
+                                        .setPositiveButton(R.string.si, new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                                dialogSolicitarCredito(totalFooter).show();
+                                                //MANDAR EL NUEVO CRÉDITO
+                                            }
+                                        })
+                                        .setCancelable(false)
+                                        .create().show();
+                            }
+
                         }else{
-                            final int finalMontoCredito = montoCredito;
-                            final Double finalMontoCreditoDouble = montoCreditoDouble;
-                            new AlertDialog.Builder(VMovil_Venta_Cabecera.this)
-                                    .setTitle("Solicitar Incremento de Crédito")
-                                    .setMessage("Venta total : " + df.format(totalFooter)+"\n" +
-                                            "Crédito actual: "+df.format(montoCreditoDouble)+"\n" +
-                                    "Crédito adicional : " + df.format(totalFooter - finalMontoCreditoDouble))
-                                    .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialogInterface, int i) {
-                                            spinnerFormaPago.setAdapter(adapterFormaPago);
+                            if (conectadoWifi() || conectadoRedMovil()) {
+                                new AlertDialog.Builder(VMovil_Venta_Cabecera.this)
+                                        .setTitle("Ops, No cuenta con crédito")
+                                        .setMessage("" +
+                                                "¿Desea solicitar crédito?")
+                                        .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i) {
+                                                spinnerFormaPago.setAdapter(adapterFormaPago);
+                                            }
+                                        })
+                                        .setPositiveButton(R.string.si, new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                                dialogSolicitarCredito(totalFooter).show();
+                                            }
+                                        })
+                                        .setCancelable(false)
+                                        .create().show();
 
-                                            updateSemaforoStatus(Constants.NO_ASIGNADO);
-                                            buttonVender.setEnabled(true);
-                                            buttonVender.setBackgroundResource(R.color.Dark5);
-                                        }
-                                    })
-                                    .setPositiveButton(R.string.si, new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            dialogSolicitarCredito(totalFooter).show();
-                                            //MANDAR EL NUEVO CRÉDITO
-                                        }
-                                    })
-                                    .setCancelable(false)
-                                    .create().show();
+                            } else {
+                                Toast toast = Toast.makeText(mContext, "Sin crédito y sin conexión", Toast.LENGTH_SHORT);
+                                toast.getView().setBackgroundColor(mainActivity.getResources().getColor(R.color.verde));
+                                TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
+                                v.setTextColor(mainActivity.getResources().getColor(R.color.Blanco));
+                                toast.show();
+                                spinnerFormaPago.setAdapter(adapterFormaPago);
+                            }
                         }
+
 
 
 

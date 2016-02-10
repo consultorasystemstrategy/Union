@@ -288,4 +288,12 @@ public class Utils {
         String formatteDate = format.format(date);
         return formatteDate.substring(0, 1).toUpperCase() + formatteDate.substring(1);
     }
+
+
+    public static String removeLastChar(String s) {
+        if (s == null || s.length() == 0) {
+            return s;
+        }
+        return s.substring(0, s.length()-1);
+    }
 }

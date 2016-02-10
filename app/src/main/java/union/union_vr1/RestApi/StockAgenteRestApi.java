@@ -1200,4 +1200,19 @@ public class StockAgenteRestApi {
         return result;
     }
 
+    public JSONObject fins_ComprobanteVentaSID(String vstr_Cabecera,String vstr_Detalle) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","RestAPI");
+        o.put("method", "fins_ComprobanteVentaSID");
+        p.put("vstr_Cabecera",mapObject(vstr_Cabecera));
+        p.put("vstr_Detalle",mapObject(vstr_Detalle));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+
 }

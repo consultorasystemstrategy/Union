@@ -100,7 +100,7 @@ public class DbAdapter_Comprob_Venta_Detalle {
         initialValues.put(CD_id_comprob_real, idReal);
 
         return mDb.update(SQLITE_TABLE_Comprob_Venta_Detalle, initialValues,
-                CD_id_comprob+"=?",new String[]{""+idComprobante});
+                CD_id_comprob + "=?", new String[]{"" + idComprobante});
     }
 
     public void changeEstadoToExport(String[] idComprobanteDetalle, int estadoSincronizacion){
@@ -123,7 +123,7 @@ public class DbAdapter_Comprob_Venta_Detalle {
                 CD_comp_detalle+"= "+ signosInterrogacion,idComprobanteDetalle);
 
 
-        Log.d("REGISTROS EXPORTADOS ", ""+cantidadRegistros);
+        Log.d("REGISTROS EXPORTADOS ", "" + cantidadRegistros);
     }
 
     public void updateComprobVentaDetalle2(String idorig, String iddest, String vals){
@@ -131,7 +131,7 @@ public class DbAdapter_Comprob_Venta_Detalle {
         initialValues.put(CD_id_comprob,iddest);
 
         mDb.update(SQLITE_TABLE_Comprob_Venta_Detalle, initialValues,
-                CD_id_comprob+"=? AND "+CD_importe+"=?",new String[]{idorig, vals});
+                CD_id_comprob + "=? AND " + CD_importe + "=?", new String[]{idorig, vals});
     }
 
     public boolean deleteAllComprobVentaDetalle() {
@@ -213,7 +213,7 @@ public class DbAdapter_Comprob_Venta_Detalle {
 
         Cursor mCursor = mDb.query(SQLITE_TABLE_Comprob_Venta_Detalle, new String[] {CD_comp_detalle,
                         CD_id_comprob, CD_id_producto, CD_costo_venta, CD_nom_producto, CD_cantidad,
-                        CD_precio_unit, CD_importe, CD_prom_anterior, CD_devuelto, CD_id_comprob_real},
+                        CD_precio_unit, CD_importe, CD_prom_anterior, CD_devuelto, CD_id_comprob_real, CD_valor_unidad},
                 CD_id_comprob + " = " + id, null, null, null, null);
 
         if (mCursor != null) {
@@ -222,12 +222,40 @@ public class DbAdapter_Comprob_Venta_Detalle {
         return mCursor;
     }
 
+    public Cursor fetchAllComprobVentaDetalleByIdSqliteCV(int _id_sqlite_cv) {
+
+        Cursor mCursor = mDb.query(SQLITE_TABLE_Comprob_Venta_Detalle, new String[] {CD_comp_detalle,
+                        CD_id_comprob, CD_id_producto, CD_costo_venta, CD_nom_producto, CD_cantidad,
+                        CD_precio_unit, CD_importe, CD_prom_anterior, CD_devuelto, CD_id_comprob_real},
+                CD_id_comprob + " = " + _id_sqlite_cv, null, null, null, null);
+
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+    }
+    public Cursor fetchAllComprobVentaDetalleByIdSIDExport(int _id_sid) {
+
+        Cursor mCursor = mDb.query(SQLITE_TABLE_Comprob_Venta_Detalle, new String[] {CD_comp_detalle,
+                        CD_id_comprob, CD_id_producto, CD_costo_venta, CD_nom_producto, CD_cantidad,
+                        CD_precio_unit, CD_importe, CD_prom_anterior, CD_devuelto, CD_id_comprob_real},
+                CD_id_comprob_real + " = " + _id_sid + " AND " + Constants._SINCRONIZAR + " = " + Constants._EXPORTADO, null, null, null, null);
+
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+    }
+
+
+
+
     public Cursor filterExport() {
 
         Cursor mCursor = mDb.query(SQLITE_TABLE_Comprob_Venta_Detalle, new String[] {CD_comp_detalle,
                         CD_id_comprob, CD_id_producto, CD_costo_venta, CD_nom_producto, CD_cantidad,
                         CD_precio_unit, CD_importe, CD_prom_anterior, CD_devuelto, CD_valor_unidad, CD_id_comprob_real},
-                Constants._SINCRONIZAR + " = " + Constants._CREADO + " OR " + Constants._SINCRONIZAR + " = " + Constants._ACTUALIZADO, null, null, null, null);
+                Constants._SINCRONIZAR + " != " + Constants._EXPORTADO + " AND " + CD_id_comprob_real + " > 0",  null, null, null, null);
 
         if (mCursor != null) {
             mCursor.moveToFirst();

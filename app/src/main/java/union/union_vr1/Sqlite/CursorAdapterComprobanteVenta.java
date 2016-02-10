@@ -15,6 +15,7 @@ import android.widget.TextView;
 import java.text.DecimalFormat;
 
 import union.union_vr1.R;
+import union.union_vr1.Utils.Utils;
 
 /**
  * Created by Usuario on 09/12/2014.
@@ -122,12 +123,11 @@ public class CursorAdapterComprobanteVenta extends CursorAdapter {
                     "\nEstado : "+ nombreEstado;
 
 
-            DecimalFormat df= new DecimalFormat("#0.00");
 
             textViewTitulo.setText(tipoDocumento+": "+serie+"-"+agregarCeros(numero_documento,8) );
             textViewSubtitulo.setText(formaPago);
             textViewComment.setText(nombreEstado);
-            textViewMonto.setText("S/. "+ df.format(total));
+            textViewMonto.setText("S/. "+ Utils.formatDouble(total));
 
         }
 

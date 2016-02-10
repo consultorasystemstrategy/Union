@@ -262,6 +262,18 @@ public class DbAdaptert_Evento_Establec {
                 EE_id_establec+"=?",new String[]{""+idEstablecimiento});
     }
 
+    public int updateEstablecsCreditoImport(int idEstablecimiento, Double montoCredito, int diasCredito){
+
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(EE_monto_credito, montoCredito);
+        initialValues.put(EE_dias_credito, diasCredito);
+
+        return mDb.update(SQLITE_TABLE_Evento_Establec, initialValues,
+                EE_id_establec+"=?",new String[]{""+idEstablecimiento});
+    }
+
+
+
     public int updateEstablecsEstadoIdUpd(int idEstablecimiento){
 
         ContentValues initialValues = new ContentValues();

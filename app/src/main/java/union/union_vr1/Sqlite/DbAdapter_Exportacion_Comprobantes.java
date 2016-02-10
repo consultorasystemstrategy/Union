@@ -20,6 +20,8 @@ public class DbAdapter_Exportacion_Comprobantes {
     public static final String EC_id_sqlite = "_id_sqlite";
     public static final String EC_id_sid = "_id_sid";
     public static final String EC_id_flex = "_id_flex";
+    public static final String EC_liquidacion = "liquidacion";
+
     public static final String EC_estado_sincronizacion = Constants._SINCRONIZAR;
 
     public static final String TAG = DbAdapter_Exportacion_Comprobantes.class.getSimpleName();
@@ -37,8 +39,9 @@ public class DbAdapter_Exportacion_Comprobantes {
                     +EC_id+" integer primary key autoincrement,"
                     +EC_id_sqlite+" integer,"
                     +EC_id_sid+" integer, "
-                    +EC_id_flex+" integer, " +
-                    EC_estado_sincronizacion+" integer);";
+                    +EC_id_flex+" integer, "
+                    +EC_liquidacion+" integer, "
+                    +EC_estado_sincronizacion+" integer);";
 
     public static final String DELETE_TABLE_EXPORTACION_COMPROBANTES = "DROP TABLE IF EXISTS " + SQLITE_TABLE_EXPORTACION_COMPROBANTES;
 
@@ -58,7 +61,7 @@ public class DbAdapter_Exportacion_Comprobantes {
         }
     }
 
-    public long createRegistroExportacion(long id_sqlite, int id_sid, int estado_sincronizacion) {
+    public long createRegistroExportacion(long id_sqlite, int id_sid, int estado_sincronizacion, int liquidacion) {
 
         long _id_mapeo = -1;
         /**
@@ -72,6 +75,8 @@ public class DbAdapter_Exportacion_Comprobantes {
         initialValues.put(EC_id_sid,id_sid);
         initialValues.put(EC_id_flex,Constants._FLEX_ID_DEFECTO);
         initialValues.put(EC_estado_sincronizacion, estado_sincronizacion);
+        initialValues.put(EC_liquidacion, liquidacion);
+
 
 
         _id_mapeo = mDb.insert(SQLITE_TABLE_EXPORTACION_COMPROBANTES, null, initialValues);
@@ -79,13 +84,13 @@ public class DbAdapter_Exportacion_Comprobantes {
         return _id_mapeo;
     }
 
-    public Cursor filterExport() {
+    public Cursor filterExport(int liquidacion) {
         Cursor mCursor = null;
         mCursor = mDb.query(true, SQLITE_TABLE_EXPORTACION_COMPROBANTES, new String[] {EC_id,
                         EC_id_sqlite, EC_id_sid, EC_id_flex,
-                        EC_estado_sincronizacion
+                        EC_estado_sincronizacion, EC_liquidacion
                 },
-                EC_estado_sincronizacion + " = " + Constants._CREADO, null,
+                EC_estado_sincronizacion + " = " + Constants._CREADO + " AND "+EC_liquidacion + " = "+liquidacion + " AND " + EC_id_sid + " > 0", null,
                 null, null, null, null);
         if (mCursor != null) {
             mCursor.moveToFirst();
@@ -117,12 +122,12 @@ public class DbAdapter_Exportacion_Comprobantes {
         return cantidadRegistros;
     }
 
-    public int changeEstado(int estado) {
+    public int changeEstado(int estado, int liquidacion) {
 
         ContentValues initialValues = new ContentValues();
         initialValues.put(Constants._SINCRONIZAR, estado);
 
-        return mDb.update(SQLITE_TABLE_EXPORTACION_COMPROBANTES, initialValues, null, null );
+        return mDb.update(SQLITE_TABLE_EXPORTACION_COMPROBANTES, initialValues, EC_liquidacion  +" = ?",  new String[]{""+liquidacion} );
     }
     public int changeEstadoToNoExportOne(int id_sid) {
 

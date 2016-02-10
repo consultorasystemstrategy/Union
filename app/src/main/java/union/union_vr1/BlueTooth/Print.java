@@ -532,7 +532,7 @@ public class Print {
         dbAdapter_stock_agente = new DbAdapter_Stock_Agente(context);
         dbAdapter_stock_agente.open();
 
-        Cursor cursor = dbAdapter_stock_agente.fetchAllStockAgenteVentas(idLiquidacion);
+        Cursor cursor = dbAdapter_stock_agente.fetchAllStockAgenteVentasPrint(idLiquidacion);
 
         cursor.moveToFirst();
 
