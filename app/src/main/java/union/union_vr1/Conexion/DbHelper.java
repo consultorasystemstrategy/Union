@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import union.union_vr1.Sqlite.DBAdapter_Cliente_Ruta;
 import union.union_vr1.Sqlite.DBAdapter_Consultar_Inventario_Anterior;
+import union.union_vr1.Sqlite.DBAdapter_Distritos;
 import union.union_vr1.Sqlite.DBAdapter_Temp_Autorizacion_Cobro;
 import union.union_vr1.Sqlite.DBAdapter_Temp_Canjes_Devoluciones;
 import union.union_vr1.Sqlite.DBAdapter_Temp_Inventario;
@@ -48,7 +49,7 @@ import union.union_vr1.Sqlite.DbAdapter_Histo_Venta_Detalle;
  */
 public class DbHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 51;
+    private static final int DATABASE_VERSION = 55;
     private static final String DATABASE_NAME = "ProdUniondb.sqlite";
 
     public DbHelper(Context context) {
@@ -119,6 +120,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(DBAdapter_Trans_Detallado.CREATE_TABLE_TEMP_Trans_Detalle);
         db.execSQL(DbAdapter_Impresion_Cobros.CREATE_TABLE_IMPRIMIR_COBRO);
         db.execSQL(DbAdapter_Forma_Pago.CREATE_TABLE_M_FORMA_PAGO);
+        db.execSQL(DBAdapter_Distritos.CREATE_TABLE_DISTRITOS);
 
 
 
@@ -168,6 +170,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(DbAdapter_ModalidadCredito.DELETE_TABLE_MODALIDAD_CREDITO);
         db.execSQL(DbAdapter_Impresion_Cobros.DELETE_TABLE_IMPRIMIR_COBRO);
         db.execSQL(DbAdapter_Forma_Pago.DELETE_TABLE_M_FORMA_PAGO);
+        db.execSQL(DBAdapter_Distritos.DELETE_TABLE_DISTRITOS);
 
 
         onCreate(db);

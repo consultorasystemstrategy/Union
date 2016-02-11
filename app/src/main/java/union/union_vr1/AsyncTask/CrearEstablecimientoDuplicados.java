@@ -99,7 +99,7 @@ public class CrearEstablecimientoDuplicados extends AsyncTask<String, String, St
                         cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_descripcion_establecimiento)),
                         cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_direccion_fiscal)),
                         0,
-                        0,
+                        cr.getInt(cr.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_distrito)),
                         cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_nro_documento)),
                         cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_correo)),
                         cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_latitud)),

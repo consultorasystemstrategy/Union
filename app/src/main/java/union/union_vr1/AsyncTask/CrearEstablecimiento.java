@@ -204,7 +204,8 @@ public class CrearEstablecimiento extends AsyncTask<String, String, String> {
                                 cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_descripcion_establecimiento)),
                                 cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_categoria_estable)),
                                 Constants._ACTUALIZADO,
-                                0);
+                                0,
+                                 cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_idDistrito)));
 
                         Log.d("INSERTO EN HISTORIAL", "" + inserEditar);
                     }

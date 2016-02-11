@@ -28,9 +28,13 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.AdapterView;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.FilterQueryProvider;
+import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,6 +49,7 @@ import org.w3c.dom.Text;
 import union.union_vr1.Objects.EventoEstablecimiento;
 import union.union_vr1.R;
 import union.union_vr1.Sqlite.Constants;
+import union.union_vr1.Sqlite.DBAdapter_Distritos;
 import union.union_vr1.Sqlite.DbAdapter_Establecimeinto_Historial;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Establecimiento;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
@@ -77,15 +82,17 @@ public class FMapaEditar extends Fragment implements Validator.ValidationListene
     private Validator validator;
     private ViewPager viewPager;
     String idEstablecimiento;
+    private AutoCompleteTextView completeTextView;
     @NumberRule(order = 3, type = NumberRule.NumberType.DOUBLE, messageResId = R.string.requerido_input)
     private EditText textLat;
     @NumberRule(order = 4, type = NumberRule.NumberType.DOUBLE, messageResId = R.string.requerido_input)
     private EditText textLon;
     private DbAdaptert_Evento_Establec dbAdaptert_evento_establec;
-
+    private String idDistrito = "";
+    private DBAdapter_Distritos dbAdapter_distritos;
 
     private DbAdapter_Establecimeinto_Historial dbAdapter_temp_establecimiento;
-
+    private static final String TAG = FMapaEditar.class.getSimpleName();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -105,6 +112,8 @@ public class FMapaEditar extends Fragment implements Validator.ValidationListene
         dbAdapter_establecimeinto_historial.open();
         dbAdaptert_evento_establec = new DbAdaptert_Evento_Establec(getActivity());
         dbAdaptert_evento_establec.open();
+        dbAdapter_distritos = new DBAdapter_Distritos(getActivity());
+        dbAdapter_distritos.open();
 
         validator = new Validator(this);
         validator.setValidationListener(this);
@@ -117,7 +126,7 @@ public class FMapaEditar extends Fragment implements Validator.ValidationListene
         webViewMap = (WebView) v.findViewById(R.id.webViewMap);
         textLat = (EditText) v.findViewById(R.id.textLat);
         textLon = (EditText) v.findViewById(R.id.textLon);
-
+        completeTextView = (AutoCompleteTextView) v.findViewById(R.id.distrito);
 
         webViewMap.getSettings().setAppCachePath(getActivity().getApplicationContext().getCacheDir().getAbsolutePath() + "/cache");
         webViewMap.getSettings().setAllowFileAccess(true);
@@ -158,6 +167,47 @@ public class FMapaEditar extends Fragment implements Validator.ValidationListene
         displatLocation();
         actualizar();
         return v;
+    }
+
+    private void autoComplete(String id) {
+        idDistrito = id;
+
+        String dis = dbAdapter_distritos.listarDistritosName(id);
+        completeTextView.setText(dis);
+        Cursor cr = dbAdapter_distritos.listarDistritosLikesss(id);
+
+        String[] columnas = new String[]{
+                DBAdapter_Distritos.Dis_descripcion
+        };
+        int[] to = new int[]{
+                R.id.textNombre
+
+        };
+        SimpleCursorAdapter adapter = new SimpleCursorAdapter(getActivity(),
+                R.layout.layout_distrito,
+                cr,
+                columnas,
+                to,
+                0);
+
+        completeTextView.setAdapter(adapter);
+        adapter.setFilterQueryProvider(new FilterQueryProvider() {
+            @Override
+            public Cursor runQuery(CharSequence charSequence) {
+                Cursor cr = dbAdapter_distritos.listarDistritosLike(charSequence.toString());
+                return cr;
+            }
+        });
+        completeTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Cursor cursor = (Cursor) parent.getItemAtPosition(position);
+                idDistrito = cursor.getString(cursor.getColumnIndexOrThrow(DBAdapter_Distritos.Dis_IdDistrito));
+                Log.d(TAG, idDistrito + "-" + cursor.getString(cursor.getColumnIndexOrThrow(DBAdapter_Distritos.Dis_descripcion)));
+                completeTextView.setText(cursor.getString(cursor.getColumnIndexOrThrow(DBAdapter_Distritos.Dis_descripcion)));
+            }
+        });
+
     }
 
     private void displatLocation() {
@@ -240,8 +290,9 @@ public class FMapaEditar extends Fragment implements Validator.ValidationListene
         if (cr.moveToFirst()) {
             String urlMap = "http://maps.google.com/maps/api/staticmap?center=" + cr.getDouble(cr.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_latitud)) + "," + cr.getDouble(cr.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_longitud)) + ",&zoom=17&markers=icon:http://www.myiconfinder.com/uploads/iconsets/256-256-a5485b563efc4511e0cd8bd04ad0fe9e.png|" + cr.getDouble(cr.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_latitud)) + "," + cr.getDouble(cr.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_longitud)) + "&path=color:0x0000FF80|weight:5|" + cr.getDouble(cr.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_latitud)) + "," + cr.getDouble(cr.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_longitud)) + "&size=400x300";//
             webViewMap.loadUrl(urlMap);
-            editTextDescripcion.setText(cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_descripcion)));
-            editTextDireccionFiscal.setText(cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Temp_Establecimiento.establec_direccion_fiscal)));
+            editTextDescripcion.setText(cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_descripcion)));
+            editTextDireccionFiscal.setText(cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_direccion_fiscal)));
+            autoComplete(cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_distrito)));
 
         }
 
@@ -260,6 +311,8 @@ public class FMapaEditar extends Fragment implements Validator.ValidationListene
                 }
             }
         });
+
+
 
         btnActualizarP.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -287,13 +340,11 @@ public class FMapaEditar extends Fragment implements Validator.ValidationListene
         lon = textLon.getText().toString();
         direccion = editTextDescripcion.getText().toString();
         direccion_fiscal = editTextDireccionFiscal.getText().toString();
-        if (!lat.equals("Obteniendo...") || !lon.equals("Obteniendo...")) {
+        if (!lat.equals("Obteniendo...") || !lon.equals("Obteniendo...") || idDistrito != "") {
 
-            long estado = dbAdapter_temp_establecimiento.updateTempEstablecDireccion(idEstablecimiento + "", lat, lon, direccion, direccion_fiscal);
+            long estado = dbAdapter_temp_establecimiento.updateTempEstablecDireccion(idEstablecimiento + "", lat, lon, direccion, direccion_fiscal,idDistrito);
             if (estado > 0) {
                 if (estadoFinalizar) {
-
-
                     guardar();
                 } else {
                     viewPager.setCurrentItem(2);
@@ -310,10 +361,10 @@ public class FMapaEditar extends Fragment implements Validator.ValidationListene
 
     }
 
-    private void guardar(){
+    private void guardar() {
         Cursor cursor = dbAdapter_establecimeinto_historial.fetchTemEstablecEdit(idEstablecimiento);
 
-        while(cursor.moveToNext()){
+        while (cursor.moveToNext()) {
 
             EventoEstablecimiento eventoEstablecimiento = new EventoEstablecimiento(
                     Integer.parseInt(idEstablecimiento),
@@ -322,8 +373,8 @@ public class FMapaEditar extends Fragment implements Validator.ValidationListene
                     1,
                     cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_descripcion_establecimiento
                     )),
-                    cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_nombres))+ " "+
-                            cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_apPaterno)) +" "+
+                    cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_nombres)) + " " +
+                            cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_apPaterno)) + " " +
                             cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_apMaterno)),
                     cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_nro_documento)),
                     0,
@@ -342,8 +393,8 @@ public class FMapaEditar extends Fragment implements Validator.ValidationListene
                     cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_latitud)),
                     cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_longitud))
             );
-            int upd =  dbAdaptert_evento_establec.updateEstablecimientosEditar(eventoEstablecimiento);
-            Log.d("EDITO",""+upd);
+            int upd = dbAdaptert_evento_establec.updateEstablecimientosEditar(eventoEstablecimiento);
+            Log.d("EDITO", "" + upd);
         }
 
 
@@ -366,8 +417,6 @@ public class FMapaEditar extends Fragment implements Validator.ValidationListene
 
 
     //----------------------
-
-
 
 
     @Override

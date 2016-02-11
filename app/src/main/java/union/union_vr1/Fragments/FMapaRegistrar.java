@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -30,9 +31,13 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.AdapterView;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.FilterQueryProvider;
+import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,6 +50,7 @@ import com.mobsandgeeks.saripaar.annotation.Required;
 import org.w3c.dom.Text;
 
 import union.union_vr1.R;
+import union.union_vr1.Sqlite.DBAdapter_Distritos;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Establecimiento;
 import union.union_vr1.Utils.Utils;
 
@@ -67,6 +73,7 @@ public class FMapaRegistrar extends Fragment implements Validator.ValidationList
     private Button btnActualizarP;
     private CheckBox checkBoxDF;
     private WebView webViewMap;
+    private AutoCompleteTextView completeTextView;
     LocationManager mLocationManager;
     Location myLocation;
     private Validator validator;
@@ -78,9 +85,13 @@ public class FMapaRegistrar extends Fragment implements Validator.ValidationList
     @Required(order = 5, messageResId = R.string.requerido_input)
     @NumberRule(order = 6, type = NumberRule.NumberType.DOUBLE, messageResId = R.string.requerido_input)
     private EditText textLon;
-
+    private String idDistrito="";
+    private DBAdapter_Distritos dbAdapter_distritos;
 
     private DbAdapter_Temp_Establecimiento dbAdapter_temp_establecimiento;
+
+
+    private static final String TAG = FMapaRegistrar.class.getSimpleName();
 
 
     @Override
@@ -98,6 +109,9 @@ public class FMapaRegistrar extends Fragment implements Validator.ValidationList
         dbAdapter_temp_establecimiento = new DbAdapter_Temp_Establecimiento(getActivity());
         dbAdapter_temp_establecimiento.open();
 
+        dbAdapter_distritos = new DBAdapter_Distritos(getActivity());
+        dbAdapter_distritos.open();
+
 
         validator = new Validator(this);
         validator.setValidationListener(this);
@@ -110,8 +124,8 @@ public class FMapaRegistrar extends Fragment implements Validator.ValidationList
         webViewMap = (WebView) v.findViewById(R.id.webViewMap);
         textLat = (EditText) v.findViewById(R.id.textLat);
         textLon = (EditText) v.findViewById(R.id.textLon);
-
-
+        completeTextView = (AutoCompleteTextView)v.findViewById(R.id.distrito);
+        autoComplete();
         webViewMap.getSettings().setAppCachePath(getActivity().getApplicationContext().getCacheDir().getAbsolutePath() + "/cache");
         webViewMap.getSettings().setAllowFileAccess(true);
         webViewMap.getSettings().setAppCacheEnabled(true);
@@ -153,12 +167,48 @@ public class FMapaRegistrar extends Fragment implements Validator.ValidationList
         actualizar();
         return v;
     }
+    private void autoComplete(){
+
+        Cursor cr  = dbAdapter_distritos.listarDistritos();
+
+        String[] columnas = new String[]{
+                DBAdapter_Distritos.Dis_descripcion
+        };
+        int[] to = new int[]{
+                R.id.textNombre
+
+        };
+        SimpleCursorAdapter adapter = new SimpleCursorAdapter(getActivity(),
+                R.layout.layout_distrito,
+                cr,
+                columnas,
+                to,
+                0);
+
+        completeTextView.setAdapter(adapter);
+        adapter.setFilterQueryProvider(new FilterQueryProvider() {
+            @Override
+            public Cursor runQuery(CharSequence charSequence) {
+                Cursor cr = dbAdapter_distritos.listarDistritosLike(charSequence.toString());
+                return cr;
+            }
+        });
+        completeTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Cursor cursor = (Cursor) parent.getItemAtPosition(position);
+                idDistrito = cursor.getString(cursor.getColumnIndexOrThrow(DBAdapter_Distritos.Dis_IdDistrito));
+                Log.d(TAG,idDistrito+"-"+cursor.getString(cursor.getColumnIndexOrThrow(DBAdapter_Distritos.Dis_descripcion)));
+                completeTextView.setText(cursor.getString(cursor.getColumnIndexOrThrow(DBAdapter_Distritos.Dis_descripcion)));
+            }
+        });
+
+    }
 
     private void displatLocation() {
         mLocationManager = (LocationManager) getActivity().getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
 
-        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000,
-                0, mLocaction);
+        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,1000,0, mLocaction);
 
     }
 
@@ -187,7 +237,7 @@ public class FMapaRegistrar extends Fragment implements Validator.ValidationList
             }
 
             @Override
-            public void onPageScrollStateChanged(int state) {
+            public void onPageScrollStateChanged(int state){
 
             }
         });
@@ -321,8 +371,8 @@ public class FMapaRegistrar extends Fragment implements Validator.ValidationList
         direccion = editTextDescripcion.getText().toString();
         direccion_fiscal = editTextDireccionFiscal.getText().toString();
 
-        if (!lat.equals("Obteniendo...") || !lon.equals("Obteniendo...")) {
-            long estado = dbAdapter_temp_establecimiento.updateTempEstablecDireccion(idEstablecimiento + "", lat, lon, direccion, direccion_fiscal);
+        if (!lat.equals("Obteniendo...") || !lon.equals("Obteniendo...") || idDistrito!="") {
+            long estado = dbAdapter_temp_establecimiento.updateTempEstablecDireccion(idEstablecimiento + "", lat, lon, direccion, direccion_fiscal,idDistrito);
             if (estado > 0) {
                 viewPager.setCurrentItem(2);
                 mLocationManager.removeUpdates(mLocaction);

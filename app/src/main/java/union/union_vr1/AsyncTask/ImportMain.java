@@ -44,6 +44,7 @@ import union.union_vr1.Objects.TipoGasto;
 import union.union_vr1.R;
 import union.union_vr1.RestApi.StockAgenteRestApi;
 import union.union_vr1.Sqlite.Constants;
+import union.union_vr1.Sqlite.DBAdapter_Distritos;
 import union.union_vr1.Sqlite.DBAdapter_Temp_Autorizacion_Cobro;
 import union.union_vr1.Sqlite.DbAdapter_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
@@ -81,7 +82,7 @@ public class ImportMain extends AsyncTask<String, String, String> {
     private DbAdapter_Histo_Comprob_Anterior dbAdapter_histo_comprob_anterior;
     private DBAdapter_Temp_Autorizacion_Cobro dbAdapter_temp_autorizacion_cobro;
     private DbAdapter_Ruta_Distribucion dbAdapter_ruta_distribucion;
-
+    private DBAdapter_Distritos dbAdapter_distritos;
     private DbAdapter_ModalidadCredito dbAdapter_modalidadCredito;
     private DbAdapter_Forma_Pago dbAdapter_forma_pago;
 
@@ -99,7 +100,8 @@ public class ImportMain extends AsyncTask<String, String, String> {
 
         session = new DbAdapter_Temp_Session(mainActivity);
         session.open();
-
+        dbAdapter_distritos = new DBAdapter_Distritos(mainActivity);
+        dbAdapter_distritos.open();
         dbAdapter_agente = new DbAdapter_Agente(mainActivity);
         dbAdapter_agente.open();
         dbAdapter_stock_agente = new DbAdapter_Stock_Agente(mainActivity);
@@ -175,6 +177,8 @@ public class ImportMain extends AsyncTask<String, String, String> {
 
 
             publishProgress("" + 5);
+
+            //
             JSONObject jsonObjectStockAgente = api.GetStockAgente(idAgente);
             //Log.d("JSON ERROR MESSAGE", getErrorMessage(jsonObjectStockAgente));
             publishProgress("" + 10);
@@ -197,21 +201,21 @@ public class ImportMain extends AsyncTask<String, String, String> {
             JSONObject jsonObjectRutaDistribucion = api.GetConsultarPlan_Distribucion(idAgente);
 
 
-            Log.d(TAG,"JSON OBJECT STOCK AGENTE : "+ jsonObjectStockAgente.toString());
+            Log.d(TAG, "JSON OBJECT STOCK AGENTE : " + jsonObjectStockAgente.toString());
             Log.d(TAG, "JSON OBJECT PRECIO : " + jsonObjectPrecio.toString());
-            Log.d(TAG,"JSON OBJECT TIPO GASTO : "+ jsonObjectTipoGasto.toString());
-            Log.d(TAG,"JSON MODALIDAD CREDITO : "+ jsonObjectModalidadCredito.toString());
-            Log.d(TAG,"JSON FORMA PAGO : "+ jsonObjectFormaPago.toString());
-            Log.d(TAG,"JSON OBJECT EVENTO ESTABLECIMIENTO : "+ jsonObjectEventoEstablecimiento.toString());
-            Log.d(TAG,"JSON OBJECT COMPROBANTE COBRO : "+ jsonObjectComprobanteCobro.toString());
-            Log.d(TAG,"JSON OBJECT HISTORIAL VENTA DETALLE : "+ jsonObjectHistorialVentaDetalle.toString());
-            Log.d(TAG,"JSON OBJECT HISTORIAL VENTA ANTERIOR "+ jsonObjectHistorialComprobanteAnterior.toString());
-            Log.d(TAG,"JSON OBJECT RUTA DISTRIBUCION "+ jsonObjectRutaDistribucion.toString());
+            Log.d(TAG, "JSON OBJECT TIPO GASTO : " + jsonObjectTipoGasto.toString());
+            Log.d(TAG, "JSON MODALIDAD CREDITO : " + jsonObjectModalidadCredito.toString());
+            Log.d(TAG, "JSON FORMA PAGO : " + jsonObjectFormaPago.toString());
+            Log.d(TAG, "JSON OBJECT EVENTO ESTABLECIMIENTO : " + jsonObjectEventoEstablecimiento.toString());
+            Log.d(TAG, "JSON OBJECT COMPROBANTE COBRO : " + jsonObjectComprobanteCobro.toString());
+            Log.d(TAG, "JSON OBJECT HISTORIAL VENTA DETALLE : " + jsonObjectHistorialVentaDetalle.toString());
+            Log.d(TAG, "JSON OBJECT HISTORIAL VENTA ANTERIOR " + jsonObjectHistorialComprobanteAnterior.toString());
+            Log.d(TAG, "JSON OBJECT RUTA DISTRIBUCION " + jsonObjectRutaDistribucion.toString());
 
 
             ParserStockAgente parserStockAgente = new ParserStockAgente();
             ParserTipoGasto parserTipoGasto = new ParserTipoGasto();
-            ParserModalidadCredito parserModalidadCredito= new ParserModalidadCredito();
+            ParserModalidadCredito parserModalidadCredito = new ParserModalidadCredito();
             ParserFormaPago parserFormaPago = new ParserFormaPago();
             ParserPrecio parserPrecio = new ParserPrecio(idAgente);
             ParserEventoEstablecimiento parserEventoEstablecimiento = new ParserEventoEstablecimiento();
@@ -229,23 +233,52 @@ public class ImportMain extends AsyncTask<String, String, String> {
             historialVentaDetalleses = parserHistorialVentaDetalles.parserHistorialVentaDetalles(jsonObjectHistorialVentaDetalle);
             comprobanteVentaDetalles = parserComprobanteVentaDetalle.parserComprobanteVentaDetalle(jsonObjectHistorialComprobanteAnterior);
 
-            if (eventoEstablecimientos.size()<=0){
+
+            //Import Distrito
+
+            //Ver si existe ya datos en el dispositivo
+
+            int disCursor = dbAdapter_distritos.listarDistritos().getCount();
+
+            if (disCursor == 0) {
+
+                JSONObject jsonObjectDistritos = api.fsel_Distritos();
+                Log.d(TAG, "JSON OBJECT DISTRITOS " + jsonObjectDistritos.toString());
+
+                JSONArray jsonArray = jsonObjectDistritos.getJSONArray("Value");
+
+                for (int i = 0; i < jsonArray.length(); i++) {
+
+                    JSONObject object = jsonArray.getJSONObject(i);
+
+                    long in = dbAdapter_distritos.createDistritos(object.getInt("Id"),object.getString("Distrito"));
+                    Log.d(TAG, "JSON OBJECT DISTRITOS INSERTO " + in);
+
+                }
+
+
+            } else {
+                Log.d(TAG, "JSON OBJECT DISTRITOS " + "DISTRITOS YA IMPORTADOS");
+            }
+
+
+            if (eventoEstablecimientos.size() <= 0) {
                 Log.d(TAG, "EVENTO ESTABLECIMIENTO VACÍO, OBTENIENDO NUEVAMENTE ...");
                 jsonObjectEventoEstablecimiento = api.GetEstablecimeintoXRuta(idLiquidacion, fecha, idAgente);
                 eventoEstablecimientos = parserEventoEstablecimiento.parserEventoEstablecimiento(jsonObjectEventoEstablecimiento);
             }
 
-            for(int i =0;i<historialVentaDetalleses.size();i++){
+            for (int i = 0; i < historialVentaDetalleses.size(); i++) {
 
-                    boolean existe = dbAdapter_histo_venta_detalle.existeHistoVentaDetalle(historialVentaDetalleses.get(i).getIdDetalle());
+                boolean existe = dbAdapter_histo_venta_detalle.existeHistoVentaDetalle(historialVentaDetalleses.get(i).getIdDetalle());
 
-                    Log.d("EXISTE DETALLE", "" + existe);
-                    if (existe) {
-                        dbAdapter_histo_venta_detalle.updateHistoVentaDetalle(historialVentaDetalleses.get(i));
-                    } else {
-                        //NO EXISTE ENTONCES CREEMOS UNO NUEVO
-                        dbAdapter_histo_venta_detalle.createHistoVentaDetalle(historialVentaDetalleses.get(i));
-                    }
+                Log.d("EXISTE DETALLE", "" + existe);
+                if (existe) {
+                    dbAdapter_histo_venta_detalle.updateHistoVentaDetalle(historialVentaDetalleses.get(i));
+                } else {
+                    //NO EXISTE ENTONCES CREEMOS UNO NUEVO
+                    dbAdapter_histo_venta_detalle.createHistoVentaDetalle(historialVentaDetalleses.get(i));
+                }
             }
 
 
@@ -312,7 +345,7 @@ public class ImportMain extends AsyncTask<String, String, String> {
 
 
             for (int i = 0; i < modalidadCreditos.size(); i++) {
-                Log.d("MODALIDAD DE CRÉDITOS" + i, "ID : " + modalidadCreditos.get(i).getId()+ ", descripcion : "+modalidadCreditos.get(i).getDescripcion() + ", DIAS CRÉDITO :"+modalidadCreditos.get(i).getDiasCredito());
+                Log.d("MODALIDAD DE CRÉDITOS" + i, "ID : " + modalidadCreditos.get(i).getId() + ", descripcion : " + modalidadCreditos.get(i).getDescripcion() + ", DIAS CRÉDITO :" + modalidadCreditos.get(i).getDiasCredito());
 
                 boolean existe = dbAdapter_modalidadCredito.existeModalidadCreditos(modalidadCreditos.get(i).getId());
                 Log.d(TAG, "EXISTE MODALIDAD CREDITO " + existe);
@@ -330,7 +363,7 @@ public class ImportMain extends AsyncTask<String, String, String> {
 
             //Log.d(TAG, "FORMA PAGO ELIMNADO COUNT : "+ocuntFPDeleted);
             for (int i = 0; i < formaPagos.size(); i++) {
-                Log.d(TAG, "FORMA DE PAGOS" + i + "ID : " + formaPagos.get(i).get_id_forma_pago()+ ", descripcion : "+formaPagos.get(i).getDetalle() + ", SELECTED :"+formaPagos.get(i).getSelected());
+                Log.d(TAG, "FORMA DE PAGOS" + i + "ID : " + formaPagos.get(i).get_id_forma_pago() + ", descripcion : " + formaPagos.get(i).getDetalle() + ", SELECTED :" + formaPagos.get(i).getSelected());
 
                 boolean existe = dbAdapter_forma_pago.existeFormaPagos(formaPagos.get(i).get_id_forma_pago());
                 Log.d(TAG, "EXISTE FORMA PAGO" + existe);
@@ -468,7 +501,7 @@ public class ImportMain extends AsyncTask<String, String, String> {
                         String fechaLimite = jsonObj.getString("CliDTFechaLimiteCredito");
                         // String fechaLimite = "02/10/2015";
                         String SolReferenciaIdAndroid = jsonObj.getString("SolReferencia");
-                        Log.d("DATOS", "" + montocredito+"--"+idEstablecimiento1+"--"+estadoSolicitud+"--"+idAutorizacionCobro+"--"+fechaLimite+"--"+SolReferenciaIdAndroid);
+                        Log.d("DATOS", "" + montocredito + "--" + idEstablecimiento1 + "--" + estadoSolicitud + "--" + idAutorizacionCobro + "--" + fechaLimite + "--" + SolReferenciaIdAndroid);
 
                         boolean exists = dbAdapter_temp_autorizacion_cobro.existeAutorizacionCobro(SolReferenciaIdAndroid);
 
@@ -476,17 +509,17 @@ public class ImportMain extends AsyncTask<String, String, String> {
                         if (exists) {
                             int isActualizado = dbAdapter_temp_autorizacion_cobro.updateAutorizacionCobro(estadoSolicitud, idEstablecimiento1, fechaLimite, SolReferenciaIdAndroid);
 
-                            Log.d("IMPORT REGISTRO AUTORIZACION COBRO ACTUALIZADO ", "" + isActualizado+"ESTADO SOLICITUD"+estadoSolicitud);
+                            Log.d("IMPORT REGISTRO AUTORIZACION COBRO ACTUALIZADO ", "" + isActualizado + "ESTADO SOLICITUD" + estadoSolicitud);
                             if (estadoSolicitud == 2) {
-                                Log.d("GET CURSOR INDEX","123456");
+                                Log.d("GET CURSOR INDEX", "123456");
                                 Cursor cr = dbAdapter_comprob_cobro.getComprobanteCobroById(SolReferenciaIdAndroid);
 
                                 if (cr.moveToFirst()) {
 
                                     double montopagado = dbAdapter_temp_autorizacion_cobro.getMontoPagado(SolReferenciaIdAndroid);
-                                    Log.d("MONTO PAGADO",""+montopagado);
+                                    Log.d("MONTO PAGADO", "" + montopagado);
                                     int estado = dbAdapter_comprob_cobro.updateComprobCobrosAutorizacion(0, montopagado, SolReferenciaIdAndroid);
-                                    Log.e("IDESTADO",""+estado);
+                                    Log.e("IDESTADO", "" + estado);
                                     if (estado > 0) {
                                         String idComprobante = dbAdapter_comprob_cobro.getIdComrobanteCobro(idEstablecimiento1 + "");
                                         int id_establec = cr.getInt(cr.getColumnIndexOrThrow(DbAdapter_Comprob_Cobro.CC_id_establec));
@@ -505,14 +538,13 @@ public class ImportMain extends AsyncTask<String, String, String> {
                                         int id_forma_cobro = cr.getInt(cr.getColumnIndexOrThrow(DbAdapter_Comprob_Cobro.CC_id_forma_cobro));
                                         String lugar_registro = cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Comprob_Cobro.CC_lugar_registro));
                                         int liquidacion = idLiquidacion;
-                                        long l =dbAdapter_comprob_cobro.createComprobCobros(id_establec, id_comprob, id_plan_pago, id_plan_pago_detalle, desc_tipo_doc, doc, fecha_programada, Double.parseDouble(monto_a_pagar), fecha_cobro, hora_cobro, monto_cobrado, estado_cobro, id_agente, id_forma_cobro, lugar_registro, liquidacion, idComprobante, 4);
-                                        Log.d("JSON CREDITOINSERTO",""+l);
-                                        if(l >0){
-                                            Log.d("JSON CREDITOINSERTO","-"+id_plan_pago+"-"+id_plan_pago_detalle);
-                                            JSONObject jsonObject1 = api.CreatePlanPagoDetalleExp(id_plan_pago, getDatePhone() , Double.parseDouble(montocredito),idUsuario, fecha_programada);
-                                            Log.d("JSON CREDITO",""+jsonObject1.toString());
+                                        long l = dbAdapter_comprob_cobro.createComprobCobros(id_establec, id_comprob, id_plan_pago, id_plan_pago_detalle, desc_tipo_doc, doc, fecha_programada, Double.parseDouble(monto_a_pagar), fecha_cobro, hora_cobro, monto_cobrado, estado_cobro, id_agente, id_forma_cobro, lugar_registro, liquidacion, idComprobante, 4);
+                                        Log.d("JSON CREDITOINSERTO", "" + l);
+                                        if (l > 0) {
+                                            Log.d("JSON CREDITOINSERTO", "-" + id_plan_pago + "-" + id_plan_pago_detalle);
+                                            JSONObject jsonObject1 = api.CreatePlanPagoDetalleExp(id_plan_pago, getDatePhone(), Double.parseDouble(montocredito), idUsuario, fecha_programada);
+                                            Log.d("JSON CREDITO", "" + jsonObject1.toString());
                                         }
-
 
 
                                     }
@@ -550,7 +582,7 @@ public class ImportMain extends AsyncTask<String, String, String> {
 
         } catch (Exception e) {
             Log.d("AysncImport : ", e.getMessage());
-            Log.d("ERROR",e.getStackTrace()[2].getMethodName()+"");
+            Log.d("ERROR", e.getStackTrace()[2].getMethodName() + "");
         }
         return null;
     }
@@ -563,7 +595,6 @@ public class ImportMain extends AsyncTask<String, String, String> {
 
     @Override
     protected void onPostExecute(String s) {
-
 
 
         if (mainActivity.isFinishing()) {

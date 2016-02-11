@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="9">
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:text="Nombre de Producto"
+            android:id="@+id/textNombre"
+            android:textSize="17dp"
+            android:layout_marginLeft="5dp"
+            android:textStyle="italic|bold"
+            android:layout_weight="1"
+            android:background="@drawable/border_bottom"
+            android:gravity="center_vertical"
+            android:textColor="@color/PersonalizadoSteve4" />
+
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"></LinearLayout>
+</LinearLayout>

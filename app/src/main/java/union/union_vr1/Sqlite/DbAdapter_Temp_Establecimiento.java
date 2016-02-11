@@ -35,6 +35,7 @@ public class DbAdapter_Temp_Establecimiento {
     public static final String establec_tipo_establecimiento = "establec_tipo_establecimiento";
     public static final String establec_descripcion_establecimiento = "establec_descripcion_establecimiento";
     public static final String establec_editado = "establec_editado";
+    public static final String establec_idDistrito = "establec_id_distrito";
 
 
     private DbHelper mDbHelper;
@@ -67,6 +68,7 @@ public class DbAdapter_Temp_Establecimiento {
                     + establec_correo + " text, "
                     + establec_tipo_establecimiento + " text, "
                     + establec_descripcion_establecimiento + " text,"
+                    + establec_idDistrito + " text,"
                     + Constants._SINCRONIZAR + " integer );";
 
     public static final String DELETE_TABLE_Temp_Establec = "DROP TABLE IF EXISTS " + SQLITE_TABLE_Temp_Establec;
@@ -139,9 +141,10 @@ public class DbAdapter_Temp_Establecimiento {
 
 
 
-    public long updateTempEstablecDireccion(String id ,String lat,String lon,String direccion, String direccion_fiscal) {
+    public long updateTempEstablecDireccion(String id ,String lat,String lon,String direccion, String direccion_fiscal,String idDistrito) {
 
         ContentValues initialValues = new ContentValues();
+        initialValues.put(establec_idDistrito,idDistrito);
         initialValues.put(establec_latitud, lat);
         initialValues.put(establec_longitud, lon);
         initialValues.put(establec_descripcion, direccion);

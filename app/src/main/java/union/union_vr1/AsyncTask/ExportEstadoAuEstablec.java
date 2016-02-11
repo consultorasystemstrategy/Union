@@ -75,10 +75,10 @@ public class ExportEstadoAuEstablec extends AsyncTask<String, String, String> {
             if (existe == 0) {
 
                 Cursor cursor = dbAdapter_establecimeinto_historial.fetchTemEstablecEdit(strings[1]);
-                Log.d("IMPORTESTADOESTABLEC", "" + cursor.getCount());
+
 
                 while (cursor.moveToNext()) {
-
+                    Log.d("IMPORTESTADOESTABLEC", "" + cursor.getCount()+cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_distrito)));
                     NuevoEstablecimiento nuevoEstablecimiento = new NuevoEstablecimiento(cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_nro_documento)), Utils.getDatePhone(), Constants.REGISTRO_INTERNET,idAgente);
                     Firebase newEstaclmientoRef = nuevoEstablecimientoRef.push();
                     newEstaclmientoRef.setValue(nuevoEstablecimiento);
@@ -111,7 +111,7 @@ public class ExportEstadoAuEstablec extends AsyncTask<String, String, String> {
                             cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_descripcion)),
                             cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_direccion_fiscal)),
                             1,
-                            0,//iddistrito
+                            cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_distrito)),//iddistrito
                             cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_telefono_fijo)),
                             cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_celular_one)),
                             cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_celular_two)),

@@ -18,6 +18,7 @@ public class DbAdapter_Establecimeinto_Historial {
     public static final String establec_id_remoto_duplicado = "establec_id_remoto_duplicado";
     public static final String establec_usuario_accion = "establec_usuario_accion";
     public static final String establec_telefono_fijo = "establec_telefono_fijo";
+    public static final String establec_distrito = "establec_distrito";
     public static final String establec_celular_one = "establec_celular_one";
     public static final String establec_celular_two = "establec_celular_two";
     public static final String establec_latitud = "establec_latitud";
@@ -67,6 +68,7 @@ public class DbAdapter_Establecimeinto_Historial {
                     + establec_nro_documento + " text, "
                     + establec_estado_guardado + " text, "
                     + establec_correo + " text, "
+                    + establec_distrito + " text, "
                     + establec_tipo_establecimiento + " text, "
                     + establec_descripcion_establecimiento + " text,"
                     + Constants._SINCRONIZAR + " integer );";
@@ -110,11 +112,12 @@ public class DbAdapter_Establecimeinto_Historial {
             String _correo,
             int _tipo_establecimiento,
             String _descripcion_establecimiento, int _categoria_establec,
-            int _ESTADO, int _estadoEditado
+            int _ESTADO, int _estadoEditado,int iddistrito
     ) {
 
         ContentValues initialValues = new ContentValues();
         initialValues.put(establec_id_remoto, _id_remoto);
+        initialValues.put(establec_distrito, iddistrito);
         initialValues.put(establec_usuario_accion, _usuario_accion);
         initialValues.put(establec_telefono_fijo, _telefono_fijo);
         initialValues.put(establec_celular_one, _celular_one);
@@ -142,9 +145,10 @@ public class DbAdapter_Establecimeinto_Historial {
     }
 
 
-    public long updateTempEstablecDireccion(String id, String lat, String lon, String direccion, String direccion_fiscal) {
+    public long updateTempEstablecDireccion(String id, String lat, String lon, String direccion, String direccion_fiscal,String distrito) {
 
         ContentValues initialValues = new ContentValues();
+        initialValues.put(establec_distrito, distrito);
         initialValues.put(establec_latitud, lat);
         initialValues.put(establec_longitud, lon);
         initialValues.put(establec_descripcion, direccion);
