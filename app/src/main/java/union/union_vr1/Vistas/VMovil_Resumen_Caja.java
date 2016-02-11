@@ -642,10 +642,16 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
                             })
                             .setPositiveButton(R.string.si, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
-                                    int registrosEnCola = 11;
-                                    registrosEnCola = validarExport();
-                                    Toast.makeText(VMovil_Resumen_Caja.this, registrosEnCola + " registros en cola.", Toast.LENGTH_SHORT).show();
-                                    if (registrosEnCola == 0) {
+                                    int estadoValidacion = session.fetchVarible(Constants.SESSION_VALIDACION_REGISTROS_EXPORTADOS);
+                                    if (estadoValidacion == 0){
+                                        int registrosEnCola = 11;
+                                        registrosEnCola = validarExport();
+                                        Toast.makeText(VMovil_Resumen_Caja.this, registrosEnCola + " registros en cola.", Toast.LENGTH_SHORT).show();
+                                        if (registrosEnCola == 0) {
+                                            dialogCerrarCaja().show();
+                                        }
+                                    }else if (estadoValidacion == 1){
+                                        Toast.makeText(VMovil_Resumen_Caja.this, "REGISTROS EN COLA VALIDADOS DESDE FIREBASE.", Toast.LENGTH_SHORT).show();
                                         dialogCerrarCaja().show();
                                     }
 

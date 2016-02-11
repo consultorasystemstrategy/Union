@@ -182,6 +182,7 @@ public class VMovil_Abrir_Caja extends Activity implements View.OnClickListener 
                         session.createTempSession(10, correlativoFactura);
                         session.createTempSession(11, correlativoBoleta);
                         session.createTempSession(Constants.SESSION_ESTADO_DEVOLUCIONES, 0);
+                        session.createTempSession(Constants.SESSION_VALIDACION_REGISTROS_EXPORTADOS, 0);
                         session.createTempSessionString(Constants._ID_SESSION_MAC, agenteLista.get(i).getMAC());
                         session.createTempSessionString(Constants._ID_SESSION_MAC_DEVICE_CIPHER_LAB, agenteLista.get(i).getMAC2());
 

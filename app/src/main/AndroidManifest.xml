@@ -167,7 +167,7 @@
         <activity
             android:name=".Vistas.VMovil_Evento_Canjes_Dev"
             android:label="Canjes y Devoluciones"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".Vistas.VMovil_Operacion_Canjes_Devoluciones"
             android:label="Canjes y Devoluciones"

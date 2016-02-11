@@ -25,7 +25,9 @@ import union.union_vr1.JSONParser.ParserAgente;
 import union.union_vr1.JSONParser.ParserComprobanteCobro;
 import union.union_vr1.JSONParser.ParserComprobanteVentaDetalle;
 import union.union_vr1.JSONParser.ParserEventoEstablecimiento;
+import union.union_vr1.JSONParser.ParserFormaPago;
 import union.union_vr1.JSONParser.ParserHistorialVentaDetalles;
+import union.union_vr1.JSONParser.ParserModalidadCredito;
 import union.union_vr1.JSONParser.ParserPrecio;
 import union.union_vr1.JSONParser.ParserStockAgente;
 import union.union_vr1.JSONParser.ParserTipoGasto;
@@ -33,7 +35,9 @@ import union.union_vr1.Objects.Agente;
 import union.union_vr1.Objects.ComprobanteCobro;
 import union.union_vr1.Objects.ComprobanteVentaDetalle;
 import union.union_vr1.Objects.EventoEstablecimiento;
+import union.union_vr1.Objects.FormaPago;
 import union.union_vr1.Objects.HistorialVentaDetalles;
+import union.union_vr1.Objects.ModalidadCredito;
 import union.union_vr1.Objects.Precio;
 import union.union_vr1.Objects.StockAgente;
 import union.union_vr1.Objects.TipoGasto;
@@ -43,8 +47,10 @@ import union.union_vr1.Sqlite.Constants;
 import union.union_vr1.Sqlite.DBAdapter_Temp_Autorizacion_Cobro;
 import union.union_vr1.Sqlite.DbAdapter_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
+import union.union_vr1.Sqlite.DbAdapter_Forma_Pago;
 import union.union_vr1.Sqlite.DbAdapter_Histo_Comprob_Anterior;
 import union.union_vr1.Sqlite.DbAdapter_Histo_Venta_Detalle;
+import union.union_vr1.Sqlite.DbAdapter_ModalidadCredito;
 import union.union_vr1.Sqlite.DbAdapter_Precio;
 import union.union_vr1.Sqlite.DbAdapter_Ruta_Distribucion;
 import union.union_vr1.Sqlite.DbAdapter_Stock_Agente;
@@ -76,6 +82,8 @@ public class ImportMain extends AsyncTask<String, String, String> {
     private DBAdapter_Temp_Autorizacion_Cobro dbAdapter_temp_autorizacion_cobro;
     private DbAdapter_Ruta_Distribucion dbAdapter_ruta_distribucion;
 
+    private DbAdapter_ModalidadCredito dbAdapter_modalidadCredito;
+    private DbAdapter_Forma_Pago dbAdapter_forma_pago;
 
 
     //private ListView listView;
@@ -112,6 +120,10 @@ public class ImportMain extends AsyncTask<String, String, String> {
         dbAdapter_temp_autorizacion_cobro.open();
         dbAdapter_ruta_distribucion = new DbAdapter_Ruta_Distribucion(mainActivity);
         dbAdapter_ruta_distribucion.open();
+        dbAdapter_modalidadCredito = new DbAdapter_ModalidadCredito(mainActivity);
+        dbAdapter_modalidadCredito.open();
+        dbAdapter_forma_pago = new DbAdapter_Forma_Pago(mainActivity);
+        dbAdapter_forma_pago.open();
 
 
 //        idAgente = ((MyApplication)mainActivity.getApplication()).getIdAgente();
@@ -145,6 +157,8 @@ public class ImportMain extends AsyncTask<String, String, String> {
         ArrayList<ComprobanteCobro> comprobanteCobros = null;
         ArrayList<HistorialVentaDetalles> historialVentaDetalleses = null;
         ArrayList<ComprobanteVentaDetalle> comprobanteVentaDetalles = null;
+        ArrayList<ModalidadCredito> modalidadCreditos = null;
+        ArrayList<FormaPago> formaPagos = null;
 
         String fecha = getDatePhone();
 
@@ -166,11 +180,15 @@ public class ImportMain extends AsyncTask<String, String, String> {
             publishProgress("" + 10);
             JSONObject jsonObjectTipoGasto = api.GetTipoGasto();
             publishProgress("" + 15);
+            JSONObject jsonObjectModalidadCredito = api.fsel_ModalidadCredito(idAgente);
+            JSONObject jsonObjectFormaPago = api.fsel_TipoPago();
+
             JSONObject jsonObjectPrecio = api.GetPrecioCategoria(idLiquidacion, idAgente);
             publishProgress("" + 20);
             JSONObject jsonObjectEventoEstablecimiento = api.GetEstablecimeintoXRuta(idLiquidacion, fecha, idAgente);
             publishProgress("" + 25);
-            JSONObject jsonObjectComprobanteCobro = api.GetHistorialCobrosPendientes();
+            //JSONObject jsonObjectComprobanteCobro = api.GetHistorialCobrosPendientes();
+            JSONObject jsonObjectComprobanteCobro = api.GetHistorialCobrosPendientesXLiquidacion(idLiquidacion, idAgente);
             publishProgress("" + 30);
             JSONObject jsonObjectHistorialVentaDetalle = api.GetHistorialVentaDetalle(idAgente);
             publishProgress("" + 35);
@@ -180,8 +198,10 @@ public class ImportMain extends AsyncTask<String, String, String> {
 
 
             Log.d(TAG,"JSON OBJECT STOCK AGENTE : "+ jsonObjectStockAgente.toString());
-            Log.d(TAG,"JSON OBJECT PRECIO : "+ jsonObjectPrecio.toString());
+            Log.d(TAG, "JSON OBJECT PRECIO : " + jsonObjectPrecio.toString());
             Log.d(TAG,"JSON OBJECT TIPO GASTO : "+ jsonObjectTipoGasto.toString());
+            Log.d(TAG,"JSON MODALIDAD CREDITO : "+ jsonObjectModalidadCredito.toString());
+            Log.d(TAG,"JSON FORMA PAGO : "+ jsonObjectFormaPago.toString());
             Log.d(TAG,"JSON OBJECT EVENTO ESTABLECIMIENTO : "+ jsonObjectEventoEstablecimiento.toString());
             Log.d(TAG,"JSON OBJECT COMPROBANTE COBRO : "+ jsonObjectComprobanteCobro.toString());
             Log.d(TAG,"JSON OBJECT HISTORIAL VENTA DETALLE : "+ jsonObjectHistorialVentaDetalle.toString());
@@ -191,6 +211,8 @@ public class ImportMain extends AsyncTask<String, String, String> {
 
             ParserStockAgente parserStockAgente = new ParserStockAgente();
             ParserTipoGasto parserTipoGasto = new ParserTipoGasto();
+            ParserModalidadCredito parserModalidadCredito= new ParserModalidadCredito();
+            ParserFormaPago parserFormaPago = new ParserFormaPago();
             ParserPrecio parserPrecio = new ParserPrecio(idAgente);
             ParserEventoEstablecimiento parserEventoEstablecimiento = new ParserEventoEstablecimiento();
             ParserComprobanteCobro parserComprobanteCobro = new ParserComprobanteCobro();
@@ -199,11 +221,19 @@ public class ImportMain extends AsyncTask<String, String, String> {
 
             stockAgentes = parserStockAgente.parserStockAgente(jsonObjectStockAgente);
             tipoGastos = parserTipoGasto.parserTipoGasto(jsonObjectTipoGasto);
+            modalidadCreditos = parserModalidadCredito.parserModalidadCredito(jsonObjectModalidadCredito);
+            formaPagos = parserFormaPago.parserFormaPago(jsonObjectFormaPago, idLiquidacion, fecha);
             precios = parserPrecio.parserPrecio(jsonObjectPrecio);
             eventoEstablecimientos = parserEventoEstablecimiento.parserEventoEstablecimiento(jsonObjectEventoEstablecimiento);
             comprobanteCobros = parserComprobanteCobro.parserComprobanteCobro(jsonObjectComprobanteCobro);
             historialVentaDetalleses = parserHistorialVentaDetalles.parserHistorialVentaDetalles(jsonObjectHistorialVentaDetalle);
             comprobanteVentaDetalles = parserComprobanteVentaDetalle.parserComprobanteVentaDetalle(jsonObjectHistorialComprobanteAnterior);
+
+            if (eventoEstablecimientos.size()<=0){
+                Log.d(TAG, "EVENTO ESTABLECIMIENTO VACÍO, OBTENIENDO NUEVAMENTE ...");
+                jsonObjectEventoEstablecimiento = api.GetEstablecimeintoXRuta(idLiquidacion, fecha, idAgente);
+                eventoEstablecimientos = parserEventoEstablecimiento.parserEventoEstablecimiento(jsonObjectEventoEstablecimiento);
+            }
 
             for(int i =0;i<historialVentaDetalleses.size();i++){
 
@@ -275,6 +305,42 @@ public class ImportMain extends AsyncTask<String, String, String> {
                 } else {
                     //NO EXISTE ENTONCES CREEMOS UNO NUEVO
                     dbAdapter_tipo_gasto.createTipoGasto(tipoGastos.get(i));
+                }
+            }
+
+            dbAdapter_modalidadCredito.deleteAllModalidadCreditos();
+
+
+            for (int i = 0; i < modalidadCreditos.size(); i++) {
+                Log.d("MODALIDAD DE CRÉDITOS" + i, "ID : " + modalidadCreditos.get(i).getId()+ ", descripcion : "+modalidadCreditos.get(i).getDescripcion() + ", DIAS CRÉDITO :"+modalidadCreditos.get(i).getDiasCredito());
+
+                boolean existe = dbAdapter_modalidadCredito.existeModalidadCreditos(modalidadCreditos.get(i).getId());
+                Log.d(TAG, "EXISTE MODALIDAD CREDITO " + existe);
+
+                if (existe) {
+                    dbAdapter_modalidadCredito.updateModalidadCredito(modalidadCreditos.get(i));
+                } else {
+                    //NO EXISTE ENTONCES CREEMOS UNO NUEVO
+
+                    dbAdapter_modalidadCredito.createModalidadCreditos(modalidadCreditos.get(i));
+                }
+            }
+
+            dbAdapter_forma_pago.deleteAllFormaPagos();
+
+            //Log.d(TAG, "FORMA PAGO ELIMNADO COUNT : "+ocuntFPDeleted);
+            for (int i = 0; i < formaPagos.size(); i++) {
+                Log.d(TAG, "FORMA DE PAGOS" + i + "ID : " + formaPagos.get(i).get_id_forma_pago()+ ", descripcion : "+formaPagos.get(i).getDetalle() + ", SELECTED :"+formaPagos.get(i).getSelected());
+
+                boolean existe = dbAdapter_forma_pago.existeFormaPagos(formaPagos.get(i).get_id_forma_pago());
+                Log.d(TAG, "EXISTE FORMA PAGO" + existe);
+
+                if (existe) {
+                    dbAdapter_forma_pago.updateFormaPago(formaPagos.get(i));
+                } else {
+                    //NO EXISTE ENTONCES CREEMOS UNO NUEVO
+
+                    dbAdapter_forma_pago.createFormaPago(formaPagos.get(i));
                 }
             }
 

@@ -28,6 +28,7 @@ public class DbAdapter_Comprob_Venta {
     public static final String CV_igv = "cv_re_igv";
     public static final String CV_total = "cv_re_total";
     public static final String CV_id_agente = "cv_in_id_agente";
+    public static final String CV_id_tipo_pago = "cv_in_id_tipo_pago";
     public static final String estado_sincronizacion = "estado_sincronizacion";
 
     //FALTA OBTENER ESTAS COLUMNAS
@@ -60,6 +61,7 @@ public class DbAdapter_Comprob_Venta {
                     +CV_id_establec+" integer,"
                     +CV_id_tipo_doc+" integer,"
                     +CV_id_forma_pago+" integer,"
+                    +CV_id_tipo_pago+" integer,"
                     +CV_id_tipo_venta+" integer,"
                     +CV_codigo_erp+" text,"
                     +CV_serie+" text,"
@@ -97,7 +99,7 @@ public class DbAdapter_Comprob_Venta {
     }
 
     public long createComprobVenta(
-            int id_establec, int id_tipo_doc, int id_forma_pago, int id_tipo_venta,
+            int id_establec, int id_tipo_doc, int id_forma_pago, int id_tipo_pago, int id_tipo_venta,
             String codigo_erp, String serie, int num_doc, double base_imp, double igv, double total,
             String fecha_doc, String hora_doc, int estado_comp, int estado_conexion, int id_agente, int estadoSincronizacion, int liquidacion){
 
@@ -105,6 +107,7 @@ public class DbAdapter_Comprob_Venta {
         initialValues.put(CV_id_establec,id_establec);
         initialValues.put(CV_id_tipo_doc,id_tipo_doc);
         initialValues.put(CV_id_forma_pago,id_forma_pago);
+        initialValues.put(CV_id_tipo_pago,id_tipo_pago);
         initialValues.put(CV_id_tipo_venta,id_tipo_venta);
         initialValues.put(CV_codigo_erp,codigo_erp);
         initialValues.put(CV_serie,serie);
@@ -212,7 +215,8 @@ public class DbAdapter_Comprob_Venta {
 
                         CV_id_establec, CV_id_tipo_doc, CV_id_forma_pago, CV_id_tipo_venta,
                         CV_codigo_erp, CV_serie, CV_num_doc, CV_base_imp, CV_igv, CV_total,
-                        CV_fecha_doc, CV_hora_doc, CV_estado_comp, CV_estado_conexion, CV_id_agente, CV_SHA1, CV_sincronizacion_sha1, CV_id_SQL_SERVER_comprob
+                        CV_fecha_doc, CV_hora_doc, CV_estado_comp, CV_estado_conexion,
+                        CV_id_agente, CV_SHA1, CV_sincronizacion_sha1, CV_id_SQL_SERVER_comprob, CV_id_tipo_pago
                 },
                 CV_liquidacion + " = ? ", new String[]{""+liquidacion}, null, null, null);
 
@@ -230,7 +234,7 @@ public class DbAdapter_Comprob_Venta {
 
                         CV_id_establec, CV_id_tipo_doc, CV_id_forma_pago, CV_id_tipo_venta,
                         CV_codigo_erp, CV_serie, CV_num_doc, CV_base_imp, CV_igv, CV_total,
-                        CV_fecha_doc, CV_hora_doc, CV_estado_comp, CV_estado_conexion, CV_id_agente
+                        CV_fecha_doc, CV_hora_doc, CV_estado_comp, CV_estado_conexion, CV_id_agente, CV_id_tipo_pago
                 },
                 CV_id_establec + " = " + id, null, null, null, null);
 
@@ -340,7 +344,7 @@ public class DbAdapter_Comprob_Venta {
 
                             CV_id_establec, CV_id_tipo_doc, CV_id_forma_pago, CV_id_tipo_venta,
                             CV_codigo_erp, CV_serie, CV_num_doc, CV_base_imp, CV_igv, CV_total,
-                            CV_fecha_doc, CV_hora_doc, CV_estado_comp, CV_estado_conexion, CV_id_agente
+                            CV_fecha_doc, CV_hora_doc, CV_estado_comp, CV_estado_conexion, CV_id_agente, CV_id_tipo_pago
                     },
                     null, null, null, null, null);
 
@@ -350,7 +354,7 @@ public class DbAdapter_Comprob_Venta {
 
                             CV_id_establec, CV_id_tipo_doc, CV_id_forma_pago, CV_id_tipo_venta,
                             CV_codigo_erp, CV_serie, CV_num_doc, CV_base_imp, CV_igv, CV_total,
-                            CV_fecha_doc, CV_hora_doc, CV_estado_comp, CV_estado_conexion, CV_id_agente
+                            CV_fecha_doc, CV_hora_doc, CV_estado_comp, CV_estado_conexion, CV_id_agente, CV_id_tipo_pago
                     },
                     CV_num_doc + " like '%" + inputText + "%'", null,
                     null, null, null, null);
@@ -367,7 +371,7 @@ public class DbAdapter_Comprob_Venta {
 
                         CV_id_establec, CV_id_tipo_doc, CV_id_forma_pago, CV_id_tipo_venta,
                         CV_codigo_erp, CV_serie, CV_num_doc, CV_base_imp, CV_igv, CV_total,
-                        CV_fecha_doc, CV_hora_doc, CV_estado_comp, CV_estado_conexion, CV_id_agente
+                        CV_fecha_doc, CV_hora_doc, CV_estado_comp, CV_estado_conexion, CV_id_agente, CV_id_tipo_pago
                 },
                 Constants._SINCRONIZAR + " = " + Constants._CREADO + " OR " + Constants._SINCRONIZAR + " = " + Constants._ACTUALIZADO, null,
                 null, null, null, null);
@@ -383,7 +387,7 @@ public class DbAdapter_Comprob_Venta {
 
                         CV_id_establec, CV_id_tipo_doc, CV_id_forma_pago, CV_id_tipo_venta,
                         CV_codigo_erp, CV_serie, CV_num_doc, CV_base_imp, CV_igv, CV_total,
-                        CV_fecha_doc, CV_hora_doc, CV_estado_comp, CV_estado_conexion, CV_id_agente
+                        CV_fecha_doc, CV_hora_doc, CV_estado_comp, CV_estado_conexion, CV_id_agente, CV_id_tipo_pago
                 },
                 CV_id_establec + " = ? AND "+CV_liquidacion + " = ?", new String[]{""+idEstablecimiento, ""+liquidacion}, null, null, null);
 
@@ -398,7 +402,7 @@ public class DbAdapter_Comprob_Venta {
 
                         CV_id_establec, CV_id_tipo_doc, CV_id_forma_pago, CV_id_tipo_venta,
                         CV_codigo_erp, CV_serie, CV_num_doc, CV_base_imp, CV_igv, CV_total,
-                        CV_fecha_doc, CV_hora_doc, CV_estado_comp, CV_estado_conexion, CV_id_agente
+                        CV_fecha_doc, CV_hora_doc, CV_estado_comp, CV_estado_conexion, CV_id_agente, CV_id_tipo_pago
                 },
                 CV_id_establec + " = ? AND "+CV_liquidacion + " = ? AND "+CV_codigo_erp +" LIKE '%"+name+"%'", new String[]{""+idEstablecimiento, ""+liquidacion}, null, null, null);
 
@@ -415,7 +419,7 @@ public class DbAdapter_Comprob_Venta {
 
                         CV_id_establec, CV_id_tipo_doc, CV_id_forma_pago, CV_id_tipo_venta,
                         CV_codigo_erp, CV_serie, CV_num_doc, CV_base_imp, CV_igv, CV_total,
-                        CV_fecha_doc, CV_hora_doc, CV_estado_comp, CV_estado_conexion, CV_id_agente
+                        CV_fecha_doc, CV_hora_doc, CV_estado_comp, CV_estado_conexion, CV_id_agente, CV_id_tipo_pago
                 },
                 CV_id_establec + " = " + id, null, null, null, null);
 
@@ -430,7 +434,7 @@ public class DbAdapter_Comprob_Venta {
 
                         CV_id_establec, CV_id_tipo_doc, CV_id_forma_pago, CV_id_tipo_venta,
                         CV_codigo_erp, CV_serie, CV_num_doc, CV_base_imp, CV_igv, CV_total,
-                        CV_fecha_doc, CV_hora_doc, CV_estado_comp, CV_estado_conexion, CV_id_agente
+                        CV_fecha_doc, CV_hora_doc, CV_estado_comp, CV_estado_conexion, CV_id_agente, CV_id_tipo_pago
                 },
                 CV_id_comprob + " = " + id, null, null, null, null);
 

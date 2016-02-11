@@ -18,6 +18,7 @@ import union.union_vr1.Sqlite.DbAdapter_Cobros_Manuales;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
 import union.union_vr1.Sqlite.DbAdapter_Establecimeinto_Historial;
 import union.union_vr1.Sqlite.DbAdapter_Exportacion_Comprobantes;
+import union.union_vr1.Sqlite.DbAdapter_Forma_Pago;
 import union.union_vr1.Sqlite.DbAdapter_Histo_Comprob_Anterior;
 import union.union_vr1.Sqlite.DbAdapter_Impresion_Cobros;
 import union.union_vr1.Sqlite.DbAdapter_ModalidadCredito;
@@ -47,7 +48,7 @@ import union.union_vr1.Sqlite.DbAdapter_Histo_Venta_Detalle;
  */
 public class DbHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 49;
+    private static final int DATABASE_VERSION = 51;
     private static final String DATABASE_NAME = "ProdUniondb.sqlite";
 
     public DbHelper(Context context) {
@@ -117,6 +118,7 @@ public class DbHelper extends SQLiteOpenHelper {
         //CREANDO TABLA TRANFERENCIA DETALLADO
         db.execSQL(DBAdapter_Trans_Detallado.CREATE_TABLE_TEMP_Trans_Detalle);
         db.execSQL(DbAdapter_Impresion_Cobros.CREATE_TABLE_IMPRIMIR_COBRO);
+        db.execSQL(DbAdapter_Forma_Pago.CREATE_TABLE_M_FORMA_PAGO);
 
 
 
@@ -165,6 +167,8 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(DbAdapter_Motivo_Dev.DELETE_TABLE_MOT_DEV);
         db.execSQL(DbAdapter_ModalidadCredito.DELETE_TABLE_MODALIDAD_CREDITO);
         db.execSQL(DbAdapter_Impresion_Cobros.DELETE_TABLE_IMPRIMIR_COBRO);
+        db.execSQL(DbAdapter_Forma_Pago.DELETE_TABLE_M_FORMA_PAGO);
+
 
         onCreate(db);
     }

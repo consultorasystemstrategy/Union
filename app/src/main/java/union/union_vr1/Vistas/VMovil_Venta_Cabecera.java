@@ -111,6 +111,7 @@ import union.union_vr1.Sqlite.DbAdapter_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta_Detalle;
+import union.union_vr1.Sqlite.DbAdapter_Forma_Pago;
 import union.union_vr1.Sqlite.DbAdapter_Histo_Comprob_Anterior;
 import union.union_vr1.Sqlite.DbAdapter_Histo_Venta_Detalle;
 import union.union_vr1.Sqlite.DbAdapter_Informe_Gastos;
@@ -141,6 +142,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
     private DbAdapter_Stock_Agente dbHelper_Stock_Agente;
     private DbAdaptert_Evento_Establec dbHelper_Evento_Establecimiento;
     private DbAdapter_ModalidadCredito dbAdapter_modalidadCredito;
+    private DbAdapter_Forma_Pago dbAdapter_forma_pago;
     private EditText savedText;
     private String SERIE_DOCUMENTO;
 
@@ -207,6 +209,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
     private SimpleCursorAdapter simpleCursorAdapter;
     private Spinner spinnerTipoDocumento;
     private Spinner spinnerFormaPago;
+    private Spinner spinnerTipoPago;
     //private Button buttonAgregar;
     private Spinner spinnerDiasCredito;
     private TextView textViewFooterText;
@@ -240,6 +243,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
     final int id_forma_cobro = 1;
     final String lugar_registro = "movil";
     String diasCredito= null;
+    int _id_tipo_pago = 0;
 
     private boolean isEstablecidasCuotas;
 
@@ -448,6 +452,9 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
         dbAdapter_modalidadCredito = new DbAdapter_ModalidadCredito(this);
         dbAdapter_modalidadCredito.open();
 
+        dbAdapter_forma_pago = new DbAdapter_Forma_Pago(this);
+        dbAdapter_forma_pago.open();
+
 
 
         idEstablecimiento = session.fetchVarible(2);
@@ -493,7 +500,32 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
 
 
 
+        spinnerTipoPago = ((Spinner) findViewById(R.id.VC_spinnerTipoPago));
 
+
+        Cursor cr = dbAdapter_forma_pago.fetchAllFormaPagos();
+        SimpleCursorAdapter simpleCursorAdapter;
+        int[] to = new int[]{
+                R.id.textSpinner,
+        };
+
+        String[] columns = new String[]{
+                DbAdapter_Forma_Pago.FP_detalle,
+
+        };
+        simpleCursorAdapter = new SimpleCursorAdapter(VMovil_Venta_Cabecera.this, R.layout.toolbar_spinner_item_fp, cr, columns, to, 0);
+        simpleCursorAdapter.setDropDownViewResource(R.layout.toolbar_spinner_item_dropdown_fp);
+        spinnerTipoPago.setAdapter(simpleCursorAdapter);
+
+
+        for (int i = 0; i < spinnerTipoPago.getCount(); i++) {
+            Cursor value = (Cursor) spinnerTipoPago.getItemAtPosition(i);
+            long id = value.getLong(value.getColumnIndex("_id"));
+            int FP_selected = value.getInt(value.getColumnIndex(DbAdapter_Forma_Pago.FP_selected));
+            if (FP_selected == 1) {
+                spinnerTipoPago.setSelection(i);
+            }
+        }
 
 
 
@@ -564,9 +596,35 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
             spinnerTipoDocumento.setPrompt("Seleccionar Documento");
             spinnerTipoDocumento.setAdapter(adapterTipoDocumento);*/
 
+            spinnerTipoPago.setEnabled(false);
+            spinnerTipoPago.setVisibility(View.GONE);
 
 
         }
+
+
+
+        spinnerTipoPago.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                Cursor cursor = dbAdapter_forma_pago.fetchFormaPagoByID(id);
+                Log.d(TAG, "cursor forma pago selected count : " + cursor.getCount());
+                if (cursor.getCount() > 0) {
+                    _id_tipo_pago = cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Forma_Pago.FP_id_forma_pago));
+                    Log.d(TAG, "_id tipo pago selected : " + _id_tipo_pago);
+                }else{
+
+                    Log.d(TAG, "SPINNER TIPO PAGO NOT WORKING WELL. NOT RECORDS");
+                }
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         boolean isDisplayed= false;
         switch (session.fetchVarible(6)){
@@ -838,7 +896,8 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
         });*/
 
 
-
+        spinnerTipoPago.setEnabled(false);
+        spinnerTipoPago.setVisibility(View.GONE);
 
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
@@ -1110,8 +1169,14 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
             buttonVender.setEnabled(true);
             buttonVender.setBackgroundResource(R.color.Dark5);
 
+            spinnerTipoPago.setEnabled(true);
+            spinnerTipoPago.setVisibility(View.VISIBLE);
+
+
         }else if(formaPago.equals(Constants._CREDITO)){
 
+            spinnerTipoPago.setEnabled(false);
+            spinnerTipoPago.setVisibility(View.GONE);
             if (isEstablecidasCuotas){
 
             }
@@ -1677,6 +1742,8 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
         });
 
 
+
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Crédito a Solicitar");
         builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
@@ -2098,13 +2165,16 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
         if(formaPago.equals(Constants._CONTADO)){
 
             i_formaPago = 1;
-
+            if (_id_tipo_pago ==0){
+                _id_tipo_pago = 9;
+            }
         }else if(formaPago.equals(Constants._CREDITO)){
 
             i_formaPago = 2;
             session.deleteVariable(5);
             session.createTempSession(5,0);
 
+            _id_tipo_pago = 0;
         }
 
 
@@ -2189,7 +2259,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
 
 
             Log.d(TAG, "SERIE : " + serie);
-            id = dbHelper_Comprob_Venta.createComprobVenta(idEstablecimiento, i_tipoDocumento, i_formaPago, tipoVenta, codigo_erp, serie, numero_documento, base_imponible, igv, monto_total, fecha, null, estado_comprobante, estado_conexion, id_agente_venta, Constants._CREADO, idLiquidacion);
+            id = dbHelper_Comprob_Venta.createComprobVenta(idEstablecimiento, i_tipoDocumento, i_formaPago, _id_tipo_pago, tipoVenta, codigo_erp, serie, numero_documento, base_imponible, igv, monto_total, fecha, null, estado_comprobante, estado_conexion, id_agente_venta, Constants._CREADO, idLiquidacion);
 
         Log.d(TAG, "_ID COMPROBANTE DE VENTA : "+id);
             Log.d("Export id CV IGUALES", "" + id);

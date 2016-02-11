@@ -267,6 +267,8 @@ public class ServiceExport extends IntentService {
                 int _cv_id_tipo_doc = cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_tipo_doc));
                 int _cv_id_agente = cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_agente));
                 int _cv_estado_comp = cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_estado_comp));
+                int _cv_id_tipo_pago = cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_tipo_pago));
+
                 //DOUBLE SALDO, SI ES AL CONTADO LE MANDO 0 SI ES AL CRÉDITO LE MANDO CV_total
                 Double _cv_saldo = 0.0;
                 if (_cv_id_forma_pago==2){
@@ -293,12 +295,13 @@ public class ServiceExport extends IntentService {
                         _cv_tipo_venta + " - " +
                         _cv_codigo_erp + " - " +
                         _cv_id_establecimiento + " - " +
-                        idUsuario);
+                        idUsuario + " - " +
+                        _cv_id_tipo_pago);
 
                 String concatenadoCabecera = "";
                 concatenadoCabecera += _cv_serie+"|"+_cv_num_doc + "|"+ _cv_id_forma_pago+ "|"+_cv_fecha_doc+ "|"+_cv_base_imponible+
                         "|"+_cv_igv+  "|"+ _cv_total+"|"+_cv_id_tipo_doc + "|"+ _cv_id_agente+ "|"+_cv_estado_comp+ "|"+_cv_saldo+
-                        "|"+idLiquidacion+ "|"+_cv_tipo_venta+ "|"+_cv_codigo_erp+ "|"+_cv_id_establecimiento+ "|"+ idUsuario;
+                        "|"+idLiquidacion+ "|"+_cv_tipo_venta+ "|"+_cv_codigo_erp+ "|"+_cv_id_establecimiento+ "|"+ idUsuario + "|"+ _cv_id_tipo_pago;
 
 
                 Log.d(TAG, "CONCATENADO COMPROBANTE DE VENTA : " +concatenadoCabecera);

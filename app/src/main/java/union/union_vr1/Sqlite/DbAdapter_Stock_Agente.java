@@ -674,5 +674,4 @@ public class DbAdapter_Stock_Agente {
         }
         return mCursor;
     }
-
 }

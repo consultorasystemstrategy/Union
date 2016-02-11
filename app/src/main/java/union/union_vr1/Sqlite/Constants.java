@@ -114,6 +114,7 @@ public class Constants {
     //VARIABLES DE SESSION
 
     public static final int SESSION_ESTADO_DEVOLUCIONES = 21;
+    public static final int SESSION_VALIDACION_REGISTROS_EXPORTADOS = 23;
     public static final int SESSION_DOCUMENTO = 22; //ESTADO -1 = NINGUNO, ESTADO 1 = FACTURA, ESTADO 2 = BOLETA
     public static final int _ID_SESSION_MAC = 12;
     public static final int _ID_SESSION_MAC_DEVICE_CIPHER_LAB = 13;

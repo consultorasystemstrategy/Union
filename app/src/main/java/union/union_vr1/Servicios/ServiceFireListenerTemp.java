@@ -268,6 +268,17 @@ public class ServiceFireListenerTemp extends Service {
                     int registrosActualizados1 = dbAdapter_exportacion_comprobantes.changeEstadoToNoExportOne(exportaciones.getIdComprobante());
                     Log.d(TAG, "REGISTRO SID MAPEO :"+ exportaciones.getIdComprobante()+" ACTUALIZDOS A NO EXPORT COUNT : "+ registrosActualizados1);
                 }
+                if (exportaciones.getAgenteId() == idAgente && exportaciones.getEstado() == 888 && exportaciones.getLiquidacion() == idLiquidacion) {
+                    // SI EL REGISTRO ES 888 y EL IDCOMPPROBANTE ES 888
+                    if (exportaciones.getIdComprobante() == 0){
+                        session.deleteVariable(Constants.SESSION_VALIDACION_REGISTROS_EXPORTADOS);
+                        session.createTempSession(Constants.SESSION_VALIDACION_REGISTROS_EXPORTADOS, 0);
+                    }else if (exportaciones.getIdComprobante() == 1){
+                        session.deleteVariable(Constants.SESSION_VALIDACION_REGISTROS_EXPORTADOS);
+                        session.createTempSession(Constants.SESSION_VALIDACION_REGISTROS_EXPORTADOS, 1);
+                    }
+                }
+
             }
 
             @Override

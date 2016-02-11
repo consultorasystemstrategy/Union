@@ -619,11 +619,11 @@ public class Login extends Activity implements OnClickListener {
                         }
 
                 }else{
-                    if (conectadoWifi()){
+                    if (estaConectado()){
                         Utils.setToast(mainActivity, "VALIDANDO FECHA...", R.color.verde);
                         new FechaRest().execute();
                     }else{
-                        Utils.setToast(mainActivity, "No esta conectado a internet.", R.color.verde);
+                        Utils.setToast(mainActivity, "No está conectado a internet.", R.color.verde);
                     }
 
                 }
