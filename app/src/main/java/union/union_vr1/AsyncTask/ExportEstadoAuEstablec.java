@@ -144,6 +144,8 @@ public class ExportEstadoAuEstablec extends AsyncTask<String, String, String> {
                         long s = dbAdaptert_evento_establec.updateEstaIdRemoto(cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_histo_id)), idRemoto + "");
                         long es = dbAdaptert_evento_establec.updateEstabEstado(cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_histo_id)), 6 + "");
                         Log.d("IMPORTESTADOESTABLEC", "" + idRemoto + "--" + s + "--" + es);
+
+
                     }
                 }
                 //-------------------Para Pedir la aprobacion del establecimiento.--------------------

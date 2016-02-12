@@ -85,7 +85,7 @@ public class FMapaRegistrar extends Fragment implements Validator.ValidationList
     @Required(order = 5, messageResId = R.string.requerido_input)
     @NumberRule(order = 6, type = NumberRule.NumberType.DOUBLE, messageResId = R.string.requerido_input)
     private EditText textLon;
-    private String idDistrito="";
+    private String idDistrito="-1";
     private DBAdapter_Distritos dbAdapter_distritos;
 
     private DbAdapter_Temp_Establecimiento dbAdapter_temp_establecimiento;
@@ -289,7 +289,7 @@ public class FMapaRegistrar extends Fragment implements Validator.ValidationList
 
             if (fiscal != null) {
                 editTextDireccionFiscal.setText(fiscal);
-                editTextDireccionFiscal.setEnabled(false);
+                editTextDireccionFiscal.setEnabled(true);
             }
 
 
@@ -371,7 +371,7 @@ public class FMapaRegistrar extends Fragment implements Validator.ValidationList
         direccion = editTextDescripcion.getText().toString();
         direccion_fiscal = editTextDireccionFiscal.getText().toString();
 
-        if (!lat.equals("Obteniendo...") || !lon.equals("Obteniendo...") || idDistrito!="") {
+        if ((!lat.equals("Obteniendo...") || !lon.equals("Obteniendo...") ) && ( !idDistrito.equals("-1"))) {
             long estado = dbAdapter_temp_establecimiento.updateTempEstablecDireccion(idEstablecimiento + "", lat, lon, direccion, direccion_fiscal,idDistrito);
             if (estado > 0) {
                 viewPager.setCurrentItem(2);
