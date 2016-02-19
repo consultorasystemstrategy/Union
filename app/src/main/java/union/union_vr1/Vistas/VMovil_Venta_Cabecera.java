@@ -94,8 +94,6 @@ import union.union_vr1.AsyncTask.ExportMain;
 import union.union_vr1.AsyncTask.SolicitarCredito;
 import union.union_vr1.BarcodeScanner.IntentIntegrator;
 import union.union_vr1.BarcodeScanner.IntentResult;
-import union.union_vr1.FacturacionElectronica.CodigoSHA1;
-import union.union_vr1.FacturacionElectronica.DigitalSignature;
 import union.union_vr1.FacturacionElectronica.Signature;
 import union.union_vr1.FacturacionElectronica.SimpleXMLAndroid;
 import union.union_vr1.InputFilterMinMax;
@@ -489,7 +487,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
                 textArrayID = R.array.tipoDocumentoFacturaBoleta;
                 break;
             default:
-                textArrayID = R.array.tipoDocumentoFacturaBoleta;
+                textArrayID = R.array.tipoDocumentoBoleta;
                 break;
         }
 
@@ -937,9 +935,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
                                                                 TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
                                                                 v.setTextColor(mainActivity.getResources().getColor(R.color.Blanco));
                                                                 toast.show();
-                                                                /*finish();
-                                                                Intent intent = new Intent(mContext, VMovil_Venta_Cabecera.class);
-                                                                startActivity(intent);*/
+
                                                                 mostrarProductosParaVender();
                                                             } else {
                                                                 Toast toast = Toast.makeText(getApplicationContext(), "No se pudo eliminar, intente nuevamente", Toast.LENGTH_SHORT);
@@ -1421,7 +1417,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
             *//*case R.id.ventaNormal:
                 ventaRRPP = -1;
                 setTitle("Venta de Productos");
-                Toast.makeText(VMovil_Venta_Cabecera.this, "Venta Nueva", Toast.LENGTH_SHORT).show();
+
                 dbHelper_temp_venta.deleteAllTempVentaDetalle();
                 mostrarProductosParaVender();
                 break;*//*
@@ -1667,7 +1663,6 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
     private void setVentaRRPP(){
 
         int registrosUpdated = dbHelper_temp_venta.updateTempVentaRRPP();
-        //Toast.makeText(VMovil_Venta_Cabecera.this, registrosUpdated + " productos RR.PP", Toast.LENGTH_SHORT).show();
         mostrarProductosParaVender();
 
     }
@@ -1920,9 +1915,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
                 int cantidad = Integer.parseInt(texto);
 
                 dbHelper_temp_venta.updateTempVentaDetalleCantidad(id_temp_venta_detalle, cantidad, cantidad * finalPrecio_unitario);
-                /*Intent intent = new Intent(mContext, VMovil_Venta_Cabecera.class);
-                finish();
-                startActivity(intent);*/
+
 
 
                 mostrarProductosParaVender();
@@ -2402,7 +2395,8 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
                 for (cursorTempComprobCobros.moveToFirst(); !cursorTempComprobCobros.isAfterLast(); cursorTempComprobCobros.moveToNext()) {
                     String fecha_programada = cursorTempComprobCobros.getString(cursorTempComprobCobros.getColumnIndex(DbAdapter_Temp_Comprob_Cobro.temp_fecha_programada));
                     Double monto_a_pagar = cursorTempComprobCobros.getDouble(cursorTempComprobCobros.getColumnIndex(DbAdapter_Temp_Comprob_Cobro.temp_monto_a_pagar));
-                    String idComprobanteCobro = "M:" + dbHelper_Comprob_Cobros.getIdComrobanteCobro(idEstablecimiento + "");
+                    //String idComprobanteCobro = "M:" + dbHelper_Comprob_Cobros.getIdComrobanteCobro(idEstablecimiento + "");
+                    String idComprobanteCobro = "M:" + idEstablecimiento+"-"+fecha+cursorTempComprobCobros.getLong(cursorTempComprobCobros.getColumnIndexOrThrow(DbAdapter_Temp_Comprob_Cobro.temp_id_cob_historial));
                     String NUMERO_COMPROBANTE = String.format("%08d", Integer.parseInt(NUMERO_DOCUMENTO));
                     Log.d(TAG, "RECORRE EL CURSOR TEMP COMPROB COBROS"+ "YES" + "--" + NUMERO_COMPROBANTE); //...
                     Log.d(TAG, "FECHA PROGRAMADA : "+ fecha_programada);
@@ -3209,8 +3203,6 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
         @Override
         protected String doInBackground(String... strings) {
 
-//            DecimalFormat df = new DecimalFormat("0.00");
-
             //POR DEFECTO FACTURA
             String tipo_doccumento = "01";
 
@@ -3232,7 +3224,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
             Iterator it = map.keySet().iterator();
             while(it.hasNext()){
                 String key = (String) it.next();
-                Log.d("GENERATE DS","Clave: " + key + " -> Valor: " + map.get(key));
+                Log.d(TAG, "GENERATE DS Clave: " + key + " -> Valor: " + map.get(key));
             }
 
             File filesinFirmar = null;
@@ -3249,119 +3241,19 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
                 }
             }
 
-            /*Log.d("GENERATE DS", ""+0);
-            final DigitalSignature handlerXML = new DigitalSignature();
-            String pathDocument = handlerXML.escribirXML(i_tipoDocumento, contexto, numeroDocumentoImpresion,documentoCliente, nombreCliente,df.format(base_imponibleFooter), df.format(totalFooter), df.format(igvFooter), simpleCursorAdapter.getCursor());
-
-            Log.d("GpathDocument", ""+pathDocument);*/
-            //byte[] byteReads = null;
-            /*String textoRead="";
-            try {
-                //byteReads = handlerXML.leerXML(contexto);
-                //textoRead = handlerXML.leerXML(contexto, numeroDocumentoImpresion+".xml");
-                textoRead = handlerXML.leerXML(contexto, pathDocument);
-                Log.d("GENERATE DS", ""+60);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (ParserConfigurationException e) {
-                e.printStackTrace();
-            } catch (SAXException e) {
-                e.printStackTrace();
-            }
-            */
-
-           /* try {
-                InputStream inputStream = new FileInputStream(pathDocument);
-                //textoSHA1 = Signature.add(keystore,inputStream,createFile(numeroDocumentoImpresion + ".xml"));
-                //textoSHA1 = Signature.add(keystore,inputStream,createFile(contexto.getString(R.string.RUC)+"-"+ numeroDocumentoImpresion+".xml"));
-                Log.d("SHA1", SHA1);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }*/
-
-            /*catch (UnrecoverableEntryException e) {
-                e.printStackTrace();
-            } catch (SAXException e) {
-                e.printStackTrace();
-            } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
-            } catch (CertificateException e) {
-                e.printStackTrace();
-            } catch (TransformerConfigurationException e) {
-                e.printStackTrace();
-            } catch (TransformerException e) {
-                e.printStackTrace();
-            } catch (MarshalException e) {
-                e.printStackTrace();
-            } catch (ParserConfigurationException e) {
-                e.printStackTrace();
-            } catch (InvalidAlgorithmParameterException e) {
-                e.printStackTrace();
-            } catch (KeyStoreException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (XMLSignatureException e) {
-                e.printStackTrace();
-            }*/
-
-
-            //Log.d("XML ESCRITO: "+pathDocument,""+textoRead);
-            /*try {
-
-                //String textoSHA1 = CodigoSHA1.SHA1(texto);
-//                textoSHA1 = CodigoSHA1.SHA1(byteReads);
-                textoSHA1 = CodigoSHA1.SHA1(textoRead);
-
-                Log.d("GENERATE DS", ""+70);
-                //String str = new String(byteReads, "iso-8859-1");
-                //textView.append(str + " a SHA-1: " + textoSHA1 + ".\n");
-            } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-
-
-            try {
-                SHA1 = handlerXML.putSHA1toXML(getApplicationContext(),numeroDocumentoImpresion, textoSHA1);
-                Log.d("GENERATE DS", ""+100);
-                //String str = new String(SHA1Generate, "iso-8859-1");
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (ParserConfigurationException e) {
-                e.printStackTrace();
-            } catch (SAXException e) {
-                e.printStackTrace();
-            } catch (TransformerException e) {
-                e.printStackTrace();
-            }
-
-            */
-            return textoSHA1;
+          return textoSHA1;
         }
 
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            Log.d("GENERATE DS", "terminó correctamente");
+            Log.d(TAG, "ON POST EXECUTE");
             int updatedSHA1NRo = dbHelper_Comprob_Venta.updateSHA1(id_comprobante, textoSHA1);
             Log.d(ServiceExport.TAG, "SHA1: "+textoSHA1 +", id_comprobante : "+ id_comprobante + ", registros actualizados : "+updatedSHA1NRo);
-
             Log.d(TAG, "_ID COMPROBANTE DE VENTA : "+id_comprobante);
             Intent intent= new Intent(contexto, VMovil_BluetoothImprimir.class);
             intent.putExtra("idComprobante",id_comprobante);
-            //Intent intent= new Intent(contexto, Files.class);
-           /* //textoImpresion += textoSHA1+"\n";
-            intent.putExtra("textoImpresion",textoImpresion);
-            intent.putExtra("textoImpresionCabecera", textoImpresionCabecera);
-            textoVentaImpresion+= textoSHA1+"\n";
-            intent.putExtra("textoVentaImpresion", textoVentaImpresion);
-            intent.putExtra("textoImpresionContenidoLeft", textoImpresionContenidoLeft);
-            intent.putExtra("textoImpresionContenidoRight", textoImpresionContenidoRight);*/
             finish();
-            /*Toast.makeText(getApplicationContext(),"Venta Satisfactoria",Toast.LENGTH_SHORT).show();*/
-            //Toast.makeText(getApplicationContext(),"SHA1 : "+s,Toast.LENGTH_LONG).show();
             startActivity(intent);
         }
     }

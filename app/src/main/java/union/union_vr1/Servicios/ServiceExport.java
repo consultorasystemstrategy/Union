@@ -186,7 +186,7 @@ public class ServiceExport extends IntentService {
        // Cursor cursorComprobanteCobro = dbAdapter_comprob_cobro.filterExport();
         Cursor cursorInsertarCaja = dbAdapter_comprob_cobro.filterExportUpdatedAndEstadoCobro();
         Cursor cursorInsertarCajaParcial = dbAdapter_comprob_cobro.filterExportUpdatedAndEstadoCobroParcial();
-        Cursor cursorEventoEstablecimiento = dbAdaptert_evento_establec.filterExportUpdated();
+        Cursor cursorEventoEstablecimiento = dbAdaptert_evento_establec.filterExportUpdated(idLiquidacion);
 
 
 
@@ -1015,6 +1015,7 @@ public class ServiceExport extends IntentService {
 
         //EXPORTAR TODOS LOS REGISTROS ACTUALIZADOS EN ANDROID
 
+        Log.d(TAG, "EVENTO ESTABLECIMIENTO CURSOR GET COUNT : "+cursorEventoEstablecimiento.getCount() );
         if (cursorEventoEstablecimiento.getCount() > 0) {
 
             for (cursorEventoEstablecimiento.moveToFirst(); !cursorEventoEstablecimiento.isAfterLast(); cursorEventoEstablecimiento.moveToNext()) {

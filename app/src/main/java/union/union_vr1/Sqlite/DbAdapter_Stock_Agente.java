@@ -185,12 +185,12 @@ public class DbAdapter_Stock_Agente {
     }
 
 
-    public boolean deleteAllStockAgente() {
+    public int deleteAllStockAgente() {
 
         int doneDelete = 0;
         doneDelete = mDb.delete(SQLITE_TABLE_Stock_Agente, null, null);
         Log.w(TAG, Integer.toString(doneDelete));
-        return doneDelete > 0;
+        return doneDelete ;
     }
     public int restartstockCanjes(int cantidad, String idProducto,String liquidacion,int estadoAgente) {
         int sFisico = 0;
@@ -202,7 +202,7 @@ public class DbAdapter_Stock_Agente {
         int malo=0,bueno=0;
 
         //Obtener fisico
-        Cursor cr = mDb.rawQuery("select * from " + SQLITE_TABLE_Stock_Agente + " where "+ST_id_producto+"='"+idProducto+"';", null);
+        Cursor cr = mDb.rawQuery("select * from " + SQLITE_TABLE_Stock_Agente + " where "+ST_id_producto+"='"+idProducto+"' AND "+ST_liquidacion+" = '"+liquidacion+"';", null);
         if (cr.moveToFirst()) {
             bueno =cr.getInt(cr.getColumnIndexOrThrow(ST_buenos));
             malo = cr.getInt(cr.getColumnIndexOrThrow(ST_malos));
@@ -238,7 +238,7 @@ public class DbAdapter_Stock_Agente {
 
         int malo=0,bueno=0;
         //Obtener fisico
-        Cursor cr = mDb.rawQuery("select * from " + SQLITE_TABLE_Stock_Agente + " where "+ST_id_producto+"='"+idProducto+"';", null);
+        Cursor cr = mDb.rawQuery("select * from " + SQLITE_TABLE_Stock_Agente + " where "+ST_id_producto+"='"+idProducto+"'AND "+ST_liquidacion+" = '"+liquidacion+"';", null);
         if (cr.moveToFirst()) {
             sFisico = cr.getInt(cr.getColumnIndexOrThrow(ST_fisico))+cantidad;
             sDisponible = cr.getInt(cr.getColumnIndexOrThrow(ST_disponible))-cantidad;
@@ -270,7 +270,7 @@ public class DbAdapter_Stock_Agente {
         int cDevoluciones=0;
         //Obtener fisico
         int bueno=0,malo=0;
-        Cursor cr = mDb.rawQuery("select * from " + SQLITE_TABLE_Stock_Agente + " where "+ST_id_producto+"='"+idProducto+"';", null);
+        Cursor cr = mDb.rawQuery("select * from " + SQLITE_TABLE_Stock_Agente + " where "+ST_id_producto+"='"+idProducto+"' AND "+ST_liquidacion+" = '"+liquidacion+"';", null);
         if (cr.moveToFirst()) {
             sFisico = cr.getInt(cr.getColumnIndexOrThrow(ST_fisico))+cantidad;
             cDevoluciones = cr.getInt(cr.getColumnIndexOrThrow(ST_devoluciones))+cantidad;
@@ -300,7 +300,7 @@ public class DbAdapter_Stock_Agente {
 
         int bueno=0,malo=0;
         //Obtener fisico
-        Cursor cr = mDb.rawQuery("select * from " + SQLITE_TABLE_Stock_Agente + " where "+ST_id_producto+"='"+idProducto+"';", null);
+        Cursor cr = mDb.rawQuery("select * from " + SQLITE_TABLE_Stock_Agente + " where "+ST_id_producto+"='"+idProducto+"' AND "+ST_liquidacion+" = '"+liquidacion+"';", null);
         if (cr.moveToFirst()) {
             bueno = cr.getInt(cr.getColumnIndexOrThrow(ST_buenos))-cantidad;
             malo = cr.getInt(cr.getColumnIndexOrThrow(ST_malos))-cantidad;
@@ -537,6 +537,18 @@ public class DbAdapter_Stock_Agente {
         Cursor mCursor = mDb.query(SQLITE_TABLE_Stock_Agente, new String[]{ST_id_stock_agente,
                         ST_id_producto, ST_nombre, ST_codigo, ST_disponible},
                 ST_liquidacion + " = ?", new String[]{"" + liquidacion}, null, null, null);
+
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+    }
+
+    public Cursor fetchAllStockAgente() {
+
+        Cursor mCursor = mDb.query(SQLITE_TABLE_Stock_Agente, new String[]{ST_id_stock_agente,
+                        ST_id_producto, ST_nombre, ST_codigo, ST_disponible, ST_liquidacion},
+                null , null, null, null, null);
 
         if (mCursor != null) {
             mCursor.moveToFirst();

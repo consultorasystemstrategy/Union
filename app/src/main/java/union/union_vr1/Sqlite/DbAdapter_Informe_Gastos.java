@@ -207,6 +207,21 @@ public class DbAdapter_Informe_Gastos {
         }
         return mCursor;
     }
+    public Cursor resumenTipoIngresos(int liquidacion) {
+
+
+        Cursor mCursor = mDb.rawQuery("SELECT ROUND(SUM(cv_re_total),1) AS total, FP.*, CV.* \n" +
+                "FROM m_comprob_venta CV \n" +
+                "INNER JOIN m_forma_pago FP \n" +
+                "ON CV.cv_in_id_tipo_pago = FP._id_forma_pago \n" +
+                "WHERE CV.id_liquidacion = '"+liquidacion+"' \n" +
+                "group by FP._id_forma_pago ",null);
+
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+    }
 
 
     public void changeEstadoToExport(String[] idsInformeGasto, int estadoSincronizacion){

@@ -82,7 +82,7 @@ public class ServiceImport extends IntentService {
     private static int _MAX = 10;
 
 
-    private static String TAG  = ServiceImport.class.getSimpleName();
+    public static String TAG  = ServiceImport.class.getSimpleName();
 
     public ServiceImport() {
         super("ServiceImport");
@@ -126,10 +126,10 @@ public class ServiceImport extends IntentService {
         dbAdapter_temp_autorizacion_cobro.open();
         dbAdapter_ruta_distribucion = new DbAdapter_Ruta_Distribucion(context);
         dbAdapter_ruta_distribucion.open();
-
         idAgente = session.fetchVarible(1);
         idLiquidacion = session.fetchVarible(3);
         Log.d(TAG, "DATOS SESSION, AGENTE: " + idAgente + " LIQUIDACION: " + idLiquidacion);
+
     }
 
 
@@ -389,14 +389,17 @@ public class ServiceImport extends IntentService {
             startForeground(1, builder.build());
             for (int i = 0; i < comprobanteCobros.size(); i++) {
                 Log.d("COBROS PENDIENTES", "" + comprobanteCobros.toString());
-                Log.d(TAG, "HISTORIAL COBROS PENDIENTES : " + i+ " Monto a pagar : " + comprobanteCobros.get(i).getIdComprobante() + "-fecha-" + comprobanteCobros.get(i).getFechaProgramada());
+                Log.d(TAG, "HISTORIAL COBROS PENDIENTES : " + i+ " Monto a pagar : " + comprobanteCobros.get(i).getIdComprobante() + "-fecha-" + comprobanteCobros.get(i).getFechaProgramada() + "-"+ comprobanteCobros.get(i).getIdComprobanteCobro());
                 boolean existe = dbAdapter_comprob_cobro.existeComprobCobro(comprobanteCobros.get(i).getIdComprobanteCobro());
-                Log.d("EXISTE ", "" + existe);
+                Log.d(TAG, "EXISTE COBROS" + existe);
                 if (existe) {
-                    dbAdapter_comprob_cobro.updateComprobCobros(comprobanteCobros.get(i));
+                     int updated =dbAdapter_comprob_cobro.updateComprobCobros(comprobanteCobros.get(i));
+                    Log.d(TAG, "UPDATED CANT : "+ updated);
+
                 } else {
                     //NO EXISTE ENTONCES CREEMOS UNO NUEVO
-                    dbAdapter_comprob_cobro.createComprobCobro(comprobanteCobros.get(i));
+                    long _id_cobro_created = dbAdapter_comprob_cobro.createComprobCobro(comprobanteCobros.get(i));
+                    Log.d(TAG, "_ID_COBRO CREADO : "+ _id_cobro_created);
                 }
             }
 
@@ -562,8 +565,11 @@ public class ServiceImport extends IntentService {
 
 
         }catch (Exception e) {
-            Log.d(TAG, " SERVICE IMPORT : " +  e.getMessage());
-            Log.d(TAG, "ERROR : " +e.getStackTrace()[2].getMethodName()+"");
+            Log.d(TAG, "EXCEPTION MESSAGE : " +  e.getMessage());
+            Log.d(TAG, "EXCEPTION LOLIZADES MESSAGE : " +  e.getLocalizedMessage());
+            Log.d(TAG, "EXCEPTION CAUSE : " +  e.getCause());
+            Log.d(TAG, "EXCEPTION STACKTRAECE : " +  e.getStackTrace()[1]);
+            Log.d(TAG, "EXCEPTION : " +e);
         }
 
 

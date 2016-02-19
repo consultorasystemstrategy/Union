@@ -17,6 +17,7 @@ import union.union_vr1.Objects.Transferencias;
 import union.union_vr1.R;
 import union.union_vr1.RestApi.StockAgenteRestApi;
 import union.union_vr1.Sqlite.Constants;
+import union.union_vr1.Sqlite.DbAdapter_Stock_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 import union.union_vr1.Sqlite.DbAdapter_Transferencias;
 import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
@@ -36,6 +37,7 @@ public class CerrarCaja extends AsyncTask<String, String, String> {
     private ProgressDialog progressDialog;
     private DbAdaptert_Evento_Establec dbAdaptert_evento_establec;
     private DbAdapter_Transferencias dbAdapter_transferencias;
+    private DbAdapter_Stock_Agente dbAdapter_stock_agente;
     JSONObject jsonObject = null;
     private int successCerrarCaja = -1;
 
@@ -49,6 +51,9 @@ public class CerrarCaja extends AsyncTask<String, String, String> {
 
         dbAdapter_transferencias = new DbAdapter_Transferencias(mainActivity);
         dbAdapter_transferencias.open();
+        dbAdapter_stock_agente = new DbAdapter_Stock_Agente(mainActivity);
+        dbAdapter_stock_agente.open();
+
 
         session = new DbAdapter_Temp_Session(mainActivity);
         session.open();
@@ -59,7 +64,7 @@ public class CerrarCaja extends AsyncTask<String, String, String> {
 
         StockAgenteRestApi api = new StockAgenteRestApi(mainActivity);
         try {
-            publishProgress(""+25);
+            publishProgress(""+60);
 
             int liquidacion = Integer.parseInt(strings[0]);
             double ingresos = Double.parseDouble(strings[1]);
@@ -160,7 +165,7 @@ public class CerrarCaja extends AsyncTask<String, String, String> {
         }
 
         super.onPostExecute(s);
-        if (successCerrarCaja>=0) {
+        if (successCerrarCaja>0) {
             mainActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -170,6 +175,9 @@ public class CerrarCaja extends AsyncTask<String, String, String> {
 
             session.deleteVariable(9);
             session.createTempSession(9, 0);
+
+            /* int nroRegistrosBorrados = dbAdapter_stock_agente.deleteAllStockAgente();
+            Log.d(TAG, "NRO REGISTROS STOCK BORRADOS : "+ nroRegistrosBorrados);*/
 
             //REDIRIJO AL LOGIN
             /*Intent intent = new Intent(mainActivity, Login.class);

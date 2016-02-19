@@ -59,7 +59,7 @@ public class FClienteRegistrar extends Fragment implements Validator.ValidationL
     //
     private DBAdapter_Cliente_Ruta dbAdapter_cliente_ruta;
     private int tipoDoc;
-    private boolean estado = false;
+    public static boolean estado = false;
 
 
 
@@ -102,6 +102,8 @@ public class FClienteRegistrar extends Fragment implements Validator.ValidationL
     String idEstablecimiento;
     int idusuario;
 
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_cliente, container, false);
@@ -111,7 +113,7 @@ public class FClienteRegistrar extends Fragment implements Validator.ValidationL
         toastBucsando = Toast.makeText(getActivity().getApplicationContext(), "Buscando...", Toast.LENGTH_SHORT);
         toast = Toast.makeText(getActivity().getApplicationContext(), "Encontrado", Toast.LENGTH_SHORT);
         toast.getView().setBackgroundColor(getActivity().getResources().getColor(R.color.verde));
-        toast.setGravity(Gravity.TOP | Gravity.LEFT, 0, 0);
+        toast.setGravity(Gravity.TOP | Gravity.CENTER, 0, 0);
         TextView vz = (TextView) toast.getView().findViewById(android.R.id.message);
         vz.setTextColor(getActivity().getResources().getColor(R.color.Blanco));
         viewPager = (ViewPager) getActivity().findViewById(R.id.viewpager);
@@ -217,14 +219,12 @@ public class FClienteRegistrar extends Fragment implements Validator.ValidationL
                 if (autoNroDocumento.getText().toString() != null || autoNroDocumento.getText().toString() != "") {
 
                     if (autoNroDocumento.getText().toString().length() == 8 && tipoDoc == 1) {
-                        estado = true;
 
                         if (conectadoWifi() || conectadoRedMovil()) {
                             new ValidarCliente(getActivity(), fragment).execute(autoNroDocumento.getText().toString());
                         }
                     }
                     if (autoNroDocumento.getText().toString().length() == 11 && tipoDoc == 2) {
-                        estado = true;
                         if (conectadoWifi() || conectadoRedMovil()) {
                             new ValidarCliente(getActivity(), fragment).execute(autoNroDocumento.getText().toString());
                         }
@@ -361,9 +361,9 @@ public class FClienteRegistrar extends Fragment implements Validator.ValidationL
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 toastBucsando.cancel();
-                Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Encontrado", Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Ya registrado", Toast.LENGTH_SHORT);
                 toast.getView().setBackgroundColor(getActivity().getResources().getColor(R.color.verde));
-                toast.setGravity(Gravity.TOP | Gravity.LEFT, 0, 0);
+                toast.setGravity(Gravity.TOP | Gravity.CENTER, 0, 8);
                 TextView vz = (TextView) toast.getView().findViewById(android.R.id.message);
                 vz.setTextColor(getActivity().getResources().getColor(R.color.Blanco));
                 toast.show();
@@ -372,6 +372,7 @@ public class FClienteRegistrar extends Fragment implements Validator.ValidationL
                 cursor.moveToFirst();
                 nom = cursor.getString(5);
                 autoNroDocumento.setText(nom);
+                estado = false;
 
                 setValueForm(cursor);
 
@@ -491,25 +492,37 @@ public class FClienteRegistrar extends Fragment implements Validator.ValidationL
         tipo_doc = crDoc.getInt(crDoc.getColumnIndex(dbAdapter_tipo_doc_identidad.tipo_Doc_IdentidadId));
         tipo_cliente = crCli.getInt(crCli.getColumnIndex(dbAdapter_tipo_persona.tipo_Persona_PersonaId));
 
-
         long estadoIn = dbAdapter_temp_establecimiento.updateTempEstablecCliente(idEstablecimiento + "", idusuario + "", celular_one, tipo_cliente + "", nombre, ap_paterno, ap_materno, tipo_doc + "", nroDocumento, 1 + "", correo);
-        if (estadoIn > 0 && estado == true) {
 
-
-
+        if (conectadoRedMovil() || conectadoWifi()) {
+            //SI HAY INTERNET
+            if (estadoIn > 0 && estado == true) {
+                //EL DOCUMENTO NO EXISTE EN EL SID
+                //LO DEJO PASAR
+                Utils.setToast(getActivity(), "Cliente nuevo.", R.color.verde);
                 viewPager.setCurrentItem(1);
-
-
-
-
-        } else {
-
-            if (conectadoRedMovil() || conectadoWifi()) {
+            }else{
                 viewPager.setCurrentItem(0);
-                Utils.setToast(getActivity(), "Verifique  el numero de documento", R.color.rojo);
+                Utils.setToast(getActivity(), "Verifique Nro Documento.", R.color.rojo);
             }
 
+        }else{
+            //SI NO HAY INTERNET
+            //VERIFICO SI EXISTE EN SQLITE
+            Cursor cr = dbAdapter_cliente_ruta.listarDocumentoClientexRuta(nroDocumento, tipoDoc);
+
+            if (cr.getCount()>0){
+                //SI EXISTE REGISTRO EN SQLITE
+                viewPager.setCurrentItem(0);
+                Utils.setToast(getActivity(), "Cliente ya registrado.", R.color.rojo);
+            }else{
+                Utils.setToast(getActivity(), "Cliente nuevo.", R.color.verde);
+                viewPager.setCurrentItem(1);
+            }
+
+
         }
+
 
     }
 

@@ -31,6 +31,7 @@ import union.union_vr1.Sqlite.DbAdapter_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta_Detalle;
+import union.union_vr1.Sqlite.DbAdapter_Forma_Pago;
 import union.union_vr1.Sqlite.DbAdapter_Informe_Gastos;
 import union.union_vr1.Sqlite.DbAdapter_Stock_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Transferencias;
@@ -315,7 +316,7 @@ public class Print {
 
                 // IMPRIMIR DATOS GENERALES DEL CLIENTE Y EL DOCUMETNO
                 posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "NUMERO  : " + comprobante + LF);
-                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "FECHA   : " + fecha+ LF+ LF);
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "FECHA   : " + fecha+ LF);
                 posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "CLIENTE : " + cleanAcentos(cliente) + LF);
                 posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "DNI/RUC : " + dni_ruc + LF);
                 posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "DIRECCION : " + cleanAcentos(direccion) + LF + LF);
@@ -414,7 +415,7 @@ public class Print {
                                 String primeraFechaCobro = cursorCredito.getString(cursorCredito.getColumnIndexOrThrow(DbAdapter_Comprob_Cobro.CC_fecha_programada));
                                 Double monto_Pagar = cursorCredito.getDouble(cursorCredito.getColumnIndexOrThrow(DbAdapter_Comprob_Cobro.CC_monto_a_pagar));
                             String cuotaDetalle = ESC + "|lA" + String.format("%-16s", "Fecha de Pago: ") + String.format("%1$11s", Utils.format(primeraFechaCobro)) + String.format("%1$21s", "__________________")+ LF;
-                            String firma = ESC + "|lA" +  String.format("%1$41s", "Firma")+  String.format("%1$7s", "")+ LF;
+                            String firma = ESC + "|lA" +  String.format("%1$41s", "Firma")+  String.format("%1$7s", "")+ LF+ LF+ LF+ LF;
                             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, cuotaDetalle);
                             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, firma);
 
@@ -684,6 +685,16 @@ public class Print {
             }
         }
 
+        Cursor cursorTipoIngresos = dbAdapter_informe_gastos.resumenTipoIngresos(idLiquidacion);
+
+        String cadenaDescripciontipoIngreso ="";
+        for (cursorTipoIngresos.moveToFirst(); !cursorTipoIngresos.isAfterLast(); cursorTipoIngresos.moveToNext()) {
+            String descripcionTipoIngreso = cursorTipoIngresos.getString(cursorTipoIngresos.getColumnIndexOrThrow(DbAdapter_Forma_Pago.FP_detalle));
+            Double total = cursorTipoIngresos.getDouble(cursorTipoIngresos.getColumnIndexOrThrow("total"));
+
+            cadenaDescripciontipoIngreso +=
+            ESC + "|lA" +String.format("%-20s", "   En "+descripcionTipoIngreso)+ String.format("%-16s", "S/.") + String.format("%1$12s", df.format(total)) + LF;
+        }
 
 
         Double ingresosTotales = cobradoTotal + pagadoTotal;
@@ -698,10 +709,13 @@ public class Print {
 
 
         String ingresos = ESC + "|lA" +String.format("%-20s", "INGRESOS TOTALES")+ String.format("%-16s", "S/.") + String.format("%1$12s", df.format(ingresosTotales)) + LF;
+
+
         String gastos = ESC + "|lA" +String.format("%-20s", "GASTOS TOTALES\"")+ String.format("%-16s", "S/.") + String.format("%1$12s", df.format(gastosTotales)) + LF;
         String total = ESC + "|lA" +String.format("%-20s", "TOTAL A RENDIR")+ String.format("%-16s", "S/.") + String.format("%1$12s", df.format(aRendir)) + LF+ LF+ LF;
 
         posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ingresos);
+        posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, cadenaDescripciontipoIngreso);
         posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, gastos);
         posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, total);
 

@@ -559,7 +559,7 @@ public class ImportMain extends AsyncTask<String, String, String> {
                 }
 
 
-                if (isSuccesfulImport(jsonObject)) {
+/*                if (isSuccesfulImport(jsonObject)) {
 
                     JSONArray jsonArray = jsonObject.getJSONArray("Value");
                     JSONObject jsonObj = null;
@@ -571,7 +571,7 @@ public class ImportMain extends AsyncTask<String, String, String> {
                         Log.d("IMPORT SOLICITUDES DATOS", idEstablecimiento + " - " + montoCredito + " - " + diasCredito);
                         dbAdaptert_evento_establec.updateEstablecsCredito(idEstablecimiento, montoCredito, diasCredito);
                     }
-                }
+                }*/
 
 
             }

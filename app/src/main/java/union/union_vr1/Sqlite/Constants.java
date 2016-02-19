@@ -80,6 +80,7 @@ public class Constants {
     public static final String _APP_ROOT_FIREBASE = "https://sidim.firebaseio.com/app";
     public static final String _CHILD_CREDITO = "credito";
     public static final String _CHILD_DEVOLUCION = "devolucion";
+    public static final String _CHILD_RUTA_DETALLE= "ruta_detalle";
     public static final String _CHILD_EXPORTACIONES = "exportaciones";
 
 

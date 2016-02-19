@@ -124,6 +124,7 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
 
 
     Utils df = new Utils();
+    private static String TAG = VMovil_Evento_Establec.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -190,6 +191,7 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
 
         dbHelper44 = new DbAdapter_Comprob_Cobro(this);
         dbHelper44.open();
+
         int idEstab = Integer.parseInt(valIdEstab);
 
 
@@ -254,13 +256,12 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
         //Recorremos el cursor hasta que no haya más registros
 
         int i;
-
-        if (cursor.moveToFirst()) {
+        cursor.moveToFirst();
+        if (cursor.getCount() >0) {
             for (i = 0; i < 1; i++) {
                 String fecha = cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Comprob_Cobro.CC_fecha_programada));
 
                 try {
-                    cursor.moveToNext();
                     SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
                     Log.d("VMovil_Evento",""+fecha);
                     Date dSqlite = df.parse((fecha));
@@ -374,7 +375,15 @@ public class VMovil_Evento_Establec extends Activity implements View.OnClickList
         dialogo.setTitle("ESTADO");
         dialogo.setItems(items, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
+                Log.d(TAG, "item "+item);
                 int idmotivoNoAtencion = ++item;
+                Log.d(TAG, " ++item position : "+item);
+                Log.d(TAG, " idmotivoNoAtencion : "+idmotivoNoAtencion);
+
+                if (idmotivoNoAtencion<=0){
+                    idmotivoNoAtencion=1;
+                }
+
                 dbHelper.updateEstadoNoAtendido(idEstabl, 3, idmotivoNoAtencion, items[item - 1], getDatePhone());
                 Intent intent2 = new Intent(getApplicationContext(), VMovil_Menu_Establec.class);
                 finish();

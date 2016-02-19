@@ -14,6 +14,7 @@ import java.util.GregorianCalendar;
 
 import union.union_vr1.Conexion.DbHelper;
 import union.union_vr1.Objects.ComprobanteCobro;
+import union.union_vr1.Servicios.ServiceImport;
 import union.union_vr1.Utils.Utils;
 
 public class DbAdapter_Comprob_Cobro {
@@ -141,7 +142,7 @@ public class DbAdapter_Comprob_Cobro {
         return mDb.insert(SQLITE_TABLE_Comprob_Cobro, null, initialValues);
     }
 
-    public String getIdComrobanteCobro(String idEstablecimiento) {
+    public String   getIdComrobanteCobro(String idEstablecimiento) {
         String idComprobanteCobro = "";
         Cursor cr = mDb.rawQuery("select max(cc_in_id_comprobante_cobro) as idComprobanteCobro from m_comprob_cobro where cc_in_id_establec = '" + idEstablecimiento + "'; ", null);
         cr.moveToFirst();
@@ -292,10 +293,10 @@ public class DbAdapter_Comprob_Cobro {
                 });
     }
 
-    public void updateComprobCobros(ComprobanteCobro comprobanteCobro) {
+    public int updateComprobCobros(ComprobanteCobro comprobanteCobro) {
 
         ContentValues initialValues = new ContentValues();
-        initialValues.put(CC_id_comprobante_cobro, comprobanteCobro.getIdComprobanteCobro());
+//        initialValues.put(CC_id_comprobante_cobro, comprobanteCobro.getIdComprobanteCobro());
         initialValues.put(CC_id_establec, comprobanteCobro.getIdEstablecimiento());
         initialValues.put(CC_id_comprob, comprobanteCobro.getIdComprobante());
 
@@ -314,8 +315,8 @@ public class DbAdapter_Comprob_Cobro {
         initialValues.put(CC_lugar_registro, comprobanteCobro.getLugarRegistro());
 
 
-        mDb.update(SQLITE_TABLE_Comprob_Cobro, initialValues,
-                CC_id_comprobante_cobro + " = ?",
+        return mDb.update(SQLITE_TABLE_Comprob_Cobro, initialValues,
+                CC_id_comprobante_cobro + " = ? ",
                 new String[]{
                         "" + comprobanteCobro.getIdComprobanteCobro()
                 });
@@ -330,14 +331,12 @@ public class DbAdapter_Comprob_Cobro {
                         CC_monto_a_pagar, CC_estado_cobro, CC_id_comprobante_cobro},
                 CC_id_comprobante_cobro + " = '" + comprobanteCobro + "'",
                 null, null, null, null, null);
-        if (mCursor != null) {
+        if (mCursor .getCount() >0) {
             mCursor.moveToFirst();
-            Log.e("ID", "" + mCursor.getString(mCursor.getColumnIndexOrThrow(CC_id_comprobante_cobro)) + "---" + comprobanteCobro);
+            //Log.d(ServiceImport.TAG, "" + mCursor.getString(mCursor.getColumnIndexOrThrow(CC_id_comprobante_cobro)) + "---" + comprobanteCobro);
             exists = true;
         }
-        if (mCursor.getCount() == 0) {
-            exists = false;
-        }
+        Log.d(ServiceImport.TAG, "EXISTS CC: "+ exists);
         return exists;
 
     }

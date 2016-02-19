@@ -23,6 +23,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import union.union_vr1.Fragments.FClienteRegistrar;
 import union.union_vr1.Fragments.FMapaRegistrar;
 import union.union_vr1.R;
 import union.union_vr1.RestApi.StockAgenteRestApi;
@@ -95,6 +96,7 @@ public class ValidarCliente extends AsyncTask<String, String, String> {
 
             if (jsonArrayCliente.length() > 0) {
                 setHideWidgets();
+
                 dismissProgressDialog();
             } else {
                 setShowWidgets();
@@ -119,6 +121,7 @@ public class ValidarCliente extends AsyncTask<String, String, String> {
 
         SharedPreferences.Editor editor = mainActivity.getSharedPreferences("DIRECCION_FISCAL", Context.MODE_PRIVATE).edit();
 
+        FClienteRegistrar.estado = false;
 
         JSONObject jsonValida = null;
         for (int i = 0; i < jsonArrayCliente.length(); i++) {
@@ -167,6 +170,7 @@ public class ValidarCliente extends AsyncTask<String, String, String> {
         apMater.setVisibility(View.VISIBLE);
         cel.setVisibility(View.VISIBLE);
         correro.setVisibility(View.VISIBLE);
+        FClienteRegistrar.estado = true;
         Utils.setToast(mainActivity, "Puede Registrar Cliente", R.color.verde);
     }
 

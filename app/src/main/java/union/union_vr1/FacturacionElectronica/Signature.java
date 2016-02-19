@@ -136,58 +136,5 @@ public class Signature {
         //Log.d("DOC",dsc.getParent().getTextContent());
         return node.getTextContent();
     }
-/*
-    public static String writeDocument(Document document, File fileOutput) throws FileNotFoundException, TransformerException {
-*//*
 
-
-        // Read
-        final Document aDoc = DOMReader.readXMLDOM (new ClassPathResource (sFilename),
-                new DOMReaderSettings ().setSchema (EUBL20DocumentType.INVOICE.getSchema ()));*//*
-
-        // Read
-        final InvoiceType aUBLObject = UBL20Reader.readInvoice(document);
-
-
-
-
-        // Validate
-        IResourceErrorGroup aErrors = UBL20Validator.validateInvoice(aUBLObject);
-        
-      *//*  InvoiceType invoiceType = new InvoiceType();
-        InvoiceLineType invoiceLineType = new InvoiceLineType();
-
-        IDType idType = new IDType("1");
-        InvoicedQuantityType invoicedQuantityType = new InvoicedQuantityType();
-
-        BigDecimal bigDecimal = new BigDecimal(150);
-        UnitCodeContentType unitCodeContentType = UnitCodeContentType.EACH;
-
-        invoicedQuantityType.setValue(bigDecimal);
-        invoicedQuantityType.setUnitCode(unitCodeContentType);
-
-
-        invoiceType.setInvoiceLine(Collections.singletonList(invoiceLineType));
-        invoiceLineType.setID(idType);
-        invoiceLineType.setInvoicedQuantity(invoicedQuantityType);*//*
-
-        // write again
-        //EUBL20DocumentType ubl20DocumentTypes = UBL20DocumentTypes.getDocumentTypeOfNamespace(UBLElements.NAMESPACE_CAC);
-
-
-
-
-        final Document documentwrite = UBL20Writer.writeInvoice(aUBLObject);
-
-
-        OutputStream os = new FileOutputStream(fileOutput);
-        TransformerFactory tf = TransformerFactory.newInstance();
-        Transformer trans = tf.newTransformer();
-        trans.setOutputProperty(OutputKeys.ENCODING, "ISO-8859-1");
-        trans.setOutputProperty(OutputKeys.STANDALONE, "no");
-        trans.transform(new DOMSource(documentwrite), new StreamResult(os));
-
-        Log.d("PATH FIRMA", fileOutput.getAbsolutePath());
-        return fileOutput.getAbsolutePath().toString();
-    }*/
 }

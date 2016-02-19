@@ -65,7 +65,7 @@ public class ParserEventoEstablecimiento {
                         jsonObj.getInt("SurtidoVentaAnterior"),
                         jsonObj.getDouble("MocrIDescripcion"),
                         diasCredito,
-                        0,
+                        1,
                         null,
                         jsonObj.getInt("LiqIAgenteVentaId"),
                         Constants._IMPORTADO,

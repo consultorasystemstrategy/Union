@@ -456,7 +456,7 @@ public class VMovil_Venta_Cabecera_PlanPagos extends Activity implements Adapter
 
         listView.setAdapter(todoAdapter);
 
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+/*        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 Cursor cursor = (Cursor) parent.getItemAtPosition(position);
@@ -497,6 +497,7 @@ public class VMovil_Venta_Cabecera_PlanPagos extends Activity implements Adapter
                 return false;
             }
         });
+        */
         //CUANDO QUIERE CAMBIAR DE FECHA, AGREGADO A LA DEUDA TÉCNICA
         /*listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

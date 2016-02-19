@@ -62,6 +62,7 @@ import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta_Detalle;
 import union.union_vr1.Sqlite.DbAdapter_Exportacion_Comprobantes;
+import union.union_vr1.Sqlite.DbAdapter_Forma_Pago;
 import union.union_vr1.Sqlite.DbAdapter_Histo_Venta;
 import union.union_vr1.Sqlite.DbAdapter_Histo_Venta_Detalle;
 import union.union_vr1.Sqlite.DbAdapter_Impresion_Cobros;
@@ -108,6 +109,9 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
     private TextView textViewResumenGastoNombre;
     private TextView textViewSlideCargar;
     private TextView textViewResumenIngresos;
+    private TextView textViewIngresosTipoNombre;
+    private TextView textViewnIngresosTipoCantidad;
+
     private TextView textViewResumenGastos;
     private TextView textViewResumenARendir;
     private TextView textviewSlideConsultarInventario;
@@ -385,7 +389,10 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
                 Intent intentImprimirDevoluciones = new Intent(mainActivity, ImprimirDevoluciones.class);
                 startActivity(intentImprimirDevoluciones);
                 break;
-
+            case R.id.buttonResumenTransferencias:
+                Intent intentB = new Intent(mainActivity, Bluetooth_Printer.class);
+                startActivity(intentB);
+                break;
             default:
                 //ON ITEM SELECTED DEFAULT
                 break;
@@ -534,6 +541,9 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
         viewResumen = getLayoutInflater().inflate(R.layout.resumen, null);
 
         textViewResumenIngresos = (TextView) viewResumen.findViewById(R.id.resumenIngresosTotales);
+        textViewIngresosTipoNombre = (TextView)viewResumen.findViewById(R.id.textViewNombreIngresos);
+        textViewnIngresosTipoCantidad = (TextView)viewResumen.findViewById(R.id.textViewTipoIngresosCant);
+
         textViewResumenGastos = (TextView) viewResumen.findViewById(R.id.resumenGastosTotales);
         textViewResumenARendir = (TextView) viewResumen.findViewById(R.id.resumenEfectivoARendir);
 
@@ -561,6 +571,20 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
 
         Cursor cursorGastos = dbAdapter_informe_gastos.resumenInformeGastos(getDayPhone());
 
+        Cursor cursorTipoIngresos = dbAdapter_informe_gastos.resumenTipoIngresos(idLiquidacion);
+
+        String cadenaDescripciontipoIngreso ="";
+        String cadenaTotalTipoIngreso = "";
+        for (cursorTipoIngresos.moveToFirst(); !cursorTipoIngresos.isAfterLast(); cursorTipoIngresos.moveToNext()) {
+            String descripcionTipoIngreso = cursorTipoIngresos.getString(cursorTipoIngresos.getColumnIndexOrThrow(DbAdapter_Forma_Pago.FP_detalle));
+            Double total = cursorTipoIngresos.getDouble(cursorTipoIngresos.getColumnIndexOrThrow("total"));
+
+            cadenaDescripciontipoIngreso += "Ingresos en "+ descripcionTipoIngreso+" : \n";
+            cadenaTotalTipoIngreso += df.format(total)+"\n";
+        }
+
+        textViewIngresosTipoNombre.setText(cadenaDescripciontipoIngreso);
+        textViewnIngresosTipoCantidad.setText(cadenaTotalTipoIngreso);
         /*String[] de = {
                 "tg_te_nom_tipo_gasto",
                 "RUTA"
@@ -611,6 +635,7 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
 
 
         textViewResumenIngresos.setText("S/. " + df.format(ingresosTotales));
+
         textViewResumenGastos.setText("S/. " + df.format(gastosTotales));
         textViewResumenARendir.setText("S/. " + df.format(aRendir));
 
@@ -720,6 +745,16 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
         dbAdapter_exportacion_comprobantes.open();
 
 
+        Cursor cursorExportacionFlex = dbAdapter_exportacion_comprobantes.fetchAll();
+        for (cursorExportacionFlex.moveToFirst(); !cursorExportacionFlex.isAfterLast(); cursorExportacionFlex.moveToNext()) {
+
+            Log.d(TAG, "EXPORTACIÓN AL FLEX -->  _ID : " + cursorExportacionFlex.getLong(cursorExportacionFlex.getColumnIndexOrThrow(dbAdapter_exportacion_comprobantes.EC_id)) + ", _ID_SID : " +
+                            cursorExportacionFlex.getInt(cursorExportacionFlex.getColumnIndexOrThrow(dbAdapter_exportacion_comprobantes.EC_id_sid)) + ", _ID_SQLITE : " +
+                            cursorExportacionFlex.getInt(cursorExportacionFlex.getColumnIndexOrThrow(dbAdapter_exportacion_comprobantes.EC_id_sqlite)) + ", ESTADO_SINCRONIZACIÓN : " +
+                            cursorExportacionFlex.getInt(cursorExportacionFlex.getColumnIndexOrThrow(dbAdapter_exportacion_comprobantes.EC_estado_sincronizacion))
+
+            );
+        }
         //FILTRO LOS REGISTROS DE LAS TABLAS A EXPORTAR
 
         int colaInformeGastos = dbAdapter_informe_gastos.filterExport().getCount();
@@ -729,7 +764,7 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
         //
         // int colaInsertarCaja = dbAdapter_comprob_cobro.filterExportUpdatedAndEstadoCobro().getCount();
         int colaInsertarCaja = dbAdapter_impresion_cobros.listarParaExportar().getCount();
-        int colaEventoEstablecimiento = dbAdaptert_evento_establec.filterExportUpdated().getCount();
+        int colaEventoEstablecimiento = dbAdaptert_evento_establec.filterExportUpdated(idLiquidacion).getCount();
         //histo venta
         int colaHistoVentaCreated = dbAdapter_histo_venta.filterExport().getCount();
         int colaHistoVentaDetalleCreated = dbAdapter_histo_venta_detalle.filterExport(idLiquidacion).getCount();
@@ -738,7 +773,7 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
         int colaExportacionFlex = dbAdapter_exportacion_comprobantes.filterExport(idLiquidacion).getCount();
         int colaExportCManuFlex = dbAdapter_cobros_manuales.filterExportForFlex().getCount();
         int colaExportCNormFlex = dbAdapter_impresion_cobros.listarCobrosExpFlex().getCount();
-        int colaCliente = dbAdaptert_evento_establec.listarToExport().getCount();
+        int colaCliente = dbAdaptert_evento_establec.listarToExport(idLiquidacion).getCount();
         //KELVIN LO REVISARÁ Y ME DIRÁ
         int colaCAnjesDevoluciones = dbAdapter_temp_canjes_devoluciones.getAllOperacionEstablecimiento().getCount();
 

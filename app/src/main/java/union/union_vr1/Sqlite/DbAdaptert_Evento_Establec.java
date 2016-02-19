@@ -176,13 +176,16 @@ public class DbAdaptert_Evento_Establec {
         return mDb.update(SQLITE_TABLE_Evento_Establec, initialValues,
                 EE_id_establec + "=?", new String[]{"" + establecimiento.getIdEstablecimiento()});
     }
-    public void updateEstablecimientos(EventoEstablecimiento establecimiento, int id_agente, int id_liquidacion){
+    public long updateEstablecimientos(EventoEstablecimiento establecimiento, int id_agente, int id_liquidacion){
 
         ContentValues initialValues = new ContentValues();
         initialValues.put(EE_id_establec,establecimiento.getIdEstablecimiento());
         initialValues.put(EE_id_cat_est,establecimiento.getIdCategoriaEstablecimiento());
         initialValues.put(EE_id_tipo_doc_cliente,establecimiento.getTipoDocCliente());
-        initialValues.put(EE_id_estado_atencion, establecimiento.getEstadoAtencion());
+        if (establecimiento.getEstadoAtencion()!=1){
+            initialValues.put(EE_id_estado_atencion, establecimiento.getEstadoAtencion());
+        }
+
         initialValues.put(EE_nom_establec,establecimiento.getNombreEstablecimiento());
         initialValues.put(EE_nom_cliente,establecimiento.getNombreCliente());
         initialValues.put(EE_doc_cliente,establecimiento.getDocCliente());
@@ -203,7 +206,7 @@ public class DbAdaptert_Evento_Establec {
         initialValues.put(EE_Longitud,establecimiento.getLongitud());
 
 
-        mDb.update(SQLITE_TABLE_Evento_Establec, initialValues,
+        return mDb.update(SQLITE_TABLE_Evento_Establec, initialValues,
                 EE_id_establec + "=?", new String[]{"" + establecimiento.getIdEstablecimiento()});
     }
     public boolean existeEstablecsById(int idEstablec) throws SQLException {
@@ -251,7 +254,7 @@ public class DbAdaptert_Evento_Establec {
         mDb.update(SQLITE_TABLE_Evento_Establec, initialValues,
                 EE_id_establec+"=?",new String[]{id});
     }
-    public int updateEstablecsCredito(int idEstablecimiento, Double montoCredito, int diasCredito){
+    public int updateEstablecsCredito(int idEstablecimiento, Double montoCredito, int diasCredito) {
 
         ContentValues initialValues = new ContentValues();
         initialValues.put(EE_monto_credito, montoCredito);
@@ -495,13 +498,13 @@ cursor.moveToFirst();
         return cursor.getString(cursor.getColumnIndexOrThrow(EE_nom_establec));
     }
 
-    public Cursor filterExportUpdated() {
+    public Cursor filterExportUpdated(int liquidacion) {
         Cursor mCursor = null;
-        mCursor = mDb.query(true, SQLITE_TABLE_Evento_Establec, new String[] {EE_id_evt_establec,
+        mCursor = mDb.query(true, SQLITE_TABLE_Evento_Establec, new String[] {EE_id_evt_establec, EE_estado_no_atencion_comentario,
                         EE_id_establec, EE_id_cat_est, EE_id_tipo_doc_cliente, EE_id_estado_atencion, EE_id_estado_no_atencion,
                         EE_nom_establec, EE_nom_cliente, EE_doc_cliente, EE_orden, EE_surtido_stock_ant,
                         EE_surtido_venta_ant, EE_monto_credito, EE_dias_credito, EE_id_agente, EE_time_atencion, EE_direccion_principal},
-                Constants._SINCRONIZAR + " = " + Constants._ACTUALIZADO, null,
+                Constants._SINCRONIZAR + " = ? ", new String[]{""+Constants._ACTUALIZADO}, null,
                 null, null, null, null);
         if (mCursor != null) {
             mCursor.moveToFirst();
@@ -608,8 +611,8 @@ cursor.moveToFirst();
     }
 
 
-    public Cursor listarToExport(){
-        Cursor cr = mDb.rawQuery("select * from "+SQLITE_TABLE_Evento_Establec+" where "+EE_estado_autorizado+"='5'",null);
+    public Cursor listarToExport(int liquidacion ){
+        Cursor cr = mDb.rawQuery("select * from "+SQLITE_TABLE_Evento_Establec+" where "+EE_estado_autorizado+"='5' AND "+EE_id_liquidacion + " = "+liquidacion,null);
         return cr;
     }
 

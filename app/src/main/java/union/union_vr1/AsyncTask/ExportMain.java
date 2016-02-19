@@ -123,7 +123,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
         //Cursor cursorComprobanteVentaDetalle = dbAdapter_comprob_venta_detalle.filterExport();
         Cursor cursorComprobanteCobro = dbAdapter_comprob_cobro.filterExport();
         Cursor cursorInsertarCaja = dbAdapter_comprob_cobro.filterExportUpdatedAndEstadoCobro();
-        Cursor cursorEventoEstablecimiento = dbAdaptert_evento_establec.filterExportUpdated();
+        Cursor cursorEventoEstablecimiento = dbAdaptert_evento_establec.filterExportUpdated(idLiquidacion);
         publishProgress("" + 15);
 //histo venta
         Cursor cursorHistoVentaCreated = dbAdapter_histo_venta.filterExport();

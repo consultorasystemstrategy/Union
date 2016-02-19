@@ -98,6 +98,21 @@ public class DbAdapter_Exportacion_Comprobantes {
         return mCursor;
     }
 
+    public Cursor fetchAll() {
+        Cursor mCursor = null;
+        mCursor = mDb.query(true, SQLITE_TABLE_EXPORTACION_COMPROBANTES, new String[] {EC_id,
+                        EC_id_sqlite, EC_id_sid, EC_id_flex,
+                        EC_estado_sincronizacion, EC_liquidacion
+                },
+                null, null,
+                null, null, null, null);
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+    }
+
+
     public int changeEstadoToExport(String[] _ids, int estadoSincronizacion){
         ContentValues initialValues = new ContentValues();
         initialValues.put(Constants._SINCRONIZAR, estadoSincronizacion);

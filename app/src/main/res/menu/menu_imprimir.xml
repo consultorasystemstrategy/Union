@@ -12,6 +12,8 @@
         android:title="Imprimir Devoluciones"
         android:orderInCategory="100" />
 
+    <item android:id="@+id/buttonResumenTransferencias" android:title="Resumen y Transferencias"
+        android:orderInCategory="100"  />
 
 
 

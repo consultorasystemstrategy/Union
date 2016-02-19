@@ -132,6 +132,7 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
     Double slide_aRendir = 0.0;
 
 
+    private static String TAG = VMovil_Evento_Indice.class.getSimpleName();
     //UTILIZARÉ EL DECIMAL FORMAT
     Utils df = new Utils();
 
@@ -646,8 +647,10 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
     private void AsignarColor(Button btn) {
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         Cursor cursor = cCobro.listarComprobantesToCobros(slideIdAgente);
+        Log.d(TAG, "CURSOR COBROS COUNT: "+ cursor.getCount());
 
-        if (cursor.moveToFirst()) {
+        cursor.moveToFirst();
+        if (cursor.getCount()>0) {
             String fecha_Programada = cursor.getString(cursor.getColumnIndexOrThrow("cc_te_fecha_programada"));
             Log.e("FECHAPARA PAGO", fecha_Programada);
             try {

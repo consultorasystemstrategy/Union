@@ -40,12 +40,28 @@ import union.union_vr1.Conexion.JSONParser;
 import union.union_vr1.JSONParser.ParserAgente;
 import union.union_vr1.Objects.Agente;
 import union.union_vr1.RestApi.StockAgenteRestApi;
+import union.union_vr1.Sqlite.Constants;
+import union.union_vr1.Sqlite.DBAdapter_Temp_Autorizacion_Cobro;
+import union.union_vr1.Sqlite.DBAdapter_Temp_Canjes_Devoluciones;
 import union.union_vr1.Sqlite.DbAdapter_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Agente_Login;
+import union.union_vr1.Sqlite.DbAdapter_Cobros_Manuales;
+import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
+import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta;
+import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta_Detalle;
+import union.union_vr1.Sqlite.DbAdapter_Exportacion_Comprobantes;
+import union.union_vr1.Sqlite.DbAdapter_Histo_Venta;
+import union.union_vr1.Sqlite.DbAdapter_Histo_Venta_Detalle;
+import union.union_vr1.Sqlite.DbAdapter_Impresion_Cobros;
+import union.union_vr1.Sqlite.DbAdapter_Informe_Gastos;
 import union.union_vr1.Sqlite.DbAdapter_Motivo_Dev;
+import union.union_vr1.Sqlite.DbAdapter_Stock_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
+import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 import union.union_vr1.Utils.Utils;
 import union.union_vr1.Vistas.AppPreferences;
+import union.union_vr1.Vistas.Bluetooth_Printer;
+import union.union_vr1.Vistas.ImprimirStockDisponible;
 import union.union_vr1.Vistas.VMovil_Abrir_Caja;
 import union.union_vr1.Vistas.VMovil_Evento_Indice;
 import union.union_vr1.Vistas.VMovil_Venta_Cabecera;
@@ -395,7 +411,7 @@ public class Login extends Activity implements OnClickListener {
         }
 
         fechaDevice = Utils.getDatePhone();
-        Log.d(TAG, "FECHA DEVICE : "+fechaDevice);
+        Log.d(TAG, "FECHA DEVICE : " + fechaDevice);
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         nombreUsuario = SP.getString("username", "");
 
@@ -484,8 +500,37 @@ public class Login extends Activity implements OnClickListener {
             case R.id.buttonAjustes:
                 Intent intentA = new Intent(mainActivity, AppPreferences.class);
                 startActivity(intentA);
-            /*case R.id.buttonNewDay:
-                dbAdapter_agente.deleteAllAgentes();
+                break;
+            case R.id.buttonResumenTransferencias:
+                Intent intentB = new Intent(mainActivity, Bluetooth_Printer.class);
+                startActivity(intentB);
+                break;
+/*            case R.id.imprimirDisponible:
+                Intent intentImprimirStock = new Intent(mainActivity, ImprimirStockDisponible.class);
+                startActivity(intentImprimirStock);
+                break;*/
+/*
+            case R.id.buttonCola:
+                idLiquidacion = session.fetchVarible(3);
+
+                int registros = validarExport(idLiquidacion);
+                Log.d(TAG, " REGISTROS EN COLA NRO : "+ registros);
+
+                break;
+            case R.id.buttonStockLiquidacion:
+                DbAdapter_Stock_Agente dbAdapter_stock_agente = new DbAdapter_Stock_Agente(mainActivity);
+                dbAdapter_stock_agente.open();
+                Cursor cursorStock = dbAdapter_stock_agente.fetchAllStockAgente();
+
+
+                for (cursorStock.moveToFirst(); !cursorStock.isAfterLast();cursorStock.moveToNext()){
+
+                    int liquidacion = cursorStock.getInt(cursorStock.getColumnIndex(dbAdapter_stock_agente.ST_liquidacion));
+                    int codigo_producto = cursorStock.getInt(cursorStock.getColumnIndex(dbAdapter_stock_agente.ST_id_producto));
+
+                    Log.d(TAG, "LIQUIACIÓN : "+ liquidacion + ", ID PRODUCTO : "+codigo_producto);
+                }
+
                 break;*/
             default:
                 //ON ITEM SELECTED DEFAULT
@@ -494,6 +539,151 @@ public class Login extends Activity implements OnClickListener {
         return super.onOptionsItemSelected(item);
     }
 
+/*
+    private int validarExport(int idLiquidacion) {
+
+
+        //DEFINO LAS VARIABLES A MIS MANEJADORES DE LAS TABLAS
+        DbAdapter_Informe_Gastos dbAdapter_informe_gastos;
+        DbAdapter_Comprob_Venta dbAdapter_comprob_venta;
+        DbAdapter_Comprob_Venta_Detalle dbAdapter_comprob_venta_detalle;
+        DbAdapter_Histo_Venta dbAdapter_histo_venta;
+        DbAdapter_Comprob_Cobro dbAdapter_comprob_cobro;
+        DbAdapter_Histo_Venta_Detalle dbAdapter_histo_venta_detalle;
+        DbAdaptert_Evento_Establec dbAdaptert_evento_establec;
+        DBAdapter_Temp_Autorizacion_Cobro dbAdapter_temp_autorizacion_cobro;
+        DBAdapter_Temp_Canjes_Devoluciones dbAdapter_temp_canjes_devoluciones;
+        DbAdapter_Cobros_Manuales dbAdapter_cobros_manuales;
+        DbAdapter_Exportacion_Comprobantes dbAdapter_exportacion_comprobantes;
+        DbAdapter_Impresion_Cobros dbAdapter_impresion_cobros;
+
+        //INSTANCIO LAS CLASES DE MIS MANEJADORES DE DB
+
+        dbAdapter_temp_canjes_devoluciones = new DBAdapter_Temp_Canjes_Devoluciones(mainActivity);
+        dbAdapter_temp_canjes_devoluciones.open();
+        session = new DbAdapter_Temp_Session(mainActivity);
+        session.open();
+
+        dbAdapter_informe_gastos = new DbAdapter_Informe_Gastos(mainActivity);
+        dbAdapter_comprob_venta = new DbAdapter_Comprob_Venta(mainActivity);
+        //dbAdapter_comprob_venta_detalle = new DbAdapter_Comprob_Venta_Detalle(mainActivity);
+        dbAdapter_comprob_cobro = new DbAdapter_Comprob_Cobro(mainActivity);
+        dbAdapter_histo_venta_detalle = new DbAdapter_Histo_Venta_Detalle(mainActivity);
+        dbAdaptert_evento_establec = new DbAdaptert_Evento_Establec(mainActivity);
+        dbAdapter_histo_venta = new DbAdapter_Histo_Venta(mainActivity);
+        dbAdapter_temp_autorizacion_cobro = new DBAdapter_Temp_Autorizacion_Cobro(mainActivity);
+        dbAdapter_cobros_manuales = new DbAdapter_Cobros_Manuales(mainActivity);
+        dbAdapter_exportacion_comprobantes = new DbAdapter_Exportacion_Comprobantes(mainActivity);
+        dbAdapter_impresion_cobros = new DbAdapter_Impresion_Cobros(mainActivity);
+
+        //ABRO LA CONEXIÓN A LA DB
+        dbAdapter_informe_gastos.open();
+        dbAdapter_comprob_venta.open();
+        //dbAdapter_comprob_venta_detalle.open();
+        dbAdapter_histo_venta_detalle.open();
+        dbAdapter_comprob_cobro.open();
+        dbAdapter_histo_venta_detalle.open();
+        dbAdaptert_evento_establec.open();
+        dbAdapter_histo_venta.open();
+        dbAdapter_temp_autorizacion_cobro.open();
+        dbAdapter_cobros_manuales.open();
+        dbAdapter_exportacion_comprobantes.open();
+        dbAdapter_impresion_cobros.open();
+
+
+        //FILTRO LOS REGISTROS DE LAS TABLAS A EXPORTAR
+
+        int colaInformeGastos = dbAdapter_informe_gastos.filterExport().getCount();
+        int colaComprobanteVenta = dbAdapter_comprob_venta.filterExport().getCount();
+        //int colaComprobanteVentaDetalle = dbAdapter_comprob_venta_detalle.filterExport().getCount();
+        int colaComprobanteCobro = dbAdapter_comprob_cobro.filterExport().getCount();
+        //
+        // int colaInsertarCaja = dbAdapter_comprob_cobro.filterExportUpdatedAndEstadoCobro().getCount();
+        int colaInsertarCaja = dbAdapter_impresion_cobros.listarParaExportar().getCount();
+        int colaEventoEstablecimiento = dbAdaptert_evento_establec.filterExportUpdated(idLiquidacion).getCount();
+        Cursor cursorEventoEstablecimiento = dbAdaptert_evento_establec.filterExportUpdated(idLiquidacion);
+        cursorEventoEstablecimiento.moveToFirst();
+        String time = "TIME_HERE";
+        time = cursorEventoEstablecimiento.getString(cursorEventoEstablecimiento.getColumnIndexOrThrow(dbAdaptert_evento_establec.EE_time_atencion));
+
+        Log.d(TAG, "TIME ATENCIÓN : "+ time);
+
+        //EXPORTAR TODOS LOS REGISTROS ACTUALIZADOS EN ANDROID
+
+        if (colaEventoEstablecimiento > 0) {
+
+            for (cursorEventoEstablecimiento.moveToFirst(); !cursorEventoEstablecimiento.isAfterLast(); cursorEventoEstablecimiento.moveToNext()) {
+                JSONObject jsonObject = null;
+
+                Log.d(TAG, "EE EXPORT DATOS" +
+                                cursorEventoEstablecimiento.getInt(cursorEventoEstablecimiento.getColumnIndexOrThrow(dbAdaptert_evento_establec.EE_id_establec)) + "-" +
+                                idLiquidacion + "-" +
+                                cursorEventoEstablecimiento.getInt(cursorEventoEstablecimiento.getColumnIndexOrThrow(dbAdaptert_evento_establec.EE_id_estado_atencion)) + "-" +
+                                cursorEventoEstablecimiento.getInt(cursorEventoEstablecimiento.getColumnIndexOrThrow(dbAdaptert_evento_establec.EE_id_estado_no_atencion)) + "1-" +
+                                cursorEventoEstablecimiento.getString(cursorEventoEstablecimiento.getColumnIndexOrThrow(dbAdaptert_evento_establec.EE_estado_no_atencion_comentario)) + "-" +
+                                cursorEventoEstablecimiento.getString(cursorEventoEstablecimiento.getColumnIndexOrThrow(dbAdaptert_evento_establec.EE_time_atencion))
+                );
+                try {
+                    StockAgenteRestApi api = null;
+                    api = new StockAgenteRestApi(mainActivity);
+                    jsonObject = api.UpdateEstadoEstablecimiento2(
+                            cursorEventoEstablecimiento.getInt(cursorEventoEstablecimiento.getColumnIndexOrThrow(dbAdaptert_evento_establec.EE_id_establec)),
+                            idLiquidacion,
+                            cursorEventoEstablecimiento.getInt(cursorEventoEstablecimiento.getColumnIndexOrThrow(dbAdaptert_evento_establec.EE_id_estado_atencion)),
+                            cursorEventoEstablecimiento.getInt(cursorEventoEstablecimiento.getColumnIndexOrThrow(dbAdaptert_evento_establec.EE_id_estado_no_atencion)),
+                            cursorEventoEstablecimiento.getString(cursorEventoEstablecimiento.getColumnIndexOrThrow(dbAdaptert_evento_establec.EE_time_atencion))
+                    );
+
+                    Log.d(TAG, "E M ESTABLECIMIENTO "+ jsonObject.toString());
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+
+
+        } else {
+            Log.d(TAG, "EXPORT, TODOS LOS ESTABLECIMIENTOS ESTÁN EXPORTADOS [ACTUALIZADOS]");
+        }
+
+        //histo venta
+        int colaHistoVentaCreated = dbAdapter_histo_venta.filterExport().getCount();
+        int colaHistoVentaDetalleCreated = dbAdapter_histo_venta_detalle.filterExport(idLiquidacion).getCount();
+        int colaAutorizacionCobro = dbAdapter_temp_autorizacion_cobro.filterExport().getCount();
+        int colaCobrosManuales = dbAdapter_cobros_manuales.filterExport().getCount();
+        int colaExportacionFlex = dbAdapter_exportacion_comprobantes.filterExport(idLiquidacion).getCount();
+        int colaExportCManuFlex = dbAdapter_cobros_manuales.filterExportForFlex().getCount();
+        int colaExportCNormFlex = dbAdapter_impresion_cobros.listarCobrosExpFlex().getCount();
+        int colaCliente = dbAdaptert_evento_establec.listarToExport(idLiquidacion).getCount();
+        //KELVIN LO REVISARÁ Y ME DIRÁ
+        int colaCAnjesDevoluciones = dbAdapter_temp_canjes_devoluciones.getAllOperacionEstablecimiento().getCount();
+
+
+        int totalRegistrosEnCola = colaInformeGastos + colaComprobanteVenta +
+                colaComprobanteCobro + colaInsertarCaja + colaEventoEstablecimiento + colaHistoVentaCreated + colaHistoVentaDetalleCreated + colaAutorizacionCobro
+                + colaCobrosManuales + colaExportacionFlex + colaExportCManuFlex + colaExportCNormFlex + colaCliente + colaCAnjesDevoluciones;
+
+        Log.d(TAG, "COLA  TOTAL: " + totalRegistrosEnCola);
+        Log.d(TAG, "COLA colaInformeGastos : " + colaInformeGastos);
+        Log.d(TAG, "COLA colaComprobanteVenta : " + colaComprobanteVenta);
+        //Log.d(TAG, "COLA colaComprobanteVentaDetalle : " + colaComprobanteVentaDetalle);
+        Log.d(TAG, "COLA colaComprobanteCobro : " + colaComprobanteCobro);
+        Log.d(TAG, "COLA colaInsertarCaja : " + colaInsertarCaja);
+        Log.d(TAG, "COLA colaEventoEstablecimiento : " + colaEventoEstablecimiento);
+        Log.d(TAG, "COLA colaHistoVentaCreated : " + colaHistoVentaCreated);
+        Log.d(TAG, "COLA colaHistoVentaDetalleCreated : " + colaHistoVentaDetalleCreated);
+        Log.d(TAG, "COLA colaAutorizacionCobro : " + colaAutorizacionCobro);
+        Log.d(TAG, "COLA colaCobrosManuales : " + colaCobrosManuales);
+        Log.d(TAG, "COLA colaExportacionFlex : " + colaExportacionFlex);
+        Log.d(TAG, "COLA colaCAnjesDevoluciones : " + colaCAnjesDevoluciones);
+        Log.d(TAG, "COLA colaExportCNormFlex : " + colaExportCNormFlex);
+        Log.d(TAG, "COLA colaExportCManuFlex : " + colaExportCManuFlex);
+        Log.d(TAG, "COLA colaCliente : " + colaCliente);
+
+
+        return totalRegistrosEnCola;
+    }*/
     public boolean isOnline() {
         ConnectivityManager cm =
                 (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);

@@ -30,8 +30,8 @@
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="Ingresos"
-                android:id="@+id/textView7"
+                android:text="Ingresos Totales : "
+                android:id="@+id/textViewIngresosNombre"
                 android:layout_weight="1"
                 android:textStyle="italic"
                 android:typeface="monospace"
@@ -54,13 +54,45 @@
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:id="@+id/linearLayout3"
+            android:layout_marginLeft="16dp">
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textViewNombreIngresos"
+                android:layout_weight="1"
+                android:textStyle="bold"
+                android:textSize="11sp"
+                android:textColor="@color/Personalizado4"
+                android:typeface="monospace"
+                android:text="Ingresos en "
+                android:textIsSelectable="false" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textViewTipoIngresosCant"
+                android:layout_weight="2"
+                android:textStyle="bold|italic"
+                android:textColor="@color/Personalizado4"
+                android:gravity="right"
+                android:layout_marginRight="8dp"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
             android:layout_height="24dp"
             android:gravity="center_vertical">
 
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="Gastos"
+                android:text="Gastos : "
                 android:id="@+id/textView3"
                 android:layout_weight="1"
                 android:textStyle="italic"
@@ -91,7 +123,7 @@
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="Efectivo a rendir"
+                android:text="Efectivo a rendir : "
                 android:id="@+id/textView5"
                 android:layout_weight="1"
                 android:textStyle="italic"

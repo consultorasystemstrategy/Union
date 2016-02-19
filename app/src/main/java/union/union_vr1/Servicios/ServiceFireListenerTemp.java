@@ -21,6 +21,7 @@ import com.firebase.client.Query;
 
 import union.union_vr1.Objects.DevolucionEstado;
 import union.union_vr1.Objects.EstablecTemp;
+import union.union_vr1.Objects.EventoEstablecimiento;
 import union.union_vr1.Objects.Exportaciones;
 import union.union_vr1.Objects.NuevoEstablecimiento;
 import union.union_vr1.R;
@@ -71,11 +72,15 @@ public class ServiceFireListenerTemp extends Service {
         Firebase nuevoEstablecimientoRefTemp = null;
         Firebase devolucionRef = null;
         Firebase exportacionesRef = null;
+        Firebase rutaDetalleRef = null;
+
         Firebase.setAndroidContext(context);
         rootRef = new Firebase(Constants._APP_ROOT_FIREBASE);
         nuevoEstablecimientoRefTemp = rootRef.child(Constants._CHILD_ESTABLECIMIENTO_TEMPORAL);
         exportacionesRef =  rootRef.child(Constants._CHILD_EXPORTACIONES);
         devolucionRef = rootRef.child(Constants._CHILD_DEVOLUCION);
+        rutaDetalleRef = rootRef.child(Constants._CHILD_RUTA_DETALLE);
+
         Log.d(TAG, "" + "onStartCommand"+nuevoEstablecimientoRefTemp.getKey());
         dbAdapter_temp_session = new DbAdapter_Temp_Session(this);
         dbAdapter_temp_session.open();
@@ -95,7 +100,7 @@ public class ServiceFireListenerTemp extends Service {
         Query queryRef = nuevoEstablecimientoRefTemp.orderByChild("fecha").equalTo(fecha);
         Query queryDevolucionRef = devolucionRef.orderByChild("fecha").equalTo(fecha);
         Query queryExportaciones = exportacionesRef.orderByChild("fecha").equalTo(fecha);
-
+        Query queryRutaDetalle = rutaDetalleRef.orderByChild("fecha").equalTo(fecha);
 
 
 
@@ -146,7 +151,7 @@ public class ServiceFireListenerTemp extends Service {
                             break;
                     }
 
-                    postNotif(titulo, mensaje, color);
+                    postNotif(titulo, mensaje, color, true);
 
                 }
 
@@ -299,6 +304,83 @@ public class ServiceFireListenerTemp extends Service {
 
         queryExportaciones.addChildEventListener(handlerExportaciones);
 
+        ChildEventListener handlerRutaDetalle;
+
+        handlerRutaDetalle = new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Log.d(TAG, " ADDED RUTA DETALLE SNAPSHOT : "+dataSnapshot.getValue());
+                EventoEstablecimiento eventoEstablecimiento = dataSnapshot.getValue(EventoEstablecimiento.class);
+                Log.d(TAG, "ADDED : "+eventoEstablecimiento.getIdEstablecimiento());
+                Log.d(TAG, "ADDED : "+eventoEstablecimiento.getIdCategoriaEstablecimiento());
+                Log.d(TAG, "ADDED : "+eventoEstablecimiento.getTipoDocCliente());
+                Log.d(TAG, "ADDED : "+eventoEstablecimiento.getEstadoAtencion());
+                Log.d(TAG, "ADDED : "+eventoEstablecimiento.getNombreEstablecimiento());
+                Log.d(TAG, "ADDED : "+eventoEstablecimiento.getNombreCliente());
+                Log.d(TAG, "ADDED : "+eventoEstablecimiento.getDocCliente());
+                Log.d(TAG, "ADDED : "+eventoEstablecimiento.getOrden());
+                Log.d(TAG, "ADDED : "+eventoEstablecimiento.getSurtidoStockAnterior());
+                Log.d(TAG, "ADDED : "+eventoEstablecimiento.getSurtidoVentaAnterior());
+                Log.d(TAG, "ADDED : "+eventoEstablecimiento.getMontoCredito());
+                Log.d(TAG, "ADDED : "+eventoEstablecimiento.getDiasCredito());
+                Log.d(TAG, "ADDED : "+eventoEstablecimiento.getIdEstadoNoAtencion());
+                Log.d(TAG, "ADDED : "+eventoEstablecimiento.getIdAgente());
+                Log.d(TAG, "ADDED : "+eventoEstablecimiento.getEstadoSincronizacion());
+                Log.d(TAG, "ADDED : "+eventoEstablecimiento.getCodigoBarras());
+                Log.d(TAG, "ADDED : "+eventoEstablecimiento.getDireccion());
+                Log.d(TAG, "ADDED : "+eventoEstablecimiento.getDireccionPrincipal());
+                Log.d(TAG, "ADDED : "+eventoEstablecimiento.getLatitud());
+                Log.d(TAG, "ADDED : "+eventoEstablecimiento.getLongitud());
+
+
+
+                Log.d(TAG, "ESTABLECIMIENTOS X RUTAS:  Nombre Establecimiento : " + eventoEstablecimiento.getNombreEstablecimiento() + ", orden : " + eventoEstablecimiento.getOrden() + ", BARCODE: " + eventoEstablecimiento.getCodigoBarras()+", ID TIPO CLIENTE :"+eventoEstablecimiento.getTipoDocCliente());
+                boolean existe = dbAdaptert_evento_establec.existeEstablecsById(eventoEstablecimiento.getIdEstablecimiento());
+
+                Log.d("EXISTE ESTABLECIMIENTO", "" + existe);
+                long id = -1;
+                if (existe) {
+                    //dbAdapter_comprob_cobro.updateComprobCobros(comprobanteCobros.get(i));
+                    id = dbAdaptert_evento_establec.updateEstablecimientos(eventoEstablecimiento, idAgente, idLiquidacion);
+                } else {
+                    //NO EXISTE ENTONCES CREEMOS UNO NUEVO
+                    id = dbAdaptert_evento_establec.createEstablecimientos(eventoEstablecimiento, idAgente, idLiquidacion,0);
+
+                    Log.d(TAG, "IMPORT INSERT ESTABLECIMIENTO id : " + id);
+                }
+
+                if (id>=1){
+                    postNotif("AGREGADO A RUTA", eventoEstablecimiento.getNombreEstablecimiento() + " ha sido agregado a su ruta", Color.GREEN, false);
+                }
+
+
+
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        };
+
+        queryRutaDetalle.addChildEventListener(handlerRutaDetalle);
+
         //==========================================================================================
 
 
@@ -306,11 +388,14 @@ public class ServiceFireListenerTemp extends Service {
     }
 
 
-    private void postNotif(String titulo, String mensaje, int estado) {
+    private void postNotif(String titulo, String mensaje, int estado, boolean startImport) {
 //
-        Intent ints = new Intent(this, ServiceImport.class);
-        ints.setAction(Constants.ACTION_IMPORT_SERVICE);
-        startService(ints);
+        if (startImport){
+
+            Intent ints = new Intent(this, ServiceImport.class);
+            ints.setAction(Constants.ACTION_IMPORT_SERVICE);
+            startService(ints);
+        }
 
         Log.d(TAG, "POST NOTIFICACIÓN ...");
 
