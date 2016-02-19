@@ -685,8 +685,11 @@ public class DbAdapter_Comprob_Cobro {
     }
 
     public Cursor printCabecera(String comprobante) {
+        Cursor cr1 = mDb.rawQuery("select * from m_comprob_cobro where _id="+comprobante+"",null);
+        Log.d("IDCOMRPBANTE 2",""+cr1.getCount());
+
         Cursor cr = mDb.rawQuery("select mc._id,mc.cc_in_id_comprobante_cobro,mc.cc_te_doc,me.ee_te_nom_cliente,ma.ag_te_nombre_agente from m_comprob_cobro mc,m_evento_establec me,m_agente ma" +
-                " where mc.cc_in_id_establec=me.ee_in_id_establec and mc.cc_in_id_agente = ma.ag_in_id_agente_venta and mc._id='" + comprobante + "' ", null);
+                " where mc.cc_in_id_establec=me.ee_in_id_establec  and mc._id='" + comprobante + "' ", null);
         return cr;
     }
 }

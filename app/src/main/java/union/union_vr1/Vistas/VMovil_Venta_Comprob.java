@@ -317,6 +317,7 @@ public class VMovil_Venta_Comprob extends Activity implements View.OnClickListen
             public void onClick(DialogInterface dialog, int which) {
 
                 if (tipoCobro == 1) {//Cobro Normal
+                    Log.d("IDCOMRPBANTE",""+idcomprobante);
                     startActivity(new Intent(getApplicationContext(), VMovil_BluetoothImpCobros.class).putExtra("idComprobante", "" + idcomprobante).putExtra("importe", "" + monto));
 
                 } else {//Cobro Manual
