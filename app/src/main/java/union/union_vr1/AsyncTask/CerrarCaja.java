@@ -64,7 +64,6 @@ public class CerrarCaja extends AsyncTask<String, String, String> {
 
         StockAgenteRestApi api = new StockAgenteRestApi(mainActivity);
         try {
-            publishProgress(""+60);
 
             int liquidacion = Integer.parseInt(strings[0]);
             double ingresos = Double.parseDouble(strings[1]);
@@ -131,12 +130,8 @@ public class CerrarCaja extends AsyncTask<String, String, String> {
                 //TODAVÍA NO SE HA VALIDADO LAS DEVOLUCIONES
             }
 
-          /*  else if (successTransferencias== Constants._DEVOLUCIONES_NO_VALIDADAS){
 
-                successCerrarCaja = Constants._DEVOLUCIONES_NO_VALIDADAS;
-            }*/
 
-            publishProgress("" + 50);
 
         }catch (Exception e){
             Log.d("AysncImport : ", e.getMessage());
@@ -159,8 +154,6 @@ public class CerrarCaja extends AsyncTask<String, String, String> {
             progressDialog.dismiss();
             return;
         }else {
-            //Log.d("JSON CERRAR CAJA", jsonObject.toString());
-            progressDialog.setProgress(100);
             dismissProgressDialog();
         }
 
@@ -175,6 +168,8 @@ public class CerrarCaja extends AsyncTask<String, String, String> {
 
             session.deleteVariable(9);
             session.createTempSession(9, 0);
+            session.deleteVariable(7);
+            session.deleteVariable(8);
 
             /* int nroRegistrosBorrados = dbAdapter_stock_agente.deleteAllStockAgente();
             Log.d(TAG, "NRO REGISTROS STOCK BORRADOS : "+ nroRegistrosBorrados);*/
@@ -204,18 +199,12 @@ public class CerrarCaja extends AsyncTask<String, String, String> {
 
     }
 
-    @Override
-    protected void onProgressUpdate(String... values) {
-        super.onProgressUpdate(values);
-        progressDialog.setProgress(Integer.parseInt(values[0]));
-    }
 
     public void createProgressDialog(){
         progressDialog = new ProgressDialog(mainActivity);
         progressDialog.setMessage("Solicitando ...");
-        progressDialog.setIndeterminate(false);
-        progressDialog.setMax(100);
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.setCancelable(false);
         progressDialog.show();
 

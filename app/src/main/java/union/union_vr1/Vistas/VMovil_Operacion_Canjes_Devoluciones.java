@@ -80,6 +80,7 @@ public class VMovil_Operacion_Canjes_Devoluciones extends TabActivity {
     private ExportMain exportMain;
 
 
+    private static String TAG = VMovil_Operacion_Canjes_Devoluciones.class.getSimpleName();
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -570,41 +571,48 @@ public class VMovil_Operacion_Canjes_Devoluciones extends TabActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int liquidacion) {
 
-                int estado = dbAdapter_temp_canjes_devoluciones.truncateCanjesDevoluciones();
-                if (estado > 0) {
+                int contadorRegistrosActualizados = 0;
+                int contadorRegistrosEliminados = 0;
 
-                    Cursor canjes = dbAdapter_temp_canjes_devoluciones.listarCanjes(establec);
-                    Cursor devol = dbAdapter_temp_canjes_devoluciones.listarDevoluciones(establec);
 
-                    //CANJES
-                    while (canjes.moveToNext()) {
+                Cursor cursorCanjes = dbAdapter_temp_canjes_devoluciones.listarCanjes(establec);
+                Cursor cursorDevoluciones = dbAdapter_temp_canjes_devoluciones.listarDevoluciones(establec);
 
-                        int cantidad = canjes.getInt(canjes.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_cantidad));
-                        String idProducto = canjes.getString(canjes.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_id_producto));
-                        String liqui = canjes.getString(canjes.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_liquidacion));
-                        int estadoPro = canjes.getInt(canjes.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_estado_producto));
-                        dbHelper_Stock.restartstockCanjes(cantidad,idProducto,liqui,estadoPro);
 
+                for (cursorCanjes.moveToFirst(); !cursorCanjes.isAfterLast(); cursorCanjes.moveToNext()) {
+                    int cantidad = cursorCanjes.getInt(cursorCanjes.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_cantidad));
+                    String idProducto = cursorCanjes.getString(cursorCanjes.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_id_producto));
+                    String liqui = cursorCanjes.getString(cursorCanjes.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_liquidacion));
+                    int estadoPro = cursorCanjes.getInt(cursorCanjes.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_estado_producto));
+                    contadorRegistrosActualizados += dbHelper_Stock.restartstockCanjes(cantidad, idProducto, liqui, estadoPro);
+                }
+                for (cursorDevoluciones.moveToFirst(); !cursorDevoluciones.isAfterLast(); cursorDevoluciones.moveToNext()) {
+                    int cantidad = cursorDevoluciones.getInt(cursorDevoluciones.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_cantidad));
+                    String idProducto = cursorDevoluciones.getString(cursorDevoluciones.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_id_producto));
+                    String liqui = cursorDevoluciones.getString(cursorDevoluciones.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_liquidacion));
+                    int estadoPro = cursorDevoluciones.getInt(cursorDevoluciones.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_estado_producto));
+                    contadorRegistrosActualizados += dbHelper_Stock.restartstockDevoluciones(cantidad, idProducto, liqui, estadoPro);
+                }
+
+                if (contadorRegistrosActualizados > 0) {
+
+                    contadorRegistrosEliminados = dbAdapter_temp_canjes_devoluciones.deleteTempCanjesDevoluciones();
+                    Log.d(TAG, "ELIMINADOS: "+contadorRegistrosEliminados+", ACTUALIZADOS stock : "+contadorRegistrosActualizados);
+
+                    if (contadorRegistrosEliminados>0) {
+                        Utils.setToast(getApplicationContext(), "Canceló", R.color.verde);
+                        startActivity(new Intent(getApplicationContext(), VMovil_Evento_Establec.class));
+                        finish();
                     }
-                    //DEVOLUCIONES
-                    while (devol.moveToNext()) {
-                        int cantidad = devol.getInt(devol.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_cantidad));
-                        String idProducto = devol.getString(devol.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_id_producto));
-                        String liqui = devol.getString(devol.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_liquidacion));
-                        int estadoPro = devol.getInt(devol.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_estado_producto));
-                        dbHelper_Stock.restartstockDevoluciones(cantidad,idProducto,liqui,estadoPro);
-                    }
-
-
-
-                    Utils.setToast(getApplicationContext(), "Eliminado", R.color.verde);
-                    startActivity(new Intent(getApplicationContext(), VMovil_Evento_Establec.class));
-                    finish();
                 } else {
-                    Utils.setToast(getApplicationContext(),"Ocurrio un error",R.color.rojo);
+
+                    Utils.setToast(getApplicationContext(), "Ocurrió un error.", R.color.rojo);
                     startActivity(new Intent(getApplicationContext(), VMovil_Evento_Establec.class));
                     finish();
                 }
+
+
+
 
             }
         });

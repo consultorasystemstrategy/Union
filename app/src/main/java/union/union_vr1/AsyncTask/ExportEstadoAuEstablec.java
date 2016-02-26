@@ -195,11 +195,10 @@ public class ExportEstadoAuEstablec extends AsyncTask<String, String, String> {
 
         } catch (Exception e) {
             e.printStackTrace();
-            Log.d("JSON AUTO ESTAB", "" + jsonObject.toString());
+
         }
 
 
-        publishProgress("" + 10);
 
         //ACTUALIZAR EN LA TABLA EVENTO POR ESTABLECIMIENTO
 
@@ -223,14 +222,8 @@ public class ExportEstadoAuEstablec extends AsyncTask<String, String, String> {
 
 
         if (mainActivity.isFinishing()) {
-
             progressDialog.dismiss();
             return;
-        } else {
-
-            progressDialog.setProgress(100);
-
-
         }
         super.onPostExecute(s);
 
@@ -238,18 +231,11 @@ public class ExportEstadoAuEstablec extends AsyncTask<String, String, String> {
     }
 
 
-    @Override
-    protected void onProgressUpdate(String... values) {
-        super.onProgressUpdate(values);
-        progressDialog.setProgress(Integer.parseInt(values[0]));
-    }
-
     public void createProgressDialog() {
         progressDialog = new ProgressDialog(mainActivity);
         progressDialog.setMessage("Enviando ...");
-        progressDialog.setIndeterminate(false);
-        progressDialog.setMax(100);
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.setCancelable(false);
         progressDialog.show();
 

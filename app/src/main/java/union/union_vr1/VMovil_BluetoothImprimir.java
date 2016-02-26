@@ -205,12 +205,7 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
         nameImpresora= SP.getString("impresoraNombre", defaultNameImpresora);
         pulgadasImpresora= Integer.parseInt(SP.getString("impresoraAncho", "3"));
 
-       /* Cursor cursor = dbAdapter_agente_login.fetchAgenteMAC(idLiquidacion);
-        cursor.moveToFirst();
-        Log.d(TAG, "CURSOR COUNT MAC : "+cursor.getCount());
-        if (cursor.getCount()>0){
-            defaultAdressImpresora = cursor.getString(cursor.getColumnIndexOrThrow(dbAdapter_agente_login.AG_MAC));
-        }*/
+
 
         defaultAdressImpresora = session.fetchMAC(Constants._ID_SESSION_MAC);
 
@@ -317,6 +312,7 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
        String direccion="";
        String sha1="";
        String tipoC="";
+       int direccion_id = Constants._DIRECCION_ESTABLECIMIENTO;
 
        double base_imponible = 0.0;
        double igv = 0.0;
@@ -340,14 +336,26 @@ public class VMovil_BluetoothImprimir extends Activity implements View.OnClickLi
            Log.d(TAG, "NRMDOC : "+numDoc
            );
            Log.d(TAG, "COMPROBANTE : "+comprobante);
+           direccion_id = cursorVentaCabecera.getInt(cursorVentaCabecera.getColumnIndexOrThrow(DbAdapter_Comprob_Venta.CV_direccion_id));
            fecha = cursorVentaCabecera.getString(cursorVentaCabecera.getColumnIndexOrThrow(DbAdapter_Comprob_Venta.CV_fecha_doc));
            cliente = cursorVentaCabecera.getString(cursorVentaCabecera.getColumnIndexOrThrow(DbAdaptert_Evento_Establec.EE_nom_cliente));
            dni_ruc = cursorVentaCabecera.getString(cursorVentaCabecera.getColumnIndexOrThrow(DbAdaptert_Evento_Establec.EE_doc_cliente));
            nombreAgente = cursorVentaCabecera.getString(cursorVentaCabecera.getColumnIndexOrThrow(DbAdapter_Agente.AG_nombre_agente));
-           direccion = cursorVentaCabecera.getString(cursorVentaCabecera.getColumnIndexOrThrow(DbAdaptert_Evento_Establec.EE_direccion));
            sha1 = cursorVentaCabecera.getString(cursorVentaCabecera.getColumnIndexOrThrow(DbAdapter_Comprob_Venta.CV_SHA1));
            tipoVenta = cursorVentaCabecera.getInt(cursorVentaCabecera.getColumnIndexOrThrow(DbAdapter_Comprob_Venta.CV_id_tipo_venta));
            idFormaPago = cursorVentaCabecera.getInt(cursorVentaCabecera.getColumnIndexOrThrow(DbAdapter_Comprob_Venta.CV_id_forma_pago));
+
+           switch (direccion_id){
+               case Constants._DIRECCION_ESTABLECIMIENTO:
+                   direccion = cursorVentaCabecera.getString(cursorVentaCabecera.getColumnIndexOrThrow(DbAdaptert_Evento_Establec.EE_direccion));
+                   break;
+               case Constants._DIRECCION_FISCAL:
+                   direccion = cursorVentaCabecera.getString(cursorVentaCabecera.getColumnIndexOrThrow(DbAdaptert_Evento_Establec.EE_direccion_principal));
+                   break;
+               default:
+                   direccion = cursorVentaCabecera.getString(cursorVentaCabecera.getColumnIndexOrThrow(DbAdaptert_Evento_Establec.EE_direccion));
+                   break;
+           }
 
 
            ventaCabecera+= "NUMERO  : "+comprobante+"\n";

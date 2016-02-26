@@ -46,8 +46,8 @@
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="Dev"
-                android:id="@+id/VRC_TXdevol"
+                android:text="Can"
+                android:id="@+id/VRC_TXcanjes"
                 android:textStyle="bold|italic"
                 android:textColor="@color/Personalizado4"
                 android:gravity="right" />
@@ -56,11 +56,12 @@
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="Can"
-                android:id="@+id/VRC_TXcanjes"
+                android:text="Disp"
+                android:id="@+id/VRC_TXdisp"
                 android:textStyle="bold|italic"
                 android:textColor="@color/Personalizado4"
                 android:gravity="right" />
+
         </TableRow>
 
     </TableLayout>

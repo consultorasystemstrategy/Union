@@ -14,6 +14,7 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
@@ -92,6 +93,8 @@ public class VMovil_Abrir_Caja extends Activity implements View.OnClickListener 
         final EditText editKm = new EditText(getApplicationContext());
         editKm.setInputType(InputType.TYPE_CLASS_NUMBER);
         editKm.setTextColor(0xff000000);
+        int maxLengthofEditText = 7;
+        editKm.setFilters(new InputFilter[] {new InputFilter.LengthFilter(maxLengthofEditText)});
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setTitle("¿Esta Seguro de Abrir Cuenta?");
         alertDialogBuilder.setView(editKm);

@@ -649,7 +649,7 @@ public class DbAdapter_Comprob_Cobro {
     public Cursor fetchAllComprobCobrosByEst(String inputText) throws SQLException {
         Log.w(TAG, inputText);
         Cursor mCursor = null;
-        String query = "SELECT me.ee_te_nom_establec,mc.* FROM m_comprob_cobro mc,m_evento_establec me where mc.cc_in_id_establec =me.ee_in_id_establec and  " + CC_id_establec + " = " + inputText + " and cc_in_estado_cobro !='0' and cc_in_id_comprobante_cobro is not null  order by cc_te_fecha_programada desc";
+        String query = "SELECT me.*, mc.* FROM m_comprob_cobro mc,m_evento_establec me where mc.cc_in_id_establec =me.ee_in_id_establec and  " + CC_id_establec + " = " + inputText + " and cc_in_estado_cobro !='0' and cc_in_id_comprobante_cobro is not null  order by cc_te_fecha_programada desc";
         mCursor = mDb.rawQuery(query, null);
         if (mCursor != null) {
 
@@ -673,7 +673,7 @@ public class DbAdapter_Comprob_Cobro {
 
     public Cursor listarComprobantesToCobros(int agente) {
 
-        Cursor mCursor = mDb.rawQuery(" SELECT me.ee_te_nom_establec,me.ee_te_nom_cliente,mc.* FROM m_comprob_cobro mc,m_evento_establec me where mc.cc_in_id_establec =me.ee_in_id_establec and  cc_in_estado_cobro !='0' and cc_in_id_comprobante_cobro is not null  order by cc_te_fecha_programada desc ", null);
+        Cursor mCursor = mDb.rawQuery(" SELECT me.*, mc.* FROM m_comprob_cobro mc,m_evento_establec me where mc.cc_in_id_establec =me.ee_in_id_establec and  cc_in_estado_cobro !='0' and cc_in_id_comprobante_cobro is not null  order by cc_te_fecha_programada desc ", null);
         return mCursor;
     }
 

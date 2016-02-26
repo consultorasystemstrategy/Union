@@ -38,6 +38,7 @@ public class CargarInventario extends AsyncTask<String, String, String> {
     private String GUIA;
     JSONObject jsonObject = null;
 
+    private static String TAG = CargarInventario.class.getSimpleName();
 
     public CargarInventario(Activity mainActivity) {
         this.mainActivity = mainActivity;
@@ -56,19 +57,17 @@ public class CargarInventario extends AsyncTask<String, String, String> {
 
         StockAgenteRestApi api = new StockAgenteRestApi(mainActivity);
         try {
-            publishProgress("" + 25);
 
             String idAgente = strings[0];
             String guia = strings[1];
             GUIA = guia;
-            Log.d("DATOS DE CARGAR INVENTARIO ", idAgente + " - " + guia);
+            Log.d(TAG,"DATOS DE CARGAR INVENTARIO: "+idAgente + " - " + guia);
 
 
             jsonObject = api.ObtenerStockAgente(guia, Integer.parseInt(idAgente));
 
-            Log.d("JSON CARGAR INVENTARIO", jsonObject.toString());
+            Log.d(TAG,"JSON CARGAR INVENTARIO: "+ jsonObject.toString());
 
-            publishProgress("" + 50);
 
         } catch (Exception e) {
             Log.d("AysncImport : ", e.getMessage());
@@ -98,7 +97,6 @@ public class CargarInventario extends AsyncTask<String, String, String> {
                 //2 fecha pasada o no existe
                 //3 la guia ya se inserto
                 //-1 error.
-                progressDialog.setProgress(100);
                 dismissProgressDialog();
                 int objrturn = Integer.parseInt(jsonObject.get("Value").toString());
                 String Mensaje = "";
@@ -163,18 +161,11 @@ public class CargarInventario extends AsyncTask<String, String, String> {
         }
     }
 
-    @Override
-    protected void onProgressUpdate(String... values) {
-        super.onProgressUpdate(values);
-        progressDialog.setProgress(Integer.parseInt(values[0]));
-    }
-
     public void createProgressDialog() {
         progressDialog = new ProgressDialog(mainActivity);
         progressDialog.setMessage("Solicitando ...");
-        progressDialog.setIndeterminate(false);
-        progressDialog.setMax(100);
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.setCancelable(false);
         progressDialog.show();
 

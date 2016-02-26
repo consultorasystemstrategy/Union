@@ -55,7 +55,6 @@ public class ConsultarInventarioAnterior extends AsyncTask<String, String, Strin
 
         StockAgenteRestApi api = new StockAgenteRestApi(mainActivity);
         try {
-            publishProgress("" + 25);
 
             int idAgente = session.fetchVarible(1);
             String fecha = strings[0];
@@ -64,7 +63,6 @@ public class ConsultarInventarioAnterior extends AsyncTask<String, String, Strin
             jsonObject = api.GetInventarioAnterior(idAgente, fecha);
             Log.d("JSON CARGAR INVENTARIO", jsonObject.toString());
 
-            publishProgress("" + 50);
 
         } catch (Exception e) {
             Log.d("AysncImport : ", e.getMessage());
@@ -94,7 +92,6 @@ public class ConsultarInventarioAnterior extends AsyncTask<String, String, Strin
                 //2 fecha pasada o no existe
                 //3 la guia ya se inserto
                 //-1 error.
-                progressDialog.setProgress(100);
 
 
                 JSONArray jsonArray = jsonObject.getJSONArray("Value");
@@ -198,18 +195,12 @@ public class ConsultarInventarioAnterior extends AsyncTask<String, String, Strin
         }
     }
 
-    @Override
-    protected void onProgressUpdate(String... values) {
-        super.onProgressUpdate(values);
-        progressDialog.setProgress(Integer.parseInt(values[0]));
-    }
 
     public void createProgressDialog() {
         progressDialog = new ProgressDialog(mainActivity);
         progressDialog.setMessage("Solicitando ...");
-        progressDialog.setIndeterminate(false);
-        progressDialog.setMax(100);
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.setCancelable(false);
         progressDialog.show();
 

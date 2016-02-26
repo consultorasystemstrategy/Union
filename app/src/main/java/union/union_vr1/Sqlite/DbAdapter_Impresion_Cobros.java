@@ -27,6 +27,7 @@ public class DbAdapter_Impresion_Cobros {
     public static final String Imprimir_fechaHora = "Imprimir_fechaHora";
     //----------
     public static final String Imprimir_liquidacion= "Imprimir_liquidacion";
+    public static final String Imprimir_id_tipo_pago = "Imprimir_id_tipo_pago";
     public static final String Imprimir_id_categoria_movimiento = "Imprimir_id_categoria_movimiento";
     public static final String Imprimir_estado_cobrado = "Imprimir_estado_cobrado";
     public static final String Imprimir_referencia = "Imprimir_referencia";
@@ -37,6 +38,7 @@ public class DbAdapter_Impresion_Cobros {
     public static final String Imprimir_estado_parcial  = "Imprimir_estado_parcial";
     public static final String Imprimir_estado_flex = "Imprimir_estado_flex";
     public static final String Imprimir_id_flex = "Imprimir_id_flex";
+
     public static final String Imprimir_comprobante_nombre = "Imprimir_comprobante_nombre";
 
 
@@ -56,6 +58,7 @@ public class DbAdapter_Impresion_Cobros {
                     +Imprimir_id+" integer primary key autoincrement,"
                     +Imprimir_id_detalle+" integer,"
                     +Imprimir_id_establecimiento+" integer,"
+                    +Imprimir_id_tipo_pago+" integer,"
                     +Imprimir_monto+" text,"
                     +Imprimir_fecha+" text,"
                     +Imprimir_cliente+" text,"
@@ -97,7 +100,7 @@ public class DbAdapter_Impresion_Cobros {
 
 
     public long createImprimir(int id_detalle,int idEstablecimiento,double monto,int tipo,String fecha,String cliente,String documento, String fechaHora,String liquidacion,int estadoCobro,String refere
-    ,int idComprobante,int idPlan, int idPlanDetalle,int estadoParcial,String nombre_comprobante){
+    ,int idComprobante,int idPlan, int idPlanDetalle,int estadoParcial,String nombre_comprobante, int idTipoPago){
 
         ContentValues initialValues = new ContentValues();
         initialValues.put(Imprimir_id_detalle,id_detalle);
@@ -119,6 +122,8 @@ public class DbAdapter_Impresion_Cobros {
         initialValues.put(Imprimir_estado_parcial,estadoParcial);
         initialValues.put(Imprimir_estado_flex,Constants._CREADO);
         initialValues.put(Imprimir_comprobante_nombre,nombre_comprobante);
+        initialValues.put(Imprimir_id_tipo_pago, idTipoPago);
+
         initialValues.put(Constants._SINCRONIZAR,Constants._ACTUALIZADO);
 
 

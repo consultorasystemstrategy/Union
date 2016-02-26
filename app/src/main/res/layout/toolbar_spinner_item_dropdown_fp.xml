@@ -10,10 +10,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:drawablePadding="8dp"
-        android:gravity="left|center"
+        android:gravity="center"
         android:textColor="@color/Dark1"
         android:textSize="18dp"
         android:padding="8dp"
         android:textStyle="italic"
-        android:layout_gravity="left" />
+        android:layout_gravity="center" />
 </LinearLayout>

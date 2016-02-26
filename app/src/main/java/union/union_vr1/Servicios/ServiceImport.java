@@ -187,44 +187,44 @@ public class ServiceImport extends IntentService {
         try{
 
 
-
-
             JSONObject jsonObjectStockAgente = api.GetStockAgente(idAgente);
-            //Log.d("JSON ERROR MESSAGE", getErrorMessage(jsonObjectStockAgente));
+            Log.d(TAG,"JSON OBJECT STOCK AGENTE : "+ jsonObjectStockAgente.toString());
             builder.setProgress(_MAX, 2, false);
             startForeground(1, builder.build());
             JSONObject jsonObjectTipoGasto = api.GetTipoGasto();
+            Log.d(TAG,"JSON OBJECT TIPO GASTO : "+ jsonObjectTipoGasto.toString());
             JSONObject jsonObjectModalidadCredito = api.fsel_ModalidadCredito(idAgente);
+            Log.d(TAG,"JSON MODALIDAD CREDITO : "+ jsonObjectModalidadCredito.toString());
             JSONObject jsonObjectFormaPago = api.fsel_TipoPago();
-
+            Log.d(TAG, "JSON FORMA PAGO : " + jsonObjectFormaPago.toString());
 
             JSONObject jsonObjectPrecio = api.GetPrecioCategoria(idLiquidacion, idAgente);
+            Log.d(TAG, "JSON OBJECT PRECIO : " + jsonObjectPrecio.toString());
 
             JSONObject jsonObjectEventoEstablecimiento = api.GetEstablecimeintoXRuta(idLiquidacion, fecha, idAgente);
+            Log.d(TAG,"JSON OBJECT EVENTO ESTABLECIMIENTO : "+ jsonObjectEventoEstablecimiento.toString());
 
             JSONObject jsonObjectComprobanteCobro = api.GetHistorialCobrosPendientesXLiquidacion(idLiquidacion, idAgente);
-            Log.d(TAG,"JSON OBJECT COMPROBANTE COBRO : "+ idLiquidacion+"--"+ idAgente);
+            Log.d(TAG, "JSON OBJECT COMPROBANTE COBRO : " + jsonObjectComprobanteCobro.toString());
+            Log.d(TAG, "JSON OBJECT COMPROBANTE COBRO : " + idLiquidacion + "--" + idAgente);
 
             builder.setProgress(_MAX, 3, false);
             startForeground(1, builder.build());
             JSONObject jsonObjectHistorialVentaDetalle = api.GetHistorialVentaDetalle(idAgente);
 
-            JSONObject jsonObjectHistorialComprobanteAnterior = api.GetComprobanteVentaDetalle_Env();
+            //Log.d(TAG, "JSON OBJECT HISTORIAL VENTA DETALLE : " + jsonObjectHistorialVentaDetalle.toString());
+
+            /*JSONObject jsonObjectHistorialComprobanteAnterior = null;*/
+            JSONObject jsonObjectHistorialComprobanteAnterior = api.fsel_UltimaVenta(idLiquidacion,idAgente);
+            Log.d(TAG,"JSON OBJECT HISTORIAL VENTA ANTERIOR "+ jsonObjectHistorialComprobanteAnterior.toString());
             builder.setProgress(_MAX, 4, false);
             startForeground(1, builder.build());
             JSONObject jsonObjectRutaDistribucion = api.GetConsultarPlan_Distribucion(idAgente);
 
 
-            Log.d(TAG,"JSON OBJECT STOCK AGENTE : "+ jsonObjectStockAgente.toString());
-            Log.d(TAG,"JSON OBJECT PRECIO : "+ jsonObjectPrecio.toString());
-            Log.d(TAG,"JSON OBJECT TIPO GASTO : "+ jsonObjectTipoGasto.toString());
-            Log.d(TAG,"JSON MODALIDAD CREDITO : "+ jsonObjectModalidadCredito.toString());
-            Log.d(TAG,"JSON FORMA PAGO : "+ jsonObjectFormaPago.toString());
-            Log.d(TAG,"JSON OBJECT EVENTO ESTABLECIMIENTO : "+ jsonObjectEventoEstablecimiento.toString());
-            Log.d(TAG,"JSON OBJECT COMPROBANTE COBRO : "+ jsonObjectComprobanteCobro.toString());
-            Log.d(TAG,"JSON OBJECT HISTORIAL VENTA DETALLE : "+ jsonObjectHistorialVentaDetalle.toString());
-            Log.d(TAG,"JSON OBJECT HISTORIAL VENTA ANTERIOR "+ jsonObjectHistorialComprobanteAnterior.toString());
             Log.d(TAG,"JSON OBJECT RUTA DISTRIBUCION "+ jsonObjectRutaDistribucion.toString());
+
+
 
 
             ParserStockAgente parserStockAgente = new ParserStockAgente();
@@ -405,18 +405,22 @@ public class ServiceImport extends IntentService {
 
             builder.setProgress(_MAX, 9, false);
             startForeground(1, builder.build());
-            for (int i = 0; i < comprobanteVentaDetalles.size(); i++) {
-                Log.d(TAG, "HVA HISTORIAL VENTA ANTERIOR : " + i + " - " + comprobanteVentaDetalles.get(i).getIdComprobante() + " - " + comprobanteVentaDetalles.get(i).getIdEstablecimiento()+ " NOMBRE PRODUCTO : " + comprobanteVentaDetalles.get(i).getNombreProducto());
 
-                boolean existe = dbAdapter_histo_comprob_anterior.existeComprobanteVentaAnterior(comprobanteVentaDetalles.get(i).getIdComprobante());
-                Log.d("HVA ID PRODUCTO", "" + comprobanteVentaDetalles.get(i).getIdProducto());
-                Log.d("EXISTE ", "" + existe);
-                if (existe) {
-                    dbAdapter_histo_comprob_anterior.updateHistoComprobAnterior(comprobanteVentaDetalles.get(i));
-                } else {
-                    //NO EXISTE ENTONCES CREEMOS UNO NUEVO
-                    dbAdapter_histo_comprob_anterior.createHistoComprobAnterior(comprobanteVentaDetalles.get(i));
+            if (comprobanteVentaDetalles!=null){
+                for (int i = 0; i < comprobanteVentaDetalles.size(); i++) {
+                    Log.d(TAG, "HVA HISTORIAL VENTA ANTERIOR : " + i + " - " + comprobanteVentaDetalles.get(i).getIdComprobante() + " - " + comprobanteVentaDetalles.get(i).getIdEstablecimiento()+ " NOMBRE PRODUCTO : " + comprobanteVentaDetalles.get(i).getNombreProducto());
+
+                    boolean existe = dbAdapter_histo_comprob_anterior.existeComprobanteVentaAnterior(comprobanteVentaDetalles.get(i).getIdComprobante());
+                    Log.d("HVA ID PRODUCTO", "" + comprobanteVentaDetalles.get(i).getIdProducto());
+                    Log.d("EXISTE ", "" + existe);
+                    if (existe) {
+                        dbAdapter_histo_comprob_anterior.updateHistoComprobAnterior(comprobanteVentaDetalles.get(i));
+                    } else {
+                        //NO EXISTE ENTONCES CREEMOS UNO NUEVO
+                        dbAdapter_histo_comprob_anterior.createHistoComprobAnterior(comprobanteVentaDetalles.get(i));
+                    }
                 }
+
             }
 
             //PerIEmpresaId
@@ -568,8 +572,11 @@ public class ServiceImport extends IntentService {
             Log.d(TAG, "EXCEPTION MESSAGE : " +  e.getMessage());
             Log.d(TAG, "EXCEPTION LOLIZADES MESSAGE : " +  e.getLocalizedMessage());
             Log.d(TAG, "EXCEPTION CAUSE : " +  e.getCause());
-            Log.d(TAG, "EXCEPTION STACKTRAECE : " +  e.getStackTrace()[1]);
-            Log.d(TAG, "EXCEPTION : " +e);
+            for (int i = 0; i< e.getStackTrace().length; i++){
+
+                Log.d(TAG, "EXCEPTION STACKTRAECE : " +i+", " + e.getStackTrace()[i]);
+            }
+            Log.d(TAG, "EXCEPTION : " + e);
         }
 
 

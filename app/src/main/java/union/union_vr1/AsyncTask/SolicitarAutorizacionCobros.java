@@ -60,7 +60,6 @@ public class SolicitarAutorizacionCobros extends AsyncTask<String, String, Strin
                 }
             }
 
-            publishProgress("" + 50);
 
         } catch (Exception e) {
             Log.d("LATLONGERROR : ", e.getMessage());

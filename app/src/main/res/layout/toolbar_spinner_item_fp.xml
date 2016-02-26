@@ -14,6 +14,8 @@
         android:layout_height="wrap_content"
         android:textColor="@color/Dark1"
         android:ellipsize="marquee"
-        android:textAlignment="inherit" />
+        android:textAlignment="inherit"
+        android:layout_gravity="center"
+        android:gravity="center" />
 
 </LinearLayout>

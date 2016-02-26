@@ -13,8 +13,8 @@ public class Constants {
 
     public static final int _CANJES = 5;
     public static final int _DEVOLUCIONES = 6;
-    public static final int _EXPORTADO_FLEX = 7;
     public static final int POR_EXPORTAR_FLEX = 7;
+    public static final int _EXPORTADO_FLEX = 8;
 
     public static final int _FLEX_ID_DEFECTO = -1;
 
@@ -53,6 +53,8 @@ public class Constants {
 
     public static final String ACTION_EXPORT_SERVICE = "EXPORT_SERVICE";
     public static final String ACTION_IMPORT_SERVICE = "IMPORT_SERVICE";
+    public static final String ACTION_IMPORT_SERVICE_RUTA_DETALLE = "IMPORT_SERVICE_RUTA_DETALLE";
+
 
 
     public static final String PRINT_AUTORIZADO_= "AUTORIZADO MEDIANTE RESOLUCION";
@@ -123,6 +125,21 @@ public class Constants {
 
     //RESPUESTA SUCCESSS //
     public static final int _ZERO = 0;
+
+    //VENTA DE PRODUCTOS
+    public static final int _DIRECCION_ESTABLECIMIENTO = 1;
+    public static final int _DIRECCION_FISCAL = 2;
+    public static final int _CV_ANULADO = 0;
+    public static final int _CV_VALIDO = 1;
+
+    //
+    public static final int _SELECTED = 1;
+
+
+
+
+
+
 
 
 

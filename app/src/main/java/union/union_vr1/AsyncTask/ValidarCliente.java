@@ -57,7 +57,6 @@ public class ValidarCliente extends AsyncTask<String, String, String> {
 
     @Override
     protected String doInBackground(String... strings) {
-        publishProgress("" + 10);
         stockAgenteRestApi = new StockAgenteRestApi(mainActivity);
 
         try {
@@ -75,7 +74,6 @@ public class ValidarCliente extends AsyncTask<String, String, String> {
             Log.d(TAG + "ERROR", "" + e.getMessage() + "" + jsonObject.toString());
         }
 
-        publishProgress("" + 80);
 
 
         return null;
@@ -175,18 +173,12 @@ public class ValidarCliente extends AsyncTask<String, String, String> {
     }
 
 
-    @Override
-    protected void onProgressUpdate(String... values) {
-        super.onProgressUpdate(values);
-        progressDialog.setProgress(Integer.parseInt(values[0]));
-    }
 
     public void createProgressDialog() {
         progressDialog = new ProgressDialog(mainActivity);
         progressDialog.setMessage("Verficando ...");
-        progressDialog.setIndeterminate(false);
-        progressDialog.setMax(100);
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.setCancelable(false);
         progressDialog.show();
 
@@ -198,7 +190,7 @@ public class ValidarCliente extends AsyncTask<String, String, String> {
             errorMessage += jsonObj.getString("ErrorMessage");
         } catch (JSONException e) {
             // TODO Auto-generated catch block
-            Log.d("JSONParser => parser Error Message", e.getMessage());
+            Log.d(TAG, "JSONParser => parser Error Message"+e.getMessage());
         }
         return errorMessage;
     }

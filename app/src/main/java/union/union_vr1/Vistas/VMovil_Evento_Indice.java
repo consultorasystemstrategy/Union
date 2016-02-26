@@ -274,6 +274,13 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         listaRutaSemanal=(ListView)findViewById(R.id.listViewRutaSemanal);
 
 
+        Cursor cursorEstablecimientos = dbHelper.listarEstablecimientos(idLiquidacion);
+        if (cursorEstablecimientos.getCount() >0){
+            mNumeroEstablecimientos.setText("" + cursorEstablecimientos.getCount());
+        }else{
+            mNumeroEstablecimientos.setText("0");
+        }
+
 
         Cursor cursorAgente = dbHelper3.fetchAgentesByIds(idAgente, idLiquidacion);
         cursorAgente.moveToFirst();
@@ -286,7 +293,7 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
 
         }
         mNombreRuta.setText("" + nombreRuta);
-        mNumeroEstablecimientos.setText("" + numeroEstablecimientoxRuta);
+
         mFecha.setText("" + Utils.getDateFull());
 
         mCobroTotal = (Button) findViewById(R.id.VEI_BTNcobrarTodo);
@@ -352,6 +359,10 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
         showSlideMenu(mainActivity);
         AsignarColor(mCobroTotal);
     }
+
+
+
+
 
     private void enableGPSactiva() {
 
@@ -515,6 +526,21 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
     @Override
     protected void onResume() {
         super.onResume();
+
+        if(mCobroTotal==null){
+            mCobroTotal = (Button) findViewById(R.id.VEI_BTNcobrarTodo);
+            mCobroTotal.setOnClickListener(this);
+        }
+
+
+        Cursor cursorEstablecimientos = dbHelper.listarEstablecimientos(idLiquidacion);
+        if (cursorEstablecimientos.getCount() >0){
+            mNumeroEstablecimientos.setText("" + cursorEstablecimientos.getCount());
+        }else{
+            mNumeroEstablecimientos.setText("0");
+        }
+
+        AsignarColor(mCobroTotal);
         //SLIDING MENU
         changeDataSlideMenu();
     }

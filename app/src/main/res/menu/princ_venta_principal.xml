@@ -6,5 +6,12 @@
         android:icon="@mipmap/ic_green"
         android:orderInCategory="1"
         android:showAsAction="always" />
+    <group android:checkableBehavior="single">
+        <item android:id="@+id/establecimiento"
+            android:title="Dir. Establecimiento"
+            android:checked="true"/>
+        <item android:id="@+id/fiscal"
+            android:title="Dir. Fiscal" />
+    </group>
 
 </menu>

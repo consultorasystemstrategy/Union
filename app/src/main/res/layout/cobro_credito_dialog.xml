@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Productos Union S.A.C"
+            android:id="@+id/tvNombreEstablecimiento"
+            android:gravity="center"
+            android:textColor="@color/PersonalizadoSteve4"
+            android:textSize="24dp" />
+
+        <Spinner
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/VC_spinnerTipoPago"
+            android:minHeight="48dp"
+            android:layout_gravity="center"
+            android:gravity="center" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Precio : S/. 000.00"
+                android:id="@+id/tvSaldo"
+                android:gravity="center"
+                android:textColor="@color/PersonalizadoSteve2"
+                android:textSize="24dp"
+                android:layout_weight="2" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

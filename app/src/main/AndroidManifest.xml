@@ -27,15 +27,6 @@
     <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
-    <!--
-        <android:uses-permission
-        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-        android:maxSdkVersion="20" />
-
-    <android:uses-permission
-        android:name="android.permission.READ_EXTERNAL_STORAGE"
-        android:maxSdkVersion="20" />
-    -->
     <application
         android:name=".Utils.MyApplication"
         android:icon="@drawable/ic_launcher"
@@ -279,14 +270,17 @@
         <service
             android:name=".AsyncTask.ExportService"
             android:exported="false" />
-
         <activity
             android:name=".Vistas.Bluetooth_Printer"
-            android:label="@string/title_activity_bluetooth__printer" />
-
+            android:label="@string/title_activity_bluetooth__printer"
+            android:screenOrientation="portrait"/>
         <service
             android:name=".Servicios.ServiceImport"
             android:exported="false" />
+        <service
+            android:name=".Servicios.ServiceImportClienteRuta"
+            android:exported="false" />
+
         <service
             android:name=".Servicios.ServiceExport"
             android:exported="false" />

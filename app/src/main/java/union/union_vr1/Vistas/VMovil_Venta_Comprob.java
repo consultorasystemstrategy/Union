@@ -2,10 +2,13 @@ package union.union_vr1.Vistas;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -40,6 +43,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import union.union_vr1.R;
+import union.union_vr1.Servicios.ServiceExport;
 import union.union_vr1.Sqlite.ArrayAdapterWithIcon;
 import union.union_vr1.Sqlite.Constants;
 import union.union_vr1.Sqlite.CursorAdapterComprobanteVenta;
@@ -268,7 +272,7 @@ public class VMovil_Venta_Comprob extends Activity implements View.OnClickListen
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         //Cursor cursor = dbHelper_Comprob_Cobro.listarComprobantesToCobrosMante("" + idEstablec);
-        Log.d("VENTACOMPRO",""+idEstablec);
+        Log.d("VENTACOMPRO", "" + idEstablec);
         Cursor cr = dbAdapter_impresion_cobros.listarImprimirCobros(getDatePhone(),idEstablec);
         CursorAdapter_Man_Cbrz cAdapter_Cbrz_Man = new CursorAdapter_Man_Cbrz(this, cr);
         final ListView listCbrz = (ListView) findViewById(R.id.VVCO_cbrz);
@@ -662,8 +666,8 @@ public class VMovil_Venta_Comprob extends Activity implements View.OnClickListen
     public void dialogAcciones(final int idComprobante) {
 
         //NO SE PODRÁ ANULAR, POR EL MOMENTO.
-        //final String[] items = {"Imprimir", "Anular"};
-        final String[] items = {"Imprimir"};
+        final String[] items = {"Imprimir", "Anular"};
+        //final String[] items = {"Imprimir"};
         AlertDialog.Builder dialogo = new AlertDialog.Builder(this);
         dialogo.setTitle("Seleccionar una acción");
         dialogo.setItems(items, new DialogInterface.OnClickListener() {
@@ -678,36 +682,8 @@ public class VMovil_Venta_Comprob extends Activity implements View.OnClickListen
                         break;
                     case 1:
 
-                        //ESTE ESTÁ DESHABILITADO
-                        Cursor cursorComprobanteVentaDetalle = dbHelper_Comp_Venta_Detalle.fetchAllComprobVentaDetalleByIdComp(idComprobante);
-                        cursorComprobanteVentaDetalle.moveToFirst();
+                        anularComprobante(VMovil_Venta_Comprob.this).show();
 
-                        int id_producto;
-                        int cantidad;
-                        int precioUnitario;
-                        int costeVenta;
-
-                        cursorComprobanteVentaDetalle.moveToFirst();
-                        if (cursorComprobanteVentaDetalle.getCount() > 0) {
-                            do {
-                                id_producto = cursorComprobanteVentaDetalle.getInt(cursorComprobanteVentaDetalle.getColumnIndex(DbAdapter_Comprob_Venta_Detalle.CD_id_producto));
-                                cantidad = cursorComprobanteVentaDetalle.getInt(cursorComprobanteVentaDetalle.getColumnIndex(DbAdapter_Comprob_Venta_Detalle.CD_cantidad));
-
-                                //FALTÓ MULTIPLICARLO POR EL VALOR UNIDAD.
-                                dbHelper_Stock_Agente.updateStockAgenteCantidad(id_producto, cantidad, liquidacion);
-
-                            } while (cursorComprobanteVentaDetalle.moveToNext());
-                        } else {
-                            Toast.makeText(getApplicationContext(), "No ha registros de este comprobante de venta : ", Toast.LENGTH_LONG).show();
-                        }
-
-                        dbHelper.updateComprobante(idComprobante, 0);
-
-                        finish();
-                        Intent intent2 = new Intent(getApplicationContext(), VMovil_Venta_Comprob.class);
-                        startActivity(intent2);
-
-                        Toast.makeText(getApplicationContext(), "Comprobante Anulado ", Toast.LENGTH_LONG).show();
                         break;
                     default:
                         //
@@ -721,6 +697,83 @@ public class VMovil_Venta_Comprob extends Activity implements View.OnClickListen
         dialogo.show();
     }
 
+    public Dialog anularComprobante(final Activity main){
+        return new AlertDialog.Builder(main)
+                .setTitle("Anular Comprobante")
+                .setMessage("¿Está seguro que desea anular el comprobante?")
+                .setNegativeButton(R.string.no, null)
+                .setPositiveButton(R.string.si, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // FIRE ZE MISSILES!
+
+                        //ESTE ESTÁ DESHABILITADO
+                        Cursor cursorComprobanteVentaDetalle = dbHelper_Comp_Venta_Detalle.fetchAllComprobVentaDetalleByIdComp(idComprobante);
+                        cursorComprobanteVentaDetalle.moveToFirst();
+
+                        int id_producto;
+                        int cantidad;
+                        int precioUnitario;
+                        int costeVenta;
+
+                        int updated = 0;
+                        cursorComprobanteVentaDetalle.moveToFirst();
+                        if (cursorComprobanteVentaDetalle.getCount() > 0) {
+                            do {
+                                id_producto = cursorComprobanteVentaDetalle.getInt(cursorComprobanteVentaDetalle.getColumnIndex(DbAdapter_Comprob_Venta_Detalle.CD_id_producto));
+                                cantidad = cursorComprobanteVentaDetalle.getInt(cursorComprobanteVentaDetalle.getColumnIndex(DbAdapter_Comprob_Venta_Detalle.CD_cantidad));
+
+                                //FALTÓ MULTIPLICARLO POR EL VALOR UNIDAD.
+                                updated += dbHelper_Stock_Agente.updateStockAgenteCantidad(id_producto, cantidad, liquidacion);
+
+                            } while (cursorComprobanteVentaDetalle.moveToNext());
+                        } else {
+                            Toast.makeText(getApplicationContext(), "No ha registros de este comprobante de venta, intente de nuevo. ", Toast.LENGTH_LONG).show();
+
+                        }
+
+                        if (updated > 0) {
+                            dbHelper.updateComprobante(idComprobante, Constants._CV_ANULADO, Constants._ACTUALIZADO);
+                            Toast.makeText(getApplicationContext(), "Comprobante Anulado ", Toast.LENGTH_LONG).show();
+                        }
+
+                        displayListView();
+
+                        if (conectadoWifi() || conectadoRedMovil()) {
+                            // exportMain.execute();
+                            Intent intent = new Intent(main, ServiceExport.class);
+                            intent.setAction(Constants.ACTION_EXPORT_SERVICE);
+                            startService(intent);
+
+                        }
+                    }
+                }).create();
+    }
+
+    protected Boolean conectadoWifi(){
+        ConnectivityManager connectivity = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivity != null) {
+            NetworkInfo info = connectivity.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+            if (info != null) {
+                if (info.isConnected()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    protected Boolean conectadoRedMovil(){
+        ConnectivityManager connectivity = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivity != null) {
+            NetworkInfo info = connectivity.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+            if (info != null) {
+                if (info.isConnected()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
     //SLIDING MENU
     public void showSlideMenu(Activity activity) {

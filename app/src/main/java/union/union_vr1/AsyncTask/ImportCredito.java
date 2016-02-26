@@ -64,7 +64,6 @@ public class ImportCredito extends AsyncTask<String, String, String> {
         StockAgenteRestApi api = new StockAgenteRestApi(mainActivity);
 
 
-        publishProgress("" + 10);
 
         //ACTUALIZAR LOS CRÉDITOS DE LOS ESTABLECIMIENTOS
 
@@ -173,7 +172,6 @@ public class ImportCredito extends AsyncTask<String, String, String> {
 
 
             }
-            publishProgress("" + 80);
 
         } catch (Exception e) {
             Log.e("Error",""+e.getMessage());
@@ -204,7 +202,6 @@ public class ImportCredito extends AsyncTask<String, String, String> {
             return;
         } else {
 
-            progressDialog.setProgress(100);
             dismissProgressDialog();
             Toast.makeText(mainActivity.getApplicationContext(), "CRÉDITOS IMPORTADOS", Toast.LENGTH_LONG).show();
 
@@ -216,18 +213,12 @@ public class ImportCredito extends AsyncTask<String, String, String> {
     }
 
 
-    @Override
-    protected void onProgressUpdate(String... values) {
-        super.onProgressUpdate(values);
-        progressDialog.setProgress(Integer.parseInt(values[0]));
-    }
 
     public void createProgressDialog() {
         progressDialog = new ProgressDialog(mainActivity);
         progressDialog.setMessage("Importando ...");
-        progressDialog.setIndeterminate(false);
-        progressDialog.setMax(100);
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.setCancelable(false);
         progressDialog.show();
 

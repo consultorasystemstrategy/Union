@@ -167,45 +167,7 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter {
                     linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.amarillo));
                     break;
             }
-/*
-            switch (estado_autorizado_esta){
-                case 5: //Puede editar o enviar
-                    linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.Dark1));
-                    break;
-                case 6: //No puede hacer nada
-                    linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.Dark1));
-                    break;
-                case 7: //Normal
-                    //DO NOTHING, QUE TOME EL COLOR ANTERIOR
-                    break;
-                case 8://Puede editar y enviar
-                    linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.Dark1));
-                    break;
-            }*/
-            /*switch (estado_autorizado) {
-                case 1: //editar
-                    linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.Dark1));
-                    break;
-                case 2://nada
-                    break;
-                case 3:
-                    break;
-                case 4://editar
-                    linearLayout.setBackgroundColor(context.getResources().getColor(R.color.Dark1));
-                    break;
-                case 5://editar
-                    linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.Dark1));
-                    break;
-                case 6://nada
-                    break;
-                case 7:
-                    break;
-                case 8://editar
-                    linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.Dark1));
-                    break;
-                default:
-                    break;
-            }*/
+
 
             final String final_id = id_establecimiento;
             final int f_estado_autorizado = estado_autorizado_esta;
@@ -235,37 +197,7 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter {
 
 
                     Log.d(TAG, "ESTADO : " + "" + estado_autorizado + _id_establecimiento_selected);
-                    /*
-                    switch (estado_autorizado) {
-                        case 1: //editar
-                            Utils.setToast(context, "No esta autorizado para la venta", R.color.rojo);
-                            break;
-                        case 2://nada
-                            Utils.setToast(context, "No esta autorizado para la venta", R.color.rojo);
-                            break;
-                        case 3:
-                            eleccion(id_establecimiento);
-                            break;
-                        case 4://editar
-                            Utils.setToast(context, "No esta autorizado para la venta", R.color.rojo);
-                            break;
-                        case 5://editar
-                            Utils.setToast(context, "No esta autorizado para la venta", R.color.rojo);
-                            break;
-                        case 6://nada
-                            Utils.setToast(context, "No esta autorizado para la venta", R.color.rojo);
-                            break;
-                        case 7:
-                            eleccion(id_establecimiento);
-                            break;
-                        case 8://editar
-                            Utils.setToast(context, "No esta autorizado para la venta", R.color.rojo);
-                            break;
-                        default:
-                            Utils.setToast(context, "No esta autorizado para la venta", R.color.rojo);
-                            break;
-                    }
-                }*/
+
                 }
             });
 
@@ -362,55 +294,7 @@ public class CursorAdapterEstablecimientoColor extends CursorAdapter {
 
         }
 
-/*
-        switch (estado_autorizado) {
-            case 1: //editar
 
-                items = new String[]{"Editar", "Refrescar"};
-                icons = new Integer[]{android.R.drawable.ic_menu_edit,
-                        android.R.drawable.ic_menu_upload};
-
-                adapter = new ArrayAdapterWithIcon(context, items, icons);
-                messageDialog(adapter, idEstablec);
-                break;
-            case 2://nada
-                Utils.setToast(context, "No esta autorizado para la venta", R.color.rojo);
-                break;
-            case 3:
-                Utils.setToast(context, "Ya está autorizado.", R.color.verde);
-                break;
-            case 4://editar
-                items = new String[]{"Editar", "Refrescar"};
-                icons = new Integer[]{android.R.drawable.ic_menu_edit,
-                        android.R.drawable.ic_menu_upload};
-
-                adapter = new ArrayAdapterWithIcon(context, items, icons);
-                messageDialog(adapter, idEstablec);
-                break;
-            case 5://editar
-                items = new String[]{"Editar", "Refrescar"};
-                icons = new Integer[]{android.R.drawable.ic_menu_edit,
-                        android.R.drawable.ic_menu_upload};
-                adapter = new ArrayAdapterWithIcon(context, items, icons);
-                messageDialog(adapter, idEstablec);
-                break;
-            case 6://nada
-                Utils.setToast((Activity) (context), "No esta autorizado para la venta", R.color.rojo);
-                break;
-            case 7:
-                Utils.setToast(context, "Ya está autorizado.", R.color.verde);
-                break;
-            case 8://editar
-                items = new String[]{"Editar", "Refrescar"};
-                icons = new Integer[]{android.R.drawable.ic_menu_edit,
-                        android.R.drawable.ic_menu_upload};
-                adapter = new ArrayAdapterWithIcon(context, items, icons);
-                messageDialog(adapter, idEstablec);
-                break;
-            default:
-                break;
-        }
-        */
 
 
     }

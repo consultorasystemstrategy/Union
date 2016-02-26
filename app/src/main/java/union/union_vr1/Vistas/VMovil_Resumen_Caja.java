@@ -84,6 +84,7 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
     private SimpleCursorAdapter dataAdapter;
     private DbAdapter_Resumen_Caja dbHelperRC;
     private DbAdapter_Informe_Gastos dbAdapter_informe_gastos;
+    private DbAdapter_Forma_Pago dbAdapter_forma_pago;
     //private SimpleCursorAdapter dataAdapterRC;
     private CursorAdapter_ReporteComprobante cursorAdapterReporteComprobante;
     private DbGastos_Ingresos dbHelperGastosIngr;
@@ -210,6 +211,10 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
 
         dbAdapter_informe_gastos = new DbAdapter_Informe_Gastos(this);
         dbAdapter_informe_gastos.open();
+
+
+        dbAdapter_forma_pago = new DbAdapter_Forma_Pago(this);
+        dbAdapter_forma_pago.open();
         //SLIDING MENU
         dbGastosIngresos = new DbGastos_Ingresos(this);
         dbGastosIngresos.open();
@@ -369,23 +374,25 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
+        Intent intentExportService = new Intent(mainActivity, ServiceExport.class);
+        intentExportService.setAction(Constants.ACTION_EXPORT_SERVICE);
         switch (id) {
             /*case R.id.buttonPrint:
                 Intent intent = new Intent(mainActivity, ImprimirArqueoCaja.class);
                 startActivity(intent);
                 break;*/
             case R.id.buttonExportERP:
-                Intent intentExportService = new Intent(mainActivity, ServiceExport.class);
-                intentExportService.setAction(Constants.ACTION_EXPORT_SERVICE);
                 mainActivity.startService(intentExportService);
                 break;
 
             case R.id.imprimirDisponible:
+                mainActivity.startService(intentExportService);
                 Intent intentImprimirStock = new Intent(mainActivity, ImprimirStockDisponible.class);
                 startActivity(intentImprimirStock);
                 break;
 
             case R.id.imprimirDevoluciones:
+                mainActivity.startService(intentExportService);
                 Intent intentImprimirDevoluciones = new Intent(mainActivity, ImprimirDevoluciones.class);
                 startActivity(intentImprimirDevoluciones);
                 break;
@@ -412,16 +419,16 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
                 DbAdapter_Stock_Agente.ST_nombre,
                 DbAdapter_Stock_Agente.ST_inicial,
                 DbAdapter_Stock_Agente.ST_ventas,
-                DbAdapter_Stock_Agente.ST_devoluciones,
-                DbAdapter_Stock_Agente.ST_canjes
+                DbAdapter_Stock_Agente.ST_canjes,
+                DbAdapter_Stock_Agente.ST_disponible
         };
         //VISTA
         int[] to = new int[]{
                 R.id.VRC_TXproducto,
                 R.id.VRC_TXinicialFin,
                 R.id.VRC_TXventa,
-                R.id.VRC_TXdevol,
-                R.id.VRC_TXcanjes
+                R.id.VRC_TXcanjes,
+                R.id.VRC_TXdisp
         };
         dataAdapter = new SimpleCursorAdapter(
                 this, R.layout.infor_resumen_ventas,
@@ -486,34 +493,10 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
         textViewTotalCobrado = (TextView) viewResumenTotal.findViewById(R.id.resumen_total_cobrado);
 
 
-        /*String[] columns = new String[]{
-                "comprobante",
-                "n",
-                "emitidas",
-                "pagado",
-                "cobrado"};
-
-
-        int[] to = new int[]{
-                R.id.VRC_descripcion,
-                R.id.VRC_cantidad,
-                R.id.VRC_vendido,
-                R.id.VRC_pagado,
-                R.id.VRC_cobrado
-        };
-
-        dataAdapterRC = new SimpleCursorAdapter(
-                this, R.layout.infor_resumen_ingresos,
-                cursor,
-                columns,
-                to,
-                0);*/
         cursorAdapterReporteComprobante = new CursorAdapter_ReporteComprobante(VMovil_Resumen_Caja.this, cursor);
 
-        //CursorAdapter cursorAdapter = new CursorResumenComprobantes(mainActivity,cursor,true);
 
         Cursor cursorResumen = cursorAdapterReporteComprobante.getCursor();
-        //Cursor cursorResumen = cursorAdapter.getCursor();
         cursorResumen.moveToFirst();
 
 
@@ -571,40 +554,39 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
 
         Cursor cursorGastos = dbAdapter_informe_gastos.resumenInformeGastos(getDayPhone());
 
-        Cursor cursorTipoIngresos = dbAdapter_informe_gastos.resumenTipoIngresos(idLiquidacion);
+        Cursor cursorTipoIngresos = dbAdapter_forma_pago.fetchAllFormaPagos();
+
+
 
         String cadenaDescripciontipoIngreso ="";
         String cadenaTotalTipoIngreso = "";
         for (cursorTipoIngresos.moveToFirst(); !cursorTipoIngresos.isAfterLast(); cursorTipoIngresos.moveToNext()) {
+            int _id = cursorTipoIngresos.getInt(cursorTipoIngresos.getColumnIndexOrThrow(DbAdapter_Forma_Pago.FP_id));
+            int _id_forma_pago = cursorTipoIngresos.getInt(cursorTipoIngresos.getColumnIndexOrThrow(DbAdapter_Forma_Pago.FP_id_forma_pago));
             String descripcionTipoIngreso = cursorTipoIngresos.getString(cursorTipoIngresos.getColumnIndexOrThrow(DbAdapter_Forma_Pago.FP_detalle));
-            Double total = cursorTipoIngresos.getDouble(cursorTipoIngresos.getColumnIndexOrThrow("total"));
+            int _selected = cursorTipoIngresos.getInt(cursorTipoIngresos.getColumnIndexOrThrow(DbAdapter_Forma_Pago.FP_selected));
 
-            cadenaDescripciontipoIngreso += "Ingresos en "+ descripcionTipoIngreso+" : \n";
-            cadenaTotalTipoIngreso += df.format(total)+"\n";
+            Double totalVenta = 0.0;
+            Double totalCobro = 0.0;
+            Double totalIngreso = 0.0;
+
+            totalVenta = dbAdapter_informe_gastos. getTotalVentaByTipoIngreso(idLiquidacion, _id_forma_pago);
+            totalCobro = dbAdapter_informe_gastos.getTotalCobroByTipoIngreso(idLiquidacion, _id_forma_pago);
+
+            totalIngreso = totalVenta + totalCobro;
+
+
+
+            if (totalIngreso >0 ){
+                cadenaDescripciontipoIngreso += "Ingresos en "+ descripcionTipoIngreso+" : \n";
+                cadenaTotalTipoIngreso += df.format(totalIngreso)+"\n";
+
+            }
         }
 
         textViewIngresosTipoNombre.setText(cadenaDescripciontipoIngreso);
         textViewnIngresosTipoCantidad.setText(cadenaTotalTipoIngreso);
-        /*String[] de = {
-                "tg_te_nom_tipo_gasto",
-                "RUTA"
-                *//*,"PLANTA"*//*
-        };
-        int[] para = {
-                R.id.textviewNombre,
-                R.id.textViewGastoRuta
-                *//*,R.id.textViewGastoPlanta*//*
 
-        };
-
-        SimpleCursorAdapter simpleCursorAdapter = new SimpleCursorAdapter(
-                this,
-                R.layout.resumen_informe_gastos,
-                cursorGastos,
-                de,
-                para,
-                0
-        );*/
         CursorAdapter_ResumenGastos cursorAdapter_resumenGastos = new CursorAdapter_ResumenGastos(VMovil_Resumen_Caja.this, cursorGastos);
 
         listViewResumenGastos.setAdapter(cursorAdapter_resumenGastos);
@@ -746,6 +728,7 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
 
 
         Cursor cursorExportacionFlex = dbAdapter_exportacion_comprobantes.fetchAll();
+        cursorExportacionFlex.moveToFirst();
         for (cursorExportacionFlex.moveToFirst(); !cursorExportacionFlex.isAfterLast(); cursorExportacionFlex.moveToNext()) {
 
             Log.d(TAG, "EXPORTACIÓN AL FLEX -->  _ID : " + cursorExportacionFlex.getLong(cursorExportacionFlex.getColumnIndexOrThrow(dbAdapter_exportacion_comprobantes.EC_id)) + ", _ID_SID : " +
@@ -771,7 +754,7 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
         int colaAutorizacionCobro = dbAdapter_temp_autorizacion_cobro.filterExport().getCount();
         int colaCobrosManuales = dbAdapter_cobros_manuales.filterExport().getCount();
         int colaExportacionFlex = dbAdapter_exportacion_comprobantes.filterExport(idLiquidacion).getCount();
-        int colaExportCManuFlex = dbAdapter_cobros_manuales.filterExportForFlex().getCount();
+        int colaExportCManuFlex = dbAdapter_cobros_manuales.filterExportForFlexId().getCount();
         int colaExportCNormFlex = dbAdapter_impresion_cobros.listarCobrosExpFlex().getCount();
         int colaCliente = dbAdaptert_evento_establec.listarToExport(idLiquidacion).getCount();
         //KELVIN LO REVISARÁ Y ME DIRÁ

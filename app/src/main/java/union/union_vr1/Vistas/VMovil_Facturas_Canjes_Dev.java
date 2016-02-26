@@ -46,7 +46,6 @@ import union.union_vr1.Sqlite.DbAdaptert_Evento_Establec;
 import union.union_vr1.Utils.RoundedLetterView;
 import union.union_vr1.Utils.Utils;
 
-import static union.union_vr1.R.layout.*;
 
 public class VMovil_Facturas_Canjes_Dev extends Activity {
     private DBAdapter_Temp_Canjes_Devoluciones dbAdapter_tem_canjes_devoluciones;
@@ -165,7 +164,8 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
         Log.d(TAG, "" + cr.getCount());
 
         layoutNoEncontrado = View.inflate(this, R.layout.info_producto_no_encontrado, null);
-        if (cr.moveToFirst()) {
+        if (cr.getCount()>0){
+            cr.moveToFirst();
             if (cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Histo_Venta_Detalle.HD_cantidad)) == null || cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Histo_Venta_Detalle.HD_cantidad)).equals("")) {
 
 
@@ -251,7 +251,8 @@ public class VMovil_Facturas_Canjes_Dev extends Activity {
                 });
             }
 
-        } else {
+
+        }else {
             ArrayList<String> noEncontrado = new ArrayList<String>();
             noEncontrado.add("");
 

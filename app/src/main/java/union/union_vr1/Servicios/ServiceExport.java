@@ -177,6 +177,8 @@ public class ServiceExport extends IntentService {
 
 
         Cursor cursorInformeGastos = dbAdapter_informe_gastos.filterExport();
+        /*int nd = dbAdapter_comprob_venta.updateSerie(1, "B239", 28, Constants._ACTUALIZADO);
+        Log.d(TAG, "UPDATED SERIE N: "+nd);*/
         Cursor cursorComprobanteVenta = dbAdapter_comprob_venta.filterExport();
 
         builder.setProgress(_MAX, 10, false);
@@ -187,6 +189,7 @@ public class ServiceExport extends IntentService {
         Cursor cursorInsertarCaja = dbAdapter_comprob_cobro.filterExportUpdatedAndEstadoCobro();
         Cursor cursorInsertarCajaParcial = dbAdapter_comprob_cobro.filterExportUpdatedAndEstadoCobroParcial();
         Cursor cursorEventoEstablecimiento = dbAdaptert_evento_establec.filterExportUpdated(idLiquidacion);
+
 
 
 
@@ -203,7 +206,6 @@ public class ServiceExport extends IntentService {
 
 
         //Log.d("COBROSNORMALES",""+crCobrosInsrCaja.getCount());
-        Log.d("COBROSNORMALES",""+cursorComprobanteVenta.getCount());
 
         builder.setProgress(_MAX, 15, false);
         startForeground(1, builder.build());
@@ -232,6 +234,8 @@ public class ServiceExport extends IntentService {
         startForeground(1, builder.build());
 
         List<String> listIdInfomeGastos = new ArrayList<String>();
+        List<String> listIdAnulados = new ArrayList<String>();
+
         List<String> listIdComprobantes = new ArrayList<String>();
         List<String> listIdComprobanteVentaDetalle = new ArrayList<String>();
         List<String> listIdComprobanteCobro = new ArrayList<String>();
@@ -268,6 +272,7 @@ public class ServiceExport extends IntentService {
                 int _cv_id_agente = cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_agente));
                 int _cv_estado_comp = cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_estado_comp));
                 int _cv_id_tipo_pago = cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_tipo_pago));
+                int _cv_id_direccion =cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_direccion_id));
 
                 //DOUBLE SALDO, SI ES AL CONTADO LE MANDO 0 SI ES AL CRÉDITO LE MANDO CV_total
                 Double _cv_saldo = 0.0;
@@ -296,12 +301,13 @@ public class ServiceExport extends IntentService {
                         _cv_codigo_erp + " - " +
                         _cv_id_establecimiento + " - " +
                         idUsuario + " - " +
-                        _cv_id_tipo_pago);
+                        _cv_id_tipo_pago + " - " +
+                        _cv_id_direccion);
 
                 String concatenadoCabecera = "";
                 concatenadoCabecera += _cv_serie+"|"+_cv_num_doc + "|"+ _cv_id_forma_pago+ "|"+_cv_fecha_doc+ "|"+_cv_base_imponible+
                         "|"+_cv_igv+  "|"+ _cv_total+"|"+_cv_id_tipo_doc + "|"+ _cv_id_agente+ "|"+_cv_estado_comp+ "|"+_cv_saldo+
-                        "|"+idLiquidacion+ "|"+_cv_tipo_venta+ "|"+_cv_codigo_erp+ "|"+_cv_id_establecimiento+ "|"+ idUsuario + "|"+ _cv_id_tipo_pago;
+                        "|"+idLiquidacion+ "|"+_cv_tipo_venta+ "|"+_cv_codigo_erp+ "|"+_cv_id_establecimiento+ "|"+ idUsuario + "|"+ _cv_id_tipo_pago+ "|"+ _cv_id_direccion;
 
 
                 Log.d(TAG, "CONCATENADO COMPROBANTE DE VENTA : " +concatenadoCabecera);
@@ -348,26 +354,7 @@ public class ServiceExport extends IntentService {
 
 
                         jsonObjectSuccesfull = api.fins_ComprobanteVentaSID( concatenadoCabecera, concatenadoDetalle);
-
-                               /* cursorComprobanteVenta.getString(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_serie)),
-                                cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_num_doc)),
-                                cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_forma_pago)),
-                                cursorComprobanteVenta.getString(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_fecha_doc)),
-                                cursorComprobanteVenta.getDouble(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_base_imp)),
-                                cursorComprobanteVenta.getDouble(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_igv)),
-                                cursorComprobanteVenta.getDouble(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_total)),
-                                cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_tipo_doc)),
-                                cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_agente)),
-                                cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_estado_comp)),
-                                0,
-                                idLiquidacion,
-                                cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_tipo_venta)),
-                                cursorComprobanteVenta.getString(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_codigo_erp)),
-                                cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_establec)),
-                                idUsuario
-                        );*/
-
-                                idComprobanteVentaRetornado = getIdComprobanteVentaRetornado(jsonObjectSuccesfull);
+                        idComprobanteVentaRetornado = getIdComprobanteVentaRetornado(jsonObjectSuccesfull);
                         if (Utils.isSuccesful(jsonObjectSuccesfull) &&  idComprobanteVentaRetornado >  0) {
 
                             Log.d("ID COMP V RETURN", "" + idComprobanteVentaRetornado);
@@ -378,6 +365,9 @@ public class ServiceExport extends IntentService {
                             long _id_mapeo = -1;
                             _id_mapeo = dbAdapter_exportacion_comprobantes.createRegistroExportacion(_id_comp_venta, idComprobanteVentaRetornado, Constants._CREADO, idLiquidacion);
                             //listIdComprobantes.add("" + cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_comprob)));
+                            if (_id_mapeo > 0){
+                                listIdComprobantes.add("" + cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_comprob)));
+                            }
                             Log.d(TAG, "_ID_MAPEO EXPORTACION COMPROBANTS : " + _id_mapeo);
                             Log.d("CV UPDATE", "" + registrosActualizados);
                         }
@@ -385,29 +375,13 @@ public class ServiceExport extends IntentService {
 
                         jsonObjectSuccesfull = api.fins_ComprobanteVentaSID( concatenadoCabecera, concatenadoDetalle);
 
-                             /*   cursorComprobanteVenta.getString(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_serie)),
-                                cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_num_doc)),
-                                cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_forma_pago)),
-                                cursorComprobanteVenta.getString(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_fecha_doc)),
-                                cursorComprobanteVenta.getDouble(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_base_imp)),
-                                cursorComprobanteVenta.getDouble(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_igv)),
-                                cursorComprobanteVenta.getDouble(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_total)),
-                                cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_tipo_doc)),
-                                cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_agente)),
-                                cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_estado_comp)),
-                                cursorComprobanteVenta.getDouble(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_total)),
-                                idLiquidacion,
-                                cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_tipo_venta)),
-                                cursorComprobanteVenta.getString(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_codigo_erp)),
-                                cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_establec)),
-                                idUsuario
-                        );
-*/
 
                         Log.d("COBROSNORMALESVENTA", "" + jsonObjectSuccesfull.toString());
-                        if (Utils.isSuccesful(jsonObjectSuccesfull) && getIdComprobanteVentaRetornado(jsonObjectSuccesfull) > 0 && getidPlanPagoRetornado(jsonObjectSuccesfull) > 0) {
 
-                            idComprobanteVentaRetornado = getIdComprobanteVentaRetornado(jsonObjectSuccesfull);
+                        idComprobanteVentaRetornado = getIdComprobanteVentaRetornado(jsonObjectSuccesfull);
+                        int idPlan = getidPlanPagoRetornado(jsonObjectSuccesfull);
+                        if (Utils.isSuccesful(jsonObjectSuccesfull) && idComprobanteVentaRetornado > 0 && idPlan > 0) {
+
                             Log.d("COBROSNORMALESVENTAID", "" + idComprobanteVentaRetornado);
 
                             int registrosActualizados = dbAdapter_comprob_venta_detalle.updateComprobVentaDetalleReal(cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_comprob)), idComprobanteVentaRetornado);
@@ -420,13 +394,15 @@ public class ServiceExport extends IntentService {
                              * */
                             long _id_mapeo = dbAdapter_exportacion_comprobantes.createRegistroExportacion(cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_comprob)), idComprobanteVentaRetornado, Constants._CREADO, idLiquidacion);
 
+                            if (_id_mapeo > 0){
+                                listIdComprobantes.add("" + cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_comprob)));
+                            }
+
                             Log.d(TAG, "_ID_MAPEO EXPORTACION COMPROBANTS : " + _id_mapeo);
 
 
                             Log.d("n# IDS cv -><-", "" + cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_comprob)) + "to" + idComprobanteVentaRetornado + "#s UPD-->" + registrosUpdtCV);
 
-
-                            int idPlan = getidPlanPagoRetornado(jsonObjectSuccesfull);
                             Log.d(TAG, "ID PLAN : " + idPlan);
 
                             Log.d("Export id CV IGUALES", "" + cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_comprob)));
@@ -488,9 +464,10 @@ public class ServiceExport extends IntentService {
 
                     Log.d(TAG,  "SUCCESFULL EXPORT CV : " + Utils.isSuccesful(jsonObjectSuccesfull));
                     Log.d(TAG ,"ID CV RETORNADO : " + idComprobanteVentaRetornado);
-                    if (Utils.isSuccesful(jsonObjectSuccesfull) && getIdComprobanteVentaRetornado(jsonObjectSuccesfull) > 0) {
-                        listIdComprobantes.add("" + cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_comprob)));
-                    }
+                    /*if (Utils.isSuccesful(jsonObjectSuccesfull) &&  idComprobanteVentaRetornado > 0) {
+                        *//*listIdComprobantes.add("" + cursorComprobanteVenta.getInt(cursorComprobanteVenta.getColumnIndexOrThrow(dbAdapter_comprob_venta.CV_id_comprob)));*//*
+                    }*/
+
                     Log.d(" EXPORT JSON MESSAGE CV", jsonObjectSuccesfull.toString());
                 } catch (Exception e) {
                     Log.d("COBROSNORMALESPLANES", e.getMessage());
@@ -575,6 +552,55 @@ public class ServiceExport extends IntentService {
             Log.d("EXPORT ", "TODOS LOS COMPROBANTES DE VENTA DETALLE ESTÁN EXPORTADOS");
         }*/
 
+        Cursor cursorCVAnulado = dbAdapter_comprob_venta.filterExportAnulado();
+        if (cursorCVAnulado.getCount() > 0) {
+            for (cursorCVAnulado.moveToFirst(); !cursorCVAnulado.isAfterLast(); cursorCVAnulado.moveToNext()) {
+                JSONObject jsonObjectSuccesfull = null;
+
+                try {
+
+                    int _cv_id_sqlite = cursorCVAnulado.getInt(cursorCVAnulado.getColumnIndexOrThrow(DbAdapter_Comprob_Venta.CV_id_comprob));
+                    int _cv_id_sid = cursorCVAnulado.getInt(cursorCVAnulado.getColumnIndexOrThrow(DbAdapter_Exportacion_Comprobantes.EC_id_sid));
+                    int _cv_estado_comprobante = cursorCVAnulado.getInt(cursorCVAnulado.getColumnIndexOrThrow(DbAdapter_Comprob_Venta.CV_estado_comp));
+                    int _cv_estado_sincronizacion = cursorCVAnulado.getInt(cursorCVAnulado.getColumnIndexOrThrow(Constants._SINCRONIZAR));
+
+                    Log.d(TAG, "" + idLiquidacion + "-" +
+                            idUsuario + "-" +
+                                    _cv_id_sqlite+ "-" +
+                                    _cv_id_sid+ "-" +
+                                    _cv_estado_comprobante + "-" +_cv_estado_sincronizacion
+                            );
+
+                    jsonObjectSuccesfull = api.fupd_AnularCompobanteVenta(
+                            _cv_id_sid, idAgente
+                    );
+
+                    Log.d(TAG, "SUCCES EXPORT CV ANULADOS "+ Utils.isSuccesful(jsonObjectSuccesfull));
+                    Log.d(TAG, "SUCCES EXPORT CV ANULADOS"+ jsonObjectSuccesfull.toString());
+
+                    if (Utils.isSuccesful(jsonObjectSuccesfull) && Utils.validateRespuesta(jsonObjectSuccesfull)) {
+                        listIdAnulados.add("" + cursorCVAnulado.getInt(cursorCVAnulado.getColumnIndexOrThrow(DbAdapter_Comprob_Venta.CV_id_comprob)));
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            String[] idAnulados = new String[listIdAnulados.size()];
+            listIdAnulados.toArray(idAnulados);
+
+            for (int i = 0; i < idAnulados.length; i++) {
+                Log.d("ID EXPORTADOS ", "" + idAnulados[i]);
+            }
+
+            if (listIdAnulados.size() > 0) {
+                dbAdapter_comprob_venta.changeEstadoAnuladoToExport(idAnulados, Constants._EXPORTADO);
+            }
+        } else {
+
+            Log.d(TAG, "TODOS LOS CV ANULADOS ESTÁN EXPORTADOS");
+        }
 
         builder.setProgress(_MAX, 60, false);
         startForeground(1, builder.build());
@@ -701,7 +727,7 @@ public class ServiceExport extends IntentService {
 
                 try {
 
-                    Log.d("COBROSNORMALESnORMALES",": "+   idLiquidacion+"-"+
+                    Log.d(TAG,"COBROSNORMALESnORMALES"+   idLiquidacion+"-"+
                             2+"-"+
                             crCobrosInsrCaja.getDouble(crCobrosInsrCaja.getColumnIndexOrThrow(DbAdapter_Impresion_Cobros.Imprimir_monto))+"-"+
                             crCobrosInsrCaja.getInt(crCobrosInsrCaja.getColumnIndexOrThrow(DbAdapter_Impresion_Cobros.Imprimir_estado_cobrado))+"-"+
@@ -923,13 +949,15 @@ public class ServiceExport extends IntentService {
 
                 if (Utils.isSuccesful(jsonObject) && Utils.validateRespuesta(jsonObject)) {
                     int idFlex = jsonObject.getInt("Value");
+                    Log.d(TAG, "COBROS IDFLEX RETURHN : "+idFlex);
                     if(idFlex==1 || idFlex==2){
                         long gu = dbAdapter_cobros_manuales.updateCobrosManualesPorId(Constants._EXPORTADO_FLEX, crManual.getInt(crManual.getColumnIndex(DbAdapter_Cobros_Manuales.CM_id_Cobros_Manuales)), idFlex);
-
+                        Log.d(TAG, "UPDATED : "+ gu);
                     }
 
                 }
-                Log.d(TAG+"COBROSFLEXMA",""+jsonObject.toString());
+
+                Log.d(TAG,"COBROSFLEXMA"+jsonObject.toString());
 
             } catch (Exception e) {
                 e.printStackTrace();

@@ -27,22 +27,16 @@
         android:orientation="horizontal"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:background="@color/Dark1"
         android:layout_weight="3">
 
-        <TextView
+        <Spinner
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Monto a Pagar:"
-            android:id="@+id/textViewEstablecimientoNombre"
-            android:layout_below="@+id/VCCR_SPNcredit"
-            android:layout_alignParentLeft="true"
+            android:layout_height="wrap_content"
+            android:id="@+id/VC_spinnerTipoPago"
             android:layout_weight="1"
-            android:textColor="@color/Dark2"
-            android:gravity="center"
-            android:textStyle="bold" />
-
+            android:minHeight="48dp"
+            android:layout_gravity="center"
+            android:gravity="center" />
         <TextView
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:layout_width="fill_parent"
@@ -50,11 +44,11 @@
             android:id="@+id/VCCR_SPNcredit"
             android:focusableInTouchMode="false"
             android:focusable="false"
-            android:text=""
-            android:textColor="@color/Dark2"
+            android:textColor="@color/Dark1"
             android:layout_weight="1"
             android:gravity="center"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:layout_gravity="center" />
     </LinearLayout>
 
     <LinearLayout
@@ -62,6 +56,7 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_weight="3">
+
 
         <!--
         <Button

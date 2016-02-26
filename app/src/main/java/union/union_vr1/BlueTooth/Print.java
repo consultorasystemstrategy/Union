@@ -66,6 +66,7 @@ public class Print {
     private DbAdapter_Transferencias dbAdapter_transferencias;
 
     private DbAdapter_Stock_Agente dbAdapter_stock_agente;
+    private DbAdapter_Forma_Pago dbAdapter_forma_pago;
 
 
     int nTotal = 0;
@@ -95,6 +96,9 @@ public class Print {
         dbAdapter_informe_gastos.open();
         dbAdapter_comprob_cobro = new DbAdapter_Comprob_Cobro(context);
         dbAdapter_comprob_cobro.open();
+
+        dbAdapter_forma_pago = new DbAdapter_Forma_Pago(context);
+        dbAdapter_forma_pago.open();
 
     }
 
@@ -221,12 +225,14 @@ public class Print {
         int tipoVenta = -1;
         double _CERO= 0.0;
         int idFormaPago = 1;
+        int direccion_id = Constants._DIRECCION_ESTABLECIMIENTO;
 
         Cursor cursorVentaCabecera = dbHelperComprobanteVenta.getVentaCabecerabyID(idComprobante);
 
         if (cursorVentaCabecera.getCount()>0){
             cursorVentaCabecera.moveToFirst();
 
+            direccion_id = cursorVentaCabecera.getInt(cursorVentaCabecera.getColumnIndexOrThrow(DbAdapter_Comprob_Venta.CV_direccion_id));
             serie = cursorVentaCabecera.getString(cursorVentaCabecera.getColumnIndexOrThrow(DbAdapter_Comprob_Venta.CV_serie));
             numDoc = cursorVentaCabecera.getString(cursorVentaCabecera.getColumnIndexOrThrow(DbAdapter_Comprob_Venta.CV_num_doc));
             comprobante = serie + "-" +agregarCeros((String.valueOf(numDoc)),8);
@@ -234,59 +240,29 @@ public class Print {
             cliente = cursorVentaCabecera.getString(cursorVentaCabecera.getColumnIndexOrThrow(DbAdaptert_Evento_Establec.EE_nom_cliente));
             dni_ruc = cursorVentaCabecera.getString(cursorVentaCabecera.getColumnIndexOrThrow(DbAdaptert_Evento_Establec.EE_doc_cliente));
             nombreAgente = cursorVentaCabecera.getString(cursorVentaCabecera.getColumnIndexOrThrow(DbAdapter_Agente.AG_nombre_agente));
-            direccion = cursorVentaCabecera.getString(cursorVentaCabecera.getColumnIndexOrThrow(DbAdaptert_Evento_Establec.EE_direccion));
             sha1 = cursorVentaCabecera.getString(cursorVentaCabecera.getColumnIndexOrThrow(DbAdapter_Comprob_Venta.CV_SHA1));
             //tipo de venta NORMAL O RRPP
             tipoVenta = cursorVentaCabecera.getInt(cursorVentaCabecera.getColumnIndexOrThrow(DbAdapter_Comprob_Venta.CV_id_tipo_venta));
             idFormaPago = cursorVentaCabecera.getInt(cursorVentaCabecera.getColumnIndexOrThrow(DbAdapter_Comprob_Venta.CV_id_forma_pago));
 
-            /*ventaCabecera+= "NUMERO  : "+comprobante+"\n";
-            ventaCabecera+= "FECHA   : "+ fecha+"\n";
-            ventaCabecera+= "VENDEDOR: "+ nombreAgente+"\n";
-            ventaCabecera+= "CLIENTE : "+ cliente+"\n";
-            ventaCabecera+= "DNI/RUC : "+ dni_ruc+"\n";
-            ventaCabecera+= "DIRECCION : "+ direccion+"\n";
-            ventaCabecera+= "SHA1 : "+ sha1+"\n";
-*/
 
-
-/*
-
-            Cursor cursorVentaDetalle = dbHelperComprobanteVentaDetalle.fetchAllComprobVentaDetalleByIdComp(idComprobante);
-
-            if (cursorVentaCabecera.getCount()>0){
-
-                for (cursorVentaDetalle.moveToFirst(); !cursorVentaDetalle.isAfterLast();cursorVentaDetalle.moveToNext()) {
-
-                    int cantidad = cursorVentaDetalle.getInt(cursorVentaDetalle.getColumnIndex(DbAdapter_Comprob_Venta_Detalle.CD_cantidad));
-                    String nombreProducto = cursorVentaDetalle.getString(cursorVentaDetalle.getColumnIndex(DbAdapter_Comprob_Venta_Detalle.CD_nom_producto));
-                    Double precioUnitario = cursorVentaDetalle.getDouble(cursorVentaDetalle.getColumnIndex(DbAdapter_Comprob_Venta_Detalle.CD_precio_unit));
-                    Double importe = cursorVentaDetalle.getDouble(cursorVentaDetalle.getColumnIndex(DbAdapter_Comprob_Venta_Detalle.CD_importe));
-
-                  *//* texto += "CANT:"+cantidad+"\n";
-                   texto += "NOM:"+nombreProducto+"\n";
-                   texto += "PU:"+ df.format(precioUnitario)+"\n";
-                   texto += "IMP:"+df.format(importe)+"\n";
-                   texto += "-------------------\n";*//*
-
-                    if (pulgadas==2){
-                        if(nombreProducto.length()>=20){
-                            nombreProducto=nombreProducto.substring(0,18);
-                            nombreProducto+="..";
-                        }
-                    }else if (pulgadas==3){
-                        if(nombreProducto.length()>=30){
-                            nombreProducto=nombreProducto.substring(0,28);
-                            nombreProducto+="..";
-                        }
-                    }
-                    ventaDetalle+=String.format("%-4s",cantidad) + String.format("%-31s",nombreProducto)+String.format("%1$5s"  ,df.format(precioUnitario)) +String.format("%1$8s"  ,df.format(importe)) + "\n";
-                  }
-            }*/
 
             base_imponible = cursorVentaCabecera.getDouble(cursorVentaCabecera.getColumnIndexOrThrow(DbAdapter_Comprob_Venta.CV_base_imp));
             igv = cursorVentaCabecera.getDouble(cursorVentaCabecera.getColumnIndexOrThrow(DbAdapter_Comprob_Venta.CV_igv));
             precio_venta = cursorVentaCabecera.getDouble(cursorVentaCabecera.getColumnIndexOrThrow(DbAdapter_Comprob_Venta.CV_total));
+
+
+            switch (direccion_id){
+                case Constants._DIRECCION_ESTABLECIMIENTO:
+                    direccion = cursorVentaCabecera.getString(cursorVentaCabecera.getColumnIndexOrThrow(DbAdaptert_Evento_Establec.EE_direccion));
+                    break;
+                case Constants._DIRECCION_FISCAL:
+                    direccion = cursorVentaCabecera.getString(cursorVentaCabecera.getColumnIndexOrThrow(DbAdaptert_Evento_Establec.EE_direccion_principal));
+                    break;
+                default:
+                    direccion = cursorVentaCabecera.getString(cursorVentaCabecera.getColumnIndexOrThrow(DbAdaptert_Evento_Establec.EE_direccion));
+                    break;
+            }
         }
 
         switch (pulgadas){
@@ -637,6 +613,12 @@ public class Print {
                 posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, detalleStockDisponible);
             }
 
+            String espacio = ESC + "|lA" + String.format("%-48s", "")+ LF+ LF;
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, espacio);
+            String lineasFirma = ESC + "|lA" + String.format("%-4s", "") + String.format("%1$12s", "") + String.format("%1$16s", "________________") +  String.format("%1$12s", "") + LF;
+            String letrasFirma = ESC + "|lA" + String.format("%-4s", "") + String.format("%1$16s", "") + String.format("%1$8s",  " Firma") +  String.format("%1$16s", "") + LF;
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, lineasFirma);
+            posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, letrasFirma);
 
             String finalEspacio = ESC + "|lA" + String.format("%-48s", "")+ LF+ LF;
             posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, finalEspacio);
@@ -684,16 +666,32 @@ public class Print {
                 totalPlanta += plantaGasto;
             }
         }
+        Cursor cursorTipoIngresos = dbAdapter_forma_pago.fetchAllFormaPagos();
 
-        Cursor cursorTipoIngresos = dbAdapter_informe_gastos.resumenTipoIngresos(idLiquidacion);
+
 
         String cadenaDescripciontipoIngreso ="";
         for (cursorTipoIngresos.moveToFirst(); !cursorTipoIngresos.isAfterLast(); cursorTipoIngresos.moveToNext()) {
+            int _id = cursorTipoIngresos.getInt(cursorTipoIngresos.getColumnIndexOrThrow(DbAdapter_Forma_Pago.FP_id));
+            int _id_forma_pago = cursorTipoIngresos.getInt(cursorTipoIngresos.getColumnIndexOrThrow(DbAdapter_Forma_Pago.FP_id_forma_pago));
             String descripcionTipoIngreso = cursorTipoIngresos.getString(cursorTipoIngresos.getColumnIndexOrThrow(DbAdapter_Forma_Pago.FP_detalle));
-            Double total = cursorTipoIngresos.getDouble(cursorTipoIngresos.getColumnIndexOrThrow("total"));
+            int _selected = cursorTipoIngresos.getInt(cursorTipoIngresos.getColumnIndexOrThrow(DbAdapter_Forma_Pago.FP_selected));
 
-            cadenaDescripciontipoIngreso +=
-            ESC + "|lA" +String.format("%-20s", "   En "+descripcionTipoIngreso)+ String.format("%-16s", "S/.") + String.format("%1$12s", df.format(total)) + LF;
+            Double totalVenta = 0.0;
+            Double totalCobro = 0.0;
+            Double totalIngreso = 0.0;
+
+            totalVenta = dbAdapter_informe_gastos. getTotalVentaByTipoIngreso(idLiquidacion, _id_forma_pago);
+            totalCobro = dbAdapter_informe_gastos.getTotalCobroByTipoIngreso(idLiquidacion, _id_forma_pago);
+
+            totalIngreso = totalVenta + totalCobro;
+
+
+
+            if (totalIngreso >0 ){
+                cadenaDescripciontipoIngreso +=
+                ESC + "|lA" +String.format("%-20s", "   En "+descripcionTipoIngreso)+ String.format("%-16s", "S/.") + String.format("%1$12s", df.format(totalIngreso)) + LF;
+            }
         }
 
 

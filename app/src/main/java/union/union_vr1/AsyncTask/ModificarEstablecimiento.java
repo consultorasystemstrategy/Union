@@ -47,9 +47,8 @@ public class ModificarEstablecimiento extends AsyncTask<String, String, String> 
     public void createProgressDialog(){
         progressDialog = new ProgressDialog(mainActivity);
         progressDialog.setMessage("Solicitando ...");
-        progressDialog.setIndeterminate(false);
-        progressDialog.setMax(100);
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.setCancelable(false);
         progressDialog.show();
 
@@ -70,8 +69,6 @@ public class ModificarEstablecimiento extends AsyncTask<String, String, String> 
             return;
         }else {
 
-
-            progressDialog.setProgress(100);
             dismissProgressDialog();
         }
 
@@ -88,7 +85,6 @@ public class ModificarEstablecimiento extends AsyncTask<String, String, String> 
 
     @Override
     protected String doInBackground(String... strings) {
-        publishProgress(""+25);
         stockAgenteRestApi = new StockAgenteRestApi(mainActivity);
         dbAdapter_temp_establecimiento = new DbAdapter_Establecimeinto_Historial(mainActivity);
         dbAdapter_temp_establecimiento.open();
@@ -96,7 +92,6 @@ public class ModificarEstablecimiento extends AsyncTask<String, String, String> 
         dbAdapter_temp_session.open();
         Log.d("ESTABLECIMIENTO ID ",""+strings[0]);
         Cursor cursor = dbAdapter_temp_establecimiento.fetchTemEstablecEdit(strings[0]);
-        publishProgress(""+55);
         try {
             int idAgente = dbAdapter_temp_session.fetchVarible(1);
             int idLiquidacion = dbAdapter_temp_session.fetchVarible(3);
@@ -145,7 +140,6 @@ public class ModificarEstablecimiento extends AsyncTask<String, String, String> 
 
                 Log.e("EDIT ESTAB ESTABLECIMIENTO", "" + 1);
             }
-            publishProgress(""+85);
             Log.e("EDIT ESTAB ESTABLECIMIENTO", "" + jsonObjectCreated);
         } catch (Exception e) {
             e.printStackTrace();

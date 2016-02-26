@@ -30,7 +30,7 @@ public class CursorAdapterCobrosTotales extends CursorAdapter {
     private LayoutInflater cursorInflater;
     DbAdapter_Comprob_Cobro cCobro ;
     public CursorAdapterCobrosTotales (Context context, Cursor c){
-        super(context, c);
+        super(context, c, true);
         cursorInflater = (LayoutInflater) context.getSystemService(
                 Context.LAYOUT_INFLATER_SERVICE);
         cCobro = new DbAdapter_Comprob_Cobro(context);
@@ -66,16 +66,15 @@ public class CursorAdapterCobrosTotales extends CursorAdapter {
 
             String factotales = cursor.getString(cursor.getColumnIndexOrThrow("cc_te_doc"));
 
-            String localCobro = cursor.getString(cursor.getColumnIndexOrThrow("ee_te_nom_establec"));
+            String localCobro = cursor.getString(cursor.getColumnIndexOrThrow(DbAdaptert_Evento_Establec.EE_nom_cliente));
             String fechpro = cursor.getString(cursor.getColumnIndexOrThrow("cc_te_fecha_programada"));
             Double repagar = cursor.getDouble(cursor.getColumnIndexOrThrow("cc_re_monto_a_pagar"));
 
             textViewNombreEstablecimiento.setText(localCobro);
-            textViewFecha.setText((fechpro));
-            textViewDocumento.setText("Documento: "+factotales);
+            textViewFecha.setText("F. Vencimiento: "+fechpro);
+            textViewDocumento.setText("Nro Doc.: "+factotales);
 
-            DecimalFormat dfd = new DecimalFormat("#.00");
-            textViewDeuda.setText("S/. " + Utils.formatDouble(repagar));
+            textViewDeuda.setText("Crédito: S/. " + Utils.formatDouble(repagar));
 
             SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
             String fecha_Programada = fechpro;

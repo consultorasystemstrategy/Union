@@ -37,12 +37,17 @@ public class DbAdapter_Comprob_Venta {
         //ACTUALIZAMOS ESTE CAMPO[CUANDO UN CLIENTE NOS DICE QUE QUIERE DEVOLVER UN PRODUCTO]
     public static final String CV_estado_comp = "cv_in_estado_comp";
     public static final String CV_liquidacion = "id_liquidacion";
+    public static final String CV_direccion_id = "cv_direccion_id";
+
     //ID DE LA BASE DE DATOS SQL SERVER
     public static final String CV_id_SQL_SERVER_comprob = "id_sql_server_comprob";
     public static final String CV_sincronizacion_sha1 = "sincronizacion_sha1";
 
 
+
     public static final String CV_estado_conexion = "cv_in_estado_conexion";
+    public static final String CV_estado_sincronizacion_anulacion = "cv_sinc_anulado";
+
     public static final String CV_SHA1 = "cv_sha1";
 
 
@@ -66,6 +71,7 @@ public class DbAdapter_Comprob_Venta {
                     +CV_codigo_erp+" text,"
                     +CV_serie+" text,"
                     +CV_num_doc+" integer,"
+                    +CV_direccion_id+" integer,"
                     +CV_base_imp+" real,"
                     +CV_igv+" real,"
                     +CV_total+" real,"
@@ -78,6 +84,7 @@ public class DbAdapter_Comprob_Venta {
                     +CV_liquidacion+" integer, "
                     +CV_id_SQL_SERVER_comprob+" integer, "
                     +CV_sincronizacion_sha1+" integer, "
+                    +CV_estado_sincronizacion_anulacion+" integer, "
                     +estado_sincronizacion+" integer);";
 
     public static final String DELETE_TABLE_COMPROB_VENTA = "DROP TABLE IF EXISTS " + SQLITE_TABLE_Comprob_Venta;
@@ -101,7 +108,7 @@ public class DbAdapter_Comprob_Venta {
     public long createComprobVenta(
             int id_establec, int id_tipo_doc, int id_forma_pago, int id_tipo_pago, int id_tipo_venta,
             String codigo_erp, String serie, int num_doc, double base_imp, double igv, double total,
-            String fecha_doc, String hora_doc, int estado_comp, int estado_conexion, int id_agente, int estadoSincronizacion, int liquidacion){
+            String fecha_doc, String hora_doc, int estado_comp, int estado_conexion, int id_agente, int estadoSincronizacion, int liquidacion, int direccion_id){
 
         ContentValues initialValues = new ContentValues();
         initialValues.put(CV_id_establec,id_establec);
@@ -121,6 +128,8 @@ public class DbAdapter_Comprob_Venta {
         initialValues.put(CV_estado_conexion,estado_conexion);
         initialValues.put(CV_id_agente,id_agente);
         initialValues.put(CV_liquidacion,liquidacion);
+        initialValues.put(CV_direccion_id,direccion_id);
+        initialValues.put(CV_estado_sincronizacion_anulacion, Constants._CREADO);
         initialValues.put(Constants._SINCRONIZAR, estadoSincronizacion);
 
 
@@ -211,14 +220,14 @@ public class DbAdapter_Comprob_Venta {
     }
     public Cursor fetchSHA1(int liquidacion) {
 
-        Cursor mCursor = mDb.query(SQLITE_TABLE_Comprob_Venta, new String[] {CV_id_comprob,
+        Cursor mCursor = mDb.query(SQLITE_TABLE_Comprob_Venta, new String[]{CV_id_comprob,
 
                         CV_id_establec, CV_id_tipo_doc, CV_id_forma_pago, CV_id_tipo_venta,
                         CV_codigo_erp, CV_serie, CV_num_doc, CV_base_imp, CV_igv, CV_total,
                         CV_fecha_doc, CV_hora_doc, CV_estado_comp, CV_estado_conexion,
                         CV_id_agente, CV_SHA1, CV_sincronizacion_sha1, CV_id_SQL_SERVER_comprob, CV_id_tipo_pago
                 },
-                CV_liquidacion + " = ? ", new String[]{""+liquidacion}, null, null, null);
+                CV_liquidacion + " = ? ", new String[]{"" + liquidacion}, null, null, null);
 
         if (mCursor != null) {
             mCursor.moveToFirst();
@@ -257,14 +266,22 @@ public class DbAdapter_Comprob_Venta {
 
     }
 
-    public void updateComprobante(int id, int estadoSincronizacion){
+    public void updateComprobante(int id, int anulado, int estadoSincronizacion){
         ContentValues initialValues = new ContentValues();
-        initialValues.put(CV_estado_comp, 0);
-        initialValues.put(Constants._SINCRONIZAR,estadoSincronizacion);
-
+        initialValues.put(CV_estado_comp, anulado);
+        initialValues.put(CV_estado_sincronizacion_anulacion, estadoSincronizacion);
         mDb.update(SQLITE_TABLE_Comprob_Venta, initialValues,
                 CV_id_comprob + "=?", new String[]{"" + id});
     }
+    public int updateSerie(int id, String serie, int num_doc, int estadoSincronizacion){
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(CV_serie, serie);
+        initialValues.put(CV_num_doc, num_doc);
+        initialValues.put(Constants._SINCRONIZAR, Constants._ACTUALIZADO);
+        return mDb.update(SQLITE_TABLE_Comprob_Venta, initialValues,
+                CV_id_comprob + "=?", new String[]{"" + id});
+    }
+
 
     public int updateComprobanteIDReal(long id, int idReal){
         ContentValues initialValues = new ContentValues();
@@ -295,9 +312,33 @@ public class DbAdapter_Comprob_Venta {
                 CV_id_comprob+"= "+ signosInterrogacion,idComprobante);
 
 
-        Log.d(ServiceExport.TAG, "REGISTROS EXPORTADOS CV "+ cantidadRegistros);
+        Log.d(ServiceExport.TAG, "REGISTROS EXPORTADOS CV " + cantidadRegistros);
         return cantidadRegistros;
     }
+    public int changeEstadoAnuladoToExport(String[] idComprobante, int estadoSincronizacion){
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(CV_estado_sincronizacion_anulacion, estadoSincronizacion);
+
+        String signosInterrogacion = "";
+        for (int i=0; i<idComprobante.length; i++){
+            if (i==idComprobante.length-1)
+            {
+                signosInterrogacion+= "?";
+            }else {
+                signosInterrogacion+= "? OR ";
+            }
+
+        }
+
+        Log.d("SIGNOS INTERROGACIÓN", signosInterrogacion);
+        int cantidadRegistros = mDb.update(SQLITE_TABLE_Comprob_Venta, initialValues,
+                CV_id_comprob+"= "+ signosInterrogacion,idComprobante);
+
+
+        Log.d(ServiceExport.TAG, "REGISTROS EXPORTADOS CV " + cantidadRegistros);
+        return cantidadRegistros;
+    }
+
 
     public int changeEstadoSHA1ToExport(String[] idComprobante, int estadoSincronizacionSHA1){
         ContentValues initialValues = new ContentValues();
@@ -326,7 +367,7 @@ public class DbAdapter_Comprob_Venta {
     public int updateComprobanteMontos(long id, Double total, Double igv, Double base_imponible){
         ContentValues initialValues = new ContentValues();
         initialValues.put(CV_total,total);
-        initialValues.put(CV_igv,igv);
+        initialValues.put(CV_igv, igv);
         initialValues.put(CV_base_imp, base_imponible);
 
 
@@ -371,7 +412,8 @@ public class DbAdapter_Comprob_Venta {
 
                         CV_id_establec, CV_id_tipo_doc, CV_id_forma_pago, CV_id_tipo_venta,
                         CV_codigo_erp, CV_serie, CV_num_doc, CV_base_imp, CV_igv, CV_total,
-                        CV_fecha_doc, CV_hora_doc, CV_estado_comp, CV_estado_conexion, CV_id_agente, CV_id_tipo_pago
+                        CV_fecha_doc, CV_hora_doc, CV_estado_comp, CV_estado_conexion,
+                        CV_id_agente, CV_id_tipo_pago, CV_direccion_id
                 },
                 Constants._SINCRONIZAR + " = " + Constants._CREADO + " OR " + Constants._SINCRONIZAR + " = " + Constants._ACTUALIZADO, null,
                 null, null, null, null);
@@ -380,6 +422,19 @@ public class DbAdapter_Comprob_Venta {
         }
         return mCursor;
     }
+    public Cursor filterExportAnulado() {
+        Cursor mCursor = null;
+        mCursor = mDb.rawQuery("SELECT CV.*, EC.* \n" +
+                "FROM m_comprob_venta CV \n" +
+                "INNER JOIN m_exportacion_comprobantes EC \n" +
+                "ON (CV._id = EC._id_sqlite) \n"+
+                "WHERE CV."+CV_estado_comp+" = ? AND CV."+CV_estado_sincronizacion_anulacion +" = ? AND EC."+DbAdapter_Exportacion_Comprobantes.EC_id_sid + " > 0", new String[]{""+Constants._CV_ANULADO,""+Constants._ACTUALIZADO});
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+    }
+
 
     public Cursor fetchAllComprobVenta(int idEstablecimiento, int liquidacion) {
 

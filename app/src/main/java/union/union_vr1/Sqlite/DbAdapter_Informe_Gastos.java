@@ -214,7 +214,7 @@ public class DbAdapter_Informe_Gastos {
                 "FROM m_comprob_venta CV \n" +
                 "INNER JOIN m_forma_pago FP \n" +
                 "ON CV.cv_in_id_tipo_pago = FP._id_forma_pago \n" +
-                "WHERE CV.id_liquidacion = '"+liquidacion+"' \n" +
+                "WHERE CV.id_liquidacion = '"+liquidacion+"' AND CV.cv_in_estado_comp != 0 \n" +
                 "group by FP._id_forma_pago ",null);
 
         if (mCursor != null) {
@@ -222,6 +222,39 @@ public class DbAdapter_Informe_Gastos {
         }
         return mCursor;
     }
+
+    public Double  getTotalVentaByTipoIngreso(int liquidacion, int idTipoIngreso) {
+
+
+        Double total = 0.0;
+        Cursor mCursor = mDb.rawQuery("SELECT ROUND(SUM(cv_re_total),1) AS total, * \n" +
+                "FROM m_comprob_venta  \n" +
+                "WHERE id_liquidacion = '"+liquidacion+"' AND cv_in_estado_comp != 0 AND cv_in_id_tipo_pago = '"+idTipoIngreso+"'\n" +
+                "group by  cv_in_id_tipo_pago; ",null);
+
+        if (mCursor.getCount()>0){
+            mCursor.moveToFirst();
+             total = mCursor.getDouble(mCursor.getColumnIndexOrThrow("total"));
+        }
+        return total;
+    }
+
+    public Double  getTotalCobroByTipoIngreso(int liquidacion, int idTipoIngreso) {
+
+
+        Double total = 0.0;
+        Cursor mCursor = mDb.rawQuery("SELECT ROUND(SUM("+DbAdapter_Impresion_Cobros.Imprimir_monto+"),1) AS total, * \n" +
+                "FROM "+DbAdapter_Impresion_Cobros.SQLITE_TABLE_IMPRIMIR_COBRO+"  \n" +
+                "WHERE "+DbAdapter_Impresion_Cobros.Imprimir_liquidacion+" = '"+liquidacion+"' AND  "+DbAdapter_Impresion_Cobros.Imprimir_id_tipo_pago+" = '"+idTipoIngreso+"'\n" +
+                "group by "+DbAdapter_Impresion_Cobros.Imprimir_id_tipo_pago+"; ",null);
+
+        if (mCursor.getCount()>0){
+            mCursor.moveToFirst();
+            total = mCursor.getDouble(mCursor.getColumnIndexOrThrow("total"));
+        }
+        return total;
+    }
+
 
 
     public void changeEstadoToExport(String[] idsInformeGasto, int estadoSincronizacion){

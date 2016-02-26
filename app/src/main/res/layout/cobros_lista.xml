@@ -40,7 +40,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Bodega Ramon"
+                android:text="Nro Doc: F504-0000078"
                 android:id="@+id/textNombreEstablec"
                 android:gravity="bottom"
                 android:textSize="16dp"
@@ -50,7 +50,7 @@
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:text="24/02/2015"
+                android:text="F. Vencimiento"
                 android:id="@+id/textViewCobroFecha"
                 android:layout_weight="1"
                 android:layout_gravity="bottom"
@@ -61,7 +61,6 @@
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:text="Documento"
                 android:id="@+id/textViewCobroDocumento"
                 android:layout_weight="1"
                 android:textSize="12dp"
@@ -70,7 +69,6 @@
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:text="Estado"
                 android:id="@+id/textViewCobroEstado"
                 android:layout_weight="1"
                 android:layout_gravity="top|left"
@@ -82,7 +80,7 @@
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:text="S/. 19.85"
+                android:text="Crédito : S/. 19.85"
                 android:id="@+id/textViewCobroMontoDeuda"
                 android:layout_weight="1"
                 android:gravity="bottom|right"

@@ -56,6 +56,7 @@ import union.union_vr1.Sqlite.DbAdapter_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Cobros_Manuales;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta;
+import union.union_vr1.Sqlite.DbAdapter_Forma_Pago;
 import union.union_vr1.Sqlite.DbAdapter_Impresion_Cobros;
 import union.union_vr1.Sqlite.DbAdapter_Informe_Gastos;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
@@ -110,6 +111,7 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener, V
     private DbAdapter_Agente dbHelperAgente;
     private DbAdapter_Cobros_Manuales dbAdapter_cobros_manuales;
 
+    private DbAdapter_Forma_Pago dbAdapter_forma_pago;
 
     SlidingMenu menu;
     View layoutSlideMenu;
@@ -153,6 +155,8 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener, V
     TextView textViewSlideMantenimiento;
     TextView textViewSlideCanjesDevoluciones;
 
+    private Spinner spinnerTipoPago;
+
     int slideIdEstablecimiento;
 
     private DbAdaptert_Evento_Establec dbAdaptert_evento_establec;
@@ -167,10 +171,14 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener, V
 
 
     private DbAdapter_Impresion_Cobros dbAdapter_impresion_cobros;
+    private static String TAG = VMovil_Cobro_Credito.class.getSimpleName();
+
+    int _id_tipo_pago = 9;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.princ_cobro_credito);
         estado = false;
         session = new DbAdapter_Temp_Session(this);
         session.open();
@@ -185,7 +193,6 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener, V
         dbAutorizacionCobro.open();
         dbComprobanteCobro = new DbAdapter_Comprob_Cobro(this);
         dbComprobanteCobro.open();
-        setContentView(R.layout.princ_cobro_credito);
         dbHelper = new DbAdapter_Comprob_Cobro(this);
         dbHelper.open();
         dbAdapter_impresion_cobros = new DbAdapter_Impresion_Cobros(this);
@@ -228,6 +235,9 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener, V
         dbAdapter_comprob_venta = new DbAdapter_Comprob_Venta(this);
         dbAdapter_comprob_venta.open();
 
+        dbAdapter_forma_pago = new DbAdapter_Forma_Pago(this);
+        dbAdapter_forma_pago.open();
+
         //SLIDING MENU
         showSlideMenu(this);
 
@@ -235,6 +245,10 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener, V
     }
 
     private void showHeader() {
+
+        spinnerTipoPago = ((Spinner) findViewById(R.id.VC_spinnerTipoPago));
+
+        rellenarSpinnerTipoPago();
 
         TextView textViewNombreEstablecimiento = (TextView) findViewById(R.id.completeName);
         RoundedLetterView letter = (RoundedLetterView) findViewById(R.id.letter);
@@ -251,6 +265,55 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener, V
         } else {
             letter.setTitleText(nombreEstablecimiento.substring(0, 1).toUpperCase());
         }
+    }
+
+    private void rellenarSpinnerTipoPago(){
+
+        Cursor cr = dbAdapter_forma_pago.fetchAllFormaPagos();
+        SimpleCursorAdapter simpleCursorAdapter;
+        int[] to = new int[]{
+                R.id.textSpinner,
+        };
+
+        String[] columns = new String[]{
+                DbAdapter_Forma_Pago.FP_detalle,
+
+        };
+        SimpleCursorAdapter sca = new SimpleCursorAdapter(VMovil_Cobro_Credito.this, R.layout.toolbar_spinner_item_fp, cr, columns, to, 0);
+        sca.setDropDownViewResource(R.layout.toolbar_spinner_item_dropdown_fp);
+        spinnerTipoPago.setAdapter(sca);
+
+
+        for (int i = 0; i < spinnerTipoPago.getCount(); i++) {
+            Cursor value = (Cursor) spinnerTipoPago.getItemAtPosition(i);
+            long id = value.getLong(value.getColumnIndex("_id"));
+            int FP_selected = value.getInt(value.getColumnIndex(DbAdapter_Forma_Pago.FP_selected));
+            if (FP_selected == 1) {
+                spinnerTipoPago.setSelection(i);
+            }
+        }
+
+        spinnerTipoPago.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                Cursor cursor = dbAdapter_forma_pago.fetchFormaPagoByID(id);
+                Log.d(TAG, "cursor forma pago selected count : " + cursor.getCount());
+                if (cursor.getCount() > 0) {
+                    _id_tipo_pago = cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Forma_Pago.FP_id_forma_pago));
+                    Log.d(TAG, "_id tipo pago selected : " + _id_tipo_pago);
+                }else{
+
+                    Log.d(TAG, "SPINNER TIPO PAGO NOT WORKING WELL. NOT RECORDS");
+                }
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     private void displayListViewVCC() {
@@ -386,7 +449,7 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener, V
                             //Cobros totales
                             Log.d("IDIDCOMPROBANTE", "" + IDCOMPROBANTEVENTA);
                             String esta = dbAdaptert_evento_establec.getNameEstablec(Integer.parseInt(estabX));
-                            long a = dbAdapter_impresion_cobros.createImprimir(Integer.parseInt(idCobro), Integer.parseInt(estabX), idValNew, Constants.COBRO_NORMAL, getDatePhone(), esta, COMPROID, getDatePhone() + " " + getTimePhone(), slideIdLiquidacion + "", 0, "", IDCOMPROBANTEVENTA, PLANPAGO, PLANPAGODETALLE, Constants.COBRO_ESTADO_TOTAL, TIPODOCUMENTO);
+                            long a = dbAdapter_impresion_cobros.createImprimir(Integer.parseInt(idCobro), Integer.parseInt(estabX), idValNew, Constants.COBRO_NORMAL, getDatePhone(), esta, COMPROID, getDatePhone() + " " + getTimePhone(), slideIdLiquidacion + "", 0, "", IDCOMPROBANTEVENTA, PLANPAGO, PLANPAGODETALLE, Constants.COBRO_ESTADO_TOTAL, TIPODOCUMENTO, _id_tipo_pago);
                             Log.d("VMovil_Cobor", "" + a);
                         }
                         Toast.makeText(getApplicationContext(),
@@ -550,7 +613,7 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener, V
                                 int estad = dbComprobanteCobro.updateComprobCobrosSN(idComprobante, fechaProgramada, valorPago, valorCobrar);
                                 if (estad > 0) {
 //Cobors parciales.
-                                    long a = dbAdapter_impresion_cobros.createImprimir(IDHISTOCOBRO, Integer.parseInt(estabX), valorPago, Constants.COBRO_NORMAL, getDatePhone(), nombreEstablec,COMPROBANTE, getDatePhone() + " " + getTimePhone(), slideIdLiquidacion + "", 0, idComprobante, comprobanteVenta, idPlanPago, idPlanPagoDetalle, Constants.COBRO_ESTADO_PARCIAL,tipoDoc);
+                                    long a = dbAdapter_impresion_cobros.createImprimir(IDHISTOCOBRO, Integer.parseInt(estabX), valorPago, Constants.COBRO_NORMAL, getDatePhone(), nombreEstablec,COMPROBANTE, getDatePhone() + " " + getTimePhone(), slideIdLiquidacion + "", 0, idComprobante, comprobanteVenta, idPlanPago, idPlanPagoDetalle, Constants.COBRO_ESTADO_PARCIAL,tipoDoc, _id_tipo_pago);
                                     //new  SolicitarAutorizacionCobros(getApplicationContext()).execute(idAgente + "", 4 + "", 1 + "", comprobanteVenta + "", valorCobrar + "", valorPago + "", estabX, Constants._CREADO + "", idComprobante + "", nombreEstablec + "",idAutorizacion+"");
                                     //   Back();
                                     Log.d("VMovil_Cobor", "" + a + "-" + estabX);
@@ -961,7 +1024,7 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener, V
 
         // set dialog message
         AlertDialog.Builder builder = alertDialogBuilder
-                .setMessage("¿Esta seguro de cobrar: S/  " + importe + " ?")
+                .setMessage("¿Esta seguro de cobrar: S/  " + Utils.formatDouble(importe) + " ?")
                 .setCancelable(false)
                 .setPositiveButton(R.string.si, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
@@ -982,7 +1045,7 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener, V
                                 String NUMERO_COMPROBANTE = String.format("%08d", numero);
                                 NUMERO = serie + "-" + NUMERO_COMPROBANTE;
                             }
-                            long h = dbAdapter_impresion_cobros.createImprimir(Integer.parseInt(l + ""), slideIdEstablecimiento, importe, Constants.COBRO_MANUAL, getDatePhone(), dbAdaptert_evento_establec.getNameEstablec(Integer.parseInt(estabX)), "" + NUMERO, getDatePhone() + " " + getTimePhone(), slideIdLiquidacion + "", 0, "", numero, 0, 0, 0, "Otros");
+                            long h = dbAdapter_impresion_cobros.createImprimir(Integer.parseInt(l + ""), slideIdEstablecimiento, importe, Constants.COBRO_MANUAL, getDatePhone(), dbAdaptert_evento_establec.getNameEstablec(Integer.parseInt(estabX)), "" + NUMERO, getDatePhone() + " " + getTimePhone(), slideIdLiquidacion + "", 0, "", numero, 0, 0, 0, "Otros", _id_tipo_pago);
                             Log.d("COBROS", "" + h);
                             if (conectadoRedMovil() || conectadoWifi()) {
 

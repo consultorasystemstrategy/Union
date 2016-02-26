@@ -176,28 +176,20 @@ public class ImportMain extends AsyncTask<String, String, String> {
         try {
 
 
-            publishProgress("" + 5);
 
             //
             JSONObject jsonObjectStockAgente = api.GetStockAgente(idAgente);
             //Log.d("JSON ERROR MESSAGE", getErrorMessage(jsonObjectStockAgente));
-            publishProgress("" + 10);
             JSONObject jsonObjectTipoGasto = api.GetTipoGasto();
-            publishProgress("" + 15);
             JSONObject jsonObjectModalidadCredito = api.fsel_ModalidadCredito(idAgente);
             JSONObject jsonObjectFormaPago = api.fsel_TipoPago();
 
             JSONObject jsonObjectPrecio = api.GetPrecioCategoria(idLiquidacion, idAgente);
-            publishProgress("" + 20);
             JSONObject jsonObjectEventoEstablecimiento = api.GetEstablecimeintoXRuta(idLiquidacion, fecha, idAgente);
-            publishProgress("" + 25);
             //JSONObject jsonObjectComprobanteCobro = api.GetHistorialCobrosPendientes();
             JSONObject jsonObjectComprobanteCobro = api.GetHistorialCobrosPendientesXLiquidacion(idLiquidacion, idAgente);
-            publishProgress("" + 30);
             JSONObject jsonObjectHistorialVentaDetalle = api.GetHistorialVentaDetalle(idAgente);
-            publishProgress("" + 35);
-            JSONObject jsonObjectHistorialComprobanteAnterior = api.GetComprobanteVentaDetalle_Env();
-            publishProgress("" + 40);
+            JSONObject jsonObjectHistorialComprobanteAnterior = api.fsel_UltimaVenta(idLiquidacion, idAgente);
             JSONObject jsonObjectRutaDistribucion = api.GetConsultarPlan_Distribucion(idAgente);
 
 
@@ -309,7 +301,6 @@ public class ImportMain extends AsyncTask<String, String, String> {
 
             }
 
-            publishProgress("" + 45);
             Log.d("IMPORTANDO ", "INICIANDO ...");
             for (int i = 0; i < stockAgentes.size(); i++) {
                 Log.d("Stock Agente" + i, "Nombre : " + stockAgentes.get(i).getNombre());
@@ -327,7 +318,7 @@ public class ImportMain extends AsyncTask<String, String, String> {
                 }
             }
 
-            publishProgress("" + 50);
+
             for (int i = 0; i < tipoGastos.size(); i++) {
                 Log.d("TipoGastos" + i, "Nombre : " + tipoGastos.get(i).getNombreTipoGasto());
 
@@ -389,7 +380,7 @@ public class ImportMain extends AsyncTask<String, String, String> {
                     dbAdapter_precio.createPrecios(precios.get(i), idAgente);
                 }
             }
-            publishProgress("" + 55);
+
 
             for (int i = 0; i < eventoEstablecimientos.size(); i++) {
                 Log.d("ESTABLECIMIENTOS X RUTAS: " + i, " Nombre Establecimiento : " + eventoEstablecimientos.get(i).getNombreEstablecimiento() + ", orden : " + eventoEstablecimientos.get(i).getOrden() + ", BARCODE: " + eventoEstablecimientos.get(i).getCodigoBarras());
@@ -407,7 +398,7 @@ public class ImportMain extends AsyncTask<String, String, String> {
                 }
             }
 
-            publishProgress("" + 60);
+
             for (int i = 0; i < comprobanteCobros.size(); i++) {
                 Log.d("COBROS PENDIENTES", "" + comprobanteCobros.toString());
                 Log.d("HISTORIAL COBROS PENDIENTES : " + i, " Monto a pagar : " + comprobanteCobros.get(i).getIdComprobante() + "-fecha-" + comprobanteCobros.get(i).getFechaProgramada());
@@ -421,10 +412,7 @@ public class ImportMain extends AsyncTask<String, String, String> {
                 }
             }
 
-            publishProgress("" + 65);
 
-
-            publishProgress("" + 90);
             for (int i = 0; i < comprobanteVentaDetalles.size(); i++) {
                 Log.d("HVA HISTORIAL VENTA ANTERIOR : " + i + " - " + comprobanteVentaDetalles.get(i).getIdComprobante() + " - " + comprobanteVentaDetalles.get(i).getIdEstablecimiento(), " NOMBRE PRODUCTO : " + comprobanteVentaDetalles.get(i).getNombreProducto());
 
@@ -467,7 +455,7 @@ public class ImportMain extends AsyncTask<String, String, String> {
 
 
             }*/
-            publishProgress("" + 95);
+
             //ACTUALIZAR LOS CRÉDITOS DE LOS ESTABLECIMIENTOS
 
              /*Actualizando estado  de cobro*/
@@ -475,7 +463,7 @@ public class ImportMain extends AsyncTask<String, String, String> {
             int idUsuario = dbAdapter_agente.getIdUsuario();
             DbAdapter_Comprob_Cobro dbAdapter_comprob_cobro = new DbAdapter_Comprob_Cobro(mainActivity);
             dbAdapter_comprob_cobro.open();
-            publishProgress("" + 20);
+
             for (cursorEstablecimiento.moveToFirst(); !cursorEstablecimiento.isAfterLast(); cursorEstablecimiento.moveToNext()) {
 
                 int idEstablecimiento = cursorEstablecimiento.getInt(cursorEstablecimiento.getColumnIndexOrThrow(dbAdaptert_evento_establec.EE_id_establec));
@@ -577,8 +565,6 @@ public class ImportMain extends AsyncTask<String, String, String> {
             }
 
 
-            publishProgress("" + 99);
-
 
         } catch (Exception e) {
             Log.d("AysncImport : ", e.getMessage());
@@ -603,7 +589,6 @@ public class ImportMain extends AsyncTask<String, String, String> {
             return;
         } else {
 
-            progressDialog.setProgress(100);
             dismissProgressDialog();
             Toast.makeText(mainActivity.getApplicationContext(), "IMPORTACIÓN EXITOSA", Toast.LENGTH_LONG).show();
 
@@ -691,9 +676,8 @@ public class ImportMain extends AsyncTask<String, String, String> {
     public void createProgressDialog() {
         progressDialog = new ProgressDialog(mainActivity);
         progressDialog.setMessage("Importando ...");
-        progressDialog.setIndeterminate(false);
-        progressDialog.setMax(100);
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.setCancelable(false);
         progressDialog.show();
 

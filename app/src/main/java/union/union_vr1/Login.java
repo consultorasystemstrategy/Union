@@ -156,14 +156,8 @@ public class Login extends Activity implements OnClickListener {
     private static final String TAG_MESSAGE = "message";
     private static final String TAG_NOMBRE = "name";
 
-    //JSON elementos para la tabla m_agente
-    // private static final String TAG_id_agente = "id_agente";
-    // private static final String TAG_id_agente_venta = "id_agente_venta";
-    // private static final String TAG_id_empresa = "id_empresa";
-    // private static final String TAG_id_usuario = "id_usuario";
-    // private static final String TAG_nombre_agente = "nombre_agente";
-    // private static final String TAG_nombre_usuario = "nombre_usuario";
-    //  private static final String TAG_pass_usuario = "pass_usuario";
+
+
     private int idAgente;
     private int idLiquidacion;
     private String nombreUsuario = "";
@@ -195,7 +189,6 @@ public class Login extends Activity implements OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
         mainActivity = this;
-
 
 
 
@@ -240,6 +233,7 @@ public class Login extends Activity implements OnClickListener {
         isCajaOpened = session.fetchVarible(9);
         Log.d("IS CAJA OPENED", "" + isCajaOpened);
 
+
         if (isCajaOpened == 0) {
             // QUEDARSE AQUÍ, LA CAJA ESTÁ CERRADA.
         } else if (isCajaOpened == 1) {
@@ -248,23 +242,6 @@ public class Login extends Activity implements OnClickListener {
         } else {
             redireccionarPrincipal();
         }
-
-       /* session = new DbAdapter_Temp_Session(this);
-        session.open();
-*/
-
-
-        //  idAgente = session.fetchVarible(1);
-        //  idLiquidacion = session.fetchVarible(3);
-
-        //((MyApplication)getApplication()).setImportado(false);
-        //((MyApplication)getApplication()).setExport(false);
-
-
-        // session.deleteVariable(7);
-        // session.createTempSession(7,0);
-        // session.deleteVariable(8);
-        // session.createTempSession(8,0);
 
         loginClass = this;
 
@@ -290,13 +267,8 @@ public class Login extends Activity implements OnClickListener {
         //register listeners
         mSubmit.setOnClickListener(this);
         logo.setOnClickListener(this);
-        //mSalirs.setOnClickListener(this);
-        //estaConectado();
-        //if(isOnline()){
-        //    user.setText("exito");
-        //}else{
-        //    user.setText("error");
-        //
+
+
         bluetoothSetup();
 
         if (!mBluetoothAdapter.isEnabled()) {
@@ -344,20 +316,7 @@ public class Login extends Activity implements OnClickListener {
             // SI LA FECHA ES INVALIDA
             Log.d(TAG, "FECHA DEVICE CIPHERLAB : "+fechaDevice);
             Log.d(TAG, "FECHA SERVER :" + fechaServer);
-            /*if (!fechaDevice.equals(fechaServer)){
-                //OPCIÓN 1, MANDAR UN MENSAJE FECHA INVÁLIDA, Y ENVIAR A LAS CONFIFURACIONES DE FECHA..
 
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        Utils.dialogCambiarFecha(mainActivity).show();
-                    }
-                });
-                //OPCIÓN 2, ESTABLECER LA FECHA PROGRAMANDO, SIN NINGÚN MENSAJE.
-            }else{
-                fechaCorrecta = true;
-            }*/
             return null;
         }
 

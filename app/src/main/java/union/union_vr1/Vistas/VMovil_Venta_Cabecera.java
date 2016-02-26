@@ -241,8 +241,8 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
     final int id_forma_cobro = 1;
     final String lugar_registro = "movil";
     String diasCredito= null;
-    int _id_tipo_pago = 0;
-
+    int _id_tipo_pago = 9;
+    private int direccionCV = Constants._DIRECCION_ESTABLECIMIENTO;
     private boolean isEstablecidasCuotas;
 
     private ExportMain exportMain;
@@ -1386,6 +1386,22 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.fiscal:
+                if (item.isChecked()) item.setChecked(false);
+                else item.setChecked(true);
+                Utils.setToast(mainActivity, "DIRECCIÓN FISCAL", R.color.verde);
+                direccionCV = Constants._DIRECCION_FISCAL;
+                return true;
+            case R.id.establecimiento:
+                if (item.isChecked()) item.setChecked(false);
+                else item.setChecked(true);
+                direccionCV = Constants._DIRECCION_ESTABLECIMIENTO;
+                Utils.setToast(mainActivity, "DIRECCIÓN ESTABLECIMIENTO", R.color.verde);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
 /*
         switch (item.getItemId()) {
             *//*case R.id.ventaRRPP:
@@ -1422,7 +1438,6 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
                 mostrarProductosParaVender();
                 break;*//*
         }*/
-        return true;
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
@@ -1750,6 +1765,11 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
         builder.setPositiveButton(R.string.si, new Dialog.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
 
+                //PINTAR
+                updateSemaforoStatus(Constants.SEMAFORO_ROJO);
+                //DESACTIVAR EL BOTON
+                buttonVender.setEnabled(false);
+                buttonVender.setBackgroundColor(getResources().getColor(R.color.Dark3));
 
                 String cantidad = Utils.replaceComa(editTextCantidadCredito.getText().toString().trim());
                 if (cantidad.length() > 0 && cantidad.length() < 10) {
@@ -2110,7 +2130,7 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
         int estado_conexion = 0;
 
         int i_formaPago = 0;
-        int estado_comprobante = 1;
+        int estado_comprobante = Constants._CV_VALIDO;
         Double monto_total  = 0.0;
         Double igv  = 0.0;
         Double base_imponible = 0.0;
@@ -2180,79 +2200,13 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
         cursorAgente.moveToFirst();
         String nombreAgenteVenta = cursorAgente.getString(cursorAgente.getColumnIndexOrThrow(dbHelperAgente.AG_nombre_agente));
 
-/*
-        if (anchoImpresora==2){
-            textoImpresion+="    UNIVERSIDAD PERUANA UNION   \n"
-                    +"     Cent.aplc. Prod. Union     \n"
-                    +"   C. Central Km 19 Villa Union \n"
-                    +" Lurigancho-Chosica Fax: 6186311\n"
-                    +"      Telf: 6186309-6186310     \n"
-                    +" Casilla 3564, Lima 1, LIMA PERU\n"
-                    +"         RUC: 20138122256       \n"
-                    +"--------------------------------\n";
-        }else if (anchoImpresora==3){
-            textoImpresion+=
-                     "            UNIVERSIDAD PERUANA UNION           \n"
-                    +"      CENTRO DE APLICACION PRODUCTOS UNION      \n"
-                    +"     CAR. CENTRAL KM. 19.5 VILLA UNION-NANA     \n"
-                    +"         Lurigancho-Chosica Fax: 6186311        \n"
-                    +"              Telf: 6186309-6186310             \n"
-                    +"         Casilla 3564, Lima 1, LIMA PERU        \n"
-                    +"                 RUC: 20138122256               \n\n";
-            //textoImpresion+= "------------------------------------------------------".substring(0,48);
-        }
-*/
-
-/*
-
-        textoImpresion+= "NUMERO  : "+numeroDocumentoImpresion+"\n";
-//        textoImpresion+= "Código ERP:  "+codigo_erp+"\n";
-        textoImpresion+= "FECHA   : "+ getDatePhone()+"\n";
-        textoImpresion+= "CLIENTE : "+ nombreCliente+"\n";
-        textoImpresion+= "DNI/RUC : "+ documentoCliente+"\n";
-        //textoImpresion+= "Direccion: Alameda Nro 2039 - Chosica\n";
-        //3 PULGADAS - STAR MICRONICS
-        //textoImpresion+= "-----------------------------------------------\n";
-        //esto será si es con impresora SEWOO de ...
-        if (anchoImpresora==2){
-            textoImpresion+= "------------------------------------------------------".substring(0,32)+"\n";
-        }else if (anchoImpresora==3){
-            textoImpresion+= "------------------------------------------------------".substring(0,48)+"\n";
-        }
-
-        //3 PULGADAS - STAR MICRONICS
-        //textoImpresion+= "Cant.             Producto              Importe\n";
-        //esto será si es con impresora SEWOO de ...
-        if (anchoImpresora==2){
-            textoImpresion+=String.format("%-6s","CANT") + String.format("%-19s","PRODUCTO")+ String.format("%-7s","IMPORTE")+"\n";
-        }else if (anchoImpresora==3){
-            textoImpresion+=String.format("%-6s","CANT") + String.format("%-30s","PRODUCTO")+String.format("%-5s","P.U.")+  String.format("%-7s","IMPORTE")+"\n";
-        }
-        //3 PULGADAS - STAR MICRONICS
-        //textoImpresion+= "-----------------------------------------------\n";
-        //esto será si es con impresora SEWOO de ...
-        if (anchoImpresora==2){
-            textoImpresion+= "------------------------------------------------------".substring(0,32)+"\n";
-        }else if (anchoImpresora==3){
-            textoImpresion+= "------------------------------------------------------".substring(0,48)+"\n";
-        }
-
-
-        textoVentaImpresion+= "N. Doc: "+numeroDocumentoImpresion+"\n";
-//        textoVentaImpresion+= "Código ERP:  "+codigo_erp+"\n";
-        textoVentaImpresion+= "Fecha: "+ getDatePhone()+"\n";
-        textoVentaImpresion+= "Vendedor: "+ nombreAgenteVenta+"\n";
-        textoVentaImpresion+= "Cliente: "+ nombreCliente+"\n";
-        textoVentaImpresion+= "DNI/RUC: "+ documentoCliente+"\n";*/
-
-        //textoVentaImpresion+= "Direccion: Alameda Nro 2039 - Chosica\n";
 
             NUMERO_DOCUMENTO = numero_documento + "";
             SERIE_DOCUMENTO = serie;
 
 
             Log.d(TAG, "SERIE : " + serie);
-            id = dbHelper_Comprob_Venta.createComprobVenta(idEstablecimiento, i_tipoDocumento, i_formaPago, _id_tipo_pago, tipoVenta, codigo_erp, serie, numero_documento, base_imponible, igv, monto_total, fecha, null, estado_comprobante, estado_conexion, id_agente_venta, Constants._CREADO, idLiquidacion);
+            id = dbHelper_Comprob_Venta.createComprobVenta(idEstablecimiento, i_tipoDocumento, i_formaPago, _id_tipo_pago, tipoVenta, codigo_erp, serie, numero_documento, base_imponible, igv, monto_total, fecha, null, estado_comprobante, estado_conexion, id_agente_venta, Constants._CREADO, idLiquidacion, direccionCV);
 
         Log.d(TAG, "_ID COMPROBANTE DE VENTA : "+id);
             Log.d("Export id CV IGUALES", "" + id);
@@ -2833,6 +2787,8 @@ public class VMovil_Venta_Cabecera extends Activity implements OnClickListener{
         });
         return alertDialog;
     }
+
+
     private Dialog myTextDialogValorUnidad() {
         final View layout = View.inflate(this, R.layout.dialog_cantidad_productos_valor_unidad, null);
 

@@ -1241,4 +1241,34 @@ public class StockAgenteRestApi {
         return result;
     }
 
+    public JSONObject fupd_AnularCompobanteVenta(int vint_ComprobanteId,int vint_AgenteId) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","RestAPI");
+        o.put("method", "fupd_AnularCompobanteVenta");
+        p.put("vint_ComprobanteId",mapObject(vint_ComprobanteId));
+        p.put("vint_AgenteId",mapObject(vint_AgenteId));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+
+    public JSONObject fsel_UltimaVenta(int vint_LiquidacionId,int vint_AgenteId) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","RestAPI");
+        o.put("method", "fsel_UltimaVenta");
+        p.put("vint_LiquidacionId",mapObject(vint_LiquidacionId));
+        p.put("vint_AgenteId",mapObject(vint_AgenteId));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+
 }

@@ -36,8 +36,6 @@ public class LocalizacionAngente extends AsyncTask<String, String, String> {
 
         StockAgenteRestApi api = new StockAgenteRestApi(context);
         try {
-            publishProgress("" + 25);
-
             String idAgente = strings[0];
             String latitud = strings[1];
             String longitud = strings[2];
@@ -48,7 +46,6 @@ public class LocalizacionAngente extends AsyncTask<String, String, String> {
             jsonObject = api.InsLocalizacionAgente(Integer.parseInt(idAgente), latitud, longitud);
             Log.d("LATLONG", jsonObject.toString());
 
-            publishProgress("" + 50);
 
         } catch (Exception e) {
             Log.d("LATLONGERROR : ", e.getMessage());
