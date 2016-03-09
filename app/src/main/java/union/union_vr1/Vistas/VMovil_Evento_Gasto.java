@@ -67,6 +67,7 @@ public class VMovil_Evento_Gasto extends Activity implements View.OnClickListene
 
     private EditText editText;
     int agente = 1;
+    private int idLiquidacion = 1;
     int tipoDocumento = 1;
     private DbAdapter_Temp_Session session;
 
@@ -134,6 +135,8 @@ public class VMovil_Evento_Gasto extends Activity implements View.OnClickListene
         session = new DbAdapter_Temp_Session(this);
         session.open();
 
+
+        idLiquidacion = session.fetchVarible(3);
         agente = session.fetchVarible(1);
 
         dbHelperInformeGasto = new DbAdapter_Informe_Gastos(this);
@@ -489,16 +492,16 @@ public class VMovil_Evento_Gasto extends Activity implements View.OnClickListene
             igv = IGV * total / 100;
             subtotal = total - igv;
             positionTipoDocumento = 1;
-            idRegistroGastoInsertado = dbHelperInformeGasto.createInformeGastos(positionTipoGasto, positionProcedenciaGasto, positionTipoDocumento, tipoGasto, subtotal, igv, total, getDatePhone(), null, estado, referencia, agente, Constants._CREADO);
+            idRegistroGastoInsertado = dbHelperInformeGasto.createInformeGastos(positionTipoGasto, positionProcedenciaGasto, positionTipoDocumento, tipoGasto, subtotal, igv, total, getDatePhone(), null, estado, referencia, agente, Constants._CREADO, idLiquidacion);
             Log.d("TIPO DOCUMENTO", "FACTURA");
         }else if (tipoDoc.equals(Constants._BOLETA)){
             positionTipoDocumento = 2;
-            idRegistroGastoInsertado = dbHelperInformeGasto.createInformeGastos(positionTipoGasto, positionProcedenciaGasto, positionTipoDocumento, tipoGasto, subtotal, igv, total, getDatePhone(), null, estado, referencia, agente, Constants._CREADO);
+            idRegistroGastoInsertado = dbHelperInformeGasto.createInformeGastos(positionTipoGasto, positionProcedenciaGasto, positionTipoDocumento, tipoGasto, subtotal, igv, total, getDatePhone(), null, estado, referencia, agente, Constants._CREADO, idLiquidacion);
             Log.d("TIPO DOCUMENTO", "BOLETA");
         }else if (tipoDoc.equals(Constants._FICHA))
         {
             positionTipoDocumento = 4;
-            idRegistroGastoInsertado = dbHelperInformeGasto.createInformeGastos(positionTipoGasto, positionProcedenciaGasto, positionTipoDocumento, tipoGasto, subtotal, igv, total, getDatePhone(), null, estado, referencia, agente, Constants._CREADO);
+            idRegistroGastoInsertado = dbHelperInformeGasto.createInformeGastos(positionTipoGasto, positionProcedenciaGasto, positionTipoDocumento, tipoGasto, subtotal, igv, total, getDatePhone(), null, estado, referencia, agente, Constants._CREADO, idLiquidacion);
             Log.d("TIPO DOCUMENTO", "FICHA");
             //DO NOTHING
         }
@@ -549,35 +552,6 @@ public class VMovil_Evento_Gasto extends Activity implements View.OnClickListene
 
         Cursor cursor = dbHelperInformeGasto.fetchAllInformeGastos(getDayPhone());
         cursor.moveToFirst();
-
-        /*// The desired columns to be bound
-        String[] columns = new String[]{
-                //DbAdapter_Informe_Gastos.GA_id_gasto,
-                DbAdapter_Tipo_Gasto.TG_nom_tipo_gasto,
-                DbAdapter_Informe_Gastos.GA_total,
-                //DbAdapter_Informe_Gastos.GA_subtotal,
-                //DbAdapter_Informe_Gastos.GA_igv,
-                //DbAdapter_Informe_Gastos.GA_referencia
-        };
-
-        // the XML defined views which the data will be bound to
-        int[] to = new int[]{
-                //R.id.VEG_textViewIdTipoGasto,
-                R.id.gastoNombre,
-                R.id.gastoImporte,
-                //R.id.VEG_textViewSubtotal,
-                //R.id.gastoReferencia
-                //R.id.VEG_textViewReferencia,
-        };
-
-        // create the adapter using the cursor pointing to the desired data
-        //as well as the layout information
-        dataAdapter = new SimpleCursorAdapter(
-                this, R.layout.infor_evento_gasto,
-                cursor,
-                columns,
-                to,
-                0);*/
 
         cursorAdapterGastos = new CursorAdapter_Gastos(VMovil_Evento_Gasto.this, cursor);
 

@@ -31,7 +31,7 @@ public class DbAdapter_Exportacion_Comprobantes {
     //
 
 
-    private static final String SQLITE_TABLE_EXPORTACION_COMPROBANTES= "m_exportacion_comprobantes";
+    public static final String SQLITE_TABLE_EXPORTACION_COMPROBANTES= "m_exportacion_comprobantes";
     private final Context mCtx;
 
     public static final String CREATE_TABLE_EXPORTACION_COMPROBANTES =
@@ -83,6 +83,50 @@ public class DbAdapter_Exportacion_Comprobantes {
         Log.d(TAG, "_ID MAPEO : "+ _id_mapeo);
         return _id_mapeo;
     }
+    public int updateRegistroExportacion(long id_sqlite, int id_sid, int estado_sincronizacion, int liquidacion) {
+
+        int updated = -1;
+        /**
+         * SE CREA UN REGISTRO QUE MAPEA LOS ID DE LOS COMPROBANTES ENTRE LOS SISTEMAS
+         * _ID_SQLITE
+         * _ID_SID
+         * _ID_FLEX
+         * */
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(EC_id_sqlite,id_sqlite);
+        initialValues.put(EC_id_sid,id_sid);
+        initialValues.put(EC_id_flex,Constants._FLEX_ID_DEFECTO);
+        initialValues.put(EC_estado_sincronizacion, estado_sincronizacion);
+        initialValues.put(EC_liquidacion, liquidacion);
+
+
+
+        updated = mDb.update(SQLITE_TABLE_EXPORTACION_COMPROBANTES, initialValues, EC_id_sqlite + " = ?", new String[]{"" + id_sqlite});
+        Log.d(TAG, "UPDATED : "+ updated);
+        return updated;
+    }
+
+
+    public boolean existeRegistroExport(long _id_sqlite) throws SQLException {
+        boolean exists = false;
+        Cursor mCursor = null;
+        mCursor = mDb.query(true, SQLITE_TABLE_EXPORTACION_COMPROBANTES, new String[] {EC_id,
+                        EC_id_sqlite, EC_id_sid, EC_id_flex,
+                        EC_estado_sincronizacion, EC_liquidacion
+                },
+                EC_id_sqlite + " = " + _id_sqlite, null,
+                null, null, null, null);
+
+        if (mCursor.getCount() >0) {
+            mCursor.moveToFirst();
+            exists = true;
+        }else{
+            exists = false;
+        }
+
+        return exists;
+
+    }
 
     public Cursor filterExport(int liquidacion) {
         Cursor mCursor = null;
@@ -92,10 +136,26 @@ public class DbAdapter_Exportacion_Comprobantes {
                 },
                 EC_estado_sincronizacion + " = " + Constants._CREADO + " AND "+EC_liquidacion + " = "+liquidacion + " AND " + EC_id_sid + " > 0", null,
                 null, null, null, null);
-        if (mCursor != null) {
+        if (mCursor.getCount() > 0) {
             mCursor.moveToFirst();
         }
         return mCursor;
+    }
+
+    public String fetchIDSID_bysqlite(int _id_sqlite) {
+
+        String sid_id = "SIN EXPORTAR";
+        Cursor mCursor = mDb.query(true, SQLITE_TABLE_EXPORTACION_COMPROBANTES, new String[] {EC_id,
+                        EC_id_sqlite, EC_id_sid, EC_id_flex,
+                        EC_estado_sincronizacion, EC_liquidacion
+                },
+                EC_id_sqlite + " = ?", new String[]{""+_id_sqlite}, null, null, null, null);
+
+        if (mCursor.getCount() >0) {
+            mCursor.moveToFirst();
+            sid_id = mCursor.getString(mCursor.getColumnIndexOrThrow(EC_id_sid));
+        }
+        return sid_id;
     }
 
     public Cursor fetchAll() {
@@ -106,7 +166,7 @@ public class DbAdapter_Exportacion_Comprobantes {
                 },
                 null, null,
                 null, null, null, null);
-        if (mCursor != null) {
+        if (mCursor.getCount() > 0) {
             mCursor.moveToFirst();
         }
         return mCursor;

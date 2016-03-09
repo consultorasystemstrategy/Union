@@ -170,6 +170,8 @@ public class CerrarCaja extends AsyncTask<String, String, String> {
             session.createTempSession(9, 0);
             session.deleteVariable(7);
             session.deleteVariable(8);
+            session.createTempSession(7, 0);
+            session.createTempSession(8, 0);
 
             /* int nroRegistrosBorrados = dbAdapter_stock_agente.deleteAllStockAgente();
             Log.d(TAG, "NRO REGISTROS STOCK BORRADOS : "+ nroRegistrosBorrados);*/

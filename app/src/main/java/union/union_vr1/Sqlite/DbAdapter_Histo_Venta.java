@@ -18,6 +18,8 @@ public class DbAdapter_Histo_Venta {
     public static final String HV_fecha= "hv_in_fecha";
     public static final String estado_sincronizacion = "estado_sincronizacion";
     public static final String HV_id_establecimiento= "hv_id_establecimiento";
+    public static final String HV_liquidacion= "hv_liquidacion";
+
 
     public static final String TAG = "Histo_Venta";
     private DbHelper mDbHelper;
@@ -36,6 +38,7 @@ public class DbAdapter_Histo_Venta {
                     +HV_subtotal+" real,"
                     +HV_fecha+" text ,"
                     +estado_sincronizacion+" integer,"
+                    +HV_liquidacion+" integer,"
                     +HV_id_establecimiento+" integer );";
 
     public static final String DELETE_TABLE_HISTO_VENTA = "DROP TABLE IF EXISTS " + SQLITE_TABLE_Histo_Venta;
@@ -57,7 +60,7 @@ public class DbAdapter_Histo_Venta {
     }
 
     public long createHistoVenta(
-            String id_histo, int id_agente, double subtotal,String fecha,int estado,String establecimiento){
+            String id_histo, int id_agente, double subtotal,String fecha,int estado,String establecimiento, int liquidacion){
 
         ContentValues initialValues = new ContentValues();
         initialValues.put(HV_id_histo,id_histo);
@@ -66,6 +69,8 @@ public class DbAdapter_Histo_Venta {
         initialValues.put(HV_fecha,fecha);
         initialValues.put(HV_id_establecimiento,establecimiento);
         initialValues.put(estado_sincronizacion,estado);
+        initialValues.put(HV_liquidacion, liquidacion);
+
 
 
         return mDb.insert(SQLITE_TABLE_Histo_Venta, null, initialValues);
@@ -78,11 +83,11 @@ public class DbAdapter_Histo_Venta {
         return mDb.update(SQLITE_TABLE_Histo_Venta, initialValues,
                 HV_id_histo+" LIKE '%"+_id+"%'",null);
     }
-    public Cursor filterExport() {
+    public Cursor filterExport(int liquidacion) {
         Cursor mCursor = null;
         mCursor = mDb.query(true, SQLITE_TABLE_Histo_Venta, new String[] {HV_id,
                         HV_id_histo, HV_id_agente, HV_subtotal,HV_fecha, estado_sincronizacion},
-                Constants._SINCRONIZAR + " = " + Constants._CREADO + " OR " + Constants._SINCRONIZAR + " = " + Constants._ACTUALIZADO, null,
+                " ("+Constants._SINCRONIZAR + " = " + Constants._CREADO + " OR " + Constants._SINCRONIZAR + " = " + Constants._ACTUALIZADO + " ) AND "+HV_liquidacion + " = '"+liquidacion+"'", null,
                 null, null, null, null);
         if (mCursor != null) {
             mCursor.moveToFirst();

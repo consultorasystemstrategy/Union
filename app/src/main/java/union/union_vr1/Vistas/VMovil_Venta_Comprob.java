@@ -599,7 +599,7 @@ public class VMovil_Venta_Comprob extends Activity implements View.OnClickListen
 
     private void displayListView() {
 
-        Cursor cursor = dbHelper.fetchAllComprobVenta(idEstablec, liquidacion);
+        Cursor cursor = dbHelper.fetchAllComprobVentaByEst(idEstablec, liquidacion);
         cursorAdapterComprobanteVenta = new CursorAdapterComprobanteVenta(this, cursor);
 
 
@@ -666,8 +666,8 @@ public class VMovil_Venta_Comprob extends Activity implements View.OnClickListen
     public void dialogAcciones(final int idComprobante) {
 
         //NO SE PODRÁ ANULAR, POR EL MOMENTO.
-        final String[] items = {"Imprimir", "Anular"};
-        //final String[] items = {"Imprimir"};
+        //final String[] items = {"Imprimir", "Anular"};
+        final String[] items = {"Imprimir"};
         AlertDialog.Builder dialogo = new AlertDialog.Builder(this);
         dialogo.setTitle("Seleccionar una acción");
         dialogo.setItems(items, new DialogInterface.OnClickListener() {

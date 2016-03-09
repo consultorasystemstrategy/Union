@@ -190,8 +190,15 @@ public class DBAdapter_Temp_Canjes_Devoluciones {
 
         return id;
     }
-    public Cursor getAllOperacionEstablecimiento() {
-        Cursor cursor = mDb.rawQuery("select DISTINCT("+temp_id_establecimiento+") from " + SQLITE_TABLE_Temp_Canjes_Devoluciones + " where "+Constants._SINCRONIZAR+"='"+Constants._ACTUALIZADO+"'", null);
+    public Cursor getAll(int liquidacion) {
+        Cursor cursor = mDb.rawQuery("SELECT DISTINCT("+temp_id_establecimiento+") FROM "+SQLITE_TABLE_Temp_Canjes_Devoluciones, null);
+        return cursor;
+    }
+
+
+    public Cursor getAllOperacionEstablecimiento(int liquidacion) {
+        Cursor cursor = mDb.rawQuery("select DISTINCT("+temp_id_establecimiento+") from " + SQLITE_TABLE_Temp_Canjes_Devoluciones + " WHERE "+Constants._SINCRONIZAR+" != '"+Constants._EXPORTADO+"' AND "+temp_liquidacion + " = '"+liquidacion+"' ", null);
+        //Cursor cursor = mDb.rawQuery("select DISTINCT("+temp_id_establecimiento+") from " + SQLITE_TABLE_Temp_Canjes_Devoluciones + " WHERE "+Constants._SINCRONIZAR+" != '"+Constants._EXPORTADO+"' ", null);
         return cursor;
     }
     public Cursor getAllOperacionByEstablec(String establec,String ESTADO) {

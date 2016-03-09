@@ -4,6 +4,7 @@ package union.union_vr1.Vistas;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.IntentService;
 import android.app.TabActivity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -382,22 +383,23 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
                 startActivity(intent);
                 break;*/
             case R.id.buttonExportERP:
+
                 mainActivity.startService(intentExportService);
                 break;
 
             case R.id.imprimirDisponible:
-                mainActivity.startService(intentExportService);
+                //mainActivity.startService(intentExportService);
                 Intent intentImprimirStock = new Intent(mainActivity, ImprimirStockDisponible.class);
                 startActivity(intentImprimirStock);
                 break;
 
             case R.id.imprimirDevoluciones:
-                mainActivity.startService(intentExportService);
+                //mainActivity.startService(intentExportService);
                 Intent intentImprimirDevoluciones = new Intent(mainActivity, ImprimirDevoluciones.class);
                 startActivity(intentImprimirDevoluciones);
                 break;
             case R.id.buttonResumenTransferencias:
-                Intent intentB = new Intent(mainActivity, Bluetooth_Printer.class);
+                Intent intentB = new Intent(mainActivity, ArqueoCaja.class);
                 startActivity(intentB);
                 break;
             default:
@@ -727,7 +729,8 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
         dbAdapter_exportacion_comprobantes.open();
 
 
-        Cursor cursorExportacionFlex = dbAdapter_exportacion_comprobantes.fetchAll();
+
+        /*Cursor cursorExportacionFlex = dbAdapter_exportacion_comprobantes.fetchAll();
         cursorExportacionFlex.moveToFirst();
         for (cursorExportacionFlex.moveToFirst(); !cursorExportacionFlex.isAfterLast(); cursorExportacionFlex.moveToNext()) {
 
@@ -737,43 +740,39 @@ public class VMovil_Resumen_Caja extends TabActivity implements View.OnClickList
                             cursorExportacionFlex.getInt(cursorExportacionFlex.getColumnIndexOrThrow(dbAdapter_exportacion_comprobantes.EC_estado_sincronizacion))
 
             );
-        }
+        }*/
         //FILTRO LOS REGISTROS DE LAS TABLAS A EXPORTAR
 
-        int colaInformeGastos = dbAdapter_informe_gastos.filterExport().getCount();
-        int colaComprobanteVenta = dbAdapter_comprob_venta.filterExport().getCount();
+        int colaComprobanteVenta = dbAdapter_comprob_venta.filterExport(idLiquidacion).getCount();
+        int colaInformeGastos = dbAdapter_informe_gastos.filterExport(idLiquidacion).getCount();
         //int colaComprobanteVentaDetalle = dbAdapter_comprob_venta_detalle.filterExport().getCount();
-        int colaComprobanteCobro = dbAdapter_comprob_cobro.filterExport().getCount();
+        int colaComprobanteCobro = dbAdapter_comprob_cobro.filterExport(idLiquidacion).getCount();
         //
         // int colaInsertarCaja = dbAdapter_comprob_cobro.filterExportUpdatedAndEstadoCobro().getCount();
-        int colaInsertarCaja = dbAdapter_impresion_cobros.listarParaExportar().getCount();
+        int colaInsertarCaja = dbAdapter_impresion_cobros.listarParaExportar(idLiquidacion).getCount();
         int colaEventoEstablecimiento = dbAdaptert_evento_establec.filterExportUpdated(idLiquidacion).getCount();
         //histo venta
-        int colaHistoVentaCreated = dbAdapter_histo_venta.filterExport().getCount();
-        int colaHistoVentaDetalleCreated = dbAdapter_histo_venta_detalle.filterExport(idLiquidacion).getCount();
-        int colaAutorizacionCobro = dbAdapter_temp_autorizacion_cobro.filterExport().getCount();
-        int colaCobrosManuales = dbAdapter_cobros_manuales.filterExport().getCount();
+        //int colaHistoVentaDetalleCreated = dbAdapter_histo_venta_detalle.filterExport(idLiquidacion).getCount();
+        int colaAutorizacionCobro = dbAdapter_temp_autorizacion_cobro.filterExport(idLiquidacion).getCount();
+        int colaCobrosManuales = dbAdapter_cobros_manuales.filterExport(idLiquidacion).getCount();
         int colaExportacionFlex = dbAdapter_exportacion_comprobantes.filterExport(idLiquidacion).getCount();
-        int colaExportCManuFlex = dbAdapter_cobros_manuales.filterExportForFlexId().getCount();
-        int colaExportCNormFlex = dbAdapter_impresion_cobros.listarCobrosExpFlex().getCount();
+        int colaExportCManuFlex = dbAdapter_cobros_manuales.filterExportForFlexId(idLiquidacion).getCount();
+        int colaExportCNormFlex = dbAdapter_impresion_cobros.listarCobrosExpFlex(idLiquidacion).getCount();
         int colaCliente = dbAdaptert_evento_establec.listarToExport(idLiquidacion).getCount();
         //KELVIN LO REVISARÁ Y ME DIRÁ
-        int colaCAnjesDevoluciones = dbAdapter_temp_canjes_devoluciones.getAllOperacionEstablecimiento().getCount();
+        int colaCAnjesDevoluciones = dbAdapter_temp_canjes_devoluciones.getAllOperacionEstablecimiento(idLiquidacion).getCount();
 
 
         int totalRegistrosEnCola = colaInformeGastos + colaComprobanteVenta +
-                colaComprobanteCobro + colaInsertarCaja + colaEventoEstablecimiento + colaHistoVentaCreated + colaHistoVentaDetalleCreated + colaAutorizacionCobro
+                colaComprobanteCobro + colaInsertarCaja + colaEventoEstablecimiento + colaAutorizacionCobro
                 + colaCobrosManuales + colaExportacionFlex + colaExportCManuFlex + colaExportCNormFlex + colaCliente + colaCAnjesDevoluciones;
 
         Log.d(TAG, "COLA  TOTAL: " + totalRegistrosEnCola);
         Log.d(TAG, "COLA colaInformeGastos : " + colaInformeGastos);
         Log.d(TAG, "COLA colaComprobanteVenta : " + colaComprobanteVenta);
-        //Log.d(TAG, "COLA colaComprobanteVentaDetalle : " + colaComprobanteVentaDetalle);
         Log.d(TAG, "COLA colaComprobanteCobro : " + colaComprobanteCobro);
         Log.d(TAG, "COLA colaInsertarCaja : " + colaInsertarCaja);
         Log.d(TAG, "COLA colaEventoEstablecimiento : " + colaEventoEstablecimiento);
-        Log.d(TAG, "COLA colaHistoVentaCreated : " + colaHistoVentaCreated);
-        Log.d(TAG, "COLA colaHistoVentaDetalleCreated : " + colaHistoVentaDetalleCreated);
         Log.d(TAG, "COLA colaAutorizacionCobro : " + colaAutorizacionCobro);
         Log.d(TAG, "COLA colaCobrosManuales : " + colaCobrosManuales);
         Log.d(TAG, "COLA colaExportacionFlex : " + colaExportacionFlex);

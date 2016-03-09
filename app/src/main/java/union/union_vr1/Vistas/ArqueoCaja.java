@@ -1,17 +1,14 @@
 package union.union_vr1.Vistas;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.app.Activity;
 import android.util.Log;
 import android.view.Gravity;
 import android.widget.CompoundButton;
@@ -27,16 +24,16 @@ import java.util.Vector;
 import jpos.JposException;
 import union.union_vr1.BlueTooth.AlertView;
 import union.union_vr1.BlueTooth.Print;
-import union.union_vr1.Login;
 import union.union_vr1.R;
 import union.union_vr1.Sqlite.Constants;
 import union.union_vr1.Sqlite.DbAdapter_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Agente_Login;
 import union.union_vr1.Sqlite.DbAdapter_Temp_Session;
 
-public class Bluetooth_Printer extends Activity {
+public class ArqueoCaja extends Activity {
 
-    private ToggleButton buttonTransferencias;
+
+    //private ToggleButton buttonTransferencias;
     private ToggleButton buttonArqueo;
 
 
@@ -87,43 +84,11 @@ public class Bluetooth_Printer extends Activity {
         }
     }
 
-    @Override
-    public void onBackPressed() {
-
-        if (countPrinterTransferencia==0){
-            backPressedDialog(Bluetooth_Printer.this, "Aún no imprimió Transferencia", Login.class).show();
-        }else{
-            if (countPrinterArqueo==0){
-                backPressedDialog(Bluetooth_Printer.this, "Aún no imprimió Resumen Caja", Login.class).show();
-            }else{
-                Intent intent = new Intent(getApplicationContext(), Login.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-            }
-        }
-
-    }
-
-    public Dialog backPressedDialog(final Activity main, final String mensaje, final Class claseAEnviar){
-        return new AlertDialog.Builder(main)
-                .setTitle(mensaje)
-                .setMessage("¿Está seguro que desea salir?")
-                .setNegativeButton(R.string.no, null)
-                .setPositiveButton(R.string.si, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // FIRE ZE MISSILES!
-                        finish();
-                        Intent intent = new Intent(main, claseAEnviar);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
-                    }
-                }).create();
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_bluetooth__printer);
+        setContentView(R.layout.activity_arqueo_caja);
 
         bluetoothSetup();
         contexto = this;
@@ -159,39 +124,39 @@ public class Bluetooth_Printer extends Activity {
         Log.d(TAG, "ADRESS IMPRESORA : " + defaultAdressImpresora);
 
         buttonArqueo = (ToggleButton) findViewById(R.id.buttonArqueoCaja);
-        buttonTransferencias = (ToggleButton) findViewById(R.id.buttonTransferencias);
+        //buttonTransferencias = (ToggleButton) findViewById(R.id.buttonTransferencias);
 
-        buttonTransferencias.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+/*        buttonTransferencias.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
                 if (isChecked){
                     //SINCRONIZAR
-                    /*if(!connected)
-                    {*/
-                        connectInit();
-                        try
-                        {
-                            btConn(mBluetoothAdapter.getRemoteDevice(defaultAdressImpresora));
-                        }
-                        catch(IllegalArgumentException e)
-                        {
-                            // Bluetooth Address Format [OO:OO:OO:OO:OO:OO]
-                            AlertView.showAlert(e.getMessage(), contexto);
-                            return;
-                        }
-                        catch (IOException e)
-                        {
-                            AlertView.showAlert(e.getMessage(), contexto);
-                            return;
-                        }
-                    /*
+                    *//*if(!connected)
+                    {*//*
+                    connectInit();
+                    try
+                    {
+                        btConn(mBluetoothAdapter.getRemoteDevice(defaultAdressImpresora));
+                    }
+                    catch(IllegalArgumentException e)
+                    {
+                        // Bluetooth Address Format [OO:OO:OO:OO:OO:OO]
+                        AlertView.showAlert(e.getMessage(), contexto);
+                        return;
+                    }
+                    catch (IOException e)
+                    {
+                        AlertView.showAlert(e.getMessage(), contexto);
+                        return;
+                    }
+                    *//*
                     // Disconnect routine.
-                    /*else
+                    *//*else
                     {
                         // Always run.
                         btDisconn();
-                    }*/
+                    }*//*
                 }else{
                     //IMPRIMIR
 
@@ -209,7 +174,7 @@ public class Bluetooth_Printer extends Activity {
 
                 }
             }
-        });
+        });*/
 
         buttonArqueo.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -248,7 +213,7 @@ public class Bluetooth_Printer extends Activity {
 
                     try {
                         //AQUÍ IMPRIMIRÉ EL ARQUEO
-                        print.printArqueo(idLiquidacion, nombreAgente, Constants.DOCUMENTO_RESUMEN_FINAL);
+                        print.printArqueo(idLiquidacion, nombreAgente, Constants.DOCUMENTO_RESUMEN_PROVISIONAL);
                         countPrinterArqueo++;
                     } catch (JposException e) {
                         e.printStackTrace();
@@ -267,7 +232,6 @@ public class Bluetooth_Printer extends Activity {
                     BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBluetooth, 0);
         }
-
     }
 
     /**
@@ -318,7 +282,7 @@ public class Bluetooth_Printer extends Activity {
     /** ------------------------------------------------------------------ */
     public class connTask extends AsyncTask<BluetoothDevice, Void, Integer>
     {
-        private final ProgressDialog dialog = new ProgressDialog(Bluetooth_Printer.this);
+        private final ProgressDialog dialog = new ProgressDialog(ArqueoCaja.this);
 //		private BluetoothPort bp;
 
         @Override
@@ -366,7 +330,7 @@ public class Bluetooth_Printer extends Activity {
                     @Override
                     public void run() {
                         // UI
-                        buttonTransferencias.setChecked(true);
+                        //buttonTransferencias.setChecked(true);
                         buttonArqueo.setChecked(true);
 
                         //TOAST
@@ -415,8 +379,8 @@ public class Bluetooth_Printer extends Activity {
             hThread.interrupt();
         connected = false;
         // UI
-            buttonArqueo.setChecked(false);
-        buttonTransferencias.setChecked(false);
+        buttonArqueo.setChecked(false);
+        //buttonTransferencias.setChecked(false);
 
     /*list.setEnabled(true);
     editText.setEnabled(true);
@@ -425,7 +389,4 @@ public class Bluetooth_Printer extends Activity {
         toast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 8);
         toast.show();
     }
-
-
-
 }

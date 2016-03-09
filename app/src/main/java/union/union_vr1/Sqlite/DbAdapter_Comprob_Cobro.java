@@ -184,7 +184,7 @@ public class DbAdapter_Comprob_Cobro {
         return estado;
     }
 
-    public long createComprobCobro(ComprobanteCobro comprobanteCobro) {
+    public long createComprobCobro(ComprobanteCobro comprobanteCobro, int liquidacion) {
 
         ContentValues initialValues = new ContentValues();
 
@@ -206,6 +206,8 @@ public class DbAdapter_Comprob_Cobro {
         initialValues.put(CC_id_agente, comprobanteCobro.getIdAgente());
         initialValues.put(CC_id_forma_cobro, comprobanteCobro.getIdFormaCobro());
         initialValues.put(CC_lugar_registro, comprobanteCobro.getLugarRegistro());
+        initialValues.put(CC_liquidacion, liquidacion);
+
         return mDb.insert(SQLITE_TABLE_Comprob_Cobro, null, initialValues);
     }
 
@@ -293,7 +295,7 @@ public class DbAdapter_Comprob_Cobro {
                 });
     }
 
-    public int updateComprobCobros(ComprobanteCobro comprobanteCobro) {
+    public int updateComprobCobrosLiq(ComprobanteCobro comprobanteCobro, int liquidacion) {
 
         ContentValues initialValues = new ContentValues();
 //        initialValues.put(CC_id_comprobante_cobro, comprobanteCobro.getIdComprobanteCobro());
@@ -313,6 +315,7 @@ public class DbAdapter_Comprob_Cobro {
         initialValues.put(CC_id_agente, comprobanteCobro.getIdAgente());
         initialValues.put(CC_id_forma_cobro, comprobanteCobro.getIdFormaCobro());
         initialValues.put(CC_lugar_registro, comprobanteCobro.getLugarRegistro());
+        initialValues.put(CC_liquidacion, liquidacion);
 
 
         return mDb.update(SQLITE_TABLE_Comprob_Cobro, initialValues,
@@ -489,7 +492,7 @@ public class DbAdapter_Comprob_Cobro {
         return insert;
 
     }
-    public Cursor filterExportUpdatedAndEstadoCobroParcial() throws SQLException {
+    public Cursor filterExportUpdatedAndEstadoCobroParcial(int liquidacion) throws SQLException {
 
         Cursor mCursor = mDb.query(true, SQLITE_TABLE_Comprob_Cobro, new String[]{
 
@@ -497,7 +500,7 @@ public class DbAdapter_Comprob_Cobro {
                         CC_id_establec, CC_id_comprob, CC_id_plan_pago, CC_id_plan_pago_detalle,
                         CC_desc_tipo_doc, CC_doc, CC_fecha_programada, CC_monto_a_pagar,
                         CC_fecha_cobro, CC_monto_cobrado, CC_estado_cobro, Constants._SINCRONIZAR},
-                Constants._SINCRONIZAR + " = ? AND " + CC_estado_prorroga + " = '"+Constants.COBRO_PARCIAL+"'",
+                Constants._SINCRONIZAR + " = ? AND " + CC_estado_prorroga + " = '"+Constants.COBRO_PARCIAL+"' AND "+CC_liquidacion + " = '"+liquidacion+"'",
                 new String[]{
                         "" + Constants._ACTUALIZADO,
                 }
@@ -507,13 +510,13 @@ public class DbAdapter_Comprob_Cobro {
             mCursor.moveToFirst();
         }
         if (mCursor.getCount() == 0) {
-            Log.d("FILTER EXPORT PLAN PAGO ", "NULL");
+            Log.d(TAG, "FILTER EXPORT PLAN PAGO NULL");
         }
         return mCursor;
 
     }
 
-    public Cursor filterExportUpdatedAndEstadoCobro() throws SQLException {
+    public Cursor filterExportUpdatedAndEstadoCobro(int liquidacion) throws SQLException {
 
         Cursor mCursor = mDb.query(true, SQLITE_TABLE_Comprob_Cobro, new String[]{
 
@@ -521,7 +524,7 @@ public class DbAdapter_Comprob_Cobro {
                         CC_id_establec, CC_id_comprob, CC_id_plan_pago, CC_id_plan_pago_detalle,
                         CC_desc_tipo_doc, CC_doc, CC_fecha_programada, CC_monto_a_pagar,
                         CC_fecha_cobro, CC_monto_cobrado, CC_estado_cobro, Constants._SINCRONIZAR},
-                Constants._SINCRONIZAR + " = ? AND " + CC_estado_cobro + " = '0'",
+                Constants._SINCRONIZAR + " = ? AND " + CC_estado_cobro + " = '0' AND "+ CC_liquidacion +" = '"+liquidacion+"'",
                 new String[]{
                         "" + Constants._ACTUALIZADO,
                 }
@@ -607,7 +610,7 @@ public class DbAdapter_Comprob_Cobro {
         return mDb.rawQuery("select * from " + SQLITE_TABLE_Comprob_Cobro + " where " + CC_estado_flex + "='" + Constants.POR_EXPORTAR_FLEX + "'", null);
     }
 
-    public Cursor filterExport() {
+    public Cursor filterExport(int liquidacion) {
 
         Cursor mCursor = mDb.query(SQLITE_TABLE_Comprob_Cobro, new String[]{
 
@@ -616,7 +619,7 @@ public class DbAdapter_Comprob_Cobro {
                         CC_id_establec, CC_id_comprob, CC_id_plan_pago, CC_id_plan_pago_detalle,
                         CC_desc_tipo_doc, CC_doc, CC_fecha_programada, CC_monto_a_pagar,
                         CC_fecha_cobro, CC_monto_cobrado, CC_estado_cobro},
-                Constants._SINCRONIZAR + " = " + Constants._CREADO, null, null, null, null);
+                Constants._SINCRONIZAR + " = " + Constants._CREADO + " AND "+CC_liquidacion +" = '"+liquidacion+"'", null, null, null, null);
 
         if (mCursor != null) {
             mCursor.moveToFirst();
@@ -671,9 +674,9 @@ public class DbAdapter_Comprob_Cobro {
         return mCursor;
     }
 
-    public Cursor listarComprobantesToCobros(int agente) {
+    public Cursor listarComprobantesToCobros(int agente, int liquidacion) {
 
-        Cursor mCursor = mDb.rawQuery(" SELECT me.*, mc.* FROM m_comprob_cobro mc,m_evento_establec me where mc.cc_in_id_establec =me.ee_in_id_establec and  cc_in_estado_cobro !='0' and cc_in_id_comprobante_cobro is not null  order by cc_te_fecha_programada desc ", null);
+        Cursor mCursor = mDb.rawQuery(" SELECT me.*, mc.* FROM m_comprob_cobro mc INNER JOIN m_evento_establec me ON (mc.cc_in_id_establec =me.ee_in_id_establec) WHERE "+CC_liquidacion+" = '"+liquidacion+"' and  cc_in_estado_cobro !='0' and cc_in_id_comprobante_cobro is not null  order by cc_te_fecha_programada desc ", null);
         return mCursor;
     }
 

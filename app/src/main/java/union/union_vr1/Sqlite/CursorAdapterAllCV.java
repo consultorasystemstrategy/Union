@@ -1,5 +1,6 @@
 package union.union_vr1.Sqlite;
 
+
 import android.content.Context;
 import android.database.Cursor;
 import android.view.LayoutInflater;
@@ -10,20 +11,20 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-
 import union.union_vr1.R;
 import union.union_vr1.Utils.Utils;
 
 /**
- * Created by Usuario on 09/12/2014.
+ * Created by Steve on 28/02/2016.
  */
-public class CursorAdapterComprobanteVenta extends CursorAdapter {
-    private DbAdapter_Comprob_Venta dbHelper;
+public class CursorAdapterAllCV extends CursorAdapter {
+
+    private DbAdapter_Exportacion_Comprobantes dbHelper;
     private LayoutInflater cursorInflater;
 
-    public CursorAdapterComprobanteVenta(Context context, Cursor c) {
+    public CursorAdapterAllCV(Context context, Cursor c) {
         super(context, c, true);
-        dbHelper = new DbAdapter_Comprob_Venta(context);
+        dbHelper = new DbAdapter_Exportacion_Comprobantes(context);
         dbHelper.open();
 
         cursorInflater = (LayoutInflater) context.getSystemService(
@@ -32,17 +33,18 @@ public class CursorAdapterComprobanteVenta extends CursorAdapter {
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup viewGroup) {
-        return cursorInflater.inflate(R.layout.lista_personalizada, viewGroup, false);
+        return cursorInflater.inflate(R.layout.item_cv_exportacion, viewGroup, false);
     }
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
 
 
-        TextView textViewTitulo = (TextView) view.findViewById(R.id.textViewListaTitulo);
-        TextView textViewSubtitulo = (TextView) view.findViewById(R.id.textViewListaSubtitulo);
+        TextView textViewEstablecimiento = (TextView) view.findViewById(R.id.textViewEstablecimiento);
+        TextView textViewComprobante = (TextView) view.findViewById(R.id.textViewComprobante);
         TextView textViewComment = (TextView) view.findViewById(R.id.textViewListaComment);
         TextView textViewMonto = (TextView) view.findViewById(R.id.textViewListaMonto);
+        TextView textviewEstadoExport = (TextView) view.findViewById(R.id.textViewEstadoExport);
         LinearLayout linearLayoutColor = (LinearLayout) view.findViewById(R.id.linearLayoutLista);
         ImageView imageView = (ImageView) view.findViewById(R.id.imageViewLista);
 
@@ -56,24 +58,44 @@ public class CursorAdapterComprobanteVenta extends CursorAdapter {
             int estado = Integer.parseInt(cursor.getString(cursor.getColumnIndex(DbAdapter_Comprob_Venta.CV_estado_comp)));
             String serie = cursor.getString(cursor.getColumnIndex(DbAdapter_Comprob_Venta.CV_serie));
             int id_tipo_documento = cursor.getInt(cursor.getColumnIndex(DbAdapter_Comprob_Venta.CV_id_tipo_doc));
+            String nombre_establecimiento = cursor.getString(cursor.getColumnIndex(DbAdaptert_Evento_Establec.EE_nom_establec));
+            int estado_exportacion = cursor.getInt(cursor.getColumnIndexOrThrow(Constants._SINCRONIZAR));
+
+            String _id_sid= dbHelper.fetchIDSID_bysqlite(_id);
 
 
-
-            String nombreEstado =null;
             switch (estado){
                 case 0:
-                    nombreEstado = "ANULADO";
                     linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.rojo));
                     imageView.setImageDrawable(context.getApplicationContext().getResources().getDrawable(R.drawable.ic_action_cancel));
                     break;
                 case 1:
-                    nombreEstado  = "CANCELADO";
                     linearLayoutColor.setBackgroundColor(context.getResources().getColor(R.color.Dark1));
                     imageView.setImageDrawable(context.getApplicationContext().getResources().getDrawable(R.drawable.ic_action_accept));
                     break;
                 default:
                     break;
             }
+
+            switch (estado_exportacion){
+                case Constants._CREADO:
+                    textviewEstadoExport.setTextColor(context.getResources().getColor(R.color.rojo));
+                    textviewEstadoExport.setText(R.string.NoExport);
+                    break;
+                case Constants._ACTUALIZADO:
+                    textviewEstadoExport.setTextColor(context.getResources().getColor(R.color.rojo));
+                    textviewEstadoExport.setText(R.string.NoExport);
+                    break;
+                case Constants._EXPORTADO:
+                    textviewEstadoExport.setTextColor(context.getResources().getColor(R.color.azul));
+                    textviewEstadoExport.setText(R.string.Exported);
+                    break;
+                case Constants._IMPORTADO:
+                    textviewEstadoExport.setTextColor(context.getResources().getColor(R.color.rojo));
+                    textviewEstadoExport.setText(R.string.NoExport);
+                    break;
+            }
+
 
             String tipoDocumento = null;
             switch (id_tipo_documento){
@@ -113,35 +135,16 @@ public class CursorAdapterComprobanteVenta extends CursorAdapter {
             }
 
 
-            String comprobanteVenta = "id : " + _id+
-                    ",Doc : "+numero_documento+
-                    "\nTotal : "+ total+
-                    "\nForma de pago : "+ formaPago+
-                    "\nEstado : "+ nombreEstado;
 
 
 
-            textViewTitulo.setText(tipoDocumento+": "+serie+"-"+agregarCeros(numero_documento,8) );
-            textViewSubtitulo.setText(formaPago);
-            textViewComment.setText(nombreEstado);
+            textViewEstablecimiento.setText(nombre_establecimiento);
+            textViewComprobante.setText(tipoDocumento+": "+serie+"-"+Utils.agregarCeros(numero_documento, 8)
+                    +"\nID SID: "+_id_sid );
+            textViewComment.setText(formaPago);
             textViewMonto.setText("S/. "+ Utils.formatDouble(total));
 
         }
 
-    }
-    private static String agregarCeros(String string, int largo)
-    {
-        String ceros = "";
-        int cantidad = largo - string.length();
-        if (cantidad >= 1)
-        {
-            for(int i=0;i<cantidad;i++)
-            {
-                ceros += "0";
-            }
-            return (ceros + string);
-        }
-        else
-            return string;
     }
 }

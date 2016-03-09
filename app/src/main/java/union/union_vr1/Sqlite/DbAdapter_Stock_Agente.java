@@ -174,12 +174,12 @@ public class DbAdapter_Stock_Agente {
                         ST_final, ST_disponible, ST_ventas, ST_fisico},
                 ST_id_producto + " = '" + idProducto + "' AND " + ST_liquidacion + " = '" + liquidacion + "' ", null, null, null, null, null);
 
-        if (mCursor != null) {
+        if (mCursor.getCount() > 0) {
             mCursor.moveToFirst();
             exists = true;
-        }
-        if (mCursor.getCount() == 0) {
+        }else{
             exists = false;
+
         }
         return exists;
     }

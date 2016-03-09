@@ -102,6 +102,7 @@ public class VMovil_Cobros_Totales extends Activity implements View.OnClickListe
     Double slide_aRendir = 0.0;
     private DbAdapter_Impresion_Cobros dbAdapter_impresion_cobros;
 
+    private int liquidacion = 0;
 
     int _id_tipo_pago = 9;
     private static String TAG = VMovil_Cobros_Totales.class.getSimpleName();
@@ -115,6 +116,8 @@ public class VMovil_Cobros_Totales extends Activity implements View.OnClickListe
 
         session = new DbAdapter_Temp_Session(this);
         session.open();
+
+        liquidacion = session.fetchVarible(3);
 
         cCobro = new DbAdapter_Comprob_Cobro(this);
         cCobro.open();
@@ -147,7 +150,7 @@ public class VMovil_Cobros_Totales extends Activity implements View.OnClickListe
         //CHANGE DATA SLIDE MENU
         changeDataSlideMenu();
 
-        Cursor cursor = cCobro.listarComprobantesToCobros(slideIdAgente);
+        Cursor cursor = cCobro.listarComprobantesToCobros(slideIdAgente, liquidacion);
 
 
         CursorAdapterCobrosTotales cACobros = new CursorAdapterCobrosTotales(this, cursor);
@@ -207,7 +210,7 @@ public class VMovil_Cobros_Totales extends Activity implements View.OnClickListe
                         cCobro.open();
 
                         int estado = cCobro.updateComprobCobrosCan2(idCCobro, getDatePhone(), getTimePhone(), deuda, "0");
-                        long a = dbAdapter_impresion_cobros.createImprimir(Integer.parseInt(idCCobro),idEstablecimiento, deuda, Constants.COBRO_NORMAL, getDatePhone(), establec,idComprobanteVenta+"", getDatePhone() + " " + getTimePhone(), slideIdLiquidacion + "", 0, idComprobanteVenta+"",1, idPlanPago, idPlanPagoDetalle, Constants.COBRO_ESTADO_PARCIAL,nombre_documento, _id_tipo_pago);
+                        long a = dbAdapter_impresion_cobros.createImprimir(Integer.parseInt(idCCobro),idEstablecimiento, deuda, Constants.COBRO_NORMAL, getDatePhone(), establec,idComprobanteVenta+"", getDatePhone() + " " + getTimePhone(), slideIdLiquidacion + "", 0, idComprobanteVenta+"", idComprobanteVenta, idPlanPago, idPlanPagoDetalle, Constants.COBRO_ESTADO_PARCIAL,nombre_documento, _id_tipo_pago);
 
                         Log.e("ESTADO DE COBRANZA", "" + estado + "-" + idCCobro);
                         if (estado > 0) {
@@ -317,7 +320,7 @@ public class VMovil_Cobros_Totales extends Activity implements View.OnClickListe
                 cCobro.open();
 
                 int estado = cCobro.updateComprobCobrosCan2(idCCobro, getDatePhone(), getTimePhone(), deuda, "0");
-                long a = dbAdapter_impresion_cobros.createImprimir(Integer.parseInt(idCCobro),idEstablecimiento, deuda, Constants.COBRO_NORMAL, getDatePhone(), establec,idComprobanteVenta+"", getDatePhone() + " " + getTimePhone(), slideIdLiquidacion + "", 0, idComprobanteVenta+"",1, idPlanPago, idPlanPagoDetalle, Constants.COBRO_ESTADO_PARCIAL,nombre_documento, _id_tipo_pago);
+                long a = dbAdapter_impresion_cobros.createImprimir(Integer.parseInt(idCCobro),idEstablecimiento, deuda, Constants.COBRO_NORMAL, getDatePhone(), establec,idComprobanteVenta+"", getDatePhone() + " " + getTimePhone(), slideIdLiquidacion + "", 0, idComprobanteVenta+"", idComprobanteVenta, idPlanPago, idPlanPagoDetalle, Constants.COBRO_ESTADO_PARCIAL,nombre_documento, _id_tipo_pago);
 
                 Log.e("ESTADO DE COBRANZA", "" + estado + "-" + idCCobro);
                 if (estado > 0) {

@@ -100,11 +100,10 @@ public class DbAdapter_ModalidadCredito {
                         TM_id_modalidad_credito, TM_dias_credito, TM_descripcion, estado_sincronizacion},
                 TM_id_modalidad_credito + " = " + idModalidadCredito, null,
                 null, null, null, null);
-        if (mCursor != null) {
+        if (mCursor.getCount() > 0) {
             mCursor.moveToFirst();
             exists = true;
-        }
-        if (mCursor.getCount()==0){
+        }else {
             exists = false;
         }
         return exists;

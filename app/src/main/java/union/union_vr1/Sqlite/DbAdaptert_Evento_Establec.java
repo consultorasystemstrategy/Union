@@ -54,7 +54,7 @@ public class DbAdaptert_Evento_Establec {
     private SQLiteDatabase mDb;
     //private static final int DATABASE_VERSION = 1;
     //private static final String DATABASE_NAME = "ProdUnion.sqlite";
-    private static final String SQLITE_TABLE_Evento_Establec = "m_evento_establec";
+    public static final String SQLITE_TABLE_Evento_Establec = "m_evento_establec";
     private final Context mCtx;
 
     public static final String CREATE_TABLE_EVENTO_ESTABLEC =
@@ -182,9 +182,9 @@ public class DbAdaptert_Evento_Establec {
         initialValues.put(EE_id_establec,establecimiento.getIdEstablecimiento());
         initialValues.put(EE_id_cat_est,establecimiento.getIdCategoriaEstablecimiento());
         initialValues.put(EE_id_tipo_doc_cliente,establecimiento.getTipoDocCliente());
-        if (establecimiento.getEstadoAtencion()!=1){
+        //if (establecimiento.getEstadoAtencion()!=1) {
             initialValues.put(EE_id_estado_atencion, establecimiento.getEstadoAtencion());
-        }
+        //}
 
         initialValues.put(EE_nom_establec,establecimiento.getNombreEstablecimiento());
         initialValues.put(EE_nom_cliente,establecimiento.getNombreCliente());
@@ -217,11 +217,10 @@ public class DbAdaptert_Evento_Establec {
                         EE_id_estado_atencion,EE_monto_credito,EE_dias_credito, EE_time_atencion, EE_direccion_principal},
                 EE_id_establec + " = " + idEstablec, null,
                 null, null, null, null);
-        if (mCursor != null) {
+        if (mCursor.getCount() > 0) {
             mCursor.moveToFirst();
             exists = true;
-        }
-        if (mCursor.getCount()==0){
+        }else {
             exists= false;
         }
         return exists;
@@ -504,7 +503,7 @@ cursor.moveToFirst();
                         EE_id_establec, EE_id_cat_est, EE_id_tipo_doc_cliente, EE_id_estado_atencion, EE_id_estado_no_atencion,
                         EE_nom_establec, EE_nom_cliente, EE_doc_cliente, EE_orden, EE_surtido_stock_ant,
                         EE_surtido_venta_ant, EE_monto_credito, EE_dias_credito, EE_id_agente, EE_time_atencion, EE_direccion_principal},
-                Constants._SINCRONIZAR + " = ? ", new String[]{""+Constants._ACTUALIZADO}, null,
+                Constants._SINCRONIZAR + " = ? AND "+EE_id_liquidacion + " = ?;", new String[]{""+Constants._ACTUALIZADO, ""+liquidacion}, null,
                 null, null, null, null);
         if (mCursor != null) {
             mCursor.moveToFirst();

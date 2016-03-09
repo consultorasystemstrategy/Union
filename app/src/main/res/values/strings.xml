@@ -121,6 +121,11 @@
         <item>Factura</item>
         <item>Boleta</item>
     </string-array>
+    <string-array name="FacturaBoleta">
+        <item>Factura</item>
+        <item>Boleta</item>
+    </string-array>
+
     <string-array name="tipoDocumentoBoleta">
         <item>Boleta</item>
     </string-array>
@@ -160,6 +165,9 @@
     <string name="title_activity_vmovil__cobros__totales">VMovil_Cobros_Totales</string>
     <string name="title_activity_my">MyActivity</string>
     <string name="title_section1">Section 1</string>
+    <string name="pin">4650</string>
+
+
     <string name="title_section2">Section 2</string>
     <string name="title_section3">Section 3</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -204,6 +212,11 @@
     <string name="title_activity_fgfg">fgfg</string>
     <string name="title_activity_bluetooth__printer">Impresión</string>
 
+
     <string name="google_maps_key" templateMergeStrategy="preserve">AIzaSyCPLWrA1ANlcLWczwX05PPgUSlkNHTmqAk</string>
+
+    <string name="NoExport">SIN EXPORTAR</string>
+    <string name="Exported">EXPORTADO</string>
+
 
 </resources>

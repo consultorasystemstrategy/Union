@@ -356,15 +356,17 @@ public class ServiceImport extends IntentService {
 
 
             for (int i = 0; i < precios.size(); i++) {
-                Log.d("PRECIO CATEGORÌA : " + i, "Nombre producto : " + precios.get(i).getNombreProducto());
+                Log.d(TAG, "PRECIO CATEGORÌA : " + i+ ", Nombre producto : " + precios.get(i).getNombreProducto() + ", PRECIO : "+precios.get(i).getPrecioUnitario() + ", costo venta : "+precios.get(i).getCostoVenta());
 
                 boolean existe = dbAdapter_precio.existePrecio(precios.get(i).getIdProducto(), precios.get(i).getIdCategoriaEstablecimiento(), precios.get(i).getValorUnidad());
-                Log.d("EXISTE ", "" + existe);
+                Log.d(TAG, "EXISTE  PRECIO CATEGORÍA : "+ existe);
                 if (existe) {
-                    dbAdapter_precio.updatePrecios(precios.get(i), idAgente);
+                    int updatedPrecios = dbAdapter_precio.updatePrecios(precios.get(i), idAgente);
+                    Log.d(TAG, "ACTUALIZADOS NRO: " + updatedPrecios);
                 } else {
                     //NO EXISTE ENTONCES CREEMOS UNO NUEVO
-                    dbAdapter_precio.createPrecios(precios.get(i), idAgente);
+                    long createdIdPrecio = dbAdapter_precio.createPrecios(precios.get(i), idAgente);
+                    Log.d(TAG, "CREATED ID PRECIO CATEGORIA ID : " + createdIdPrecio);
                 }
             }
 
@@ -393,12 +395,12 @@ public class ServiceImport extends IntentService {
                 boolean existe = dbAdapter_comprob_cobro.existeComprobCobro(comprobanteCobros.get(i).getIdComprobanteCobro());
                 Log.d(TAG, "EXISTE COBROS" + existe);
                 if (existe) {
-                     int updated =dbAdapter_comprob_cobro.updateComprobCobros(comprobanteCobros.get(i));
+                     int updated =dbAdapter_comprob_cobro.updateComprobCobrosLiq(comprobanteCobros.get(i), idLiquidacion);
                     Log.d(TAG, "UPDATED CANT : "+ updated);
 
                 } else {
                     //NO EXISTE ENTONCES CREEMOS UNO NUEVO
-                    long _id_cobro_created = dbAdapter_comprob_cobro.createComprobCobro(comprobanteCobros.get(i));
+                    long _id_cobro_created = dbAdapter_comprob_cobro.createComprobCobro(comprobanteCobros.get(i), idLiquidacion);
                     Log.d(TAG, "_ID_COBRO CREADO : "+ _id_cobro_created);
                 }
             }

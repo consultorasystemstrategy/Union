@@ -101,6 +101,9 @@ public class ServiceFireListener extends Service {
                 Log.d(TAG, "ADDED NRO DOC : " + nuevoEstablecimiento.getNroDoc());
                 Log.d(TAG, "ADDED FECHA : " + nuevoEstablecimiento.getFecha());
                 Log.d(TAG, "ADDED ESTADO: " + nuevoEstablecimiento.getEstado());
+
+                Log.d(TAG, "ADDED OBSERVACION: " + nuevoEstablecimiento.getObservacion());
+
                 if (nuevoEstablecimiento.getIdAgente() == idAgente) {
 
                     int idParent = dbAdapter_establecimeinto_historial.fetchIdEstablec(nuevoEstablecimiento.getNroDoc());
@@ -124,6 +127,7 @@ public class ServiceFireListener extends Service {
                             break;
                         case Constants.REGISTRO_RECHAZADO:
                             titulo = "Establecimiento Rechazado";
+                            mensaje+="\nMotivo: "+nuevoEstablecimiento.getObservacion();
                             color = Color.RED;
                             break;
                     }

@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -16,12 +17,17 @@ import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.Editable;
+import android.text.InputFilter;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
@@ -46,9 +52,12 @@ import union.union_vr1.AsyncTask.ImportMain;
 import union.union_vr1.AsyncTask.TimerGps;
 import union.union_vr1.BarcodeScanner.IntentIntegrator;
 import union.union_vr1.BarcodeScanner.IntentResult;
+import union.union_vr1.FacturacionElectronica.SignatureActivity;
+import union.union_vr1.InputFilterMinMax;
 import union.union_vr1.R;
 import union.union_vr1.Servicios.*;
 import union.union_vr1.Sqlite.Constants;
+import union.union_vr1.Sqlite.DBAdapter_Temp_Venta;
 import union.union_vr1.Sqlite.DbAdapter_Agente;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Cobro;
 import union.union_vr1.Sqlite.DbAdapter_Comprob_Venta;
@@ -579,33 +588,80 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
                 mainActivity.startService(intentExportService);
                 break;
             case R.id.buttonAjustes:
-                Intent intent = new Intent(mainActivity, AppPreferences.class);
-                startActivity(intent);
-                break;
-/*
-            case R.id.buttonNoExport:
-                DbAdapter_Exportacion_Comprobantes dbAdapter_exportacion_comprobantes = new DbAdapter_Exportacion_Comprobantes(VMovil_Evento_Indice.this);
-                dbAdapter_exportacion_comprobantes.open();
-                //REGISTROS ACTUALIZADOS A NO EXPORT
-                int registrosActualizados = dbAdapter_exportacion_comprobantes.changeEstado(Constants._CREADO);
-                Utils.setToast(VMovil_Evento_Indice.this, "NO EXPORT COUNT :" + registrosActualizados, R.color.rojo);
-                break;
-            case R.id.buttonNoExportOne:
-                DbAdapter_Exportacion_Comprobantes dbAdapter_exportacion_comprobantes1 = new DbAdapter_Exportacion_Comprobantes(VMovil_Evento_Indice.this);
-                dbAdapter_exportacion_comprobantes1.open();
-                //REGISTROS ACTUALIZADOS A NO EXPORT
-                int registrosActualizados1 = dbAdapter_exportacion_comprobantes1.changeEstadoToNoExportOne(2);
-                Utils.setToast(VMovil_Evento_Indice.this, "NO EXPORT ONE COUNT :" +registrosActualizados1, R.color.rojo);
-                break;
-*/
 
+                dialogActividadProtegido(AppPreferences.class).show();
+                break;
+            case R.id.buttonMantExport:
+                dialogActividadProtegido(MantenimientoExportacion.class).show();
+                break;
 
+            /*case R.id.buttonSignature:
+                dialogActividadProtegido(SignatureActivity.class).show();
+                break;*/
             default:
                 //ON ITEM SELECTED DEFAULT
                 break;
 
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private Dialog dialogActividadProtegido(final Class clase) {
+
+        final View layout = View.inflate(this, R.layout.pin_layout, null);
+
+        final EditText editTextPin = ((EditText) layout.findViewById(R.id.editTextPin));
+
+        final String pin = session.fetchMAC(Constants._ID_SESSION_PIN);
+
+        Log.d(TAG, "PIN : "+ pin);
+
+        int maxLengthofPIN = 4;
+        editTextPin.setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxLengthofPIN)});
+
+
+
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("PIN");
+        builder.setPositiveButton(R.string.ok, new Dialog.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                String pinIntroducido = null;
+                if (editTextPin.getText().toString().trim().equals("")) {
+                    pinIntroducido = "0000";
+                } else {
+                    pinIntroducido = editTextPin.getText().toString().trim();
+                }
+
+                Log.d(TAG, "PIN INTRODUCIDO : " + pinIntroducido);
+
+                if (pinIntroducido.equals(pin)){
+                    Intent intentMantExport = new Intent(mainActivity, clase);
+                    startActivity(intentMantExport);
+                }else {
+                    Utils.setToast(mainActivity, "PIN INCORRECTO.", R.color.rojo);
+                }
+
+            }
+        });
+
+        builder.setView(layout);
+
+        final AlertDialog alertDialog = builder.create();
+        editTextPin.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    Log.d("FOCUS","ALERT YES");
+                    alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                }else{
+                    Log.d("FOCUS","ALERT FALSE");
+                    alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+                }
+            }
+        });
+
+        return alertDialog;
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
@@ -672,7 +728,7 @@ public class VMovil_Evento_Indice extends Activity implements View.OnClickListen
 
     private void AsignarColor(Button btn) {
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-        Cursor cursor = cCobro.listarComprobantesToCobros(slideIdAgente);
+        Cursor cursor = cCobro.listarComprobantesToCobros(slideIdAgente,idLiquidacion);
         Log.d(TAG, "CURSOR COBROS COUNT: "+ cursor.getCount());
 
         cursor.moveToFirst();

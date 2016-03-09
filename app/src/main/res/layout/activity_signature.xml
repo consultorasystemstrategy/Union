@@ -18,7 +18,8 @@
         android:text="GENERATE"
         android:id="@+id/button"
         android:layout_below="@+id/textView"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"
+        android:theme="@style/SpecialButton"/>
 
     <ScrollView
         android:layout_width="fill_parent"

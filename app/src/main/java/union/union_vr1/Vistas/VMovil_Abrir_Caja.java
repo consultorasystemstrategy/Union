@@ -174,7 +174,9 @@ public class VMovil_Abrir_Caja extends Activity implements View.OnClickListener 
                         session.deleteVariable(11);
                         session.deleteVariable(Constants._ID_SESSION_MAC);
                         session.deleteVariable(Constants._ID_SESSION_MAC_DEVICE_CIPHER_LAB);
+                        session.deleteVariable(Constants._ID_SESSION_PIN);
                         session.deleteVariable(Constants.SESSION_ESTADO_DEVOLUCIONES);
+                        session.deleteVariable(Constants.SESSION_VALIDACION_REGISTROS_EXPORTADOS);
                         session.createTempSession(1, agenteLista.get(i).getIdAgenteVenta());
                         session.createTempSession(3, agenteLista.get(i).getLiquidacion());
                         session.createTempSession(4, agenteLista.get(i).getIdUsuario());
@@ -188,6 +190,8 @@ public class VMovil_Abrir_Caja extends Activity implements View.OnClickListener 
                         session.createTempSession(Constants.SESSION_VALIDACION_REGISTROS_EXPORTADOS, 0);
                         session.createTempSessionString(Constants._ID_SESSION_MAC, agenteLista.get(i).getMAC());
                         session.createTempSessionString(Constants._ID_SESSION_MAC_DEVICE_CIPHER_LAB, agenteLista.get(i).getMAC2());
+                        session.createTempSessionString(Constants._ID_SESSION_PIN, agenteLista.get(i).getPin());
+
 
                        /* WifiManager manager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
                         WifiInfo info = manager.getConnectionInfo();
@@ -284,7 +288,9 @@ public class VMovil_Abrir_Caja extends Activity implements View.OnClickListener 
                                 session.deleteVariable(11);
                                 session.deleteVariable(12);
                                 session.deleteVariable(13);
+                                session.deleteVariable(Constants._ID_SESSION_PIN);
                                 session.deleteVariable(Constants.SESSION_ESTADO_DEVOLUCIONES);
+                                session.deleteVariable(Constants.SESSION_VALIDACION_REGISTROS_EXPORTADOS);
 
                                 session.createTempSession(1, agenteLista.get(i).getIdAgenteVenta());
                                 session.createTempSession(3, agenteLista.get(i).getLiquidacion());
@@ -297,6 +303,8 @@ public class VMovil_Abrir_Caja extends Activity implements View.OnClickListener 
                                 session.createTempSession(11, correlativoBoleta);
                                 session.createTempSessionString(12, agenteLista.get(i).getMAC());
                                 session.createTempSessionString(13, agenteLista.get(i).getMAC2());
+                                session.createTempSessionString(Constants._ID_SESSION_PIN, agenteLista.get(i).getPin());
+                                session.createTempSession(Constants.SESSION_VALIDACION_REGISTROS_EXPORTADOS, 0);
                                 session.createTempSession(Constants.SESSION_ESTADO_DEVOLUCIONES, 0);
 /*
                             WifiManager manager = (WifiManager) getSystemService(Context.WIFI_SERVICE);

@@ -125,11 +125,10 @@ public class DbAdapter_Histo_Comprob_Anterior {
 
                 HC_id_comprobante + " = " + idComprobanteVentaAnterior, null, null, null, null);
 
-        if (mCursor != null) {
+        if (mCursor .getCount() > 0) {
             mCursor.moveToFirst();
             exists = true;
-        }
-        if (mCursor.getCount()==0){
+        }else{
             exists= false;
         }
         return exists;

@@ -125,6 +125,8 @@ public class ServiceFireListenerTemp extends Service {
                 Log.d(TAG, "ADDED NRO DOC : " + nuevoEstablecimiento.getIdEstablecTemp());
                 Log.d(TAG, "ADDED FECHA : " + nuevoEstablecimiento.getFecha());
                 Log.d(TAG, "ADDED ESTADO: " + nuevoEstablecimiento.getEstado());
+                Log.d(TAG, "ADDED OBSERVACION: " + nuevoEstablecimiento.getObservacion());
+
 
                 String idParent = nuevoEstablecimiento.getIdEstablecTemp();
 
@@ -147,6 +149,7 @@ public class ServiceFireListenerTemp extends Service {
                             break;
                         case Constants.REGISTRO_RECHAZADO:
                             titulo = "Establecimiento Rechazado";
+                            mensaje +="\nMotivo: "+nuevoEstablecimiento.getObservacion();
                             color = Color.RED;
                             break;
                     }
@@ -199,11 +202,9 @@ public class ServiceFireListenerTemp extends Service {
                 }
                 if (devolucionEstado.getAgenteId() == idAgente && devolucionEstado.getEstado() == 777) {
                     //ES EL AGENTE Y ESTÁ APROBADO
-
                     session.deleteVariable(Constants.SESSION_ESTADO_DEVOLUCIONES);
                     session.createTempSession(Constants.SESSION_ESTADO_DEVOLUCIONES, 0);
                 }
-
 
             }
 
@@ -329,11 +330,9 @@ public class ServiceFireListenerTemp extends Service {
                 Log.d(TAG, "CLIENTE ADDED IDAGENTE : "+ clienteAdded.getIdAgente());
                 Log.d(TAG, "CLIENTE ADDED ID ESTABLEC : "+ clienteAdded.getIdEstablecimiento());
 
-
-
-                if (clienteAdded.getIdLiquidacion() == idLiquidacion && clienteAdded.getIdAgente() == idAgente){
+                /*if (clienteAdded.getIdLiquidacion() == idLiquidacion && clienteAdded.getIdAgente() == idAgente){
                     iniciarServicio(ServiceImportClienteRuta.class, Constants.ACTION_IMPORT_SERVICE_RUTA_DETALLE);
-                }
+                }*/
 
             }
 
@@ -348,7 +347,6 @@ public class ServiceFireListenerTemp extends Service {
                 if (clienteAdded.getIdLiquidacion() == idLiquidacion && clienteAdded.getIdAgente() == idAgente){
                     iniciarServicio(ServiceImportClienteRuta.class, Constants.ACTION_IMPORT_SERVICE_RUTA_DETALLE);
                 }
-
             }
 
             @Override

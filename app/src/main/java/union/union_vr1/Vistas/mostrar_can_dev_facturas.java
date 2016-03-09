@@ -256,7 +256,7 @@ public class mostrar_can_dev_facturas extends TabActivity {
                 .setCancelable(false)
                 .setPositiveButton(R.string.si, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        String idGuia = dbHelper_CanDev.guardarCabecera(idAgente,establecimiento);
+                        String idGuia = dbHelper_CanDev.guardarCabecera(idAgente,establecimiento, liquidacion);
                         if (operacion == 1) {
                             boolean estado = dbHelper_CanDev.guardarCambios_dev(idGuia, idEstablec,liquidacion);
                             if (estado) {

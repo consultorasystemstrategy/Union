@@ -33,6 +33,10 @@ public class Constants {
     public static final int DOCUMENTO_DEVOLUCIONES_MALAS = 1004;
 
 
+    public static final int DOCUMENTO_RESUMEN_FINAL = 1005;
+    public static final int DOCUMENTO_RESUMEN_PROVISIONAL = 1006;
+
+
 
 
     public static final int DOCUMENTO_EXTERNO = 700;
@@ -121,6 +125,8 @@ public class Constants {
     public static final int SESSION_DOCUMENTO = 22; //ESTADO -1 = NINGUNO, ESTADO 1 = FACTURA, ESTADO 2 = BOLETA
     public static final int _ID_SESSION_MAC = 12;
     public static final int _ID_SESSION_MAC_DEVICE_CIPHER_LAB = 13;
+    public static final int _ID_SESSION_PIN = 24;
+
 
 
     //RESPUESTA SUCCESSS //
@@ -135,6 +141,7 @@ public class Constants {
     //
     public static final int _SELECTED = 1;
 
+    public static final String _OBSERVACION = "Observacion";
 
 
 

@@ -238,12 +238,12 @@ public class DbAdapter_Histo_Venta_Detalle {
                         HD_categoria_ope, HD_forma_ope, HD_cantidad_ope, HD_importe_ope, HD_fecha_ope, HD_estado},
                 HD_id_detalle + " = " + idDetalle, null, null, null, null);
 
-        if (mCursor != null) {
+        if (mCursor.getCount() > 0) {
             mCursor.moveToFirst();
             exists = true;
-        }
-        if (mCursor.getCount() == 0) {
+        }else{
             exists = false;
+
         }
         return exists;
     }

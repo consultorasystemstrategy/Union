@@ -32,6 +32,10 @@ public class DbAdapter_Cobros_Manuales {
     public static final String CM_Estado_flex = "CM_Estado_flex";
     public static final String CM_Numero = "vint_Numero";
     public static  final String CM_Numero_comprobante = "CM_Numero_comprobante";
+    public static  final String CM_liquidacion = "CM_liquidacion";
+    public static  final String CM_id_tipo_pago = "CM_id_tipo_pago";
+
+
 
     public static final String TAG = "Cobros Manuales";
     private DbHelper mDbHelper;
@@ -57,6 +61,9 @@ public class DbAdapter_Cobros_Manuales {
                     + CM_Estado + " integer,"
                     + CM_Numero_comprobante + " integer,"
                     + CM_Id_Establecimiento + " integer,"
+                    + CM_liquidacion + " integer,"
+                    + CM_id_tipo_pago + " integer,"
+
                     + CM_Serie + " text,"
                     + CM_Numero + " text,"
                     + Constants._SINCRONIZAR + " integer);";
@@ -84,7 +91,7 @@ public class DbAdapter_Cobros_Manuales {
     }
 
 
-    public long createCobrosManuales(int categoriaMovimiento, Double importe, String fechaHora, String referencia, int usuario, String serie, int numero,String nombreCliente, int idEtablecimiento,String fecha, String hora) {
+    public long createCobrosManuales(int categoriaMovimiento, Double importe, String fechaHora, String referencia, int usuario, String serie, int numero,String nombreCliente, int idEtablecimiento,String fecha, String hora, int liquidacion, int id_tipo_pago) {
         String NUMERO = "";
         String chater = String.valueOf(numero);
         if (chater.length() > 8) {
@@ -109,12 +116,16 @@ public class DbAdapter_Cobros_Manuales {
         initialValues.put(CM_Hora, hora);
         initialValues.put(CM_Estado_flex, Constants.POR_EXPORTAR_FLEX);
         initialValues.put(CM_Estado,"Cobrado");
+        initialValues.put(CM_liquidacion, liquidacion);
+        initialValues.put(CM_id_tipo_pago, id_tipo_pago);
+
+
         initialValues.put(Constants._SINCRONIZAR, Constants._CREADO);
         return mDb.insert(SQLITE_TABLE_Cobros_Manuales, null, initialValues);
     }
 
-    public Cursor filterExport() {
-        Cursor cursor = mDb.rawQuery("select * from " + SQLITE_TABLE_Cobros_Manuales + " where " + Constants._SINCRONIZAR + "='" + Constants._CREADO + "'", null);
+    public Cursor filterExport(int liquidacion) {
+        Cursor cursor = mDb.rawQuery("select * from " + SQLITE_TABLE_Cobros_Manuales + " where " + Constants._SINCRONIZAR + "='" + Constants._CREADO + "' AND "+CM_liquidacion + " = '"+liquidacion+"'", null);
         return cursor;
     }
 
@@ -123,8 +134,8 @@ public class DbAdapter_Cobros_Manuales {
         return cursor;
     }
 
-    public Cursor filterExportForFlexId() {
-        Cursor cursor = mDb.rawQuery("select * from " + SQLITE_TABLE_Cobros_Manuales + " where " +CM_Estado_flex + "='" + Constants.POR_EXPORTAR_FLEX+ "'", null);
+    public Cursor filterExportForFlexId(int liquidacion) {
+        Cursor cursor = mDb.rawQuery("select * from " + SQLITE_TABLE_Cobros_Manuales + " where " +CM_Estado_flex + "='" + Constants.POR_EXPORTAR_FLEX+ "' AND "+CM_liquidacion + " = '"+liquidacion+"'", null);
         return cursor;
     }
 

@@ -147,6 +147,13 @@ public class Print {
             case Constants.DOCUMENTO_ARQUEO:
                 posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT,ESC + "|cA" + ESC + "|bC" + ESC + "|2C" + "RESUMEN DEL DIA" + LF + LF + LF);
                 break;
+            case Constants.DOCUMENTO_RESUMEN_FINAL:
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT,ESC + "|cA" + ESC + "|bC" + ESC + "|2C" + "RESUMEN DEL DIA" + LF + LF + LF);
+                break;
+            case Constants.DOCUMENTO_RESUMEN_PROVISIONAL:
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT,ESC + "|cA" + ESC + "|bC" + ESC + "|2C" + "RESUMEN DEL DIA" + LF );
+                posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT,ESC + "|cA" + ESC + "|bC" + ESC + "|4C" + "(PROVISIONAL)" + LF + LF + LF);
+                break;
             case Constants.DOCUMENTO_RRPP:
                 posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT,ESC + "|cA" + ESC + "|bC" + ESC + "|2C" + "VENTA RRPP" + LF + LF + LF);
                 break;
@@ -629,7 +636,7 @@ public class Print {
 
     }
 
-    public void printArqueo(int idLiquidacion, String nombreAgente) throws JposException {
+    public void printArqueo(int idLiquidacion, String nombreAgente, int tipoArqueo) throws JposException {
         DecimalFormatSymbols simbolos = DecimalFormatSymbols.getInstance(Locale.ENGLISH);
         DecimalFormat df = new DecimalFormat("0.00", simbolos);
 
@@ -700,7 +707,7 @@ public class Print {
         Double aRendir = ingresosTotales - gastosTotales;
 
 
-        printCabecera(Constants.DOCUMENTO_ARQUEO, Constants.DOCUMENTO_INTERNO);
+        printCabecera(tipoArqueo, Constants.DOCUMENTO_INTERNO);
         posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "AGENTE       : " + cleanAcentos(nombreAgente) + LF);
         posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "LIQUIDACION  : " + idLiquidacion + LF);
         posPtr.printNormal(POSPrinterConst.PTR_S_RECEIPT, ESC + "|lA" + "FECHA        : " + cleanAcentos(getDateFull()) + LF+ LF+ LF);

@@ -50,8 +50,10 @@ public class ParserAgente {
                             jsonObj.getInt("rolid"),
                             Constants._IMPORTADO,
                             jsonObj.getString("MAC2"),
-                            jsonObj.getInt("RutaId")
-                    ));
+                            jsonObj.getInt("RutaId"),
+                            jsonObj.getString("pin")
+
+                            ));
                 }
 
             } catch (JSONException e) {

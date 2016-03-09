@@ -158,7 +158,7 @@
         <activity
             android:name=".Vistas.VMovil_Evento_Canjes_Dev"
             android:label="Canjes y Devoluciones"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Vistas.VMovil_Operacion_Canjes_Devoluciones"
             android:label="Canjes y Devoluciones"
@@ -209,8 +209,8 @@
             android:label="@string/title_activity_imprimir_arqueo_caja" />
         <activity
             android:name=".Vistas.VMovil_Crear_Establecimiento"
-            android:screenOrientation="portrait"
             android:label="@string/title_activity_vmovil__crear__establecimiento"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
         <activity
             android:name=".Vistas.VMovil_Modificar_Estab"
@@ -220,7 +220,7 @@
         <activity
             android:name=".Vistas.VMovil_Abrir_Caja"
             android:label="Abrir Cuenta"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Vistas.VMovil_Agentes_Dias_Semanas"
             android:label="Días Semanales">
@@ -229,8 +229,7 @@
         <activity
             android:name=".Vistas.VMovil_Trans_Prod_Detallado"
             android:label="Guia de Remisión"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".FacturacionElectronica.SignatureActivity"
             android:label="@string/title_activity_signature">
@@ -270,17 +269,18 @@
         <service
             android:name=".AsyncTask.ExportService"
             android:exported="false" />
+
         <activity
             android:name=".Vistas.Bluetooth_Printer"
             android:label="@string/title_activity_bluetooth__printer"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
+
         <service
             android:name=".Servicios.ServiceImport"
             android:exported="false" />
         <service
             android:name=".Servicios.ServiceImportClienteRuta"
             android:exported="false" />
-
         <service
             android:name=".Servicios.ServiceExport"
             android:exported="false" />
@@ -304,7 +304,9 @@
         <activity
             android:name=".Vistas.ImprimirStockDisponible"
             android:screenOrientation="portrait" />
-        <activity android:name=".Vistas.ImprimirDevoluciones"></activity>
+        <activity android:name=".Vistas.ImprimirDevoluciones" />
+        <activity android:name=".Vistas.MantenimientoExportacion" />
+        <activity android:name=".Vistas.ArqueoCaja"></activity>
     </application>
 
 </manifest>

@@ -120,12 +120,12 @@ public class DbAdapter_Tipo_Gasto {
                             TG_id_tgasto, TG_nom_tipo_gasto},
                     TG_id_tgasto + " = " + idTipoGasto  , null,
                     null, null, null, null);
-        if (mCursor != null) {
+        if (mCursor.getCount() > 0) {
             mCursor.moveToFirst();
             exists = true;
-        }
-        if (mCursor.getCount()==0){
+        }else{
             exists = false;
+
         }
         return exists;
     }

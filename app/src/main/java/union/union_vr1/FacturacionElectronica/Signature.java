@@ -77,13 +77,15 @@ public class Signature {
     * FILEINPUTSTREAM SIN FIRMAR
     * PATH DE LA SALIDA
     * */
+
+    private static String TAG = Signature.class.getSimpleName();
     public static String add(InputStream BKS, File DocumentoSinFirmar, File fileDocumentoFirmado) throws NoSuchAlgorithmException, InvalidAlgorithmParameterException, KeyStoreException, CertificateException, FileNotFoundException, IOException, UnrecoverableEntryException, ParserConfigurationException, SAXException, MarshalException, XMLSignatureException, TransformerConfigurationException, TransformerException  {
 
         Security.addProvider(new org.jcp.xml.dsig.internal.dom.XMLDSigRI());
         Provider providerCrypto = null;
         for (Provider p : Security.getProviders()) {
-            Log.d("PROVIDERS",p.getName());
-            Log.d("INFO", p.getInfo());
+            Log.d(TAG, "PROVIDERS : "+p.getName());
+            Log.d(TAG, "INFO: "+ p.getInfo());
             //Log.d("SERVICES", ""+p.getServices());
 
         }
@@ -132,8 +134,8 @@ public class Signature {
 
         Node node = doc.getElementsByTagName("ds:DigestValue").item(0);
 
-        Log.d("PATH FIRMA",fileDocumentoFirmado.getAbsolutePath());
-        //Log.d("DOC",dsc.getParent().getTextContent());
+        Log.d(TAG, "PATH FIRMA : " + fileDocumentoFirmado.getAbsolutePath());
+        Log.d(TAG, "DSC PARENT GET TEXT CONTENT : "+dsc.getParent().getTextContent());
         return node.getTextContent();
     }
 

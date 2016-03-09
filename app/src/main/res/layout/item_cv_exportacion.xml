@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="120dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginRight="12dp">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="3"
+            android:background="@color/Personalizado4"
+            android:id="@+id/linearLayoutLista">
+
+            <ImageView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:id="@+id/imageViewLista"
+                android:src="@drawable/ic_action_place"
+                android:contentDescription="Place"
+                android:layout_margin="4dp"
+                android:baselineAlignBottom="false" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:layout_marginLeft="16dp">
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="INVERSIONES PRODUCTOS UNIÓN S.A.C."
+                android:id="@+id/textViewEstablecimiento"
+                android:layout_weight="1"
+                android:layout_gravity="bottom"
+                android:gravity="bottom"
+                android:textSize="16dp"
+                android:textStyle="normal|bold"
+                android:textColor="@color/Dark1" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="COMPROBANTE: F246-00000014"
+                android:id="@+id/textViewComprobante"
+                android:layout_weight="1"
+                android:textSize="12dp"
+                android:textStyle="italic"
+                android:textColor="@color/Dark1" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="AL CONTADO"
+                android:id="@+id/textViewListaComment"
+                android:layout_weight="1"
+                android:layout_gravity="top|left"
+                android:gravity="top|left"
+                android:textSize="12dp"
+                android:singleLine="false"
+                android:textStyle="italic"
+                android:textColor="@color/Dark1" />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="EXPORTADO"
+                    android:id="@+id/textViewEstadoExport"
+                    android:layout_weight="1"
+                    android:gravity="left|right"
+                    android:layout_marginRight="4dp"
+                    android:textColor="@color/azul"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="S/. 324.00"
+                    android:id="@+id/textViewListaMonto"
+                    android:layout_weight="1"
+                    android:gravity="bottom|right"
+                    android:layout_marginRight="4dp"
+                    android:textColor="@color/verde" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

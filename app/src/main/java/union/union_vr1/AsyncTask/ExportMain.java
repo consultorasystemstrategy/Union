@@ -117,22 +117,20 @@ public class ExportMain extends AsyncTask<String, String, String> {
 
         //FILTRO LOS REGISTROS DE LAS TABLAS A EXPORTAR
 
-        Cursor cursorInformeGastos = dbAdapter_informe_gastos.filterExport();
-        Cursor cursorComprobanteVenta = dbAdapter_comprob_venta.filterExport();
+        Cursor cursorInformeGastos = dbAdapter_informe_gastos.filterExport(idLiquidacion);
+        Cursor cursorComprobanteVenta = dbAdapter_comprob_venta.filterExport(idLiquidacion);
         publishProgress("" + 10);
         //Cursor cursorComprobanteVentaDetalle = dbAdapter_comprob_venta_detalle.filterExport();
-        Cursor cursorComprobanteCobro = dbAdapter_comprob_cobro.filterExport();
-        Cursor cursorInsertarCaja = dbAdapter_comprob_cobro.filterExportUpdatedAndEstadoCobro();
+        Cursor cursorComprobanteCobro = dbAdapter_comprob_cobro.filterExport(idLiquidacion);
+        Cursor cursorInsertarCaja = dbAdapter_comprob_cobro.filterExportUpdatedAndEstadoCobro(idLiquidacion);
         Cursor cursorEventoEstablecimiento = dbAdaptert_evento_establec.filterExportUpdated(idLiquidacion);
         publishProgress("" + 15);
 //histo venta
-        Cursor cursorHistoVentaCreated = dbAdapter_histo_venta.filterExport();
-
-        Cursor cursorHistoVentaDetalleCreated = dbAdapter_histo_venta_detalle.filterExport(idLiquidacion);
+        Cursor cursorHistoVentaCreated = dbAdapter_histo_venta.filterExport(idLiquidacion);
         publishProgress("" + 20);
-        Cursor cursorAutorizacionCobro = dbAdapter_temp_autorizacion_cobro.filterExport();
+        Cursor cursorAutorizacionCobro = dbAdapter_temp_autorizacion_cobro.filterExport(idLiquidacion);
 
-        Cursor cursorCobrosManuales = dbAdapter_cobros_manuales.filterExport();
+        Cursor cursorCobrosManuales = dbAdapter_cobros_manuales.filterExport(idLiquidacion);
 
         idAgente = session.fetchVarible(1);
         idUsuario = session.fetchVarible(4);
@@ -931,7 +929,7 @@ public class ExportMain extends AsyncTask<String, String, String> {
             Toast.makeText(mainActivity.getApplicationContext(), "EXPORTACIÓN EXITOSA", Toast.LENGTH_LONG).show();
         }
         //Conseguir Operaciones:
-        Cursor cursor = dbAdapter_temp_canjes_devoluciones.getAllOperacionEstablecimiento();
+        Cursor cursor = dbAdapter_temp_canjes_devoluciones.getAllOperacionEstablecimiento(idLiquidacion);
         while(cursor.moveToNext()){
             String idEstablec = cursor.getString(cursor.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_id_establecimiento));
             Log.d("Hola mundo",""+cursor.getString(cursor.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_id_establecimiento)));

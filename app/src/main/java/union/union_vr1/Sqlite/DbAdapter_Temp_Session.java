@@ -84,6 +84,7 @@ public class DbAdapter_Temp_Session {
     }
     public int fetchVarible(int idVariable) {
 
+        int valor= 0;
         Cursor mCursor = mDb.query(SQLITE_TABLE_Temp_session, new String[] {session_id_session,
                         session_id_variable, session_valor, session_valor_string},
                 session_id_variable + " = ? " ,
@@ -92,15 +93,13 @@ public class DbAdapter_Temp_Session {
                 },
                 null, null, null);
 
-        if (mCursor != null) {
+        if (mCursor.getCount() > 0) {
             mCursor.moveToFirst();
-        }
-        if (mCursor.getCount()==0){
-            Log.d("SESSION", "valor 0");
-            return 0;
+            return mCursor.getInt(mCursor.getColumnIndexOrThrow(session_valor));
+        }else{
+         return valor;
         }
 
-        return mCursor.getInt(mCursor.getColumnIndexOrThrow(session_valor));
     }
 
     public String fetchMAC(int ID_SESSION) {
@@ -114,15 +113,13 @@ public class DbAdapter_Temp_Session {
                 },
                 null, null, null);
 
-        if (mCursor != null) {
+        if (mCursor.getCount()>0) {
             mCursor.moveToFirst();
-        }
-        if (mCursor.getCount()==0){
-            Log.d("SESSION", "valor 0");
+            return mCursor.getString(mCursor.getColumnIndexOrThrow(session_valor_string));
+        }else{
             return "XX:XX:XX:XX:XX:XX";
         }
 
-        return mCursor.getString(mCursor.getColumnIndexOrThrow(session_valor_string));
     }
 
 

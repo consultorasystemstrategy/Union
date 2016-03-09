@@ -109,7 +109,7 @@ public class  DbAdapter_Precio {
     public long createPrecios(Precio precioCategoria, int idAgente){
 
         ContentValues initialValues = new ContentValues();
-        initialValues.put(PR_id_producto,precioCategoria.getIdPrecioCategoria());
+        //initialValues.put(PR_id_producto,precioCategoria.getIdPrecioCategoria());
         initialValues.put(PR_id_producto,precioCategoria.getIdProducto());
         initialValues.put(PR_id_cat_est,precioCategoria.getIdCategoriaEstablecimiento());
         initialValues.put(PR_costo_venta,precioCategoria.getCostoVenta());
@@ -123,11 +123,11 @@ public class  DbAdapter_Precio {
 
         return mDb.insert(SQLITE_TABLE_Precio, null, initialValues);
     }
-    public long updatePrecios(Precio precioCategoria, int idAgente){
+    public int  updatePrecios(Precio precioCategoria, int idAgente){
 
         ContentValues initialValues = new ContentValues();
+        //initialValues.put(PR_id_producto,precioCategoria.getIdPrecioCategoria());
         initialValues.put(PR_id_producto,precioCategoria.getIdProducto());
-        initialValues.put(PR_id_producto,precioCategoria.getIdPrecioCategoria());
         initialValues.put(PR_id_cat_est,precioCategoria.getIdCategoriaEstablecimiento());
         initialValues.put(PR_costo_venta,precioCategoria.getCostoVenta());
         initialValues.put(PR_precio_unit,precioCategoria.getPrecioUnitario());
@@ -135,14 +135,16 @@ public class  DbAdapter_Precio {
         initialValues.put(PR_id_agente,idAgente);
         initialValues.put(PR_desde,precioCategoria.getDesde());
         initialValues.put(PR_hasta,precioCategoria.getHasta());
-        initialValues.put(PR_nombreProducto,precioCategoria.getNombreProducto());
+        initialValues.put(PR_nombreProducto, precioCategoria.getNombreProducto());
 
 
         return mDb.update(SQLITE_TABLE_Precio,
                 initialValues,
-                PR_id_precio_categoria + "=?",
+                PR_id_producto + " = ? AND "+PR_id_cat_est + " = ? AND "+PR_valor_unidad + " = ?",
                 new String[]{
-                        ""+precioCategoria.getIdPrecioCategoria()
+                        ""+precioCategoria.getIdProducto(),
+                        ""+precioCategoria.getIdCategoriaEstablecimiento(),
+                        ""+precioCategoria.getValorUnidad()
                 });
     }
 
@@ -154,11 +156,10 @@ public class  DbAdapter_Precio {
                 PR_id_producto + " = " + idProducto + " AND " + PR_id_cat_est + " = " + catEstablec + " AND " + PR_valor_unidad+ " = " + valorUnidad ,
                 null, null, null, null, null);
 
-        if (mCursor != null) {
+        if (mCursor.getCount() > 0) {
             mCursor.moveToFirst();
             exists = true;
-        }
-        if(mCursor.getCount()==0){
+        }else{
             exists=false;
         }
         return exists;

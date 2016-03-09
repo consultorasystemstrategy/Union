@@ -58,6 +58,8 @@ public class FirebaseBackgroundService extends Service {
                 Log.d(TAG, "ADDED NRO DOC : " + nuevoEstablecimiento.getNroDoc());
                 Log.d(TAG, "ADDED FECHA : " + nuevoEstablecimiento.getFecha());
                 Log.d(TAG, "ADDED ESTADO: " + nuevoEstablecimiento.getEstado());
+                Log.d(TAG, "ADDED ESTADO: " + nuevoEstablecimiento.getEstado());
+
                 postNotif("Js");
 
                 if(nuevoEstablecimiento.getEstado()==Constants.REGISTRO_APROBADO){

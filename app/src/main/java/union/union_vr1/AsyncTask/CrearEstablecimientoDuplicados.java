@@ -79,7 +79,7 @@ public class CrearEstablecimientoDuplicados extends AsyncTask<String, String, St
 
             EstablecTemp nuevoEstablecimientoTemp = new EstablecTemp(
                     cr.getString(cr.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_histo_id)),
-                    Utils.getDatePhone(),Constants.REGISTRO_CREADO,idAgente, Constants._ID_SID_ESTABLECIMIENTO_TEMPORAL);
+                    Utils.getDatePhone(),Constants.REGISTRO_CREADO,idAgente, Constants._ID_SID_ESTABLECIMIENTO_TEMPORAL, Constants._OBSERVACION);
             Firebase newEstaclmientoRef = nuevoEstablecimientoRef.push();
             newEstaclmientoRef.setValue(nuevoEstablecimientoTemp);
 

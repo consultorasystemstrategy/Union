@@ -91,6 +91,8 @@ public class ExportCanjesDevolucionesLater extends AsyncTask<String, String, Str
                     int estadoUpdateGuia = dbAdapter_temp_canjes_devoluciones.updateIdDetalle(operacionesDetalleForUpdate.getString(operacionesDetalleForUpdate.getColumnIndexOrThrow(DBAdapter_Temp_Canjes_Devoluciones.temp_id_canjes_devoluciones)), idGuia);
                     Log.d("Actualizo", estadoUpdateGuia + "");
                 }
+
+
                 JSONObject jsonObjectDetalle = null;
 
                 Log.d("ESTADO DEL CAMPO", "" + idGuia);

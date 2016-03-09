@@ -1271,4 +1271,50 @@ public class StockAgenteRestApi {
         return result;
     }
 
+    public JSONObject fins_CobroPlanPago(int idLiquidacionCaja,int idCategoriaMovimiento,double importeDecimal,int estado,String fecha,String referencia,int idusuario,int idcomprobante,int idPlanPago,int idPlanPagoDetalle,int vint_TipoPagoId) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","RestAPI");
+        o.put("method", "fins_CobroPlanPago");
+        p.put("idLiquidacionCaja",mapObject(idLiquidacionCaja));
+        p.put("idCategoriaMovimiento",mapObject(idCategoriaMovimiento));
+        p.put("importeDecimal",mapObject(importeDecimal));
+        p.put("estado",mapObject(estado));
+        p.put("fecha",mapObject(fecha));
+        p.put("referencia",mapObject(referencia));
+        p.put("idusuario",mapObject(idusuario));
+        p.put("idcomprobante",mapObject(idcomprobante));
+        p.put("idPlanPago",mapObject(idPlanPago));
+        p.put("idPlanPagoDetalle",mapObject(idPlanPagoDetalle));
+        p.put("vint_TipoPagoId",mapObject(vint_TipoPagoId));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+
+    public JSONObject fins_CobroManual(int vbint_LiquidacionId,int vint_CategoriaMovimientoId,double vdou_Importe,String vstr_FechaHora,String vstr_Referencia,int vint_UsuarioId,String vstr_Serie,int vint_Numero,int vint_TipoPagoId) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","RestAPI");
+        o.put("method", "fins_CobroManual");
+        p.put("vbint_LiquidacionId",mapObject(vbint_LiquidacionId));
+        p.put("vint_CategoriaMovimientoId",mapObject(vint_CategoriaMovimientoId));
+        p.put("vdou_Importe",mapObject(vdou_Importe));
+        p.put("vstr_FechaHora",mapObject(vstr_FechaHora));
+        p.put("vstr_Referencia",mapObject(vstr_Referencia));
+        p.put("vint_UsuarioId",mapObject(vint_UsuarioId));
+        p.put("vstr_Serie",mapObject(vstr_Serie));
+        p.put("vint_Numero",mapObject(vint_Numero));
+        p.put("vint_TipoPagoId",mapObject(vint_TipoPagoId));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+
 }

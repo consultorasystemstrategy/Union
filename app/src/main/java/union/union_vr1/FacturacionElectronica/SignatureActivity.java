@@ -3,6 +3,7 @@ package union.union_vr1.FacturacionElectronica;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -24,6 +25,8 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableEntryException;
 import java.security.cert.CertificateException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.xml.crypto.MarshalException;
 import javax.xml.crypto.dsig.XMLSignatureException;
@@ -31,6 +34,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
 import union.union_vr1.R;
+import union.union_vr1.Utils.Utils;
 
 public class SignatureActivity extends Activity {
 
@@ -39,7 +43,6 @@ public class SignatureActivity extends Activity {
     private Button button;
     private Context contexto;
     String textoSHA1 = null;
-    //FileInputStream fis = null;
     private final static String BKS  ="union.bks";
 
 
@@ -47,19 +50,13 @@ public class SignatureActivity extends Activity {
     //private Document docSinFirmar;
     public InputStream docSinFirmar;
     public InputStream keystore;
+    Map<String, String> map = new HashMap<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signature);
-
         contexto = getApplicationContext();
 
-        try {
-            keystore = getFilefromAssets(BKS);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
         textView = (TextView) findViewById(R.id.textView);
         editText = (EditText) findViewById(R.id.editText);
@@ -73,11 +70,41 @@ public class SignatureActivity extends Activity {
                     //File filesinFirmar = SimpleXMLAndroid.generarXMLown(File.createTempFile("20138122256-01-F104-00000011", "XML"));
                      /*digestValue = Signature.add(keystore, filesinFirmar, createFile("20138122256-01-F104-00000011.XML"));*/
 
+                    //POR DEFECTO FACTURA
+                    String tipo_doccumento = "01";
+
+
+
+                    map.put("tipo_documento", tipo_doccumento);
+                    map.put("id_documento", "6660666");
+                    map.put("user_ruc_dni", "7770777");
+                    map.put("user_name", "Steve Campos Vega");
+                    map.put("total_operaciones_gravadas", Utils.formatDouble(666.0));
+                    map.put("total_importe_venta",Utils.formatDouble(666.0));
+                    map.put("total__igv", Utils.formatDouble(333.0));
+
 
                 } catch (Exception e) {
                     e.printStackTrace();
                 } finally {
-                    textView.setText("DIGESTVALUE: "+digestValue);
+                    //textView.setText("DIGESTVALUE: "+digestValue);
+                }
+
+                File filesinFirmar = null;
+                try {
+                    Cursor cursor = null;
+                    filesinFirmar = SimpleXMLAndroid.generateCreditNote(File.createTempFile(contexto.getString(R.string.RUC) + "-" + "F" + "-" + "666000666","XML"), map, cursor);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }finally {
+                    try {
+                        keystore = getFilefromAssets(BKS);
+                        textoSHA1 = Signature.add(keystore, filesinFirmar, createFile(contexto.getString(R.string.RUC) + "-" + "F" + "-" + "666000666" + ".XML"));
+
+                        textView.setText("DIGESTVALUE: "+textoSHA1);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
 
             }
@@ -113,7 +140,7 @@ public class SignatureActivity extends Activity {
         File createFile(String pathFile)
                 throws IOException, ParserConfigurationException, SAXException {
             File file = new File(Environment.getExternalStoragePublicDirectory(
-                    Environment.DIRECTORY_PICTURES), pathFile);
+                    Environment.DIRECTORY_DOWNLOADS), pathFile);
             //return File.createTempFile(pathFile,"xml",contexto.getCacheDir());
             return file;
         }

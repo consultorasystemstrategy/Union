@@ -211,6 +211,22 @@ public class Utils {
 
     }
 
+    public static String agregarCeros(String string, int largo)
+    {
+        String ceros = "";
+        int cantidad = largo - string.length();
+        if (cantidad >= 1)
+        {
+            for(int i=0;i<cantidad;i++)
+            {
+                ceros += "0";
+            }
+            return (ceros + string);
+        }
+        else
+            return string;
+    }
+
 
 
 

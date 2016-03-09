@@ -9,6 +9,29 @@ public class NuevoEstablecimiento {
     private String fecha;
     private int estado;
 
+    private int idAgente;
+
+    private String observacion;
+
+    public NuevoEstablecimiento() {
+    }
+
+    public NuevoEstablecimiento(String nroDoc, String fecha, int estado, int idAgente, String observacion) {
+        this.nroDoc = nroDoc;
+        this.fecha = fecha;
+        this.estado = estado;
+        this.idAgente = idAgente;
+        this.observacion = observacion;
+    }
+
+    public String getObservacion() {
+        return observacion;
+    }
+
+    public void setObservacion(String observacion) {
+        this.observacion = observacion;
+    }
+
     public int getIdAgente() {
         return idAgente;
     }
@@ -17,17 +40,6 @@ public class NuevoEstablecimiento {
         this.idAgente = idAgente;
     }
 
-    private int idAgente;
-
-    public NuevoEstablecimiento() {
-    }
-
-    public NuevoEstablecimiento(String nroDoc, String fecha, int estado, int idAgente) {
-        this.nroDoc = nroDoc;
-        this.fecha = fecha;
-        this.estado = estado;
-        this.idAgente = idAgente;
-    }
 
     public String getNroDoc() {
         return nroDoc;

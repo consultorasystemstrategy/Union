@@ -24,11 +24,13 @@ import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.InputFilter;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -82,33 +84,9 @@ public class Login extends Activity implements OnClickListener {
      * AQUÍ DEFINO LAS VARIABLES PARA EL SYNCADAPTER
      */
 
-/*    public static final String ARG_ACCOUNT_TYPE = "1";
-    public static final String ARG_AUTH_TYPE = "2";
-    public static final String ARG_IS_ADDING_NEW_ACCOUNT = "3";
-    public static final String PARAM_USER_PASS = "4";
-    private AccountManager mAccountManager;z
-
-    public static final String CODE_NAME = "name";
 
 
-    private AccountManagerCallback<Bundle> mGetAuthTokenCallback =
-            new AccountManagerCallback<Bundle>() {
-                @Override
-                public void run(final AccountManagerFuture<Bundle> arg0) {
-                    try {
-                        token = (String) arg0.getResult().get(AccountManager.KEY_AUTHTOKEN);
-                    } catch (Exception e) {
-                        // handle error
-                    }
-                }
-            };
-    private Account mAccount;
-    public static String token = "";
 
-    private boolean addNewAccount = false;*/
-
-
-    // private DbAdapter_Temp_Session session;
     private Login loginClass;
     private boolean succesMACDevice;
     private boolean succesLogin;
@@ -133,23 +111,7 @@ public class Login extends Activity implements OnClickListener {
         return this.var1;
     }
 
-    //public void modificarValorVar1(){
-    //    this.var1 = "pruebas XD";
-    //}
 
-    //php login script location:
-
-    //localhost :  
-    //testing on your device
-    //put your local ip instead,  on windows, run CMD > ipconfig
-    //or in mac's terminal type ifconfig and look for the ip under en0 or en1
-    // private static final String LOGIN_URL = "http://xxx.xxx.x.x:1234/webservice/login.php";
-
-    //testing on Emulator:
-    //  private static final String LOGIN_URL = "http://192.168.0.158:8083/produnion/login.php";
-    //private static final String LOGIN_URL = "http://192.168.0.158:8081/webservice/login.php";
-    //testing from a real server:78
-    //private static final String LOGIN_URL = "http://www.yourdomain.com/webservice/login.php";
 
     //JSON element ids from repsonse of php script:
     private static final String TAG_SUCCESS = "success";
@@ -189,43 +151,6 @@ public class Login extends Activity implements OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
         mainActivity = this;
-
-
-
-/*
-        ContentResolver resolver = getContentResolver();
-
-        mAccountManager = (AccountManager) getSystemService(
-                ACCOUNT_SERVICE);
-
-        // Se chequea si existe una cuenta asociada a ACCOUNT_TYPE.
-        Account[] accounts = mAccountManager.getAccountsByType(AccountAuthenticator.ACCOUNT_TYPE);
-        if (accounts.length == 0){
-            // También se puede llamar a metodo mAccountManager.addAcount(...)
-            //TENGO QUE AGREGAR UNA NUEVA CUENTA
-            //PONDRÉ UN VALOR BOOLEANO  ADDNEWACOUNT
-            */
-/*
-            Intent intent = new Intent(this, AuthenticatorActivity.class);
-            intent.putExtra(AuthenticatorActivity.ARG_IS_ADDING_NEW_ACCOUNT, true);
-            startActivity(intent);*//*
-
-            addNewAccount = true;
-
-        }
-        else {
-            mAccount = accounts[0];
-            mAccountManager.getAuthToken(mAccount, AccountAuthenticator.ACCOUNT_TYPE, null, this,
-                    mGetAuthTokenCallback, null);
-            */
-/*resolver.setIsSyncable(mAccount, StudentsContract.AUTHORITY, 1);
-            resolver.setSyncAutomatically(mAccount, StudentsContract.AUTHORITY, true);*//*
-
-        }
-        Log.d(TAG, "ACCOUNTS "+ addNewAccount);
-*/
-       // new FechaRest().execute();
-
 
         session = new DbAdapter_Temp_Session(this);
         session.open();
@@ -457,8 +382,7 @@ public class Login extends Activity implements OnClickListener {
         int id = item.getItemId();
         switch (id) {
             case R.id.buttonAjustes:
-                Intent intentA = new Intent(mainActivity, AppPreferences.class);
-                startActivity(intentA);
+                dialogActividadProtegido(AppPreferences.class).show();
                 break;
             case R.id.buttonResumenTransferencias:
                 Intent intentB = new Intent(mainActivity, Bluetooth_Printer.class);
@@ -498,6 +422,67 @@ public class Login extends Activity implements OnClickListener {
         return super.onOptionsItemSelected(item);
     }
 
+
+    private Dialog dialogActividadProtegido(final Class clase) {
+
+        final View layout = View.inflate(this, R.layout.pin_layout, null);
+
+        final EditText editTextPin = ((EditText) layout.findViewById(R.id.editTextPin));
+
+        String pin = session.fetchMAC(Constants._ID_SESSION_PIN);
+
+        Log.d(TAG, "PIN : "+ pin);
+
+        int maxLengthofPIN = 4;
+        editTextPin.setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxLengthofPIN)});
+
+        if(pin.length()>maxLengthofPIN){
+            pin = mainActivity.getString(R.string.pin);
+        }
+
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("PIN");
+        final String finalPin = pin;
+        builder.setPositiveButton(R.string.ok, new Dialog.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                String pinIntroducido = null;
+                if (editTextPin.getText().toString().trim().equals("")) {
+                    pinIntroducido = "0000";
+                } else {
+                    pinIntroducido = editTextPin.getText().toString().trim();
+                }
+
+                Log.d(TAG, "PIN INTRODUCIDO : " + pinIntroducido);
+
+                if (pinIntroducido.equals(finalPin)){
+                    Intent intentMantExport = new Intent(mainActivity, clase);
+                    startActivity(intentMantExport);
+                }else {
+                    Utils.setToast(mainActivity, "PIN INCORRECTO.", R.color.rojo);
+                }
+
+            }
+        });
+
+        builder.setView(layout);
+
+        final AlertDialog alertDialog = builder.create();
+        editTextPin.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    Log.d("FOCUS","ALERT YES");
+                    alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                }else{
+                    Log.d("FOCUS","ALERT FALSE");
+                    alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+                }
+            }
+        });
+
+        return alertDialog;
+    }
 /*
     private int validarExport(int idLiquidacion) {
 

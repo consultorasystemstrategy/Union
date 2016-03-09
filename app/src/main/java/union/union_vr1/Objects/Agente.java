@@ -24,20 +24,14 @@ public class Agente {
     private int correlativoRrpp;
     private int estadoSincronizado;
     private String MAC;
-
-    public int getRutaId() {
-        return rutaId;
-    }
-
-    public void setRutaId(int rutaId) {
-        this.rutaId = rutaId;
-    }
-
     private int rutaId;
     private int rolid;
     private String MAC2;
 
-    public Agente(int idAgenteVenta, int idEmpresa, int idUsuario, String nombreAgente, String nombreUsuario, String passUsuario, int liquidacion, Double kmInicial, Double kmFinal, String nombreRuta, int nroBodegas, String serieBoleta, String serieFactura, String serieRrpp, int correlativoBoleta, int correlativoFactura, int correlativoRrpp, String MAC, int rolid, int estadoSincronizado, String MAC2, int rutaId) {
+    private String pin;
+
+
+    public Agente(int idAgenteVenta, int idEmpresa, int idUsuario, String nombreAgente, String nombreUsuario, String passUsuario, int liquidacion, Double kmInicial, Double kmFinal, String nombreRuta, int nroBodegas, String serieBoleta, String serieFactura, String serieRrpp, int correlativoBoleta, int correlativoFactura, int correlativoRrpp, String MAC, int rolid, int estadoSincronizado, String MAC2, int rutaId, String pin) {
         this.idAgenteVenta = idAgenteVenta;
         this.idEmpresa = idEmpresa;
         this.idUsuario = idUsuario;
@@ -60,8 +54,25 @@ public class Agente {
         this.rolid = rolid;
         this.MAC2 = MAC2;
         this.rutaId = rutaId;
+        this.pin = pin;
     }
 
+
+    public String getPin() {
+        return pin;
+    }
+
+    public void setPin(String pin) {
+        this.pin = pin;
+    }
+
+    public int getRutaId() {
+        return rutaId;
+    }
+
+    public void setRutaId(int rutaId) {
+        this.rutaId = rutaId;
+    }
 
     public String getMAC2() {
         return MAC2;

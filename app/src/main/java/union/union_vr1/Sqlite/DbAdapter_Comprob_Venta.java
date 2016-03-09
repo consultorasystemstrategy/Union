@@ -273,6 +273,14 @@ public class DbAdapter_Comprob_Venta {
         mDb.update(SQLITE_TABLE_Comprob_Venta, initialValues,
                 CV_id_comprob + "=?", new String[]{"" + id});
     }
+    public int updateAllEstadoSincronizacion(int estadoSincronizacion, int liquidacion){
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(Constants._SINCRONIZAR, estadoSincronizacion);
+        return mDb.update(SQLITE_TABLE_Comprob_Venta, initialValues,
+                CV_liquidacion + " = '"+liquidacion+"'", null);
+    }
+
+
     public int updateSerie(int id, String serie, int num_doc, int estadoSincronizacion){
         ContentValues initialValues = new ContentValues();
         initialValues.put(CV_serie, serie);
@@ -281,6 +289,14 @@ public class DbAdapter_Comprob_Venta {
         return mDb.update(SQLITE_TABLE_Comprob_Venta, initialValues,
                 CV_id_comprob + "=?", new String[]{"" + id});
     }
+    public int changeEstadoExport(int id, int estadoSincronizacion){
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(Constants._SINCRONIZAR, estadoSincronizacion);
+        return mDb.update(SQLITE_TABLE_Comprob_Venta, initialValues,
+                CV_id_comprob + "=?", new String[]{"" + id});
+    }
+
+
 
 
     public int updateComprobanteIDReal(long id, int idReal){
@@ -406,7 +422,7 @@ public class DbAdapter_Comprob_Venta {
         return mCursor;
 
     }
-    public Cursor filterExport() {
+    public Cursor filterExport(int liquidacion) {
         Cursor mCursor = null;
         mCursor = mDb.query(true, SQLITE_TABLE_Comprob_Venta,new String[] {CV_id_comprob,
 
@@ -415,20 +431,20 @@ public class DbAdapter_Comprob_Venta {
                         CV_fecha_doc, CV_hora_doc, CV_estado_comp, CV_estado_conexion,
                         CV_id_agente, CV_id_tipo_pago, CV_direccion_id
                 },
-                Constants._SINCRONIZAR + " = " + Constants._CREADO + " OR " + Constants._SINCRONIZAR + " = " + Constants._ACTUALIZADO, null,
+                " ("+Constants._SINCRONIZAR + " = " + Constants._CREADO + " OR " + Constants._SINCRONIZAR + " = " + Constants._ACTUALIZADO+ ") AND "+CV_liquidacion + " = "+ liquidacion, null,
                 null, null, null, null);
         if (mCursor != null) {
             mCursor.moveToFirst();
         }
         return mCursor;
     }
-    public Cursor filterExportAnulado() {
+    public Cursor filterExportAnulado(int liquidacion) {
         Cursor mCursor = null;
         mCursor = mDb.rawQuery("SELECT CV.*, EC.* \n" +
                 "FROM m_comprob_venta CV \n" +
                 "INNER JOIN m_exportacion_comprobantes EC \n" +
-                "ON (CV._id = EC._id_sqlite) \n"+
-                "WHERE CV."+CV_estado_comp+" = ? AND CV."+CV_estado_sincronizacion_anulacion +" = ? AND EC."+DbAdapter_Exportacion_Comprobantes.EC_id_sid + " > 0", new String[]{""+Constants._CV_ANULADO,""+Constants._ACTUALIZADO});
+                "ON (CV._id = EC._id_sqlite) \n" +
+                "WHERE CV." + CV_liquidacion + " = ? AND CV." + CV_estado_comp + " = ? AND CV." + CV_estado_sincronizacion_anulacion + " = ? AND EC." + DbAdapter_Exportacion_Comprobantes.EC_id_sid + " > 0", new String[]{"" + liquidacion, "" + Constants._CV_ANULADO, "" + Constants._ACTUALIZADO});
         if (mCursor != null) {
             mCursor.moveToFirst();
         }
@@ -436,7 +452,7 @@ public class DbAdapter_Comprob_Venta {
     }
 
 
-    public Cursor fetchAllComprobVenta(int idEstablecimiento, int liquidacion) {
+    public Cursor fetchAllComprobVentaByEst(int idEstablecimiento, int liquidacion) {
 
         Cursor mCursor = mDb.query(SQLITE_TABLE_Comprob_Venta, new String[] {CV_id_comprob,
 
@@ -451,6 +467,23 @@ public class DbAdapter_Comprob_Venta {
         }
         return mCursor;
     }
+
+    public Cursor fetchAllComprobVenta(int liquidacion) {
+
+        Cursor mCursor = null;
+        mCursor = mDb.rawQuery("SELECT CV.*, EE."+DbAdaptert_Evento_Establec.EE_nom_establec+" \n" +
+                "FROM "+SQLITE_TABLE_Comprob_Venta+" CV \n" +
+                "INNER JOIN "+DbAdaptert_Evento_Establec.SQLITE_TABLE_Evento_Establec+" EE \n" +
+                "ON (CV."+CV_id_establec+" = EE."+DbAdaptert_Evento_Establec.EE_id_establec+") \n" +
+                "WHERE CV." + CV_liquidacion + " = ? ", new String[]{"" + liquidacion});
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+    }
+
+
+
     public Cursor fetchAllComprobVentaByName(int idEstablecimiento, int liquidacion, String name) {
 
         Cursor mCursor = mDb.query(SQLITE_TABLE_Comprob_Venta, new String[] {CV_id_comprob,

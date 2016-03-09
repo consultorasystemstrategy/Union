@@ -9,6 +9,15 @@ public class EstablecTemp {
     private int estado;
     private int idAgente;
     private int idEstablecimientoSID;
+    private String observacion;
+
+    public String getObservacion() {
+        return observacion;
+    }
+
+    public void setObservacion(String observacion) {
+        this.observacion = observacion;
+    }
 
     public int getIdAgente() {
         return idAgente;
@@ -26,12 +35,13 @@ public class EstablecTemp {
         this.idEstablecimientoSID = idEstablecimientoSID;
     }
 
-    public EstablecTemp(String idEstablecTemp, String fecha, int estado, int idAgente, int idEstablecimientoSID) {
+    public EstablecTemp(String idEstablecTemp, String fecha, int estado, int idAgente, int idEstablecimientoSID, String observacion) {
         this.idEstablecTemp = idEstablecTemp;
         this.fecha = fecha;
         this.estado = estado;
         this.idAgente = idAgente;
         this.idEstablecimientoSID = idEstablecimientoSID;
+        this.observacion = observacion;
     }
 
     public EstablecTemp() {

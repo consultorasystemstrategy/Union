@@ -130,9 +130,9 @@ public class DbAdapter_Impresion_Cobros {
         return mDb.insert(SQLITE_TABLE_IMPRIMIR_COBRO, null, initialValues);
     }
 
-    public Cursor listarCobrosExpFlex(){
+    public Cursor listarCobrosExpFlex(int liquidacion){
 
-        Cursor cr = mDb.rawQuery("select * from "+SQLITE_TABLE_IMPRIMIR_COBRO+" where "+Imprimir_estado_flex+"='"+Constants._CREADO+"' and "+Imprimir_id_flex+" != '0' AND "+Imprimir_tipo+" !='"+Constants.COBRO_MANUAL+"' ",null);
+        Cursor cr = mDb.rawQuery("select * from "+SQLITE_TABLE_IMPRIMIR_COBRO+" where "+Imprimir_estado_flex+"='"+Constants._CREADO+"' AND "+Imprimir_id_flex+" != '0' AND "+Imprimir_tipo+" !='"+Constants.COBRO_MANUAL+"' AND "+Imprimir_liquidacion + " = '"+liquidacion+"'",null);
 
         return cr;
     }
@@ -144,9 +144,9 @@ public class DbAdapter_Impresion_Cobros {
         return cr;
     }
 
-    public Cursor listarParaExportar(){
+    public Cursor listarParaExportar(int liquidacion){
 
-        Cursor cr = mDb.rawQuery("select * from "+SQLITE_TABLE_IMPRIMIR_COBRO+" where  "+Constants._SINCRONIZAR+"='"+Constants._ACTUALIZADO+"' and "+Imprimir_tipo+" !='"+Constants.COBRO_MANUAL+"'  ",null);
+        Cursor cr = mDb.rawQuery("select * from "+SQLITE_TABLE_IMPRIMIR_COBRO+" where  "+Constants._SINCRONIZAR+"='"+Constants._ACTUALIZADO+"' and "+Imprimir_tipo+" !='"+Constants.COBRO_MANUAL+"' AND "+Imprimir_liquidacion + " = '"+liquidacion+"'",null);
 
         return cr;
     }

@@ -79,7 +79,7 @@ public class ExportEstadoAuEstablec extends AsyncTask<String, String, String> {
 
                 while (cursor.moveToNext()) {
                     Log.d("IMPORTESTADOESTABLEC", "" + cursor.getCount()+cursor.getInt(cursor.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_distrito)));
-                    NuevoEstablecimiento nuevoEstablecimiento = new NuevoEstablecimiento(cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_nro_documento)), Utils.getDatePhone(), Constants.REGISTRO_INTERNET,idAgente);
+                    NuevoEstablecimiento nuevoEstablecimiento = new NuevoEstablecimiento(cursor.getString(cursor.getColumnIndexOrThrow(DbAdapter_Establecimeinto_Historial.establec_nro_documento)), Utils.getDatePhone(), Constants.REGISTRO_INTERNET, idAgente, Constants._OBSERVACION);
                     Firebase newEstaclmientoRef = nuevoEstablecimientoRef.push();
                     newEstaclmientoRef.setValue(nuevoEstablecimiento);
 

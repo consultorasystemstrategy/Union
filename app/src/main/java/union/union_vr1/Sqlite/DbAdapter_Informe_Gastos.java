@@ -24,6 +24,7 @@ public class DbAdapter_Informe_Gastos {
     public static final String GA_estado = "ga_int_estado";
     public static final String GA_referencia = "ga_referencia";
     public static final String GA_id_agente = "ga_in_id_agente";
+    public static final String GA_liquidacion = "ga_liquidacion";
     public static final String TAG = "Informe_Gastos";
     private DbHelper mDbHelper;
     private SQLiteDatabase mDb;
@@ -46,6 +47,7 @@ public class DbAdapter_Informe_Gastos {
                     +GA_estado+" integer,"
                     +GA_referencia+" text,"
                     +GA_id_agente+" integer,"
+                    +GA_liquidacion+" integer,"
                     +Constants._SINCRONIZAR+" text);";
 
     public static final String DELETE_TABLE_INFORME_GASTOS = "DROP TABLE IF EXISTS " + SQLITE_TABLE_Informe_Gastos;
@@ -69,7 +71,7 @@ public class DbAdapter_Informe_Gastos {
     public long createInformeGastos(
             int id_tipo_gasto, int id_procedencia_gasto, int id_tipo_doc, String nom_tipo_gasto,
             double subtotal, double igv, double total, String fecha, String hora, int estado, String referencia,
-            int id_agente, int estadoSincronizado) {
+            int id_agente, int estadoSincronizado, int liquidacion) {
 
         ContentValues initialValues = new ContentValues();
         initialValues.put(GA_id_tipo_gasto,id_tipo_gasto);
@@ -84,6 +86,7 @@ public class DbAdapter_Informe_Gastos {
         initialValues.put(GA_estado,estado);
         initialValues.put(GA_referencia, referencia);
         initialValues.put(GA_id_agente,id_agente);
+        initialValues.put(GA_liquidacion,id_agente);
         initialValues.put(Constants._SINCRONIZAR, estadoSincronizado);
         return mDb.insert(SQLITE_TABLE_Informe_Gastos, null, initialValues);
     }
@@ -159,7 +162,7 @@ public class DbAdapter_Informe_Gastos {
 
     }
 
-    public Cursor filterExport() {
+    public Cursor filterExport(int liquidacion) {
         Cursor mCursor = null;
         mCursor = mDb.query(true, SQLITE_TABLE_Informe_Gastos, new String[] {GA_id_gasto,
                         GA_id_tipo_gasto, GA_id_proced_gasto, GA_id_tipo_doc,

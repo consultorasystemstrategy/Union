@@ -12,7 +12,7 @@
         android:title="Imprimir Devoluciones"
         android:orderInCategory="100" />
 
-    <item android:id="@+id/buttonResumenTransferencias" android:title="Resumen y Transferencias"
+    <item android:id="@+id/buttonResumenTransferencias" android:title="Resumen"
         android:orderInCategory="100"  />
 
 

@@ -371,7 +371,7 @@ public class DbAdapter_Canjes_Devoluciones {
         return cr;
     }
 
-    public String guardarCabecera(int idAgente, String establecimiento) {
+    public String guardarCabecera(int idAgente, String establecimiento, int liquidacion) {
         String idCabecera = "";
         Cursor cursor = mDb.rawQuery("select _id,hv_in_id_histo from m_histo_venta where hv_in_fecha='" + getDatePhone() + "' and hv_id_establecimiento='" + establecimiento + "';", null);
         //cursor.moveToFirst();
@@ -380,7 +380,7 @@ public class DbAdapter_Canjes_Devoluciones {
             idCabecera = cursor.getString(1);
             Log.d("idCabecera", idCabecera);
         } else {
-            long id = dbHistoVenta.createHistoVenta("" + idAgente + "." + getDatePhone() + " " + getTimePhone(), idAgente, 0.0, getDatePhone(), Constants._CREADO, establecimiento);
+            long id = dbHistoVenta.createHistoVenta("" + idAgente + "." + getDatePhone() + " " + getTimePhone(), idAgente, 0.0, getDatePhone(), Constants._CREADO, establecimiento, liquidacion);
             Cursor cr = mDb.rawQuery("select _id,hv_in_id_histo from m_histo_venta where _id=" + id + "", null);
             cr.moveToFirst();
             idCabecera = cr.getString(1);

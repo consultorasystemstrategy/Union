@@ -111,12 +111,12 @@ public class DbAdapter_Forma_Pago {
                         FP_id, FP_detalle, FP_selected, FP_fecha, FP_liquidacion, FP_estado_sincronizacion},
                 FP_id_forma_pago + " = " + idFormaPago, null,
                 null, null, null, null);
-        if (mCursor != null) {
+        if (mCursor .getCount() > 0) {
             mCursor.moveToFirst();
             exists = true;
-        }
-        if (mCursor.getCount()==0){
+        }else{
             exists = false;
+
         }
         return exists;
     }

@@ -31,7 +31,9 @@ public class DBAdapter_Temp_Autorizacion_Cobro {
     public static final String estado_sincronizacion = "estado_sincronizacion";
     public static final String temp_id_comprobante = "estado_id_comprobante";
     public static final String temp_nom_establec = "temp_nom_establec";
-    public static final String TAG = "Temp_autorizacion_cobros";
+    public static final String temp_liquidacion = "temp_liquidacion";
+
+    public static final String TAG = DBAdapter_Temp_Autorizacion_Cobro.class.getSimpleName();
     private DbHelper mDbHelper;
     private SQLiteDatabase mDb;
 
@@ -52,6 +54,7 @@ public class DBAdapter_Temp_Autorizacion_Cobro {
                     + temp_id_comprobante + " text,"
                     + temp_monto_pagado + " real,"
                     + estado_sincronizacion + " integer ,"
+                    + temp_liquidacion + " integer ,"
                     + temp_nom_establec + " text ," +
                     temp_fechaLimite + " text );";
 
@@ -125,14 +128,14 @@ public class DBAdapter_Temp_Autorizacion_Cobro {
         return cr;
     }
 
-    public Cursor filterExport() {
+    public Cursor filterExport(int liquidacion) {
         Cursor mCursor = null;
         mCursor = mDb.query(true, SQLITE_TABLE_Temp_Autorizacion_Cobro, new String[]{
                         temp_autorizacion_cobro, temp_id_agente,
                         temp_establec, temp_id_motivo_solicitud, temp_id_estado_solicitud,
                         temp_referencia, temp_montoCredito, temp_monto_pagado, estado_sincronizacion, temp_id_comprobante, temp_id_autorizacion_cobro
                 },
-                Constants._SINCRONIZAR + " = " + Constants._CREADO + " AND " + temp_id_estado_solicitud + " = '1'", null,
+                Constants._SINCRONIZAR + " = " + Constants._CREADO + " AND " + temp_id_estado_solicitud + " = '1' AND "+ temp_liquidacion +" = '"+liquidacion+"'", null,
                 null, null, null, null);
         if (mCursor != null) {
             mCursor.moveToFirst();
@@ -149,14 +152,13 @@ public class DBAdapter_Temp_Autorizacion_Cobro {
                 },
                 temp_id_comprobante + " = '" + idAutorizacionCobro+"' and "+temp_id_estado_solicitud+"=1;", null,
                 null, null, null, null);
-        if (mCursor != null) {
+        if (mCursor. getCount() > 0) {
             mCursor.moveToFirst();
             exists = true;
-        }
-        if (mCursor.getCount() == 0) {
+        }else {
             exists = false;
         }
-        Log.d("EXISTE AUTORIZACION COBRO ", "" + exists);
+        Log.d(TAG,"EXISTE AUTORIZACION COBRO " + exists);
         return exists;
     }
 

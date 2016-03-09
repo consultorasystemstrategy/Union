@@ -961,6 +961,11 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener, V
         final EditText editTextNumero = (EditText) layout_Cobros_Manuales.findViewById(R.id.cobrosManualNumero);
         final EditText editTextImporte = (EditText) layout_Cobros_Manuales.findViewById(R.id.cobrosManualImporte);
 
+        ArrayAdapter<CharSequence> adapterTipoOperacion = ArrayAdapter.createFromResource(this, R.array.FacturaBoleta, android.R.layout.simple_spinner_item);
+        adapterTipoOperacion.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerTipoCobro.setAdapter(adapterTipoOperacion);
+
+
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                 context);
 
@@ -976,7 +981,7 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener, V
                         NumberFormat formatter = new DecimalFormat("0.00");
                         //Posicion 0 == cobro total, 1 == Parcial
                         Log.d("ITEMSELECTED", spinnerTipoCobro.getSelectedItemPosition() + "");
-                        int itemTipo = spinnerTipoCobro.getSelectedItemPosition();
+                        String documento = spinnerTipoCobro.getSelectedItem().toString();
                         String serie = editTextSerie.getText().toString();
                         String numeroString = editTextNumero.getText().toString();
                         String importeString = editTextImporte.getText().toString();
@@ -985,7 +990,7 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener, V
                         } else {
                             int numero = Integer.parseInt(numeroString);
                             Double importe = Double.parseDouble(Utils.replaceComa(formatter.format(Double.parseDouble(Utils.replaceComa(importeString)))));
-                            estaSeguroCobrar(serie, numero, importe, itemTipo);
+                            estaSeguroCobrar(serie, numero, importe, documento);
 
                         }
 
@@ -1006,14 +1011,9 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener, V
         // show it
         alertDialog.show();
 
-        ArrayAdapter<CharSequence> adapterTipoOperacion = ArrayAdapter.createFromResource(this, R.array.tipo_cobros_manuales, android.R.layout.simple_spinner_item);
-
-        adapterTipoOperacion.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        spinnerTipoCobro.setAdapter(adapterTipoOperacion);
     }
 
-    private void estaSeguroCobrar(final String serie, final int numero, final Double importe, final int tipoCobro) {
+    private void estaSeguroCobrar(final String serie, final int numero, final Double importe, final String documento) {
 
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
@@ -1028,13 +1028,9 @@ public class VMovil_Cobro_Credito extends Activity implements OnClickListener, V
                 .setCancelable(false)
                 .setPositiveButton(R.string.si, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        String cateMovimiento = "";
-                        if (tipoCobro > 0) {
-                            cateMovimiento = "t";
-                        } else {
-                            cateMovimiento = "p";
-                        }
-                        long l = dbAdapter_cobros_manuales.createCobrosManuales(3, importe, getTimeAndDate(), cateMovimiento, slideIdAgente, serie, numero, dbAdaptert_evento_establec.getNameCliente(Integer.parseInt(estabX)), Integer.parseInt(estabX), getDatePhone(), getTimePhone());
+
+
+                        long l = dbAdapter_cobros_manuales.createCobrosManuales(3, importe, Utils.getDatePhone(), ""+documento.charAt(0), slideIdAgente, serie, numero, dbAdaptert_evento_establec.getNameCliente(Integer.parseInt(estabX)), Integer.parseInt(estabX), getDatePhone(), getTimePhone(), slideIdLiquidacion, _id_tipo_pago);
                         if (l > 0) {
                             //Cobros Manuales
                             String NUMERO = "";

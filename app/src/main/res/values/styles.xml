@@ -167,6 +167,11 @@
 
     </style>
 
+    <style name="SpecialButton" parent="Widget.AppCompat.Button.Colored">
+        <item name="colorButtonNormal">@color/azul</item>
+        <item name="android:textColorPrimary">#fff</item>
+    </style>
+
 
 
 

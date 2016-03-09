@@ -374,7 +374,8 @@ public class ImportMain extends AsyncTask<String, String, String> {
                 boolean existe = dbAdapter_precio.existePrecio(precios.get(i).getIdProducto(), precios.get(i).getIdCategoriaEstablecimiento(), precios.get(i).getValorUnidad());
                 Log.d("EXISTE ", "" + existe);
                 if (existe) {
-                    dbAdapter_precio.updatePrecios(precios.get(i), idAgente);
+                    int updatedPrecios = dbAdapter_precio.updatePrecios(precios.get(i), idAgente);
+                    Log.d(TAG, "ACTUALIZADOS NRO: "+ updatedPrecios);
                 } else {
                     //NO EXISTE ENTONCES CREEMOS UNO NUEVO
                     dbAdapter_precio.createPrecios(precios.get(i), idAgente);
@@ -383,7 +384,7 @@ public class ImportMain extends AsyncTask<String, String, String> {
 
 
             for (int i = 0; i < eventoEstablecimientos.size(); i++) {
-                Log.d("ESTABLECIMIENTOS X RUTAS: " + i, " Nombre Establecimiento : " + eventoEstablecimientos.get(i).getNombreEstablecimiento() + ", orden : " + eventoEstablecimientos.get(i).getOrden() + ", BARCODE: " + eventoEstablecimientos.get(i).getCodigoBarras());
+                Log.d(TAG, "ESTABLECIMIENTOS X RUTAS: " + i+", Nombre Establecimiento : " + eventoEstablecimientos.get(i).getNombreEstablecimiento() + ", orden : " + eventoEstablecimientos.get(i).getOrden() + ", BARCODE: " + eventoEstablecimientos.get(i).getCodigoBarras());
                 boolean existe = dbAdaptert_evento_establec.existeEstablecsById(eventoEstablecimientos.get(i).getIdEstablecimiento());
 
                 Log.d("EXISTE ESTABLECIMIENTO", "" + existe);
@@ -405,10 +406,10 @@ public class ImportMain extends AsyncTask<String, String, String> {
                 boolean existe = dbAdapter_comprob_cobro.existeComprobCobro(comprobanteCobros.get(i).getIdComprobanteCobro());
                 Log.d("EXISTE ", "" + existe);
                 if (existe) {
-                    dbAdapter_comprob_cobro.updateComprobCobros(comprobanteCobros.get(i));
+                    dbAdapter_comprob_cobro.updateComprobCobrosLiq(comprobanteCobros.get(i), idLiquidacion);
                 } else {
                     //NO EXISTE ENTONCES CREEMOS UNO NUEVO
-                    dbAdapter_comprob_cobro.createComprobCobro(comprobanteCobros.get(i));
+                    dbAdapter_comprob_cobro.createComprobCobro(comprobanteCobros.get(i), idLiquidacion);
                 }
             }
 
